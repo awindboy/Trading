@@ -1841,22 +1841,728 @@ search causal LTF child
 ---
 
 
-## 5. Causal LTF Refinement
+## 5. Causal LTF OB Refinement
 
-Status: TBD
+Status: FROZEN FOR V1
 
-At least one child OB is required.
+Primary authority:
+- `AGENTS.md`
 
-Child must:
-- share direction
-- overlap / be contained / belong to adjacent substructure
-- explain the same price event
-- belong to the same displacement
-- have valid formation timing
-- create lower-TF structure delivery
+Primary implementation reference:
+- `mentor_engine/planner.py`
+- `mentor_engine/zones.py`
 
-Implementation:
-TBD.
+Secondary reference:
+- `research/mentor-youtube/MENTOR_RULE_CONTRACT.md`
+
+### 5.1 Purpose
+
+HTF Root OB가 확정됐다고 해서
+그 넓은 Root candle 전체를 바로 precision execution source로 사용하지 않는다.
+
+Refinement의 목적은:
+
+```text
+상위 timeframe에서 본 동일한 원인 사건을
+더 낮은 timeframe에서 causal하게 다시 확인
+```
+
+하는 것이다.
+
+예:
+
+```text
+H1 Root
+→ M30 causal child
+→ M15 causal child
+→ M5 causal child
+```
+
+각 child는 단순히 parent 내부에 있는 작은 OB가 아니라
+같은 price event와 같은 displacement를 설명해야 한다.
+
+### 5.2 Minimum One Child Requirement
+
+Classification: D
+
+최초 position baseline은
+최소 하나의 valid lower-timeframe causal child를 요구한다.
+
+```text
+HTF Root only
+→ no first-position authorization
+```
+
+예:
+
+```text
+H1 Root
+→ no valid M30/M15/M5 child
+→ NO TRADE
+```
+
+또는:
+
+```text
+M30 Root
+→ valid M15 child
+→ refinement requirement satisfied
+```
+
+Root 전체를 바로 M1 trigger source로 사용하는 것은
+V1 baseline protocol이 아니다.
+
+### 5.3 Allowed Refinement Timeframes
+
+Classification: D
+
+Root timeframes:
+
+```text
+H1
+M30
+M15
+```
+
+Refinement timeframes:
+
+```text
+M30
+M15
+M5
+```
+
+Child는 반드시 parent보다 더 낮은 timeframe이어야 한다.
+
+Examples:
+
+```text
+H1
+→ M30
+→ M15
+→ M5
+```
+
+```text
+H1
+→ M15
+```
+
+```text
+M30
+→ M15
+→ M5
+```
+
+모든 중간 timeframe에 child가 반드시 존재할 필요는 없다.
+
+M1은 HTF-to-LTF source refinement에 포함하지 않는다.
+
+M1은 이후:
+
+```text
+sweep
+CHoCH
+execution OB
+```
+
+를 담당한다.
+
+### 5.4 Same Direction
+
+Classification: D
+
+Child OB는 parent와 동일 방향이어야 한다.
+
+```text
+bullish parent
+→ bullish child only
+
+bearish parent
+→ bearish child only
+```
+
+반대 방향 lower-TF OB는 correction structure일 수 있으나
+parent source refinement로 사용하지 않는다.
+
+### 5.5 Recursive Causal OB Logic
+
+Classification: D for V1
+
+Child OB도 Root OB와 같은 causal logic을 축소 적용한다.
+
+Valid child는:
+
+```text
+lower-TF meaningful swing-origin context
++
+last opposite candle inside that origin window
++
+same causal lower-TF directional leg
++
+meaningful lower-TF structure body-break
+```
+
+을 모두 만족해야 한다.
+
+즉:
+
+```text
+parent 안에 있는 작은 반대색 candle
+```
+
+이라는 이유만으로 child가 되지 않는다.
+
+Bullish child example:
+
+```text
+meaningful lower-TF low
+        ↓
+last bearish candle in origin window
+        ↓
+bullish displacement
+        ↓
+meaningful lower-TF high body-break
+```
+
+Bearish child는 반대다.
+
+### 5.6 Same Price Event
+
+Classification: D
+
+Parent와 child는 같은 가격 사건을 설명해야 한다.
+
+Child origin은 parent의 causal swing-origin window 안에 있어야 한다.
+
+Required time relation:
+
+```text
+parent origin
+<= child origin
+<= child structure confirmation
+<= parent linked structure confirmation
+```
+
+Parent의 structure delivery가 완전히 끝난 뒤
+나중에 생긴 lower-TF OB는
+기존 parent의 refinement로 연결하지 않는다.
+
+그것은 별도의 continuation source 후보일 수 있다.
+
+### 5.7 Same Displacement Ownership
+
+Classification: D
+
+Price overlap만으로 parent-child 관계를 만들지 않는다.
+
+Child의 structure delivery는
+parent displacement가 진행 중인 동일 directional delivery chain에 속해야 한다.
+
+즉:
+
+```text
+same direction
++
+same causal origin window
++
+same directional delivery chain
+```
+
+을 만족해야 한다.
+
+금지:
+
+```text
+parent 안에 가격이 겹치는 unrelated M5 OB
+→ child 승격
+```
+
+### 5.8 Price Containment
+
+Classification: D-compatible
+
+가장 명확한 refinement는:
+
+```text
+parent.bottom <= child.bottom
+AND
+child.top <= parent.top
+```
+
+이다.
+
+Full containment를 우선적으로 인정한다.
+
+그러나 multi-timeframe aggregation 차이 때문에
+같은 causal event의 lower-TF child가 parent 경계를 일부 벗어날 수 있다.
+
+이 경우 고정 point / ATR tolerance를 사용하지 않는다.
+
+### 5.9 Event-Defined Immediate Adjacency
+
+Classification: D for V1 protocol
+
+Parent boundary를 일부 벗어난 child는
+다음 causal 조건이 모두 성립할 때만 허용한다.
+
+```text
+same parent swing-origin lower-TF bar sequence
++
+same directional displacement
++
+same structure-delivery ownership
++
+child structure confirmation inside parent event window
+```
+
+즉:
+
+```text
+가격이 3포인트 이내라서
+ATR의 0.2배 이내라서
+```
+
+같은 거리 기반 adjacency는 사용하지 않는다.
+
+V1에서 adjacency는 가격 거리가 아니라
+event lineage로 정의한다.
+
+### 5.10 Child Structure Delivery Requirement
+
+Classification: D
+
+Child도 자체 lower-timeframe structure delivery를 만들어야 한다.
+
+Valid bullish child:
+
+```text
+lower-TF origin
+→ bullish directional leg
+→ meaningful lower-TF high body-close break
+```
+
+Valid bearish child:
+
+```text
+lower-TF origin
+→ bearish directional leg
+→ meaningful lower-TF low body-close break
+```
+
+Wick-only break는 child confirmation이 아니다.
+
+Structure delivery가 없는 lower-TF opposite candle은
+refinement source가 아니다.
+
+### 5.11 Child Availability
+
+Classification: D
+
+Child candle의 발생 시점과
+causal child로 사용할 수 있게 된 시점을 분리한다.
+
+```text
+occurred_at
+= child origin candle time
+
+available_at
+= child linked structure delivery confirmation
+```
+
+Child는 `available_at` 이전에
+refined source로 사용할 수 없다.
+
+### 5.12 Refinement Is Not Forced to M5
+
+Classification: D
+
+Refinement는 가능한 가장 낮은 timeframe까지
+무조건 내려가는 과정이 아니다.
+
+목적은:
+
+```text
+lowest timeframe
+```
+
+이 아니라:
+
+```text
+deepest unambiguous causal child
+```
+
+이다.
+
+Example:
+
+```text
+H1 Root
+→ M30 valid
+→ M15 valid
+→ M5 ambiguous
+```
+
+이면 final refined source:
+
+```text
+M15
+```
+
+이다.
+
+M5의 가장 좁은 candidate를 임의 선택하지 않는다.
+
+### 5.13 Ambiguity Handling
+
+Classification: D
+
+동일 parent 안에 비교 불가능한 child candidates가 여러 개 존재하고
+causal ownership을 deterministic하게 구분할 수 없으면:
+
+```text
+nearest child
+narrowest child
+newest child
+best RR child
+```
+
+기준으로 선택하지 않는다.
+
+#### Case A — 이미 상위 child가 확정된 경우
+
+```text
+H1
+→ M30 valid
+→ M15 ambiguous
+```
+
+이면:
+
+```text
+M30을 final refined source로 유지
+```
+
+한다.
+
+#### Case B — 첫 child 단계부터 ambiguous
+
+```text
+H1 Root
+→ M30/M15 child를 하나도 확정할 수 없음
+```
+
+이면:
+
+```text
+NO TRADE
+```
+
+이다.
+
+이유:
+
+V1은 최소 하나의 causal lower-TF child를 요구한다.
+
+### 5.14 Final Refined Source
+
+Classification: D
+
+Ambiguity 없이 causal lineage가 유지되는
+가장 깊은 child가 final refined source다.
+
+Final child는:
+
+```text
+price contact zone
+trigger-location authority
+SL geometry source
+```
+
+를 담당한다.
+
+단:
+
+```text
+더 좁아서 선택
+```
+
+하는 것이 아니라:
+
+```text
+같은 원인이 더 낮은 TF에서도 명확해서 선택
+```
+
+하는 것이다.
+
+### 5.15 Lineage Freeze Before M1
+
+Classification: D
+
+Final causal child와 parent-child lineage는
+M1 trigger 관찰 전에 확정되어야 한다.
+
+Required order:
+
+```text
+objective frozen
+→ map frozen
+→ HTF Root frozen
+→ causal refinement lineage frozen
+→ final refined source frozen
+→ source contact
+→ liquidity sweep
+→ M1 CHoCH
+```
+
+금지:
+
+```text
+M1 CHoCH 발견
+→ 그 반응에 잘 맞는 M5 OB 선택
+→ 그 M5 OB와 겹치는 M15/H1 OB를 사후 연결
+```
+
+이는 retrospective fitting으로 취급한다.
+
+### 5.16 Source Contact
+
+Classification: D concept
+
+Final refined source는 M1 trigger를 보기 전에 존재한다.
+
+Price가 final child bounds와 실제로 교차하면
+source contact event를 기록할 수 있다.
+
+```text
+bar.high >= child.bottom
+AND
+bar.low <= child.top
+```
+
+단, source contact 자체는 trade trigger가 아니다.
+
+Source contact 이후에만
+해당 scenario의 M1 sweep / CHoCH search를 활성화한다.
+
+Source Contact의 세부 event contract는
+다음 `Source Contact + Mature Sweep` 단계에서 확정한다.
+
+### 5.17 Child Lifecycle
+
+Classification: D
+
+Child state는 최소:
+
+```text
+FRESH
+TOUCHED
+PARTIALLY_MITIGATED
+CONSUMED
+STRUCTURALLY_INVALIDATED
+```
+
+를 유지한다.
+
+단순 touch만으로 child를 즉시 invalid 처리하지 않는다.
+
+V1에서는:
+
+```text
+N-touch expiry
+N-bar expiry
+age score
+quality score
+```
+
+를 사용하지 않는다.
+
+### 5.18 Parent Invalidation Propagation
+
+Classification: D
+
+Ownership은 상위에서 하위로 흐른다.
+
+```text
+Parent Root invalidated
+→ all descendants invalidated
+```
+
+상위 owner가 사라지면
+lower-TF child가 차트상 untouched여도
+source authority를 잃는다.
+
+### 5.19 Child Consumption
+
+Classification: D
+
+Final child가 완전히 소비되면
+그 child를 사용하는 execution lane은 종료된다.
+
+```text
+final child consumed
+→ current lane invalid
+```
+
+다만 child consumption이
+항상 HTF Root 자체의 구조적 invalidation을 뜻하는 것은 아니다.
+
+Root가 살아 있다면
+향후 새로운 causal child가 형성될 가능성은 있다.
+
+하지만 같은 consumed child를
+재사용해서 새 M1 trigger를 기다리지는 않는다.
+
+### 5.20 Parent-Child Identity
+
+Classification: D
+
+각 child는 자신의 direct parent를 명시적으로 기록한다.
+
+Required lineage example:
+
+```text
+H1 Root ID
+→ M30 Child ID
+→ M15 Child ID
+→ M5 Child ID
+```
+
+중간 timeframe을 건너뛰는 경우:
+
+```text
+H1 Root ID
+→ M15 Child ID
+```
+
+도 허용한다.
+
+각 child는 최소:
+
+```text
+parent_zone_id
+root_zone_id
+linked_structure_event_id
+origin_wave_id
+```
+
+를 보존한다.
+
+### 5.21 Distance Is Not Authority
+
+Classification: D
+
+Distance는 후보 탐색 최적화에 사용할 수 있으나
+causal child authorization에는 사용할 수 없다.
+
+```text
+distance
+-> enumeration optimization only
+
+causal lineage
+-> authorization
+```
+
+현재 `planner.py`의 nearest-family 탐색 성격은
+후보 enumeration으로만 참고한다.
+
+다음은 child 권한을 부여하지 않는다.
+
+```text
+closest lower-TF OB
+smallest lower-TF OB
+best RR lower-TF OB
+```
+
+### 5.22 Required Refinement Object
+
+Minimum lineage state:
+
+```text
+root_zone_id
+
+path:
+    [root, child1, child2, ...]
+
+final_child_id
+
+for each child:
+    id
+    timeframe
+    direction
+    parent_zone_id
+    root_zone_id
+
+    origin_wave_id
+    linked_structure_event_id
+
+    occurred_at
+    available_at
+
+    bottom
+    top
+
+    containment_type:
+        CONTAINED
+        EVENT_ADJACENT
+
+    state:
+        FRESH
+        TOUCHED
+        PARTIALLY_MITIGATED
+        CONSUMED
+        STRUCTURALLY_INVALIDATED
+```
+
+### 5.23 Explicit V1 Exclusions
+
+Causal refinement에서 사용하지 않는다.
+
+```text
+price overlap alone
+nearest-zone selection
+narrowest-zone selection
+RR-based refinement
+fixed point adjacency tolerance
+ATR adjacency tolerance
+force refinement to M5
+M1 retrospective refinement
+AI-selected child
+weighted child quality score
+```
+
+### 5.24 V1 Refinement Protocol Summary
+
+LONG:
+
+```text
+valid bullish HTF Root
+        ↓
+project Root causal origin event to lower TF
+        ↓
+find meaningful lower-TF origin
+        ↓
+last bearish candle inside child origin window
+        ↓
+bullish child displacement
+        ↓
+meaningful lower-TF body-break
+        ↓
+verify same event / same displacement / time causality
+        ↓
+link as child
+        ↓
+repeat on lower TF while unambiguous
+        ↓
+freeze deepest unambiguous child
+        ↓
+wait for source contact
+```
+
+SHORT는 반대다.
+
+---
+
 
 ## 6. Sweep
 

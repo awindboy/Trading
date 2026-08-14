@@ -469,3 +469,188 @@ Reason:
 baseline의 설명 가능성과 causal parity를 유지하기 위함이다.
 
 ---
+## D-023 — Causal child repeats Root logic on lower timeframe
+
+Status: ACTIVE
+
+V1 lower-timeframe child OB는
+parent 내부의 단순 small opposite candle이 아니다.
+
+각 child는 다음 causal logic을 만족해야 한다.
+
+```text
+meaningful lower-TF swing origin
++
+last opposite candle in that origin window
++
+same causal lower-TF directional leg
++
+meaningful lower-TF structure body-break
+```
+
+Reason:
+
+HTF Root와 lower-TF refinement가
+서로 다른 OB 철학을 사용하지 않게 하고,
+작은 candle을 임의로 precision source로 승격하는 것을 방지하기 위함이다.
+
+---
+
+## D-024 — Refinement authority follows event lineage, not distance
+
+Status: ACTIVE
+
+Parent-child refinement는
+가격 근접도보다 event lineage를 우선한다.
+
+Full containment는 직접 허용한다.
+
+Parent boundary를 일부 벗어난 child는
+고정 point/ATR tolerance로 허용하지 않는다.
+
+대신:
+
+```text
+same swing-origin lower-TF sequence
+same displacement ownership
+same structure-delivery chain
+valid parent-child time relation
+```
+
+을 모두 만족할 때만 `EVENT_ADJACENT` child로 인정한다.
+
+Reason:
+
+multi-timeframe aggregation 차이는 허용하되,
+임의 tolerance parameter로 unrelated zone을 연결하지 않기 위함이다.
+
+---
+
+## D-025 — Refinement stops at deepest unambiguous child
+
+Status: ACTIVE
+
+V1은 무조건 M5까지 refinement하지 않는다.
+
+```text
+deepest unambiguous causal child
+```
+
+를 final refined source로 사용한다.
+
+예:
+
+```text
+H1 → M30 → M15 valid
+M5 ambiguous
+```
+
+이면 M15를 final child로 유지한다.
+
+M5에서 가장 좁거나 RR이 좋은 candidate를 선택하지 않는다.
+
+Reason:
+
+Refinement의 목적은 SL 최소화가 아니라
+causal certainty를 유지한 precision source identification이기 때문이다.
+
+---
+
+## D-026 — At least one lower-timeframe child is mandatory
+
+Status: ACTIVE
+
+최초-position V1 baseline은
+HTF Root 아래 최소 하나의 valid causal child를 요구한다.
+
+```text
+Root only
+→ NO TRADE
+```
+
+첫 refinement 단계부터 child ownership이 ambiguous하고
+하나도 deterministic하게 확정할 수 없으면 거래하지 않는다.
+
+Reason:
+
+현재 Mentor baseline은
+HTF source를 lower timeframe에서 causal하게 정밀화한 뒤
+M1 trigger를 확인하는 protocol이기 때문이다.
+
+---
+
+## D-027 — Refinement lineage is frozen before M1 trigger
+
+Status: ACTIVE
+
+Final refined source와 전체 parent-child lineage는
+source contact 및 M1 sweep/CHoCH를 보기 전에 확정한다.
+
+금지:
+
+```text
+M1 reaction observed
+→ matching M5 OB selected retrospectively
+→ M15/H1 parent fitted afterward
+```
+
+Reason:
+
+Historical replay에서 사후맞춤을 막고
+live execution과 동일한 information order를 유지하기 위함이다.
+
+---
+
+## D-028 — Parent invalidation propagates downward
+
+Status: ACTIVE
+
+Causal ownership은 parent에서 child로 흐른다.
+
+```text
+parent invalidated
+→ descendants invalidated
+```
+
+Final child가 완전히 consumed되면
+그 child를 사용하는 current execution lane은 종료한다.
+
+그러나 child consumption만으로
+항상 HTF Root 전체를 구조적으로 invalid 처리하지는 않는다.
+
+Root가 여전히 유효하다면
+새로운 causal child가 별도 chain으로 형성될 수 있다.
+
+Reason:
+
+Root ownership과 execution precision zone lifecycle을
+동일한 상태로 뭉개지 않기 위함이다.
+
+---
+
+## D-029 — Distance may enumerate but may not authorize refinement
+
+Status: ACTIVE
+
+Nearest-zone, narrowest-zone, RR-based 기준은
+causal child authorization에 사용하지 않는다.
+
+거리 기반 탐색은 계산량을 줄이기 위한
+candidate enumeration 단계에서만 사용할 수 있다.
+
+Final authorization은:
+
+```text
+same event
+same displacement
+same causal ownership
+```
+
+으로 결정한다.
+
+Reason:
+
+과거 `planner.py`의 후보 탐색 편의를
+전략적 거래 권한으로 오해하지 않기 위함이다.
+
+---
