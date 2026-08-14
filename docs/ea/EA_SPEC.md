@@ -33,24 +33,655 @@ Only information available from closed bars may authorize a decision.
 
 ## 2. Market Structure
 
-Status: TBD
+Status: PARTIALLY FROZEN
 
-Inputs:
-- H1/M30/M15/M5/M1 OHLC
+Primary authority:
+- `AGENTS.md`
 
-Outputs:
-- external protected high
-- external protected low
-- internal swings
-- trend direction
-- dealing range
-- EQ
-
-Deterministic definition:
-TBD after comparison with:
+Primary implementation reference:
 - `mentor_engine/structure.py`
-- `ICTCockpitIndicator.mq5`
-- `MentorScenarioTraderEA.mq5`
+
+Secondary references:
+- `research/mentor-youtube/MENTOR_RULE_CONTRACT.md`
+- `mt5/legacy/MentorScenarioTraderEA.mq5`
+
+`mt5/indicators/ICTCockpitIndicator.mq5`의 symmetric pivot detector는
+현재 baseline의 structure authority로 사용하지 않는다.
+
+### 2.1 Purpose
+
+Market Structure 엔진의 목적은 차트의 모든 고점과 저점에 BOS/CHoCH를 붙이는 것이 아니다.
+
+다음 상태를 deterministic하게 유지하는 것이 목적이다.
+
+- 현재 map trend
+- confirmed swing highs / lows
+- external protected high / low
+- internal swings
+- active dealing range
+- BOS
+- CHoCH
+- structure information availability time
+
+H1/M30 구조가 시나리오 scope와 objective selection의 기반이 된다.
+
+M15/M5 구조는 H1/M30 external structure 내부의 correction / refinement context로 사용한다.
+
+M1 구조는 독립적인 외부 시나리오를 만들지 않고,
+이미 사전에 준비된 HTF scenario의 reaction trigger를 확인하는 데 사용한다.
+
+### 2.2 Candle Colour
+
+Classification: D
+
+각 확정봉은 다음과 같이 분류한다.
+
+```text
+close > open  -> bullish
+close < open  -> bearish
+close == open -> doji
+```
+
+Doji는 bullish 또는 bearish sequence 어느 쪽에도 포함되지 않는다.
+
+따라서 doji가 발생하면 현재 3-candle wave confirmation sequence는 중단된다.
+
+### 2.3 Wave Confirmation
+
+Classification: D
+
+Baseline EA는 symmetric pivot detector를 사용하지 않는다.
+
+#### Swing High
+
+이전 wave 이후 가격 상승 구간 뒤에
+3개의 연속 bearish candle body가 확정되면 swing high 후보가 확정된다.
+
+Swing High price는:
+
+```text
+이전 confirmed wave 이후
+~
+세 번째 bearish confirmation candle까지
+
+구간 내 최고 wick high
+```
+
+이다.
+
+#### Swing Low
+
+이전 wave 이후 가격 하락 구간 뒤에
+3개의 연속 bullish candle body가 확정되면 swing low 후보가 확정된다.
+
+Swing Low price는:
+
+```text
+이전 confirmed wave 이후
+~
+세 번째 bullish confirmation candle까지
+
+구간 내 최저 wick low
+```
+
+이다.
+
+Wave는 swing price가 실제 발생한 시점과
+그 wave를 알고 사용할 수 있게 된 시점을 별도로 기록한다.
+
+Required fields:
+
+```text
+occurred_at
+confirmed_at
+available_at
+price
+side
+timeframe
+```
+
+`available_at` 이전에는 해당 swing을 structure, liquidity 또는 entry 판단에 사용할 수 없다.
+
+### 2.4 Initial Structure State
+
+Classification: D
+
+각 timeframe의 구조 엔진은 초기 상태에서:
+
+```text
+trend = NEUTRAL
+protected_high = NONE
+protected_low = NONE
+external_high = NONE
+external_low = NONE
+```
+
+으로 시작한다.
+
+confirmed swing high / low는 수집할 수 있지만,
+한쪽 구조가 body close로 파괴되기 전까지 directional external trend를 선언하지 않는다.
+
+### 2.5 Initial BOS
+
+Classification: D
+
+Trend가 아직 NEUTRAL인 상태에서
+가장 최근 사용 가능한 confirmed swing을 body close로 파괴하면 INITIAL_BOS가 발생한다.
+
+#### Bullish INITIAL_BOS
+
+```text
+close > latest confirmed swing high
+```
+
+이면 bullish INITIAL_BOS다.
+
+이때 최근 유효한 반대편 swing low가 새로운 protected low 후보가 된다.
+
+#### Bearish INITIAL_BOS
+
+```text
+close < latest confirmed swing low
+```
+
+이면 bearish INITIAL_BOS다.
+
+이때 최근 유효한 반대편 swing high가 새로운 protected high 후보가 된다.
+
+Wick만 swing level을 통과하는 것은 INITIAL_BOS가 아니다.
+
+### 2.6 Bullish External Structure State
+
+Classification: D
+
+Bullish external state에서는:
+
+```text
+trend = BULLISH
+protected_low = current bullish structure invalidation swing
+external_high = current bullish delivery extreme
+```
+
+를 유지한다.
+
+#### Bullish BOS
+
+현재 external high를 body close로 상향 돌파하면:
+
+```text
+close > external_high
+```
+
+bullish BOS가 발생한다.
+
+BOS 후에도 external bullish direction은 유지된다.
+
+새로운 opposite-side protected low는
+해당 continuation leg 이전에 형성되어 있으며
+현재 구조를 지키는 가장 최근의 causal confirmed swing low를 사용한다.
+
+#### Bearish CHoCH
+
+현재 protected low를 body close로 하향 돌파하면:
+
+```text
+close < protected_low
+```
+
+bearish CHoCH가 발생한다.
+
+이 시점부터 기존 bullish external structure는 invalidated된다.
+
+새 bearish state는
+반대편 confirmed swing 구조를 이용해 새 protected high와 external low를 구성한다.
+
+### 2.7 Bearish External Structure State
+
+Classification: D
+
+Bearish external state에서는:
+
+```text
+trend = BEARISH
+protected_high = current bearish structure invalidation swing
+external_low = current bearish delivery extreme
+```
+
+를 유지한다.
+
+#### Bearish BOS
+
+현재 external low를 body close로 하향 돌파하면:
+
+```text
+close < external_low
+```
+
+bearish BOS가 발생한다.
+
+#### Bullish CHoCH
+
+현재 protected high를 body close로 상향 돌파하면:
+
+```text
+close > protected_high
+```
+
+bullish CHoCH가 발생한다.
+
+이 시점부터 기존 bearish external structure는 invalidated된다.
+
+### 2.8 BOS vs CHoCH
+
+Classification: D
+
+BOS는 현재 external trend와 같은 방향으로 구조를 전달하는 break다.
+
+CHoCH는 현재 external structure를 지키는 protected swing을
+반대 방향 body close로 파괴하는 event다.
+
+Example:
+
+```text
+Bullish state
+
+external high break
+-> bullish BOS
+
+protected low break
+-> bearish CHoCH
+```
+
+```text
+Bearish state
+
+external low break
+-> bearish BOS
+
+protected high break
+-> bullish CHoCH
+```
+
+모든 opposite-direction lower-timeframe break를 CHoCH로 승격하지 않는다.
+
+특히 M1 CHoCH만으로 H1/M30 external reversal을 선언하지 않는다.
+
+### 2.9 Wick Breach
+
+Classification: D
+
+Structure break는 반드시 body close를 요구한다.
+
+따라서:
+
+```text
+high > structure high
+but
+close <= structure high
+```
+
+또는
+
+```text
+low < structure low
+but
+close >= structure low
+```
+
+이면 structure break가 아니다.
+
+이 event는 liquidity module에서 sweep candidate로 평가할 수 있지만
+Market Structure state를 직접 변경하지 않는다.
+
+### 2.10 Internal vs External Swing
+
+Classification: D
+
+모든 confirmed wave는 생성 시점에 자동으로 external swing이 되지 않는다.
+
+#### External swing
+
+현재 external trend의 구조를 실제로 정의하거나
+현재 dealing range를 확장하는 swing만 external로 승격한다.
+
+Bullish state에서는:
+
+- protected low
+- 현재 bullish delivery extreme / external high
+
+가 external structure를 구성한다.
+
+Bearish state에서는:
+
+- protected high
+- 현재 bearish delivery extreme / external low
+
+가 external structure를 구성한다.
+
+#### Internal swing
+
+현재 external protected high/low 범위 안에서 발생하는
+하위 swing은 기본적으로 internal로 유지한다.
+
+Internal swing은:
+
+- liquidity candidate
+- correction context
+- LTF refinement
+- M1 trigger structure
+
+에는 사용할 수 있지만,
+
+그 자체로 H1/M30 external trend를 뒤집지 않는다.
+
+### 2.11 External Swing Promotion
+
+Classification: D
+
+새 confirmed swing은 현재 trend 방향의 external range를 실제로 확장할 때만
+directional external swing으로 승격할 수 있다.
+
+#### Bullish state
+
+새 swing high가 기존 external high보다 높고
+현재 bullish range high를 확장할 경우
+새 external high로 승격할 수 있다.
+
+그 사이에 형성된 lower highs / higher lows는 기본적으로 internal structure다.
+
+#### Bearish state
+
+새 swing low가 기존 external low보다 낮고
+현재 bearish range low를 확장할 경우
+새 external low로 승격할 수 있다.
+
+그 사이의 lower highs / higher lows는 기본적으로 internal structure다.
+
+### 2.12 Protected Swing Lifecycle
+
+Classification: D
+
+Protected swing은 단순히 가장 최근 swing이 아니다.
+
+현재 external structure가 유지되기 위해 지켜져야 하는 opposite-side causal swing이다.
+
+#### Bullish state
+
+```text
+protected_low
+```
+
+가 존재한다.
+
+Bullish continuation 중 형성되는 모든 새로운 swing low가
+자동으로 protected low가 되지 않는다.
+
+Continuation BOS와 그 leg의 causal relationship이 확인될 때
+새로운 protected low로 갱신할 수 있다.
+
+protected low body break 전까지 bullish external state는 유지된다.
+
+#### Bearish state
+
+```text
+protected_high
+```
+
+가 존재한다.
+
+모든 새로운 swing high가 자동으로 protected high가 되지 않는다.
+
+Continuation BOS와 연결된 causal opposite swing만
+새 protected high로 승격한다.
+
+protected high body break 전까지 bearish external state는 유지된다.
+
+### 2.13 Active Dealing Range
+
+Classification: D
+
+Active dealing range는 단순 최근 pivot high / low가 아니다.
+
+H1/M30의 현재 external structure를 구성하는 protected extreme과
+directional delivery extreme을 사용한다.
+
+#### Bullish structure
+
+```text
+range_low  = protected_low
+range_high = current external high
+```
+
+#### Bearish structure
+
+```text
+range_high = protected_high
+range_low  = current external low
+```
+
+EQ:
+
+```text
+EQ = (range_high + range_low) / 2
+```
+
+Continuation setup에서는:
+
+```text
+long  -> discount
+short -> premium
+```
+
+조건을 적용한다.
+
+Premium / discount 자체는 entry signal이 아니다.
+
+### 2.14 Timeframe Independence
+
+Classification: D
+
+각 timeframe은 독립적인 Structure State를 유지한다.
+
+Required map states:
+
+```text
+H1
+M30
+M15
+M5
+M1
+```
+
+그러나 역할은 동일하지 않다.
+
+```text
+H1 / M30
+-> external map authority
+
+M15 / M5
+-> internal correction / refinement context
+
+M1
+-> executable trigger structure
+```
+
+M1 state 변화는 H1/M30 structure state를 직접 덮어쓰지 않는다.
+
+### 2.15 Closed-Bar Rule
+
+Classification: D
+
+Structure authorization은 확정봉 데이터만 사용한다.
+
+현재 진행 중인 candle의:
+
+```text
+high
+low
+close
+```
+
+를 이용해 BOS, CHoCH 또는 wave confirmation을 미리 확정하지 않는다.
+
+각 event는:
+
+```text
+occurred_at
+available_at
+```
+
+을 별도로 보존한다.
+
+EA가 event를 사용할 수 있는 최초 시각은 `available_at`이다.
+
+### 2.16 Look-Ahead Prevention
+
+Classification: D
+
+다음 행위를 금지한다.
+
+- future candles를 이용한 symmetric pivot confirmation을 baseline structure에 사용
+- 이후 발생한 BOS를 보고 과거 swing의 rank를 과거 시점부터 external로 소급 적용
+- unfinished HTF candle의 close를 structure break로 사용
+- 향후 가격을 보고 protected swing을 재선택
+- future session movement를 이용해 historical map을 다시 분류
+
+Swing 또는 rank가 나중에 확정되더라도
+그 정보의 effective time은 confirmation 이후다.
+
+### 2.17 Session Gap Handling
+
+Classification: H
+
+`mentor_engine/structure.py`에는 market closure / gap이
+physical displacement나 3-candle wave confirmation으로 잘못 처리되지 않도록
+operational gap logic이 존재한다.
+
+특히 기존 Python engine은:
+
+- non-contiguous bars가 3-candle wave를 완성하지 못하게 함
+- session gap 자체를 body break로 사용하지 않음
+- M1의 긴 closure 뒤 execution structure 일부를 reset함
+
+현재 이 동작은 sensible implementation safeguard이지만
+`AGENTS.md`의 직접적인 전략 규칙은 아니다.
+
+Baseline EA에 정확히 어떻게 적용할지는 별도 decision으로 확정한다.
+
+Status:
+
+```text
+H — pending implementation decision
+```
+
+### 2.18 Warm-Up Requirement
+
+Classification: H
+
+Structure state는 테스트 시작 시점 이전의 과거 bars가 필요하다.
+
+Warm-up의 목적은:
+
+- active H1/M30 trend 복원
+- protected swing 복원
+- active dealing range 복원
+- 아직 살아 있는 external liquidity context 복원
+
+이다.
+
+고정된 arbitrary bar count는 아직 확정하지 않는다.
+
+Strategy Tester의 economic counting start보다 충분히 앞선 기간에서
+structure state를 재구성해야 한다.
+
+Exact warm-up requirement:
+
+```text
+TBD
+```
+
+### 2.19 Required Structure State
+
+각 timeframe별 엔진은 최소 다음 상태를 노출한다.
+
+```text
+timeframe
+
+trend:
+    NEUTRAL
+    BULLISH
+    BEARISH
+
+latest_confirmed_high
+latest_confirmed_low
+
+protected_high
+protected_low
+
+external_high
+external_low
+
+range_high
+range_low
+eq
+
+confirmed_waves[]
+structure_events[]
+```
+
+각 wave:
+
+```text
+id
+side
+price
+occurred_at
+confirmed_at
+available_at
+rank
+rank_available_at
+```
+
+각 structure event:
+
+```text
+id
+type:
+    INITIAL_BOS
+    BOS
+    CHOCH
+
+direction
+
+broken_swing_id
+broken_level
+
+protected_swing_id
+protected_level
+
+occurred_at
+available_at
+```
+
+### 2.20 Baseline Exclusions
+
+Market Structure baseline에는 다음을 넣지 않는다.
+
+```text
+- symmetric pivot length optimization
+- ATR-based swing quality score
+- weighted swing ranking
+- EMA trend bias
+- H4 map
+- fractal indicator dependency
+- arbitrary BOS strength score
+- AI-based swing selection
+```
+
+이들은 필요하면 별도 research variant로만 검토한다.
+
+---
+
 
 ## 3. Liquidity
 
@@ -182,3 +813,4 @@ TBD.
 - FVG add-on
 - discretionary partial profit
 - live trading
+
