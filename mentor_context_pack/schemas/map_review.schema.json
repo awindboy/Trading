@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "asOfUtc", "phase", "action", "candidateId", "scope", "objectiveType", "rootCausality", "objectiveCausality", "competingLiquidity", "reason"],
+  "properties": {
+    "schemaVersion": {"type": "string", "enum": ["2.0.0"]},
+    "asOfUtc": {"type": "string"},
+    "phase": {"type": "string", "enum": ["MAP_REVIEW"]},
+    "action": {"type": "string", "enum": ["APPROVE", "WATCH", "REJECT", "DATA_ERROR"]},
+    "candidateId": {"type": "string"},
+    "scope": {"type": ["string", "null"], "enum": ["EXTERNAL_CONTINUATION", "INTERNAL_ROTATION", "EXTERNAL_REVERSAL", null], "description": "Independent reviewer classification; do not infer external status from candle timeframe."},
+    "objectiveType": {"type": ["string", "null"], "enum": ["EXTERNAL_LIQUIDITY", "INTERNAL_LIQUIDITY", null]},
+    "rootCausality": {"type": "string"},
+    "objectiveCausality": {"type": "string"},
+    "competingLiquidity": {"type": "string"},
+    "reason": {"type": "string"}
+  }
+}

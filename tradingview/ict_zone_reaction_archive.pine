@@ -1,0 +1,473 @@
+//@version=5
+indicator("ICT 미해소 영역과 과거 반응 기록", overlay=true, max_boxes_count=500, max_labels_count=300)
+
+// TradingView가 동적 박스가 아직 없는 초기 구간에서도 지표 출력을 확실히 인식하도록 하는 숨김 출력이다.
+plot(na, title="내부 출력 확인", display=display.none)
+
+// PROVEN_ZONE_ARCHIVE
+// 미해소 FVG/OB는 현재 시나리오 후보로 계속 표시한다.
+// 해소된 FVG/OB는 선택한 반응 필터를 통과한 경우에만 과거 영역으로 남긴다.
+
+groupDetection = "1. 영역 감지"
+detectFvg = input.bool(true, "FVG 감지", group=groupDetection)
+detectOb = input.bool(true, "OB 감지", group=groupDetection)
+useMinFvgSize = input.bool(false, "FVG 최소 크기 필터 사용", group=groupDetection, tooltip="켜면 ATR 대비 너무 작은 FVG는 생성 단계에서 제외합니다.")
+fvgMinAtr = input.float(0.10, "FVG 최소 크기(ATR 배수)", minval=0.0, maxval=5.0, step=0.05, group=groupDetection)
+atrLen = input.int(14, "ATR 계산 길이", minval=1, maxval=200, group=groupDetection)
+structurePivotLen = input.int(5, "OB 구조 피벗 길이", minval=2, maxval=30, group=groupDetection)
+obSearchBars = input.int(15, "OB 탐색 범위(봉)", minval=3, maxval=50, group=groupDetection)
+obResolutionMode = input.string("영역 끝값 도달", "OB 해소 판정", options=["영역 끝값 도달", "영역 밖 종가 마감"], group=groupDetection, tooltip="영역 끝값 도달은 꼬리가 반대편 경계에 닿으면 해소로 봅니다. 영역 밖 종가 마감은 종가가 반대편 경계를 넘어야 해소로 봅니다.")
+
+groupActive = "2. 현재 미해소 영역"
+showActiveFvg = input.bool(true, "미해소 FVG 표시", group=groupActive)
+showActiveOb = input.bool(true, "미해소 OB 표시", group=groupActive)
+extendActiveZones = input.bool(true, "미해소 영역 오른쪽 연장", group=groupActive)
+showObCreationMarks = input.bool(false, "OB 생성 위치 표식", group=groupActive, tooltip="OB가 만들어진 구조 돌파 봉에 작은 표식을 표시합니다.")
+maxActiveFvg = input.int(100, "추적할 미해소 FVG 최대 개수", minval=10, maxval=140, group=groupActive)
+maxActiveOb = input.int(80, "추적할 미해소 OB 최대 개수", minval=10, maxval=100, group=groupActive)
+
+groupHistory = "3. 과거 해소 영역"
+showResolvedHistory = input.bool(true, "반응 후 해소된 영역 표시", group=groupHistory)
+showResolvedFvg = input.bool(true, "해소된 FVG 표시", group=groupHistory)
+showResolvedOb = input.bool(true, "해소된 OB 표시", group=groupHistory)
+showResolvedPivot = input.bool(true, "반응 피벗 표시", group=groupHistory)
+maxResolvedFvg = input.int(110, "보관할 과거 FVG 수", minval=10, maxval=120, group=groupHistory)
+maxResolvedOb = input.int(110, "보관할 과거 OB 수", minval=10, maxval=120, group=groupHistory)
+
+groupFilters = "4. 과거 해소 영역 단계별 필터"
+requirePivot = input.bool(true, "1단계: 영역 내부 확정 피벗 필수", group=groupFilters, tooltip="상승 영역은 내부 확정 저점, 하락 영역은 내부 확정 고점이 있어야 과거 영역으로 남깁니다.")
+reactionPivotLen = input.int(2, "반응 피벗 좌우 길이", minval=1, maxval=10, group=groupFilters)
+requireMinLife = input.bool(false, "2단계: 최소 생존 기간 필수", group=groupFilters, tooltip="생성 직후 곧바로 해소된 영역을 봉 수로 추가 제외합니다.")
+minLifeBars = input.int(5, "최소 생존 봉 수", minval=1, maxval=500, group=groupFilters)
+requireFirstVisit = input.bool(false, "3단계: 첫 방문 피벗만 인정", group=groupFilters, tooltip="영역이 처음 방문된 구간 안에서 만들어진 피벗만 인정합니다.")
+requireReaction = input.bool(false, "4단계: 최소 반응 폭 필수", group=groupFilters, tooltip="피벗에서 영역 높이와 ATR로 계산한 최소 거리만큼 가격이 유리한 방향으로 움직여야 합니다.")
+reactionZoneMultiple = input.float(1.0, "최소 반응 폭(영역 높이 배수)", minval=0.0, maxval=20.0, step=0.25, group=groupFilters)
+reactionAtrMultiple = input.float(0.25, "최소 반응 폭(ATR 배수)", minval=0.0, maxval=10.0, step=0.05, group=groupFilters)
+requireStructureBreak = input.bool(false, "5단계: 반응 후 단기 구조 돌파 필수", group=groupFilters, tooltip="상승 영역은 피벗 전 단기 고점 위 종가, 하락 영역은 피벗 전 단기 저점 아래 종가가 필요합니다.")
+reactionStructureLookback = input.int(8, "단기 구조 탐색 범위(봉)", minval=2, maxval=50, group=groupFilters)
+requirePivotSweep = input.bool(false, "6단계: 피벗의 유동성 스윕 필수", group=groupFilters, tooltip="영역 내부 피벗이 이전 동종 피벗을 넘었다가 종가로 다시 안쪽에 들어와야 합니다.")
+sweepPivotMaxBars = input.int(80, "스윕 기준 피벗 최대 간격(봉)", minval=5, maxval=500, group=groupFilters)
+
+groupActiveColors = "5. 미해소 영역 색상"
+activeBullFvgBorder = input.color(color.new(color.rgb(34, 197, 94), 10), "상승 FVG 테두리", group=groupActiveColors)
+activeBullFvgFill = input.color(color.new(color.rgb(34, 197, 94), 84), "상승 FVG 채우기", group=groupActiveColors)
+activeBearFvgBorder = input.color(color.new(color.rgb(244, 63, 94), 10), "하락 FVG 테두리", group=groupActiveColors)
+activeBearFvgFill = input.color(color.new(color.rgb(244, 63, 94), 84), "하락 FVG 채우기", group=groupActiveColors)
+activeBullObBorder = input.color(color.new(color.rgb(14, 165, 233), 5), "상승 OB 테두리", group=groupActiveColors)
+activeBullObFill = input.color(color.new(color.rgb(14, 165, 233), 80), "상승 OB 채우기", group=groupActiveColors)
+activeBearObBorder = input.color(color.new(color.rgb(249, 115, 22), 5), "하락 OB 테두리", group=groupActiveColors)
+activeBearObFill = input.color(color.new(color.rgb(249, 115, 22), 80), "하락 OB 채우기", group=groupActiveColors)
+
+groupHistoryColors = "6. 과거 해소 영역 색상"
+historyBullFvgBorder = input.color(color.new(color.rgb(34, 197, 94), 20), "상승 FVG 테두리", group=groupHistoryColors)
+historyBullFvgFill = input.color(color.new(color.rgb(34, 197, 94), 92), "상승 FVG 채우기", group=groupHistoryColors)
+historyBearFvgBorder = input.color(color.new(color.rgb(244, 63, 94), 20), "하락 FVG 테두리", group=groupHistoryColors)
+historyBearFvgFill = input.color(color.new(color.rgb(244, 63, 94), 92), "하락 FVG 채우기", group=groupHistoryColors)
+historyBullObBorder = input.color(color.new(color.rgb(14, 165, 233), 15), "상승 OB 테두리", group=groupHistoryColors)
+historyBullObFill = input.color(color.new(color.rgb(14, 165, 233), 90), "상승 OB 채우기", group=groupHistoryColors)
+historyBearObBorder = input.color(color.new(color.rgb(249, 115, 22), 15), "하락 OB 테두리", group=groupHistoryColors)
+historyBearObFill = input.color(color.new(color.rgb(249, 115, 22), 90), "하락 OB 채우기", group=groupHistoryColors)
+
+groupSummary = "7. 요약표"
+showSummary = input.bool(true, "요약표 표시", group=groupSummary)
+summaryPositionInput = input.string("오른쪽 위", "요약표 위치", options=["오른쪽 위", "오른쪽 아래", "왼쪽 위", "왼쪽 아래"], group=groupSummary)
+
+const int BULL_FVG = 1
+const int BEAR_FVG = -1
+const int BULL_OB = 2
+const int BEAR_OB = -2
+
+type ZoneState
+    int kind
+    int leftBar
+    int createdBar
+    float top
+    float bottom
+    box drawing
+    bool touching
+    int visitCount
+    int firstVisitStart
+    int firstVisitEnd
+    bool anyPivotSeen
+    int candidatePivotBar
+    float candidatePivotPrice
+    bool candidateFirstVisit
+    float candidateReaction
+    float candidateThreshold
+    float candidateStructureLevel
+    bool candidateStructureSeen
+    bool candidateSweepSeen
+    bool qualified
+    int qualifiedPivotBar
+    float qualifiedPivotPrice
+    int qualifiedBar
+    float qualifiedReaction
+
+f_is_bull(int kind) =>
+    kind == BULL_FVG or kind == BULL_OB
+
+f_is_fvg(int kind) =>
+    kind == BULL_FVG or kind == BEAR_FVG
+
+f_active_border_color(int kind) =>
+    kind == BULL_FVG ? activeBullFvgBorder : kind == BEAR_FVG ? activeBearFvgBorder : kind == BULL_OB ? activeBullObBorder : activeBearObBorder
+
+f_active_fill_color(int kind) =>
+    kind == BULL_FVG ? activeBullFvgFill : kind == BEAR_FVG ? activeBearFvgFill : kind == BULL_OB ? activeBullObFill : activeBearObFill
+
+f_history_border_color(int kind) =>
+    kind == BULL_FVG ? historyBullFvgBorder : kind == BEAR_FVG ? historyBearFvgBorder : kind == BULL_OB ? historyBullObBorder : historyBearObBorder
+
+f_history_fill_color(int kind) =>
+    kind == BULL_FVG ? historyBullFvgFill : kind == BEAR_FVG ? historyBearFvgFill : kind == BULL_OB ? historyBullObFill : historyBearObFill
+
+f_should_draw_active(int kind) =>
+    f_is_fvg(kind) ? showActiveFvg : showActiveOb
+
+f_new_zone(int kind, int leftBar, int createdBar, float topPrice, float bottomPrice) =>
+    box zoneBox = na
+    if f_should_draw_active(kind)
+        borderColor = f_active_border_color(kind)
+        fillColor = f_active_fill_color(kind)
+        borderStyle = f_is_fvg(kind) ? line.style_solid : line.style_dashed
+        borderWidth = f_is_fvg(kind) ? 1 : 2
+        zoneBox := box.new(left=leftBar, top=topPrice, right=bar_index, bottom=bottomPrice, xloc=xloc.bar_index, extend=extendActiveZones ? extend.right : extend.none, border_color=borderColor, border_width=borderWidth, border_style=borderStyle, bgcolor=fillColor)
+    ZoneState.new(kind, leftBar, createdBar, topPrice, bottomPrice, zoneBox, false, 0, na, na, false, na, na, false, 0.0, na, na, false, false, false, na, na, na, 0.0)
+
+f_count_active_type(array<ZoneState> zones, bool countFvg) =>
+    int count = 0
+    if array.size(zones) > 0
+        for i = 0 to array.size(zones) - 1
+            zone = array.get(zones, i)
+            if f_is_fvg(zone.kind) == countFvg
+                count += 1
+    count
+
+f_trim_active_type(array<ZoneState> zones, bool trimFvg, int limit) =>
+    int trimStatus = 0
+    int removeCount = math.max(0, f_count_active_type(zones, trimFvg) - limit)
+    int i = 0
+    while i < array.size(zones) and removeCount > 0
+        oldZone = array.get(zones, i)
+        if f_is_fvg(oldZone.kind) == trimFvg
+            if not na(oldZone.drawing)
+                box.delete(oldZone.drawing)
+            removedZone = array.remove(zones, i)
+            removeCount -= 1
+        else
+            i += 1
+    trimStatus
+
+f_trim_history(array<box> boxes, array<label> labels, int limit) =>
+    int trimStatus = 0
+    while array.size(boxes) > limit
+        oldBox = array.shift(boxes)
+        box.delete(oldBox)
+        if array.size(labels) > 0
+            oldLabel = array.shift(labels)
+            if not na(oldLabel)
+                label.delete(oldLabel)
+        trimStatus := 0
+    trimStatus
+
+f_find_bull_ob(int lookback) =>
+    float topPrice = na
+    float bottomPrice = na
+    int leftBar = na
+    for i = 1 to lookback
+        if na(topPrice) and close[i] < open[i]
+            topPrice := high[i]
+            bottomPrice := low[i]
+            leftBar := bar_index - i
+    [leftBar, topPrice, bottomPrice]
+
+f_find_bear_ob(int lookback) =>
+    float topPrice = na
+    float bottomPrice = na
+    int leftBar = na
+    for i = 1 to lookback
+        if na(topPrice) and close[i] > open[i]
+            topPrice := high[i]
+            bottomPrice := low[i]
+            leftBar := bar_index - i
+    [leftBar, topPrice, bottomPrice]
+
+var array<ZoneState> activeZones = array.new<ZoneState>()
+var array<box> resolvedFvgBoxes = array.new_box()
+var array<label> resolvedFvgPivotLabels = array.new_label()
+var array<box> resolvedObBoxes = array.new_box()
+var array<label> resolvedObPivotLabels = array.new_label()
+
+var float lastStructureHigh = na
+var float lastStructureLow = na
+var int lastStructureHighBar = na
+var int lastStructureLowBar = na
+var int lastBullObOrigin = na
+var int lastBearObOrigin = na
+
+var float previousReactionHigh = na
+var float previousReactionLow = na
+var int previousReactionHighBar = na
+var int previousReactionLowBar = na
+
+var int totalResolvedCount = 0
+var int filteredResolvedCount = 0
+var int noPivotResolvedCount = 0
+var int totalFvgCreatedCount = 0
+var int totalObCreatedCount = 0
+var int keptFvgCount = 0
+var int keptObCount = 0
+var int trimStatus = 0
+
+atrValue = ta.atr(atrLen)
+
+structurePh = ta.pivothigh(high, structurePivotLen, structurePivotLen)
+structurePl = ta.pivotlow(low, structurePivotLen, structurePivotLen)
+
+// 새로 확정된 피벗으로 기준을 바꾸기 전에 기존 구조의 돌파 여부를 먼저 판정한다.
+bullishBreak = not na(lastStructureHigh) and close > lastStructureHigh and close[1] <= lastStructureHigh
+bearishBreak = not na(lastStructureLow) and close < lastStructureLow and close[1] >= lastStructureLow
+
+if not na(structurePh)
+    lastStructureHigh := structurePh
+    lastStructureHighBar := bar_index - structurePivotLen
+
+if not na(structurePl)
+    lastStructureLow := structurePl
+    lastStructureLowBar := bar_index - structurePivotLen
+
+bullFvgRaw = bar_index >= 2 and low > high[2]
+bearFvgRaw = bar_index >= 2 and high < low[2]
+bullFvg = detectFvg and bullFvgRaw and (not useMinFvgSize or low - high[2] >= atrValue * fvgMinAtr)
+bearFvg = detectFvg and bearFvgRaw and (not useMinFvgSize or low[2] - high >= atrValue * fvgMinAtr)
+
+if bullFvg
+    newZone = f_new_zone(BULL_FVG, bar_index - 2, bar_index, low, high[2])
+    array.push(activeZones, newZone)
+    totalFvgCreatedCount += 1
+    trimStatus := f_trim_active_type(activeZones, true, maxActiveFvg)
+
+if bearFvg
+    newZone = f_new_zone(BEAR_FVG, bar_index - 2, bar_index, low[2], high)
+    array.push(activeZones, newZone)
+    totalFvgCreatedCount += 1
+    trimStatus := f_trim_active_type(activeZones, true, maxActiveFvg)
+
+bool bullObCreatedThisBar = false
+bool bearObCreatedThisBar = false
+
+if detectOb and bullishBreak
+    [bullObLeft, bullObTop, bullObBottom] = f_find_bull_ob(obSearchBars)
+    if not na(bullObLeft) and bullObTop > bullObBottom and (na(lastBullObOrigin) or bullObLeft != lastBullObOrigin)
+        lastBullObOrigin := bullObLeft
+        newZone = f_new_zone(BULL_OB, bullObLeft, bar_index, bullObTop, bullObBottom)
+        array.push(activeZones, newZone)
+        totalObCreatedCount += 1
+        bullObCreatedThisBar := true
+        trimStatus := f_trim_active_type(activeZones, false, maxActiveOb)
+
+if detectOb and bearishBreak
+    [bearObLeft, bearObTop, bearObBottom] = f_find_bear_ob(obSearchBars)
+    if not na(bearObLeft) and bearObTop > bearObBottom and (na(lastBearObOrigin) or bearObLeft != lastBearObOrigin)
+        lastBearObOrigin := bearObLeft
+        newZone = f_new_zone(BEAR_OB, bearObLeft, bar_index, bearObTop, bearObBottom)
+        array.push(activeZones, newZone)
+        totalObCreatedCount += 1
+        bearObCreatedThisBar := true
+        trimStatus := f_trim_active_type(activeZones, false, maxActiveOb)
+
+plotshape(showObCreationMarks and bullObCreatedThisBar, title="상승 OB 생성 위치", style=shape.diamond, color=activeBullObBorder, location=location.belowbar, size=size.tiny)
+plotshape(showObCreationMarks and bearObCreatedThisBar, title="하락 OB 생성 위치", style=shape.diamond, color=activeBearObBorder, location=location.abovebar, size=size.tiny)
+
+reactionPh = ta.pivothigh(high, reactionPivotLen, reactionPivotLen)
+reactionPl = ta.pivotlow(low, reactionPivotLen, reactionPivotLen)
+reactionPivotBar = bar_index - reactionPivotLen
+reactionPivotClose = close[reactionPivotLen]
+reactionWindowHigh = ta.highest(high, reactionPivotLen + 1)
+reactionWindowLow = ta.lowest(low, reactionPivotLen + 1)
+localHighSeries = ta.highest(high, reactionStructureLookback)
+localLowSeries = ta.lowest(low, reactionStructureLookback)
+bullStructureReference = localHighSeries[reactionPivotLen + 1]
+bearStructureReference = localLowSeries[reactionPivotLen + 1]
+
+bullPivotSweep = not na(reactionPl) and not na(previousReactionLow) and not na(previousReactionLowBar) and reactionPivotBar > previousReactionLowBar and reactionPivotBar - previousReactionLowBar <= sweepPivotMaxBars and reactionPl < previousReactionLow and reactionPivotClose > previousReactionLow
+bearPivotSweep = not na(reactionPh) and not na(previousReactionHigh) and not na(previousReactionHighBar) and reactionPivotBar > previousReactionHighBar and reactionPivotBar - previousReactionHighBar <= sweepPivotMaxBars and reactionPh > previousReactionHigh and reactionPivotClose < previousReactionHigh
+
+anyPivotCriterion = requirePivot or requireFirstVisit or requireReaction or requireStructureBreak or requirePivotSweep
+bool archivedBullThisBar = false
+bool archivedBearThisBar = false
+
+if array.size(activeZones) > 0
+    for i = array.size(activeZones) - 1 to 0
+        zone = array.get(activeZones, i)
+        isBull = f_is_bull(zone.kind)
+        isFvg = f_is_fvg(zone.kind)
+        historyBorderColor = f_history_border_color(zone.kind)
+        historyFillColor = f_history_fill_color(zone.kind)
+        zoneHeight = zone.top - zone.bottom
+
+        if not na(zone.drawing)
+            box.set_right(zone.drawing, bar_index)
+
+        overlapsNow = high >= zone.bottom and low <= zone.top
+        if bar_index > zone.createdBar
+            if overlapsNow and not zone.touching
+                zone.visitCount += 1
+                if zone.visitCount == 1
+                    zone.firstVisitStart := bar_index
+            if not overlapsNow and zone.touching and zone.visitCount == 1 and na(zone.firstVisitEnd)
+                zone.firstVisitEnd := bar_index - 1
+            zone.touching := overlapsNow
+
+        if isBull and not na(reactionPl) and reactionPivotBar > zone.createdBar and reactionPl >= zone.bottom and reactionPl <= zone.top
+            pivotWasFirstVisit = not na(zone.firstVisitStart) and reactionPivotBar >= zone.firstVisitStart and (na(zone.firstVisitEnd) or reactionPivotBar <= zone.firstVisitEnd)
+            pivotAtr = atrValue[reactionPivotLen]
+            zone.anyPivotSeen := true
+            zone.candidatePivotBar := reactionPivotBar
+            zone.candidatePivotPrice := reactionPl
+            zone.candidateFirstVisit := pivotWasFirstVisit
+            zone.candidateReaction := math.max(0.0, reactionWindowHigh - reactionPl)
+            zone.candidateThreshold := math.max(zoneHeight * reactionZoneMultiple, nz(pivotAtr, 0.0) * reactionAtrMultiple)
+            zone.candidateStructureLevel := bullStructureReference
+            zone.candidateStructureSeen := not na(bullStructureReference) and close > bullStructureReference
+            zone.candidateSweepSeen := bullPivotSweep
+
+        if not isBull and not na(reactionPh) and reactionPivotBar > zone.createdBar and reactionPh >= zone.bottom and reactionPh <= zone.top
+            pivotWasFirstVisit = not na(zone.firstVisitStart) and reactionPivotBar >= zone.firstVisitStart and (na(zone.firstVisitEnd) or reactionPivotBar <= zone.firstVisitEnd)
+            pivotAtr = atrValue[reactionPivotLen]
+            zone.anyPivotSeen := true
+            zone.candidatePivotBar := reactionPivotBar
+            zone.candidatePivotPrice := reactionPh
+            zone.candidateFirstVisit := pivotWasFirstVisit
+            zone.candidateReaction := math.max(0.0, reactionPh - reactionWindowLow)
+            zone.candidateThreshold := math.max(zoneHeight * reactionZoneMultiple, nz(pivotAtr, 0.0) * reactionAtrMultiple)
+            zone.candidateStructureLevel := bearStructureReference
+            zone.candidateStructureSeen := not na(bearStructureReference) and close < bearStructureReference
+            zone.candidateSweepSeen := bearPivotSweep
+
+        if not na(zone.candidatePivotBar)
+            currentReaction = isBull ? math.max(0.0, high - zone.candidatePivotPrice) : math.max(0.0, zone.candidatePivotPrice - low)
+            zone.candidateReaction := math.max(zone.candidateReaction, currentReaction)
+            if not na(zone.candidateStructureLevel)
+                structureBrokenNow = isBull ? close > zone.candidateStructureLevel : close < zone.candidateStructureLevel
+                zone.candidateStructureSeen := zone.candidateStructureSeen or structureBrokenNow
+
+            candidateReady = (not requirePivot or zone.anyPivotSeen) and (not requireFirstVisit or zone.candidateFirstVisit) and (not requireReaction or zone.candidateReaction >= zone.candidateThreshold) and (not requireStructureBreak or zone.candidateStructureSeen) and (not requirePivotSweep or zone.candidateSweepSeen)
+            if not zone.qualified and candidateReady
+                zone.qualified := true
+                zone.qualifiedPivotBar := zone.candidatePivotBar
+                zone.qualifiedPivotPrice := zone.candidatePivotPrice
+                zone.qualifiedBar := bar_index
+                zone.qualifiedReaction := zone.candidateReaction
+
+        if zone.qualified and not na(zone.qualifiedPivotPrice)
+            qualifiedReactionNow = isBull ? math.max(0.0, high - zone.qualifiedPivotPrice) : math.max(0.0, zone.qualifiedPivotPrice - low)
+            zone.qualifiedReaction := math.max(zone.qualifiedReaction, qualifiedReactionNow)
+
+        fvgResolved = isBull ? low <= zone.bottom : high >= zone.top
+        obResolvedByEdge = isBull ? low <= zone.bottom : high >= zone.top
+        obResolvedByClose = isBull ? close < zone.bottom : close > zone.top
+        obResolved = obResolutionMode == "영역 밖 종가 마감" ? obResolvedByClose : obResolvedByEdge
+        resolvedNow = isFvg ? fvgResolved : obResolved
+
+        if resolvedNow
+            totalResolvedCount += 1
+            if not zone.anyPivotSeen
+                noPivotResolvedCount += 1
+
+            lifePassed = not requireMinLife or bar_index - zone.createdBar >= minLifeBars
+            reactionPassed = not anyPivotCriterion or zone.qualified
+            keepResolved = lifePassed and reactionPassed
+
+            if keepResolved
+                if isFvg
+                    keptFvgCount += 1
+                else
+                    keptObCount += 1
+                if isBull
+                    archivedBullThisBar := true
+                else
+                    archivedBearThisBar := true
+
+                drawThisHistoryType = isFvg ? showResolvedFvg : showResolvedOb
+                if showResolvedHistory and drawThisHistoryType
+                    historyBox = zone.drawing
+
+                    if na(historyBox)
+                        historyBox := box.new(left=zone.leftBar, top=zone.top, right=bar_index, bottom=zone.bottom, xloc=xloc.bar_index, border_color=historyBorderColor, border_width=2, border_style=isFvg ? line.style_solid : line.style_dashed, bgcolor=historyFillColor)
+                    else
+                        box.set_right(historyBox, bar_index)
+                        box.set_extend(historyBox, extend.none)
+                        box.set_bgcolor(historyBox, historyFillColor)
+                        box.set_border_color(historyBox, historyBorderColor)
+                        box.set_border_width(historyBox, 2)
+                        box.set_border_style(historyBox, isFvg ? line.style_solid : line.style_dashed)
+                        box.set_text(historyBox, "")
+
+                    label pivotLabel = na
+                    if showResolvedPivot and not na(zone.qualifiedPivotBar) and not na(zone.qualifiedPivotPrice)
+                        pivotLabel := label.new(x=zone.qualifiedPivotBar, y=zone.qualifiedPivotPrice, text="", xloc=xloc.bar_index, yloc=yloc.price, style=label.style_circle, color=color.new(historyBorderColor, 15), size=size.tiny)
+
+                    if isFvg
+                        array.push(resolvedFvgBoxes, historyBox)
+                        array.push(resolvedFvgPivotLabels, pivotLabel)
+                        trimStatus := f_trim_history(resolvedFvgBoxes, resolvedFvgPivotLabels, maxResolvedFvg)
+                    else
+                        array.push(resolvedObBoxes, historyBox)
+                        array.push(resolvedObPivotLabels, pivotLabel)
+                        trimStatus := f_trim_history(resolvedObBoxes, resolvedObPivotLabels, maxResolvedOb)
+                else if not na(zone.drawing)
+                    box.delete(zone.drawing)
+            else
+                filteredResolvedCount += 1
+                if not na(zone.drawing)
+                    box.delete(zone.drawing)
+
+            removedZone = array.remove(activeZones, i)
+        else
+            array.set(activeZones, i, zone)
+
+if not na(reactionPh)
+    previousReactionHigh := reactionPh
+    previousReactionHighBar := reactionPivotBar
+
+if not na(reactionPl)
+    previousReactionLow := reactionPl
+    previousReactionLowBar := reactionPivotBar
+
+summaryPosition = summaryPositionInput == "오른쪽 아래" ? position.bottom_right : summaryPositionInput == "왼쪽 위" ? position.top_left : summaryPositionInput == "왼쪽 아래" ? position.bottom_left : position.top_right
+var table summaryTable = table.new(summaryPosition, 2, 10, border_width=1)
+
+if barstate.islast
+    if showSummary
+        activeFvgCount = f_count_active_type(activeZones, true)
+        activeObCount = f_count_active_type(activeZones, false)
+        table.cell(summaryTable, 0, 0, "항목", bgcolor=color.new(color.gray, 70), text_color=color.white)
+        table.cell(summaryTable, 1, 0, "개수", bgcolor=color.new(color.gray, 70), text_color=color.white)
+        table.cell(summaryTable, 0, 1, "현재 미해소 FVG", text_color=color.white)
+        table.cell(summaryTable, 1, 1, str.tostring(activeFvgCount), text_color=color.white)
+        table.cell(summaryTable, 0, 2, "현재 미해소 OB", text_color=color.white)
+        table.cell(summaryTable, 1, 2, str.tostring(activeObCount), text_color=color.white)
+        table.cell(summaryTable, 0, 3, "누적 FVG 생성", text_color=color.white)
+        table.cell(summaryTable, 1, 3, str.tostring(totalFvgCreatedCount), text_color=color.white)
+        table.cell(summaryTable, 0, 4, "누적 OB 생성", text_color=color.white)
+        table.cell(summaryTable, 1, 4, str.tostring(totalObCreatedCount), text_color=color.white)
+        table.cell(summaryTable, 0, 5, "전체 해소", text_color=color.white)
+        table.cell(summaryTable, 1, 5, str.tostring(totalResolvedCount), text_color=color.white)
+        table.cell(summaryTable, 0, 6, "누적 통과 FVG", text_color=color.new(activeBullFvgBorder, 0))
+        table.cell(summaryTable, 1, 6, str.tostring(keptFvgCount), text_color=color.new(activeBullFvgBorder, 0))
+        table.cell(summaryTable, 0, 7, "누적 통과 OB", text_color=color.new(activeBullObBorder, 0))
+        table.cell(summaryTable, 1, 7, str.tostring(keptObCount), text_color=color.new(activeBullObBorder, 0))
+        table.cell(summaryTable, 0, 8, "필터 탈락", text_color=color.new(activeBearFvgBorder, 0))
+        table.cell(summaryTable, 1, 8, str.tostring(filteredResolvedCount), text_color=color.new(activeBearFvgBorder, 0))
+        table.cell(summaryTable, 0, 9, "피벗 없이 해소", text_color=color.silver)
+        table.cell(summaryTable, 1, 9, str.tostring(noPivotResolvedCount), text_color=color.silver)
+    else
+        table.clear(summaryTable, 0, 0, 1, 9)
+
+alertcondition(bullFvg, "새 상승 FVG", "새로운 미해소 상승 FVG가 생성되었습니다.")
+alertcondition(bearFvg, "새 하락 FVG", "새로운 미해소 하락 FVG가 생성되었습니다.")
+alertcondition(bullObCreatedThisBar, "새 상승 OB", "새로운 미해소 상승 OB가 생성되었습니다.")
+alertcondition(bearObCreatedThisBar, "새 하락 OB", "새로운 미해소 하락 OB가 생성되었습니다.")
+alertcondition(archivedBullThisBar, "과거 상승 반응 영역 확정", "상승 FVG 또는 OB가 의미 있는 반응 후 해소되어 과거 영역으로 남았습니다.")
+alertcondition(archivedBearThisBar, "과거 하락 반응 영역 확정", "하락 FVG 또는 OB가 의미 있는 반응 후 해소되어 과거 영역으로 남았습니다.")

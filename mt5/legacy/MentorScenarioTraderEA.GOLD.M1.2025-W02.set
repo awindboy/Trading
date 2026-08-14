@@ -1,0 +1,13 @@
+InpEnableLiveTrading=false
+InpMagicNumber=26072001
+InpTradeFrom=2025.01.06 00:00
+InpTradeTo=2025.01.11 00:00
+InpSizingMode=0
+InpFixedLot=0.01
+InpRiskPercent=1.0
+InpMaxSpreadPoints=0
+InpMaxHistoryBars=420
+InpSweepLookbackBars=12
+InpSignalCooldownBars=1
+InpBufferTicks=1.0
+InpWriteJournalEvents=false

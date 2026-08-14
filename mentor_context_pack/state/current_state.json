@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "state_id": "INITIAL-FLAT",
+  "symbol": "GOLD",
+  "as_of": null,
+  "status": "FLAT",
+  "scenario_id": null,
+  "direction": null,
+  "scope": null,
+  "map": null,
+  "objective": null,
+  "competing_liquidity_review": null,
+  "root_ob": null,
+  "refinement_path": [],
+  "source_invalidation": null,
+  "poi_status": "NOT_PREPARED",
+  "trigger": null,
+  "pending_order": null,
+  "position": null,
+  "last_h1_reauthorized_at": null,
+  "last_m15_reauthorized_at": null,
+  "evidence_files": [],
+  "previous_state_hash": null,
+  "state_hash": null
+}
+

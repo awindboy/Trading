@@ -1,0 +1,61 @@
+{
+  "responses": [
+    {
+      "schemaVersion": "4.4.0",
+      "action": "MAP",
+      "selectedBarIds": [
+        "H1:1755738000",
+        "H1:1755662400",
+        "M15:1755784800",
+        "M30:1755792000",
+        "M30:1755793800"
+      ],
+      "direction": "SHORT",
+      "scope": "INTERNAL_ROTATION",
+      "dealingRange": {"highIndex": 0, "lowIndex": 1},
+      "objective": {"barIndex": 2, "kind": "REACTION_TRAP"},
+      "mapProtectedSwingIndex": 1,
+      "ownerBreakTargetIndex": null,
+      "ownerBreakIndex": null,
+      "root": {"obIndex": 3, "displacementIndex": 4, "protectedSwingIndex": 3},
+      "intermediateLiquidityIndexes": [],
+      "scopeAudit": {
+        "EXTERNAL_CONTINUATION": {"verdict": "INVALID", "reason": "Current price is not in the continuation execution half."},
+        "INTERNAL_ROTATION": {"verdict": "VALID", "reason": "External bullish owner remains intact while a bearish internal delivery targets the first internal SSL."},
+        "EXTERNAL_REVERSAL": {"verdict": "INVALID", "reason": "The external protected low has not been body-broken."}
+      },
+      "rootFreshness": "FRESH",
+      "reason": "Scripted engine regression for the audited Aug 21 map."
+    },
+    {
+      "schemaVersion": "4.2.0",
+      "action": "REFINEMENT",
+      "selectedBarIds": [
+        "M15:1755792900",
+        "M15:1755794700",
+        "M15:1755792000",
+        "M5:1755793800",
+        "M5:1755795000",
+        "M5:1755792300"
+      ],
+      "refinements": [
+        {"obIndex": 0, "displacementIndex": 1, "protectedSwingIndex": 2},
+        {"obIndex": 3, "displacementIndex": 4, "protectedSwingIndex": 5}
+      ],
+      "reason": "M15 and M5 children explain the same bearish delivery as the frozen M30 root."
+    },
+    {
+      "schemaVersion": "4.2.0",
+      "action": "ARM_REACTION",
+      "selectedBarIds": [
+        "M1:1755793860",
+        "M5:1755796800",
+        "M1:1755796800"
+      ],
+      "matureLiquidityIndex": 0,
+      "m5CorrectionSwingIndex": 1,
+      "chochReferenceIndex": 2,
+      "reason": "The 16:31 BSL matured before child touch; the 17:20 low governs the correction."
+    }
+  ]
+}

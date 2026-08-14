@@ -1,0 +1,48 @@
+{
+  "pack_version": "1.0.0",
+  "generated_at": "2026-08-02T17:02:33.001354Z",
+  "authority": "AGENTS.md",
+  "authority_sha256": "BA39D61C0B02485E1B5F14E6960931B80BA3AEEFCDF44F059777476879415CC0",
+  "official_evidence": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "BA39D61C0B02485E1B5F14E6960931B80BA3AEEFCDF44F059777476879415CC0",
+      "bytes": 33875
+    },
+    {
+      "path": "output/mentor_50trade_scope_locked_v1/working_trades.csv",
+      "sha256": "9F750CB918A80D0453CC6306C5BE30BE2910F81BE9CA5023774E8528A2500074",
+      "bytes": 13264
+    },
+    {
+      "path": "output/mentor_50trade_scope_locked_v1/FINAL_REPORT.md",
+      "sha256": "9BEE8CA10262F820F5B94696522F6331B8865D8BE58B59E6F71163BDE6801422",
+      "bytes": 7860
+    },
+    {
+      "path": "output/mentor_50trade_oos_v2/trades.csv",
+      "sha256": "5F77C8448685AFE7D6EF575A6C425E6FBBBB7133C0376BE32983529C1DD2680E",
+      "bytes": 13087
+    },
+    {
+      "path": "output/mentor_50trade_oos_v2/manual_decisions.jsonl",
+      "sha256": "979FDB5794C50773802EA23BD1F1782864D26CDC2639DADDD690E75ED1B08DDA",
+      "bytes": 43527
+    },
+    {
+      "path": "output/mentor_50trade_oos_v2/FINAL_REPORT.md",
+      "sha256": "B15E7831F2FB4EBD6FA655F32A115574C46D2200FF82E0F18151190D0CB5AA3D",
+      "bytes": 5201
+    },
+    {
+      "path": "output/mentor_50trade_oos_v2/WORKING_STATE.md",
+      "sha256": "F4DF490FC56580C1246B1749D27770FD3E949357368326962ACDA2C8094B5D59",
+      "bytes": 1229
+    }
+  ],
+  "case_count": 12,
+  "trade_case_count": 8,
+  "non_trade_case_count": 4,
+  "case_index": "mentor_context_pack/examples/case_index.jsonl",
+  "case_index_sha256": "E6B9A538062652E5D33FD7329D39934C4CD851F03447542E08A8CA79A0F7CA09"
+}

@@ -1,0 +1,70 @@
+{
+  "schema": "mentor-q1-asof-adjudication-v1",
+  "source": "GOLD_2025_Q1_FINAL/MENTOR_VS_ALGORITHM_REVIEW.md",
+  "matchingWindowMinutes": 5,
+  "mentorConsistentWindowMinutes": 45,
+  "cases": [
+    {
+      "id": "Q1_02",
+      "decisionAtUtc": "2025-01-14T13:55:00+00:00",
+      "direction": "long",
+      "expected": "NO_TRADE",
+      "reason": "Bearish context supply was treated as a bullish source before the planned sell-side destination was reached."
+    },
+    {
+      "id": "Q1_05",
+      "decisionAtUtc": "2025-02-03T01:09:00+00:00",
+      "direction": "long",
+      "expected": "MENTOR_CONSISTENT",
+      "entryRange": [2797.0, 2802.5],
+      "stopRange": [2788.0, 2791.0],
+      "takeProfitRange": [2816.0, 2818.5],
+      "reason": "HTF continuation, sell-side sweep, M1 reversal zone, parent-safe SL, and external target were aligned."
+    },
+    {
+      "id": "Q1_07",
+      "decisionAtUtc": "2025-02-12T16:09:00+00:00",
+      "direction": "long",
+      "expected": "MENTOR_CONSISTENT",
+      "entryRange": [2884.0, 2887.0],
+      "stopRange": [2862.0, 2864.5],
+      "takeProfitRange": [2941.0, 2943.5],
+      "reason": "The complete destination-first continuation chain was present."
+    },
+    {
+      "id": "Q1_08",
+      "decisionAtUtc": "2025-02-14T01:01:00+00:00",
+      "direction": "short",
+      "expected": "NO_TRADE",
+      "reason": "A local bearish CHoCH was promoted against the active higher-timeframe destination."
+    },
+    {
+      "id": "Q1_09",
+      "decisionAtUtc": "2025-02-17T08:01:00+00:00",
+      "direction": "short",
+      "expected": "NO_TRADE",
+      "reason": "The source zone and destination did not belong to one causal scenario."
+    },
+    {
+      "id": "Q1_11",
+      "decisionAtUtc": "2025-02-26T07:29:00+00:00",
+      "direction": "long",
+      "expected": "NO_TRADE",
+      "reason": "The algorithm bought inside unresolved bearish supply before source delivery completed."
+    },
+    {
+      "id": "Q1_12",
+      "decisionAtUtc": "2025-03-04T12:32:00+00:00",
+      "direction": "short",
+      "expected": "NO_TRADE",
+      "reason": "The local sweep did not own the map objective selected for the order."
+    },
+    {
+      "id": "Q1_14",
+      "decisionAtUtc": "2025-03-12T15:20:00+00:00",
+      "direction": "short",
+      "expected": "NO_TRADE",
+      "reason": "A stale H4 bearish objective was attached to an unrelated local short trigger."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+InpMagicNumber=26080901||26080901||1||99999999||N
+InpRequireMtfEvidence=true||false||0||true||N
+InpUseStopForCrossEntry=true||false||0||true||N
+InpPriceTolerance=0.03||0.03||0.01||1.00||N
+InpDecisionTimeOffsetMinutes=0||0||1||1440||N
+InpMaxEntryWaitMinutes=240||240||1||1440||N
+InpWriteParityCsv=true||false||0||true||N

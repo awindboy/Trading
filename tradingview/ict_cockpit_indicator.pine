@@ -1,0 +1,1330 @@
+//@version=6
+indicator('개인용 ICT MTF 정보 지표 V2', overlay = true, scale = scale.none, max_boxes_count = 500, max_lines_count = 500, max_labels_count = 500, dynamic_requests = true)
+
+// DISPLAY_ONLY_ICT_COCKPIT
+// 정보 표시 전용 지표:
+// 원시 FVG/OB/swing을 숨기지 않고 MTF 구조, 유동성 등급, zone 상태를 추가로 표시한다.
+// 매매 셋업, 방향 추천, 진입 가이드, SL/TP 계산은 포함하지 않는다.
+
+const int DIR_BULL = 1
+const int DIR_BEAR = -1
+const int KIND_FVG = 0
+const int KIND_OB = 1
+const int OB_OPPOSITE = 0
+const int STATE_FRESH = 0
+const int STATE_FIRST_TOUCH = 1
+const int STATE_PARTIAL = 2
+const int STATE_RESOLVED = 3
+const int STATE_INVALID = 4
+const int LIQ_ACTIVE = 0
+const int LIQ_SWEPT = 1
+const int LIQ_CONSUMED = 2
+
+groupMtf = '1. 다중 시간봉'
+modeM1 = input.string('자동', 'M1 겹침 판정', options = ['자동', '포함', '제외'], group = groupMtf, tooltip = 'POI 박스는 현재 차트 시간봉만 그립니다. 자동은 현재 차트가 M1일 때 M1을 계산하며, 포함은 상위 차트에서도 최근 M1 POI를 겹침 판정에 사용합니다.')
+modeM5 = input.string('자동', 'M5 겹침 판정', options = ['자동', '포함', '제외'], group = groupMtf, tooltip = 'POI 박스는 현재 차트 시간봉만 그립니다. 자동은 현재 차트가 M5 이하일 때 M5 POI를 겹침 판정에 사용합니다.')
+modeM15 = input.string('자동', 'M15 겹침 판정', options = ['자동', '포함', '제외'], group = groupMtf, tooltip = 'POI 박스는 현재 차트 시간봉만 그립니다. 자동은 현재 차트가 M15 이하일 때 M15 POI를 겹침 판정에 사용합니다.')
+modeM30 = input.string('자동', 'M30 겹침 판정', options = ['자동', '포함', '제외'], group = groupMtf, tooltip = 'POI 박스는 현재 차트 시간봉만 그립니다. 자동은 현재 차트가 M30 이하일 때 M30 POI를 겹침 판정에 사용합니다.')
+modeH1 = input.string('자동', 'H1 겹침 판정', options = ['자동', '포함', '제외'], group = groupMtf, tooltip = 'POI 박스는 현재 차트 시간봉만 그립니다. 자동은 현재 차트가 H1 이하일 때 H1 POI를 겹침 판정에 사용합니다.')
+modeH4 = input.string('자동', 'H4 겹침 판정', options = ['자동', '포함', '제외'], group = groupMtf, tooltip = 'POI 박스는 현재 차트 시간봉만 그립니다. 자동은 지원하는 모든 차트에서 H4 POI를 겹침 판정에 사용합니다.')
+sourceHistoryBars = input.int(2400, '시간봉별 계산 봉 수', minval = 500, maxval = 6000, group = groupMtf, tooltip = '각 표시 시간봉에서 최근 몇 개의 확정봉을 해석할지 정합니다. 객체 한도보다 충분히 넓은 기본 범위이며, 값을 과도하게 늘리면 TradingView 메모리 한도에 도달할 수 있습니다.')
+lowerHistoryBars = input.int(60, '강제 하위 시간봉 호스트 봉 수', minval = 10, maxval = 300, group = groupMtf, tooltip = '높은 차트에서 낮은 시간봉을 강제로 켰을 때 intrabar 배열을 요청할 최근 차트 봉 수입니다. 확인된 최근 하위 구조만 표시하며 전체 이력은 해당 낮은 시간봉 차트에서 확인하세요.')
+
+groupRaw = '2. 원시 정보'
+marketPreset = input.string('자동', '종목 프리셋', options = ['자동', 'GOLD / FX CFD', '암호화폐', '지수', '주식', '직접 설정'], group = groupRaw, tooltip = '원시 스윙 후보의 기본 밀도만 조정합니다. FVG·OB를 숨기거나 거래 방향을 추천하는 필터로 사용하지 않습니다.')
+showRawSwings = input.bool(false, 'SH / SL 후보 표시', group = groupRaw, tooltip = '현재 차트 시간봉의 확정 raw pivot을 SH 또는 SL 후보로 표시합니다. 텍스트 과밀을 줄이기 위해 기본값은 꺼짐입니다.')
+showThreeCandleWaves = input.bool(false, '반대색 3캔들 파동 후보 표시', group = groupRaw, tooltip = '현재 차트 시간봉에서 반대색 캔들 세 개가 연속 확정될 때 파동 후보를 표시합니다. 텍스트 과밀을 줄이기 위해 기본값은 꺼짐입니다.')
+showRawFvg = input.bool(true, '모든 원시 FVG 표시', group = groupRaw, tooltip = '3캔들 wick gap 조건을 만족하는 모든 FVG를 표시합니다. 구조와 연결되지 않은 FVG도 삭제하지 않습니다.')
+
+groupStructure = '3. 구조 해석'
+swingLen = input.int(5, '원시 스윙 피벗 길이', minval = 2, maxval = 30, group = groupStructure, tooltip = 'SH/SL 후보를 확정할 좌우 캔들 수입니다. 원시 swing 밀도에만 영향을 주며 FVG를 숨기지 않습니다.')
+obLookback = input.int(15, '구조 OB 탐색 캔들 수', minval = 3, maxval = 50, group = groupStructure, tooltip = '몸통 구조 돌파가 발생했을 때 displacement 안의 마지막 반대색 캔들을 찾을 최대 범위입니다.')
+showBosChoch = input.bool(true, 'BOS / CHoCH 구조선 표시', group = groupStructure, tooltip = 'protected 구조의 몸통 종가 돌파는 외부 BOS/CHoCH, 외부 범위 안의 작은 돌파는 iBOS/iCHoCH로 표시합니다.')
+showProtected = input.bool(true, '보호 고점 / 저점 표시', group = groupStructure, tooltip = '현재 외부 구조에서 방향을 보호하는 고점과 저점을 PH와 PL 태그로 표시합니다.')
+maxStructureMarks = input.int(120, '최대 구조선 개수', minval = 20, maxval = 180, group = groupStructure, tooltip = '차트에 남길 외부·내부 BOS/CHoCH 구조선의 최대 개수입니다. 오래된 구조선부터 정리합니다.')
+
+groupLiquidity = '4. 유동성'
+showLiquidity = input.bool(true, '분류된 BSL / SSL 표시', group = groupLiquidity, tooltip = 'EXT, EQH/EQL, RNG, TRAP 근거가 확인된 swing을 BSL 또는 SSL로 표시합니다. 일반 pivot은 SH/SL 후보로 유지합니다.')
+showSweepLabels = input.bool(true, '스윕 삼각형 표시', group = groupLiquidity, tooltip = '활성 유동성이 wick으로 관통된 뒤 안쪽에서 종가 마감되면 기존 선과 텍스트를 지웁니다. BSL sweep은 캔들 고점에 끝이 닿는 하락 삼각형, SSL sweep은 캔들 저점에 끝이 닿는 상승 삼각형으로 남깁니다.')
+sweepTriangleGap = input.float(0.10, '스윕 삼각형 간격', minval = 0.02, maxval = 0.50, step = 0.01, group = groupLiquidity, tooltip = '삼각형 중심을 캔들 고점·저점에서 얼마나 띄울지 현재 캔들 전체 범위의 배수로 정합니다. 기본값 0.10은 초소형 삼각형의 끝이 캔들 끝을 향하도록 배치합니다.')
+maxLiquidityMarks = input.int(220, '최대 유동성 후보 개수', minval = 50, maxval = 280, group = groupLiquidity, tooltip = '내부적으로 보관하고 화면에 표시할 raw swing과 분류된 유동성의 최대 개수입니다. 소진된 오래된 항목부터 정리합니다.')
+
+groupZones = '5. FVG / OB 상태'
+showFvg = input.bool(true, 'FVG 영역 표시', group = groupZones, tooltip = '현재 차트 시간봉의 FVG 박스만 표시합니다. 다른 시간봉 FVG와 겹치면 현재 박스 중앙의 시간봉 태그에 합쳐서 표시합니다.')
+showOb = input.bool(true, 'OB 영역 표시', group = groupZones, tooltip = '몸통 구조 돌파 직전에 형성된 마지막 반대색 캔들을 OB로 표시합니다. 현재 차트 시간봉의 박스만 그리고, 다른 시간봉 OB와 겹치면 중앙 시간봉 태그에 합쳐서 표시합니다. FVG 첫 캔들은 OB로 사용하지 않습니다.')
+keepResolved = input.bool(true, '해소·무효 영역 보존', group = groupZones, tooltip = '켜면 해소 또는 무효화된 캔들까지만 박스를 남깁니다. 끄면 상태가 끝난 박스를 삭제합니다.')
+maxTrackedFvg = input.int(300, '최대 추적 FVG 개수', minval = 100, maxval = 350, group = groupZones, tooltip = '겹침 판정을 위해 내부적으로 추적할 FVG 수입니다. FVG가 많아져도 OB 보관 영역을 침범하지 않습니다.')
+maxTrackedOb = input.int(150, '최대 추적 OB 개수', minval = 50, maxval = 180, group = groupZones, tooltip = '겹침 판정을 위해 별도로 확보할 구조 OB 수입니다. 화면에는 현재 차트 시간봉 OB만 표시합니다.')
+
+groupPd = '6. Premium / Discount'
+showPd = input.bool(true, '외부 Dealing Range 표시', group = groupPd, tooltip = '각 시간봉의 protected 외부 구조 범위와 균형가 EQ 50%를 표시합니다.')
+showRawPd = input.bool(false, '최근 원시 swing 범위도 표시', group = groupPd, tooltip = '외부 구조 범위와 별도로 가장 최근 raw swing high/low와 중간값을 얇은 선으로 표시합니다.')
+showPdBackground = input.bool(true, '현재 시간봉 Premium / Discount 배경', group = groupPd, tooltip = '현재 차트 시간봉의 외부 dealing range에 대해서만 premium과 discount 배경을 옅게 표시합니다.')
+
+groupLineStyle = '7. 선 형태'
+globalLineWidth = input.int(1, '전체 선·테두리 굵기', minval = 1, maxval = 4, group = groupLineStyle, tooltip = 'FVG·OB 테두리, BOS·CHoCH, 유동성, 외부 범위와 EQ 선의 굵기를 한 번에 조절합니다. 외부 구조 강조선은 선택값보다 한 단계 굵게 유지됩니다.')
+externalStructureLineStyle = input.string('파선', '외부 BOS / CHoCH 선', options = ['실선', '파선', '점선'], group = groupLineStyle, tooltip = '외부 구조 BOS와 CHoCH 수평선의 형태입니다.')
+internalStructureLineStyle = input.string('점선', '내부 iBOS / iCHoCH 선', options = ['실선', '파선', '점선'], group = groupLineStyle, tooltip = '외부 구조 안에서 발생하는 내부 iBOS와 iCHoCH 수평선의 형태입니다.')
+liquidityLineStyle = input.string('파선', '활성 유동성 선', options = ['실선', '파선', '점선'], group = groupLineStyle, tooltip = '아직 해소되지 않은 BSL, SSL 및 보호 고점·저점 유동성 선의 형태입니다.')
+freshFvgBorderStyle = input.string('실선', '활성 FVG 테두리', options = ['실선', '파선', '점선'], group = groupLineStyle, tooltip = '아직 가격이 접촉하지 않은 Fresh FVG 박스의 테두리 형태입니다.')
+touchedFvgBorderStyle = input.string('파선', '접촉 FVG 테두리', options = ['실선', '파선', '점선'], group = groupLineStyle, tooltip = '첫 접촉 또는 부분 체결 상태인 FVG 박스의 테두리 형태입니다.')
+endedFvgBorderStyle = input.string('점선', '해소·무효 FVG 테두리', options = ['실선', '파선', '점선'], group = groupLineStyle, tooltip = '완전히 해소되거나 무효화되어 연장이 종료된 FVG 박스의 테두리 형태입니다.')
+freshObBorderStyle = input.string('실선', '활성 OB 테두리', options = ['실선', '파선', '점선'], group = groupLineStyle, tooltip = '아직 가격이 접촉하지 않은 Fresh OB 박스의 테두리 형태입니다.')
+touchedObBorderStyle = input.string('파선', '접촉 OB 테두리', options = ['실선', '파선', '점선'], group = groupLineStyle, tooltip = '첫 접촉 또는 부분 체결 상태인 OB 박스의 테두리 형태입니다.')
+endedObBorderStyle = input.string('점선', '해소·무효 OB 테두리', options = ['실선', '파선', '점선'], group = groupLineStyle, tooltip = '완전히 해소되거나 무효화되어 연장이 종료된 OB 박스의 테두리 형태입니다.')
+
+groupVisual = '8. 색상과 글꼴'
+bullColor = input.color(color.rgb(35, 197, 94), '상승 구조 색상', group = groupVisual, tooltip = '상승 BOS·CHoCH, SSL, discount 구조에 사용하는 기본 색상입니다.')
+bearColor = input.color(color.rgb(251, 113, 133), '하락 구조 색상', group = groupVisual, tooltip = '하락 BOS·CHoCH, BSL, premium 구조에 사용하는 기본 색상입니다.')
+rawColor = input.color(color.new(color.silver, 30), '원시 후보 색상', group = groupVisual, tooltip = '아직 유동성이나 구조로 분류되지 않은 SH/SL 및 원시 범위에 사용하는 색상입니다.')
+
+bullFvgBgColor = input.color(color.new(color.rgb(35, 197, 94), 84), '상승 FVG 배경색', group = groupVisual, tooltip = '활성 상승 FVG 박스의 배경색과 투명도입니다.')
+bullFvgBorderColor = input.color(color.new(color.rgb(35, 197, 94), 25), '상승 FVG 테두리색', group = groupVisual, tooltip = '활성 상승 FVG 박스의 테두리색과 투명도입니다.')
+bearFvgBgColor = input.color(color.new(color.rgb(251, 113, 133), 84), '하락 FVG 배경색', group = groupVisual, tooltip = '활성 하락 FVG 박스의 배경색과 투명도입니다.')
+bearFvgBorderColor = input.color(color.new(color.rgb(251, 113, 133), 25), '하락 FVG 테두리색', group = groupVisual, tooltip = '활성 하락 FVG 박스의 테두리색과 투명도입니다.')
+
+bullObBgColor = input.color(color.new(color.rgb(59, 130, 246), 82), '상승 OB 배경색', group = groupVisual, tooltip = '활성 상승 OB 박스의 배경색과 투명도입니다.')
+bullObBorderColor = input.color(color.new(color.rgb(59, 130, 246), 20), '상승 OB 테두리색', group = groupVisual, tooltip = '활성 상승 OB 박스의 테두리색과 투명도입니다.')
+bearObBgColor = input.color(color.new(color.rgb(249, 115, 22), 82), '하락 OB 배경색', group = groupVisual, tooltip = '활성 하락 OB 박스의 배경색과 투명도입니다.')
+bearObBorderColor = input.color(color.new(color.rgb(249, 115, 22), 20), '하락 OB 테두리색', group = groupVisual, tooltip = '활성 하락 OB 박스의 테두리색과 투명도입니다.')
+
+resolvedFvgBgColor = input.color(color.new(color.gray, 91), '해소 FVG 배경색', group = groupVisual, tooltip = '완전히 채워진 FVG를 보존할 때 사용하는 배경색과 투명도입니다.')
+resolvedFvgBorderColor = input.color(color.new(color.gray, 70), '해소 FVG 테두리색', group = groupVisual, tooltip = '완전히 채워진 FVG를 보존할 때 사용하는 테두리색과 투명도입니다.')
+invalidFvgBgColor = input.color(color.new(color.rgb(148, 163, 184), 93), '무효 FVG 배경색', group = groupVisual, tooltip = 'FVG가 distal 바깥으로 전달되어 무효로 구분될 때 사용할 배경색입니다.')
+invalidFvgBorderColor = input.color(color.new(color.rgb(148, 163, 184), 65), '무효 FVG 테두리색', group = groupVisual, tooltip = '무효 FVG 박스의 테두리색과 투명도입니다.')
+
+resolvedObBgColor = input.color(color.new(color.gray, 90), '해소 OB 배경색', group = groupVisual, tooltip = 'distal까지 체결된 OB를 보존할 때 사용하는 배경색과 투명도입니다.')
+resolvedObBorderColor = input.color(color.new(color.gray, 68), '해소 OB 테두리색', group = groupVisual, tooltip = 'distal까지 체결된 OB를 보존할 때 사용하는 테두리색과 투명도입니다.')
+invalidObBgColor = input.color(color.new(color.rgb(239, 68, 68), 93), '무효 OB 배경색', group = groupVisual, tooltip = 'distal 바깥으로 몸통 종가가 마감된 OB의 배경색과 투명도입니다.')
+invalidObBorderColor = input.color(color.new(color.rgb(239, 68, 68), 55), '무효 OB 테두리색', group = groupVisual, tooltip = 'distal 바깥으로 몸통 종가가 마감된 OB의 테두리색과 투명도입니다.')
+
+fontSizeOption = input.string('작게', '텍스트 크기', options = ['매우 작게', '작게', '보통', '크게', '매우 크게'], group = groupVisual, tooltip = '구조선, 유동성, FVG, OB 텍스트 크기를 한 번에 조절합니다.')
+showStatusTable = input.bool(true, 'MTF 상태표 표시', group = groupVisual, tooltip = '현재 표시 중인 시간봉, 객체 수, TradingView 한도로 정리된 객체 수를 오른쪽 위에 표시합니다.')
+
+fontSize = fontSizeOption == '매우 작게' ? size.tiny : fontSizeOption == '작게' ? size.small : fontSizeOption == '보통' ? size.normal : fontSizeOption == '크게' ? size.large : size.huge
+int emphasisLineWidth = int(math.min(5, globalLineWidth + 1))
+bool automaticCrypto = syminfo.type == 'crypto'
+bool automaticIndex = syminfo.type == 'index' or syminfo.type == 'futures'
+bool automaticStock = syminfo.type == 'stock'
+bool cryptoPreset = marketPreset == '암호화폐' or marketPreset == '자동' and automaticCrypto
+bool indexPreset = marketPreset == '지수' or marketPreset == '자동' and automaticIndex
+bool stockPreset = marketPreset == '주식' or marketPreset == '자동' and automaticStock
+int pivotLen = marketPreset == '직접 설정' ? swingLen : cryptoPreset ? 7 : indexPreset or stockPreset ? 6 : 5
+
+type TfEvent
+    int stamp = na
+    int closeTime = na
+    float barHigh = na
+    float barLow = na
+    float barClose = na
+    bool swingHighEvent = false
+    float swingHighPrice = na
+    float swingHighBody = na
+    int swingHighTime = na
+    bool swingLowEvent = false
+    float swingLowPrice = na
+    float swingLowBody = na
+    int swingLowTime = na
+    bool waveHighEvent = false
+    float waveHighPrice = na
+    int waveHighTime = na
+    bool waveLowEvent = false
+    float waveLowPrice = na
+    int waveLowTime = na
+    int structureDir = 0
+    bool structureExternal = false
+    bool structureChoch = false
+    float structureLevel = na
+    int structureLevelTime = na
+    int impulseStartTime = na
+    int externalTrend = 0
+    float protectedHigh = na
+    int protectedHighTime = na
+    float protectedLow = na
+    int protectedLowTime = na
+    float rangeHigh = na
+    float rangeLow = na
+    int rangeStartTime = na
+    float rawRangeHigh = na
+    float rawRangeLow = na
+    int rawRangeStartTime = na
+    bool bullFvg = false
+    float bullFvgTop = na
+    float bullFvgBottom = na
+    int bullFvgStartTime = na
+    int bullFvgEndTime = na
+    bool bearFvg = false
+    float bearFvgTop = na
+    float bearFvgBottom = na
+    int bearFvgStartTime = na
+    int bearFvgEndTime = na
+    int obOppositeTime = na
+    float obOppositeTop = na
+    float obOppositeBottom = na
+
+type ZoneState
+    box drawing = na
+    int kind = 0
+    int variant = 0
+    string tf = ''
+    int tfRank = 0
+    int direction = 0
+    int originTime = na
+    int endTime = na
+    int breakTime = na
+    float top = na
+    float bottom = na
+    float contextHigh = na
+    float contextLow = na
+    int state = 0
+    int touchCount = 0
+    bool structureOwned = false
+    string overlapTfs = ''
+
+type LiquidityState
+    line drawing = na
+    label caption = na
+    string tf = ''
+    int tfRank = 0
+    int direction = 0
+    float price = na
+    float wickEdge = na
+    int originTime = na
+    int state = 0
+    string reason = ''
+
+type StructureMark
+    line drawing = na
+    label caption = na
+    int eventTime = na
+
+f_line_style(string selectedStyle) =>
+    selectedStyle == '실선' ? line.style_solid : selectedStyle == '파선' ? line.style_dashed : line.style_dotted
+
+f_tf_rank(string tf) =>
+    int rank = tf == '1' ? 1 : tf == '5' ? 2 : tf == '15' ? 3 : tf == '30' ? 4 : tf == '60' ? 5 : 6
+    rank
+
+f_tf_label(string tf) =>
+    string labelText = tf == '1' ? 'M1' : tf == '5' ? 'M5' : tf == '15' ? 'M15' : tf == '30' ? 'M30' : tf == '60' ? 'H1' : 'H4'
+    labelText
+
+f_tf_compact(string tf) =>
+    string labelText = tf == '1' ? '1m' : tf == '5' ? '5m' : tf == '15' ? '15m' : tf == '30' ? '30m' : tf == '60' ? '1h' : '4h'
+    labelText
+
+f_is_chart_tf(string tf) =>
+    bool sameTimeframe = timeframe.in_seconds(tf) == timeframe.in_seconds()
+    sameTimeframe
+
+f_tf_visible(string mode, string tf) =>
+    float chartSeconds = timeframe.in_seconds()
+    float sourceSeconds = timeframe.in_seconds(tf)
+    bool visible = mode == '포함' or mode == '자동' and sourceSeconds >= chartSeconds
+    visible
+
+f_tf_transparency(string tf) =>
+    int transparency = tf == '240' ? 0 : tf == '60' ? 7 : tf == '30' ? 13 : tf == '15' ? 19 : tf == '5' ? 25 : 31
+    transparency
+
+f_with_tf_alpha(color baseColor, string tf, int extra) =>
+    int transparency = int(math.min(100.0, color.t(baseColor) + f_tf_transparency(tf) + extra))
+    color result = color.new(baseColor, transparency)
+    result
+
+f_find_bull_ob(int lookback) =>
+    int foundOffset = na
+    float topPrice = na
+    float bottomPrice = na
+    for i = 1 to lookback
+        if na(foundOffset) and close[i] < open[i]
+            foundOffset := i
+            topPrice := high[i]
+            bottomPrice := low[i]
+    [foundOffset, topPrice, bottomPrice]
+
+f_find_bear_ob(int lookback) =>
+    int foundOffset = na
+    float topPrice = na
+    float bottomPrice = na
+    for i = 1 to lookback
+        if na(foundOffset) and close[i] > open[i]
+            foundOffset := i
+            topPrice := high[i]
+            bottomPrice := low[i]
+    [foundOffset, topPrice, bottomPrice]
+
+f_three_bar_high() =>
+    float extremePrice = high
+    int extremeTime = time
+    if high[1] > extremePrice
+        extremePrice := high[1]
+        extremeTime := time[1]
+    if high[2] > extremePrice
+        extremePrice := high[2]
+        extremeTime := time[2]
+    [extremePrice, extremeTime]
+
+f_three_bar_low() =>
+    float extremePrice = low
+    int extremeTime = time
+    if low[1] < extremePrice
+        extremePrice := low[1]
+        extremeTime := time[1]
+    if low[2] < extremePrice
+        extremePrice := low[2]
+        extremeTime := time[2]
+    [extremePrice, extremeTime]
+
+f_snapshot(int pivotLength, int structureObLookback) =>
+    // Raw pivots remain information candidates. Structural decisions use alternating
+    // three-opposite-candle waves and their causally protected range.
+    var float lastSwingHigh = na
+    var float lastSwingHighBody = na
+    var int lastSwingHighTime = na
+    var float lastSwingLow = na
+    var float lastSwingLowBody = na
+    var int lastSwingLowTime = na
+    var float lastWaveHigh = na
+    var int lastWaveHighTime = na
+    var float lastWaveLow = na
+    var int lastWaveLowTime = na
+    var int lastWaveKind = 0
+    var float waveCandidateHigh = na
+    var int waveCandidateHighTime = na
+    var float waveCandidateLow = na
+    var int waveCandidateLowTime = na
+    var int lastBrokenHighTime = na
+    var int lastBrokenLowTime = na
+    var int extTrend = 0
+    var int internalTrend = 0
+    var float protectedHigh = na
+    var int protectedHighTime = na
+    var float protectedLow = na
+    var int protectedLowTime = na
+    var float externalRangeHigh = na
+    var int externalRangeHighTime = na
+    var float externalRangeLow = na
+    var int externalRangeLowTime = na
+    var int externalRangeStart = na
+    var float externalPullbackHigh = na
+    var int externalPullbackHighTime = na
+    var float externalPullbackLow = na
+    var int externalPullbackLowTime = na
+
+    float ph = ta.pivothigh(high, pivotLength, pivotLength)
+    float pl = ta.pivotlow(low, pivotLength, pivotLength)
+
+    bool swingHighEvent = not na(ph)
+    bool swingLowEvent = not na(pl)
+    float newSwingHighBody = swingHighEvent ? math.max(open[pivotLength], close[pivotLength]) : na
+    float newSwingLowBody = swingLowEvent ? math.min(open[pivotLength], close[pivotLength]) : na
+    int newSwingHighTime = swingHighEvent ? time[pivotLength] : na
+    int newSwingLowTime = swingLowEvent ? time[pivotLength] : na
+
+    if swingHighEvent
+        lastSwingHigh := ph
+        lastSwingHighBody := newSwingHighBody
+        lastSwingHighTime := newSwingHighTime
+    if swingLowEvent
+        lastSwingLow := pl
+        lastSwingLowBody := newSwingLowBody
+        lastSwingLowTime := newSwingLowTime
+
+    bool threeBear = close < open and close[1] < open[1] and close[2] < open[2]
+    bool threeBull = close > open and close[1] > open[1] and close[2] > open[2]
+    bool newBearRun = threeBear and not threeBear[1]
+    bool newBullRun = threeBull and not threeBull[1]
+
+    if lastWaveKind == 0 or lastWaveKind == DIR_BEAR
+        if na(waveCandidateHigh) or high > waveCandidateHigh
+            waveCandidateHigh := high
+            waveCandidateHighTime := time
+    if lastWaveKind == 0 or lastWaveKind == DIR_BULL
+        if na(waveCandidateLow) or low < waveCandidateLow
+            waveCandidateLow := low
+            waveCandidateLowTime := time
+
+    bool waveHighEvent = false
+    float newWaveHighPrice = na
+    int newWaveHighTime = na
+    bool waveLowEvent = false
+    float newWaveLowPrice = na
+    int newWaveLowTime = na
+
+    if newBearRun and lastWaveKind != DIR_BULL and not na(waveCandidateHigh)
+        waveHighEvent := true
+        newWaveHighPrice := waveCandidateHigh
+        newWaveHighTime := waveCandidateHighTime
+        lastWaveHigh := newWaveHighPrice
+        lastWaveHighTime := newWaveHighTime
+        lastWaveKind := DIR_BULL
+        [resetLow, resetLowTime] = f_three_bar_low()
+        waveCandidateLow := resetLow
+        waveCandidateLowTime := resetLowTime
+        waveCandidateHigh := na
+        waveCandidateHighTime := na
+    else if newBullRun and lastWaveKind != DIR_BEAR and not na(waveCandidateLow)
+        waveLowEvent := true
+        newWaveLowPrice := waveCandidateLow
+        newWaveLowTime := waveCandidateLowTime
+        lastWaveLow := newWaveLowPrice
+        lastWaveLowTime := newWaveLowTime
+        lastWaveKind := DIR_BEAR
+        [resetHigh, resetHighTime] = f_three_bar_high()
+        waveCandidateHigh := resetHigh
+        waveCandidateHighTime := resetHighTime
+        waveCandidateLow := na
+        waveCandidateLowTime := na
+
+    if extTrend == DIR_BULL and waveLowEvent and not na(externalRangeHighTime) and newWaveLowTime > externalRangeHighTime
+        if na(externalPullbackLow) or newWaveLowPrice < externalPullbackLow
+            externalPullbackLow := newWaveLowPrice
+            externalPullbackLowTime := newWaveLowTime
+    if extTrend == DIR_BEAR and waveHighEvent and not na(externalRangeLowTime) and newWaveHighTime > externalRangeLowTime
+        if na(externalPullbackHigh) or newWaveHighPrice > externalPullbackHigh
+            externalPullbackHigh := newWaveHighPrice
+            externalPullbackHighTime := newWaveHighTime
+
+    bool protectedBullBreak = extTrend == DIR_BEAR and not na(protectedHigh) and close > protectedHigh and close[1] <= protectedHigh
+    bool protectedBearBreak = extTrend == DIR_BULL and not na(protectedLow) and close < protectedLow and close[1] >= protectedLow
+    bool externalBullBos = extTrend == DIR_BULL and not na(externalRangeHigh) and not na(externalPullbackLow) and close > externalRangeHigh and close[1] <= externalRangeHigh
+    bool externalBearBos = extTrend == DIR_BEAR and not na(externalRangeLow) and not na(externalPullbackHigh) and close < externalRangeLow and close[1] >= externalRangeLow
+    bool newBullStructure = not na(lastWaveHighTime) and (na(lastBrokenHighTime) or lastWaveHighTime != lastBrokenHighTime)
+    bool newBearStructure = not na(lastWaveLowTime) and (na(lastBrokenLowTime) or lastWaveLowTime != lastBrokenLowTime)
+    bool waveBullBreak = not na(lastWaveHigh) and newBullStructure and close > lastWaveHigh and close[1] <= lastWaveHigh
+    bool waveBearBreak = not na(lastWaveLow) and newBearStructure and close < lastWaveLow and close[1] >= lastWaveLow
+
+    int structureDir = 0
+    bool structureExternal = false
+    bool structureChoch = false
+    float structureLevel = na
+    int structureLevelTime = na
+
+    if protectedBullBreak
+        structureDir := DIR_BULL
+        structureExternal := true
+        structureChoch := true
+        structureLevel := protectedHigh
+        structureLevelTime := protectedHighTime
+        extTrend := DIR_BULL
+        internalTrend := DIR_BULL
+        bool hasCausalReversalLow = not na(lastWaveLowTime) and (na(externalRangeLowTime) or lastWaveLowTime >= externalRangeLowTime)
+        protectedLow := hasCausalReversalLow ? lastWaveLow : externalRangeLow
+        protectedLowTime := hasCausalReversalLow ? lastWaveLowTime : externalRangeLowTime
+        protectedHigh := na
+        protectedHighTime := na
+        externalRangeHigh := math.max(high, structureLevel)
+        externalRangeHighTime := time
+        externalRangeLow := protectedLow
+        externalRangeLowTime := protectedLowTime
+        externalRangeStart := protectedLowTime
+        externalPullbackHigh := na
+        externalPullbackHighTime := na
+        externalPullbackLow := na
+        externalPullbackLowTime := na
+        lastBrokenHighTime := structureLevelTime
+    else if protectedBearBreak
+        structureDir := DIR_BEAR
+        structureExternal := true
+        structureChoch := true
+        structureLevel := protectedLow
+        structureLevelTime := protectedLowTime
+        extTrend := DIR_BEAR
+        internalTrend := DIR_BEAR
+        bool hasCausalReversalHigh = not na(lastWaveHighTime) and (na(externalRangeHighTime) or lastWaveHighTime >= externalRangeHighTime)
+        protectedHigh := hasCausalReversalHigh ? lastWaveHigh : externalRangeHigh
+        protectedHighTime := hasCausalReversalHigh ? lastWaveHighTime : externalRangeHighTime
+        protectedLow := na
+        protectedLowTime := na
+        externalRangeHigh := protectedHigh
+        externalRangeHighTime := protectedHighTime
+        externalRangeLow := math.min(low, structureLevel)
+        externalRangeLowTime := time
+        externalRangeStart := protectedHighTime
+        externalPullbackHigh := na
+        externalPullbackHighTime := na
+        externalPullbackLow := na
+        externalPullbackLowTime := na
+        lastBrokenLowTime := structureLevelTime
+    else if externalBullBos
+        structureDir := DIR_BULL
+        structureExternal := true
+        structureChoch := false
+        structureLevel := externalRangeHigh
+        structureLevelTime := externalRangeHighTime
+        protectedLow := externalPullbackLow
+        protectedLowTime := externalPullbackLowTime
+        protectedHigh := na
+        protectedHighTime := na
+        externalRangeHigh := math.max(high, structureLevel)
+        externalRangeHighTime := time
+        externalRangeLow := protectedLow
+        externalRangeLowTime := protectedLowTime
+        externalRangeStart := protectedLowTime
+        externalPullbackLow := na
+        externalPullbackLowTime := na
+        internalTrend := DIR_BULL
+        lastBrokenHighTime := structureLevelTime
+    else if externalBearBos
+        structureDir := DIR_BEAR
+        structureExternal := true
+        structureChoch := false
+        structureLevel := externalRangeLow
+        structureLevelTime := externalRangeLowTime
+        protectedHigh := externalPullbackHigh
+        protectedHighTime := externalPullbackHighTime
+        protectedLow := na
+        protectedLowTime := na
+        externalRangeHigh := protectedHigh
+        externalRangeHighTime := protectedHighTime
+        externalRangeLow := math.min(low, structureLevel)
+        externalRangeLowTime := time
+        externalRangeStart := protectedHighTime
+        externalPullbackHigh := na
+        externalPullbackHighTime := na
+        internalTrend := DIR_BEAR
+        lastBrokenLowTime := structureLevelTime
+    else if extTrend == 0 and waveBullBreak and not na(lastWaveLow)
+        structureDir := DIR_BULL
+        structureExternal := true
+        structureChoch := false
+        structureLevel := lastWaveHigh
+        structureLevelTime := lastWaveHighTime
+        extTrend := DIR_BULL
+        internalTrend := DIR_BULL
+        protectedLow := lastWaveLow
+        protectedLowTime := lastWaveLowTime
+        protectedHigh := na
+        protectedHighTime := na
+        externalRangeHigh := math.max(high, structureLevel)
+        externalRangeHighTime := time
+        externalRangeLow := protectedLow
+        externalRangeLowTime := protectedLowTime
+        externalRangeStart := protectedLowTime
+        externalPullbackLow := na
+        externalPullbackLowTime := na
+        lastBrokenHighTime := lastWaveHighTime
+    else if extTrend == 0 and waveBearBreak and not na(lastWaveHigh)
+        structureDir := DIR_BEAR
+        structureExternal := true
+        structureChoch := false
+        structureLevel := lastWaveLow
+        structureLevelTime := lastWaveLowTime
+        extTrend := DIR_BEAR
+        internalTrend := DIR_BEAR
+        protectedHigh := lastWaveHigh
+        protectedHighTime := lastWaveHighTime
+        protectedLow := na
+        protectedLowTime := na
+        externalRangeHigh := protectedHigh
+        externalRangeHighTime := protectedHighTime
+        externalRangeLow := math.min(low, structureLevel)
+        externalRangeLowTime := time
+        externalRangeStart := protectedHighTime
+        externalPullbackHigh := na
+        externalPullbackHighTime := na
+        lastBrokenLowTime := lastWaveLowTime
+    else if waveBullBreak
+        structureDir := DIR_BULL
+        structureExternal := false
+        structureChoch := internalTrend != 0 and internalTrend != DIR_BULL
+        structureLevel := lastWaveHigh
+        structureLevelTime := lastWaveHighTime
+        internalTrend := DIR_BULL
+        lastBrokenHighTime := lastWaveHighTime
+    else if waveBearBreak
+        structureDir := DIR_BEAR
+        structureExternal := false
+        structureChoch := internalTrend != 0 and internalTrend != DIR_BEAR
+        structureLevel := lastWaveLow
+        structureLevelTime := lastWaveLowTime
+        internalTrend := DIR_BEAR
+        lastBrokenLowTime := lastWaveLowTime
+
+    if extTrend == DIR_BULL and na(externalPullbackLow) and (na(externalRangeHigh) or high > externalRangeHigh)
+        externalRangeHigh := high
+        externalRangeHighTime := time
+    if extTrend == DIR_BEAR and na(externalPullbackHigh) and (na(externalRangeLow) or low < externalRangeLow)
+        externalRangeLow := low
+        externalRangeLowTime := time
+
+    int oppositeOffset = na
+    float oppositeTop = na
+    float oppositeBottom = na
+    if structureDir == DIR_BULL
+        [bullOffset, bullTop, bullBottom] = f_find_bull_ob(structureObLookback)
+        oppositeOffset := bullOffset
+        oppositeTop := bullTop
+        oppositeBottom := bullBottom
+    else if structureDir == DIR_BEAR
+        [bearOffset, bearTop, bearBottom] = f_find_bear_ob(structureObLookback)
+        oppositeOffset := bearOffset
+        oppositeTop := bearTop
+        oppositeBottom := bearBottom
+
+    bool bullFvg = low > high[2]
+    bool bearFvg = high < low[2]
+
+    TfEvent current = TfEvent.new()
+    current.stamp := time
+    current.closeTime := time_close
+    current.barHigh := high
+    current.barLow := low
+    current.barClose := close
+    current.swingHighEvent := swingHighEvent
+    current.swingHighPrice := ph
+    current.swingHighBody := newSwingHighBody
+    current.swingHighTime := newSwingHighTime
+    current.swingLowEvent := swingLowEvent
+    current.swingLowPrice := pl
+    current.swingLowBody := newSwingLowBody
+    current.swingLowTime := newSwingLowTime
+    current.waveHighEvent := waveHighEvent
+    current.waveHighPrice := newWaveHighPrice
+    current.waveHighTime := newWaveHighTime
+    current.waveLowEvent := waveLowEvent
+    current.waveLowPrice := newWaveLowPrice
+    current.waveLowTime := newWaveLowTime
+    current.structureDir := structureDir
+    current.structureExternal := structureExternal
+    current.structureChoch := structureChoch
+    current.structureLevel := structureLevel
+    current.structureLevelTime := structureLevelTime
+    current.impulseStartTime := not na(oppositeOffset) ? time[oppositeOffset] : structureLevelTime
+    current.externalTrend := extTrend
+    current.protectedHigh := protectedHigh
+    current.protectedHighTime := protectedHighTime
+    current.protectedLow := protectedLow
+    current.protectedLowTime := protectedLowTime
+    current.rangeHigh := externalRangeHigh
+    current.rangeLow := externalRangeLow
+    current.rangeStartTime := externalRangeStart
+    current.rawRangeHigh := lastSwingHigh
+    current.rawRangeLow := lastSwingLow
+    current.rawRangeStartTime := not na(lastSwingHighTime) and not na(lastSwingLowTime) ? math.min(lastSwingHighTime, lastSwingLowTime) : na
+    current.bullFvg := bullFvg
+    current.bullFvgTop := bullFvg ? low : na
+    current.bullFvgBottom := bullFvg ? high[2] : na
+    current.bullFvgStartTime := bullFvg ? time[2] : na
+    current.bullFvgEndTime := bullFvg ? time_close : na
+    current.bearFvg := bearFvg
+    current.bearFvgTop := bearFvg ? low[2] : na
+    current.bearFvgBottom := bearFvg ? high : na
+    current.bearFvgStartTime := bearFvg ? time[2] : na
+    current.bearFvgEndTime := bearFvg ? time_close : na
+    current.obOppositeTime := not na(oppositeOffset) ? time[oppositeOffset] : na
+    current.obOppositeTop := oppositeTop
+    current.obOppositeBottom := oppositeBottom
+
+    TfEvent confirmed = current[1]
+    confirmed
+
+f_append_token(string source, string token) =>
+    string result = source
+    if not str.contains('/' + source + '/', '/' + token + '/')
+        result := str.length(source) == 0 ? token : source + '/' + token
+    result
+
+f_has_token(string source, string token) =>
+    bool found = str.contains('/' + source + '/', '/' + token + '/')
+    found
+
+f_zone_tf_cluster(ZoneState z) =>
+    string result = f_tf_compact(z.tf)
+    if z.tf != '1' and f_has_token(z.overlapTfs, '1')
+        result += '+1m'
+    if z.tf != '5' and f_has_token(z.overlapTfs, '5')
+        result += '+5m'
+    if z.tf != '15' and f_has_token(z.overlapTfs, '15')
+        result += '+15m'
+    if z.tf != '30' and f_has_token(z.overlapTfs, '30')
+        result += '+30m'
+    if z.tf != '60' and f_has_token(z.overlapTfs, '60')
+        result += '+1h'
+    if z.tf != '240' and f_has_token(z.overlapTfs, '240')
+        result += '+4h'
+    result
+
+f_zone_text(ZoneState z) =>
+    string kindText = z.kind == KIND_FVG ? 'FVG' : 'OB'
+    '[' + f_zone_tf_cluster(z) + '] ' + kindText
+
+f_zone_fill(ZoneState z) =>
+    color fillColor = z.kind == KIND_FVG ? (z.direction == DIR_BULL ? bullFvgBgColor : bearFvgBgColor) : (z.direction == DIR_BULL ? bullObBgColor : bearObBgColor)
+    if z.state == STATE_RESOLVED
+        fillColor := z.kind == KIND_FVG ? resolvedFvgBgColor : resolvedObBgColor
+    else if z.state == STATE_INVALID
+        fillColor := z.kind == KIND_FVG ? invalidFvgBgColor : invalidObBgColor
+    else if z.state == STATE_FIRST_TOUCH
+        fillColor := color.new(fillColor, int(math.min(100.0, color.t(fillColor) + 3)))
+    else if z.state == STATE_PARTIAL
+        fillColor := color.new(fillColor, int(math.min(100.0, color.t(fillColor) + 6)))
+    fillColor
+
+f_zone_border(ZoneState z) =>
+    color borderColor = z.kind == KIND_FVG ? (z.direction == DIR_BULL ? bullFvgBorderColor : bearFvgBorderColor) : (z.direction == DIR_BULL ? bullObBorderColor : bearObBorderColor)
+    if z.state == STATE_RESOLVED
+        borderColor := z.kind == KIND_FVG ? resolvedFvgBorderColor : resolvedObBorderColor
+    else if z.state == STATE_INVALID
+        borderColor := z.kind == KIND_FVG ? invalidFvgBorderColor : invalidObBorderColor
+    borderColor
+
+f_zone_border_style(ZoneState z) =>
+    string selectedStyle = z.kind == KIND_FVG ? (z.state == STATE_FRESH ? freshFvgBorderStyle : z.state < STATE_RESOLVED ? touchedFvgBorderStyle : endedFvgBorderStyle) : (z.state == STATE_FRESH ? freshObBorderStyle : z.state < STATE_RESOLVED ? touchedObBorderStyle : endedObBorderStyle)
+    f_line_style(selectedStyle)
+
+f_refresh_zone(ZoneState z) =>
+    int status = 0
+    if not na(z.drawing)
+        box.set_text(z.drawing, f_zone_text(z))
+        box.set_bgcolor(z.drawing, f_zone_fill(z))
+        box.set_border_color(z.drawing, f_zone_border(z))
+        box.set_border_style(z.drawing, f_zone_border_style(z))
+        box.set_border_width(z.drawing, globalLineWidth)
+        status := 1
+    status
+
+f_delete_zone(ZoneState z) =>
+    int status = 0
+    if not na(z.drawing)
+        box.delete(z.drawing)
+        status := 1
+    status
+
+f_count_zone_kind(array<ZoneState> zones, int kind) =>
+    int count = 0
+    if array.size(zones) > 0
+        for i = 0 to array.size(zones) - 1
+            ZoneState candidate = array.get(zones, i)
+            if candidate.kind == kind
+                count += 1
+    count
+
+f_trim_zones(array<ZoneState> zones, int kind) =>
+    int dropped = 0
+    int limit = kind == KIND_FVG ? maxTrackedFvg : maxTrackedOb
+    while f_count_zone_kind(zones, kind) > limit
+        int removeIndex = na
+        for i = 0 to array.size(zones) - 1
+            ZoneState candidate = array.get(zones, i)
+            if na(removeIndex) and candidate.kind == kind and candidate.state >= STATE_RESOLVED
+                removeIndex := i
+        if na(removeIndex)
+            for i = 0 to array.size(zones) - 1
+                ZoneState candidate = array.get(zones, i)
+                if na(removeIndex) and candidate.kind == kind
+                    removeIndex := i
+        ZoneState removed = array.remove(zones, removeIndex)
+        f_delete_zone(removed)
+        dropped += 1
+    dropped
+
+f_zone_duplicate(array<ZoneState> zones, string tf, int kind, int variant, int direction, int originTime) =>
+    bool duplicate = false
+    if array.size(zones) > 0
+        for i = 0 to array.size(zones) - 1
+            ZoneState z = array.get(zones, i)
+            if z.tf == tf and z.kind == kind and z.variant == variant and z.direction == direction and z.originTime == originTime
+                duplicate := true
+    duplicate
+
+f_add_zone(array<ZoneState> zones, string tf, int kind, int variant, int direction, int originTime, int endTime, int breakTime, float top, float bottom, float contextHigh, float contextLow, bool structureOwned) =>
+    int dropped = 0
+    bool added = false
+    if not na(originTime) and not na(endTime) and not na(top) and not na(bottom) and top > bottom and not f_zone_duplicate(zones, tf, kind, variant, direction, originTime)
+        ZoneState z = ZoneState.new()
+        z.kind := kind
+        z.variant := variant
+        z.tf := tf
+        z.tfRank := f_tf_rank(tf)
+        z.direction := direction
+        z.originTime := originTime
+        z.endTime := endTime
+        z.breakTime := breakTime
+        z.top := top
+        z.bottom := bottom
+        z.contextHigh := contextHigh
+        z.contextLow := contextLow
+        z.state := STATE_FRESH
+        z.structureOwned := structureOwned
+        color fillColor = f_zone_fill(z)
+        color borderColor = f_zone_border(z)
+        bool showKind = kind == KIND_FVG ? showFvg and showRawFvg : showOb
+        if f_is_chart_tf(tf) and showKind
+            z.drawing := box.new(left = originTime, top = top, right = endTime, bottom = bottom, xloc = xloc.bar_time, extend = extend.none, bgcolor = fillColor, border_color = borderColor, border_width = globalLineWidth, border_style = f_zone_border_style(z), text = f_zone_text(z), text_color = color.new(color.white, 12), text_size = fontSize, text_halign = text.align_center, text_valign = text.align_center, force_overlay = true)
+        array.push(zones, z)
+        dropped := f_trim_zones(zones, kind)
+        added := true
+    [dropped, added]
+
+f_link_new_zone_overlap(array<ZoneState> zones) =>
+    int status = 0
+    if array.size(zones) > 1
+        int newIndex = array.size(zones) - 1
+        ZoneState newest = array.get(zones, newIndex)
+        if newest.state < STATE_RESOLVED
+            for i = 0 to array.size(zones) - 2
+                ZoneState other = array.get(zones, i)
+                bool samePoi = newest.kind == other.kind and newest.direction == other.direction
+                bool differentTf = newest.tf != other.tf
+                bool active = other.state < STATE_RESOLVED
+                bool priceOverlap = math.min(newest.top, other.top) > math.max(newest.bottom, other.bottom)
+                if samePoi and differentTf and active and priceOverlap
+                    if f_is_chart_tf(newest.tf)
+                        newest.overlapTfs := f_append_token(newest.overlapTfs, other.tf)
+                        array.set(zones, newIndex, newest)
+                        f_refresh_zone(newest)
+                        status += 1
+                    if f_is_chart_tf(other.tf)
+                        other.overlapTfs := f_append_token(other.overlapTfs, newest.tf)
+                        array.set(zones, i, other)
+                        f_refresh_zone(other)
+                        status += 1
+    status
+
+f_mark_structure_zones(array<ZoneState> zones, TfEvent ev, string tf) =>
+    int status = 0
+    if ev.structureDir != 0 and array.size(zones) > 0
+        int startTime = na(ev.impulseStartTime) ? ev.structureLevelTime : ev.impulseStartTime
+        for i = 0 to array.size(zones) - 1
+            ZoneState z = array.get(zones, i)
+            bool inImpulse = z.tf == tf and z.direction == ev.structureDir and z.originTime >= startTime and z.originTime <= ev.closeTime
+            if inImpulse and z.kind == KIND_FVG
+                z.structureOwned := true
+                z.breakTime := ev.closeTime
+                z.contextHigh := ev.rangeHigh
+                z.contextLow := ev.rangeLow
+                array.set(zones, i, z)
+                f_refresh_zone(z)
+                status += 1
+    status
+
+f_update_zones(array<ZoneState> zones, string tf, float sourceHigh, float sourceLow, float sourceClose, int sourceCloseTime) =>
+    int status = 0
+    if array.size(zones) > 0
+        for i = array.size(zones) - 1 to 0
+            ZoneState z = array.get(zones, i)
+            if z.tf == tf and z.state < STATE_RESOLVED and sourceCloseTime > z.endTime
+                if not na(z.drawing)
+                    box.set_extend(z.drawing, extend.none)
+                    box.set_right(z.drawing, sourceCloseTime)
+                bool touched = sourceLow <= z.top and sourceHigh >= z.bottom
+                bool full = z.direction == DIR_BULL ? sourceLow <= z.bottom : sourceHigh >= z.top
+                bool invalid = z.direction == DIR_BULL ? sourceClose < z.bottom : sourceClose > z.top
+                if invalid
+                    z.state := STATE_INVALID
+                else if full
+                    z.state := STATE_RESOLVED
+                else if touched
+                    z.touchCount += 1
+                    z.state := z.touchCount == 1 ? STATE_FIRST_TOUCH : STATE_PARTIAL
+                if z.state >= STATE_RESOLVED
+                    if keepResolved
+                        if not na(z.drawing)
+                            box.set_extend(z.drawing, extend.none)
+                            box.set_right(z.drawing, sourceCloseTime)
+                    else
+                        f_delete_zone(z)
+                        array.remove(zones, i)
+                if keepResolved or z.state < STATE_RESOLVED
+                    array.set(zones, i, z)
+                    f_refresh_zone(z)
+                status += 1
+    status
+
+f_liq_text(LiquidityState liq) =>
+    string base = liq.direction == DIR_BULL ? 'BSL' : 'SSL'
+    string candidate = liq.direction == DIR_BULL ? 'SH' : 'SL'
+    string result = str.length(liq.reason) > 0 ? base + '·' + liq.reason : candidate
+    result
+
+f_render_liquidity(LiquidityState liq) =>
+    int status = 0
+    bool classified = str.length(liq.reason) > 0
+    bool protectedLevel = str.contains(liq.reason, 'PH') or str.contains(liq.reason, 'PL')
+    bool showClassified = showLiquidity or showProtected and protectedLevel
+    color liqColor = liq.direction == DIR_BULL ? bearColor : bullColor
+    if f_is_chart_tf(liq.tf)
+        if liq.state == LIQ_ACTIVE
+            if classified and showClassified and na(liq.drawing)
+                liq.drawing := line.new(x1 = liq.originTime, y1 = liq.price, x2 = liq.originTime, y2 = liq.price, xloc = xloc.bar_time, extend = extend.none, color = liqColor, style = f_line_style(liquidityLineStyle), width = globalLineWidth, force_overlay = true)
+            if (showRawSwings or classified and showClassified) and na(liq.caption)
+                liq.caption := label.new(x = liq.originTime, y = liq.price, text = f_liq_text(liq), xloc = xloc.bar_time, yloc = yloc.price, style = label.style_none, textcolor = classified ? liqColor : rawColor, size = fontSize, textalign = text.align_left, force_overlay = true)
+            if not na(liq.caption)
+                label.set_text(liq.caption, f_liq_text(liq))
+                label.set_textcolor(liq.caption, classified ? liqColor : rawColor)
+            if not na(liq.drawing)
+                line.set_color(liq.drawing, liqColor)
+                line.set_style(liq.drawing, f_line_style(liquidityLineStyle))
+                line.set_width(liq.drawing, globalLineWidth)
+        else
+            if not na(liq.drawing)
+                line.delete(liq.drawing)
+                liq.drawing := na
+            if not na(liq.caption)
+                label.delete(liq.caption)
+                liq.caption := na
+    status := 1
+    status
+
+f_delete_liquidity(LiquidityState liq) =>
+    int status = 0
+    if not na(liq.drawing)
+        line.delete(liq.drawing)
+        status += 1
+    if not na(liq.caption)
+        label.delete(liq.caption)
+        status += 1
+    status
+
+f_trim_liquidity(array<LiquidityState> liquidity) =>
+    int dropped = 0
+    while array.size(liquidity) > maxLiquidityMarks
+        int removeIndex = na
+        for i = 0 to array.size(liquidity) - 1
+            LiquidityState candidate = array.get(liquidity, i)
+            if na(removeIndex) and candidate.state != LIQ_ACTIVE
+                removeIndex := i
+        if na(removeIndex)
+            removeIndex := 0
+        LiquidityState removed = array.remove(liquidity, removeIndex)
+        f_delete_liquidity(removed)
+        dropped += 1
+    dropped
+
+f_mark_liquidity_reason(array<LiquidityState> liquidity, string tf, int direction, int originTime, string reason) =>
+    int status = 0
+    if array.size(liquidity) > 0
+        for i = 0 to array.size(liquidity) - 1
+            LiquidityState liq = array.get(liquidity, i)
+            if liq.tf == tf and liq.direction == direction and liq.originTime == originTime
+                liq.reason := f_append_token(liq.reason, reason)
+                array.set(liquidity, i, liq)
+                f_render_liquidity(liq)
+                status += 1
+    status
+
+f_mark_range_edges(array<LiquidityState> liquidity, string tf) =>
+    int status = 0
+    int h1 = na
+    int h2 = na
+    int l1 = na
+    int l2 = na
+    if array.size(liquidity) > 0
+        for i = array.size(liquidity) - 1 to 0
+            LiquidityState liq = array.get(liquidity, i)
+            if liq.tf == tf and liq.state == LIQ_ACTIVE
+                if liq.direction == DIR_BULL and str.contains(liq.reason, 'EQH')
+                    if na(h2)
+                        h2 := i
+                    else if na(h1)
+                        h1 := i
+                if liq.direction == DIR_BEAR and str.contains(liq.reason, 'EQL')
+                    if na(l2)
+                        l2 := i
+                    else if na(l1)
+                        l1 := i
+        if not na(h1) and not na(h2) and not na(l1) and not na(l2)
+            int th1 = array.get(liquidity, h1).originTime
+            int th2 = array.get(liquidity, h2).originTime
+            int tl1 = array.get(liquidity, l1).originTime
+            int tl2 = array.get(liquidity, l2).originTime
+            bool alternating = th1 < tl1 and tl1 < th2 and th2 < tl2 or tl1 < th1 and th1 < tl2 and tl2 < th2
+            if alternating
+                for idx in array.from(h1, h2, l1, l2)
+                    LiquidityState edge = array.get(liquidity, idx)
+                    edge.reason := f_append_token(edge.reason, 'RNG')
+                    array.set(liquidity, idx, edge)
+                    f_render_liquidity(edge)
+                    status += 1
+    status
+
+f_add_liquidity(array<LiquidityState> liquidity, string tf, int direction, float price, float wickEdge, int originTime) =>
+    int dropped = 0
+    bool duplicate = false
+    if array.size(liquidity) > 0
+        for i = 0 to array.size(liquidity) - 1
+            LiquidityState existing = array.get(liquidity, i)
+            if existing.tf == tf and existing.direction == direction and existing.originTime == originTime
+                duplicate := true
+    if not duplicate and not na(originTime) and not na(price)
+        LiquidityState newest = LiquidityState.new()
+        newest.tf := tf
+        newest.tfRank := f_tf_rank(tf)
+        newest.direction := direction
+        newest.price := price
+        newest.wickEdge := wickEdge
+        newest.originTime := originTime
+        newest.state := LIQ_ACTIVE
+        if array.size(liquidity) > 0
+            for i = 0 to array.size(liquidity) - 1
+                LiquidityState previous = array.get(liquidity, i)
+                bool sameSide = previous.tf == tf and previous.direction == direction and previous.state == LIQ_ACTIVE
+                bool wickOverlap = math.max(math.min(previous.price, previous.wickEdge), math.min(newest.price, newest.wickEdge)) <= math.min(math.max(previous.price, previous.wickEdge), math.max(newest.price, newest.wickEdge))
+                if sameSide and wickOverlap
+                    string equalReason = direction == DIR_BULL ? 'EQH' : 'EQL'
+                    previous.reason := f_append_token(previous.reason, equalReason)
+                    newest.reason := f_append_token(newest.reason, equalReason)
+                    array.set(liquidity, i, previous)
+                    f_render_liquidity(previous)
+        array.push(liquidity, newest)
+        f_render_liquidity(newest)
+        dropped := f_trim_liquidity(liquidity)
+        f_mark_range_edges(liquidity, tf)
+    dropped
+
+f_mark_trap(array<LiquidityState> liquidity, array<ZoneState> zones, TfEvent ev, string tf) =>
+    int status = 0
+    int trapDirection = ev.structureDir == DIR_BULL ? DIR_BEAR : DIR_BULL
+    int trapTime = ev.structureDir == DIR_BULL ? ev.protectedLowTime : ev.protectedHighTime
+    float trapPrice = ev.structureDir == DIR_BULL ? ev.protectedLow : ev.protectedHigh
+    bool reactedInZone = false
+    if array.size(zones) > 0 and not na(trapTime) and not na(trapPrice)
+        for i = 0 to array.size(zones) - 1
+            ZoneState z = array.get(zones, i)
+            if z.tf == tf and z.direction == ev.structureDir and z.touchCount > 0 and trapTime >= z.originTime and trapPrice <= z.top and trapPrice >= z.bottom
+                reactedInZone := true
+    if reactedInZone
+        status := f_mark_liquidity_reason(liquidity, tf, trapDirection, trapTime, 'TRAP')
+    status
+
+f_push_event_label(array<label> eventLabels, int x, float y, string textValue, color textColor) =>
+    int status = 0
+    label eventLabel = label.new(x = x, y = y, text = textValue, xloc = xloc.bar_time, yloc = yloc.price, style = label.style_none, textcolor = textColor, size = fontSize, force_overlay = true)
+    array.push(eventLabels, eventLabel)
+    while array.size(eventLabels) > 140
+        label oldLabel = array.shift(eventLabels)
+        label.delete(oldLabel)
+    status := 1
+    status
+
+f_push_sweep_triangle(array<label> eventLabels, int x, float y, bool buySide, color markerColor) =>
+    int status = 0
+    label sweepTriangle = label.new(x = x, y = y, text = '', xloc = xloc.bar_time, yloc = yloc.price, style = buySide ? label.style_triangledown : label.style_triangleup, color = markerColor, textcolor = markerColor, size = 2, force_overlay = true)
+    array.push(eventLabels, sweepTriangle)
+    while array.size(eventLabels) > 140
+        label oldLabel = array.shift(eventLabels)
+        label.delete(oldLabel)
+    status := 1
+    status
+
+f_update_liquidity(array<LiquidityState> liquidity, array<label> eventLabels, string tf, float sourceHigh, float sourceLow, float sourceClose, int sourceTime, int sourceCloseTime) =>
+    int status = 0
+    bool drewBuySideTriangle = false
+    bool drewSellSideTriangle = false
+    if array.size(liquidity) > 0
+        for i = 0 to array.size(liquidity) - 1
+            LiquidityState liq = array.get(liquidity, i)
+            if liq.tf == tf and liq.state == LIQ_ACTIVE and sourceCloseTime > liq.originTime
+                if not na(liq.drawing)
+                    line.set_extend(liq.drawing, extend.none)
+                    line.set_x2(liq.drawing, sourceCloseTime)
+                if not na(liq.caption)
+                    int captionOffset = int(timeframe.in_seconds(tf) * 1000.0 * 0.20)
+                    label.set_x(liq.caption, sourceCloseTime + captionOffset)
+                    label.set_y(liq.caption, liq.price)
+                bool swept = liq.direction == DIR_BULL ? sourceHigh > liq.price and sourceClose < liq.price : sourceLow < liq.price and sourceClose > liq.price
+                bool consumed = liq.direction == DIR_BULL ? sourceClose > liq.price : sourceClose < liq.price
+                if consumed or swept
+                    liq.state := consumed ? LIQ_CONSUMED : LIQ_SWEPT
+                    if not na(liq.drawing)
+                        line.set_extend(liq.drawing, extend.none)
+                        line.set_x2(liq.drawing, sourceCloseTime)
+                    array.set(liquidity, i, liq)
+                    f_render_liquidity(liq)
+                    bool triangleAlreadyDrawn = liq.direction == DIR_BULL ? drewBuySideTriangle : drewSellSideTriangle
+                    if swept and not triangleAlreadyDrawn and showSweepLabels and str.length(liq.reason) > 0 and f_is_chart_tf(tf)
+                        bool buySide = liq.direction == DIR_BULL
+                        float candleRange = math.max(sourceHigh - sourceLow, syminfo.mintick * 10.0)
+                        float markerGap = math.max(candleRange * sweepTriangleGap, syminfo.mintick * 2.0)
+                        float sweepY = buySide ? sourceHigh + markerGap : sourceLow - markerGap
+                        color sweepColor = buySide ? bearColor : bullColor
+                        f_push_sweep_triangle(eventLabels, sourceTime, sweepY, buySide, sweepColor)
+                        if buySide
+                            drewBuySideTriangle := true
+                        else
+                            drewSellSideTriangle := true
+                    status += 1
+    status
+
+f_draw_structure_break(array<StructureMark> structures, string tf, TfEvent ev) =>
+    int status = 0
+    if showBosChoch and f_is_chart_tf(tf) and ev.structureDir != 0 and not na(ev.structureLevelTime)
+        bool internal = not ev.structureExternal
+        string breakText = internal ? (ev.structureChoch ? 'iCHoCH' : 'iBOS') : (ev.structureChoch ? 'CHoCH' : 'BOS')
+        color breakColor = ev.structureDir == DIR_BULL ? bullColor : bearColor
+        int midTime = ev.structureLevelTime + int((ev.closeTime - ev.structureLevelTime) / 2)
+        line breakLine = line.new(x1 = ev.structureLevelTime, y1 = ev.structureLevel, x2 = ev.closeTime, y2 = ev.structureLevel, xloc = xloc.bar_time, extend = extend.none, color = breakColor, style = f_line_style(internal ? internalStructureLineStyle : externalStructureLineStyle), width = internal ? globalLineWidth : emphasisLineWidth, force_overlay = true)
+        label breakLabel = label.new(x = midTime, y = ev.structureLevel, text = breakText, xloc = xloc.bar_time, yloc = yloc.price, style = label.style_none, textcolor = breakColor, size = fontSize, force_overlay = true)
+        StructureMark mark = StructureMark.new()
+        mark.drawing := breakLine
+        mark.caption := breakLabel
+        mark.eventTime := ev.closeTime
+        array.push(structures, mark)
+        while array.size(structures) > maxStructureMarks
+            StructureMark oldMark = array.shift(structures)
+            line.delete(oldMark.drawing)
+            label.delete(oldMark.caption)
+        status := 1
+    status
+
+f_process_event(TfEvent ev, string tf, array<ZoneState> zones, array<LiquidityState> liquidity, array<StructureMark> structures, array<label> eventLabels) =>
+    int dropped = 0
+    bool chartEvent = f_is_chart_tf(tf)
+
+    f_update_zones(zones, tf, ev.barHigh, ev.barLow, ev.barClose, ev.closeTime)
+    if chartEvent
+        f_update_liquidity(liquidity, eventLabels, tf, ev.barHigh, ev.barLow, ev.barClose, ev.stamp, ev.closeTime)
+
+    if chartEvent and ev.swingHighEvent
+        dropped += f_add_liquidity(liquidity, tf, DIR_BULL, ev.swingHighPrice, ev.swingHighBody, ev.swingHighTime)
+    if chartEvent and ev.swingLowEvent
+        dropped += f_add_liquidity(liquidity, tf, DIR_BEAR, ev.swingLowPrice, ev.swingLowBody, ev.swingLowTime)
+
+    if chartEvent and ev.waveHighEvent
+        dropped += f_add_liquidity(liquidity, tf, DIR_BULL, ev.waveHighPrice, ev.waveHighPrice, ev.waveHighTime)
+    if chartEvent and ev.waveLowEvent
+        dropped += f_add_liquidity(liquidity, tf, DIR_BEAR, ev.waveLowPrice, ev.waveLowPrice, ev.waveLowTime)
+
+    if chartEvent and showThreeCandleWaves and ev.waveHighEvent
+        f_push_event_label(eventLabels, ev.waveHighTime, ev.waveHighPrice, '3B-H', rawColor)
+    if chartEvent and showThreeCandleWaves and ev.waveLowEvent
+        f_push_event_label(eventLabels, ev.waveLowTime, ev.waveLowPrice, '3B-L', rawColor)
+
+    if ev.bullFvg
+        if showFvg and showRawFvg
+            [fvgDropped, fvgAdded] = f_add_zone(zones, tf, KIND_FVG, 0, DIR_BULL, ev.bullFvgStartTime, ev.bullFvgEndTime, ev.bullFvgEndTime, ev.bullFvgTop, ev.bullFvgBottom, ev.rangeHigh, ev.rangeLow, false)
+            dropped += fvgDropped
+            if fvgAdded
+                f_link_new_zone_overlap(zones)
+
+    if ev.bearFvg
+        if showFvg and showRawFvg
+            [fvgDropped, fvgAdded] = f_add_zone(zones, tf, KIND_FVG, 0, DIR_BEAR, ev.bearFvgStartTime, ev.bearFvgEndTime, ev.bearFvgEndTime, ev.bearFvgTop, ev.bearFvgBottom, ev.rangeHigh, ev.rangeLow, false)
+            dropped += fvgDropped
+            if fvgAdded
+                f_link_new_zone_overlap(zones)
+
+    if ev.structureDir != 0
+        f_draw_structure_break(structures, tf, ev)
+        if not na(ev.obOppositeTime)
+            [ownedDropped, ownedAdded] = f_add_zone(zones, tf, KIND_OB, OB_OPPOSITE, ev.structureDir, ev.obOppositeTime, ev.closeTime, ev.closeTime, ev.obOppositeTop, ev.obOppositeBottom, ev.rangeHigh, ev.rangeLow, true)
+            dropped += ownedDropped
+            if ownedAdded
+                f_link_new_zone_overlap(zones)
+        f_mark_structure_zones(zones, ev, tf)
+        if chartEvent and ev.structureExternal
+            if ev.structureDir == DIR_BULL and not na(ev.protectedLowTime)
+                f_mark_liquidity_reason(liquidity, tf, DIR_BEAR, ev.protectedLowTime, 'EXT')
+                if showProtected
+                    f_mark_liquidity_reason(liquidity, tf, DIR_BEAR, ev.protectedLowTime, 'PL')
+            if ev.structureDir == DIR_BEAR and not na(ev.protectedHighTime)
+                f_mark_liquidity_reason(liquidity, tf, DIR_BULL, ev.protectedHighTime, 'EXT')
+                if showProtected
+                    f_mark_liquidity_reason(liquidity, tf, DIR_BULL, ev.protectedHighTime, 'PH')
+        if chartEvent
+            f_mark_trap(liquidity, zones, ev, tf)
+
+    dropped
+
+f_handle_one(TfEvent ev, string tf, int lastStamp, array<ZoneState> zones, array<LiquidityState> liquidity, array<StructureMark> structures, array<label> eventLabels) =>
+    int nextStamp = lastStamp
+    int dropped = 0
+    if not na(ev) and not na(ev.stamp) and (na(lastStamp) or ev.stamp != lastStamp)
+        dropped := f_process_event(ev, tf, zones, liquidity, structures, eventLabels)
+        nextStamp := ev.stamp
+    [nextStamp, dropped]
+
+f_handle_array(array<TfEvent> events, string tf, int lastStamp, array<ZoneState> zones, array<LiquidityState> liquidity, array<StructureMark> structures, array<label> eventLabels) =>
+    int nextStamp = lastStamp
+    int dropped = 0
+    if array.size(events) > 0
+        for i = 0 to array.size(events) - 1
+            TfEvent ev = array.get(events, i)
+            if not na(ev) and not na(ev.stamp) and (na(nextStamp) or ev.stamp != nextStamp)
+                dropped += f_process_event(ev, tf, zones, liquidity, structures, eventLabels)
+                nextStamp := ev.stamp
+    [nextStamp, dropped]
+
+var array<ZoneState> zones = array.new<ZoneState>()
+var array<LiquidityState> liquidity = array.new<LiquidityState>()
+var array<StructureMark> structures = array.new<StructureMark>()
+var array<label> eventLabels = array.new_label()
+var int overflowCount = 0
+
+bool showM1 = f_tf_visible(modeM1, '1')
+bool showM5 = f_tf_visible(modeM5, '5')
+bool showM15 = f_tf_visible(modeM15, '15')
+bool showM30 = f_tf_visible(modeM30, '30')
+bool showH1 = f_tf_visible(modeH1, '60')
+bool showH4 = f_tf_visible(modeH4, '240')
+
+float chartSeconds = timeframe.in_seconds()
+bool forceLowerM1 = modeM1 == '포함' and timeframe.in_seconds('1') < chartSeconds
+bool forceLowerM5 = modeM5 == '포함' and timeframe.in_seconds('5') < chartSeconds
+bool forceLowerM15 = modeM15 == '포함' and timeframe.in_seconds('15') < chartSeconds
+bool forceLowerM30 = modeM30 == '포함' and timeframe.in_seconds('30') < chartSeconds
+bool forceLowerH1 = modeH1 == '포함' and timeframe.in_seconds('60') < chartSeconds
+bool forceLowerH4 = modeH4 == '포함' and timeframe.in_seconds('240') < chartSeconds
+
+TfEvent evChart = f_snapshot(pivotLen, obLookback)
+TfEvent evM1 = showM1 and not forceLowerM1 ? (f_is_chart_tf('1') ? evChart : request.security(syminfo.tickerid, '1', f_snapshot(pivotLen, obLookback), gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on, calc_bars_count = sourceHistoryBars)) : na
+TfEvent evM5 = showM5 and not forceLowerM5 ? (f_is_chart_tf('5') ? evChart : request.security(syminfo.tickerid, '5', f_snapshot(pivotLen, obLookback), gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on, calc_bars_count = sourceHistoryBars)) : na
+TfEvent evM15 = showM15 and not forceLowerM15 ? (f_is_chart_tf('15') ? evChart : request.security(syminfo.tickerid, '15', f_snapshot(pivotLen, obLookback), gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on, calc_bars_count = sourceHistoryBars)) : na
+TfEvent evM30 = showM30 and not forceLowerM30 ? (f_is_chart_tf('30') ? evChart : request.security(syminfo.tickerid, '30', f_snapshot(pivotLen, obLookback), gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on, calc_bars_count = sourceHistoryBars)) : na
+TfEvent evH1 = showH1 and not forceLowerH1 ? (f_is_chart_tf('60') ? evChart : request.security(syminfo.tickerid, '60', f_snapshot(pivotLen, obLookback), gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on, calc_bars_count = sourceHistoryBars)) : na
+TfEvent evH4 = showH4 and not forceLowerH4 ? (f_is_chart_tf('240') ? evChart : request.security(syminfo.tickerid, '240', f_snapshot(pivotLen, obLookback), gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on, calc_bars_count = sourceHistoryBars)) : na
+
+array<TfEvent> lowerM1 = forceLowerM1 ? request.security_lower_tf(syminfo.tickerid, '1', f_snapshot(pivotLen, obLookback), ignore_invalid_timeframe = true, calc_bars_count = lowerHistoryBars) : array.new<TfEvent>()
+array<TfEvent> lowerM5 = forceLowerM5 ? request.security_lower_tf(syminfo.tickerid, '5', f_snapshot(pivotLen, obLookback), ignore_invalid_timeframe = true, calc_bars_count = lowerHistoryBars) : array.new<TfEvent>()
+array<TfEvent> lowerM15 = forceLowerM15 ? request.security_lower_tf(syminfo.tickerid, '15', f_snapshot(pivotLen, obLookback), ignore_invalid_timeframe = true, calc_bars_count = lowerHistoryBars) : array.new<TfEvent>()
+array<TfEvent> lowerM30 = forceLowerM30 ? request.security_lower_tf(syminfo.tickerid, '30', f_snapshot(pivotLen, obLookback), ignore_invalid_timeframe = true, calc_bars_count = lowerHistoryBars) : array.new<TfEvent>()
+array<TfEvent> lowerH1 = forceLowerH1 ? request.security_lower_tf(syminfo.tickerid, '60', f_snapshot(pivotLen, obLookback), ignore_invalid_timeframe = true, calc_bars_count = lowerHistoryBars) : array.new<TfEvent>()
+array<TfEvent> lowerH4 = forceLowerH4 ? request.security_lower_tf(syminfo.tickerid, '240', f_snapshot(pivotLen, obLookback), ignore_invalid_timeframe = true, calc_bars_count = lowerHistoryBars) : array.new<TfEvent>()
+
+var int lastM1Stamp = na
+var int lastM5Stamp = na
+var int lastM15Stamp = na
+var int lastM30Stamp = na
+var int lastH1Stamp = na
+var int lastH4Stamp = na
+
+if showM1
+    if forceLowerM1
+        [nextStamp, dropped] = f_handle_array(lowerM1, '1', lastM1Stamp, zones, liquidity, structures, eventLabels)
+        lastM1Stamp := nextStamp
+        overflowCount += dropped
+    else
+        [nextStamp, dropped] = f_handle_one(evM1, '1', lastM1Stamp, zones, liquidity, structures, eventLabels)
+        lastM1Stamp := nextStamp
+        overflowCount += dropped
+
+if showM5
+    if forceLowerM5
+        [nextStamp, dropped] = f_handle_array(lowerM5, '5', lastM5Stamp, zones, liquidity, structures, eventLabels)
+        lastM5Stamp := nextStamp
+        overflowCount += dropped
+    else
+        [nextStamp, dropped] = f_handle_one(evM5, '5', lastM5Stamp, zones, liquidity, structures, eventLabels)
+        lastM5Stamp := nextStamp
+        overflowCount += dropped
+
+if showM15
+    if forceLowerM15
+        [nextStamp, dropped] = f_handle_array(lowerM15, '15', lastM15Stamp, zones, liquidity, structures, eventLabels)
+        lastM15Stamp := nextStamp
+        overflowCount += dropped
+    else
+        [nextStamp, dropped] = f_handle_one(evM15, '15', lastM15Stamp, zones, liquidity, structures, eventLabels)
+        lastM15Stamp := nextStamp
+        overflowCount += dropped
+
+if showM30
+    if forceLowerM30
+        [nextStamp, dropped] = f_handle_array(lowerM30, '30', lastM30Stamp, zones, liquidity, structures, eventLabels)
+        lastM30Stamp := nextStamp
+        overflowCount += dropped
+    else
+        [nextStamp, dropped] = f_handle_one(evM30, '30', lastM30Stamp, zones, liquidity, structures, eventLabels)
+        lastM30Stamp := nextStamp
+        overflowCount += dropped
+
+if showH1
+    if forceLowerH1
+        [nextStamp, dropped] = f_handle_array(lowerH1, '60', lastH1Stamp, zones, liquidity, structures, eventLabels)
+        lastH1Stamp := nextStamp
+        overflowCount += dropped
+    else
+        [nextStamp, dropped] = f_handle_one(evH1, '60', lastH1Stamp, zones, liquidity, structures, eventLabels)
+        lastH1Stamp := nextStamp
+        overflowCount += dropped
+
+if showH4
+    if forceLowerH4
+        [nextStamp, dropped] = f_handle_array(lowerH4, '240', lastH4Stamp, zones, liquidity, structures, eventLabels)
+        lastH4Stamp := nextStamp
+        overflowCount += dropped
+    else
+        [nextStamp, dropped] = f_handle_one(evH4, '240', lastH4Stamp, zones, liquidity, structures, eventLabels)
+        lastH4Stamp := nextStamp
+        overflowCount += dropped
+
+f_range_high(TfEvent ev) =>
+    not na(ev) ? ev.rangeHigh : na
+
+f_range_low(TfEvent ev) =>
+    not na(ev) ? ev.rangeLow : na
+
+f_raw_range_high(TfEvent ev) =>
+    not na(ev) ? ev.rawRangeHigh : na
+
+f_raw_range_low(TfEvent ev) =>
+    not na(ev) ? ev.rawRangeLow : na
+
+f_range_eq(TfEvent ev) =>
+    float hi = f_range_high(ev)
+    float lo = f_range_low(ev)
+    not na(hi) and not na(lo) ? (hi + lo) / 2.0 : na
+
+plot(showPd and showM1 ? f_range_high(evM1) : na, '[M1] 외부 고점', color = f_with_tf_alpha(bearColor, '1', 10), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showM1 ? f_range_low(evM1) : na, '[M1] 외부 저점', color = f_with_tf_alpha(bullColor, '1', 10), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showM1 ? f_range_eq(evM1) : na, '[M1] 균형가 / EQ 50%', color = f_with_tf_alpha(color.white, '1', 25), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showM5 ? f_range_high(evM5) : na, '[M5] 외부 고점', color = f_with_tf_alpha(bearColor, '5', 10), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showM5 ? f_range_low(evM5) : na, '[M5] 외부 저점', color = f_with_tf_alpha(bullColor, '5', 10), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showM5 ? f_range_eq(evM5) : na, '[M5] 균형가 / EQ 50%', color = f_with_tf_alpha(color.white, '5', 25), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showM15 ? f_range_high(evM15) : na, '[M15] 외부 고점', color = f_with_tf_alpha(bearColor, '15', 10), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showM15 ? f_range_low(evM15) : na, '[M15] 외부 저점', color = f_with_tf_alpha(bullColor, '15', 10), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showM15 ? f_range_eq(evM15) : na, '[M15] 균형가 / EQ 50%', color = f_with_tf_alpha(color.white, '15', 25), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showM30 ? f_range_high(evM30) : na, '[M30] 외부 고점', color = f_with_tf_alpha(bearColor, '30', 10), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showM30 ? f_range_low(evM30) : na, '[M30] 외부 저점', color = f_with_tf_alpha(bullColor, '30', 10), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showM30 ? f_range_eq(evM30) : na, '[M30] 균형가 / EQ 50%', color = f_with_tf_alpha(color.white, '30', 25), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showH1 ? f_range_high(evH1) : na, '[H1] 외부 고점', color = f_with_tf_alpha(bearColor, '60', 10), linewidth = emphasisLineWidth, style = plot.style_linebr)
+plot(showPd and showH1 ? f_range_low(evH1) : na, '[H1] 외부 저점', color = f_with_tf_alpha(bullColor, '60', 10), linewidth = emphasisLineWidth, style = plot.style_linebr)
+plot(showPd and showH1 ? f_range_eq(evH1) : na, '[H1] 균형가 / EQ 50%', color = f_with_tf_alpha(color.white, '60', 25), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showPd and showH4 ? f_range_high(evH4) : na, '[H4] 외부 고점', color = f_with_tf_alpha(bearColor, '240', 10), linewidth = emphasisLineWidth, style = plot.style_linebr)
+plot(showPd and showH4 ? f_range_low(evH4) : na, '[H4] 외부 저점', color = f_with_tf_alpha(bullColor, '240', 10), linewidth = emphasisLineWidth, style = plot.style_linebr)
+plot(showPd and showH4 ? f_range_eq(evH4) : na, '[H4] 균형가 / EQ 50%', color = f_with_tf_alpha(color.white, '240', 25), linewidth = emphasisLineWidth, style = plot.style_linebr)
+
+float currentRangeHigh = timeframe.period == '1' ? f_range_high(evM1) : timeframe.period == '5' ? f_range_high(evM5) : timeframe.period == '15' ? f_range_high(evM15) : timeframe.period == '30' ? f_range_high(evM30) : timeframe.period == '60' ? f_range_high(evH1) : timeframe.period == '240' ? f_range_high(evH4) : na
+float currentRangeLow = timeframe.period == '1' ? f_range_low(evM1) : timeframe.period == '5' ? f_range_low(evM5) : timeframe.period == '15' ? f_range_low(evM15) : timeframe.period == '30' ? f_range_low(evM30) : timeframe.period == '60' ? f_range_low(evH1) : timeframe.period == '240' ? f_range_low(evH4) : na
+float currentRawRangeHigh = timeframe.period == '1' ? f_raw_range_high(evM1) : timeframe.period == '5' ? f_raw_range_high(evM5) : timeframe.period == '15' ? f_raw_range_high(evM15) : timeframe.period == '30' ? f_raw_range_high(evM30) : timeframe.period == '60' ? f_raw_range_high(evH1) : timeframe.period == '240' ? f_raw_range_high(evH4) : na
+float currentRawRangeLow = timeframe.period == '1' ? f_raw_range_low(evM1) : timeframe.period == '5' ? f_raw_range_low(evM5) : timeframe.period == '15' ? f_raw_range_low(evM15) : timeframe.period == '30' ? f_raw_range_low(evM30) : timeframe.period == '60' ? f_raw_range_low(evH1) : timeframe.period == '240' ? f_raw_range_low(evH4) : na
+float currentRawEq = not na(currentRawRangeHigh) and not na(currentRawRangeLow) ? (currentRawRangeHigh + currentRawRangeLow) / 2.0 : na
+plot(showRawPd ? currentRawRangeHigh : na, '현재 TF 원시 고점', color = color.new(rawColor, 18), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showRawPd ? currentRawRangeLow : na, '현재 TF 원시 저점', color = color.new(rawColor, 18), linewidth = globalLineWidth, style = plot.style_linebr)
+plot(showRawPd ? currentRawEq : na, '현재 TF 원시 EQ', color = color.new(rawColor, 30), linewidth = globalLineWidth, style = plot.style_linebr)
+
+float currentEq = not na(currentRangeHigh) and not na(currentRangeLow) ? (currentRangeHigh + currentRangeLow) / 2.0 : na
+bgcolor(showPd and showPdBackground and not na(currentEq) and close >= currentEq ? color.new(bearColor, 95) : showPd and showPdBackground and not na(currentEq) and close < currentEq ? color.new(bullColor, 95) : na, title = '현재 시간봉 Premium / Discount 배경')
+
+float chartPh = ta.pivothigh(high, pivotLen, pivotLen)
+float chartPl = ta.pivotlow(low, pivotLen, pivotLen)
+float chartLastHigh = ta.valuewhen(not na(chartPh), chartPh, 0)
+float chartLastLow = ta.valuewhen(not na(chartPl), chartPl, 0)
+buySideSweep = not na(chartLastHigh) and high > chartLastHigh and close < chartLastHigh
+sellSideSweep = not na(chartLastLow) and low < chartLastLow and close > chartLastLow
+
+alertcondition(buySideSweep, '매수측 유동성 스윕', '현재 차트 시간봉에서 최근 raw swing high를 wick으로 관통한 뒤 아래에서 종가가 마감됐습니다.')
+alertcondition(sellSideSweep, '매도측 유동성 스윕', '현재 차트 시간봉에서 최근 raw swing low를 wick으로 관통한 뒤 위에서 종가가 마감됐습니다.')
+
+var table statusTable = table.new(position.top_right, 2, 5, border_width = globalLineWidth, frame_color = color.new(color.white, 82), border_color = color.new(color.white, 88))
+if barstate.islast
+    string visibleTfs = (showM1 ? 'M1 ' : '') + (showM5 ? 'M5 ' : '') + (showM15 ? 'M15 ' : '') + (showM30 ? 'M30 ' : '') + (showH1 ? 'H1 ' : '') + (showH4 ? 'H4' : '')
+    color tableBg = color.new(color.rgb(15, 23, 42), 12)
+    color tableText = color.new(color.white, 10)
+    if showStatusTable
+        table.cell(statusTable, 0, 0, 'ICT MTF', bgcolor = tableBg, text_color = color.aqua, text_size = size.small)
+        table.cell(statusTable, 1, 0, '3B 보호점 구조', bgcolor = tableBg, text_color = tableText, text_size = size.small)
+        table.cell(statusTable, 0, 1, '겹침 판정 TF', bgcolor = tableBg, text_color = tableText, text_size = size.tiny)
+        table.cell(statusTable, 1, 1, visibleTfs, bgcolor = tableBg, text_color = tableText, text_size = size.tiny)
+        table.cell(statusTable, 0, 2, 'FVG / OB 추적', bgcolor = tableBg, text_color = tableText, text_size = size.tiny)
+        table.cell(statusTable, 1, 2, str.tostring(f_count_zone_kind(zones, KIND_FVG)) + ' / ' + str.tostring(f_count_zone_kind(zones, KIND_OB)), bgcolor = tableBg, text_color = tableText, text_size = size.tiny)
+        table.cell(statusTable, 0, 3, '현재 TF 유동성', bgcolor = tableBg, text_color = tableText, text_size = size.tiny)
+        table.cell(statusTable, 1, 3, str.tostring(array.size(liquidity)), bgcolor = tableBg, text_color = tableText, text_size = size.tiny)
+        table.cell(statusTable, 0, 4, '추적 한도 정리', bgcolor = tableBg, text_color = overflowCount > 0 ? color.orange : tableText, text_size = size.tiny)
+        table.cell(statusTable, 1, 4, str.tostring(overflowCount) + '개', bgcolor = tableBg, text_color = overflowCount > 0 ? color.orange : tableText, text_size = size.tiny)
+    else
+        table.clear(statusTable, 0, 0, 1, 4)
+
+plot(na, title = '출력 확인', display = display.none)

@@ -1,0 +1,45 @@
+{
+  "responses": [
+    {
+      "schemaVersion": "4.7.0",
+      "action": "PLAN",
+      "direction": "LONG",
+      "scope": "EXTERNAL_CONTINUATION",
+      "dealingRange": {
+        "highBarId": "M30:1756852200",
+        "lowBarId": "M30:1756848600"
+      },
+      "objective": {
+        "barId": "M30:1756852200",
+        "side": "HIGH",
+        "kind": "EXTERNAL_SWING"
+      },
+      "mapProtectedSwingBarId": "M30:1756848600",
+      "ownerBreakTargetBarId": null,
+      "ownerBreakBarId": null,
+      "root": {
+        "obBarId": "M15:1756849500",
+        "displacementBarId": "M15:1756850400",
+        "protectedSwingBarId": "M15:1756848600"
+      },
+      "refinements": [
+        {
+          "obBarId": "M5:1756849800",
+          "displacementBarId": "M5:1756850400",
+          "protectedSwingBarId": "M5:1756849500"
+        }
+      ],
+      "intermediateLiquidityBarIds": ["M15:1756862100"],
+      "reason": "Audited M50-001 causal lineage."
+    },
+    {
+      "schemaVersion": "4.7.0",
+      "action": "ARM_REACTION",
+      "matureLiquidityBarId": "M1:1756867140",
+      "m5CorrectionSwingBarId": "M5:1756866900",
+      "chochReferenceBarId": "M1:1756866900",
+      "chochBreakBarId": "M1:1756867560",
+      "reason": "Mature SSL and completed M5/M1 body transfer."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "asOfUtc", "phase", "action", "candidates", "scopeComparisons", "reason"],
+  "properties": {
+    "schemaVersion": {"type": "string", "enum": ["2.0.0"]},
+    "asOfUtc": {"type": "string"},
+    "phase": {"type": "string", "enum": ["MAP_SCOUT"]},
+    "action": {"type": "string", "enum": ["CANDIDATE", "NO_CANDIDATE", "DATA_ERROR"]},
+    "candidates": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["candidateId", "direction", "scope", "rootBarId", "objectiveBarId", "objectiveSide", "objectiveType", "reason"],
+        "properties": {
+          "candidateId": {"type": "string"},
+          "direction": {"type": "string", "enum": ["LONG", "SHORT"]},
+          "scope": {"type": "string", "enum": ["EXTERNAL_CONTINUATION", "INTERNAL_ROTATION", "EXTERNAL_REVERSAL"]},
+          "rootBarId": {"type": "string"},
+          "objectiveBarId": {"type": "string"},
+          "objectiveSide": {"type": "string", "enum": ["BSL", "SSL"]},
+          "objectiveType": {"type": "string", "enum": ["EXTERNAL_LIQUIDITY", "INTERNAL_LIQUIDITY"]},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "scopeComparisons": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scope", "verdict", "reason"],
+        "properties": {
+          "scope": {"type": "string", "enum": ["EXTERNAL_CONTINUATION", "INTERNAL_ROTATION", "EXTERNAL_REVERSAL"]},
+          "verdict": {"type": "string", "enum": ["POSSIBLE", "REJECTED", "UNCLEAR"]},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "reason": {"type": "string"}
+  }
+}

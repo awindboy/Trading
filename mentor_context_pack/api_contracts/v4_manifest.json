@@ -1,0 +1,76 @@
+{
+  "pipelineVersion": "4.51-ground-truth-v2",
+  "authority": "AGENTS.md",
+  "agentsSha256": "1974e207e9cc4b474308675eaa1365a468505bdb8198ef56e8f7c1b7377104f3",
+  "generationMode": "AGENTS_SECTION_DERIVED_GROUND_TRUTH_V2",
+  "contracts": {
+    "plan": {
+      "path": "mentor_context_pack/api_contracts/plan_v4.md",
+      "sha256": "ab918d7f13d87e34c029cdfe48051b3bae80315fc364a295933c829671638419",
+      "authoritySections": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        14,
+        15,
+        18
+      ],
+      "mode": "semantic-compaction-no-new-permissions"
+    },
+    "triggerWatch": {
+      "path": "mentor_context_pack/api_contracts/trigger_watch_v4.md",
+      "sha256": "f873382f2bb89a23c439fcbda1f8c4ec777ef3d4098cc80005a82124b075d1a6",
+      "authoritySections": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        14,
+        15,
+        18
+      ],
+      "mode": "semantic-compaction-no-new-permissions"
+    },
+    "deliveryReview": {
+      "path": "mentor_context_pack/api_contracts/delivery_review_v4.md",
+      "sha256": "fa74a169f67960701f3b2791cd060537fff8ebbcd4e588ddb66244078e1a559a",
+      "authoritySections": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        14,
+        15,
+        18
+      ],
+      "mode": "semantic-compaction-no-new-permissions"
+    }
+  },
+  "coverageMatrix": {
+    "path": "mentor_context_pack/api_contracts/coverage_matrix.md",
+    "sha256": "790071b35d757e2c7cefbe2f3eee83faf362dc6657724993d85191439c6253d3",
+    "jsonPath": "mentor_context_pack/api_contracts/coverage_matrix.json",
+    "jsonSha256": "51ddae8d0dbe0c7140980e658dfd822d0021fe33b9a722fe2ffb0f752d2d2016"
+  }
+}

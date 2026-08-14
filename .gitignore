@@ -1,0 +1,17 @@
+node_modules/
+dist/
+__pycache__/
+*.py[cod]
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+*.local
+*.log
+data/mentor_ai_replay_secret.json
+data/backups/
+data/mentor_ai_live_v4/
+archive/outputs/
+output/
+.env
+.venv/
+__pycache__/

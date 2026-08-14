@@ -1,0 +1,506 @@
+[
+  {
+    "number": 1,
+    "video_id": "6l3mktEl9PM",
+    "title": "해외에서 이미 유명한 차트이론",
+    "youtube_url": "https://www.youtube.com/watch?v=6l3mktEl9PM",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\01_6l3mktEl9PM_study.jpg",
+    "frames": [
+      {
+        "seconds": 194,
+        "timestamp": "03:14",
+        "caption": "이전 고점의 유동성을 꼬리로 쓸어가는 장면"
+      },
+      {
+        "seconds": 451,
+        "timestamp": "07:31",
+        "caption": "Sweep 이후 구조 이탈과 OB 되돌림을 연결하는 장면"
+      },
+      {
+        "seconds": 612,
+        "timestamp": "10:12",
+        "caption": "반대편 손절 유동성을 TP 후보로 지정하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 2,
+    "video_id": "7sQryLbDm6A",
+    "title": "ICT트레이딩 진입 전략",
+    "youtube_url": "https://www.youtube.com/watch?v=7sQryLbDm6A",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\02_7sQryLbDm6A_study.jpg",
+    "frames": [
+      {
+        "seconds": 260,
+        "timestamp": "04:20",
+        "caption": "큰 시간봉에서 방향과 구조 이탈을 정하는 장면"
+      },
+      {
+        "seconds": 332,
+        "timestamp": "05:32",
+        "caption": "같은 위치를 작은 시간봉으로 세분화하는 장면"
+      },
+      {
+        "seconds": 415,
+        "timestamp": "06:55",
+        "caption": "LTF 전환 과정의 FVG에서 진입을 잡는 장면"
+      }
+    ]
+  },
+  {
+    "number": 3,
+    "video_id": "stffuxegJLk",
+    "title": "FVG + liquidity 원리와 정리",
+    "youtube_url": "https://www.youtube.com/watch?v=stffuxegJLk",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\03_stffuxegJLk_study.jpg",
+    "frames": [
+      {
+        "seconds": 514,
+        "timestamp": "08:34",
+        "caption": "유동성 sweep 이후에도 즉시 진입하지 않는 장면"
+      },
+      {
+        "seconds": 748,
+        "timestamp": "12:28",
+        "caption": "FVG와 OB의 체결 범위 및 손절 위치를 비교하는 장면"
+      },
+      {
+        "seconds": 822,
+        "timestamp": "13:42",
+        "caption": "반대편 고점 유동성을 TP로 설정하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 4,
+    "video_id": "PcufwRQn3zE",
+    "title": "Price Action의 심리",
+    "youtube_url": "https://www.youtube.com/watch?v=PcufwRQn3zE",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\04_PcufwRQn3zE_study.jpg",
+    "frames": [
+      {
+        "seconds": 226,
+        "timestamp": "03:46",
+        "caption": "지지·저항 참가자들의 진입과 손절 위치를 추론하는 장면"
+      },
+      {
+        "seconds": 396,
+        "timestamp": "06:36",
+        "caption": "캔들 모양보다 손절이 몰린 가격대를 찾는 장면"
+      },
+      {
+        "seconds": 513,
+        "timestamp": "08:33",
+        "caption": "큰 흐름 뒤 작은 시간봉 전환을 기다리는 장면"
+      }
+    ]
+  },
+  {
+    "number": 5,
+    "video_id": "sZr8tlQEv7U",
+    "title": "OB전략이 실패한 이유",
+    "youtube_url": "https://www.youtube.com/watch?v=sZr8tlQEv7U",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\05_sZr8tlQEv7U_study.jpg",
+    "frames": [
+      {
+        "seconds": 221,
+        "timestamp": "03:41",
+        "caption": "이미 체결되어 소진된 FVG·OB를 구분하는 장면"
+      },
+      {
+        "seconds": 405,
+        "timestamp": "06:45",
+        "caption": "현재 추세 속에서 되돌림 가능 범위를 판단하는 장면"
+      },
+      {
+        "seconds": 515,
+        "timestamp": "08:35",
+        "caption": "구조 전환과 OB 반응을 함께 확인하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 6,
+    "video_id": "b9LzAMEu0JI",
+    "title": "ICT시장 구조 가격대 판별",
+    "youtube_url": "https://www.youtube.com/watch?v=b9LzAMEu0JI",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\06_b9LzAMEu0JI_study.jpg",
+    "frames": [
+      {
+        "seconds": 184,
+        "timestamp": "03:04",
+        "caption": "Premium과 Discount로 후보 위치를 나누는 장면"
+      },
+      {
+        "seconds": 397,
+        "timestamp": "06:37",
+        "caption": "구조 변화 zone과 50% 위치를 함께 보는 장면"
+      },
+      {
+        "seconds": 564,
+        "timestamp": "09:24",
+        "caption": "FVG보다 OB를 선택한 실제 맥락을 설명하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 7,
+    "video_id": "mcPF2iX1N-Y",
+    "title": "15m ICT Trading",
+    "youtube_url": "https://www.youtube.com/watch?v=mcPF2iX1N-Y",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\07_mcPF2iX1N-Y_study.jpg",
+    "frames": [
+      {
+        "seconds": 97,
+        "timestamp": "01:37",
+        "caption": "FVG를 메우는 캔들과 OB 정의를 설명하는 장면"
+      },
+      {
+        "seconds": 211,
+        "timestamp": "03:31",
+        "caption": "저점 유동성 sweep과 하락 추세 OB를 연결하는 장면"
+      },
+      {
+        "seconds": 292,
+        "timestamp": "04:52",
+        "caption": "반대편 손절 유동성을 목표로 설정하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 8,
+    "video_id": "KlECfDT1yas",
+    "title": "실시간 트레이딩 2",
+    "youtube_url": "https://www.youtube.com/watch?v=KlECfDT1yas",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\08_KlECfDT1yas_study.jpg",
+    "frames": [
+      {
+        "seconds": 93,
+        "timestamp": "01:33",
+        "caption": "여러 시간봉에서 현재 상승 구조를 다시 점검하는 장면"
+      },
+      {
+        "seconds": 208,
+        "timestamp": "03:28",
+        "caption": "진입 이후 실제 유동성과 1차 목표를 재확인하는 장면"
+      },
+      {
+        "seconds": 422,
+        "timestamp": "07:02",
+        "caption": "과거 반응과 현재 시나리오를 동일시하지 않는 장면"
+      }
+    ]
+  },
+  {
+    "number": 9,
+    "video_id": "4J4YzAsrWbI",
+    "title": "지금 진입 Yes or No",
+    "youtube_url": "https://www.youtube.com/watch?v=4J4YzAsrWbI",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\09_4J4YzAsrWbI_study.jpg",
+    "frames": [
+      {
+        "seconds": 181,
+        "timestamp": "03:01",
+        "caption": "H1의 불명확한 자리를 M15 OB로 세분화하는 장면"
+      },
+      {
+        "seconds": 533,
+        "timestamp": "08:53",
+        "caption": "외부 유동성과 내부 유동성을 구분하는 장면"
+      },
+      {
+        "seconds": 781,
+        "timestamp": "13:01",
+        "caption": "같은 가격을 다른 시간봉 구조로 다시 읽는 장면"
+      }
+    ]
+  },
+  {
+    "number": 10,
+    "video_id": "Q5vjDNLSNXM",
+    "title": "진입 전략 1 Trend 확인",
+    "youtube_url": "https://www.youtube.com/watch?v=Q5vjDNLSNXM",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\10_Q5vjDNLSNXM_study.jpg",
+    "frames": [
+      {
+        "seconds": 324,
+        "timestamp": "05:24",
+        "caption": "FVG보다 시장 구조를 먼저 확인해야 하는 장면"
+      },
+      {
+        "seconds": 581,
+        "timestamp": "09:41",
+        "caption": "반대색 캔들 세 개로 구조 파동을 읽는 장면"
+      },
+      {
+        "seconds": 823,
+        "timestamp": "13:43",
+        "caption": "실제 구조 변화 이후 반대 방향을 고려하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 11,
+    "video_id": "bCmYPKTj-pc",
+    "title": "진입 전략 2 Liquidity 이용하기",
+    "youtube_url": "https://www.youtube.com/watch?v=bCmYPKTj-pc",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\11_bCmYPKTj-pc_study.jpg",
+    "frames": [
+      {
+        "seconds": 338,
+        "timestamp": "05:38",
+        "caption": "강하게 방어된 고저점 뒤 손절 유동성을 찾는 장면"
+      },
+      {
+        "seconds": 516,
+        "timestamp": "08:36",
+        "caption": "HTF 고저점과 LTF 구조 전환을 연결하는 장면"
+      },
+      {
+        "seconds": 822,
+        "timestamp": "13:42",
+        "caption": "계단식 추세의 FVG 되돌림을 진입에 쓰는 장면"
+      }
+    ]
+  },
+  {
+    "number": 12,
+    "video_id": "nFo44-vQUKE",
+    "title": "진입 전략 3 FVG와 OB",
+    "youtube_url": "https://www.youtube.com/watch?v=nFo44-vQUKE",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\12_nFo44-vQUKE_study.jpg",
+    "frames": [
+      {
+        "seconds": 331,
+        "timestamp": "05:31",
+        "caption": "3캔들 FVG와 OB의 두 정의를 설명하는 장면"
+      },
+      {
+        "seconds": 528,
+        "timestamp": "08:48",
+        "caption": "큰 추세의 되돌림 속 LTF 반대 추세를 구분하는 장면"
+      },
+      {
+        "seconds": 629,
+        "timestamp": "10:29",
+        "caption": "반대편 손절 위치를 TP로 정하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 13,
+    "video_id": "aFdHzpa9o48",
+    "title": "진입 전략 4 Time frame 연동",
+    "youtube_url": "https://www.youtube.com/watch?v=aFdHzpa9o48",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\13_aFdHzpa9o48_study.jpg",
+    "frames": [
+      {
+        "seconds": 294,
+        "timestamp": "04:54",
+        "caption": "내부 구간에서 성급한 진입을 피하는 장면"
+      },
+      {
+        "seconds": 621,
+        "timestamp": "10:21",
+        "caption": "LTF CHoCH와 그 과정의 FVG·OB를 찾는 장면"
+      },
+      {
+        "seconds": 1006,
+        "timestamp": "16:46",
+        "caption": "지도·맥락·트리거 시간봉의 역할을 나누는 장면"
+      }
+    ]
+  },
+  {
+    "number": 14,
+    "video_id": "dD4PE-MlWmM",
+    "title": "비트코인 실시간 트레이딩 매매 분석",
+    "youtube_url": "https://www.youtube.com/watch?v=dD4PE-MlWmM",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\14_dD4PE-MlWmM_study.jpg",
+    "frames": [
+      {
+        "seconds": 347,
+        "timestamp": "05:47",
+        "caption": "현재 거래 기간에 유효한 활성 추세를 고르는 장면"
+      },
+      {
+        "seconds": 619,
+        "timestamp": "10:19",
+        "caption": "다른 시간봉에서 구조와 FVG를 재확인하는 장면"
+      },
+      {
+        "seconds": 799,
+        "timestamp": "13:19",
+        "caption": "되돌림을 놓친 뒤 빠른 진입 조건을 검토하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 15,
+    "video_id": "8cU6xdYaXaE",
+    "title": "실패와 또 다른 기회",
+    "youtube_url": "https://www.youtube.com/watch?v=8cU6xdYaXaE",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\15_8cU6xdYaXaE_study.jpg",
+    "frames": [
+      {
+        "seconds": 430,
+        "timestamp": "07:10",
+        "caption": "BOS·BSL·M5 POI를 연결해 진입을 복기하는 장면"
+      },
+      {
+        "seconds": 746,
+        "timestamp": "12:26",
+        "caption": "OB 대기와 FVG 선반응의 차이를 비교하는 장면"
+      },
+      {
+        "seconds": 1775,
+        "timestamp": "29:35",
+        "caption": "낮은 승률과 높은 손익비의 관계를 설명하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 16,
+    "video_id": "uhuyEbeJZP4",
+    "title": "SMC ICT의 원리와 맥락 이해",
+    "youtube_url": "https://www.youtube.com/watch?v=uhuyEbeJZP4",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\16_uhuyEbeJZP4_study.jpg",
+    "frames": [
+      {
+        "seconds": 556,
+        "timestamp": "09:16",
+        "caption": "시장 구조 변화와 CHoCH 뒤 zone 반응을 읽는 장면"
+      },
+      {
+        "seconds": 702,
+        "timestamp": "11:42",
+        "caption": "LTF가 지저분할 때 HTF로 구조를 복원하는 장면"
+      },
+      {
+        "seconds": 1265,
+        "timestamp": "21:05",
+        "caption": "유동성 맥락이 있는 zone만 선별하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 17,
+    "video_id": "iXOVCbwQh8A",
+    "title": "가격이동 분석이 맞았나요",
+    "youtube_url": "https://www.youtube.com/watch?v=iXOVCbwQh8A",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\17_iXOVCbwQh8A_study.jpg",
+    "frames": [
+      {
+        "seconds": 129,
+        "timestamp": "02:09",
+        "caption": "외부 반전 미확정 상태에서 가까운 내부 TP를 고르는 장면"
+      },
+      {
+        "seconds": 439,
+        "timestamp": "07:19",
+        "caption": "중간 장애물과 OB에서 포지션을 관리하는 장면"
+      },
+      {
+        "seconds": 572,
+        "timestamp": "09:32",
+        "caption": "가격 전달 실패 시 다음 구조를 검토하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 18,
+    "video_id": "7inzWhh_tdY",
+    "title": "손절 기준과 재진입 시나리오",
+    "youtube_url": "https://www.youtube.com/watch?v=7inzWhh_tdY",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\18_7inzWhh_tdY_study.jpg",
+    "frames": [
+      {
+        "seconds": 275,
+        "timestamp": "04:35",
+        "caption": "첫 시나리오의 구조·유동성·목표를 복기하는 장면"
+      },
+      {
+        "seconds": 482,
+        "timestamp": "08:02",
+        "caption": "유사해 보이지만 후속 구조가 달라 손절된 장면"
+      },
+      {
+        "seconds": 690,
+        "timestamp": "11:30",
+        "caption": "새 방향 확인 후 재진입 시나리오를 세우는 장면"
+      }
+    ]
+  },
+  {
+    "number": 19,
+    "video_id": "x0duegy7hH8",
+    "title": "SMC ICT 기준 매매일지 작성법",
+    "youtube_url": "https://www.youtube.com/watch?v=x0duegy7hH8",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\19_x0duegy7hH8_study.jpg",
+    "frames": [
+      {
+        "seconds": 241,
+        "timestamp": "04:01",
+        "caption": "진입 이유와 감정을 기록해 과매매 원인을 찾는 장면"
+      },
+      {
+        "seconds": 388,
+        "timestamp": "06:28",
+        "caption": "추세·유동성·공급 zone·trigger를 함께 복기하는 장면"
+      },
+      {
+        "seconds": 567,
+        "timestamp": "09:27",
+        "caption": "MTF 확인과 sniper 진입의 장단점을 비교하는 장면"
+      }
+    ]
+  },
+  {
+    "number": 20,
+    "video_id": "DARyWRgiN48",
+    "title": "부담과 감사를 느낀 아서",
+    "youtube_url": "https://www.youtube.com/watch?v=DARyWRgiN48",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\20_DARyWRgiN48_study.jpg",
+    "frames": [
+      {
+        "seconds": 292,
+        "timestamp": "04:52",
+        "caption": "큰 구조에서 상승 추세를 먼저 확인하는 장면"
+      },
+      {
+        "seconds": 361,
+        "timestamp": "06:01",
+        "caption": "M30에 없던 OB를 M15에서 찾아내는 장면"
+      },
+      {
+        "seconds": 469,
+        "timestamp": "07:49",
+        "caption": "되돌림 하락 추세의 반전까지 기다리는 장면"
+      }
+    ]
+  },
+  {
+    "number": 21,
+    "video_id": "v2d-oOuu03s",
+    "title": "실시간 트레이딩 빠르게 분석",
+    "youtube_url": "https://www.youtube.com/watch?v=v2d-oOuu03s",
+    "image": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\research\\mentor-youtube\\study_frames\\21_v2d-oOuu03s_study.jpg",
+    "frames": [
+      {
+        "seconds": 121,
+        "timestamp": "02:01",
+        "caption": "횡보 경계의 유동성과 OB를 연결하는 장면"
+      },
+      {
+        "seconds": 510,
+        "timestamp": "08:30",
+        "caption": "하락 추세 속 유동성·OB 반응으로 short를 검토하는 장면"
+      },
+      {
+        "seconds": 657,
+        "timestamp": "10:57",
+        "caption": "외부 상승과 내부 하락 구조를 분리하는 장면"
+      }
+    ]
+  }
+]

@@ -1,0 +1,143 @@
+{
+  "source": "AGENTS.md",
+  "sourceSha256": "8e4863594f50a03717dc7fa4d43b6e5aed399664474304fa7adf5e2ff5d65825",
+  "currentMatchesAuthority": true,
+  "contracts": {
+    "common": {
+      "path": "mentor_context_pack/api_contracts/common.md",
+      "ranges": [
+        [
+          13,
+          17
+        ],
+        [
+          19,
+          34
+        ],
+        [
+          49,
+          60
+        ],
+        [
+          424,
+          426
+        ]
+      ],
+      "mode": "semantic-compaction-no-new-permissions",
+      "sha256": "2d253aa0c7dcfa106d00f74e9b2910382fc49d0670d0a1b46f9518dc498e2b88",
+      "characters": 671
+    },
+    "map": {
+      "path": "mentor_context_pack/api_contracts/map.md",
+      "ranges": [
+        [
+          62,
+          122
+        ],
+        [
+          285,
+          289
+        ],
+        [
+          298,
+          301
+        ],
+        [
+          312,
+          312
+        ],
+        [
+          316,
+          316
+        ]
+      ],
+      "mode": "semantic-compaction-no-new-permissions",
+      "sha256": "a24314b99a1c2a8d19c99558d0c55004b2234c0f50fae2ccc245eab01c9c1b63",
+      "characters": 1637
+    },
+    "refinement": {
+      "path": "mentor_context_pack/api_contracts/refinement.md",
+      "ranges": [
+        [
+          101,
+          141
+        ],
+        [
+          288,
+          291
+        ],
+        [
+          299,
+          299
+        ],
+        [
+          313,
+          315
+        ]
+      ],
+      "mode": "semantic-compaction-no-new-permissions",
+      "sha256": "0e818f3882757cdf06551ec1b6f33d297ca9d960153123a063e8868502ddc3a7",
+      "characters": 1303
+    },
+    "trigger": {
+      "path": "mentor_context_pack/api_contracts/trigger.md",
+      "ranges": [
+        [
+          143,
+          190
+        ],
+        [
+          220,
+          226
+        ],
+        [
+          246,
+          273
+        ],
+        [
+          292,
+          302
+        ],
+        [
+          304,
+          306
+        ],
+        [
+          331,
+          344
+        ]
+      ],
+      "mode": "semantic-compaction-no-new-permissions",
+      "sha256": "2d85f2bf636f9a6005843920a4c535e0b0f6cb16cf45360edad400baf747e7cf",
+      "characters": 1566
+    },
+    "pending": {
+      "path": "mentor_context_pack/api_contracts/pending.md",
+      "ranges": [
+        [
+          197,
+          218
+        ],
+        [
+          228,
+          244
+        ],
+        [
+          246,
+          279
+        ],
+        [
+          296,
+          306
+        ],
+        [
+          343,
+          347
+        ]
+      ],
+      "mode": "semantic-compaction-no-new-permissions",
+      "sha256": "9ccbb7733b7a51d40dfeab72fba668b00bed65363002bd4922ae259f8d4c47be",
+      "characters": 1037
+    }
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "asOfUtc", "phase", "action", "state", "scenario",
+    "candleQueries", "watchEvents", "nextReviewAtUtc", "order", "rejectionReasons", "reason"
+  ],
+  "properties": {
+    "schemaVersion": {"type": "string", "enum": ["1.5.0"]},
+    "asOfUtc": {"type": "string"},
+    "phase": {"type": "string", "enum": ["MAP", "REFINEMENT", "TRIGGER", "PENDING_REVIEW"]},
+    "action": {"type": "string", "enum": ["QUERY_CANDLES", "WAIT", "PREPARE", "ARM", "ORDER", "CANCEL", "NO_TRADE", "DATA_ERROR"]},
+    "state": {"type": "string", "enum": ["FLAT", "PREPARED", "ARMED", "TRIGGERED", "PENDING", "CANCELED"]},
+    "scenario": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["scenarioId", "direction", "scope", "objective", "rootOb", "refinementPath", "sourceInvalidation"],
+      "properties": {
+        "scenarioId": {"type": "string"},
+        "direction": {"type": "string", "enum": ["LONG", "SHORT"]},
+        "scope": {"type": "string", "enum": ["EXTERNAL_CONTINUATION", "INTERNAL_ROTATION", "EXTERNAL_REVERSAL"]},
+        "objective": {"$ref": "#/$defs/level"},
+        "rootOb": {"$ref": "#/$defs/zone"},
+        "refinementPath": {"type": "array", "items": {"$ref": "#/$defs/zone"}},
+        "sourceInvalidation": {"type": "number"}
+      }
+    },
+    "candleQueries": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["queryId", "tf", "aroundTimeUtc", "before", "after", "purpose"],
+        "properties": {
+          "queryId": {"type": "string"},
+          "tf": {"type": "string", "enum": ["H1", "M30", "M15", "M5", "M1"]},
+          "aroundTimeUtc": {"type": "string"},
+          "before": {"type": "integer", "minimum": 0, "maximum": 3},
+          "after": {"type": "integer", "minimum": 0, "maximum": 3},
+          "purpose": {"type": "string", "enum": ["OBJECTIVE", "ROOT_OB", "CHILD_OB", "SWEEP", "CHOCH", "EXECUTION_ZONE", "INVALIDATION"]}
+        }
+      }
+    },
+    "watchEvents": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["eventId", "kind", "comparison", "price", "sourceTf", "sourceTimeUtc", "validUntilUtc"],
+        "properties": {
+          "eventId": {"type": "string"},
+          "kind": {"type": "string", "enum": ["ROOT_APPROACH", "CHILD_TOUCH", "SOURCE_INVALIDATION", "OBJECTIVE_REACHED", "SWEEP_CANDIDATE", "CHOCH_REFERENCE", "ORDER_CANCEL_LEVEL"]},
+          "comparison": {"type": "string", "enum": ["TOUCH", "CROSS_ABOVE", "CROSS_BELOW"]},
+          "price": {"type": "number"},
+          "sourceTf": {"type": "string", "enum": ["H1", "M30", "M15", "M5", "M1"]},
+          "sourceTimeUtc": {"type": "string"},
+          "validUntilUtc": {"type": "string"}
+        }
+      }
+    },
+    "nextReviewAtUtc": {"type": "string"},
+    "order": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["executionModel", "executionOriginTime", "executionLow", "executionHigh", "triggerLineage"],
+      "properties": {
+        "executionModel": {"type": "string", "enum": ["HTF_OB_REACTION", "HTF_OB_REACTION_INTENT", "DELIVERY_FVG_REPLACEMENT"]},
+        "executionOriginTime": {"type": "string"},
+        "executionLow": {"type": "number"},
+        "executionHigh": {"type": "number"},
+        "triggerLineage": {"type": "string"}
+      }
+    },
+    "rejectionReasons": {"type": "array", "items": {"type": "string"}},
+    "reason": {"type": "string"}
+  },
+  "$defs": {
+    "level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "side", "price", "sourceTf", "sourceTime"],
+      "properties": {
+        "type": {"type": "string", "enum": ["EXTERNAL_LIQUIDITY", "INTERNAL_LIQUIDITY"]},
+        "side": {"type": "string", "enum": ["BSL", "SSL"]},
+        "price": {"type": "number"},
+        "sourceTf": {"type": "string", "enum": ["H1", "M30", "M15", "M5", "M1"]},
+        "sourceTime": {"type": "string"}
+      }
+    },
+    "zone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tf", "originTime", "low", "high", "direction", "causalReason"],
+      "properties": {
+        "tf": {"type": "string", "enum": ["H1", "M30", "M15", "M5"]},
+        "originTime": {"type": "string"},
+        "low": {"type": "number"},
+        "high": {"type": "number"},
+        "direction": {"type": "string", "enum": ["BULLISH", "BEARISH"]},
+        "causalReason": {"type": "string"}
+      }
+    }
+  }
+}

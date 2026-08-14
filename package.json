@@ -1,0 +1,35 @@
+{
+  "name": "trading-journal",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "mt5": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_python_sandbox.ps1 bridge/mt5_bridge.py",
+    "install-mt5-ea": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_python_sandbox.ps1 scripts/install_mt5_ea.py",
+    "install-mt5-indicator": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_python_sandbox.ps1 scripts/install_mt5_indicator.py",
+    "check-mt5": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_python_sandbox.ps1 scripts/check_mt5_journal_pipeline.py",
+    "watch-mt5": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_python_sandbox.ps1 scripts/watch_mt5_journal_pipeline.py",
+    "test-ea-pipeline": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_python_sandbox.ps1 scripts/test_ea_event_pipeline.py",
+    "test-mentor-engine": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_python_sandbox.ps1 -m scripts.test_mentor_engine",
+    "test-replay-workspace": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_python_sandbox.ps1 -m scripts.test_replay_workspace",
+    "check-workspace": "python scripts/check_workspace_structure.py",
+    "replay-mentor-q1": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_python_sandbox.ps1 -m mentor_engine.cli",
+    "build": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "lightweight-charts": "^5.2.0",
+    "lucide-react": "^1.21.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^3.9.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^6.0.3",
+    "typescript": "^5.5.4",
+    "vite": "^8.1.0"
+  }
+}

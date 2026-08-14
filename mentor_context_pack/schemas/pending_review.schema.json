@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "asOfUtc", "phase", "action", "fvgLeftBarId", "fvgMiddleBarId", "fvgRightBarId", "causalObBarId", "deliveryProtectedSwingBarId", "reason"],
+  "properties": {
+    "schemaVersion": {"type": "string", "enum": ["2.0.0"]},
+    "asOfUtc": {"type": "string"},
+    "phase": {"type": "string", "enum": ["PENDING_REVIEW"]},
+    "action": {"type": "string", "enum": ["KEEP", "REPLACE_DELIVERY_FVG", "CANCEL", "DATA_ERROR"], "description": "REPLACE_DELIVERY_FVG is permitted only for a locally surfaced fresh FVG while the frozen original causal OB order or intent is still unfilled. KEEP preserves the original order or intent."},
+    "fvgLeftBarId": {"type": ["string", "null"]},
+    "fvgMiddleBarId": {"type": ["string", "null"]},
+    "fvgRightBarId": {"type": ["string", "null"]},
+    "causalObBarId": {"type": ["string", "null"]},
+    "deliveryProtectedSwingBarId": {"type": ["string", "null"]},
+    "reason": {"type": "string"}
+  }
+}

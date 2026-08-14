@@ -1,0 +1,79 @@
+{
+  "responses": [
+    {
+      "schemaVersion": "4.0.0",
+      "action": "NO_PLAN",
+      "selectedBarIds": [],
+      "direction": null,
+      "scope": null,
+      "dealingRange": null,
+      "objective": null,
+      "mapProtectedSwingIndex": null,
+      "ownerBreakTargetIndex": null,
+      "ownerBreakIndex": null,
+      "root": null,
+      "refinements": [],
+      "intermediateLiquidityIndexes": [],
+      "reason": "No complete frozen lineage yet."
+    },
+    {
+      "schemaVersion": "4.0.0",
+      "action": "NO_PLAN",
+      "selectedBarIds": [],
+      "direction": null,
+      "scope": null,
+      "dealingRange": null,
+      "objective": null,
+      "mapProtectedSwingIndex": null,
+      "ownerBreakTargetIndex": null,
+      "ownerBreakIndex": null,
+      "root": null,
+      "refinements": [],
+      "intermediateLiquidityIndexes": [],
+      "reason": "No complete frozen lineage yet."
+    },
+    {
+      "schemaVersion": "4.0.0",
+      "action": "PLAN",
+      "selectedBarIds": [
+        "M30:1756852200",
+        "M30:1756848600",
+        "M15:1756849500",
+        "M15:1756850400",
+        "M15:1756848600",
+        "M5:1756849800",
+        "M5:1756850400",
+        "M5:1756849500",
+        "M15:1756862100"
+      ],
+      "direction": "LONG",
+      "scope": "EXTERNAL_CONTINUATION",
+      "dealingRange": {"highIndex": 0, "lowIndex": 1},
+      "objective": {"barIndex": 0, "side": "HIGH", "kind": "EXTERNAL_SWING"},
+      "mapProtectedSwingIndex": 1,
+      "ownerBreakTargetIndex": null,
+      "ownerBreakIndex": null,
+      "root": {"obIndex": 2, "displacementIndex": 3, "protectedSwingIndex": 4},
+      "refinements": [
+        {"obIndex": 5, "displacementIndex": 6, "protectedSwingIndex": 7}
+      ],
+      "intermediateLiquidityIndexes": [8],
+      "reason": "Audited M50-001 root, objective, and causal M5 child."
+    },
+    {
+      "schemaVersion": "4.6.0",
+      "action": "ARM_REACTION",
+      "selectedBarIds": [
+        "M1:1756867140",
+        "M5:1756866900",
+        "M1:1756866900",
+        "M1:1756867560"
+      ],
+      "matureLiquidityIndex": 0,
+      "m5CorrectionSwingIndex": 1,
+      "chochReferenceIndex": 2,
+      "chochBreakIndex": 3,
+      "reason": "Mature SSL and completed M5/M1 body transfer."
+    }
+  ]
+}

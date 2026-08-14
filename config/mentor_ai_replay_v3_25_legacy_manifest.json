@@ -1,0 +1,23 @@
+{
+  "status": "READ_ONLY_LEGACY",
+  "pipelineVersion": "3.25-engine-validated-delivery-contract",
+  "createdFor": "Mentor AI Replay V4 isolation",
+  "files": [
+    {
+      "path": "scripts/mentor_ai_replay.py",
+      "sha256": "d8ab701164b3235e0c532561f7abba26bdcf7b35a5aee3954221d41bcc467667",
+      "bytes": 287906
+    },
+    {
+      "path": "scripts/mentor_replay_v2.py",
+      "sha256": "15abe5b0b21a0d89c868fe1bea06d5ce4299aeb9cc408e3b631e9b5dd6b0128b",
+      "bytes": 57291
+    }
+  ],
+  "excludedMutableArtifacts": [
+    "scripts/test_mentor_ai_replay_contract.py",
+    "mentor_context_pack/api_contracts/manifest.json"
+  ],
+  "excludedArtifactReason": "Tests and generated contracts are mutable workspace artifacts. V3 runtime source remains hash-locked; active V4.51 contracts are independently hash-verified by v4_manifest.json.",
+  "isolationRule": "Never load V3 state, schedules, watch events, correction logic, or resume data into V4."
+}

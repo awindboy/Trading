@@ -1,0 +1,248 @@
+{
+  "schema": "mentor-casebook-v1",
+  "replayFixtureStatus": "MISSING_TIMESTAMPED_OHLC_FIXTURES",
+  "replayFixtureNote": "Video timestamps and semantic decisions are documented, but the videos do not expose machine-readable symbol/date/OHLC coordinates. Semantic coverage must not be reported as chart-replay parity.",
+  "sourcePolicy": "Only the 21 videos listed in README.md are admissible.",
+  "cases": [
+    {
+      "id": "V05_OB_ONE_USE",
+      "video": 5,
+      "videoId": "sZr8tlQEv7U",
+      "timestamp": "01:57-05:14",
+      "decision": "RULE",
+      "confidence": "explicit",
+      "requiredFacts": ["TWO_OB_DEFINITIONS", "FVG_THREE_CANDLE_WICK_GAP", "OB_RETIRES_AFTER_FULL_USE"],
+      "forbiddenFacts": ["ALL_OB_REUSABLE"]
+    },
+    {
+      "id": "V05_ZONE_WITHOUT_TREND_NO_TRADE",
+      "video": 5,
+      "videoId": "sZr8tlQEv7U",
+      "timestamp": "06:16-08:35",
+      "decision": "NO_TRADE",
+      "confidence": "explicit",
+      "requiredFacts": ["ACTIVE_TREND_REQUIRED", "LIQUIDITY_CONTEXT_REQUIRED"],
+      "forbiddenFacts": ["FVG_ALONE_AUTHORIZES_ENTRY", "OB_ALONE_AUTHORIZES_ENTRY"]
+    },
+    {
+      "id": "V06_PD_CONTINUATION",
+      "video": 6,
+      "videoId": "b9LzAMEu0JI",
+      "timestamp": "03:04-09:58",
+      "decision": "TRADE",
+      "confidence": "explicit",
+      "scenarioScope": "EXTERNAL_CONTINUATION",
+      "requiredFacts": ["DEALING_RANGE_50_PERCENT", "PREMIUM_SHORT", "LIQUIDITY_SWEEP", "STRUCTURE_CONFIRMATION", "FVG_OR_OB_ENTRY"]
+    },
+    {
+      "id": "V07_SWEEP_REVERSAL_OB",
+      "video": 7,
+      "videoId": "mcPF2iX1N-Y",
+      "timestamp": "02:58-05:28",
+      "decision": "TRADE",
+      "confidence": "explicit",
+      "requiredFacts": ["SOURCE_LIQUIDITY_SWEEP", "CHOCH_AFTER_SWEEP", "REVERSAL_OB_ENTRY", "NEXT_LIQUIDITY_TARGET"]
+    },
+    {
+      "id": "V10_INTERNAL_RANGE_AVOID",
+      "video": 10,
+      "videoId": "Q5vjDNLSNXM",
+      "timestamp": "05:24-10:22",
+      "decision": "NO_TRADE",
+      "confidence": "explicit",
+      "requiredFacts": ["EXTERNAL_INTERNAL_SEPARATION", "INTERNAL_LEVELS_ARE_LIQUIDITY"],
+      "forbiddenFacts": ["EVERY_INTERNAL_CHOCH_FLIPS_EXTERNAL_TREND"]
+    },
+    {
+      "id": "V10_THREE_CANDLE_WAVE",
+      "video": 10,
+      "videoId": "Q5vjDNLSNXM",
+      "timestamp": "10:59-14:11",
+      "decision": "RULE",
+      "confidence": "explicit",
+      "requiredFacts": ["THREE_OPPOSITE_CANDLES_CONFIRM_WAVE", "BODY_BREAK_CONFIRMS_CHOCH", "CHOCH_FVG_RETEST"]
+    },
+    {
+      "id": "V11_OLD_HIGH_M1_TRIGGER",
+      "video": 11,
+      "videoId": "bCmYPKTj-pc",
+      "timestamp": "08:36-10:58",
+      "decision": "TRADE",
+      "confidence": "explicit",
+      "mapTimeframe": "HTF",
+      "triggerTimeframe": "M1",
+      "requiredFacts": ["EXTERNAL_SWING_LIQUIDITY", "M1_CHOCH", "M1_FVG_ENTRY", "TRENDLINE_LIQUIDITY_TARGET"]
+    },
+    {
+      "id": "V11_NO_EARLY_ENTRY",
+      "video": 11,
+      "videoId": "bCmYPKTj-pc",
+      "timestamp": "13:42-14:48",
+      "decision": "NO_TRADE_THEN_TRADE",
+      "confidence": "explicit",
+      "requiredFacts": ["SWEEP_BEFORE_TRIGGER", "WAIT_FOR_CHOCH", "CHOCH_FVG_RETEST"],
+      "forbiddenFacts": ["SWEEP_ALONE_AUTHORIZES_ENTRY"]
+    },
+    {
+      "id": "V12_CONTEXT_BEFORE_ZONE",
+      "video": 12,
+      "videoId": "nFo44-vQUKE",
+      "timestamp": "06:59-11:47",
+      "decision": "TRADE",
+      "confidence": "explicit",
+      "requiredFacts": ["TREND_FIRST", "LIQUIDITY_NEAR_ZONE", "LOWER_TIMEFRAME_CONFIRMATION"],
+      "forbiddenFacts": ["ALL_FVG_SUPPORT_RESISTANCE_TRADES"]
+    },
+    {
+      "id": "V13_H1_M15_M1_REFINEMENT",
+      "video": 13,
+      "videoId": "aFdHzpa9o48",
+      "timestamp": "04:54-14:18",
+      "decision": "TRADE",
+      "confidence": "explicit",
+      "mapTimeframe": "H1",
+      "contextTimeframe": "M15",
+      "triggerTimeframe": "M1",
+      "requiredFacts": ["HTF_MAP", "M15_LIQUIDITY_AND_OB", "M1_SWEEP", "M1_CHOCH", "LTF_STOP_REDUCTION"]
+    },
+    {
+      "id": "V13_INTERNAL_AREA_WAIT",
+      "video": 13,
+      "videoId": "aFdHzpa9o48",
+      "timestamp": "07:40-09:01",
+      "decision": "NO_TRADE_THEN_TRADE",
+      "confidence": "explicit",
+      "requiredFacts": ["WAIT_OUTSIDE_INTERNAL_NOISE", "BSL_SWEEP_BEFORE_SHORT", "CONTEXT_OB"]
+    },
+    {
+      "id": "V14_FVG_INVERSION_SEPARATE",
+      "video": 14,
+      "videoId": "dD4PE-MlWmM",
+      "timestamp": "13:19-16:27",
+      "decision": "VARIANT",
+      "confidence": "explicit",
+      "requiredFacts": ["FVG_INVERSION_IS_SEPARATE_PROTOCOL"],
+      "forbiddenFacts": ["FVG_INVERSION_IN_BASE_PROTOCOL"]
+    },
+    {
+      "id": "V15_OB_MISSED_FVG_FILLED",
+      "video": 15,
+      "videoId": "8cU6xdYaXaE",
+      "timestamp": "11:50-14:26",
+      "decision": "MISSED_ENTRY",
+      "confidence": "explicit",
+      "requiredFacts": ["FVG_CAN_FILL_BEFORE_OB", "FVG_AND_OB_EXECUTIONS_DIFFER"]
+    },
+    {
+      "id": "V15_BREAK_EVEN_SEPARATE",
+      "video": 15,
+      "videoId": "8cU6xdYaXaE",
+      "timestamp": "14:26-16:00",
+      "decision": "VARIANT",
+      "confidence": "explicit",
+      "requiredFacts": ["BREAK_EVEN_MANAGEMENT_IS_SEPARATE"],
+      "forbiddenFacts": ["DISCRETIONARY_BE_IN_BASE_BACKTEST"]
+    },
+    {
+      "id": "V16_NO_LIQUIDITY_WAIT",
+      "video": 16,
+      "videoId": "uhuyEbeJZP4",
+      "timestamp": "14:33-17:18",
+      "decision": "NO_TRADE_THEN_TRADE",
+      "confidence": "explicit",
+      "requiredFacts": ["ZONE_WITHOUT_TRAP_IS_NOT_READY", "REACTION_TRAP_CREATES_CONTEXT"],
+      "forbiddenFacts": ["NEAREST_FVG_AUTOMATIC_ENTRY"]
+    },
+    {
+      "id": "V16_H4_M30_M5_DELIVERY",
+      "video": 16,
+      "videoId": "uhuyEbeJZP4",
+      "timestamp": "17:33-20:41",
+      "decision": "TRADE",
+      "confidence": "explicit",
+      "mapTimeframe": "H4",
+      "contextTimeframe": "M30",
+      "triggerTimeframe": "M5",
+      "requiredFacts": ["H4_DESTINATION", "REACTION_TRAP_SWEEP", "M5_FVG_ENTRY", "LIQUIDITY_TARGET"]
+    },
+    {
+      "id": "V17_INTERNAL_TARGET",
+      "video": 17,
+      "videoId": "iXOVCbwQh8A",
+      "timestamp": "00:49-03:09",
+      "decision": "TRADE",
+      "confidence": "explicit",
+      "scenarioScope": "INTERNAL_ROTATION",
+      "requiredFacts": ["EXTERNAL_TREND_NOT_FLIPPED", "M1_CHOCH", "INTERNAL_OB_ENTRY", "NEAR_INTERNAL_LIQUIDITY_TARGET"],
+      "forbiddenFacts": ["FORCE_EXTERNAL_REVERSAL_TARGET"]
+    },
+    {
+      "id": "V17_PD_SKIP",
+      "video": 17,
+      "videoId": "iXOVCbwQh8A",
+      "timestamp": "04:14-05:28",
+      "decision": "NO_TRADE_THEN_TRADE",
+      "confidence": "explicit",
+      "requiredFacts": ["WAIT_FOR_CORRECT_50_PERCENT_HALF", "CHOCH_FVG_AFTER_PD"]
+    },
+    {
+      "id": "V18_VALID_LOSS",
+      "video": 18,
+      "videoId": "7inzWhh_tdY",
+      "timestamp": "04:35-10:02",
+      "decision": "TRADE_LOSS",
+      "confidence": "explicit",
+      "requiredFacts": ["VALID_STRUCTURE_CAN_LOSE", "PREDEFINED_STOP", "NO_POST_HOC_REWRITE"]
+    },
+    {
+      "id": "V18_NEW_REVERSE_SCENARIO",
+      "video": 18,
+      "videoId": "7inzWhh_tdY",
+      "timestamp": "10:02-14:50",
+      "decision": "NEW_TRADE",
+      "confidence": "explicit",
+      "scenarioScope": "EXTERNAL_REVERSAL",
+      "requiredFacts": ["OLD_SCENARIO_TERMINATED", "NEW_BODY_BREAK", "NEW_LIQUIDITY_SOURCE", "NEW_OBJECTIVE"]
+    },
+    {
+      "id": "V20_ADAPTIVE_M30_M15",
+      "video": 20,
+      "videoId": "DARyWRgiN48",
+      "timestamp": "04:52-08:22",
+      "decision": "TRADE",
+      "confidence": "explicit",
+      "mapTimeframe": "H1",
+      "contextTimeframe": "M15",
+      "requiredFacts": ["M30_HAS_NO_SOURCE_OB", "M15_REVEALS_SOURCE_OB", "LIQUIDITY_ON_APPROACH_SIDE", "ADAPTIVE_SOURCE_TIMEFRAME"]
+    },
+    {
+      "id": "V20_CONSERVATIVE_TARGET",
+      "video": 20,
+      "videoId": "DARyWRgiN48",
+      "timestamp": "08:30-10:16",
+      "decision": "TRADE",
+      "confidence": "explicit",
+      "requiredFacts": ["UNRESOLVED_LARGER_STRUCTURE", "NEARER_SCOPE_COMPATIBLE_TARGET"]
+    },
+    {
+      "id": "V21_INTERNAL_SHORT_WITHIN_EXTERNAL_UP",
+      "video": 21,
+      "videoId": "v2d-oOuu03s",
+      "timestamp": "02:01-12:45",
+      "decision": "TRADE",
+      "confidence": "explicit",
+      "scenarioScope": "INTERNAL_ROTATION",
+      "requiredFacts": ["EXTERNAL_UPTREND", "INTERNAL_DOWNTREND", "RANGE_OR_TRENDLINE_LIQUIDITY", "NEAR_INTERNAL_TARGET"]
+    },
+    {
+      "id": "V21_STOP_LOCATION_REASON",
+      "video": 21,
+      "videoId": "v2d-oOuu03s",
+      "timestamp": "13:21-13:52",
+      "decision": "RULE",
+      "confidence": "explicit",
+      "requiredFacts": ["LIQUIDITY_REQUIRES_PARTICIPANT_STOP_REASON"],
+      "forbiddenFacts": ["LATEST_PIVOT_EQUALS_LIQUIDITY"]
+    }
+  ]
+}

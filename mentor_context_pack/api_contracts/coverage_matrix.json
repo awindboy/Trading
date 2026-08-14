@@ -1,0 +1,2258 @@
+[
+  {
+    "ruleId": "S01-R001",
+    "authoritySection": 1,
+    "authorityText": "전략 근거는 이 폴더에 정리된 스승님의 21개 영상으로 제한한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "AGENTS authority text and supplied role IDs",
+    "codeInvariant": "fail-closed semantic contract validation",
+    "testId": "test_active_contract_surface_and_agents_hash",
+    "ledgerFields": "requestId, reason, evidence IDs"
+  },
+  {
+    "ruleId": "S01-R002",
+    "authoritySection": 1,
+    "authorityText": "일반 ICT/SMC 지식, 기존 EA, V32, 점수 모델, 역설계 결과는 거래를 허가할 수 없다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "AGENTS authority text and supplied role IDs",
+    "codeInvariant": "fail-closed semantic contract validation",
+    "testId": "test_active_contract_surface_and_agents_hash",
+    "ledgerFields": "requestId, reason, evidence IDs"
+  },
+  {
+    "ruleId": "S01-R003",
+    "authoritySection": 1,
+    "authorityText": "과거 문서나 기존 관행과 충돌하면 이 문서의 **비매매 원칙과 원인 우선순위**를 따른다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "AGENTS authority text and supplied role IDs",
+    "codeInvariant": "fail-closed semantic contract validation",
+    "testId": "test_active_contract_surface_and_agents_hash",
+    "ledgerFields": "requestId, reason, evidence IDs"
+  },
+  {
+    "ruleId": "S01-R004",
+    "authoritySection": 1,
+    "authorityText": "모호한 부분을 임의의 ICT 개념으로 채우지 않는다. 설명할 수 없으면 `비매매`다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "AGENTS authority text and supplied role IDs",
+    "codeInvariant": "fail-closed semantic contract validation",
+    "testId": "test_active_contract_surface_and_agents_hash",
+    "ledgerFields": "requestId, reason, evidence IDs"
+  },
+  {
+    "ruleId": "S01-R005",
+    "authoritySection": 1,
+    "authorityText": "결과가 수익이어도 이 계약을 위반한 거래는 스승님식 성과에 포함하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "AGENTS authority text and supplied role IDs",
+    "codeInvariant": "fail-closed semantic contract validation",
+    "testId": "test_active_contract_surface_and_agents_hash",
+    "ledgerFields": "requestId, reason, evidence IDs"
+  },
+  {
+    "ruleId": "S02-R001",
+    "authoritySection": 2,
+    "authorityText": "시간봉의 고정 역할",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "AGENTS authority text and supplied role IDs",
+    "codeInvariant": "fail-closed semantic contract validation",
+    "testId": "test_timeframe_and_future_bar_boundaries",
+    "ledgerFields": "requestId, reason, evidence IDs"
+  },
+  {
+    "ruleId": "S03-R001",
+    "authoritySection": 3,
+    "authorityText": "PLAN은 임의의 TP 하나가 아니라 동일 owner 경로의 순서가 고정된 `objective family`를 동결한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R002",
+    "authoritySection": 3,
+    "authorityText": "`EXTERNAL_CONTINUATION` family는 현재 H1/M30 외부 방향의 미소진 H1/M30 external liquidity로만 구성한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R003",
+    "authoritySection": 3,
+    "authorityText": "`INTERNAL_ROTATION` family는 외부 구조가 바뀌었다고 확대하지 않고, 현재 dealing range 안의 의미 있는 M15 이상 internal liquidity로만 구성한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R004",
+    "authoritySection": 3,
+    "authorityText": "`EXTERNAL_REVERSAL`은 반대 방향 M1 CHoCH만으로 선언하지 않는다. H1/M30 protected swing의 몸통 파괴와 새 방향 owner가 확인된 뒤에만 새 방향 external liquidity를 목표로 한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R005",
+    "authoritySection": 3,
+    "authorityText": "`EXTERNAL_CONTINUATION`의 entry와 external objective 사이에 있는 내부 유동성은 최종 TP가 아니라 `INTERMEDIATE_DELIVERY`로 사전에 기록한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R006",
+    "authoritySection": 3,
+    "authorityText": "`INTERMEDIATE_DELIVERY`가 CHoCH 또는 delivery displacement 과정에서 소진돼도, 외부 objective·owner·source lineage가 그대로라면 그것만으로 pending order를 취소하거나 TP를 재지정하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R007",
+    "authoritySection": 3,
+    "authorityText": "반대로 `INTERNAL_ROTATION`의 첫 internal objective가 entry 전에 소진되면 시나리오는 끝난다. 더 먼 internal/external liquidity로 TP를 갈아 끼우지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R008",
+    "authoritySection": 3,
+    "authorityText": "목적 유동성은 다른 참여자가 실제로 손절을 둘 만한 스윙, 반복 방어된 range edge, reaction trap 등이어야 한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R009",
+    "authoritySection": 3,
+    "authorityText": "단순 최근 pivot, 라운드 넘버, 이미 소진된 고저점은 목적 유동성이 아니다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R010",
+    "authoritySection": 3,
+    "authorityText": "비교할 수 없는 owner 경로의 목적지가 여러 개 남으면 하나의 family로 섞지 않고 별도 scenario lane으로 유지한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R011",
+    "authoritySection": 3,
+    "authorityText": "PLAN packet은 현재 구조의 미소진 H1/M30 objective를 주 경로로 보존하고, `2023-12-01` 이후의 먼 과거 미소진 H1 liquidity 중 현재가에서 방향상 가장 가까운 최대 `2개`만 비활성 fallback으로 함께 동결할 수 있다. 오래된 M30 이하는 fallback이 될 수 없다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R012",
+    "authoritySection": 3,
+    "authorityText": "장기 H1 fallback은 Entry와 hard SL이 확정된 뒤 현재 구조 objective가 없거나 모두 planned R `1` 미만인 경우에만 활성화한다. 현재 objective가 하나라도 planned R `>=1`이면 장기 H1 후보를 TP로 선택하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R013",
+    "authoritySection": 3,
+    "authorityText": "Entry와 hard SL이 확정된 시점에 family 순서대로 검사하여 아직 미소진이고 planned R `>=1`인 최초 수준을 최종 TP로 선택한다. 그 앞 수준은 `INTERMEDIATE_DELIVERY`다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R014",
+    "authoritySection": 3,
+    "authorityText": "`INTERNAL_ROTATION`에서는 진입가와 먼 유동성 사이의 더 가까운 성숙한 internal liquidity를 건너뛰지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R015",
+    "authoritySection": 3,
+    "authorityText": "`EXTERNAL_CONTINUATION`에서는 더 가까운 내부 유동성을 숨기지 않고 중간 전달 지점으로 기록하되, 그것을 이유로 사전에 동결한 external objective를 내부 TP로 축소하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R016",
+    "authoritySection": 3,
+    "authorityText": "처음 선택한 목적지가 멀수록 좋은 거래라고 판단하지 않는다. 큰 R은 올바른 원인과 가까운 구조 무효화에서 나오는 결과이지, TP를 먼 유동성으로 밀어서 만드는 수치가 아니다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R017",
+    "authoritySection": 3,
+    "authorityText": "주문 전 최종 objective가 먼저 소진되거나 더 가까운 opposing liquidity가 새 owner로 확정되면 기존 시나리오와 pending order를 취소하고 map부터 다시 작성한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R018",
+    "authoritySection": 3,
+    "authorityText": "H1/M30 protected swing과 dealing range를 먼저 표시한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R019",
+    "authoritySection": 3,
+    "authorityText": "그 범위 안의 M15/M5 저점과 고점은 우선 내부 구조로 취급한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R020",
+    "authoritySection": 3,
+    "authorityText": "내부 저점 sweep만으로 H1 외부 반전을 선언하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R021",
+    "authoritySection": 3,
+    "authorityText": "외부 구조가 남아 있는데 M1 CHoCH가 발생해도 그것은 우선 내부 반응이다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R022",
+    "authoritySection": 3,
+    "authorityText": "H1/M30의 현재 external protected high와 low로 active dealing range를 정하고 EQ 50%를 표시한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R023",
+    "authoritySection": 3,
+    "authorityText": "`EXTERNAL_CONTINUATION` long은 discount에서만, short은 premium에서만 준비한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R024",
+    "authoritySection": 3,
+    "authorityText": "continuation 방향의 POI가 반대 절반에 있으면 OB가 선명해도 정보로만 남기고 주문 권한을 부여하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R025",
+    "authoritySection": 3,
+    "authorityText": "`INTERNAL_ROTATION`은 range의 반대편 외부 유동성까지 확대하지 않고 현재 range 안의 첫 내부 objective에서 끝낸다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S03-R026",
+    "authoritySection": 3,
+    "authorityText": "premium/discount 위치는 단독 진입 신호가 아니다. 올바른 위치에 있더라도 root OB, causal refinement, mature sweep, M1 trigger가 모두 필요하다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "objectiveFamily, dealingRange, protectedSwing",
+    "codeInvariant": "deterministic objective-family selection",
+    "testId": "test_objective_family_scope_lifecycle",
+    "ledgerFields": "objectiveFamilyId, selectedObjective, intermediateDelivery"
+  },
+  {
+    "ruleId": "S04-R001",
+    "authoritySection": 4,
+    "authorityText": "화면에서 가장 가까운 반대색 캔들",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "rootBarId, displacementBarId, protectedSwing IDs and raw OHLC",
+    "codeInvariant": "root structure-transfer and lifecycle validation",
+    "testId": "test_displacement_episode_and_nonpivot_protected",
+    "ledgerFields": "rootObBarId, displacementBarId, protectedSwingBarId"
+  },
+  {
+    "ruleId": "S04-R002",
+    "authoritySection": 4,
+    "authorityText": "M1 반응을 보고 사후에 선택한 HTF 캔들",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "rootBarId, displacementBarId, protectedSwing IDs and raw OHLC",
+    "codeInvariant": "root structure-transfer and lifecycle validation",
+    "testId": "test_displacement_episode_and_nonpivot_protected",
+    "ledgerFields": "rootObBarId, displacementBarId, protectedSwingBarId"
+  },
+  {
+    "ruleId": "S04-R003",
+    "authoritySection": 4,
+    "authorityText": "구조 전달을 만들지 않은 임의의 캔들 묶음",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "rootBarId, displacementBarId, protectedSwing IDs and raw OHLC",
+    "codeInvariant": "root structure-transfer and lifecycle validation",
+    "testId": "test_displacement_episode_and_nonpivot_protected",
+    "ledgerFields": "rootObBarId, displacementBarId, protectedSwingBarId"
+  },
+  {
+    "ruleId": "S04-R004",
+    "authoritySection": 4,
+    "authorityText": "단순히 FVG와 겹치는 캔들",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "rootBarId, displacementBarId, protectedSwing IDs and raw OHLC",
+    "codeInvariant": "root structure-transfer and lifecycle validation",
+    "testId": "test_displacement_episode_and_nonpivot_protected",
+    "ledgerFields": "rootObBarId, displacementBarId, protectedSwingBarId"
+  },
+  {
+    "ruleId": "S04-R005",
+    "authoritySection": 4,
+    "authorityText": "이미 여러 번 완전히 체결된 OB",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "rootBarId, displacementBarId, protectedSwing IDs and raw OHLC",
+    "codeInvariant": "root structure-transfer and lifecycle validation",
+    "testId": "test_displacement_episode_and_nonpivot_protected",
+    "ledgerFields": "rootObBarId, displacementBarId, protectedSwingBarId"
+  },
+  {
+    "ruleId": "S04-R006",
+    "authoritySection": 4,
+    "authorityText": "HTF FVG 자체",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "rootBarId, displacementBarId, protectedSwing IDs and raw OHLC",
+    "codeInvariant": "root structure-transfer and lifecycle validation",
+    "testId": "test_displacement_episode_and_nonpivot_protected",
+    "ledgerFields": "rootObBarId, displacementBarId, protectedSwingBarId"
+  },
+  {
+    "ruleId": "S05-R001",
+    "authoritySection": 5,
+    "authorityText": "causal LTF OB refinement",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "lineagePathOptions and parent-child raw OHLC",
+    "codeInvariant": "causal lineage freeze and unresolved-lineage rejection",
+    "testId": "test_lineage_paging_roundtrip",
+    "ledgerFields": "refinementObBarIds, sourceFamilyKey"
+  },
+  {
+    "ruleId": "S06-R001",
+    "authoritySection": 6,
+    "authorityText": "목적 유동성 동결",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R002",
+    "authoritySection": 6,
+    "authorityText": "map 방향과 scenario scope 동결",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R003",
+    "authoritySection": 6,
+    "authorityText": "HTF root OB 동결",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R004",
+    "authoritySection": 6,
+    "authorityText": "causal LTF refinement 경로 동결",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R005",
+    "authoritySection": 6,
+    "authorityText": "source/refined OB 무효화 가격 동결",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R006",
+    "authoritySection": 6,
+    "authorityText": "가격이 refined OB에 실제 접촉",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R007",
+    "authoritySection": 6,
+    "authorityText": "sweep 대상 고저점은 **최종 sweep excursion이 시작되기 전에 이미 존재**해야 한다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R008",
+    "authoritySection": 6,
+    "authorityText": "그 고저점에서 최소 한 번의 완결된 반응이 나와 live swing 또는 실제 stop pool로 확인돼야 한다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R009",
+    "authoritySection": 6,
+    "authorityText": "현재 reaction leg가 방금 만든 고저점을 같은 leg 안에서 즉시 `BSL/SSL sweep 완료`로 선언하지 않는다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R010",
+    "authoritySection": 6,
+    "authorityText": "reaction 중 생긴 고저점은 가격이 충분히 이탈해 구조가 확정된 뒤, 별도의 후속 접근이 그것을 관통하고 회복할 때만 sweep 근거가 될 수 있다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R011",
+    "authoritySection": 6,
+    "authorityText": "하나의 진행 중 wick이 고점을 만들고 다시 밀렸다는 이유만으로 `final sweep`이라 부르지 않는다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R012",
+    "authoritySection": 6,
+    "authorityText": "wick 돌파가 아니라 몸통 종가 돌파여야 한다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R013",
+    "authoritySection": 6,
+    "authorityText": "하락 중 long이라면 실제 correction을 지배하던 반응 고점을 깨야 한다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R014",
+    "authoritySection": 6,
+    "authorityText": "상승 중 short이라면 실제 correction을 지배하던 반응 저점을 깨야 한다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R015",
+    "authoritySection": 6,
+    "authorityText": "한두 캔들의 미세 pivot이나 같은 방향의 내부 흔들림은 CHoCH가 아니다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R016",
+    "authoritySection": 6,
+    "authorityText": "M1 CHoCH가 선명해도 HTF root OB와 refinement가 없으면 진입하지 않는다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R017",
+    "authoritySection": 6,
+    "authorityText": "M1 CHoCH가 M5 correction을 지배하던 swing을 깨지 못했다면 HTF delivery 전환으로 승격하지 않는다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S06-R018",
+    "authoritySection": 6,
+    "authorityText": "M5가 명확히 반대 방향으로 전달 중인데 M1에서만 짧은 반등 CHoCH가 발생하면 우선 내부 correction으로 분류한다.",
+    "geminiContracts": [
+      "triggerWatch"
+    ],
+    "packetEvidence": "touch, mature liquidity, sweep, CHoCH, execution IDs",
+    "codeInvariant": "post-touch ordered trigger chain",
+    "testId": "test_trigger_latency_and_through_delivery",
+    "ledgerFields": "childTouchAtUtc, sweepBarId, chochBreakBarId, executionObBarId"
+  },
+  {
+    "ruleId": "S07-R001",
+    "authoritySection": 7,
+    "authorityText": "source와 SL 근거는 HTF-to-LTF OB lineage다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R002",
+    "authoritySection": 7,
+    "authorityText": "M1 CHoCH FVG는 displacement 확인 정보다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R003",
+    "authoritySection": 7,
+    "authorityText": "기본 최초 진입은 마지막 causal execution OB의 retest다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R004",
+    "authoritySection": 7,
+    "authorityText": "CHoCH FVG가 선명하더라도 누락된 root OB 또는 refinement를 대신할 수 없다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R005",
+    "authoritySection": 7,
+    "authorityText": "CHoCH FVG 자체를 최초 entry zone으로 쓰는 변형",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R006",
+    "authoritySection": 7,
+    "authorityText": "HTF FVG를 source로 쓰는 변형",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R007",
+    "authoritySection": 7,
+    "authorityText": "동결된 HTF owner·objective·OB lineage 없이 delivery FVG만 추격하는 변형",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R008",
+    "authoritySection": 7,
+    "authorityText": "FVG inversion 진입",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R009",
+    "authoritySection": 7,
+    "authorityText": "기존의 깊은 OB pending은 delivery가 확인되는 즉시 취소한다. 원주문과 대체 주문을 동시에 남기지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R010",
+    "authoritySection": 7,
+    "authorityText": "기본 entry는 fresh FVG의 방향별 proximal boundary다. FVG 안의 causal M1 OB가 같은 displacement를 명확히 설명하면 그 OB의 첫 retest로 정밀화할 수 있다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R011",
+    "authoritySection": 7,
+    "authorityText": "SL은 fresh FVG distal 하나가 아니라 displacement causal OB distal, trigger protected swing, 원래 final child 무효화 중 정상 되돌림을 모두 벗어나는 가장 보수적인 경계 바깥에 둔다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R012",
+    "authoritySection": 7,
+    "authorityText": "주문 생성 시점의 `max(actual spread, broker stops level, 1 tick)` buffer를 그 구조 경계 바깥에 더한다. FVG distal은 entry zone의 상태와 through-delivery를 판정하는 정보이지 hard SL의 단독 권한이 아니다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R013",
+    "authoritySection": 7,
+    "authorityText": "체결 시점 spread가 동결 buffer보다 커졌다면 SL을 사후로 넓히지 않고 주문을 취소한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R014",
+    "authoritySection": 7,
+    "authorityText": "TP는 처음 동결한 동일 objective다. FVG 진입으로 바뀌었다는 이유로 목표를 더 멀리 연장하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R015",
+    "authoritySection": 7,
+    "authorityText": "첫 retest 전에 objective가 소진되거나 owner가 바뀌거나 FVG/causal OB/protected swing이 무효화되면 주문을 취소한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S07-R016",
+    "authoritySection": 7,
+    "authorityText": "첫 되돌림 없이 목적지까지 직행하면 `MISSED - NO DELIVERY RETEST`로 기록하고 보내준다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "fresh FVG, causal OB, first-retest evidence",
+    "codeInvariant": "causal structural SL, add-on disabled, and one physical execution ID",
+    "testId": "test_delivery_fvg_dedup_addon_reentry",
+    "ledgerFields": "executionModel, deliveryFvgBarId, executionSignalKey"
+  },
+  {
+    "ruleId": "S08-R001",
+    "authoritySection": 8,
+    "authorityText": "최초 진입은 final causal execution OB의 방향별 proximal boundary를 기본으로 한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R002",
+    "authoritySection": 8,
+    "authorityText": "이미 지나간 첫 retest에 사후 진입하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R003",
+    "authoritySection": 8,
+    "authorityText": "가격이 POI에서 출발했다면 시장가로 추격하지 않는다. 원래 시나리오가 유지되고 목적지 방향 displacement가 새 fresh FVG를 만든 경우에만 제7장의 `DELIVERY_FVG_REPLACEMENT`를 검토한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R004",
+    "authoritySection": 8,
+    "authorityText": "`PENDING`은 무기한 유효하지 않다. 새로운 H1 또는 M15 확정봉이 생길 때마다 owner, scope, objective, source freshness, trigger protected swing을 다시 승인한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R005",
+    "authoritySection": 8,
+    "authorityText": "주문 생성 뒤 한 번이라도 H1/M15 map이 달라졌는데 재승인 기록이 없으면 체결하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R006",
+    "authoritySection": 8,
+    "authorityText": "objective 선도달, root/child 몸통 무효화, trigger protected swing 파괴, POI 완전 소비, opposing owner 확정 중 하나가 발생하면 즉시 `CANCELED`다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R007",
+    "authoritySection": 8,
+    "authorityText": "trigger 뒤 가격이 entry zone을 떠나 새로운 HTF leg를 만든 경우, 과거 M1 trigger를 다음 세션까지 재사용하지 않는다. 새로운 진입에는 새로운 sweep부터 execution OB까지 전 체인이 필요하다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R008",
+    "authoritySection": 8,
+    "authorityText": "entry와 trigger invalidation 또는 SL을 같은 접근 displacement가 함께 관통하면 정상 retest가 아니라 `through-delivery`로 분류한다. historical tick이 별도의 진입-반응 순서를 증명하지 못하면 유효한 스승님식 체결로 승인하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R009",
+    "authoritySection": 8,
+    "authorityText": "주문 체결 시점의 시나리오를 주문 생성 시점의 설명만으로 정당화하지 않는다. **마지막 재승인 시각**을 원장에 반드시 기록한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R010",
+    "authoritySection": 8,
+    "authorityText": "final causal child OB의 distal",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R011",
+    "authoritySection": 8,
+    "authorityText": "해당 OB를 방어하는 protected swing",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R012",
+    "authoritySection": 8,
+    "authorityText": "유효한 sweep extreme",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R013",
+    "authoritySection": 8,
+    "authorityText": "현재 시나리오를 실제로 무효화하는 구조 가격",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R014",
+    "authoritySection": 8,
+    "authorityText": "hard SL buffer는 `actual spread`, `broker stops level`, `1 tick` 중 최댓값보다 작을 수 없다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R015",
+    "authoritySection": 8,
+    "authorityText": "long SL은 chart의 Bid 기준 하단 체결을, short SL은 Ask 기준 상단 체결을 반영한다. 특히 short는 chart high에 spread를 더하지 않은 SL을 금지한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R016",
+    "authoritySection": 8,
+    "authorityText": "sweep extreme 자체에 SL을 붙이지 않는다. 먼저 final sweep이 확정된 뒤 그 extreme 바깥에 execution buffer를 둔다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R017",
+    "authoritySection": 8,
+    "authorityText": "buffer 때문에 risk가 커지면 lot을 줄인다. 계획 R을 키우려고 SL을 spread 안쪽이나 micro pivot 바로 바깥으로 당기지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R018",
+    "authoritySection": 8,
+    "authorityText": "진입 전에 동결한 동일한 objective family를 사용하며, Entry·SL 확정 시 그 family에 결정론적 선택 규칙을 적용해 TP 하나를 확정한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R019",
+    "authoritySection": 8,
+    "authorityText": "유동성보다 더 멀리 임의 buffer를 두지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R020",
+    "authoritySection": 8,
+    "authorityText": "RR fallback, 최대 R 제한, 최소 R을 맞추기 위한 TP 이동을 사용하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R021",
+    "authoritySection": 8,
+    "authorityText": "TP가 지나치게 멀다고 느껴지면 목적 유동성과 scenario scope를 다시 검토한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R022",
+    "authoritySection": 8,
+    "authorityText": "EXTERNAL_CONTINUATION TP는 H1/M30 외부 방향의 다음 미소진 external liquidity다. 그 사이의 internal liquidity는 주문 전에 중간 전달 지점으로 기록하되 TP로 대체하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R023",
+    "authoritySection": 8,
+    "authorityText": "INTERNAL_ROTATION TP는 현재 dealing range 안의 첫 미소진 내부 유동성이다. H1 external body break가 없으면 그 너머 external liquidity까지 목표를 확장하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R024",
+    "authoritySection": 8,
+    "authorityText": "EXTERNAL_REVERSAL TP는 H1/M30 protected swing의 몸통 파괴와 새 owner 확인 뒤 선택한 새 방향 external liquidity다. M1 반전만으로 이 계약을 사용할 수 없다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R025",
+    "authoritySection": 8,
+    "authorityText": "목표 wick을 정확히 맞히는 대신 체결 안정성을 위해 front-run할 경우, 주문 전에 선언하고 actual spread 또는 1 tick 안쪽 범위로만 제한한다. 유동성 바깥으로 TP를 더 멀리 두는 것은 금지한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R026",
+    "authoritySection": 8,
+    "authorityText": "최초 SL 또는 TP가 결과를 판정한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R027",
+    "authoritySection": 8,
+    "authorityText": "공포, 수익 보호 욕구, 중간 M1 반대 신호로 임의 청산하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S08-R028",
+    "authoritySection": 8,
+    "authorityText": "시간 만료, 본절 이동, 부분 익절은 별도 승인 전까지 사용하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "entry, distal, spread, stops level, selected objective family member",
+    "codeInvariant": "risk geometry and exact liquidity TP",
+    "testId": "test_risk_slot_arbitration_and_geometry",
+    "ledgerFields": "entry, stop, target, buffer, plannedR"
+  },
+  {
+    "ruleId": "S09-R001",
+    "authoritySection": 9,
+    "authorityText": "즉시 비매매 조건",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "AGENTS authority text and supplied role IDs",
+    "codeInvariant": "fail-closed semantic contract validation",
+    "testId": "test_immediate_no_trade_contracts",
+    "ledgerFields": "requestId, reason, evidence IDs"
+  },
+  {
+    "ruleId": "S10-R001",
+    "authoritySection": 10,
+    "authorityText": "블라인드 재생 규율",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "closed-M1 as-of clock and frozen event IDs",
+    "codeInvariant": "future-hidden advance_closed_m1_bar",
+    "testId": "test_shared_advance_clock_and_restart",
+    "ledgerFields": "asOfUtc, lastClosedM1BarId, contentHash"
+  },
+  {
+    "ruleId": "S11-R001",
+    "authoritySection": 11,
+    "authorityText": "map TF와 scenario scope",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R002",
+    "authoritySection": 11,
+    "authorityText": "active dealing range, EQ, 현재 premium/discount 위치",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R003",
+    "authoritySection": 11,
+    "authorityText": "정확한 목적 유동성 가격",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R004",
+    "authoritySection": 11,
+    "authorityText": "entry와 objective 사이의 더 가까운 competing liquidity 검토 결과",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R005",
+    "authoritySection": 11,
+    "authorityText": "HTF root OB의 시간, 상단, 하단",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R006",
+    "authoritySection": 11,
+    "authorityText": "refinement 경로와 각 child OB의 시간, 상단, 하단",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R007",
+    "authoritySection": 11,
+    "authorityText": "parent-child가 같은 displacement인 이유",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R008",
+    "authoritySection": 11,
+    "authorityText": "refined OB 접촉 시각",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R009",
+    "authoritySection": 11,
+    "authorityText": "sweep 대상 유동성, 그 유동성이 성숙한 시각, final sweep extreme",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R010",
+    "authoritySection": 11,
+    "authorityText": "M1 CHoCH가 돌파한 live swing",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R011",
+    "authoritySection": 11,
+    "authorityText": "final execution OB",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R012",
+    "authoritySection": 11,
+    "authorityText": "entry, child distal, protected swing, scenario invalidation, actual spread, broker stops level, hard SL",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R013",
+    "authoritySection": 11,
+    "authorityText": "TP와 해당 유동성의 출처 및 scenario scope와의 일치",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R014",
+    "authoritySection": 11,
+    "authorityText": "pending order의 마지막 H1/M15 재승인 시각",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R015",
+    "authoritySection": 11,
+    "authorityText": "execution model이 `HTF_OB_REACTION`, `DELIVERY_FVG_REPLACEMENT`, `DELIVERY_FVG_ADDON` 중 무엇인지",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S11-R016",
+    "authoritySection": 11,
+    "authorityText": "대체 진입이라면 원래 OB 주문의 가격·취소 시각, delivery가 돌파한 protected swing, fresh FVG의 형성 시각·범위·첫 retest 여부, delivery causal OB distal과 protected swing으로 계산한 local hard SL, 원래 final child distal이 hard SL에서 제외됐다는 기록",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "complete order evidence record",
+    "codeInvariant": "order precondition completeness",
+    "testId": "test_ground_truth_independent_audits",
+    "ledgerFields": "lastReauthorizedAtUtc, evidence IDs"
+  },
+  {
+    "ruleId": "S12-R001",
+    "authoritySection": 12,
+    "authorityText": "root OB 누락",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R002",
+    "authoritySection": 12,
+    "authorityText": "causal refinement 누락",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R003",
+    "authoritySection": 12,
+    "authorityText": "내부 유동성을 외부 유동성으로 승격",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R004",
+    "authoritySection": 12,
+    "authorityText": "HTF FVG를 standalone source로 사용",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R005",
+    "authoritySection": 12,
+    "authorityText": "M1 trigger-first 진입",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R006",
+    "authoritySection": 12,
+    "authorityText": "micro CHoCH 진입",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R007",
+    "authoritySection": 12,
+    "authorityText": "stale pending order 체결",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R008",
+    "authoritySection": 12,
+    "authorityText": "성숙하지 않은 reaction 고저점을 sweep으로 사용",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R009",
+    "authoritySection": 12,
+    "authorityText": "premium continuation long 또는 discount continuation short",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R010",
+    "authoritySection": 12,
+    "authorityText": "INTERNAL_ROTATION 목표를 외부 유동성까지 확대",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R011",
+    "authoritySection": 12,
+    "authorityText": "actual Bid/Ask spread 안쪽 SL",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R012",
+    "authoritySection": 12,
+    "authorityText": "사후 선택한 entry/SL/TP",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R013",
+    "authoritySection": 12,
+    "authorityText": "필수 차트 증거 누락",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R014",
+    "authoritySection": 12,
+    "authorityText": "동결된 HTF 시나리오 없이 fresh FVG만 보고 만든 `DELIVERY_FVG_REPLACEMENT`",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R015",
+    "authoritySection": 12,
+    "authorityText": "기존 OB pending과 Delivery FVG 대체 주문을 동시에 유지한 거래",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S12-R016",
+    "authoritySection": 12,
+    "authorityText": "두 번째 이후 FVG 접촉을 첫 retest로 소급한 거래",
+    "geminiContracts": [
+      "deliveryReview"
+    ],
+    "packetEvidence": "protocolPassed and violation reason",
+    "codeInvariant": "protocol violation excluded regardless of PnL",
+    "testId": "test_protocol_classification_taxonomy",
+    "ledgerFields": "protocolPassed, terminalReason"
+  },
+  {
+    "ruleId": "S14-R001",
+    "authoritySection": 14,
+    "authorityText": "주문 직전 최종 선언",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "AGENTS authority text and supplied role IDs",
+    "codeInvariant": "fail-closed semantic contract validation",
+    "testId": "test_ground_truth_final_declaration_fields",
+    "ledgerFields": "requestId, reason, evidence IDs"
+  },
+  {
+    "ruleId": "S15-R001",
+    "authoritySection": 15,
+    "authorityText": "한 문장 원칙",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "AGENTS authority text and supplied role IDs",
+    "codeInvariant": "fail-closed semantic contract validation",
+    "testId": "test_active_contract_surface_and_agents_hash",
+    "ledgerFields": "requestId, reason, evidence IDs"
+  },
+  {
+    "ruleId": "S18-R001",
+    "authoritySection": 18,
+    "authorityText": "거래 후보는 raw M1 확정봉에서 집계한 H1/M30/M15/M5 사건 원장으로만 만든다. oracle, move index, 결과가 보이는 미래 구간은 후보 발견에 사용할 수 없다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R002",
+    "authoritySection": 18,
+    "authorityText": "root 후보는 모든 `마지막 반대색 원인 캔들 -> displacement -> 몸통 구조 전달` episode를 형성 시점부터 소비·무효화 시점까지 영구 ID로 보존한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R003",
+    "authoritySection": 18,
+    "authorityText": "liquidity 후보는 H1/M30의 external swing·반복 방어·range edge·reaction trap과 M15 이상 internal liquidity를 형성 시점부터 소진 시점까지 추적한다. 단순 2-bar pivot은 모델이 검토할 원시 후보일 뿐 자동으로 목적 유동성이 되지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R004",
+    "authoritySection": 18,
+    "authorityText": "후보 수나 prompt 크기 때문에 family를 삭제하지 않는다. 결정론적 paging을 사용하고, page별 입력 family ID와 응답 family ID의 집합이 정확히 일치해야 한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R005",
+    "authoritySection": 18,
+    "authorityText": "PLAN은 같은 owner·scope·lineage의 순서가 고정된 objective family를 동결한다. 모델은 family 구성원의 가격이나 순서를 다시 쓰지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R006",
+    "authoritySection": 18,
+    "authorityText": "objective family의 장기 이력 구간에는 현재가에서 방향상 가장 가까운 미소진 H1 liquidity를 최대 `2개`만 포함한다. 장기 M30 이하 후보는 포함하지 않으며, 현재 구조 objective가 주문 기하상 적격이면 장기 후보는 비활성 상태를 유지한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R007",
+    "authoritySection": 18,
+    "authorityText": "정답 거래의 최초 판단 가능 시각 packet에 root·child·objective family 역할 ID가 하나라도 없으면 `MODEL_MISS`가 아니라 `ENGINE_CANDIDATE_MISS`다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R008",
+    "authoritySection": 18,
+    "authorityText": "전역 상태는 `ownerEpoch`, 독립 `scenarioLanes`, `orders`, `positions`, `executionChains`로 나눈다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R009",
+    "authoritySection": 18,
+    "authorityText": "PREPARED·TRIGGER_WATCH lane은 위험 슬롯을 사용하지 않는다. `PENDING + FILLED`의 합계만 최대 `3`이며 각 주문은 독립 `1R`이다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R010",
+    "authoritySection": 18,
+    "authorityText": "슬롯은 주문 생성 시각 순으로 배정한다. 같은 시각이면 root TF `H1 > M30 > M15`, source 인식 시각, signal ID 순으로 정한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R011",
+    "authoritySection": 18,
+    "authorityText": "열린 pending 또는 position과 반대 방향의 새 주문은 금지한다. 반대 watch lane은 유지할 수 있지만 차단되어 지나간 첫 retest를 나중에 복원하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R012",
+    "authoritySection": 18,
+    "authorityText": "같은 physical FVG·첫 retest는 하나의 execution ID만 가진다. 서로 다른 lineage가 동일 execution을 주장하고 하나로 해소되지 않으면 `UNRESOLVED_LINEAGE`다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R013",
+    "authoritySection": 18,
+    "authorityText": "SL 이후에도 source·owner·objective family가 유효하면 family 자체를 retire하지 않는다. 새 sweep부터 execution zone까지 완전한 새 execution chain만 재진입할 수 있다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R014",
+    "authoritySection": 18,
+    "authorityText": "TP 또는 최종 objective 소진 뒤에는 그 family를 종료한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R015",
+    "authoritySection": 18,
+    "authorityText": "API 요청 중 새로 확정된 M1 봉과 broker tick은 순서대로 버퍼링한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R016",
+    "authoritySection": 18,
+    "authorityText": "모델 응답과 로컬 승인 전에 첫 retest가 지나가면 `MISSED_API_LATENCY`, broker 주문 승인 전에 지나가면 `MISSED_ORDER_LATENCY`다. 사후 체결은 금지한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R017",
+    "authoritySection": 18,
+    "authorityText": "historical M1만 있어 응답 분의 touch 순서를 판별할 수 없으면 `LATENCY_INTRABAR_AMBIGUOUS`로 제외한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R018",
+    "authoritySection": 18,
+    "authorityText": "최초 접근 봉이 Entry와 SL을 함께 관통하면 `THROUGH_DELIVERY`다. 체결 후 후속 봉에서 SL·TP가 동시에 닿으면 보수적으로 SL 우선이다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R019",
+    "authoritySection": 18,
+    "authorityText": "FVG 주문 생성 때 동결한 buffer보다 fill 시점 actual spread가 커지면 주문을 취소하고 SL을 사후 수정하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R020",
+    "authoritySection": 18,
+    "authorityText": "replay와 live는 같은 `advance_closed_m1_bar()` 순서로 후보 갱신, 모든 lane 진행, position 진행, PLAN scheduling, slot arbitration을 수행한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R021",
+    "authoritySection": 18,
+    "authorityText": "live archive의 M1 gap은 MT5에서 backfill한다. 복구할 수 없는 gap이 있으면 API 판단과 주문을 모두 중지한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R022",
+    "authoritySection": 18,
+    "authorityText": "모든 주문은 idempotent client ID를 사용하며 재시작 때 in-flight request, lane, pending, position, objective family, latency 상태를 content hash로 복원한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R023",
+    "authoritySection": 18,
+    "authorityText": "MT5 pending·position과 로컬 원장을 reconciliation하지 못하면 새 주문을 만들지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R024",
+    "authoritySection": 18,
+    "authorityText": "live shadow가 replay와 동일 사건 원장을 만든 뒤에만 DEMO 최소 lot 주문을 허용한다. 실계좌 주문은 별도 위험 비율과 운영 승인 전까지 비활성이다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R025",
+    "authoritySection": 18,
+    "authorityText": "Ground Truth는 chronological 감사, 순서를 섞은 반증 감사, no-trade 구간 감사를 모두 통과해야 한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R026",
+    "authoritySection": 18,
+    "authorityText": "각 거래는 최초 판단 가능 시각의 역할 ID, objective family, execution chain, 주문 전 증거, 종료 결과를 append-only 원장에 남긴다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R027",
+    "authoritySection": 18,
+    "authorityText": "모든 accepted 거래의 역할 ID가 당시 Gemini packet에 존재하는지 100% 검사한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R028",
+    "authoritySection": 18,
+    "authorityText": "정답지의 결과가 좋다는 이유로 거래를 채택하지 않고, 결과가 나쁘다는 이유로 룰을 만족한 거래를 삭제하지 않는다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  },
+  {
+    "ruleId": "S18-R029",
+    "authoritySection": 18,
+    "authorityText": "render 수·파일 수·후보 수만으로 정답지 완료를 선언하지 않는다. 실제 의미 감사와 주문 생명주기 증거가 모두 있어야 한다.",
+    "geminiContracts": [
+      "plan",
+      "triggerWatch",
+      "deliveryReview"
+    ],
+    "packetEvidence": "family pages, ownerEpoch, lanes, latency and broker fields",
+    "codeInvariant": "exhaustive paging, 3R slots, latency and restart invariants",
+    "testId": "test_live_backfill_buffer_and_fake_demo_router",
+    "ledgerFields": "ownerEpoch, slotId, orderId, bookId, latency status"
+  }
+]

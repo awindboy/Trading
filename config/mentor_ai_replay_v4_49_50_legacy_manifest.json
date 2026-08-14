@@ -1,0 +1,28 @@
+{
+  "status": "READ_ONLY_LEGACY",
+  "writePolicy": "FORBIDDEN",
+  "resumeIntoV451": false,
+  "codeArchive": [
+    {
+      "path": "archive/code/mentor_ai_replay_v4_49/mentor_ai_replay_v4.py",
+      "bytes": 169229,
+      "sha256": "1788a3fa51f0fe67642986d0c3fad733b067b4f687ad50b493787f5cc32efec1"
+    },
+    {
+      "path": "archive/code/mentor_ai_replay_v4_49/mentor_replay_v4_core.py",
+      "bytes": 166264,
+      "sha256": "a41ae992886fb3c9091a3f5cd07b253e54c3c4d6d8cddfdfa0d219aaa6a5c2ff"
+    },
+    {
+      "path": "archive/code/mentor_ai_replay_v4_49/test_mentor_ai_replay_v4.py",
+      "bytes": 118179,
+      "sha256": "5d050cdf04007dacf9a8826575bf3852d0c0d194b194efe2dade9913f9dd0a18"
+    }
+  ],
+  "outputNamePatterns": [
+    "gemini_v449_*",
+    "gemini_v450_*",
+    "scripted_v449_*"
+  ],
+  "note": "V4.49 and V4.50 code, output, and state are comparison evidence only. V4.51 must start a new runtime."
+}

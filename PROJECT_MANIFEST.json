@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "workspace": "Trading",
+  "authority": {
+    "manualTradingContract": "AGENTS.md",
+    "projectEntry": "README.md",
+    "structurePolicy": "docs/PROJECT_STRUCTURE.md"
+  },
+  "activeSystems": {
+    "journalWeb": {
+      "source": "src",
+      "bridge": "bridge/mt5_bridge.py",
+      "launcher": "launchers/TradingJournalLauncher.cmd"
+    },
+    "mentorGroundTruthV2": {
+      "pipelineVersion": "4.51-ground-truth-v2",
+      "cli": "scripts/mentor_ai_replay_v4.py",
+      "core": "scripts/mentor_replay_v4_core.py",
+      "groundTruth": "scripts/build_ground_truth_v2.py",
+      "contractBuilder": "scripts/build_mentor_api_contracts.py",
+      "liveShadow": "scripts/mentor_ai_live_v4.py",
+      "documentation": "docs/architecture/MENTOR_AI_GROUND_TRUTH_V2.md",
+      "auditProcedure": "docs/operations/GROUND_TRUTH_V2_AUDIT.md",
+      "invalidatedGroundTruth": "output/ground_truth_v2_june2026_v451",
+      "groundTruthStatus": "BLOCKED_DYNAMIC_OBJECTIVE_LIFECYCLE",
+      "status": "CODE_UNDER_REVALIDATION"
+    },
+    "mt5Journal": {
+      "ea": "mt5/experts/TradeJournalExporterEA.mq5"
+    },
+    "tradingView": {
+      "indicator": "tradingview/ict_cockpit_indicator.pine",
+      "mt5Indicator": "mt5/indicators/ICTCockpitIndicator.mq5"
+    }
+  },
+  "artifactPolicy": {
+    "active": "output",
+    "legacy": "archive/outputs/legacy",
+    "marketDataset": "output/datasets",
+    "journal": "data/journal.json",
+    "secrets": "data/mentor_ai_replay_secret.json"
+  },
+  "verification": {
+    "workspace": "npm run check-workspace",
+    "frontend": "npm run build",
+    "replayCore": "python scripts/test_mentor_ai_replay_v4.py",
+    "liveShadow": "python scripts/test_mentor_ai_live_v4.py",
+    "groundTruthIntegration": "python scripts/test_ground_truth_v2_integration.py",
+    "contracts": "python scripts/build_mentor_api_contracts.py"
+  }
+}

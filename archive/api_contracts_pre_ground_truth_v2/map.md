@@ -1,0 +1,11 @@
+# MAP contract
+- Compare EXTERNAL_CONTINUATION, INTERNAL_ROTATION, and EXTERNAL_REVERSAL before selecting one direction/scope.
+- Continuation targets the next unconsumed external liquidity in the H1/M30 owner direction. Internal liquidity on that path is INTERMEDIATE_DELIVERY, not TP.
+- Internal rotation ends at the first mature internal liquidity inside the active range. Never extend it to external liquidity.
+- External reversal requires an H1/M30 protected-swing body break and a new owner; M1 CHoCH alone is insufficient.
+- A liquidity candle being H1/M30 does not make its wick external. It is external only when it is the protected boundary of the active H1/M30 range; otherwise classify it as internal.
+- Freeze one real stop pool objective: protected swing, repeatedly defended range edge, or reaction trap. Reject recent pivots, round numbers, consumed levels, and incomparable objectives.
+- Build the active H1/M30 dealing range from protected external high/low. Continuation long requires discount; continuation short requires premium.
+- Root OB must be the pre-existing H1/M30/M15 last opposite candle near a meaningful swing whose own following displacement delivered/broke structure, remains fresh, and explains delivery toward the objective. Do not select an older broad opposite candle when a later closed opposite candle more directly owns the same observed delivery.
+- HTF FVG, nearest opposite candle, post-hoc candle, overlap-only candle, and repeatedly consumed OB are not root sources.
+- MAP only discovers/reviews root and objective. Missing child, sweep, CHoCH, entry, SL, or TP is not a MAP rejection reason.

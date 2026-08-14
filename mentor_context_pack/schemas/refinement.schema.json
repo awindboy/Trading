@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "asOfUtc", "phase", "action", "childBarIds", "touchBarId", "candleQueries", "reason"],
+  "properties": {
+    "schemaVersion": {"type": "string", "enum": ["2.0.0"]},
+    "asOfUtc": {"type": "string"},
+    "phase": {"type": "string", "enum": ["REFINEMENT"]},
+    "action": {"type": "string", "enum": ["SELECT_CHILD", "WAIT", "QUERY_CANDLES", "CANCEL", "DATA_ERROR"]},
+    "childBarIds": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+    "touchBarId": {"type": ["string", "null"]},
+    "candleQueries": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["queryId", "tf", "aroundTimeUtc", "before", "after", "purpose"],
+        "properties": {
+          "queryId": {"type": "string"},
+          "tf": {"type": "string", "enum": ["M30", "M15", "M5"]},
+          "aroundTimeUtc": {"type": "string"},
+          "before": {"type": "integer", "minimum": 0, "maximum": 3},
+          "after": {"type": "integer", "minimum": 0, "maximum": 3},
+          "purpose": {"type": "string", "enum": ["CHILD_OB", "INVALIDATION"]}
+        }
+      }
+    },
+    "reason": {"type": "string"}
+  }
+}

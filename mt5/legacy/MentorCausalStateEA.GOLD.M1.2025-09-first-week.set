@@ -1,0 +1,11 @@
+InpMagicNumber=26080902||26080902||1||99999999||N
+InpTradeFrom=2025.09.01 00:00||0||0||0||N
+InpTradeTo=2025.09.06 00:00||0||0||0||N
+InpHistoryBars=300||300||100||5000||N
+InpRootMaxAgeHours=120||120||1||720||N
+InpMatureLiquidityMaxAgeMinutes=180||180||10||1440||N
+InpTriggerMaxMinutes=180||180||10||1440||N
+InpMaxPendingMinutes=720||720||10||2880||N
+InpPriceTolerance=0.03||0.03||0.01||1.00||N
+InpMaxSpreadPoints=0||0||1||1000||N
+InpWriteAuditCsv=true||false||0||true||N

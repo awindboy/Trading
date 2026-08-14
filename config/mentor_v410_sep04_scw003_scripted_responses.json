@@ -1,0 +1,49 @@
+{
+  "responses": [
+    {
+      "schemaVersion": "4.7.0",
+      "action": "PLAN",
+      "direction": "SHORT",
+      "scope": "EXTERNAL_CONTINUATION",
+      "dealingRange": {
+        "highBarId": "H1:1757001600",
+        "lowBarId": "H1:1756965600"
+      },
+      "objective": {
+        "barId": "H1:1756965600",
+        "side": "LOW",
+        "kind": "EXTERNAL_SWING"
+      },
+      "mapProtectedSwingBarId": "H1:1757001600",
+      "ownerBreakTargetBarId": null,
+      "ownerBreakBarId": null,
+      "root": {
+        "obBarId": "M15:1757002500",
+        "displacementBarId": "M15:1757005200",
+        "protectedSwingBarId": "M15:1756998000"
+      },
+      "refinements": [
+        {
+          "obBarId": "M5:1757003700",
+          "displacementBarId": "M5:1757004000",
+          "protectedSwingBarId": "M5:1757003100"
+        }
+      ],
+      "intermediateLiquidityBarIds": [
+        "M15:1757005200",
+        "M15:1756980000",
+        "H1:1756976400"
+      ],
+      "reason": "Current AGENTS.md audit: M15 bearish root and causal M5 child remain fresh before the premium return; nearer lows are intermediate delivery to the frozen external SSL."
+    },
+    {
+      "schemaVersion": "4.7.0",
+      "action": "ARM_REACTION",
+      "matureLiquidityBarId": "M1:1757012460",
+      "m5CorrectionSwingBarId": "M5:1757012700",
+      "chochReferenceBarId": "M1:1757013060",
+      "chochBreakBarId": "M1:1757014020",
+      "reason": "The 19:01 BSL matured through a completed reaction, the later excursion swept it, and the 19:27 body close broke both the governing M5 correction low and the meaningful M1 live low."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "asOfUtc", "phase", "action", "triggerCandidateKey", "protectedSwingBarId", "matureLiquidityBarId", "sweepBarId", "sweepRecoveryBarId", "chochReferenceBarId", "chochBreakBarId", "executionBarId", "executionModel", "candleQueries", "reason"],
+  "properties": {
+    "schemaVersion": {"type": "string", "enum": ["2.0.0"]},
+    "asOfUtc": {"type": "string"},
+    "phase": {"type": "string", "enum": ["TRIGGER"]},
+    "action": {"type": "string", "enum": ["ORDER", "WAIT", "QUERY_CANDLES", "CANCEL", "DATA_ERROR"], "description": "ORDER places a pending limit immediately after the causal execution OB exists and before its first future retest. The engine handles the retest and fill. Never WAIT merely because the retest has not happened yet."},
+    "triggerCandidateKey": {"type": ["string", "null"], "description": "For ORDER, select one complete OHLC-backed chain from packet.localTriggerWakeup.candidates. Use null for non-ORDER actions."},
+    "protectedSwingBarId": {"type": ["string", "null"]},
+    "matureLiquidityBarId": {"type": ["string", "null"], "description": "Pre-existing M1 liquidity candle that had a completed reaction before the later final sweep. It cannot be the sweep candle."},
+    "sweepBarId": {"type": ["string", "null"]},
+    "sweepRecoveryBarId": {"type": ["string", "null"], "description": "M1 candle that closes back inside the swept liquidity. It may equal sweepBarId or be a later candle, but must precede the CHoCH break."},
+    "chochReferenceBarId": {"type": ["string", "null"]},
+    "chochBreakBarId": {"type": ["string", "null"]},
+    "executionBarId": {"type": ["string", "null"], "description": "Causal execution OB origin candle. Required for ORDER; it may precede the CHoCH break candle."},
+    "executionModel": {"type": ["string", "null"], "enum": ["HTF_OB_REACTION", null], "description": "The first trigger always creates the causal execution-OB order. Delivery-FVG replacement is evaluated later, only while that order remains unfilled."},
+    "candleQueries": {"type": "array", "maxItems": 4, "items": {"type": "object", "additionalProperties": false, "required": ["queryId", "tf", "aroundTimeUtc", "before", "after", "purpose"], "properties": {"queryId": {"type": "string"}, "tf": {"type": "string", "enum": ["M15", "M5", "M1"]}, "aroundTimeUtc": {"type": "string"}, "before": {"type": "integer", "minimum": 0, "maximum": 3}, "after": {"type": "integer", "minimum": 0, "maximum": 3}, "purpose": {"type": "string", "enum": ["SWEEP", "CHOCH", "EXECUTION_ZONE", "INVALIDATION"]}}}},
+    "reason": {"type": "string"}
+  }
+}
