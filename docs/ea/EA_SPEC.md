@@ -3284,18 +3284,690 @@ M1 CHoCH search enabled
 ---
 
 
-## 7. M1 CHoCH
+## 7. M1 Meaningful CHoCH
 
-Status: TBD
+Status: FROZEN FOR V1
 
-Must:
-- happen after refined source contact
-- break meaningful live M1 structure
-- use body close
-- belong to expected correction/reaction
+Primary authority:
+- `AGENTS.md`
 
-Implementation:
-TBD.
+Primary implementation reference:
+- `mentor_engine/structure.py`
+
+Secondary references:
+- `research/mentor-youtube/MENTOR_RULE_CONTRACT.md`
+- `research/mentor-youtube/MENTOR_MINIMAL_METHOD.md`
+
+### 7.1 Purpose
+
+M1 CHoCH의 역할은 새로운 HTF scenario를 만드는 것이 아니다.
+
+이미 사전에 frozen된:
+
+```text
+objective
+map owner
+HTF Root
+causal LTF lineage
+final refined source
+```
+
+가 실제 source reaction에서 실행 가능한 방향으로 반응하고 있는지를
+M1 structure로 확인하는 것이다.
+
+따라서:
+
+```text
+M1 CHoCH
+= execution confirmation
+```
+
+이며:
+
+```text
+M1 CHoCH
+≠ HTF directional authority
+```
+
+이다.
+
+### 7.2 Required Causal Order
+
+Classification: D
+
+V1 first-position trigger는 다음 순서를 요구한다.
+
+```text
+final source frozen
+→ source contact
+→ authorized mature liquidity sweep
+→ meaningful M1 CHoCH
+→ causal M1 execution OB
+```
+
+앞 단계가 없으면
+뒤 단계의 M1 structure event가 아무리 선명해도
+현재 scenario의 trade authority가 아니다.
+
+### 7.3 Meaningful CHoCH Reference
+
+Classification: D
+
+Meaningful CHoCH는 최근 아무 pivot을 깨는 사건이 아니다.
+
+CHoCH reference는:
+
+```text
+final source로 들어오던 M1 correction을
+실제로 지배하던 protected swing
+```
+
+이어야 한다.
+
+LONG scenario:
+
+```text
+bearish M1 correction
+→ current protected HIGH
+→ bullish body-close break
+```
+
+SHORT scenario:
+
+```text
+bullish M1 correction
+→ current protected LOW
+→ bearish body-close break
+```
+
+을 요구한다.
+
+### 7.4 Arbitrary Pivot Is Not CHoCH Authority
+
+Classification: D
+
+다음 기준으로 CHoCH reference를 선택하지 않는다.
+
+```text
+nearest pivot
+latest tiny pivot
+smallest swing
+best RR swing
+visually convenient swing
+```
+
+CHoCH reference는 global M1 structure detector가
+현재 correction trend에서 실제 protected structure로 관리하던 swing이어야 한다.
+
+### 7.5 Reference Freeze at Authorized Sweep
+
+Classification: D
+
+Authorized sweep이 확정될 때
+현재 M1 correction structure의 protected swing을 snapshot한다.
+
+LONG:
+
+```text
+M1 trend before sweep = bearish
+reference = current protected HIGH
+```
+
+SHORT:
+
+```text
+M1 trend before sweep = bullish
+reference = current protected LOW
+```
+
+이 reference를:
+
+```text
+choch_reference_swing
+```
+
+으로 freeze한다.
+
+### 7.6 Reference Must Pre-Exist Sweep
+
+Classification: D
+
+CHoCH reference swing은 sweep event보다 먼저
+이미 확정되어 있어야 한다.
+
+Required:
+
+```text
+reference.available_at
+<= sweep_bar_open
+```
+
+Sweep candle 또는 이후 price action을 보고
+새로운 쉬운 pivot을 reference로 사후 선택하지 않는다.
+
+### 7.7 No Protected Reference Means No Trigger
+
+Classification: D for V1
+
+Authorized sweep 시점에
+scenario 방향과 반대되는 M1 correction trend 및
+그 trend의 protected swing이 존재하지 않으면:
+
+```text
+NO CHOCH AUTHORIZATION
+```
+
+이다.
+
+예 LONG:
+
+```text
+source contact
+→ sell-side sweep
+→ M1 bearish correction protected HIGH 없음
+```
+
+이면 해당 sweep chain으로 거래하지 않는다.
+
+최근 임의 pivot 또는 `INITIAL_BOS`를
+CHoCH reference의 fallback으로 사용하지 않는다.
+
+### 7.8 Direction Compatibility
+
+Classification: D
+
+LONG scenario:
+
+```text
+authorized sell-side sweep
+→ bullish M1 CHoCH only
+```
+
+SHORT scenario:
+
+```text
+authorized buy-side sweep
+→ bearish M1 CHoCH only
+```
+
+반대 방향 CHoCH는
+현재 frozen scenario의 execution confirmation이 아니다.
+
+### 7.9 Body-Close Break
+
+Classification: Authority / Frozen
+
+Meaningful CHoCH는 body close로
+frozen reference level을 실제 돌파해야 한다.
+
+LONG:
+
+```text
+M1 close > reference_high
+```
+
+SHORT:
+
+```text
+M1 close < reference_low
+```
+
+다음은 CHoCH가 아니다.
+
+```text
+wick-only breach
+close == reference level
+```
+
+### 7.10 No Arbitrary Break-Strength Threshold
+
+Classification: D
+
+Body close break가 성립하면
+별도의 임의 break-strength threshold를 추가하지 않는다.
+
+사용하지 않는다.
+
+```text
+ATR displacement threshold
+N-point close buffer
+percentage break filter
+CHoCH strength score
+```
+
+Symbol price/tick normalization은 적용하지만
+추가 trading threshold로 사용하지 않는다.
+
+### 7.11 Same-Bar Sweep + CHoCH Is Excluded in V1
+
+Classification: D for causal replay
+
+V1에서는 authorized sweep과 CHoCH가
+동일 M1 candle에서 확정되는 것을 first-position trigger로 사용하지 않는다.
+
+Required:
+
+```text
+choch_bar.index > sweep_bar.index
+```
+
+이유:
+
+OHLC bar만으로 동일 candle 내부에서:
+
+```text
+liquidity sweep
+→ recovery
+→ protected swing break
+```
+
+순서가 실제로 발생했는지 확인할 수 없기 때문이다.
+
+Same-bar sweep + CHoCH는
+향후 MT5 real-tick ordering을 사용하는
+별도 immutable research variant에서 검토한다.
+
+### 7.12 CHoCH Bar Need Not Intersect Source
+
+Classification: D
+
+Authorized sweep bar는 V1에서
+final refined source와 교차해야 한다.
+
+하지만 이후 CHoCH bar까지
+source와 교차할 필요는 없다.
+
+유효 causal relation:
+
+```text
+authorized sweep at source
+→ later body-close break of frozen protected swing
+```
+
+이다.
+
+강한 reaction displacement가 source를 빠르게 벗어난 뒤
+CHoCH를 만드는 것을 허용한다.
+
+### 7.13 No Fixed CHoCH Timeout
+
+Classification: D
+
+Sweep 이후 CHoCH까지:
+
+```text
+N bars
+N minutes
+```
+
+같은 고정 timeout을 두지 않는다.
+
+대신 실제 causal invalidation event로
+trigger chain을 종료한다.
+
+### 7.14 Trigger-Chain Invalidation Before CHoCH
+
+Classification: D
+
+CHoCH가 확정되기 전에 다음 중 하나가 발생하면
+현재 trigger chain은 종료된다.
+
+```text
+final refined source structurally invalidated
+HTF Root / parent owner invalidated
+frozen objective delivered before entry
+final child fully consumed
+scenario map owner invalidated
+```
+
+시간 경과만으로 자동 폐기하지 않는다.
+
+### 7.15 Multiple Authorized Sweeps Before CHoCH
+
+Classification: D
+
+CHoCH 전에 새로운 direction-compatible authorized sweep이
+같은 valid source에서 발생할 수 있다.
+
+각 sweep은 독립 trigger chain으로 기록한다.
+
+```text
+trigger_chain_A
+trigger_chain_B
+```
+
+새 sweep B가 발생하면
+B 시점의 valid M1 correction protected swing을
+새 reference로 snapshot할 수 있다.
+
+이는 새로운 physical sweep event가 발생했기 때문에
+retrospective fitting이 아니다.
+
+과거 chain A의 기록은 삭제하지 않는다.
+
+Execution authorization에는
+현재 유효한 latest trigger chain을 사용한다.
+
+### 7.16 M5 Correction Context
+
+Classification: Authority-compatible
+
+M5는:
+
+```text
+correction context / ownership
+```
+
+을 담당한다.
+
+M1은:
+
+```text
+execution confirmation
+```
+
+을 담당한다.
+
+M5는 현재 M1 trigger가
+final source로 들어오는 expected correction/reaction에 속하는지
+context를 제공할 수 있다.
+
+그러나 V1은 다음을 추가 요구하지 않는다.
+
+```text
+M5 CHoCH mandatory
+M5 BOS mandatory
+M5 candle-colour confirmation
+```
+
+M5 단독 event는 first-position order를 authorize하지 않는다.
+
+### 7.17 M1 CHoCH Does Not Change HTF Owner
+
+Classification: Authority / Frozen
+
+M1 meaningful CHoCH는
+현재 frozen scenario scope 안에서만 의미가 있다.
+
+예:
+
+```text
+INTERNAL_ROTATION LONG
++
+bullish M1 CHoCH
+```
+
+는:
+
+```text
+internal bullish execution reaction confirmed
+```
+
+을 의미할 뿐이다.
+
+이것만으로 H1/M30 external structure를
+bullish reversal로 변경하지 않는다.
+
+External reversal은 별도로:
+
+```text
+H1/M30 protected swing body break
++
+new-direction owner confirmation
+```
+
+이 필요하다.
+
+### 7.18 CHoCH Displacement vs CHoCH Validity
+
+Classification: D
+
+Structure event 자체의 CHoCH validity는:
+
+```text
+body close through frozen protected swing
+```
+
+으로 결정한다.
+
+별도:
+
+```text
+minimum candle size
+ATR displacement threshold
+mandatory FVG
+```
+
+를 CHoCH 조건으로 추가하지 않는다.
+
+다만 이후 execution OB는
+이 CHoCH를 실제로 만들어낸 directional leg의
+causal source여야 한다.
+
+그 causality는 다음
+`Causal M1 Execution OB + Retest Entry`
+단계에서 결정한다.
+
+### 7.19 CHoCH FVG Is Not Mandatory
+
+Classification: Authority / Frozen
+
+CHoCH displacement 과정에 FVG가 존재하면
+delivery evidence로 기록할 수 있다.
+
+하지만 V1 first-position CHoCH authorization에:
+
+```text
+FVG required
+```
+
+조건을 넣지 않는다.
+
+Initial FVG execution은 별도 research variant다.
+
+### 7.20 Additional BOS Is Not Mandatory
+
+Classification: Authority / Frozen
+
+V1 baseline은:
+
+```text
+authorized sweep
+→ meaningful M1 CHoCH
+→ causal execution OB
+```
+
+이다.
+
+다음은 별도 research variant로 유지한다.
+
+```text
+authorized sweep
+→ CHoCH
+→ additional BOS
+→ entry
+```
+
+따라서 second BOS가 없다는 이유만으로
+valid V1 CHoCH를 거부하지 않는다.
+
+### 7.21 INITIAL_BOS Cannot Substitute for CHoCH
+
+Classification: D for V1
+
+현재 `structure.py`에서 trend가 아직 확립되지 않았을 때
+생성되는:
+
+```text
+INITIAL_BOS
+```
+
+는 first-position meaningful CHoCH를 대체할 수 없다.
+
+M1 correction이 directional protected structure를
+아직 확립하지 못했다면:
+
+```text
+trigger not mature
+```
+
+로 취급한다.
+
+### 7.22 Session Discontinuity
+
+Classification: D-compatible
+
+M1 session discontinuity/opening gap 자체를
+old protected swing CHoCH로 사용하지 않는다.
+
+큰 session gap 이후:
+
+```text
+reset/rebuild M1 execution structure
+→ require new protected correction swing
+→ require new causal trigger chain
+```
+
+을 따른다.
+
+세부 session-gap handling은
+Market Structure 최종 통합 감사에서 다시 확인한다.
+
+### 7.23 Global Detection vs Scenario Authorization
+
+Classification: D
+
+기존 `mentor_engine/structure.py`는
+global M1 structure event detector로 재사용할 수 있다.
+
+Trade authorization은 별도 scenario layer에서 수행한다.
+
+Required filter:
+
+```text
+event.timeframe == M1
+event.event_type == CHOCH
+event.direction == scenario.direction
+event.index > authorized_sweep.index
+event.broken_swing_id == frozen_choch_reference_swing_id
+scenario still valid
+```
+
+즉 global CHoCH event가 존재한다는 사실만으로
+trade authority가 생기지 않는다.
+
+### 7.24 Required CHoCH Object
+
+Minimum state:
+
+```text
+choch_event_id
+scenario_id
+trigger_chain_id
+
+direction
+
+source_id
+sweep_event_id
+
+reference_swing_id
+reference_swing_level
+reference_swing_available_at
+
+choch_bar_index
+occurred_at
+available_at
+close_price
+
+break_type = BODY_CLOSE
+```
+
+Audit fields:
+
+```text
+m1_trend_before
+reference_side
+reference_rank
+source_contact_at
+sweep_confirmed_at
+```
+
+### 7.25 Explicit V1 Exclusions
+
+다음을 meaningful M1 CHoCH authorization에 사용하지 않는다.
+
+```text
+arbitrary recent pivot
+nearest pivot
+wick-only break
+equality break
+INITIAL_BOS fallback
+same-bar sweep + CHoCH
+ATR break threshold
+CHoCH quality score
+mandatory CHoCH FVG
+mandatory second BOS
+M5-only trigger
+M1 CHoCH as HTF reversal authority
+AI-selected CHoCH reference
+```
+
+### 7.26 V1 LONG Protocol
+
+```text
+LONG scenario frozen
+        ↓
+bullish final refined source
+        ↓
+source contact
+        ↓
+authorized sell-side sweep
+        ↓
+at sweep:
+    M1 correction trend = bearish
+    current protected HIGH exists
+    protected HIGH already available
+        ↓
+freeze protected HIGH as CHoCH reference
+        ↓
+wait for later closed M1 bar
+        ↓
+M1 close > frozen protected HIGH
+        ↓
+bullish meaningful CHoCH
+        ↓
+enable causal execution OB search
+```
+
+### 7.27 V1 SHORT Protocol
+
+```text
+SHORT scenario frozen
+        ↓
+bearish final refined source
+        ↓
+source contact
+        ↓
+authorized buy-side sweep
+        ↓
+at sweep:
+    M1 correction trend = bullish
+    current protected LOW exists
+    protected LOW already available
+        ↓
+freeze protected LOW as CHoCH reference
+        ↓
+wait for later closed M1 bar
+        ↓
+M1 close < frozen protected LOW
+        ↓
+bearish meaningful CHoCH
+        ↓
+enable causal execution OB search
+```
+
+---
+
 
 ## 8. Entry
 

@@ -873,3 +873,211 @@ Reason:
 manual replay와 live EA의 information order를 동일하게 유지하기 위함이다.
 
 ---
+## D-038 — Meaningful M1 CHoCH breaks the correction's protected swing
+
+Status: ACTIVE
+
+V1 CHoCH reference는
+sweep 뒤 가장 가까운 임의 pivot이 아니다.
+
+LONG:
+
+```text
+bearish M1 correction
+→ protected HIGH
+→ bullish body-close break
+```
+
+SHORT:
+
+```text
+bullish M1 correction
+→ protected LOW
+→ bearish body-close break
+```
+
+을 요구한다.
+
+Reason:
+
+작은 M1 noise break를 execution reversal로 승격하지 않고
+source로 들어오던 correction의 실제 protected structure가
+무너졌음을 확인하기 위함이다.
+
+---
+
+## D-039 — CHoCH reference is frozen at the authorized sweep
+
+Status: ACTIVE
+
+Authorized sweep 시점에
+현재 M1 correction structure의 protected swing을 snapshot한다.
+
+Required:
+
+```text
+reference.available_at
+<= sweep_bar_open
+```
+
+Sweep 이후 price action을 보고
+더 쉬운 pivot으로 reference를 변경하지 않는다.
+
+Protected reference가 없으면
+해당 sweep chain은 first-position trigger를 authorize할 수 없다.
+
+Reason:
+
+CHoCH level의 retrospective fitting을 방지하기 위함이다.
+
+---
+
+## D-040 — M1 CHoCH requires body-close break
+
+Status: ACTIVE
+
+LONG:
+
+```text
+close > frozen protected HIGH
+```
+
+SHORT:
+
+```text
+close < frozen protected LOW
+```
+
+만 CHoCH로 인정한다.
+
+Wick-only breach와 equality는 CHoCH가 아니다.
+
+별도 ATR/N-point break-strength threshold는 사용하지 않는다.
+
+Reason:
+
+기존 structure contract와 일치시키면서
+추가 임의 parameter 없이 structural delivery를 확인하기 위함이다.
+
+---
+
+## D-041 — Same-bar sweep and CHoCH are excluded from V1 baseline
+
+Status: ACTIVE
+
+V1은:
+
+```text
+choch_bar.index > sweep_bar.index
+```
+
+를 요구한다.
+
+동일 M1 candle에서 sweep과 protected-swing body break가
+모두 관측되어도 baseline first-position CHoCH로 사용하지 않는다.
+
+Reason:
+
+OHLC만으로 동일 candle 내부의
+`sweep → recovery → CHoCH` 순서를 증명할 수 없기 때문이다.
+
+향후 MT5 real-tick ordering을 이용한
+별도 immutable variant에서 검토한다.
+
+---
+
+## D-042 — CHoCH waiting uses causal invalidation, not fixed timeout
+
+Status: ACTIVE
+
+Sweep 이후 CHoCH까지
+고정 N-bar/N-minute timeout을 두지 않는다.
+
+현재 trigger chain은 다음 causal event로 종료된다.
+
+```text
+final source invalidation
+Root/parent owner invalidation
+objective delivery before entry
+final child full consumption
+map owner invalidation
+```
+
+Reason:
+
+근거 없는 시간 parameter를 추가하지 않고
+scenario 자체의 원인이 사라질 때 setup을 종료하기 위함이다.
+
+---
+
+## D-043 — M1 CHoCH is execution confirmation, not HTF reversal authority
+
+Status: ACTIVE
+
+M1 meaningful CHoCH는
+현재 frozen scenario의 실행 방향을 확인할 뿐이다.
+
+M1 CHoCH만으로 H1/M30 external owner 또는 trend를
+반전시키지 않는다.
+
+External reversal은 별도의
+H1/M30 protected structure body break와
+new-direction owner confirmation이 필요하다.
+
+Reason:
+
+internal reaction과 external structural reversal을
+혼동하지 않기 위함이다.
+
+---
+
+## D-044 — FVG and additional BOS are not mandatory CHoCH gates
+
+Status: ACTIVE
+
+V1 first-position baseline:
+
+```text
+authorized sweep
+→ meaningful body-close CHoCH
+→ causal execution OB
+```
+
+을 사용한다.
+
+다음은 필수 조건이 아니다.
+
+```text
+CHoCH FVG
+additional BOS after CHoCH
+```
+
+FVG execution 및 CHoCH+BOS confirmation은
+별도 immutable research variants로 유지한다.
+
+Reason:
+
+현재 Mentor Rule Contract의 base path와
+research variant를 섞지 않기 위함이다.
+
+---
+
+## D-045 — INITIAL_BOS cannot substitute for meaningful CHoCH
+
+Status: ACTIVE
+
+M1 directional correction structure가 아직 확립되지 않아
+protected swing이 없는 상태에서 발생하는 `INITIAL_BOS`는
+V1 first-position CHoCH를 대체하지 않는다.
+
+```text
+no protected correction swing
+→ no meaningful CHoCH authority
+```
+
+Reason:
+
+아무 첫 structure break를
+sweep-confirmed reversal로 과대평가하지 않기 위함이다.
+
+---
