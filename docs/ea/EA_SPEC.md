@@ -2564,15 +2564,725 @@ SHORT는 반대다.
 ---
 
 
-## 6. Sweep
+## 6. Source Contact + Mature Sweep
 
-Status: TBD
+Status: FROZEN FOR V1
 
-Candidate definition:
-wick/liquidity penetration followed by recovery without a valid body structure break.
+Primary authority:
+- `AGENTS.md`
 
-Additional maturity rules:
-TBD.
+Primary implementation reference:
+- `mentor_engine/liquidity.py`
+
+Secondary references:
+- `research/mentor-youtube/MENTOR_MINIMAL_METHOD.md`
+- `research/mentor-youtube/MENTOR_RULE_CONTRACT.md`
+
+### 6.1 Purpose
+
+이 단계의 목적은 전역적으로 탐지된 모든 liquidity sweep 중
+현재 frozen scenario와 final refined source에 실제로 연결되는 sweep만
+M1 trigger chain에 사용할 수 있도록 제한하는 것이다.
+
+Liquidity detector와 trade authorization은 분리한다.
+
+```text
+GLOBAL LIQUIDITY DETECTION
+        ↓
+scenario-specific authorization
+        ↓
+AUTHORIZED SWEEP
+```
+
+`liquidity.py`가 sweep event를 만들었다는 사실만으로
+현재 거래 setup의 sweep condition이 충족되는 것은 아니다.
+
+### 6.2 Required Precondition
+
+Classification: D
+
+Source Contact / Sweep 단계에 들어오기 전에
+다음이 모두 frozen 상태여야 한다.
+
+```text
+objective
+scenario scope
+map owner
+HTF Root OB
+causal refinement lineage
+final refined source
+source invalidation geometry
+```
+
+이 중 하나라도 없으면
+M1 sweep authorization을 시작하지 않는다.
+
+### 6.3 Source Contact
+
+Classification: D for V1
+
+Final refined source와 closed bar range가
+실제로 최초 교차하면 source contact로 기록한다.
+
+Condition:
+
+```text
+bar.high >= source.bottom
+AND
+bar.low <= source.top
+```
+
+단:
+
+```text
+bar.available_at > source.available_at
+```
+
+인 causal bar만 contact 후보가 된다.
+
+Source가 final refined source로 확정되기 전에
+과거에 이미 지나간 가격 움직임을
+사후적으로 source contact라고 소급하지 않는다.
+
+### 6.4 Source Contact Is a Gate, Not a Signal
+
+Classification: D
+
+Source contact는:
+
+```text
+entry
+sweep
+CHoCH
+```
+
+가 아니다.
+
+Source contact의 의미는:
+
+```text
+이제부터 현재 scenario의 M1 trigger chain을 관찰할 수 있다.
+```
+
+뿐이다.
+
+따라서 V1은 refined OB touch만으로
+첫 position limit/market entry를 실행하지 않는다.
+
+Required chain remains:
+
+```text
+source contact
+→ mature liquidity sweep
+→ meaningful M1 CHoCH
+→ causal execution OB
+→ retest
+```
+
+### 6.5 Trigger Search Activation
+
+Classification: D
+
+Source contact 이전:
+
+```text
+trigger_search_enabled = false
+```
+
+Source contact 이후:
+
+```text
+sweep_search_enabled = true
+```
+
+단, CHoCH authorization은
+valid sweep이 확정된 이후에만 활성화한다.
+
+```text
+source contact
+→ sweep confirmed
+→ CHoCH search enabled
+```
+
+Source contact 이전에 발생한 M1 sweep/CHoCH를
+현재 scenario에 끌어와 사용하지 않는다.
+
+### 6.6 Direction-Compatible Sweep
+
+Classification: D
+
+LONG scenario:
+
+```text
+required sweep side = LOW
+```
+
+즉 sell-side liquidity sweep이 필요하다.
+
+SHORT scenario:
+
+```text
+required sweep side = HIGH
+```
+
+즉 buy-side liquidity sweep이 필요하다.
+
+반대 side liquidity sweep은
+현재 first-position trigger chain authorization이 아니다.
+
+### 6.7 Eligible Sweep Liquidity Families
+
+Classification: D
+
+V1 trigger-authorizing sweep에는
+현재 Liquidity V1에서 허용한 family만 사용한다.
+
+```text
+EXTERNAL_SWING
+DEFENDED_RANGE_EDGE
+STRUCTURAL_REACTION
+```
+
+V1에서 제외:
+
+```text
+TRENDLINE_CLUSTER
+simple recent pivot
+arbitrary local high/low
+session high/low by itself
+round number
+```
+
+Detector 또는 legacy code가 해당 event를 생성해도
+V1 trade authorization에는 사용하지 않는다.
+
+### 6.8 Mature Liquidity Definition
+
+Classification: D for V1
+
+V1에서 maturity는 arbitrary age가 아니라
+causal pre-existence와 structural eligibility로 정의한다.
+
+Required:
+
+```text
+eligible liquidity family
++
+liquidity already available before source-contact bar begins
++
+not already consumed
+```
+
+현재 first-position trigger에 사용할 liquidity는:
+
+```text
+liquidity.available_at
+<
+source_contact_bar_open
+```
+
+이어야 한다.
+
+즉 source contact candle이 진행되는 동안 처음 확정된 liquidity는
+같은 first-position trigger의 required pool이 될 수 없다.
+
+### 6.9 No Arbitrary Liquidity Age Threshold
+
+Classification: D
+
+V1은 다음을 사용하지 않는다.
+
+```text
+minimum 2 bars old
+minimum 3 bars old
+minimum N minutes old
+ATR-distance maturity
+age score
+maturity score
+```
+
+이유:
+
+Liquidity family 자체가 이미 구조적으로 의미 있는 stop pool만
+보수적으로 허용하기 때문이다.
+
+V1 maturity의 핵심은:
+
+```text
+pre-existing
++
+eligible
++
+unconsumed
+```
+
+이다.
+
+### 6.10 Pre-Contact Sweep Is Not Reused
+
+Classification: D
+
+Final refined source가 실제 접촉되기 전에
+완료된 sweep은 현재 first-position trigger chain에 사용하지 않는다.
+
+금지:
+
+```text
+old sweep
+→ later source contact
+→ old sweep reused
+→ CHoCH
+```
+
+Required order:
+
+```text
+source contact
+→ authorized sweep
+→ CHoCH
+```
+
+이 규칙은 unrelated earlier liquidity event를
+사후적으로 current source에 연결하는 것을 방지한다.
+
+### 6.11 Same-Bar Contact + Sweep
+
+Classification: D
+
+Source contact와 liquidity sweep이
+같은 closed M1 bar에서 발생하는 것은 허용한다.
+
+Example LONG:
+
+```text
+M1 bar enters bullish refined source
++
+same bar wicks below pre-existing sell-side liquidity
++
+same bar closes back above liquidity boundary
+```
+
+이면:
+
+```text
+source contact
++
+authorized sell-side sweep
+```
+
+을 동시에 기록할 수 있다.
+
+단:
+
+```text
+liquidity itself must pre-exist the source-contact bar
+```
+
+여야 한다.
+
+즉:
+
+```text
+same-bar contact + sweep
+→ allowed
+
+same-bar liquidity creation + sweep
+→ forbidden
+```
+
+이다.
+
+### 6.12 Sweep Must Occur at the Final Refined Source
+
+Classification: D for V1
+
+V1 trigger-authorizing sweep bar는
+final refined source와 실제로 교차해야 한다.
+
+```text
+sweep_bar.high >= source.bottom
+AND
+sweep_bar.low <= source.top
+```
+
+즉 source를 과거에 한 번 touch한 뒤
+가격이 source와 멀어진 곳에서 나중에 발생한 sweep을
+원래 setup의 trigger로 연결하지 않는다.
+
+V1에서는:
+
+```text
+sweep bar intersects final refined source
+```
+
+를 required causal condition으로 사용한다.
+
+### 6.13 Sweep Extreme May Extend Beyond Source
+
+Classification: D
+
+Sweep bar가 final source와 교차해야 하지만
+sweep extreme 자체가 source bounds 안에 있을 필요는 없다.
+
+LONG example:
+
+```text
+bullish refined source
+        ↓
+price enters source
+        ↓
+wick extends below source distal
+        ↓
+pre-existing sell-side liquidity swept
+        ↓
+close recovers
+```
+
+은 유효할 수 있다.
+
+즉 source는 reaction context이고
+liquidity sweep extreme은 source 바깥까지 확장될 수 있다.
+
+### 6.14 Physical Sweep Condition
+
+Classification: D
+
+Sweep은 pre-existing eligible liquidity의 outer boundary를
+실제로 최소 one valid tick 이상 관통하고
+같은 closed bar에서 recovery해야 한다.
+
+#### HIGH-side liquidity
+
+```text
+bar.high >= pool.top + one_tick
+AND
+bar.close <= pool.top
+```
+
+#### LOW-side liquidity
+
+```text
+bar.low <= pool.bottom - one_tick
+AND
+bar.close >= pool.bottom
+```
+
+여기서 `one_tick`은
+해당 symbol의 실제 valid tick size를 사용한다.
+
+별도 ATR 또는 percentage penetration threshold는 사용하지 않는다.
+
+### 6.15 Same-Bar Recovery Only
+
+Classification: D for V1
+
+V1 physical sweep은:
+
+```text
+penetration
++
+recovery
+```
+
+가 같은 closed bar 안에서 완료되어야 한다.
+
+Example excluded from V1:
+
+```text
+bar 1:
+liquidity 아래 body close
+
+bar 2:
+다시 위로 reclaim
+```
+
+이것은 V1 sweep으로 취급하지 않는다.
+
+Multi-bar reclaim은 향후 별도 immutable research variant로 검토할 수 있다.
+
+### 6.16 Body Delivery Is Not Sweep
+
+Classification: D
+
+Liquidity outer edge를 body close로 directional하게 통과하면
+sweep이 아니라 BODY_DELIVERY다.
+
+HIGH-side:
+
+```text
+close > pool.top
+→ BODY_DELIVERY
+```
+
+LOW-side:
+
+```text
+close < pool.bottom
+→ BODY_DELIVERY
+```
+
+해당 pool은 consumed되며
+현재 trigger chain의 required sweep으로 사용할 수 없다.
+
+### 6.17 One-Tick Minimum Penetration
+
+Classification: D
+
+Sweep penetration은 실제 symbol tick size 기준으로
+최소 한 tick 이상 outer boundary를 넘어야 한다.
+
+단순 equality:
+
+```text
+high == pool.top
+low == pool.bottom
+```
+
+은 sweep이 아니다.
+
+V1은 다음을 사용하지 않는다.
+
+```text
+ATR penetration multiplier
+fixed arbitrary point penetration
+percentage penetration
+sweep strength score
+```
+
+### 6.18 Source-Generated Liquidity Cannot Trigger the Same First Position
+
+Classification: D
+
+현재 final refined source 접촉 이후
+그 reaction 자체가 새 swing/liquidity를 만들 수 있다.
+
+하지만 그 새 liquidity를
+동일 first-position trigger의 required pre-existing liquidity로 사용할 수 없다.
+
+금지:
+
+```text
+source contact
+→ reaction low/high generated
+→ that new liquidity declared mature
+→ same setup sweep
+```
+
+현재 setup의 required pool은
+source-contact bar 이전부터 이미 available해야 한다.
+
+새 reaction liquidity는
+향후 별도 scenario / continuation context에서 사용할 수 있다.
+
+### 6.19 Multiple Pools Swept by One Bar
+
+Classification: D
+
+하나의 sweep bar가 여러 eligible pre-existing pools를
+동시에 관통하고 recovery할 수 있다.
+
+예:
+
+```text
+structural reaction liquidity
++
+defended range edge
++
+external swing
+```
+
+이 동일 wick에 의해 sweep될 수 있다.
+
+이 경우:
+
+```text
+모든 consumed eligible pool을 event ledger에 기록
+```
+
+한다.
+
+Scenario authorization은:
+
+```text
+direction-compatible
+eligible
+pre-existing
+unconsumed
+pool
+at least one swept
+```
+
+이면 충족한다.
+
+Best-pool score를 만들지 않는다.
+
+### 6.20 Sweep Availability
+
+Classification: D
+
+Sweep은 해당 candle이 close된 뒤에만 확정된다.
+
+```text
+sweep.occurred_at
+= sweep bar time
+
+sweep.available_at
+= sweep bar close
+```
+
+진행 중 candle의 wick만 보고
+미리 sweep을 확정하지 않는다.
+
+### 6.21 CHoCH Search Activation
+
+Classification: D
+
+Valid authorized sweep이 closed-bar 기준으로 확정된 이후:
+
+```text
+trigger_search_enabled = true
+```
+
+가 된다.
+
+이 시점부터 current scenario와 연결된
+meaningful M1 CHoCH를 찾는다.
+
+Sweep이 확정되기 전에
+향후 CHoCH event를 사후적으로 연결하지 않는다.
+
+같은 bar가 sweep과 CHoCH를 동시에 수행할 수 있는지는
+다음 `M1 Meaningful CHoCH` specification에서 별도로 결정한다.
+
+### 6.22 Scenario-Specific Sweep State
+
+각 scenario는 최소 다음 state를 보존한다.
+
+```text
+scenario_id
+
+final_source_id
+
+source_contacted
+source_contact_at
+source_contact_bar
+
+eligible_pool_ids_at_contact
+
+authorized_sweep_ids
+sweep_confirmed_at
+
+sweep_search_enabled
+trigger_search_enabled
+```
+
+이 state는 audit 시 다음을 설명할 수 있어야 한다.
+
+```text
+어떤 source에 닿았는가?
+어떤 liquidity가 그 전에 이미 존재했는가?
+어떤 pool이 sweep됐는가?
+왜 그 sweep이 현재 scenario에 허용됐는가?
+언제부터 CHoCH를 찾기 시작했는가?
+```
+
+### 6.23 Global Detection vs Scenario Authorization
+
+Classification: D
+
+기존 liquidity detector는
+전역 liquidity/sweep event discovery 용도로 사용할 수 있다.
+
+그러나 V1 trade authority는 별도 filter를 통과해야 한다.
+
+```text
+GLOBAL SWEEP EVENT
+        ↓
+V1 family eligible?
+        ↓
+correct side?
+        ↓
+available before source contact?
+        ↓
+unconsumed before sweep?
+        ↓
+sweep bar intersects final source?
+        ↓
+same-bar penetration + recovery?
+        ↓
+attached to frozen scenario?
+        ↓
+AUTHORIZED SWEEP
+```
+
+Distance, quality score, nearest-pool rule은
+authorization에 사용하지 않는다.
+
+### 6.24 Explicit V1 Exclusions
+
+다음을 first-position sweep authorization에 사용하지 않는다.
+
+```text
+pre-contact sweep reuse
+same-bar liquidity creation + sweep
+micro-pivot sweep
+trendline liquidity sweep
+multi-bar reclaim sweep
+body-delivery-as-sweep
+ATR penetration filter
+liquidity age threshold
+sweep quality score
+nearest-pool fallback
+AI-selected sweep
+source-distant later sweep
+```
+
+### 6.25 V1 Source Contact + Sweep Summary
+
+LONG:
+
+```text
+bullish final refined source frozen
+        ↓
+eligible pre-existing sell-side liquidity snapshot
+        ↓
+price intersects final source
+        ↓
+same bar or later source-intersecting bar
+penetrates eligible LOW pool by >= 1 tick
+        ↓
+same bar closes back at/above pool boundary
+        ↓
+pool consumed as SWEEP
+        ↓
+scenario authorized_sweep recorded
+        ↓
+M1 CHoCH search enabled
+```
+
+SHORT:
+
+```text
+bearish final refined source frozen
+        ↓
+eligible pre-existing buy-side liquidity snapshot
+        ↓
+price intersects final source
+        ↓
+same bar or later source-intersecting bar
+penetrates eligible HIGH pool by >= 1 tick
+        ↓
+same bar closes back at/below pool boundary
+        ↓
+pool consumed as SWEEP
+        ↓
+scenario authorized_sweep recorded
+        ↓
+M1 CHoCH search enabled
+```
+
+---
+
 
 ## 7. M1 CHoCH
 

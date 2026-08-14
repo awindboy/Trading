@@ -654,3 +654,222 @@ Reason:
 전략적 거래 권한으로 오해하지 않기 위함이다.
 
 ---
+## D-030 — Source contact gates M1 trigger observation
+
+Status: ACTIVE
+
+Final refined source와 price가 실제로 교차하기 전에는
+현재 scenario의 M1 trigger chain을 활성화하지 않는다.
+
+```text
+source contact
+→ sweep search enabled
+```
+
+Source contact 자체는 entry signal이 아니다.
+
+Reason:
+
+HTF/LTF source가 실제로 반응할 위치에 도달하기 전에
+M1의 unrelated noise/sweeps/CHoCH를 거래 근거로 사용하는 것을 방지하기 위함이다.
+
+---
+
+## D-031 — First-position sweep liquidity must pre-exist source contact
+
+Status: ACTIVE
+
+현재 first-position trigger에 사용할 liquidity pool은
+source-contact bar가 시작되기 전에 이미 available해야 한다.
+
+```text
+liquidity.available_at
+<
+source_contact_bar_open
+```
+
+추가 N-bar/N-minute maturity threshold는 두지 않는다.
+
+Maturity는:
+
+```text
+eligible structural family
++
+causal pre-existence
++
+unconsumed state
+```
+
+로 정의한다.
+
+Reason:
+
+현재 source reaction이 만든 새 고저점을
+같은 setup의 원인 liquidity로 사후 재사용하는 것을 방지하면서
+임의 age parameter도 피하기 위함이다.
+
+---
+
+## D-032 — Same-bar source contact and sweep are allowed
+
+Status: ACTIVE
+
+Final refined source contact와
+pre-existing eligible liquidity sweep이
+동일 M1 candle에서 발생하는 것은 허용한다.
+
+```text
+same-bar contact + sweep
+→ allowed
+```
+
+단:
+
+```text
+same-bar liquidity creation + sweep
+→ forbidden
+```
+
+이다.
+
+Reason:
+
+실전에서 source 진입과 liquidity raid가
+한 candle의 동일 reaction으로 발생할 수 있기 때문이다.
+
+---
+
+## D-033 — Trigger-authorizing sweep must occur at the refined source
+
+Status: ACTIVE
+
+V1 first-position의 authorized sweep bar는
+final refined source와 실제로 교차해야 한다.
+
+```text
+sweep bar intersects final source
+```
+
+Source를 과거에 touch한 뒤
+가격이 source와 멀어진 곳에서 발생한 sweep을
+원래 setup에 연결하지 않는다.
+
+Reason:
+
+`몇 bar 이내`, `몇 point 이내` 같은 임의 reaction-window parameter 없이
+source-sweep causality를 보수적으로 유지하기 위함이다.
+
+---
+
+## D-034 — V1 sweep requires same-bar penetration and recovery
+
+Status: ACTIVE
+
+HIGH-side liquidity:
+
+```text
+high >= top + one_tick
+AND
+close <= top
+```
+
+LOW-side liquidity:
+
+```text
+low <= bottom - one_tick
+AND
+close >= bottom
+```
+
+을 V1 physical sweep으로 정의한다.
+
+Body close beyond liquidity는
+`BODY_DELIVERY`이며 sweep이 아니다.
+
+Multi-bar reclaim은 V1 baseline에서 제외한다.
+
+Reason:
+
+Sweep event를 closed-bar basis에서 명확하고 재현 가능하게 만들고
+복잡한 intrabar/multi-bar reclaim state machine을 초기 baseline에 도입하지 않기 위함이다.
+
+---
+
+## D-035 — Sweep penetration uses symbol tick, not arbitrary strength threshold
+
+Status: ACTIVE
+
+Liquidity outer boundary를 넘어가는 최소 유효 penetration은:
+
+```text
+one valid symbol tick
+```
+
+이다.
+
+다음은 사용하지 않는다.
+
+```text
+ATR multiplier
+fixed arbitrary point threshold
+percentage threshold
+sweep strength score
+```
+
+Reason:
+
+실제 가격 최소 단위를 사용하면서
+근거 없는 sweep-quality parameter를 추가하지 않기 위함이다.
+
+---
+
+## D-036 — Multiple eligible pools may authorize one sweep event
+
+Status: ACTIVE
+
+하나의 candle이 여러 eligible pre-existing liquidity pools를
+동시에 sweep하면 모두 event ledger에 기록한다.
+
+현재 scenario의 sweep condition은:
+
+```text
+at least one
+direction-compatible
+eligible
+pre-existing
+pool
+```
+
+이 valid sweep되면 충족한다.
+
+Best-pool score 또는 strongest-pool selection은 사용하지 않는다.
+
+Reason:
+
+하나의 physical liquidity raid가
+여러 structural pool을 동시에 소비할 수 있으며,
+사후적으로 “가장 좋은” 하나를 골라 성과를 최적화하지 않기 위함이다.
+
+---
+
+## D-037 — Pre-contact sweep cannot be reused
+
+Status: ACTIVE
+
+Final refined source 접촉 이전에 완료된 liquidity sweep을
+현재 first-position trigger chain의 sweep으로 재사용하지 않는다.
+
+Required causal order:
+
+```text
+source contact
+→ authorized sweep
+→ M1 CHoCH
+```
+
+Reason:
+
+이전의 unrelated sweep을 현재 source reaction에 사후 연결하는 것을 방지하고
+manual replay와 live EA의 information order를 동일하게 유지하기 위함이다.
+
+---
