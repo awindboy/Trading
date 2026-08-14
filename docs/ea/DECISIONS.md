@@ -302,3 +302,170 @@ Historical replay에서 미래 정보를 이용한
 self-referential liquidity/sweep event를 방지하기 위함이다.
 
 ---
+
+## D-017 — Root OB requires meaningful swing ownership
+
+Status: ACTIVE
+
+V1 HTF Root OB는 단순 latest opposite candle이 아니다.
+
+Root candidate는:
+
+```text
+meaningful external/protected swing
+or
+structurally meaningful internal swing
+```
+
+의 origin causal window에 속해야 한다.
+
+그 window 안에서 subsequent directional leg가 시작되기 전
+마지막 opposite candle을 Root candidate로 사용한다.
+
+Reason:
+
+구조 전달 직전 우연히 존재한 pause candle을
+실제 scenario source로 잘못 승격하는 것을 방지하기 위함이다.
+
+---
+
+## D-018 — Structure delivery is V1 displacement proof
+
+Status: ACTIVE
+
+V1은 Root OB confirmation을 위해
+별도의 ATR/body-size/FVG-size threshold를 사용하지 않는다.
+
+Root candidate 이후 same causal directional leg가
+meaningful structure level을 body close로 돌파한 사실을
+minimum displacement proof로 사용한다.
+
+```text
+meaningful structure body-break
+= minimum V1 displacement proof
+```
+
+Wick breach는 충분하지 않다.
+
+Reason:
+
+임의 threshold parameter를 줄이면서도
+실제 directional delivery가 발생했다는 객관적인 증거를 유지하기 위함이다.
+
+---
+
+## D-019 — V1 initial Root uses causal LAST_OPPOSITE_OB lineage
+
+Status: ACTIVE
+
+V1 first-position Root source는
+`LAST_OPPOSITE_OB` 계열을 사용한다.
+
+하지만 모든 last-opposite detector 결과를 사용하지 않는다.
+
+Required filters:
+
+```text
+meaningful swing ownership
+same causal leg
+opposite candle direction
+meaningful structure body-break
+scenario/objective direction alignment
+freshness
+```
+
+`FVG_ORIGIN_OB`는 V1 initial Root source 권한을 갖지 않는다.
+
+HTF FVG 자체도 Root source가 아니다.
+
+향후 FVG-origin Root 방식은
+별도 immutable research variant로 비교할 수 있다.
+
+---
+
+## D-020 — Root freshness uses structural state, not arbitrary expiry
+
+Status: ACTIVE
+
+Root OB는:
+
+```text
+fully consumed
+or
+causal structure invalidated
+```
+
+될 때 first-position source 권한을 잃는다.
+
+단순 touch만으로 즉시 폐기하지 않는다.
+
+V1에서는 다음을 사용하지 않는다.
+
+```text
+N-touch expiry
+N-bar expiry
+ATR age decay
+quality score
+```
+
+Reason:
+
+Root의 생존 여부를 임의 score가 아니라
+실제 price interaction과 causal structure state로 판단하기 위함이다.
+
+---
+
+## D-021 — Root bounds remain full candle until causal refinement
+
+Status: ACTIVE
+
+HTF Root OB의 initial bounds는 origin candle의 전체 wick range다.
+
+```text
+bottom = low
+top = high
+```
+
+Root 단계에서 body-only 또는 50% geometry로 축소하지 않는다.
+
+SL과 entry precision은
+후속 causal LTF refinement가 담당한다.
+
+Reason:
+
+HTF Root detection과 execution refinement의 역할을 분리하고,
+Root 단계에서 임의로 RR을 개선하는 것을 방지하기 위함이다.
+
+---
+
+## D-022 — Ambiguous incomparable Roots do not get score-selected
+
+Status: ACTIVE
+
+동일 scenario에 비교 불가능한 Root candidate가 여러 개 남을 경우
+다음 기준으로 하나를 임의 선택하지 않는다.
+
+```text
+nearest
+narrowest
+newest
+highest RR
+weighted quality score
+```
+
+Nested causal relation이 명확하면 lineage로 유지한다.
+
+Causal owner를 deterministic하게 결정할 수 없다면:
+
+```text
+NO TRADE / AMBIGUOUS ROOT
+```
+
+로 처리한다.
+
+Reason:
+
+수익률 최적화를 위해 사후적으로 좋은 OB를 선택하는 것을 막고
+baseline의 설명 가능성과 causal parity를 유지하기 위함이다.
+
+---

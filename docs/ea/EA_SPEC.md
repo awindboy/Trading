@@ -1260,20 +1260,586 @@ PARTIALLY FROZEN
 
 ## 4. HTF Root OB
 
-Status: TBD
+Status: FROZEN FOR V1
 
-Must:
-- exist before trigger
-- be near meaningful structure
-- originate displacement
-- cause meaningful structure delivery/body break
-- remain fresh/valid
-- align with objective direction
+Primary authority:
+- `AGENTS.md`
 
-HTF FVG alone cannot be the initial source.
+Primary implementation reference:
+- `mentor_engine/zones.py`
 
-Implementation:
-TBD.
+Secondary reference:
+- `research/mentor-youtube/MENTOR_RULE_CONTRACT.md`
+
+Legacy MQL5의 단순 lookback-based last-opposite detector는
+root-source authority로 사용하지 않는다.
+
+### 4.1 Purpose
+
+HTF Root OB는 최초 포지션 시나리오의
+사전에 존재하는 causal source다.
+
+다음 정의는 사용하지 않는다.
+
+```text
+bullish move 전 아무 마지막 bearish candle
+bearish move 전 아무 마지막 bullish candle
+```
+
+V1 Root OB는 다음 causal chain을 설명해야 한다.
+
+```text
+meaningful HTF swing
+        ↓
+opposite candle in swing-origin region
+        ↓
+directional leg
+        ↓
+meaningful structure body-break
+        ↓
+confirmed causal Root OB
+```
+
+즉 Root OB는 candle pattern이 아니라
+structure-owned source object다.
+
+### 4.2 Allowed Root Timeframes
+
+Classification: D
+
+최초 position의 Root OB 허용 timeframe:
+
+```text
+H1
+M30
+M15
+```
+
+M5와 M1은 최초 Root owner가 될 수 없다.
+
+```text
+H1/M30/M15
+-> root/source
+
+M30/M15/M5
+-> causal refinement 가능
+
+M1
+-> trigger/execution
+```
+
+동일 scenario에서 무조건 가장 높은 timeframe의 OB를 선택하지 않는다.
+
+현재 structure owner와 displacement를
+직접 설명하는 causal Root를 선택한다.
+
+### 4.3 Direction
+
+Classification: D
+
+Bullish Root OB:
+
+```text
+meaningful low/swing-origin region
++
+bearish candle
++
+subsequent bullish structure delivery
+```
+
+Bearish Root OB:
+
+```text
+meaningful high/swing-origin region
++
+bullish candle
++
+subsequent bearish structure delivery
+```
+
+Doji는 opposite candle로 사용하지 않는다.
+
+### 4.4 Meaningful Swing Context
+
+Classification: D for V1 protocol
+
+Root OB candidate는 의미 있는 swing formation에 속해야 한다.
+
+Eligible swing context:
+
+```text
+external/protected swing
+or
+structurally meaningful internal swing
+```
+
+단순 micro pivot은 Root context가 아니다.
+
+Root candidate는 해당 swing의 origin window 안에서 찾는다.
+
+V1에서 `swing-origin window`는:
+
+```text
+confirmed meaningful swing을 형성한 causal wave leg의
+실제 reversal/origin region
+```
+
+을 뜻한다.
+
+구현 시 Market Structure engine의 confirmed wave ownership을 사용하며,
+structure delivery와 무관한 이전 wave까지 검색 범위를 확장하지 않는다.
+
+### 4.5 Root Candle Selection
+
+Classification: D for V1 protocol
+
+V1 Root candle은:
+
+```text
+meaningful swing-origin window 안에 존재하면서
+subsequent causal directional leg가 시작되기 전의
+last opposite candle
+```
+
+이다.
+
+즉:
+
+```text
+last opposite candle anywhere
+```
+
+가 아니라:
+
+```text
+last opposite candle
+within the meaningful swing-origin causal window
+```
+
+이다.
+
+이 규칙은 기존 `mentor_engine/zones.py`의
+deterministic last-opposite 탐색 원리를 재사용하되,
+meaningful swing ownership constraint를 추가한다.
+
+### 4.6 Same Causal Leg Requirement
+
+Classification: D
+
+Root candle과 linked structure event는
+같은 directional causal leg에 속해야 한다.
+
+금지:
+
+```text
+과거 unrelated bearish candle
+        ↓
+몇 개 wave 경과
+        ↓
+현재 bullish BOS
+        ↓
+과거 candle을 bullish Root로 연결
+```
+
+허용:
+
+```text
+meaningful swing origin
+        ↓
+root candle
+        ↓
+same directional leg
+        ↓
+structure delivery
+```
+
+Market closure/session gap을 가로질러
+이전 session candle을 새 displacement의 Root로 연결하지 않는다.
+
+### 4.7 Structure Delivery Confirmation
+
+Classification: D
+
+Root candidate가 실제 Root OB로 승격되려면
+그 이후 directional leg가 의미 있는 structure level을
+몸통 종가로 돌파해야 한다.
+
+Bullish:
+
+```text
+close > meaningful protected/owned high
+```
+
+Bearish:
+
+```text
+close < meaningful protected/owned low
+```
+
+Wick-only breach는 Root confirmation용 structure delivery가 아니다.
+
+Linked event는 현재 Market Structure engine이 생성하는
+valid BOS/CHoCH 계열 event여야 한다.
+
+### 4.8 Displacement Proof
+
+Classification: D for V1 protocol
+
+V1은 별도의:
+
+```text
+ATR multiplier
+minimum candle-body percentage
+minimum consecutive candle count
+minimum FVG size
+```
+
+를 displacement 필수 조건으로 추가하지 않는다.
+
+Minimum displacement proof는:
+
+```text
+Root candidate에서 시작한 directional leg가
+meaningful structure level을 body close로 실제 전달했다
+```
+
+는 사실이다.
+
+즉:
+
+```text
+meaningful structure delivery
+= V1 minimum displacement proof
+```
+
+FVG는 추가 delivery evidence일 수 있으나 필수 조건이 아니다.
+
+### 4.9 FVG Relationship
+
+Classification: D
+
+HTF FVG는 최초 position의 standalone Root source가 될 수 없다.
+
+```text
+FVG only
+-> no Root authority
+```
+
+FVG가 존재하더라도 causal Root OB가 없으면
+최초 scenario를 승인하지 않는다.
+
+반대로 valid Root OB가 structure delivery를 만들었다면
+FVG가 없다는 이유만으로 Root를 폐기하지 않는다.
+
+V1:
+
+```text
+causal OB + meaningful structure delivery
+-> Root candidate/confirmation
+
+FVG
+-> optional delivery evidence
+```
+
+### 4.10 Root OB Family
+
+Classification: D for V1 protocol
+
+V1 최초 Root source는:
+
+```text
+LAST_OPPOSITE_OB lineage
+```
+
+를 사용한다.
+
+단, 기존 detector의 모든 LAST_OPPOSITE_OB를 인정하는 것이 아니라
+다음 filter를 모두 통과해야 한다.
+
+```text
+meaningful swing ownership
+same causal leg
+valid opposite candle
+meaningful structure body-break
+scenario direction alignment
+freshness
+```
+
+`FVG_ORIGIN_OB`는 V1 최초 Root source로 사용하지 않는다.
+
+향후 별도 immutable research variant로 비교할 수 있다.
+
+### 4.11 Root Bounds
+
+Classification: D for V1
+
+Root OB의 initial HTF bounds는
+origin candle의 전체 wick range를 사용한다.
+
+```text
+bottom = candle.low
+top    = candle.high
+```
+
+V1 Root 단계에서:
+
+```text
+body-only
+open-to-low
+open-to-high
+50% OB
+```
+
+등으로 임의 축소하지 않는다.
+
+실제 execution geometry와 SL 축소는
+causal LTF refinement가 담당한다.
+
+### 4.12 Occurrence and Availability
+
+Classification: D
+
+Root candle 자체의 발생 시점과
+Root라는 의미가 확정되는 시점을 분리한다.
+
+```text
+occurred_at
+= origin candle time
+
+available_at
+= linked meaningful structure event confirmation time
+```
+
+Structure delivery가 확인되기 전에
+해당 candle을 이미 Root OB였던 것처럼 사용할 수 없다.
+
+이 규칙은 historical replay에서 look-ahead를 방지한다.
+
+### 4.13 Scenario Direction Alignment
+
+Classification: D
+
+Root OB는 frozen scenario direction과 objective를 설명해야 한다.
+
+예:
+
+```text
+scenario:
+bullish continuation
+
+objective:
+upper external liquidity
+```
+
+이면 bullish Root OB만 해당 scenario source 후보가 된다.
+
+반대 방향 OB가 기술적으로 valid하더라도
+현재 scenario의 Root로 사용하지 않는다.
+
+### 4.14 Freshness and Lifecycle
+
+Classification: D
+
+Root OB는 scenario planning 시점에 active해야 한다.
+
+Minimum lifecycle state:
+
+```text
+FRESH
+TOUCHED
+PARTIALLY_MITIGATED
+CONSUMED
+STRUCTURALLY_INVALIDATED
+```
+
+단순 첫 touch만으로 Root를 폐기하지 않는다.
+
+임의의:
+
+```text
+touch_count >= N
+age >= N bars
+ATR decay
+quality decay
+```
+
+규칙은 V1에 넣지 않는다.
+
+### 4.15 Full Consumption
+
+Classification: D
+
+Bullish Root:
+
+```text
+price fully delivers through Root distal
+```
+
+즉 Root 전체가 완전히 관통되면 consumed 처리한다.
+
+Bearish Root도 반대로 동일하다.
+
+기존 zone lifecycle infrastructure를 재사용할 수 있으나,
+Root lifecycle과 FVG partial-fill semantics를 혼동하지 않는다.
+
+Consumed Root는 신규 first-position source로 재사용하지 않는다.
+
+### 4.16 Structural Invalidation
+
+Classification: D
+
+Root가 속한 causal structure premise가 무효화되면
+Root 자체도 source authority를 잃는다.
+
+즉 candle zone이 물리적으로 남아 있더라도:
+
+```text
+owner invalidated
+scenario scope invalidated
+causal structure invalidated
+```
+
+이면 Root는 active source가 아니다.
+
+정확한 invalidation event는
+Market Structure / Scenario Scope state와 연결한다.
+
+### 4.17 Multiple Root Candidates
+
+Classification: D principle
+
+여러 candidate가 있을 때 다음 기준으로 임의 선택하지 않는다.
+
+```text
+가장 좁은 OB
+현재가에 가장 가까운 OB
+가장 큰 RR을 만드는 OB
+가장 최근 OB
+```
+
+Nested causal relation이 명확하면 parent-child lineage로 유지한다.
+
+비교할 수 없는 서로 다른 Root candidate가
+동일 scenario ownership을 주장하고
+deterministic하게 causal owner를 선택할 수 없다면:
+
+```text
+NO TRADE / AMBIGUOUS ROOT
+```
+
+로 처리한다.
+
+### 4.18 Explicit V1 Exclusions
+
+Root source selection에서 사용하지 않는다.
+
+```text
+simple latest opposite candle
+nearest opposite candle
+FVG overlap alone
+HTF FVG as source
+M1 reaction-based retrospective HTF selection
+ATR displacement score
+body-size score
+touch-count score
+age-decay score
+RR-based Root selection
+AI-selected Root
+```
+
+### 4.19 Required Root Object
+
+Minimum state:
+
+```text
+id
+
+timeframe:
+    H1
+    M30
+    M15
+
+direction:
+    LONG
+    SHORT
+
+origin_index
+occurred_at
+available_at
+
+bottom
+top
+
+origin_wave_id
+meaningful_swing_id
+linked_structure_event_id
+
+scenario_owner_id
+objective_family_id
+
+state:
+    FRESH
+    TOUCHED
+    PARTIALLY_MITIGATED
+    CONSUMED
+    STRUCTURALLY_INVALIDATED
+
+first_touch_at
+consumed_at
+invalidated_at
+```
+
+Implementation에서 모든 field가 즉시 필요하지 않더라도
+causal ownership과 replay 검증에 필요한 식별자를 보존한다.
+
+### 4.20 V1 Root Protocol Summary
+
+LONG:
+
+```text
+bullish scenario/objective frozen
+        ↓
+meaningful HTF low/swing context
+        ↓
+swing-origin causal window
+        ↓
+last bearish candle inside that window
+        ↓
+same bullish directional leg
+        ↓
+meaningful high body-close break
+        ↓
+Root available
+        ↓
+Root still fresh / structurally valid
+        ↓
+search causal LTF child
+```
+
+SHORT:
+
+```text
+bearish scenario/objective frozen
+        ↓
+meaningful HTF high/swing context
+        ↓
+swing-origin causal window
+        ↓
+last bullish candle inside that window
+        ↓
+same bearish directional leg
+        ↓
+meaningful low body-close break
+        ↓
+Root available
+        ↓
+Root still fresh / structurally valid
+        ↓
+search causal LTF child
+```
+
+---
+
 
 ## 5. Causal LTF Refinement
 
