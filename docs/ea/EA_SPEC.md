@@ -685,22 +685,578 @@ Market Structure baseline에는 다음을 넣지 않는다.
 
 ## 3. Liquidity
 
-Status: TBD
+Status: PARTIALLY FROZEN
 
-Required semantic condition:
-A liquidity level must represent a plausible participant stop pool.
+Primary authority:
+- `AGENTS.md`
 
-Supported concepts from current research:
-- external swing
-- defended range edge
-- reaction trap
-- trendline cluster
-- meaningful internal liquidity
+Primary implementation reference:
+- `mentor_engine/liquidity.py`
 
-Recent pivot alone is insufficient.
+Secondary references:
+- `research/mentor-youtube/MENTOR_RULE_CONTRACT.md`
+- `research/mentor-youtube/MENTOR_MINIMAL_METHOD.md`
 
-Deterministic implementation:
-TBD.
+Legacy MQL5의 단순 recent-pivot liquidity logic은 baseline authority로 사용하지 않는다.
+
+### 3.1 Purpose
+
+Liquidity 엔진의 목적은 모든 swing high/low를 liquidity로 표시하는 것이 아니다.
+
+Liquidity로 인정하려면:
+
+```text
+다른 시장 참여자가
+그 가격 바깥에 stop을 둘
+구조적 / 행동적 이유
+```
+
+가 있어야 한다.
+
+따라서:
+
+```text
+confirmed swing != automatically tradable liquidity
+```
+
+이다.
+
+V1은 모호한 유동성을 많이 탐지하는 것보다
+신뢰할 수 있고 반복 가능한 liquidity pool을 적게 탐지하는 것을 우선한다.
+
+### 3.2 V1 Eligible Liquidity Families
+
+V1 baseline에서 허용하는 liquidity family는 다음 세 가지다.
+
+```text
+1. EXTERNAL_SWING
+2. DEFENDED_RANGE_EDGE
+3. STRUCTURAL_REACTION
+```
+
+다음은 V1에서 제외한다.
+
+```text
+TRENDLINE_CLUSTER
+simple recent pivot
+round number
+session high/low by itself
+arbitrary local high/low
+```
+
+이들은 향후 별도 research variant로 검토할 수 있다.
+
+### 3.3 External Swing Liquidity
+
+Classification: D
+
+V1에서 가장 우선적으로 신뢰하는 liquidity다.
+
+Market Structure 엔진에서 이미 external/protected 의미가 확정된
+구조적 고점/저점을 사용한다.
+
+단순히 H1/M30에서 최근에 보이는 고점/저점이라는 이유만으로
+external liquidity가 되지 않는다.
+
+Required conditions:
+
+1. confirmed wave여야 한다.
+2. Market Structure state에 의해 external/protected 의미가 확정되어야 한다.
+3. 해당 의미가 확정된 시점 이전에는 liquidity로 사용할 수 없다.
+4. 실제 outer wick extreme이 sweep/delivery reference level이다.
+
+Examples:
+
+```text
+H1/M30 meaningful previous high
+-> buy-side external liquidity
+
+H1/M30 meaningful previous low
+-> sell-side external liquidity
+```
+
+단, 해당 level은 현재 Market Structure engine에서
+external/protected structure의 일부로 인정되어야 한다.
+
+### 3.4 Defended Range Edge
+
+Classification: D for V1 protocol
+
+V1은 명확하게 위와 아래가 반복 방어된 박스형 range만 사용한다.
+
+기본 형태:
+
+```text
+HIGH 1 -------- HIGH 2
+   |              |
+   |    RANGE     |
+   |              |
+LOW 1  -------- LOW 2
+```
+
+Required operational conditions:
+
+1. four confirmed waves가 alternating sequence를 구성한다.
+2. 두 high의 wick 영역이 서로 overlap한다.
+3. 두 low의 wick 영역이 서로 overlap한다.
+4. range가 완성되기 전 body close가 해당 defended box를 명확히 이탈하지 않는다.
+5. 네 번째 wave가 confirmed되기 전에는 range-edge liquidity가 존재하지 않는다.
+
+Alternating sequence examples:
+
+```text
+HIGH -> LOW -> HIGH -> LOW
+```
+
+또는:
+
+```text
+LOW -> HIGH -> LOW -> HIGH
+```
+
+High defended edge는 buy-side liquidity다.
+
+Low defended edge는 sell-side liquidity다.
+
+#### V1 restriction
+
+다음처럼 한쪽에만 equal highs/equal lows가 존재하는 경우는
+V1 baseline에서는 독립적인 defended edge로 승격하지 않는다.
+
+```text
+HIGH ---- HIGH
+```
+
+또는:
+
+```text
+LOW ----- LOW
+```
+
+이것은 의미 없는 패턴이라는 뜻이 아니다.
+
+V1에서 임의의 price tolerance를 추가하지 않고
+보수적인 deterministic baseline을 유지하기 위한 제한이다.
+
+향후 별도 variant에서 independent equal-high/equal-low detector를 비교한다.
+
+### 3.5 Structural Reaction Liquidity
+
+Classification: D for V1 protocol
+
+이미 구조적으로 의미가 확인된 causal OB에서 가격이 반응하고,
+그 반응으로 confirmed swing이 형성되면
+해당 swing 바깥에 새로운 stop liquidity가 생긴 것으로 본다.
+
+직관:
+
+```text
+pre-existing meaningful OB
+        |
+        v
+price touches OB
+        |
+        v
+visible reaction
+        |
+        v
+confirmed reaction swing
+        |
+        v
+participants may place stops beyond that swing
+```
+
+#### Bullish reaction
+
+Pre-existing bullish structural OB에서 반응하여
+confirmed swing low가 형성되면:
+
+```text
+reaction low
+-> sell-side liquidity
+```
+
+후보가 된다.
+
+#### Bearish reaction
+
+Pre-existing bearish structural OB에서 반응하여
+confirmed swing high가 형성되면:
+
+```text
+reaction high
+-> buy-side liquidity
+```
+
+후보가 된다.
+
+Required conditions:
+
+1. causal OB는 reaction 이전에 이미 존재해야 한다.
+2. OB는 현재 zone/source rules에 의해 structurally owned 상태여야 한다.
+3. price reaction은 해당 OB에 실제로 접촉해야 한다.
+4. reaction 이후 opposite wave가 confirmed되어야 한다.
+5. liquidity는 reaction wave confirmation 이후에만 사용할 수 있다.
+
+#### V1 restriction
+
+단순 FVG touch만으로 reaction liquidity를 생성하지 않는다.
+
+단순 최근 swing이 OB 근처에 있다는 이유만으로도 생성하지 않는다.
+
+정확한 OB 생성/ownership 규칙은 이후 `HTF Root OB` 및
+`Causal LTF Refinement` specification에서 확정한다.
+
+따라서 Structural Reaction Liquidity는
+해당 zone engine이 causal OB를 확정할 수 있을 때 활성화된다.
+
+### 3.6 Trendline Liquidity
+
+Classification: X in V1
+
+V1 baseline에서는 trendline liquidity를 사용하지 않는다.
+
+Reason:
+
+사람에게 명확해 보이는 trendline을
+EA에서 동일하게 재현하는 deterministic definition이 현재 충분히 안정적이지 않다.
+
+기존 Python의 3-wave line projection 방식은
+유용한 research implementation이지만
+현재 Mentor strategy authority 자체로 승격하지 않는다.
+
+향후 별도 immutable research variant로 검증할 수 있다.
+
+### 3.7 Liquidity Side
+
+Classification: D
+
+```text
+HIGH-side pool
+-> buy-side liquidity
+-> stops / breakout interest above
+-> sweep may support short reaction context
+
+LOW-side pool
+-> sell-side liquidity
+-> stops / breakout interest below
+-> sweep may support long reaction context
+```
+
+Liquidity object 자체는 trade direction을 결정하지 않는다.
+
+Trade direction은:
+
+```text
+map
+objective
+source/context
+swept liquidity side
+```
+
+를 함께 사용해 결정한다.
+
+### 3.8 Liquidity Bounds
+
+Classification: D
+
+Liquidity는 필요할 경우 price zone으로 저장한다.
+
+Required representation:
+
+```text
+bottom
+top
+```
+
+Swing-based pool의 wick zone:
+
+```text
+HIGH swing:
+bottom = max(open, close)
+top    = high
+
+LOW swing:
+bottom = low
+top    = min(open, close)
+```
+
+Defended range edge는
+defending wick intervals의 overlap을 bounds로 사용할 수 있다.
+
+하지만 physical sweep / delivery 판단의 outer reference는:
+
+```text
+HIGH pool -> top
+LOW pool  -> bottom
+```
+
+이다.
+
+### 3.9 Availability Time
+
+Classification: D
+
+Liquidity는 그 존재 이유가 causal하게 확정된 이후에만 사용할 수 있다.
+
+Examples:
+
+```text
+external swing
+-> external/protected rank availability 이후
+
+defended range
+-> required fourth wave confirmation 이후
+
+structural reaction
+-> reaction wave confirmation 이후
+```
+
+Required metadata:
+
+```text
+occurred_at
+available_at
+source_reason
+source_id
+```
+
+나중에 확인된 liquidity를
+과거 시점부터 존재했던 것처럼 사용할 수 없다.
+
+### 3.10 Physical Sweep
+
+Classification: D
+
+Physical sweep은:
+
+```text
+pre-existing eligible liquidity
++
+wick penetration
++
+body close recovery
+```
+
+로 정의한다.
+
+#### HIGH-side sweep
+
+```text
+high > pool.top
+AND
+close <= pool.top
+```
+
+#### LOW-side sweep
+
+```text
+low < pool.bottom
+AND
+close >= pool.bottom
+```
+
+Sweep은 liquidity event이지
+그 자체로 entry trigger가 아니다.
+
+다음 조건을 대신하지 않는다.
+
+```text
+valid map
+valid objective
+valid source/context
+source contact
+M1 CHoCH
+valid execution zone
+```
+
+### 3.11 Body Delivery
+
+Classification: D
+
+Price가 liquidity outer level을 body close로 통과하면
+wick sweep이 아니라 directional delivery로 처리한다.
+
+HIGH-side:
+
+```text
+close > pool.top
+```
+
+LOW-side:
+
+```text
+close < pool.bottom
+```
+
+해당 pool은 consumed 처리한다.
+
+### 3.12 Pool Consumption
+
+Classification: D
+
+Liquidity pool은 physical sweep 또는 body delivery가 발생하면 consumed된다.
+
+```text
+sweep
+-> consumed
+
+body delivery
+-> consumed
+```
+
+Consumed pool은 동일한 structural reason으로 다시 사용할 수 없다.
+
+새 liquidity를 사용하려면
+새로운 causal structural reason이 형성되어야 한다.
+
+### 3.13 Same-Bar Self-Sweep Prevention
+
+Classification: D
+
+현재 bar close에서 처음 available해진 liquidity를
+같은 bar의 intrabar high/low가 이미 sweep한 것으로 처리하지 않는다.
+
+즉:
+
+```text
+pool.available_at == current_bar_close
+```
+
+이면 해당 bar 내부 움직임으로 그 pool의 sweep을 선언할 수 없다.
+
+Pool은 다음 causal processing step부터 active하다.
+
+이 규칙은 self-referential event와 look-ahead를 방지한다.
+
+### 3.14 Source Liquidity vs Objective Liquidity
+
+Classification: D
+
+동일한 LiquidityPool object model을 사용할 수 있지만
+scenario 내 역할은 분리한다.
+
+#### Source liquidity
+
+Setup이 시작되기 전에 sweep되어야 할 liquidity.
+
+```text
+LONG scenario
+-> LOW-side source liquidity
+
+SHORT scenario
+-> HIGH-side source liquidity
+```
+
+Source liquidity는 pre-existing이어야 한다.
+
+#### Objective liquidity
+
+가격이 전달될 목표 liquidity.
+
+Objective는 단순 nearest pivot으로 선택하지 않는다.
+
+Scenario scope와 frozen objective rules에 따라 선택한다.
+
+정확한 objective-selection algorithm은
+`Objective / TP` section에서 확정한다.
+
+### 3.15 V1 Liquidity Priority
+
+동시에 여러 liquidity candidate가 존재할 경우
+V1은 단순히 가장 가까운 level을 자동 선택하지 않는다.
+
+개념적 신뢰도 우선순위는:
+
+```text
+1. meaningful external/protected structure
+2. clearly defended range edge
+3. structurally-owned OB reaction liquidity
+```
+
+이다.
+
+단, 이것을 weighted score로 구현하지 않는다.
+
+실제 source/objective selection은
+scenario scope와 causal ownership rule을 이용해 결정한다.
+
+### 3.16 Explicit V1 Exclusions
+
+다음은 V1 baseline liquidity source로 사용하지 않는다.
+
+```text
+trendline cluster
+simple recent pivot
+arbitrary local high/low
+round number
+session high/low by itself
+ATR-based liquidity quality score
+weighted maturity score
+age-decay score
+nearest-pivot fallback
+AI-selected liquidity
+```
+
+이들은 필요하면 baseline 완성 후
+독립된 research variant로 비교한다.
+
+### 3.17 Required Liquidity Object
+
+Minimum state:
+
+```text
+id
+
+family:
+    EXTERNAL_SWING
+    DEFENDED_RANGE_EDGE
+    STRUCTURAL_REACTION
+
+side:
+    HIGH
+    LOW
+
+bottom
+top
+
+source_id
+source_reason
+
+occurred_at
+available_at
+
+consumed
+consumed_at
+consumption_type:
+    NONE
+    SWEEP
+    BODY_DELIVERY
+```
+
+### 3.18 Remaining Dependencies
+
+Liquidity semantics는 V1 기준으로 대부분 확정하지만,
+`STRUCTURAL_REACTION`의 실제 활성화는
+zone engine의 다음 규칙이 확정되어야 완성된다.
+
+```text
+HTF Root OB
+Causal LTF Refinement
+OB ownership
+OB validity / invalidation
+```
+
+따라서 Liquidity section status는 현재:
+
+```text
+PARTIALLY FROZEN
+```
+
+으로 유지한다.
+
+---
+
 
 ## 4. HTF Root OB
 
