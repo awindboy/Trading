@@ -1189,15 +1189,7 @@ bool FindLastOppositeCandleInSwingOrigin(const ENUM_TIMEFRAMES tf,
                                          MqlRates &origin_bar)
   {
    if(!meaningful_wave.valid || !meaningful_wave.is_wave)
-     {
-      LogRootRejected(tf_index,
-                      available_at,
-                      event_type,
-                      direction,
-                      "NO_CAUSAL_CORRECTION_OR_MEANINGFUL_WAVE",
-                      "");
       return false;
-     }
 
    datetime start_time=meaningful_wave.origin_window_start;
    datetime end_time=meaningful_wave.origin_window_end;
@@ -1330,7 +1322,15 @@ bool AddRootFromStructureEvent(const int tf_index,
       return false;
 
    if(!meaningful_wave.valid || !meaningful_wave.is_wave)
+     {
+      LogRootRejected(tf_index,
+                      available_at,
+                      event_type,
+                      direction,
+                      "NO_CAUSAL_CORRECTION_OR_MEANINGFUL_WAVE",
+                      "");
       return false;
+     }
 
    MqlRates origin_bar;
    ZeroMemory(origin_bar);
@@ -2454,7 +2454,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.30 property_version=1.00 magic=%I64d phase=ROOT_CORE",
+           StringFormat("build=0.31 property_version=1.00 magic=%I64d phase=ROOT_CORE",
                         InpMagicNumber));
 
    // Do not fail initialization just because MT5 is still synchronizing history.
