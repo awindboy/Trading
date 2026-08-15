@@ -161,12 +161,77 @@ external_low = NONE
 confirmed swing high / low는 수집할 수 있지만,
 한쪽 구조가 body close로 파괴되기 전까지 directional external trend를 선언하지 않는다.
 
+Directional trend initialization에는
+반대편 protected boundary까지 포함된 two-sided confirmed range가 필요하다.
+
+즉 한쪽 confirmed swing만 존재하는 상태에서
+그 swing을 body close로 돌파했다는 이유만으로
+mature BULLISH / BEARISH external state를 만들지 않는다.
+
+Required before INITIAL_BOS:
+
+confirmed swing high
++
+confirmed swing low
+
+Both must be available before the INITIAL_BOS close.
+
 ### 2.5 Initial BOS
 
 Classification: D
 
-Trend가 아직 NEUTRAL인 상태에서
-가장 최근 사용 가능한 confirmed swing을 body close로 파괴하면 INITIAL_BOS가 발생한다.
+Trend가 NEUTRAL인 상태에서
+먼저 양쪽 boundary가 모두 존재하는 confirmed two-sided range를 구성한다.
+
+Required:
+
+latest adjacent confirmed swing high
++
+latest adjacent confirmed swing low
+
+두 swing 모두 INITIAL_BOS close 전에 available해야 한다.
+
+이 pair를:
+
+neutral_range_high
+neutral_range_low
+
+로 사용한다.
+
+#### Bullish INITIAL_BOS
+
+close > neutral_range_high
+
+이면 bullish INITIAL_BOS다.
+
+Result:
+
+trend = BULLISH
+protected_low = neutral_range_low
+external_high = bullish break / delivery extreme
+
+#### Bearish INITIAL_BOS
+
+close < neutral_range_low
+
+이면 bearish INITIAL_BOS다.
+
+Result:
+
+trend = BEARISH
+protected_high = neutral_range_high
+external_low = bearish break / delivery extreme
+
+Wick-only breach는 INITIAL_BOS가 아니다.
+
+반대편 confirmed boundary가 아직 없다면:
+
+NO INITIAL TREND
+
+이다.
+
+한쪽 swing break만으로
+protected swing이 없는 directional state를 만들지 않는다.
 
 #### Bullish INITIAL_BOS
 
@@ -206,19 +271,64 @@ external_high = current bullish delivery extreme
 
 #### Bullish BOS
 
-현재 external high를 body close로 상향 돌파하면:
+현재 bullish external high를 body close로 상향 돌파하면:
 
-```text
 close > external_high
-```
 
 bullish BOS가 발생한다.
 
 BOS 후에도 external bullish direction은 유지된다.
 
-새로운 opposite-side protected low는
-해당 continuation leg 이전에 형성되어 있으며
-현재 구조를 지키는 가장 최근의 causal confirmed swing low를 사용한다.
+BOS가 돌파한 기존 external high를:
+
+break_reference_high
+
+로 freeze한다.
+
+Causal correction window:
+
+break_reference_high occurred
+→ bullish BOS candle close
+
+이 window 안에서:
+
+candidate.side = LOW
+candidate.occurred_at > break_reference_high.occurred_at
+candidate.available_at <= BOS.available_at
+
+을 만족하는 confirmed swing low만
+causal correction candidate로 사용한다.
+
+Candidate가 하나 이상이면:
+
+causal_correction_low
+=
+가장 가격이 낮은 candidate
+
+를 선택한다.
+
+이 swing만 새 protected low로 승격할 수 있다.
+
+Candidate가 하나도 없으면:
+
+protected_low remains unchanged
+
+이다.
+
+단순 latest swing low 또는
+BOS candle에 가장 가까운 swing low를
+자동 protected low로 사용하지 않는다.
+```
+
+Keep the existing Bearish CHoCH body-close rule in 2.6, but append:
+
+```text
+Protected low body-break가 발생하면
+기존 bullish external state는 invalidated되고
+trend state는 `TRANSITION`으로 이동한다.
+
+완성된 new bearish external state는
+새 opposite protected structure가 deterministic하게 성립한 뒤에만 확정한다.
 
 #### Bearish CHoCH
 
@@ -251,13 +361,64 @@ external_low = current bearish delivery extreme
 
 #### Bearish BOS
 
-현재 external low를 body close로 하향 돌파하면:
+현재 bearish external low를 body close로 하향 돌파하면:
 
-```text
 close < external_low
-```
 
 bearish BOS가 발생한다.
+
+BOS 후에도 external bearish direction은 유지된다.
+
+BOS가 돌파한 기존 external low를:
+
+break_reference_low
+
+로 freeze한다.
+
+Causal correction window:
+
+break_reference_low occurred
+→ bearish BOS candle close
+
+이 window 안에서:
+
+candidate.side = HIGH
+candidate.occurred_at > break_reference_low.occurred_at
+candidate.available_at <= BOS.available_at
+
+을 만족하는 confirmed swing high만
+causal correction candidate로 사용한다.
+
+Candidate가 하나 이상이면:
+
+causal_correction_high
+=
+가장 가격이 높은 candidate
+
+를 선택한다.
+
+이 swing만 새 protected high로 승격할 수 있다.
+
+Candidate가 하나도 없으면:
+
+protected_high remains unchanged
+
+이다.
+
+단순 latest swing high 또는
+BOS candle에 가장 가까운 swing high를
+자동 protected high로 사용하지 않는다.
+```
+
+Keep the existing Bullish CHoCH body-close rule in 2.7, but append:
+
+```text
+Protected high body-break가 발생하면
+기존 bearish external state는 invalidated되고
+trend state는 `TRANSITION`으로 이동한다.
+
+완성된 new bullish external state는
+새 opposite protected structure가 deterministic하게 성립한 뒤에만 확정한다.
 
 #### Bullish CHoCH
 
@@ -374,6 +535,19 @@ Internal swing은:
 
 그 자체로 H1/M30 external trend를 뒤집지 않는다.
 
+Confirmed wave는 다음 role 중 하나를 가질 수 있다.
+
+INTERNAL
+EXTERNAL_EXTREME
+CAUSAL_CORRECTION
+PROTECTED
+
+Wave가 confirmed되었다는 사실만으로
+INTERNAL 이외의 role을 자동 획득하지 않는다.
+
+`CAUSAL_CORRECTION`과 `PROTECTED` role은
+Section 2.12의 BOS-time causal promotion으로만 획득한다.
+
 ### 2.11 External Swing Promotion
 
 Classification: D
@@ -403,38 +577,88 @@ Classification: D
 
 Protected swing은 단순히 가장 최근 swing이 아니다.
 
-현재 external structure가 유지되기 위해 지켜져야 하는 opposite-side causal swing이다.
+현재 external structure를 실제로 유지시키고,
+그 swing 이후의 directional leg가
+기존 external boundary를 body close BOS로 돌파했기 때문에
+보호 기준으로 승격된 opposite-side causal correction extreme이다.
 
 #### Bullish state
 
-```text
+현재:
+
 protected_low
-```
 
 가 존재한다.
 
-Bullish continuation 중 형성되는 모든 새로운 swing low가
-자동으로 protected low가 되지 않는다.
+Bullish continuation 중 모든 새 swing low는
+처음에는 INTERNAL이다.
 
-Continuation BOS와 그 leg의 causal relationship이 확인될 때
-새로운 protected low로 갱신할 수 있다.
+Bullish BOS가 발생하면:
 
-protected low body break 전까지 bullish external state는 유지된다.
+1. BOS가 돌파한 기존 external high를 `break_reference_high`로 freeze한다.
+2. `break_reference_high.occurred_at` 이후부터 BOS close까지를 correction window로 정의한다.
+3. BOS close 시점까지 이미 available한 confirmed swing low만 후보로 사용한다.
+4. 그 후보 중 가장 낮은 price의 swing low를 `causal_correction_low`로 선택한다.
+5. `causal_correction_low`가 존재하면 새 protected low로 승격한다.
+6. 후보가 없으면 기존 protected low를 유지한다.
 
 #### Bearish state
 
-```text
+현재:
+
 protected_high
-```
 
 가 존재한다.
 
-모든 새로운 swing high가 자동으로 protected high가 되지 않는다.
+Bearish continuation 중 모든 새 swing high는
+처음에는 INTERNAL이다.
 
-Continuation BOS와 연결된 causal opposite swing만
-새 protected high로 승격한다.
+Bearish BOS가 발생하면:
 
-protected high body break 전까지 bearish external state는 유지된다.
+1. BOS가 돌파한 기존 external low를 `break_reference_low`로 freeze한다.
+2. `break_reference_low.occurred_at` 이후부터 BOS close까지를 correction window로 정의한다.
+3. BOS close 시점까지 이미 available한 confirmed swing high만 후보로 사용한다.
+4. 그 후보 중 가장 높은 price의 swing high를 `causal_correction_high`로 선택한다.
+5. `causal_correction_high`가 존재하면 새 protected high로 승격한다.
+6. 후보가 없으면 기존 protected high를 유지한다.
+
+#### Availability / No Retroactive Promotion
+
+BOS 전에 가격상 swing이 이미 발생했더라도
+그 swing의 3-candle confirmation이 BOS close 이후에야 available되었다면
+그 BOS의 causal correction candidate로 사용할 수 없다.
+
+금지:
+
+future confirmation
+→ rewrite historical protected swing
+
+Protected promotion은
+BOS close 당시 알 수 있었던 정보만 사용한다.
+
+#### External CHoCH
+
+Bullish state:
+
+close < protected_low
+→ current bullish external state invalidated
+→ TRANSITION
+
+Bearish state:
+
+close > protected_high
+→ current bearish external state invalidated
+→ TRANSITION
+
+Wick-only breach는 external CHoCH가 아니다.
+
+`TRANSITION` 상태에서는
+old trend authority가 종료됐지만
+반대편 mature external trend도 아직 완성됐다고 가정하지 않는다.
+
+새 directional state는
+valid two-sided structure와 body-close directional confirmation이
+다시 확보된 뒤에만 mature BULLISH / BEARISH로 승격한다.
 
 ### 2.13 Active Dealing Range
 
@@ -444,6 +668,14 @@ Active dealing range는 단순 최근 pivot high / low가 아니다.
 
 H1/M30의 현재 external structure를 구성하는 protected extreme과
 directional delivery extreme을 사용한다.
+
+`TRANSITION` 상태에서는
+이전 trend의 dealing range를
+새 continuation authorization에 재사용하지 않는다.
+
+새 mature directional external state가 확정된 뒤
+새 protected extreme과 directional external extreme으로
+새 active dealing range를 구성한다.
 
 #### Bullish structure
 
@@ -600,7 +832,69 @@ Exact warm-up requirement:
 TBD
 ```
 
-### 2.19 Required Structure State
+### 2.19 Trend Engine State and Required Fields
+
+Classification: D
+
+Each timeframe maintains:
+
+trend_state:
+    NEUTRAL
+    BULLISH
+    BEARISH
+    TRANSITION
+
+confirmed_waves[]
+
+external_high_id
+external_low_id
+
+protected_high_id
+protected_low_id
+
+break_reference_id
+
+causal_correction_candidate_ids
+causal_correction_extreme_id
+
+last_bos_id
+last_choch_id
+
+range_high
+range_low
+
+Each confirmed wave records:
+
+wave_id
+side
+price
+occurred_at
+confirmed_at
+available_at
+
+role:
+    INTERNAL
+    EXTERNAL_EXTREME
+    CAUSAL_CORRECTION
+    PROTECTED
+
+Core invariants:
+
+1. Three-candle wave != external trend.
+2. Initial trend requires a two-sided confirmed range.
+3. Mature directional trend must have an opposite protected swing.
+4. Latest swing alone never becomes protected.
+5. Protected promotion requires external directional BOS.
+6. Bullish BOS selects the lowest available confirmed low in its causal correction window.
+7. Bearish BOS selects the highest available confirmed high in its causal correction window.
+8. No retroactive protected-swing rewrite.
+9. Internal break cannot flip H1/M30 external trend.
+10. External trend invalidation requires body close through the current protected swing.
+11. Wick-only protected breach is not trend reversal.
+12. External/internal promotion uses structural role, not ATR/point/percentage thresholds.
+
+
+### 2.20 Required Structure State
 
 각 timeframe별 엔진은 최소 다음 상태를 노출한다.
 
@@ -663,7 +957,7 @@ occurred_at
 available_at
 ```
 
-### 2.20 Baseline Exclusions
+### 2.21 Baseline Exclusions
 
 Market Structure baseline에는 다음을 넣지 않는다.
 

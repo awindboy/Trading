@@ -56,6 +56,34 @@ Objective
 
 ## Current Status
 
+Three-candle wave detector
+→ FROZEN
+→ swing candidate only
+
+Initial trend initialization
+→ FROZEN
+→ two-sided confirmed range required
+
+Protected swing selection
+→ FROZEN
+→ BOS-producing causal correction extreme
+→ NOT latest opposite swing
+
+Protected swing availability
+→ BOS-close information only
+→ no retroactive promotion
+
+External trend invalidation
+→ body close through current protected swing
+
+Post-external-CHoCH state
+→ TRANSITION
+→ no immediate fabricated opposite mature trend
+
+External/internal wave promotion
+→ structural role based
+→ no ATR/point/percentage threshold
+
 INITIAL_CHOCH_FVG core entry
 → FROZEN
 
@@ -138,13 +166,16 @@ Baseline TP price
 
 Create the first EA rule mapping for:
 
-1. Full AGENTS / EA_SPEC / DECISIONS consistency audit.
-2. Resolve remaining non-Objective V1 H/U items required for implementation.
-3. Freeze deterministic V1 specification.
-4. Implement minimum MQL5 EA.
-5. Compile in MetaEditor.
-6. Run MT5 Strategy Tester with Every tick based on real ticks.
-7. Validate implementation parity before profitability optimization.
+1. Validate the frozen trend-state semantics visually and during implementation parity testing.
+2. Return to H1/M30 map-owner + scenario-scope assignment using the frozen trend engine.
+3. Resolve selected-FVG exact invalidation / consumption.
+4. Resolve final refined-source exact invalidation.
+5. Resolve session-gap handling.
+6. Resolve warm-up/state reconstruction.
+7. Run final AGENTS / EA_SPEC / DECISIONS consistency audit.
+8. Freeze deterministic V1 specification.
+9. Implement minimum MQL5 EA.
+10. Validate implementation parity before profitability optimization.
 
 Each rule must be classified as:
 

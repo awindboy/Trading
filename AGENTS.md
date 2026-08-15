@@ -113,6 +113,106 @@ TP는 해당 유동성의 실제 wick 가격에 둔다. 스윕 가능성을 무�
 
 `내부 유동성 -> M1 CHoCH`를 `외부 반전`으로 승격하는 것은 금지한다.
 
+### 3.2.1 H1/M30 추세는 causal protected swing으로 판정한다
+
+3-candle wave는 추세 자체가 아니라 swing 후보를 확정하는 detector다.
+
+확정된 모든 wave를 외부 구조로 승격하지 않는다.
+
+각 map timeframe은 먼저:
+
+trend = NEUTRAL
+
+에서 시작하며, 상승/하락의 양쪽 confirmed swing이 모두 존재하는 two-sided range가 만들어지기 전에는 directional external trend를 선언하지 않는다.
+
+Bullish initial structure:
+
+confirmed swing high + confirmed swing low
+→ swing high를 body close로 상향 돌파
+→ bullish external state
+→ 반대편 confirmed swing low가 최초 protected low
+
+Bearish initial structure:
+
+confirmed swing high + confirmed swing low
+→ swing low를 body close로 하향 돌파
+→ bearish external state
+→ 반대편 confirmed swing high가 최초 protected high
+
+Wick-only breach는 trend initialization 또는 trend reversal이 아니다.
+
+Protected swing은 단순 latest opposite swing이 아니다.
+
+Bullish continuation BOS가 발생할 때:
+
+1. 돌파 대상이었던 기존 external high의 발생 이후부터 BOS close까지를 correction window로 잡는다.
+2. 그 window 안에서 BOS close 시점까지 이미 confirmed / available인 swing low만 후보로 사용한다.
+3. 후보 중 가장 낮은 confirmed swing low를 해당 BOS를 만든 `causal correction low`로 본다.
+4. 그 causal correction low만 새 protected low로 승격할 수 있다.
+5. 해당 후보가 없으면 기존 protected low를 유지한다.
+
+Bearish continuation BOS는 대칭적으로:
+
+1. 기존 external low 이후부터 BOS close까지의 correction window를 사용한다.
+2. 이미 confirmed / available인 swing high만 후보로 사용한다.
+3. 후보 중 가장 높은 confirmed swing high를 `causal correction high`로 본다.
+4. 그 swing만 새 protected high로 승격할 수 있다.
+5. 후보가 없으면 기존 protected high를 유지한다.
+
+즉:
+
+최근 swing
+≠ 자동 protected swing
+
+이며:
+
+external BOS를 실제로 만든 correction extreme
+= protected swing candidate
+
+다.
+
+BOS 시점에 아직 confirmed되지 않은 과거 swing을
+나중에 확인됐다는 이유로 과거 protected swing으로 소급 승격하지 않는다.
+
+Bullish external trend는:
+
+close < current protected low
+
+가 발생할 때만 외부 상승 구조가 무효화된다.
+
+Bearish external trend는:
+
+close > current protected high
+
+가 발생할 때만 외부 하락 구조가 무효화된다.
+
+Protected swing을 wick으로만 관통하고 종가가 다시 구조 안에서 마감되면
+external trend는 뒤집히지 않으며 liquidity sweep 후보로만 본다.
+
+Protected swing body-break가 발생하면 기존 external trend는 즉시 invalidated된다.
+
+다만 반대편 mature external structure의 protected boundary가 아직 완성되지 않았다면
+곧바로 완성된 반대 trend를 만들어내지 않고 `TRANSITION` 상태로 둔다.
+
+새 반대 external trend는
+다시 valid two-sided structure와 body-close directional confirmation이 확보된 뒤
+mature directional state로 승격한다.
+
+현재 protected swing / directional external extreme / BOS에 의해 승격된 causal correction swing이 아닌
+나머지 confirmed waves는 기본적으로 INTERNAL로 유지한다.
+
+External / internal 판정에는:
+
+ATR threshold
+minimum point distance
+minimum retracement percentage
+minimum bar count
+
+같은 추가 크기 threshold를 사용하지 않는다.
+
+Wave의 크기가 아니라
+현재 external structure 안에서 맡는 causal role로 external 여부를 결정한다.
+
 ### 3.3 dealing range 위치를 진입 권한에 포함한다
 
 - H1/M30의 현재 external protected high와 low로 active dealing range를 정하고 EQ 50%를 표시한다.

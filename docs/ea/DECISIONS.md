@@ -1687,3 +1687,119 @@ LONG TP는 Bid-side,
 SHORT TP는 Ask-side execution semantics를 따른다.
 
 Front-run은 향후 별도 immutable execution optimization variant로만 검토한다.
+
+## D-073 — Three-candle waves are swing candidates, not trend states
+
+Status: ACTIVE / FROZEN
+
+The three-candle detector confirms wave highs/lows only.
+
+Confirmed wave creation does not automatically create:
+
+external swing
+protected swing
+directional trend
+
+Reason:
+
+Internal waves must coexist inside an external trend without flipping the external map.
+
+---
+
+## D-074 — Initial external trend requires a two-sided confirmed range
+
+Status: ACTIVE / FROZEN
+
+Before INITIAL_BOS, both a confirmed swing high and confirmed swing low must already be available.
+
+Bullish initialization:
+
+body close above range high
+→ BULLISH
+→ opposite range low becomes protected low
+
+Bearish initialization:
+
+body close below range low
+→ BEARISH
+→ opposite range high becomes protected high
+
+A directional state without a valid opposite protected boundary is forbidden.
+
+---
+
+## D-075 — Protected swing is the BOS-producing correction extreme
+
+Status: ACTIVE / FROZEN
+
+The protected swing is not the latest opposite swing.
+
+At bullish BOS:
+
+correction window
+= broken external high occurrence → BOS close
+
+eligible lows
+= confirmed / available lows inside that window
+
+new protected low
+= lowest eligible low
+
+At bearish BOS:
+
+correction window
+= broken external low occurrence → BOS close
+
+eligible highs
+= confirmed / available highs inside that window
+
+new protected high
+= highest eligible high
+
+If no eligible correction swing exists, retain the previous protected swing.
+
+---
+
+## D-076 — Protected promotion uses only BOS-time available information
+
+Status: ACTIVE / FROZEN
+
+A swing whose price occurred before BOS but whose confirmation becomes available only after BOS cannot retroactively become the protected swing for that BOS.
+
+Reason:
+
+Prevent look-ahead and historical structure rewriting.
+
+---
+
+## D-077 — External trend invalidation enters TRANSITION before a new mature opposite state
+
+Status: ACTIVE / FROZEN
+
+Body-close break of the current protected swing immediately invalidates the old external trend.
+
+However, V1 does not fabricate a complete opposite mature trend when the new opposite protected boundary is not yet deterministic.
+
+State:
+
+old directional trend
+→ protected body break
+→ TRANSITION
+
+New BULLISH / BEARISH state requires a valid new two-sided structure and body-close directional confirmation.
+
+---
+
+## D-078 — External/internal importance is structural-role based, not size-threshold based
+
+Status: ACTIVE / FROZEN
+
+V1 does not use ATR, minimum points, percentage retracement, or minimum bar-count thresholds to decide whether a confirmed wave is external.
+
+External role comes from:
+
+directional external boundary
+protected causal correction role
+BOS/CHoCH structure relationship
+
+All other confirmed waves remain internal by default.
