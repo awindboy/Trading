@@ -309,12 +309,53 @@ Broker transaction reconciliation
 → ticket/history based
 → callback arrival order not trusted
 
+
+## Implementation Checkpoint — Phase 1 Structure/Bootstrap Core
+
+`mt5/experts/MentorDeterministicV1EA.mq5` implementation started.
+
+Current code status:
+
+- Phase: `STRUCTURE_ONLY`
+- Version: `0.10`
+- Orders: intentionally disabled
+- MetaEditor compile: NOT YET VERIFIED locally
+- Strategy Tester parity: NOT STARTED
+
+Implemented in this checkpoint:
+
+- H4 / H1 / M30 / M15 historical structure bootstrap backbone
+- H4 → H1 → M30 → M15 chronological bootstrap tie order
+- runtime H4 → H1 → M30 → M15 → M5 → M1 closed-bar scheduler
+- causal 3-candle wave confirmation
+- doji interruption
+- body-close INITIAL_BOS / BOS
+- protected-swing body-close break → TRANSITION
+- compact structure working state instead of full historical wave tree
+- execution epoch boundary logging
+- CSV structural/event logging
+
+Not implemented yet:
+
+- H4 long-horizon liquidity index objects
+- liquidity families / sweep engine
+- Root OB detection
+- causal LTF child refinement
+- source contact / source lifecycle
+- M1 meaningful CHoCH scenario authorization
+- execution FVG selection
+- objective / TP selection
+- broker order submission / cancellation / OnTradeTransaction reconciliation
+
+The next action is local MetaEditor compilation of the Phase 1 file before adding the next strategy layer.
+
 ## Next Task
 
-1. Implement the minimum deterministic MQL5 EA from `AGENTS.md` + `EA_SPEC.md`.
-2. Compile with zero errors/warnings that affect behavior.
-3. Build structural/event logging required for parity inspection.
-4. Run MT5 Strategy Tester parity tests before profitability optimization.
+1. Compile `mt5/experts/MentorDeterministicV1EA.mq5` in MetaEditor and record every error/warning.
+2. Fix Phase 1 compile/runtime defects without changing the frozen strategy contract.
+3. Inspect bootstrap / wave / BOS / TRANSITION CSV logs on a short Strategy Tester run.
+4. Implement H4 liquidity index + V1 liquidity/sweep layer on the verified structure backbone.
+5. Continue Root/source → M1 execution → broker order layers, then run full parity before profitability optimization.
 
 ## Do Not Do Yet
 

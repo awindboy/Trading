@@ -12,6 +12,14 @@
 - [ ] Audit `MentorScenarioTraderEA.mq5`.
 - [ ] Produce reuse / replace / reject matrix.
 
+
+## Current implementation checkpoint
+
+- `mt5/experts/MentorDeterministicV1EA.mq5` Phase 1 structure/bootstrap core drafted.
+- Compile verification: pending local MetaEditor.
+- Trading/order submission: intentionally disabled in Phase 1.
+- Do not mark Market structure or bootstrap items complete until compile + short tester log inspection passes.
+
 ## P1 — Baseline implementation
 
 - [ ] Market structure
