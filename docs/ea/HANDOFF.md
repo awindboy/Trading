@@ -2,7 +2,7 @@
 
 Last updated: 2026-08-16
 Status: V1 SPECIFICATION FROZEN
-Current phase: Phase 4A H1/M30 map and reversal-permission implementation
+Current phase: Phase 4B scenario / objective-family implementation
 
 ## Goal
 
@@ -55,6 +55,14 @@ Objective
 - `mt5/legacy/MentorSep2025ParityEA.mq5`
 
 ## Current Status
+
+Phase 4A H1/M30 map / reversal permission
+→ REAL-TICK EXTENDED TEST PASS
+→ owner hierarchy PASS
+→ reversal-reference precedence PASS
+→ same-bar self-interaction 0
+→ permission-origin rewrite 0
+→ Phase 1~3B regression PASS
 
 Phase 3B causal LTF refinement
 → EXTENDED REAL-TICK COVERAGE PASS
@@ -349,84 +357,83 @@ Broker transaction reconciliation
 → callback arrival order not trusted
 
 
-## Implementation Checkpoint — Phase 4A H1/M30 Map / Reversal Permission
+## Implementation Checkpoint — Phase 4B Scenario / Objective Family
 
-Phase 3B extended validation is complete.
+Phase 4A verification is complete.
 
-Verified:
+Verified runtime:
 
 ```text
-CHILD_CREATED = 7
-CHILD_INVALIDATED = 6
+MAP_STATE = 103
+REVERSAL_REFERENCE_SET = 62
+REVERSAL_REFERENCE_EVENT = 108
+REVERSAL_PERMISSION_STATE = 53
 
-CONTAINED = 5
-EVENT_ADJACENT = 2
-
-child causal violations = 0
-parent invalidation propagation violations = 0
-early refinement freeze = 0
+map hierarchy violations = 0
+owner transition violations = 0
+reference precedence violations = 0
+same-bar reference interaction = 0
+reference monotonicity violations = 0
+permission-origin rewrite = 0
 ```
 
-Phase 4A code status:
+Phase 4B code status:
 
-- Phase: `MAP_REVERSAL_CORE`
-- Internal build: `0.50`
+- Phase: `SCENARIO_OBJECTIVE_CORE`
+- Internal build: `0.60`
 - MQL property version: `1.00`
 - Orders: intentionally disabled
-- Scenario freeze: intentionally disabled
-- Objective family: intentionally disabled
-- Phase 4A compile: PENDING LOCAL METAEDITOR
-- Phase 4A smoke: NOT STARTED
+- Source-contact authorization: disabled
+- M1 trigger: disabled
+- Entry/SL/final TP: disabled
+- Phase 4B compile: PENDING LOCAL METAEDITOR
+- Phase 4B smoke: NOT STARTED
 
 Implemented:
 
 ```text
-H1/M30 owner identity
-H1 highest-active-map priority
-M30-primary fallback while H1 non-directional
-H1 reversal reference
-TOUCH / SWEEP_REJECTION / CONTINUATION_BODY_BREAK precedence
-reversal permission OPEN/CLOSED state
-same-bar reference self-interaction prevention
-reference monotonicity inside an owner flow
-historical permission reconstruction
+EXTERNAL_CONTINUATION scenario PLAN
+early EXTERNAL_REVERSAL scenario PLAN
+M30-primary continuation
+Root/refinement final-source binding
+continuation premium/discount gate
+PREPLAN_SOURCE_CONTACT retrospective-plan block
+AMBIGUOUS_ROOT_LINEAGE fail-closed
+objective family freeze
+H4 continuation extension
+objective candidate consumption audit
+scenario cancellation lifecycle
 ```
 
-Directional owner ID:
+Objective family is frozen before Entry/SL.
+
+Phase 4B does not compute:
 
 ```text
-owner_id = INITIAL_BOS event ID
+planned_R
+final_objective
+TP
 ```
 
-and remains stable through continuation BOS.
+because execution FVG Entry and normalized SL do not exist yet.
 
-Protected break:
+Known implementation decision recorded in DECISIONS:
 
 ```text
-owner_id cleared
-trend = TRANSITION
+owner-compatible primary final-objective external liquidity
+→ ACTIVE EXTERNAL_SWING at/beyond current directional external boundary
 ```
 
-Reversal permission is context only.
+This prevents internal M30 liquidity inside the current map horizon
+from being promoted to final external TP.
 
-It still does not authorize:
-
-```text
-scenario
-Root binding
-source contact
-M1 trigger
-order
-```
-
-Next after Phase 4A verification:
+Next after Phase 4B PASS:
 
 ```text
-Phase 4B
-→ scenario scope binding
-→ objective family freeze
-→ Root/refinement lineage binding
-→ H4 objective extension
+Phase 4C
+→ source contact
+→ scenario-specific mature sweep authorization
+→ STRUCTURAL_REACTION
 ```
 
 

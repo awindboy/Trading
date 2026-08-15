@@ -1,30 +1,30 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - Phase 4A map/reversal core   |
+//| Deterministic Mentor EA V1 - Phase 4B scenario/objective core   |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| Phase 4A intentionally DOES NOT submit orders.                   |
-//| Structure/liquidity/Root/refinement core is verified. This build |
-//| adds H1/M30 directional-owner and reversal-reference permission. |
-//| Scenario/objective/source-contact/order layers remain disabled.                |
+//| Phase 4B intentionally DOES NOT submit orders.                   |
+//| Structure/liquidity/Root/refinement/map core is verified. This  |
+//| build adds frozen scenario/source-lineage/objective-family PLANs.  |
+//| Source-contact/trigger/order layers remain disabled.                |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - Phase 4A map/reversal core"
+#property description "Mentor deterministic V1 EA - Phase 4B scenario/objective core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
 input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
-input string InpEventCsvFile       = "mentor_v1_phase4a_events.csv";
+input string InpEventCsvFile       = "mentor_v1_phase4b_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
-// but are intentionally not active in this Phase 4A map/reversal build.
+// but are intentionally not active in this Phase 4B scenario/objective build.
 
 enum V1InitState
   {
@@ -111,6 +111,23 @@ enum V1ReferenceEventType
    V1_REFERENCE_CONTINUATION_BODY_BREAK
   };
 
+enum V1ScenarioScope
+  {
+   V1_SCOPE_NONE=0,
+   V1_SCOPE_EXTERNAL_CONTINUATION,
+   V1_SCOPE_EXTERNAL_REVERSAL
+  };
+
+enum V1StrategyState
+  {
+   V1_STRATEGY_PLANNED=0,
+   V1_STRATEGY_WAITING_TRIGGER,
+   V1_STRATEGY_PENDING,
+   V1_STRATEGY_FILLED,
+   V1_STRATEGY_CANCELED,
+   V1_STRATEGY_NO_TRADE
+  };
+
 struct V1MapControl
   {
    string            h1_owner_id;
@@ -129,6 +146,11 @@ struct V1MapControl
    int               reversal_permission_event_type;
    string            permission_reference_id;
    double            permission_reference_price;
+
+   datetime          last_permission_closed_at;
+   string            last_permission_close_reason;
+   string            last_closed_permission_reference_id;
+   datetime          last_closed_permission_opened_at;
 
    string            last_snapshot_signature;
   };
@@ -235,6 +257,86 @@ struct V1RefinementLineage
    datetime          frozen_at;
    datetime          snapshot_at;
    string            stop_reason;
+
+   // Phase 4B audit: a source touched before PLAN freeze can never be
+   // retrospectively converted into a new scenario.
+   datetime          preplan_contact_at;
+  };
+
+struct V1ObjectiveCandidate
+  {
+   bool              valid;
+   string            scenario_id;
+   string            id;
+   string            liquidity_id;
+   int               family;
+   ENUM_TIMEFRAMES   tf;
+   int               side;
+   double            price;
+   datetime          available_at;
+   int               order_index;
+   bool              consumed;
+   datetime          consumed_at;
+  };
+
+struct V1ScenarioPlan
+  {
+   bool              valid;
+   string            id;
+   int               strategy_state;
+   int               scope;
+   int               direction;
+
+   ENUM_TIMEFRAMES   active_map_tf;
+   string            owner_id;
+   string            parent_context_id;
+
+   int               h1_trend_at_freeze;
+   string            h1_owner_id_at_freeze;
+   int               m30_trend_at_freeze;
+   string            m30_owner_id_at_freeze;
+   int               reversal_permission_at_freeze;
+
+   string            permission_reference_id;
+   datetime          permission_opened_at;
+
+   string            root_zone_id;
+   string            final_source_id;
+   ENUM_TIMEFRAMES   source_tf;
+   double            source_bottom;
+   double            source_top;
+
+   double            map_range_low;
+   double            map_range_high;
+   double            map_eq;
+
+   datetime          frozen_at;
+   datetime          plan_reference_bar_open;
+   double            plan_reference_price;
+   double            primary_directional_horizon;
+   int               objective_count;
+
+   datetime          canceled_at;
+   string            cancel_reason;
+  };
+
+struct V1ScenarioDraft
+  {
+   bool              valid;
+   int               refinement_index;
+   string            context_key;
+   int               scope;
+   int               direction;
+   ENUM_TIMEFRAMES   active_map_tf;
+   string            owner_id;
+   string            parent_context_id;
+   string            permission_reference_id;
+   datetime          permission_opened_at;
+   string            root_zone_id;
+   string            final_source_id;
+   double            range_low;
+   double            range_high;
+   double            eq;
   };
 
 struct V1StructureState
@@ -338,7 +440,10 @@ V1LiquidityPool g_liquidity[];
 V1SourceZone     g_sources[];
 V1RefinementLineage g_refinements[];
 string           g_pending_refinement_root_ids[];
+V1ObjectiveCandidate g_objective_candidates[];
+V1ScenarioPlan   g_scenarios[];
 V1MapControl      g_map;
+string            g_scenario_layer_signature="";
 datetime         g_last_current_open[V1_TF_COUNT];
 bool             g_cursor_bar_pending[V1_TF_COUNT];
 datetime         g_history_first_date[V1_TF_COUNT];
@@ -368,6 +473,12 @@ long             g_reference_sweeps=0;
 long             g_reference_continuations=0;
 long             g_permission_opens=0;
 long             g_permission_closes=0;
+long             g_scenarios_planned=0;
+long             g_scenarios_canceled=0;
+long             g_scenarios_ambiguous=0;
+long             g_scenarios_no_objective=0;
+long             g_scenarios_precontact_rejected=0;
+long             g_objective_candidates_frozen=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -513,6 +624,30 @@ string ReferenceEventName(const int event_type)
    return "NONE";
   }
 
+
+string ScenarioScopeName(const int scope)
+  {
+   if(scope==V1_SCOPE_EXTERNAL_CONTINUATION)
+      return "EXTERNAL_CONTINUATION";
+   if(scope==V1_SCOPE_EXTERNAL_REVERSAL)
+      return "EXTERNAL_REVERSAL";
+   return "NONE";
+  }
+
+string StrategyStateName(const int state)
+  {
+   switch(state)
+     {
+      case V1_STRATEGY_PLANNED:         return "PLANNED";
+      case V1_STRATEGY_WAITING_TRIGGER: return "WAITING_TRIGGER";
+      case V1_STRATEGY_PENDING:         return "PENDING";
+      case V1_STRATEGY_FILLED:          return "FILLED";
+      case V1_STRATEGY_CANCELED:        return "CANCELED";
+      case V1_STRATEGY_NO_TRADE:        return "NO_TRADE";
+     }
+   return "UNKNOWN";
+  }
+
 bool IsMatureDirectionalTrend(const int trend)
   {
    return (trend==V1_TREND_BULLISH || trend==V1_TREND_BEARISH);
@@ -560,6 +695,11 @@ void ResetMapControl()
    g_map.reversal_permission_event_type=V1_REFERENCE_NONE;
    g_map.permission_reference_id="";
    g_map.permission_reference_price=0.0;
+
+   g_map.last_permission_closed_at=0;
+   g_map.last_permission_close_reason="";
+   g_map.last_closed_permission_reference_id="";
+   g_map.last_closed_permission_opened_at=0;
 
    g_map.last_snapshot_signature="";
   }
@@ -627,7 +767,12 @@ void LogLine(const string event_name,
           event_name=="LIQUIDITY_BODY_DELIVERY" ||
           event_name=="ROOT_CREATED" ||
           event_name=="ROOT_INVALIDATED" ||
-          event_name=="ROOT_REJECTED");
+          event_name=="ROOT_REJECTED" ||
+          event_name=="MAP_STATE" ||
+          event_name=="REVERSAL_REFERENCE_SET" ||
+          event_name=="REVERSAL_REFERENCE_CLEARED" ||
+          event_name=="REVERSAL_REFERENCE_EVENT" ||
+          event_name=="REVERSAL_PERMISSION_STATE");
 
       if(high_volume)
          return;
@@ -729,6 +874,9 @@ void InitializeAllStructureStates()
    ArrayResize(g_sources,0);
    ArrayResize(g_refinements,0);
    ArrayResize(g_pending_refinement_root_ids,0);
+   ArrayResize(g_objective_candidates,0);
+   ArrayResize(g_scenarios,0);
+   g_scenario_layer_signature="";
    g_liquidity_created=0;
    g_liquidity_sweeps=0;
    g_liquidity_body_deliveries=0;
@@ -745,6 +893,12 @@ void InitializeAllStructureStates()
    g_reference_continuations=0;
    g_permission_opens=0;
    g_permission_closes=0;
+   g_scenarios_planned=0;
+   g_scenarios_canceled=0;
+   g_scenarios_ambiguous=0;
+   g_scenarios_no_objective=0;
+   g_scenarios_precontact_rejected=0;
+   g_objective_candidates_frozen=0;
    ResetMapControl();
 
    for(int i=0;i<V1_TF_COUNT;i++)
@@ -2426,6 +2580,10 @@ void ClearReversalPermission(const datetime available_at,
               g_map.permission_reference_id,
               detail);
       g_permission_closes++;
+      g_map.last_permission_closed_at=available_at;
+      g_map.last_permission_close_reason=reason;
+      g_map.last_closed_permission_reference_id=g_map.permission_reference_id;
+      g_map.last_closed_permission_opened_at=g_map.reversal_permission_opened_at;
      }
 
    g_map.reversal_permission=V1_REVERSAL_CLOSED;
@@ -2753,6 +2911,1010 @@ void RefreshMapControlAfterStructure(const datetime available_at)
 
    LogMapSnapshot(available_at,"MAP_REFRESH");
   }
+
+//+------------------------------------------------------------------+
+//| Phase 4B scenario + frozen objective-family planning             |
+//+------------------------------------------------------------------+
+bool IsRefinementReadyStatus(const int status)
+  {
+   return (status==V1_REFINE_READY ||
+           status==V1_REFINE_STOPPED_AMBIGUOUS);
+  }
+
+int FindActiveScenarioByContextKey(const string context_key)
+  {
+   for(int i=0;i<ArraySize(g_scenarios);i++)
+     {
+      if(!g_scenarios[i].valid ||
+         g_scenarios[i].strategy_state==V1_STRATEGY_CANCELED ||
+         g_scenarios[i].strategy_state==V1_STRATEGY_NO_TRADE)
+         continue;
+
+      string key=StringFormat("%s|%s|%s|%s|%s",
+                              ScenarioScopeName(g_scenarios[i].scope),
+                              DirectionName(g_scenarios[i].direction),
+                              TfName(g_scenarios[i].active_map_tf),
+                              g_scenarios[i].owner_id,
+                              g_scenarios[i].parent_context_id);
+      if(g_scenarios[i].scope==V1_SCOPE_EXTERNAL_REVERSAL)
+         key+="|"+g_scenarios[i].permission_reference_id;
+
+      if(key==context_key)
+         return i;
+     }
+   return -1;
+  }
+
+int FindScenarioById(const string scenario_id)
+  {
+   for(int i=0;i<ArraySize(g_scenarios);i++)
+      if(g_scenarios[i].valid && g_scenarios[i].id==scenario_id)
+         return i;
+   return -1;
+  }
+
+bool HasActiveScenarioForRoot(const string root_id)
+  {
+   for(int i=0;i<ArraySize(g_scenarios);i++)
+     {
+      if(!g_scenarios[i].valid ||
+         g_scenarios[i].strategy_state==V1_STRATEGY_CANCELED ||
+         g_scenarios[i].strategy_state==V1_STRATEGY_NO_TRADE)
+         continue;
+      if(g_scenarios[i].root_zone_id==root_id)
+         return true;
+     }
+   return false;
+  }
+
+bool GetActiveMapRange(const ENUM_TIMEFRAMES tf,
+                       const int direction,
+                       double &range_low,
+                       double &range_high,
+                       double &directional_boundary)
+  {
+   int index=-1;
+   if(tf==PERIOD_H1)
+      index=1;
+   else if(tf==PERIOD_M30)
+      index=2;
+   else
+      return false;
+
+   if(direction>0)
+     {
+      if(g_structure[index].trend!=V1_TREND_BULLISH ||
+         !g_structure[index].protected_low.valid ||
+         !g_structure[index].external_high.valid)
+         return false;
+
+      range_low=g_structure[index].protected_low.price;
+      range_high=g_structure[index].external_high.price;
+      directional_boundary=g_structure[index].external_high.price;
+     }
+   else
+     {
+      if(g_structure[index].trend!=V1_TREND_BEARISH ||
+         !g_structure[index].external_low.valid ||
+         !g_structure[index].protected_high.valid)
+         return false;
+
+      range_low=g_structure[index].external_low.price;
+      range_high=g_structure[index].protected_high.price;
+      directional_boundary=g_structure[index].external_low.price;
+     }
+
+   return (range_high>range_low);
+  }
+
+bool FindReadyLineageSource(const int refinement_index,
+                            int &root_index,
+                            int &source_index)
+  {
+   root_index=-1;
+   source_index=-1;
+
+   if(refinement_index<0 ||
+      refinement_index>=ArraySize(g_refinements) ||
+      !g_refinements[refinement_index].valid ||
+      !IsRefinementReadyStatus(g_refinements[refinement_index].status) ||
+      g_refinements[refinement_index].final_child_id=="")
+      return false;
+
+   root_index=FindActiveSourceById(g_refinements[refinement_index].root_zone_id);
+   source_index=FindActiveSourceById(g_refinements[refinement_index].final_child_id);
+
+   if(root_index<0 || source_index<0)
+      return false;
+
+   if(g_sources[root_index].kind!=V1_SOURCE_ROOT ||
+      g_sources[source_index].kind!=V1_SOURCE_CHILD ||
+      g_sources[root_index].direction!=g_sources[source_index].direction ||
+      g_sources[source_index].root_zone_id!=g_sources[root_index].id)
+      return false;
+
+   return true;
+  }
+
+bool BuildScenarioDraft(const int refinement_index,
+                        V1ScenarioDraft &draft)
+  {
+   draft.valid=false;
+
+   int root_index=-1;
+   int source_index=-1;
+   if(!FindReadyLineageSource(refinement_index,root_index,source_index))
+      return false;
+
+   if(HasActiveScenarioForRoot(g_sources[root_index].id))
+      return false;
+
+   if(g_refinements[refinement_index].preplan_contact_at>0)
+      return false;
+
+   int direction=g_sources[source_index].direction;
+   if(direction==0)
+      return false;
+
+   bool h1_mature=
+      IsMatureDirectionalTrend(g_structure[1].trend) &&
+      g_structure[1].owner_id!="";
+   bool m30_mature=
+      IsMatureDirectionalTrend(g_structure[2].trend) &&
+      g_structure[2].owner_id!="";
+
+   int scope=V1_SCOPE_NONE;
+   ENUM_TIMEFRAMES active_map_tf=PERIOD_CURRENT;
+   string owner_id="";
+   string parent_context_id="";
+   string permission_reference_id="";
+   datetime permission_opened_at=0;
+
+   if(h1_mature)
+     {
+      int h1_direction=TrendDirection(g_structure[1].trend);
+
+      if(g_map.reversal_permission==V1_REVERSAL_CLOSED)
+        {
+         if(direction!=h1_direction)
+            return false;
+
+         scope=V1_SCOPE_EXTERNAL_CONTINUATION;
+         active_map_tf=PERIOD_H1;
+         owner_id=g_structure[1].owner_id;
+         parent_context_id=g_structure[1].owner_id;
+        }
+      else
+        {
+         int permission_direction=
+            (g_map.reversal_permission==V1_REVERSAL_OPEN_FOR_LONG ? 1 : -1);
+
+         if(direction!=permission_direction ||
+            !m30_mature ||
+            TrendDirection(g_structure[2].trend)!=direction ||
+            direction==h1_direction)
+            return false;
+
+         scope=V1_SCOPE_EXTERNAL_REVERSAL;
+         active_map_tf=PERIOD_M30;
+         owner_id=g_structure[2].owner_id;
+         parent_context_id=g_structure[1].owner_id;
+         permission_reference_id=g_map.permission_reference_id;
+         permission_opened_at=g_map.reversal_permission_opened_at;
+
+         if(permission_reference_id=="" || permission_opened_at<=0)
+            return false;
+        }
+     }
+   else
+     {
+      if(!m30_mature ||
+         direction!=TrendDirection(g_structure[2].trend))
+         return false;
+
+      scope=V1_SCOPE_EXTERNAL_CONTINUATION;
+      active_map_tf=PERIOD_M30;
+      owner_id=g_structure[2].owner_id;
+      parent_context_id="";
+     }
+
+   double range_low=0.0;
+   double range_high=0.0;
+   double boundary=0.0;
+   if(!GetActiveMapRange(active_map_tf,
+                         direction,
+                         range_low,
+                         range_high,
+                         boundary))
+      return false;
+
+   double source_mid=(g_sources[source_index].bottom+
+                      g_sources[source_index].top)*0.5;
+
+   // The source must belong to the current active map, not merely overlap it.
+   if(g_sources[source_index].bottom<range_low ||
+      g_sources[source_index].top>range_high)
+      return false;
+
+   double eq=(range_low+range_high)*0.5;
+
+   // Premium/discount is a frozen continuation gate.
+   if(scope==V1_SCOPE_EXTERNAL_CONTINUATION)
+     {
+      if(direction>0 && source_mid>eq)
+         return false;
+      if(direction<0 && source_mid<eq)
+         return false;
+     }
+
+   draft.valid=true;
+   draft.refinement_index=refinement_index;
+   draft.scope=scope;
+   draft.direction=direction;
+   draft.active_map_tf=active_map_tf;
+   draft.owner_id=owner_id;
+   draft.parent_context_id=parent_context_id;
+   draft.permission_reference_id=permission_reference_id;
+   draft.permission_opened_at=permission_opened_at;
+   draft.root_zone_id=g_sources[root_index].id;
+   draft.final_source_id=g_sources[source_index].id;
+   draft.range_low=range_low;
+   draft.range_high=range_high;
+   draft.eq=eq;
+
+   draft.context_key=StringFormat("%s|%s|%s|%s|%s",
+                                  ScenarioScopeName(scope),
+                                  DirectionName(direction),
+                                  TfName(active_map_tf),
+                                  owner_id,
+                                  parent_context_id);
+   if(scope==V1_SCOPE_EXTERNAL_REVERSAL)
+      draft.context_key+="|"+permission_reference_id;
+
+   return true;
+  }
+
+double ObjectivePrice(const V1LiquidityPool &pool)
+  {
+   if(pool.side==V1_SIDE_HIGH)
+      return pool.top;
+   if(pool.side==V1_SIDE_LOW)
+      return pool.bottom;
+   return 0.0;
+  }
+
+bool LatestClosedM1CloseAt(const datetime snapshot_at,
+                           double &price,
+                           datetime &bar_open)
+  {
+   price=0.0;
+   bar_open=0;
+   if(snapshot_at<=0)
+      return false;
+
+   int shift=iBarShift(_Symbol,PERIOD_M1,snapshot_at-1,false);
+   if(shift<0)
+      return false;
+
+   MqlRates bar[];
+   ArraySetAsSeries(bar,false);
+   if(CopyRates(_Symbol,PERIOD_M1,shift,1,bar)!=1)
+      return false;
+
+   if(bar[0].time+PeriodSeconds(PERIOD_M1)>snapshot_at)
+      return false;
+
+   price=bar[0].close;
+   bar_open=bar[0].time;
+   return true;
+  }
+
+void AddObjectiveDraft(V1ObjectiveCandidate &candidates[],
+                       const V1LiquidityPool &pool)
+  {
+   int n=ArraySize(candidates);
+   if(ArrayResize(candidates,n+1,32)<0)
+      return;
+
+   candidates[n].valid=true;
+   candidates[n].scenario_id="";
+   candidates[n].id="";
+   candidates[n].liquidity_id=pool.id;
+   candidates[n].family=pool.family;
+   candidates[n].tf=pool.tf;
+   candidates[n].side=pool.side;
+   candidates[n].price=ObjectivePrice(pool);
+   candidates[n].available_at=pool.available_at;
+   candidates[n].order_index=0;
+   candidates[n].consumed=false;
+   candidates[n].consumed_at=0;
+  }
+
+void SortObjectiveDrafts(V1ObjectiveCandidate &candidates[],
+                         const int direction)
+  {
+   int n=ArraySize(candidates);
+   for(int i=1;i<n;i++)
+     {
+      V1ObjectiveCandidate key=candidates[i];
+      int j=i-1;
+
+      while(j>=0)
+        {
+         bool move=false;
+         if(direction>0)
+            move=(candidates[j].price>key.price);
+         else
+            move=(candidates[j].price<key.price);
+
+         if(!move)
+            break;
+
+         candidates[j+1]=candidates[j];
+         j--;
+        }
+
+      candidates[j+1]=key;
+     }
+
+   for(int i=0;i<n;i++)
+      candidates[i].order_index=i;
+  }
+
+bool BuildFrozenObjectiveFamily(const V1ScenarioDraft &draft,
+                                const datetime frozen_at,
+                                datetime &plan_reference_bar_open,
+                                double &plan_reference_price,
+                                double &primary_horizon,
+                                V1ObjectiveCandidate &candidates[])
+  {
+   ArrayResize(candidates,0);
+
+   if(!LatestClosedM1CloseAt(frozen_at,
+                             plan_reference_price,
+                             plan_reference_bar_open))
+      return false;
+
+   double range_low=0.0;
+   double range_high=0.0;
+   double directional_boundary=0.0;
+   if(!GetActiveMapRange(draft.active_map_tf,
+                         draft.direction,
+                         range_low,
+                         range_high,
+                         directional_boundary))
+      return false;
+
+   int target_side=(draft.direction>0 ? V1_SIDE_HIGH : V1_SIDE_LOW);
+
+   V1ObjectiveCandidate primary[];
+   ArrayResize(primary,0);
+
+   for(int i=0;i<ArraySize(g_liquidity);i++)
+     {
+      if(!g_liquidity[i].valid ||
+         g_liquidity[i].consumed ||
+         g_liquidity[i].family!=V1_LIQ_EXTERNAL_SWING ||
+         g_liquidity[i].side!=target_side ||
+         g_liquidity[i].available_at>frozen_at)
+         continue;
+
+      bool timeframe_ok=false;
+
+      if(draft.scope==V1_SCOPE_EXTERNAL_CONTINUATION &&
+         draft.active_map_tf==PERIOD_H1)
+         timeframe_ok=(g_liquidity[i].tf==PERIOD_H1 ||
+                       g_liquidity[i].tf==PERIOD_M30);
+      else
+         timeframe_ok=(g_liquidity[i].tf==PERIOD_M30);
+
+      if(!timeframe_ok)
+         continue;
+
+      double price=ObjectivePrice(g_liquidity[i]);
+
+      if(draft.direction>0)
+        {
+         if(price<=plan_reference_price ||
+            price<directional_boundary)
+            continue;
+        }
+      else
+        {
+         if(price>=plan_reference_price ||
+            price>directional_boundary)
+            continue;
+        }
+
+      AddObjectiveDraft(primary,g_liquidity[i]);
+     }
+
+   if(ArraySize(primary)>0)
+     {
+      primary_horizon=primary[0].price;
+      for(int i=1;i<ArraySize(primary);i++)
+        {
+         if(draft.direction>0)
+            primary_horizon=MathMax(primary_horizon,primary[i].price);
+         else
+            primary_horizon=MathMin(primary_horizon,primary[i].price);
+        }
+     }
+   else
+      primary_horizon=plan_reference_price;
+
+   for(int i=0;i<ArraySize(primary);i++)
+     {
+      int n=ArraySize(candidates);
+      if(ArrayResize(candidates,n+1,32)<0)
+         continue;
+      candidates[n]=primary[i];
+     }
+
+   // H4 is a long-horizon extension only. It is never an early-reversal map
+   // or source authority.
+   if(draft.scope==V1_SCOPE_EXTERNAL_CONTINUATION)
+     {
+      for(int i=0;i<ArraySize(g_liquidity);i++)
+        {
+         if(!g_liquidity[i].valid ||
+            g_liquidity[i].consumed ||
+            g_liquidity[i].family!=V1_LIQ_EXTERNAL_SWING ||
+            g_liquidity[i].tf!=PERIOD_H4 ||
+            g_liquidity[i].side!=target_side ||
+            g_liquidity[i].available_at>frozen_at)
+            continue;
+
+         double price=ObjectivePrice(g_liquidity[i]);
+
+         if(draft.direction>0)
+           {
+            if(price<=primary_horizon)
+               continue;
+           }
+         else
+           {
+            if(price>=primary_horizon)
+               continue;
+           }
+
+         AddObjectiveDraft(candidates,g_liquidity[i]);
+        }
+     }
+
+   SortObjectiveDrafts(candidates,draft.direction);
+   return (ArraySize(candidates)>0);
+  }
+
+void BindLineageScenarioOwner(const string root_id,
+                              const string scenario_id)
+  {
+   for(int i=0;i<ArraySize(g_sources);i++)
+     {
+      if(!g_sources[i].valid ||
+         g_sources[i].strategy_state!=V1_SOURCE_ACTIVE ||
+         g_sources[i].root_zone_id!=root_id)
+         continue;
+
+      if(g_sources[i].scenario_owner_id=="")
+         g_sources[i].scenario_owner_id=scenario_id;
+     }
+  }
+
+void ReleaseLineageScenarioOwner(const string root_id,
+                                 const string scenario_id)
+  {
+   for(int i=0;i<ArraySize(g_sources);i++)
+     {
+      if(!g_sources[i].valid ||
+         g_sources[i].root_zone_id!=root_id)
+         continue;
+
+      if(g_sources[i].scenario_owner_id==scenario_id)
+         g_sources[i].scenario_owner_id="";
+     }
+  }
+
+void LogScenarioCanceled(const V1ScenarioPlan &plan,
+                         const datetime available_at,
+                         const string reason)
+  {
+   LogLine("SCENARIO_CANCELED",
+           TfName(plan.active_map_tf),
+           available_at,
+           plan.id,
+           StringFormat("state=CANCELED scope=%s direction=%s owner_id=%s parent_context_id=%s root_zone_id=%s final_source_id=%s reason=%s",
+                        ScenarioScopeName(plan.scope),
+                        DirectionName(plan.direction),
+                        plan.owner_id,
+                        plan.parent_context_id=="" ? "NONE" : plan.parent_context_id,
+                        plan.root_zone_id,
+                        plan.final_source_id,
+                        reason));
+  }
+
+void RefreshObjectiveCandidateConsumption(const datetime available_at)
+  {
+   for(int i=0;i<ArraySize(g_objective_candidates);i++)
+     {
+      if(!g_objective_candidates[i].valid ||
+         g_objective_candidates[i].consumed)
+         continue;
+
+      int plan_index=FindScenarioById(g_objective_candidates[i].scenario_id);
+      if(plan_index<0)
+         continue;
+
+      if(FindActiveLiquidityById(g_objective_candidates[i].liquidity_id)>=0)
+         continue;
+
+      g_objective_candidates[i].consumed=true;
+      g_objective_candidates[i].consumed_at=available_at;
+
+      LogLine("OBJECTIVE_CANDIDATE_CONSUMED",
+              TfName(g_objective_candidates[i].tf),
+              available_at,
+              g_objective_candidates[i].id,
+              StringFormat("scenario_id=%s liquidity_id=%s order_index=%d price=%.10f action=KEEP_FROZEN_ORDER_SKIP_IF_LATER_TP_SELECTION",
+                           g_objective_candidates[i].scenario_id,
+                           g_objective_candidates[i].liquidity_id,
+                           g_objective_candidates[i].order_index,
+                           g_objective_candidates[i].price));
+     }
+  }
+
+void CancelInvalidScenarioPlans(const datetime available_at)
+  {
+   for(int i=0;i<ArraySize(g_scenarios);i++)
+     {
+      if(!g_scenarios[i].valid ||
+         g_scenarios[i].strategy_state==V1_STRATEGY_CANCELED ||
+         g_scenarios[i].strategy_state==V1_STRATEGY_NO_TRADE)
+         continue;
+
+      string reason="";
+
+      int root_index=FindActiveSourceById(g_scenarios[i].root_zone_id);
+      int source_index=FindActiveSourceById(g_scenarios[i].final_source_id);
+
+      if(root_index<0 || source_index<0)
+         reason="SOURCE_LINEAGE_INVALIDATED";
+      else if(g_scenarios[i].scope==V1_SCOPE_EXTERNAL_CONTINUATION)
+        {
+         if(g_scenarios[i].active_map_tf==PERIOD_H1)
+           {
+            if(g_structure[1].owner_id!=g_scenarios[i].owner_id ||
+               !IsMatureDirectionalTrend(g_structure[1].trend))
+               reason="CONTINUATION_OWNER_INVALIDATED";
+           }
+         else if(g_scenarios[i].active_map_tf==PERIOD_M30)
+           {
+            if(g_structure[2].owner_id!=g_scenarios[i].owner_id ||
+               !IsMatureDirectionalTrend(g_structure[2].trend))
+               reason="CONTINUATION_OWNER_INVALIDATED";
+           }
+        }
+      else if(g_scenarios[i].scope==V1_SCOPE_EXTERNAL_REVERSAL)
+        {
+         if(g_map.last_permission_closed_at>g_scenarios[i].frozen_at &&
+            g_map.last_permission_close_reason=="TERMINATED_BY_CONTINUATION" &&
+            g_map.last_closed_permission_reference_id==
+               g_scenarios[i].permission_reference_id &&
+            g_map.last_closed_permission_opened_at==
+               g_scenarios[i].permission_opened_at)
+            reason="EARLY_REVERSAL_PERMISSION_TERMINATED";
+        }
+
+      if(reason=="")
+         continue;
+
+      g_scenarios[i].strategy_state=V1_STRATEGY_CANCELED;
+      g_scenarios[i].canceled_at=available_at;
+      g_scenarios[i].cancel_reason=reason;
+      ReleaseLineageScenarioOwner(g_scenarios[i].root_zone_id,
+                                  g_scenarios[i].id);
+      LogScenarioCanceled(g_scenarios[i],available_at,reason);
+      g_scenarios_canceled++;
+     }
+  }
+
+void AuditPrePlanSourceContact(const MqlRates &bar,
+                               const datetime available_at)
+  {
+   for(int i=0;i<ArraySize(g_refinements);i++)
+     {
+      if(!g_refinements[i].valid ||
+         !IsRefinementReadyStatus(g_refinements[i].status) ||
+         g_refinements[i].final_child_id=="" ||
+         g_refinements[i].preplan_contact_at>0 ||
+         HasActiveScenarioForRoot(g_refinements[i].root_zone_id) ||
+         available_at<=g_refinements[i].frozen_at)
+         continue;
+
+      int source_index=FindActiveSourceById(g_refinements[i].final_child_id);
+      if(source_index<0)
+         continue;
+
+      if(bar.high>=g_sources[source_index].bottom &&
+         bar.low<=g_sources[source_index].top)
+        {
+         g_refinements[i].preplan_contact_at=available_at;
+         LogLine("PREPLAN_SOURCE_CONTACT",
+                 "M1",
+                 available_at,
+                 g_refinements[i].root_zone_id,
+                 StringFormat("final_source_id=%s source_bottom=%.10f source_top=%.10f refinement_frozen_at=%s action=BLOCK_RETROSPECTIVE_PLAN",
+                              g_refinements[i].final_child_id,
+                              g_sources[source_index].bottom,
+                              g_sources[source_index].top,
+                              TimeToString(g_refinements[i].frozen_at,TIME_DATE|TIME_SECONDS)));
+         g_scenarios_precontact_rejected++;
+        }
+     }
+  }
+
+void AuditBootstrapPrePlanContacts(const datetime snapshot_at)
+  {
+   for(int i=0;i<ArraySize(g_refinements);i++)
+     {
+      if(!g_refinements[i].valid ||
+         !IsRefinementReadyStatus(g_refinements[i].status) ||
+         g_refinements[i].final_child_id=="" ||
+         g_refinements[i].preplan_contact_at>0)
+         continue;
+
+      int source_index=FindActiveSourceById(g_refinements[i].final_child_id);
+      if(source_index<0)
+         continue;
+
+      MqlRates bars[];
+      ArraySetAsSeries(bars,false);
+      int copied=CopyRates(_Symbol,
+                           PERIOD_M1,
+                           g_refinements[i].frozen_at,
+                           snapshot_at,
+                           bars);
+      if(copied<=0)
+         continue;
+
+      for(int k=0;k<copied;k++)
+        {
+         datetime bar_available=bars[k].time+PeriodSeconds(PERIOD_M1);
+         if(bar_available<=g_refinements[i].frozen_at ||
+            bar_available>snapshot_at)
+            continue;
+
+         if(bars[k].high>=g_sources[source_index].bottom &&
+            bars[k].low<=g_sources[source_index].top)
+           {
+            g_refinements[i].preplan_contact_at=bar_available;
+            LogLine("PREPLAN_SOURCE_CONTACT",
+                    "M1",
+                    snapshot_at,
+                    g_refinements[i].root_zone_id,
+                    StringFormat("historical_contact_at=%s final_source_id=%s source_bottom=%.10f source_top=%.10f refinement_frozen_at=%s action=BLOCK_RETROSPECTIVE_PLAN",
+                                 TimeToString(bar_available,TIME_DATE|TIME_SECONDS),
+                                 g_refinements[i].final_child_id,
+                                 g_sources[source_index].bottom,
+                                 g_sources[source_index].top,
+                                 TimeToString(g_refinements[i].frozen_at,TIME_DATE|TIME_SECONDS)));
+            g_scenarios_precontact_rejected++;
+            break;
+           }
+        }
+     }
+  }
+
+string BuildScenarioLayerSignature()
+  {
+   string signature=StringFormat(
+      "h1=%s|%s|m30=%s|%s|perm=%s|permref=%s|h1ext=%s|m30ext=%s|liq=%I64d/%I64d/%I64d",
+      TrendName(g_structure[1].trend),
+      g_structure[1].owner_id,
+      TrendName(g_structure[2].trend),
+      g_structure[2].owner_id,
+      ReversalPermissionName(g_map.reversal_permission),
+      g_map.permission_reference_id,
+      g_structure[1].trend==V1_TREND_BULLISH ?
+         g_structure[1].external_high.id : g_structure[1].external_low.id,
+      g_structure[2].trend==V1_TREND_BULLISH ?
+         g_structure[2].external_high.id : g_structure[2].external_low.id,
+      g_liquidity_created,
+      g_liquidity_sweeps,
+      g_liquidity_body_deliveries);
+
+   for(int i=0;i<ArraySize(g_refinements);i++)
+     {
+      if(!g_refinements[i].valid)
+         continue;
+
+      signature+=StringFormat("|R:%s:%s:%d:%I64d",
+                              g_refinements[i].root_zone_id,
+                              g_refinements[i].final_child_id,
+                              g_refinements[i].status,
+                              (long)g_refinements[i].preplan_contact_at);
+     }
+
+   return signature;
+  }
+
+void StoreScenarioPlan(const V1ScenarioDraft &draft,
+                       const datetime frozen_at,
+                       const datetime plan_reference_bar_open,
+                       const double plan_reference_price,
+                       const double primary_horizon,
+                       V1ObjectiveCandidate &family[])
+  {
+   int source_index=FindActiveSourceById(draft.final_source_id);
+   if(source_index<0)
+      return;
+
+   string scenario_id=StringFormat("scenario:%s:%s:%I64d:%s",
+                                   ScenarioScopeName(draft.scope),
+                                   DirectionName(draft.direction),
+                                   (long)frozen_at,
+                                   draft.final_source_id);
+
+   int n=ArraySize(g_scenarios);
+   if(ArrayResize(g_scenarios,n+1,32)<0)
+      return;
+
+   g_scenarios[n].valid=true;
+   g_scenarios[n].id=scenario_id;
+   g_scenarios[n].strategy_state=V1_STRATEGY_PLANNED;
+   g_scenarios[n].scope=draft.scope;
+   g_scenarios[n].direction=draft.direction;
+   g_scenarios[n].active_map_tf=draft.active_map_tf;
+   g_scenarios[n].owner_id=draft.owner_id;
+   g_scenarios[n].parent_context_id=draft.parent_context_id;
+   g_scenarios[n].h1_trend_at_freeze=g_structure[1].trend;
+   g_scenarios[n].h1_owner_id_at_freeze=g_structure[1].owner_id;
+   g_scenarios[n].m30_trend_at_freeze=g_structure[2].trend;
+   g_scenarios[n].m30_owner_id_at_freeze=g_structure[2].owner_id;
+   g_scenarios[n].reversal_permission_at_freeze=g_map.reversal_permission;
+   g_scenarios[n].permission_reference_id=draft.permission_reference_id;
+   g_scenarios[n].permission_opened_at=draft.permission_opened_at;
+   g_scenarios[n].root_zone_id=draft.root_zone_id;
+   g_scenarios[n].final_source_id=draft.final_source_id;
+   g_scenarios[n].source_tf=g_sources[source_index].tf;
+   g_scenarios[n].source_bottom=g_sources[source_index].bottom;
+   g_scenarios[n].source_top=g_sources[source_index].top;
+   g_scenarios[n].map_range_low=draft.range_low;
+   g_scenarios[n].map_range_high=draft.range_high;
+   g_scenarios[n].map_eq=draft.eq;
+   g_scenarios[n].frozen_at=frozen_at;
+   g_scenarios[n].plan_reference_bar_open=plan_reference_bar_open;
+   g_scenarios[n].plan_reference_price=plan_reference_price;
+   g_scenarios[n].primary_directional_horizon=primary_horizon;
+   g_scenarios[n].objective_count=ArraySize(family);
+   g_scenarios[n].canceled_at=0;
+   g_scenarios[n].cancel_reason="";
+
+   BindLineageScenarioOwner(draft.root_zone_id,scenario_id);
+
+   LogLine("SCENARIO_LINEAGE_BOUND",
+           TfName(g_sources[source_index].tf),
+           frozen_at,
+           scenario_id,
+           StringFormat("root_zone_id=%s final_source_id=%s source_tf=%s source_bottom=%.10f source_top=%.10f scenario_owner_id=%s",
+                        draft.root_zone_id,
+                        draft.final_source_id,
+                        TfName(g_sources[source_index].tf),
+                        g_sources[source_index].bottom,
+                        g_sources[source_index].top,
+                        scenario_id));
+
+   for(int i=0;i<ArraySize(family);i++)
+     {
+      int c=ArraySize(g_objective_candidates);
+      if(ArrayResize(g_objective_candidates,c+1,64)<0)
+         continue;
+
+      family[i].scenario_id=scenario_id;
+      family[i].id=StringFormat("%s:objective:%d",
+                                scenario_id,
+                                family[i].order_index);
+      g_objective_candidates[c]=family[i];
+      g_objective_candidates_frozen++;
+
+      LogLine("OBJECTIVE_CANDIDATE_FROZEN",
+              TfName(family[i].tf),
+              frozen_at,
+              family[i].id,
+              StringFormat("scenario_id=%s order_index=%d liquidity_id=%s family=%s side=%s price=%.10f available_at=%s primary_or_extension=%s",
+                           scenario_id,
+                           family[i].order_index,
+                           family[i].liquidity_id,
+                           LiquidityFamilyName(family[i].family),
+                           SideName(family[i].side),
+                           family[i].price,
+                           TimeToString(family[i].available_at,TIME_DATE|TIME_SECONDS),
+                           family[i].tf==PERIOD_H4 ? "H4_EXTENSION" : "PRIMARY"));
+     }
+
+   LogLine("SCENARIO_PLANNED",
+           TfName(draft.active_map_tf),
+           frozen_at,
+           scenario_id,
+           StringFormat("state=PLANNED scope=%s direction=%s active_map_tf=%s owner_id=%s parent_context_id=%s h1_trend_at_freeze=%s h1_owner_id_at_freeze=%s m30_trend_at_freeze=%s m30_owner_id_at_freeze=%s reversal_permission_at_freeze=%s permission_reference_id=%s permission_opened_at=%s root_zone_id=%s final_source_id=%s source_tf=%s source_bottom=%.10f source_top=%.10f map_range_low=%.10f map_range_high=%.10f map_eq=%.10f plan_reference_bar_open=%s plan_reference_price=%.10f primary_directional_horizon=%.10f objective_count=%d trigger_search_enabled=false",
+                        ScenarioScopeName(draft.scope),
+                        DirectionName(draft.direction),
+                        TfName(draft.active_map_tf),
+                        draft.owner_id,
+                        draft.parent_context_id=="" ? "NONE" : draft.parent_context_id,
+                        TrendName(g_structure[1].trend),
+                        g_structure[1].owner_id=="" ? "NA" : g_structure[1].owner_id,
+                        TrendName(g_structure[2].trend),
+                        g_structure[2].owner_id=="" ? "NA" : g_structure[2].owner_id,
+                        ReversalPermissionName(g_map.reversal_permission),
+                        draft.permission_reference_id=="" ? "NA" : draft.permission_reference_id,
+                        draft.permission_opened_at>0 ?
+                           TimeToString(draft.permission_opened_at,TIME_DATE|TIME_SECONDS) : "NA",
+                        draft.root_zone_id,
+                        draft.final_source_id,
+                        TfName(g_sources[source_index].tf),
+                        g_sources[source_index].bottom,
+                        g_sources[source_index].top,
+                        draft.range_low,
+                        draft.range_high,
+                        draft.eq,
+                        TimeToString(plan_reference_bar_open,TIME_DATE|TIME_SECONDS),
+                        plan_reference_price,
+                        primary_horizon,
+                        ArraySize(family)));
+
+   g_scenarios_planned++;
+  }
+
+void RefreshScenarioLayer(const datetime available_at,const bool force=false)
+  {
+   RefreshObjectiveCandidateConsumption(available_at);
+   CancelInvalidScenarioPlans(available_at);
+
+   string signature=BuildScenarioLayerSignature();
+   if(!force && signature==g_scenario_layer_signature)
+      return;
+   g_scenario_layer_signature=signature;
+
+   V1ScenarioDraft drafts[];
+   ArrayResize(drafts,0);
+
+   for(int i=0;i<ArraySize(g_refinements);i++)
+     {
+      V1ScenarioDraft draft;
+      if(!BuildScenarioDraft(i,draft))
+         continue;
+
+      int n=ArraySize(drafts);
+      if(ArrayResize(drafts,n+1,16)<0)
+         continue;
+      drafts[n]=draft;
+     }
+
+   bool processed[];
+   ArrayResize(processed,ArraySize(drafts));
+   ArrayInitialize(processed,false);
+
+   for(int i=0;i<ArraySize(drafts);i++)
+     {
+      if(processed[i] || !drafts[i].valid)
+         continue;
+
+      int matches=0;
+      int selected=-1;
+      string roots="";
+
+      for(int j=i;j<ArraySize(drafts);j++)
+        {
+         if(processed[j] || !drafts[j].valid)
+            continue;
+
+         if(drafts[j].context_key!=drafts[i].context_key)
+            continue;
+
+         processed[j]=true;
+         matches++;
+         selected=j;
+         if(roots!="")
+            roots+="|";
+         roots+=drafts[j].root_zone_id;
+        }
+
+      if(FindActiveScenarioByContextKey(drafts[i].context_key)>=0)
+         continue;
+
+      if(matches>1)
+        {
+         LogLine("SCENARIO_REJECTED",
+                 TfName(drafts[i].active_map_tf),
+                 available_at,
+                 drafts[i].context_key,
+                 StringFormat("reason=AMBIGUOUS_ROOT_LINEAGE scope=%s direction=%s candidate_count=%d root_ids=%s",
+                              ScenarioScopeName(drafts[i].scope),
+                              DirectionName(drafts[i].direction),
+                              matches,
+                              roots));
+         g_scenarios_ambiguous++;
+         continue;
+        }
+
+      if(selected<0)
+         continue;
+
+      V1ObjectiveCandidate family[];
+      datetime plan_reference_bar_open=0;
+      double plan_reference_price=0.0;
+      double primary_horizon=0.0;
+
+      if(!BuildFrozenObjectiveFamily(drafts[selected],
+                                     available_at,
+                                     plan_reference_bar_open,
+                                     plan_reference_price,
+                                     primary_horizon,
+                                     family))
+        {
+         LogLine("SCENARIO_REJECTED",
+                 TfName(drafts[selected].active_map_tf),
+                 available_at,
+                 drafts[selected].root_zone_id,
+                 StringFormat("reason=NO_OBJECTIVE_FAMILY scope=%s direction=%s root_zone_id=%s final_source_id=%s",
+                              ScenarioScopeName(drafts[selected].scope),
+                              DirectionName(drafts[selected].direction),
+                              drafts[selected].root_zone_id,
+                              drafts[selected].final_source_id));
+         g_scenarios_no_objective++;
+         continue;
+        }
+
+      StoreScenarioPlan(drafts[selected],
+                        available_at,
+                        plan_reference_bar_open,
+                        plan_reference_price,
+                        primary_horizon,
+                        family);
+     }
+  }
+
+void LogScenarioSnapshot(const datetime available_at)
+  {
+   int planned=0;
+   int canceled=0;
+   int continuation=0;
+   int reversal=0;
+
+   for(int i=0;i<ArraySize(g_scenarios);i++)
+     {
+      if(!g_scenarios[i].valid)
+         continue;
+
+      if(g_scenarios[i].strategy_state==V1_STRATEGY_CANCELED)
+        {
+         canceled++;
+         continue;
+        }
+
+      planned++;
+      if(g_scenarios[i].scope==V1_SCOPE_EXTERNAL_CONTINUATION)
+         continuation++;
+      else if(g_scenarios[i].scope==V1_SCOPE_EXTERNAL_REVERSAL)
+         reversal++;
+     }
+
+   LogLine("SCENARIO_STATE",
+           "",
+           available_at,
+           "",
+           StringFormat("active_planned=%d continuation=%d early_reversal=%d canceled=%d objective_candidates_frozen=%I64d preplan_contact_rejected=%I64d ambiguous=%I64d no_objective=%I64d source_contact_authorization=DEFERRED",
+                        planned,
+                        continuation,
+                        reversal,
+                        canceled,
+                        g_objective_candidates_frozen,
+                        g_scenarios_precontact_rejected,
+                        g_scenarios_ambiguous,
+                        g_scenarios_no_objective));
+  }
+
 
 void ShiftRecentBars(V1StructureState &s,const MqlRates &bar)
   {
@@ -3681,6 +4843,7 @@ bool BuildRefinementForRoot(const string root_id,
    lineage.frozen_at=freeze_at;
    lineage.snapshot_at=snapshot;
    lineage.stop_reason=stop_reason;
+   lineage.preplan_contact_at=0;
 
    StoreRefinementLineage(lineage);
 
@@ -3862,6 +5025,11 @@ void ProcessClosedBar(const int tf_index,
 
    ShiftRecentBars(g_structure[tf_index],bar);
 
+   // This is audit-only. It does not activate trigger search in Phase 4B.
+   // It only blocks retrospective PLAN creation after an already-passed source.
+   if(tf_index==5)
+      AuditPrePlanSourceContact(bar,available_at);
+
    if(tf_index==1 || tf_index==2)
       RefreshMapControlAfterStructure(available_at);
   }
@@ -3945,11 +5113,16 @@ bool BootstrapStructureCore()
    // then perform targeted lower-TF replay only for those surviving Roots.
    BuildRefinementsForActiveRoots(now);
 
+   // A source already crossed after its refinement freeze cannot receive a
+   // retrospective scenario at startup.
+   AuditBootstrapPrePlanContacts(now);
+   RefreshScenarioLayer(now,true);
+
    g_init_state=V1_INIT_ACTIVE_MAP;
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
    g_init_state=V1_INIT_SOURCE_CONTEXT;
-   LogLine("INIT_STATE","",now,"","PHASE4A_MAP_REVERSAL_READY_SCENARIO_BINDING_NOT_YET_ATTACHED");
+   LogLine("INIT_STATE","",now,"","PHASE4B_SCENARIO_OBJECTIVE_READY_SOURCE_CONTACT_NOT_YET_ATTACHED");
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -3988,7 +5161,7 @@ bool BootstrapStructureCore()
       CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
 
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_PHASE4A_MAP_REVERSAL ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d",
+           StringFormat("READY_PHASE4B_SCENARIO_OBJECTIVE ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d",
                         TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
                         h4_long_horizon_count,
                         ArraySize(g_liquidity),
@@ -4003,6 +5176,7 @@ bool BootstrapStructureCore()
      }
 
    LogMapSnapshot(now,"BOOTSTRAP_COMPLETE",true);
+   LogScenarioSnapshot(now);
 
    return true;
   }
@@ -4151,6 +5325,7 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
          // Dependent source refinement is evaluated only after every
          // H4/H1/M30/M15/M5/M1 close sharing the timestamp has been processed.
          ProcessPendingRefinements(group_time);
+         RefreshScenarioLayer(group_time);
         }
 
       group_time=events[i].available_at;
@@ -4161,10 +5336,12 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
      }
 
    if(group_time!=0)
+     {
       ProcessPendingRefinements(group_time);
+      RefreshScenarioLayer(group_time);
+     }
 
-   // Scenario/order authorization will be attached after source lineage
-   // validation. It must remain after same-timestamp MTF processing.
+   // Source-contact / trigger / order authorization remains deferred.
   }
 
 //+------------------------------------------------------------------+
@@ -4202,7 +5379,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.50 property_version=1.00 magic=%I64d phase=MAP_REVERSAL_CORE",
+           StringFormat("build=0.60 property_version=1.00 magic=%I64d phase=SCENARIO_OBJECTIVE_CORE",
                         InpMagicNumber));
 
    // Do not fail initialization just because MT5 is still synchronizing history.
@@ -4215,7 +5392,7 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d children_created=%I64d children_invalidated=%I64d refinements_ready=%I64d refinements_no_child=%I64d refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d children_created=%I64d children_invalidated=%I64d refinements_ready=%I64d refinements_no_child=%I64d refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_ambiguous=%I64d scenarios_no_objective=%I64d preplan_contact_rejected=%I64d objective_candidates_frozen=%I64d",
                         reason,
                         InitStateName(g_init_state),
                         ArraySize(g_liquidity),
@@ -4236,7 +5413,13 @@ void OnDeinit(const int reason)
                         g_reference_continuations,
                         g_permission_opens,
                         g_permission_closes,
-                        ReversalPermissionName(g_map.reversal_permission)));
+                        ReversalPermissionName(g_map.reversal_permission),
+                        g_scenarios_planned,
+                        g_scenarios_canceled,
+                        g_scenarios_ambiguous,
+                        g_scenarios_no_objective,
+                        g_scenarios_precontact_rejected,
+                        g_objective_candidates_frozen));
 
    if(g_log_handle!=INVALID_HANDLE)
      {
@@ -4269,11 +5452,11 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              "Phase4A trading disabled; runtime map/reversal events start here");
+              "Phase4B trading disabled; scenario/objective PLAN may freeze before source contact");
      }
 
    ProcessRuntimeClosedBars((datetime)tick.time);
 
-   // No trade submission in Phase 4A.
+   // No trade submission in Phase 4B.
   }
 //+------------------------------------------------------------------+

@@ -621,6 +621,129 @@ No scenario/order layer exists.
 ```
 
 
+## 2026-08-16 — Phase 4A H1/M30 Map / Reversal Permission Validation
+
+Status:
+
+```text
+PASS — Phase 4A map/reversal core
+NOT A PROFITABILITY TEST
+```
+
+EA:
+
+```text
+repository commit = 400665f8d76e6f4c615a54efa106b5289e59dbf4
+internal build = 0.50
+phase = MAP_REVERSAL_CORE
+```
+
+CSV:
+
+```text
+event rows = 8616
+execution epoch = 2025-01-06 01:00:05
+```
+
+Runtime Phase 4A events:
+
+```text
+MAP_STATE = 103
+REVERSAL_REFERENCE_SET = 62
+REVERSAL_REFERENCE_CLEARED = 3
+REVERSAL_REFERENCE_EVENT = 108
+REVERSAL_PERMISSION_STATE = 53
+```
+
+Runtime map snapshots:
+
+```text
+H1 LONG = 86
+H1 SHORT = 9
+M30 LONG = 3
+M30 SHORT = 2
+NONE = 3
+```
+
+Reference event geometry:
+
+```text
+all-history:
+CONTINUATION_BODY_BREAK = 289
+SWEEP_REJECTION = 240
+TOUCH = 1
+
+runtime:
+CONTINUATION_BODY_BREAK = 52
+SWEEP_REJECTION = 56
+```
+
+Permission:
+
+```text
+all-history OPEN = 144
+all-history CLOSE = 143
+tester-end state = OPEN_FOR_SHORT
+
+runtime:
+OPEN_FOR_SHORT = 26
+OPEN_FOR_LONG = 1
+CLOSE continuation = 23
+CLOSE owner-change = 3
+```
+
+Automated checks:
+
+```text
+highest-active-map hierarchy violation = 0
+owner set without matching INITIAL_BOS = 0
+owner clear without matching PROTECTED_BREAK = 0
+direct owner A→B rewrite = 0
+
+reference side / H1 direction mismatch = 0
+reference monotonicity violation = 0
+same-bar reference self-interaction = 0
+reference precedence mismatch = 0
+multiple reference events on one H1 bar = 0
+
+permission OPEN direction mismatch = 0
+permission OPEN without TOUCH/SWEEP = 0
+continuation CLOSE without body-break = 0
+permission-origin rewrite while OPEN = 0
+permission-origin rewrite on CLOSE = 0
+
+future available_at = 0
+
+Phase 1~3B core event regression = 0
+```
+
+Logging-only defect:
+
+```text
+Phase 4A bootstrap replay emitted new map/reference events
+despite InpLogBootstrapEvents=false.
+```
+
+Resolution:
+
+```text
+Phase 4B adds map/reference events to bootstrap high-volume suppression.
+Final BOOTSTRAP_COMPLETE MAP snapshot remains enabled.
+```
+
+Profitability:
+
+```text
+N/A
+```
+
+Reason:
+
+```text
+No order layer exists.
+```
+
+
 ## Required reporting format
 
 For every significant V1 test record:

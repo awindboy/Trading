@@ -2717,3 +2717,80 @@ Reason:
 Do not rewrite the causal origin of an already-open permission
 when the current owner later publishes a farther external extreme.
 
+---
+
+## D-118 — Owner-compatible final objective primary liquidity uses current external-horizon `EXTERNAL_SWING`
+
+Status: ACTIVE / IMPLEMENTATION-FROZEN
+
+The frozen objective contract requires:
+
+```text
+current H1/M30 owner-compatible external liquidity
+```
+
+and separately states that internal liquidity between Entry and the final
+external target must not be promoted to final external TP.
+
+Phase 4B operationalizes that contract as follows.
+
+Primary final-objective liquidity family:
+
+```text
+EXTERNAL_SWING
+```
+
+only.
+
+H1-owned continuation:
+
+```text
+eligible TF = H1 or M30
+```
+
+but the candidate must be at or beyond the current H1 directional external boundary.
+
+LONG:
+
+```text
+candidate.price >= current H1 external_high
+```
+
+SHORT:
+
+```text
+candidate.price <= current H1 external_low
+```
+
+M30-primary continuation and early reversal:
+
+```text
+eligible TF = M30
+```
+
+and the candidate must be at or beyond the current M30 directional external boundary.
+
+This prevents an M30 external pool that is still internal to the active H1
+directional horizon from being misclassified as a final H1 external objective.
+
+`DEFENDED_RANGE_EDGE` and `STRUCTURAL_REACTION` remain valid liquidity families
+for their frozen liquidity roles, but are not promoted into this final
+external-objective primary family merely because they are direction-ahead.
+
+H4 extension remains separately governed by the frozen:
+
+```text
+family = EXTERNAL_SWING
+timeframe = H4
+beyond primary_directional_horizon
+```
+
+contract.
+
+No ATR, point-distance, RR, nearest-pivot, or score threshold is introduced.
+
+Reason:
+
+Use structural external ownership, not price proximity, to distinguish
+final external objective candidates from internal delivery liquidity.
+

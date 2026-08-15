@@ -28,7 +28,7 @@
 
 - [x] Market structure
 - [x] Liquidity — Phase 2 core verified
-- [ ] Objective selection
+- [ ] Objective selection — Phase 4B family freeze implemented; R/final TP pending execution geometry
 - [ ] Root OB — Phase 3A core verified; internal-swing completeness audit still open
 - [x] LTF refinement — Phase 3B extended child-path validation PASS
 - [ ] Source touch
@@ -47,7 +47,8 @@
 
 ## P2 — Validation
 
-- [ ] Phase 4A map/reversal-permission smoke
+- [ ] Phase 4B scenario/objective-family smoke
+- [x] Phase 4A map/reversal-permission smoke
 - [x] Phase 3B extended refinement coverage — CHILD_CREATED=7 / CHILD_INVALIDATED=6
 - [x] Phase 3A Root core smoke / causal CSV audit
 - [x] Phase 2 liquidity/sweep smoke / CSV causal audit
