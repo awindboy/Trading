@@ -2,7 +2,7 @@
 
 - 상태: `FROZEN / MANUAL-TRADING AUTHORITY`
 - 제정일: `2026-08-01`
-- 최근 개정: `2026-08-02` (`scenario scope별 목적 유동성 계약 및 외부추세 지속 중간 유동성 처리 추가`)
+- 최근 개정: `2026-08-15` (`최초 진입을 CHoCH displacement FVG retest로 정정하고 widest-FVG 선택·FVG 기반 SL 규칙 추가`)
 - 적용 범위: 수동 차트 분석, 블라인드 리플레이, 데모 매매 판단
 
 ## 1. 문서의 지위
@@ -26,14 +26,19 @@
 -> refined OB 접촉
 -> 사전에 존재하던 유동성 sweep
 -> M1의 의미 있는 몸통 CHoCH
--> causal execution OB retest
--> 구조 무효화 바깥 SL
+-> 같은 sweep-to-CHoCH causal leg의 fresh FVG
+-> valid FVG 중 가장 넓은 FVG 선택
+-> 선택된 FVG의 첫 retest
+-> LONG은 FVG 상단 / SHORT은 FVG 하단 진입
+-> FVG distal 바깥으로 FVG 폭의 20%를 둔 SL
 -> 처음 동결한 목적 유동성 TP
 ```
 
 이 순서에서 앞 단계가 없으면 뒷 단계는 아무리 선명해도 거래 근거가 아니다.
 
-단, 위 시나리오와 원래 목적지가 모두 동결됐지만 기다리던 OB 주문이 미체결된 채 가격이 목적지 방향으로 출발한 경우에는 다음 **대체 실행 경로**를 허용한다.
+아래 `DELIVERY_FVG_REPLACEMENT` 대체 실행 경로는 기존 계약을 역사적으로 보존한다. 최초 포지션 기본형이 `INITIAL_CHOCH_FVG`로 정정되었으므로 **현재 V1에서는 RE-AUDIT REQUIRED / 주문 권한 비활성**이며, 별도 감사 전까지 새 주문에 사용하지 않는다.
+
+기존 계약은 다음과 같다.
 
 ```text
 동결된 owner / 방향 / objective / HTF-to-LTF OB lineage
@@ -143,7 +148,7 @@ refinement는 H1/M30/M15/M5를 내려가며 찾되 다음을 모두 만족해야
 
 가격만 겹치거나 나중에 우연히 생긴 하위 OB는 refinement가 아니다.
 
-유효한 refinement가 확인되면 마지막 causal child OB가 정밀 진입과 SL geometry를 담당한다. 이때만 넓은 HTF OB 전체가 아니라 하위 OB로 SL 폭을 줄일 수 있다.
+유효한 refinement가 확인되면 마지막 causal child OB는 최초 포지션의 source/context와 무효화 맥락을 정밀화한다. 최초 포지션의 실제 entry와 기본 SL geometry는 제7~8장의 CHoCH displacement FVG 규칙이 담당한다.
 
 하위 OB가 여러 개로 갈라지고 어느 것이 원인인지 비교할 수 없으면 가장 좁은 것을 임의로 선택하지 않는다. 더 높은 child OB를 유지하거나 비매매한다.
 
@@ -165,8 +170,9 @@ refined OB 접촉
 -> 그 맥락 안에 사전 형성된 유동성 관통
 -> 가격 회복
 -> 진행 중 M1 추세의 의미 있는 live swing을 몸통 종가로 돌파
--> CHoCH displacement가 만든 causal execution OB
--> 이후 첫 retest
+-> 같은 sweep-to-CHoCH causal leg의 fresh same-direction FVG 확인
+-> valid FVG 중 가장 넓은 FVG 선택
+-> 선택된 FVG의 이후 첫 retest
 ```
 
 ### sweep 대상 유동성의 성숙도
@@ -193,21 +199,42 @@ FVG를 보았다는 이유로 최초 시나리오를 만들지 않는다.
 
 ### 최초 포지션 기본형
 
-- source와 SL 근거는 HTF-to-LTF OB lineage다.
-- M1 CHoCH FVG는 displacement 확인 정보다.
-- 기본 최초 진입은 마지막 causal execution OB의 retest다.
+- HTF-to-LTF OB lineage는 source/context authority다.
+- 의미 있는 M1 CHoCH 자체는 protected/live swing의 몸통 종가 돌파로 성립한다.
+- 다만 최초 포지션을 실제로 허가하려면 authorized sweep에서 CHoCH까지 이어지는 동일 causal leg 안에 fresh same-direction 3-candle FVG가 최소 하나 있어야 한다.
+- CHoCH가 있어도 causal FVG가 없으면 structure event만 기록하고 `NO ENTRY`다.
+- valid FVG가 여러 개면 `width = top - bottom`이 가장 큰 FVG를 선택한다.
+- symbol tick 기준으로 최대 폭이 정확히 같은 FVG가 둘 이상이면 임의 선택하지 않고 `NO TRADE`다.
+- selected FVG와 meaningful CHoCH가 모두 확정된 이후 가격이 그 FVG에 처음 닿는 것을 first retest로 사용한다.
+- first retest의 가격 교차는 `bar.high >= FVG.bottom AND bar.low <= FVG.top`으로 판정하며, authorization 이전에 이미 지나간 touch를 사후 retest로 복원하지 않는다.
 - CHoCH FVG가 선명하더라도 누락된 root OB 또는 refinement를 대신할 수 없다.
+
+3-candle FVG는 다음처럼 정의한다.
+
+```text
+Bullish:
+Candle3.low > Candle1.high
+bottom = Candle1.high
+top = Candle3.low
+
+Bearish:
+Candle3.high < Candle1.low
+bottom = Candle3.high
+top = Candle1.low
+```
 
 ### 별도 연구형
 
 다음은 기본 스승님식 최초 진입에 섞지 않는다.
 
-- CHoCH FVG 자체를 최초 entry zone으로 쓰는 변형
+- causal execution OB만을 최초 entry zone으로 쓰는 변형
 - HTF FVG를 source로 쓰는 변형
 - 동결된 HTF owner·objective·OB lineage 없이 delivery FVG만 추격하는 변형
 - FVG inversion 진입
 
 ### 미체결 원주문의 Delivery FVG 대체 진입
+
+> **현재 V1 상태: RE-AUDIT REQUIRED / 주문 권한 비활성.** 아래 내용은 기존 계약을 역사적으로 보존한다. 최초 `INITIAL_CHOCH_FVG` baseline과의 연결 조건 및 SL 계약은 별도 감사 전까지 새 V1 주문에 사용하지 않는다.
 
 기다리던 refined OB 주문이 체결되지 않고 가격이 목적지 방향으로 출발했다면 시장가로 추격하지 않는다. 다음 조건을 모두 만족할 때만 `DELIVERY_FVG_REPLACEMENT`를 허용한다.
 
@@ -238,9 +265,13 @@ FVG를 보았다는 이유로 최초 시나리오를 만들지 않는다.
 
 ### Entry
 
-- 최초 진입은 final causal execution OB의 방향별 proximal boundary를 기본으로 한다.
-- 이미 지나간 첫 retest에 사후 진입하지 않는다.
-- 가격이 POI에서 출발했다면 시장가로 추격하지 않는다. 원래 시나리오가 유지되고 목적지 방향 displacement가 새 fresh FVG를 만든 경우에만 제7장의 `DELIVERY_FVG_REPLACEMENT`를 검토한다.
+- 최초 진입 execution model은 `INITIAL_CHOCH_FVG`다.
+- LONG은 selected bullish FVG의 상단(`top`)에 Buy Limit을 둔다.
+- SHORT은 selected bearish FVG의 하단(`bottom`)에 Sell Limit을 둔다.
+- selected FVG와 meaningful CHoCH가 모두 확정된 이후 첫 retest만 사용하며, 이미 지나간 접촉에 사후 진입하지 않는다.
+- CHoCH가 있어도 같은 sweep-to-CHoCH causal leg에 valid fresh FVG가 없으면 최초 포지션은 만들지 않는다.
+- selected FVG first retest 없이 가격이 출발하면 시장가로 추격하지 않는다.
+- `DELIVERY_FVG_REPLACEMENT`는 제7장에 기존 기록을 보존하지만 현재 V1에서는 재감사 전 주문 권한이 없다.
 
 ### 체결 전 pending order 생명주기
 
@@ -249,39 +280,45 @@ FVG를 보았다는 이유로 최초 시나리오를 만들지 않는다.
 ```text
 PREPARED: objective / map / root / child 동결
 -> ARMED: refined OB 실제 접촉
--> TRIGGERED: mature sweep + M1 CHoCH + execution OB 확정
--> PENDING: 이후 retest 주문 대기
+-> CHOCH_CONFIRMED: mature sweep + meaningful M1 CHoCH
+-> TRIGGERED: causal FVG 확인 + widest valid FVG 확정
+-> PENDING: selected FVG first retest 주문 대기
 -> FILLED 또는 CANCELED
 ```
 
 - `PENDING`은 무기한 유효하지 않다. 새로운 H1 또는 M15 확정봉이 생길 때마다 owner, scope, objective, source freshness, trigger protected swing을 다시 승인한다.
 - 주문 생성 뒤 한 번이라도 H1/M15 map이 달라졌는데 재승인 기록이 없으면 체결하지 않는다.
 - objective 선도달, root/child 몸통 무효화, trigger protected swing 파괴, POI 완전 소비, opposing owner 확정 중 하나가 발생하면 즉시 `CANCELED`다.
-- trigger 뒤 가격이 entry zone을 떠나 새로운 HTF leg를 만든 경우, 과거 M1 trigger를 다음 세션까지 재사용하지 않는다. 새로운 진입에는 새로운 sweep부터 execution OB까지 전 체인이 필요하다.
-- entry와 trigger invalidation 또는 SL을 같은 접근 displacement가 함께 관통하면 정상 retest가 아니라 `through-delivery`로 분류한다. historical tick이 별도의 진입-반응 순서를 증명하지 못하면 유효한 스승님식 체결로 승인하지 않는다.
+- trigger 뒤 가격이 entry zone을 떠나 새로운 HTF leg를 만든 경우, 과거 M1 trigger를 다음 세션까지 재사용하지 않는다. 새로운 진입에는 새로운 sweep부터 CHoCH displacement FVG까지 전 체인이 필요하다.
+- entry와 SL을 같은 접근 displacement가 함께 관통하면 정상 retest가 아니라 `through-delivery`로 분류한다. historical tick이 별도의 진입-반응 순서를 증명하지 못하면 유효한 스승님식 체결로 승인하지 않는다.
 - 주문 체결 시점의 시나리오를 주문 생성 시점의 설명만으로 정당화하지 않는다. **마지막 재승인 시각**을 원장에 반드시 기록한다.
 
 ### SL
 
-SL은 단순 M1 sweep extreme 하나로 정하지 않는다.
+`INITIAL_CHOCH_FVG` 최초 진입의 전략 SL은 selected FVG geometry로 정한다.
 
-`HTF_OB_REACTION` 최초 진입에는 다음 구조를 적용한다.
+```text
+width = FVG.top - FVG.bottom
+buffer = width * 0.20
+```
 
-- final causal child OB의 distal
-- 해당 OB를 방어하는 protected swing
-- 유효한 sweep extreme
-- 현재 시나리오를 실제로 무효화하는 구조 가격
+LONG:
 
-위 가격 중 정상적인 되돌림 경로를 모두 벗어나는 가장 보수적인 경계 바깥에 SL을 둔다. 유효한 child refinement가 같은 부모 원인을 증명할 때만 HTF OB 전체가 아닌 child 구조를 시나리오 무효화로 사용할 수 있다.
+```text
+SL = FVG.bottom - buffer
+```
 
-`DELIVERY_FVG_REPLACEMENT`에는 제7장의 causal structural invalidation을 적용한다. delivery causal OB, trigger protected swing, 원래 final child 무효화 중 가장 보수적인 경계를 hard SL 계산에 포함한다. FVG distal은 단독 hard SL 근거가 아니다. `DELIVERY_FVG_ADDON`은 별도 승격 전까지 주문 권한이 없다.
+SHORT:
 
-- hard SL buffer는 `actual spread`, `broker stops level`, `1 tick` 중 최댓값보다 작을 수 없다.
-- long SL은 chart의 Bid 기준 하단 체결을, short SL은 Ask 기준 상단 체결을 반영한다. 특히 short는 chart high에 spread를 더하지 않은 SL을 금지한다.
-- sweep extreme 자체에 SL을 붙이지 않는다. 먼저 final sweep이 확정된 뒤 그 extreme 바깥에 execution buffer를 둔다.
-- buffer 때문에 risk가 커지면 lot을 줄인다. 계획 R을 키우려고 SL을 spread 안쪽이나 micro pivot 바로 바깥으로 당기지 않는다.
+```text
+SL = FVG.top + buffer
+```
 
-SL이 너무 멀어 손익비가 나쁘다면 SL을 M1 pivot으로 억지로 줄이지 않는다. 더 정밀한 causal refinement를 찾거나 거래하지 않는다.
+- 전략 SL은 symbol tick size에 맞게 가격 단위만 normalize한다.
+- broker spread / stops level / Bid-Ask 체결 제약을 전략 SL과 정확히 어떻게 연결할지는 execution infrastructure 단계에서 별도로 확정한다. 이 미결정을 이유로 전략 SL 공식을 임의 변경하지 않는다.
+- buffer 때문에 risk가 커지면 lot을 줄인다.
+
+`DELIVERY_FVG_REPLACEMENT`와 `DELIVERY_FVG_ADDON`의 SL 계약은 현재 최초 진입 규칙과 별개이며, 재감사/승격 전까지 새 V1 주문에 사용하지 않는다.
 
 ### TP
 
@@ -315,8 +352,9 @@ SL이 너무 멀어 손익비가 나쁘다면 SL을 M1 pivot으로 억지로 줄
 9. OB 접촉 전에 M1 trigger부터 찾았다.
 10. sweep 대상 유동성이 사전에 존재하지 않았다.
 11. CHoCH가 의미 있는 live swing이 아니라 micro pivot만 돌파했다.
-12. 진입 retest가 이미 지나갔다.
-13. 구조 무효화 바깥 SL을 설명할 수 없다.
+11a. 의미 있는 CHoCH는 있지만 같은 sweep-to-CHoCH causal leg에 valid fresh FVG가 없다.
+12. selected FVG의 first retest가 이미 지나갔다.
+13. selected FVG와 FVG 폭 20% buffer 기반 전략 SL을 설명할 수 없다.
 14. TP를 정확한 유동성 가격으로 설명할 수 없다.
 15. 필수 구조를 차트에 표시할 수 없다.
 16. continuation long이 active range의 premium에 있거나 continuation short이 discount에 있다.
@@ -324,8 +362,8 @@ SL이 너무 멀어 손익비가 나쁘다면 SL을 M1 pivot으로 억지로 줄
 18. sweep 대상 고저점이 현재 reaction leg에서 방금 생겼고 아직 완결된 반응으로 성숙하지 않았다.
 19. pending order 뒤 새 H1/M15 확정봉이 생겼지만 마지막 재승인 기록이 없다.
 20. M5는 반대 방향 correction을 유지하는데 M1 micro CHoCH만으로 전환을 선언했다.
-21. entry 접근 displacement가 zone과 invalidation을 동시에 관통한다.
-22. short의 Ask spread 또는 long/short의 broker stops level을 반영한 hard SL을 계산하지 않았다.
+21. entry 접근 displacement가 selected FVG entry와 전략 SL을 동시에 관통한다.
+22. broker spread/stops-level 때문에 전략 SL을 그대로 제출할 수 없는 상태인데, execution-infrastructure 정책이 확정되지 않은 채 SL을 임의 변경하거나 주문을 강행한다.
 
 `FVG가 보임`, `M1이 강하게 움직임`, `곧 반전할 것 같음`, `최근 고저점 sweep`은 누락된 조건을 보충하지 못한다.
 
@@ -341,7 +379,7 @@ SL이 너무 멀어 손익비가 나쁘다면 SL을 M1 pivot으로 억지로 줄
 8. 거래 결과를 본 뒤 OB, liquidity, CHoCH, SL, TP를 다시 그리지 않는다.
 9. 재생 제어 오류로 미래 데이터가 보이면 해당 세션을 즉시 폐기한다.
 10. 코드, 지표, 기존 후보 원장, 이후 가격은 매매 판단에 사용하지 않는다.
-11. 원래 OB가 미체결된 채 delivery가 출발하면 시장가로 따라가지 않는다. 기존 pending을 취소하고, 목적지 방향 displacement가 만든 fresh FVG의 첫 되돌림이 실제로 생길 때만 대체 주문을 준비한다.
+11. `[RE-AUDIT REQUIRED / 현재 V1 비활성]` 기존 Delivery FVG replacement 절차에서는 원주문 미체결 뒤 시장가로 따라가지 않고 후속 fresh FVG의 첫 되돌림만 검토했다. 이 절차는 별도 재감사 전까지 새 V1 주문에 사용하지 않는다.
 12. `DELIVERY_FVG_REPLACEMENT`를 준비할 때도 해당 FVG가 나타난 시점까지의 데이터만 보고 owner·objective 유지, 구조 전달, causal OB, protected swing을 다시 동결한다.
 13. 재생을 빨리 넘겨 후보를 뒤늦게 발견한 것은 시장의 `미체결`이나 정상적인 `놓친 거래`가 아니라 **분석자 재생 절차 실패**다. 해당 거래일은 블라인드 성과 통계에서 제외하고 새 미사용 기간으로 다시 검증한다.
 14. 넓은 시간 구간의 OHLC를 한꺼번에 출력하거나 이후 봉을 먼저 열어 본 뒤 과거 시점의 판단을 복원하는 행위를 금지한다. 단, 사전에 동결한 사건 가격 중 하나에 도달할 때까지만 재생기가 자동 탐색하는 것은 허용한다. 이때 사건 이전의 이후 차트는 판단자에게 노출하지 않는다.
@@ -362,12 +400,13 @@ SL이 너무 멀어 손익비가 나쁘다면 SL을 M1 pivot으로 억지로 줄
 - refined OB 접촉 시각
 - sweep 대상 유동성, 그 유동성이 성숙한 시각, final sweep extreme
 - M1 CHoCH가 돌파한 live swing
-- final execution OB
-- entry, child distal, protected swing, scenario invalidation, actual spread, broker stops level, hard SL
+- 같은 sweep-to-CHoCH displacement 안의 valid FVG와 각 width
+- selected widest FVG의 형성 시각, 상단, 하단, width, first retest 여부
+- entry, FVG distal, 20% width buffer, actual spread, broker stops level, hard SL
 - TP와 해당 유동성의 출처 및 scenario scope와의 일치
 - pending order의 마지막 H1/M15 재승인 시각
-- execution model이 `HTF_OB_REACTION`, `DELIVERY_FVG_REPLACEMENT`, `DELIVERY_FVG_ADDON` 중 무엇인지
-- 대체 진입이라면 원래 OB 주문의 가격·취소 시각, delivery가 돌파한 protected swing, fresh FVG의 형성 시각·범위·첫 retest 여부, delivery causal OB distal과 protected swing으로 계산한 local hard SL, 원래 final child distal이 hard SL에서 제외됐다는 기록
+- execution model이 `INITIAL_CHOCH_FVG`, `DELIVERY_FVG_REPLACEMENT`, `DELIVERY_FVG_ADDON` 중 무엇인지
+- `DELIVERY_FVG_REPLACEMENT` 관련 기존 증거 계약은 역사적으로 보존하되 현재 V1에서는 재감사 전 비활성
 
 차트에서 이 연결을 사용자가 한눈에 확인할 수 없다면 내가 원인을 제대로 선택하지 못한 것으로 간주한다.
 
@@ -387,6 +426,9 @@ SL이 너무 멀어 손익비가 나쁘다면 SL을 M1 pivot으로 억지로 줄
 - HTF FVG를 standalone source로 사용
 - M1 trigger-first 진입
 - micro CHoCH 진입
+- causal FVG가 없는 CHoCH만으로 만든 최초 진입
+- widest-FVG 규칙을 무시하고 임의 FVG를 선택한 최초 진입
+- FVG 20% external-buffer 전략 SL을 임의 변경한 최초 진입
 - stale pending order 체결
 - 성숙하지 않은 reaction 고저점을 sweep으로 사용
 - premium continuation long 또는 discount continuation short
@@ -432,14 +474,15 @@ root OB는 ________ TF의 ________ 가격 영역이다.
 가격은 ________ 시각에 refined OB를 접촉했다.
 유동성 ________ 은 ________ 시각에 성숙했고, ________ 시각에 final sweep됐다.
 M1은 ________ live swing을 몸통으로 돌파했다.
-final execution OB는 ________ 이다.
-Entry는 ________, hard SL은 ________, TP는 ________ 이다.
-actual spread는 ________, broker stops level은 ________, SL buffer는 ________ 이다.
-SL이 시나리오를 무효화하는 이유는 ________ 이다.
+같은 sweep-to-CHoCH displacement의 valid FVG는 ________ 이며, widest selected FVG는 ________ 이다.
+selected FVG의 first retest는 ________ 이다.
+Entry는 ________, FVG width는 ________, 20% SL buffer는 ________, hard SL은 ________, TP는 ________ 이다.
+actual spread는 ________, broker stops level은 ________ 이다.
+SL이 FVG 규칙에 맞는 이유는 ________ 이다.
 TP가 목적 유동성인 이유는 ________ 이다.
 pending order의 마지막 H1/M15 재승인 시각은 ________ 이다.
-execution model은 HTF_OB_REACTION / DELIVERY_FVG_REPLACEMENT / DELIVERY_FVG_ADDON 중 ________ 이다.
-대체 진입이라면 원래 OB 주문 취소 시각은 ________, delivery가 돌파한 protected swing은 ________, fresh FVG와 첫 retest는 ________, delivery-local SL 근거는 ________ 이며 원래 final child distal은 hard SL 계산에서 제외됐다.
+execution model은 INITIAL_CHOCH_FVG / DELIVERY_FVG_REPLACEMENT / DELIVERY_FVG_ADDON 중 ________ 이다.
+DELIVERY_FVG_REPLACEMENT는 현재 V1에서 비활성이며, 재감사 전에는 N/A로 기록한다.
 ```
 
 한 항목이라도 답할 수 없으면 주문하지 않는다.
@@ -449,6 +492,8 @@ execution model은 HTF_OB_REACTION / DELIVERY_FVG_REPLACEMENT / DELIVERY_FVG_ADD
 > M1 trigger로 거래의 원인을 찾지 않는다. 먼저 HTF swing OB와 causal LTF OB refinement로 시나리오를 완성하고, M1은 그 시나리오가 실제로 반응했는지만 확인한다.
 
 ## 16. 2025-08-18~22 실패 회귀 검사
+
+> 이 절의 과거 entry/SL 숫자 또는 sweep-based SL 문구는 당시 프로토콜의 legacy 기록이다. 현재 최초 진입의 entry/SL pass/fail은 제7~8장의 `INITIAL_CHOCH_FVG` 규칙으로 다시 계산한다. liquidity maturity, map, scenario scope 관련 회귀 목적은 그대로 유지한다.
 
 다음 주간 매매를 시작하기 전에 아래 세 사례가 현재 규칙으로 반드시 거절되거나 올바른 시점까지 대기되는지 확인한다.
 
@@ -475,6 +520,8 @@ execution model은 HTF_OB_REACTION / DELIVERY_FVG_REPLACEMENT / DELIVERY_FVG_ADD
 이 세 회귀 중 하나라도 통과하지 못하면 새로운 주간 블라인드 매매를 시작하지 않는다.
 
 ## 17. 2025-08-25~29 목적 유동성 회귀 검사
+
+> 이 절의 과거 execution OB entry/SL 숫자는 legacy 기록이며 현재 최초 진입 authority가 아니다. 이 절은 scenario scope와 objective 종류 회귀를 보존하며, 현재 entry/SL은 제7~8장의 `INITIAL_CHOCH_FVG` 규칙으로 재산출한다.
 
 scenario scope와 TP 종류를 혼동하지 않기 위해 다음 세 사례를 고정 회귀로 사용한다.
 
@@ -522,7 +569,7 @@ scenario scope와 TP 종류를 혼동하지 않기 위해 다음 세 사례를 �
 - 슬롯은 주문 생성 시각 순으로 배정한다. 같은 시각이면 root TF `H1 > M30 > M15`, source 인식 시각, signal ID 순으로 정한다.
 - 열린 pending 또는 position과 반대 방향의 새 주문은 금지한다. 반대 watch lane은 유지할 수 있지만 차단되어 지나간 첫 retest를 나중에 복원하지 않는다.
 - 같은 physical FVG·첫 retest는 하나의 execution ID만 가진다. 서로 다른 lineage가 동일 execution을 주장하고 하나로 해소되지 않으면 `UNRESOLVED_LINEAGE`다.
-- SL 이후에도 source·owner·objective family가 유효하면 family 자체를 retire하지 않는다. 새 sweep부터 execution zone까지 완전한 새 execution chain만 재진입할 수 있다.
+- SL 이후에도 source·owner·objective family가 유효하면 family 자체를 retire하지 않는다. 새 sweep부터 CHoCH displacement FVG까지 완전한 새 execution chain만 재진입할 수 있다.
 - TP 또는 최종 objective 소진 뒤에는 그 family를 종료한다.
 
 ### 18.3 API 지연과 체결 순서

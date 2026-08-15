@@ -35,8 +35,11 @@ Objective
 -> refined OB touch
 -> pre-existing liquidity sweep
 -> meaningful M1 body-close CHoCH
--> causal execution OB retest
--> structural SL
+-> causal fresh FVG in the same sweep-to-CHoCH displacement
+-> widest valid FVG
+-> first FVG retest
+-> LONG: FVG top / SHORT: FVG bottom entry
+-> FVG distal ± 20% FVG-width strategy SL
 -> frozen objective TP
 
 ## Primary References
@@ -56,7 +59,7 @@ Objective
 No new EA baseline has been implemented yet.
 
 The next task is not MQL5 coding.
-The next task is to map AGENTS.md requirements into deterministic rules and compare them with existing implementations.
+The next task is to finish the remaining execution-lifecycle rules around the now-frozen initial CHoCH-FVG entry geometry and compare them with existing implementations.
 
 ## Next Task
 
@@ -68,8 +71,8 @@ Create the first EA rule mapping for:
 4. Causal LTF Refinement
 5. Sweep
 6. M1 CHoCH
-7. Entry
-8. SL
+7. FVG availability / selection / first-retest lifecycle
+8. Pending-order cancellation and broker execution constraints
 9. Objective / TP
 
 Each rule must be classified as:
@@ -82,7 +85,7 @@ Each rule must be classified as:
 
 - Do not optimize parameters.
 - Do not add AI runtime dependencies.
-- Do not implement FVG add-ons.
+- Do not implement FVG add-ons or Delivery FVG replacement until their post-correction contracts are re-audited.
 - Do not implement CHoCH+BOS confirmation variant.
 - Do not enable live trading.
 - Do not treat legacy EA performance as current strategy performance.

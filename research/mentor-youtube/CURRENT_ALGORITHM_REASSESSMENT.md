@@ -206,15 +206,22 @@ AND 출발 liquidity에 손절 집중 이유가 존재
 AND fresh context FVG/OB가 같은 가격 사건에 존재
 AND 가격이 출발 liquidity를 sweep하고 회복
 AND M5 또는 M1에서 live structure CHoCH
-AND CHoCH displacement가 fresh FVG/OB 생성
-AND 이후 그 zone을 retest
+AND 같은 sweep-to-CHoCH causal leg에 fresh same-direction FVG 존재
+AND valid FVG 중 가장 넓은 FVG 선택
+AND meaningful CHoCH와 selected FVG 확정 이후 first retest
 ```
 
-별도 BOS는 필수가 아니다. 확인형 모델에서만 추가한다.
+- LONG entry는 selected bullish FVG의 상단이다.
+- SHORT entry는 selected bearish FVG의 하단이다.
+- meaningful CHoCH가 있어도 같은 causal leg에 valid FVG가 없으면 최초 포지션은 없다.
+- 별도 BOS는 필수가 아니다. 확인형 모델에서만 추가한다.
 
 ### 5.5 SL/TP 계약
 
-- SL: sweep extreme과 entry zone 바깥 중 더 보수적인 가격 + spread/tick buffer
+- `width = selected FVG top - bottom`
+- long SL: `FVG bottom - 0.20 * width`
+- short SL: `FVG top + 0.20 * width`
+- broker spread / stops-level / Bid-Ask와 전략 SL의 결합 방식은 execution infrastructure에서 별도 확정
 - TP: 현재 시나리오 등급과 같은 등급의 다음 liquidity
 - 체결 전 objective가 소비되면 주문 취소
 - 체결 후에는 SL/TP로 판정
@@ -224,8 +231,8 @@ AND 이후 그 zone을 retest
 
 다음 단계는 기능을 더 붙이는 것이 아니라 원전의 모호성을 최소 실험으로 분리하는 것이다.
 
-1. 기본형 `CHoCH entry`와 확인형 `CHoCH+BOS entry` 중 어느 쪽이 expectancy가 높은가?
-2. 같은 시나리오에서 FVG entry와 OB entry의 체결률·SL폭·기대값 차이는 무엇인가?
+1. 기본형 `CHoCH-FVG entry`와 확인형 `CHoCH+BOS entry` 중 어느 쪽이 expectancy가 높은가?
+2. widest-FVG first-retest와 FVG 폭 20% SL 규칙이 표본 전체에서 원전 의도대로 재현되는가?
 3. 행동 근거가 있는 liquidity만 남기면 단순 pivot liquidity 대비 방향 정확도가 나아지는가?
 4. 내부 시나리오 TP를 내부 liquidity로 제한하면 승률과 평균 R이 어떻게 바뀌는가?
 5. adaptive timeframe 선택이 고정 H1/M30 source보다 같은 가격 사건을 더 잘 설명하는가?

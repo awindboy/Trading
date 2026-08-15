@@ -4,7 +4,7 @@
 
 현재 가격이 향하는 **다음 유동성**을 시장 구조로 정하고, 반대편의 의미 있는
 유동성이 **FVG/OB 맥락 구간에서 sweep**된 뒤 작은 시간봉의 **추세 전환**을
-확인하여, 그 전환에서 만들어진 **FVG/OB 되돌림**에 진입하는 방법이다.
+확인하여, 그 전환 displacement가 만든 **FVG 되돌림**에 진입하는 방법이다.
 
 이 문서에서 FVG, OB, CHoCH는 서로 독립된 신호가 아니다. 하나의 가격 이동
 시나리오를 설명하는 역할만 가진다.
@@ -96,8 +96,9 @@ zone은 재사용하지 않는다.
 M5로 내려가면 같은 가격 사건을 만든 더 작은 스윙과 OB가 보일 수 있다. 하위 OB가
 상위 OB 안에 있거나 겹치며, 경계가 조금 벗어나더라도 동일한 상위 스윙 안에서
 같은 displacement를 설명할 때만 refinement로 인정한다. 최소 한 단계 이상의
-하위 OB가 확인되지 않으면 정밀 진입 시나리오를 만들지 않는다. 이때 하위 OB가
-진입 구조와 SL을 정밀화한다. 단순히 가격이 가깝다는 이유로 별개의
+하위 OB가 확인되지 않으면 정밀 진입 시나리오를 만들지 않는다. 이때 하위 OB는
+최초 포지션의 source/context lineage를 정밀화하고, 실제 entry/SL geometry는
+CHoCH displacement FVG 규칙이 담당한다. 단순히 가격이 가깝다는 이유로 별개의
 하위 zone을 연결하지 않는다.
 
 근거: 9편 `03:01-03:38`, 13편 `16:46-18:33`, 16편 `02:20-03:32`,
@@ -143,8 +144,9 @@ M5/M1에서 기존 추세의 live swing을 반대 방향 몸통 종가로 깨고
 
 별도 BOS는 전환 신뢰도를 높이는 확인이지만 영상 전체의 필수 조건은 아니다.
 기본 실행 구역은 CHoCH displacement가 새로 만든 M1 FVG다. 여기서 HTF/LTF OB
-refinement는 진입 주문 자체가 아니라 가격이 반응할 원인 위치와 FVG 바깥의
-구조적 SL을 설명한다.
+refinement는 진입 주문 자체가 아니라 가격이 반응할 원인 위치와 causal lineage를
+설명한다. 의미 있는 CHoCH가 있어도 같은 sweep-to-CHoCH leg에 fresh FVG가 없으면
+구조 전환만 기록하고 최초 포지션은 진입하지 않는다.
 
 - 기본형: HTF OB -> causal LTF OB refinement -> sweep -> M1 CHoCH
   -> CHoCH displacement FVG -> FVG retest
@@ -155,30 +157,29 @@ refinement는 진입 주문 자체가 아니라 가격이 반응할 원인 위�
 
 ### 단계 5. 되돌림에 진입한다
 
-기본 최초 진입은 M1 CHoCH displacement가 만든 첫 fresh FVG의 proximal boundary를
-사용한다. FVG가 더 깊게 채워질 수 있으므로 SL은 그 displacement를 시작한 M1
-execution OB, sweep extreme, 마지막 M15/M5 refined source OB 중 더 먼 구조
-바깥에 둔다. H1 OB 전체가 아니라 세분화된 LTF 원인 구조를 사용하므로 손절폭을
-줄이면서도 같은 HTF 시나리오를 유지할 수 있다.
+기본 최초 진입은 M1 CHoCH displacement 안의 valid fresh FVG 중 **가격 폭이 가장
+넓은 FVG**를 선택하고, selected FVG와 meaningful CHoCH가 모두 확정된 이후의 첫
+retest를 사용한다. LONG은 bullish FVG의 상단, SHORT은 bearish FVG의 하단에 주문을
+둔다. 동일한 최대 폭 FVG가 둘 이상이면 임의 선택하지 않고 거래하지 않는다.
 
-FVG는 standalone source가 아니다. 그러나 기존 owner와 objective가 살아 있는
-상태에서 강한 displacement가 구조 전달을 재확인하고 FVG를 만들면 첫 retest를
-실행에 사용할 수 있다. 원래 OB 주문이 미체결이면 `DELIVERY_FVG_REPLACEMENT`,
-기존 포지션이 있으면 `DELIVERY_FVG_ADDON`으로 구분한다. 두 경우 모두 FVG를 만든
-causal OB와 protected swing이 설명돼야 한다.
+선택된 FVG의 `width = top - bottom`으로 정의한다. LONG SL은
+`bottom - 0.20 * width`, SHORT SL은 `top + 0.20 * width`로 둔다.
+
+FVG는 standalone source가 아니다. `DELIVERY_FVG_REPLACEMENT`와
+`DELIVERY_FVG_ADDON`은 최초 `INITIAL_CHOCH_FVG` 기본형과 별도의 후속 execution
+protocol이다. 최초 진입 기본형이 정정되었으므로 두 protocol의 시작 조건과 SL 계약은
+별도 재감사 전까지 V1 주문 권한을 비활성으로 유지한다.
 
 ### 단계 6. 틀릴 가격과 맞을 가격을 정한다
 
 **SL**
 
-- M1 sweep extreme은 trigger chain 폐기 기준이며 그 자체가 자동 SL은 아님
-- long: M1 execution OB 하단, sweep low, 마지막 causal M15/M5 source OB 하단 중
-  정상적인 되돌림 경로를 모두 벗어난 가장 낮은 가격 아래
-- short: M1 execution OB 상단, sweep high, 마지막 causal M15/M5 source OB 상단 중
-  정상적인 되돌림 경로를 모두 벗어난 가장 높은 가격 위
-- 인과적 refinement가 확인된 경우에만 상위 OB 전체가 아니라 마지막 LTF OB와
-  그 스윙 바깥으로 정밀화
-- 최소 tick과 실제 spread를 고려한 작은 buffer 추가
+- selected FVG의 `width = top - bottom`
+- long: `SL = bottom - 0.20 * width`
+- short: `SL = top + 0.20 * width`
+- symbol tick size에 맞게 가격 단위만 normalize
+- broker spread / stops level / Bid-Ask 제약을 전략 SL과 연결하는 방식은 execution
+  infrastructure 단계에서 별도로 확정하며, 그 전에는 전략 SL 공식을 임의 변경하지 않음
 
 **TP**
 
@@ -217,8 +218,8 @@ SL로 시나리오가 끝난 뒤 반대 구조가 새로 완성되면 기존 obj
 3. 반대편 출발 유동성은 어디이며 왜 의미 있는가?
 4. HTF 스윙 부근의 fresh OB와 그 안의 인과적 LTF OB 계보는 무엇인가?
 5. 유동성 sweep과 작은 시간봉 CHoCH가 실제로 발생했는가?
-6. entry FVG는 POI 접촉 뒤 CHoCH를 만든 M1 displacement에 속하며, 그 바깥의
-   execution OB와 sweep extreme을 설명할 수 있는가?
+6. entry FVG는 POI 접촉 뒤 CHoCH를 만든 M1 displacement에 속하며, valid FVG 중
+   가장 넓고 meaningful CHoCH 확정 이후의 first retest를 사용하고 있는가?
 7. SL, TP, 그리고 틀렸다고 판정할 이유를 진입 전에 설명할 수 있는가?
 
 한 질문이라도 `그냥 최근 고점`, `그냥 FVG`, `그냥 추세 같음`이라면 거래하지 않는다.
@@ -232,9 +233,9 @@ SL로 시나리오가 끝난 뒤 반대 구조가 새로 완성되면 기존 obj
 - HTF swing OB와 causal LTF OB refinement
 - adaptive MTF 역할 분담
 - sweep 뒤 LTF 추세 전환
-- LTF 전환 확인 뒤 refined OB retest entry
-- 기존 objective 방향 displacement 뒤 첫 FVG retest 대체·추가진입
-- 구조 바깥 SL, 다음 유동성 TP
+- CHoCH displacement의 widest valid FVG first-retest entry
+- 후속 FVG replacement/add-on은 별도 재감사 전 비활성
+- FVG distal 바깥 20% width SL, 다음 유동성 TP
 
 ### 옵션 또는 별도 모델
 
@@ -261,13 +262,11 @@ SL로 시나리오가 끝난 뒤 반대 구조가 새로 완성되면 기존 obj
 각 후보를 독립적으로 재생해야 한다.
 
 1. OB를 마지막 반대색 캔들로 볼지, FVG fill candle로 볼지
-2. CHoCH만으로 entry를 허용할지, 별도 BOS까지 기다릴지
-3. FVG proximal/mean/full-fill 중 어느 가격에 주문할지
-4. 내부 시나리오와 외부 시나리오의 최소 구분 기준
-5. delivery 정체 시 본절 이동을 규칙화할 수 있는지
-6. 부분 청산이 전체 기대값을 개선하는지
+2. 내부 시나리오와 외부 시나리오의 최소 구분 기준
+3. delivery 정체 시 본절 이동을 규칙화할 수 있는지
+4. 부분 청산이 전체 기대값을 개선하는지
 
-이 여섯 항목은 필터 튜닝 문제가 아니라 매매 모델의 서로 다른 변형이다.
+이 네 항목은 필터 튜닝 문제가 아니라 매매 모델의 서로 다른 변형이다.
 
 ## 7. 수익성에 대한 정직한 경계
 

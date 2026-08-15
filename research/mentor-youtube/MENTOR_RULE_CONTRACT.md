@@ -47,8 +47,9 @@ allowed to authorize a trade.
 7. Refine the source by descending from the HTF OB through H1/M30/M15/M5. At
    least one lower-timeframe child is required. A child OB is valid only when
    it is contained by, overlaps, or is the immediately adjacent substructure
-   of its parent swing and belongs to the same displacement. This causal child, rather
-   than the full HTF candle, supplies the execution geometry and shorter SL.
+   of its parent swing and belongs to the same displacement. This causal child
+   defines the source/context lineage; it does not replace the CHoCH
+   displacement FVG as the base first-position entry zone.
 8. The map timeframe is adaptive within H1 and M30, with H1 as the highest
    active frame. H1/M30 establish scope; H1/M30/M15/M5 reveal the nested OB family;
    M5 describes the correction context and M1 alone confirms the executable
@@ -58,17 +59,23 @@ allowed to authorize a trade.
    range: long in discount and short in premium. This is the mentor's execution
    discipline, not a universal market law.
 10. The base first-entry chain is the predeclared nested OB family, source
-    liquidity context, OB contact, M1 sweep, M1 body-close CHoCH, then retest of
-    the final causal M1 OB. M5 may validate that the M1 event belongs to the
-    expected correction but cannot authorize an order. A CHoCH FVG may confirm
-    displacement but cannot replace a missing HTF-to-LTF OB lineage. A separate
-    continuation BOS is not mandatory.
-11. Use the proximal boundary of the final causal LTF OB for the base first
-    position. Initial FVG execution remains a separate video-grounded variant;
-    it must not be mixed into the OB-refinement baseline.
-12. Put SL beyond both the sweep extreme and the entry-zone distal boundary.
-    Add only the broker stop level, current spread, or one tick, whichever is
-    largest.
+    liquidity context, OB contact, M1 sweep, M1 body-close CHoCH, then a fresh
+    same-direction 3-candle FVG belonging to the same sweep-to-CHoCH causal leg.
+    M5 may validate that the M1 event belongs to the expected correction but
+    cannot authorize an order. A separate continuation BOS is not mandatory.
+    If the meaningful CHoCH has no such causal FVG, the structure event remains
+    valid but the base first-position order is not authorized.
+11. If more than one valid FVG exists in that causal displacement, select the
+    widest by price range. An exact maximum-width tie after tick normalization
+    is no-trade. Use the selected FVG's first subsequent touch, after both the
+    FVG and meaningful CHoCH are available, as the retest. Long entry is the
+    bullish FVG upper boundary; short entry is the bearish FVG lower boundary.
+    OB-only first-position execution remains a separate research variant.
+12. Let `width = FVG.top - FVG.bottom`. For the base first position, long SL is
+    `FVG.bottom - 0.20 * width`; short SL is
+    `FVG.top + 0.20 * width`. Broker spread, stops-level, and Bid/Ask handling
+    remain execution-infrastructure concerns; they must not silently redefine
+    this strategy geometry before that infrastructure policy is frozen.
 13. Match TP to scenario scope. External continuation targets external
     liquidity; internal rotation targets the first internal liquidity or
     unfilled delivery zone before the external invalidation; confirmed external
@@ -82,7 +89,7 @@ allowed to authorize a trade.
 16. In-position FVG retracement entries are a separate continuation/add-on
     protocol: the first position must already be delivering toward its frozen
     TP, and the retracement fills a newly created inefficiency. This protocol is
-    documented but disabled until the base OB-refinement method proves
+    documented but disabled until the base initial CHoCH-FVG method proves
     reproducible.
 
 ## Explicitly separate research variants
@@ -90,7 +97,6 @@ allowed to authorize a trade.
 - CHoCH plus an additional BOS confirmation.
 - H4 context or owner above the active H1 map.
 - Direct M5 trigger execution without an M1 confirmation.
-- Initial entry at a CHoCH-created FVG instead of the refined LTF OB.
 - In-position continuation/add-on entry at a delivery FVG retracement.
 - OB-only precision entry.
 - FVG inversion entry.

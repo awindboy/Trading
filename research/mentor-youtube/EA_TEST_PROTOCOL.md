@@ -1,5 +1,7 @@
 # MentorScenarioTraderEA 첫 테스트
 
+> **Status: LEGACY TEST PROTOCOL.** 이 문서는 `mt5/legacy/MentorScenarioTraderEA.mq5`의 당시 연구 baseline을 재현하기 위한 테스트 기록이다. 현재 V1 최초 포지션 authority는 `AGENTS.md`와 `docs/ea/EA_SPEC.md`의 `INITIAL_CHOCH_FVG` 규칙이며, 아래의 과거 OB/sweep 기반 entry·SL 확인 항목을 새 baseline의 합격 기준으로 사용하지 않는다.
+
 현재 EA는 수동 1주 원장을 코드로 이식한 첫 연구 baseline이다. 수익성을 승인한 버전이 아니다.
 
 ## Strategy Tester 설정
@@ -31,3 +33,16 @@
 테스트 결과 HTML/CSV와 Journal의 거래 목록을 보존한다. 같은 기간을 다시 돌릴 때는 결과를 덮어쓰지 말고 파일명에 `mentor-v1-week2`를 붙인다.
 
 첫 비교 기준은 수동 원장의 11건과 숫자가 같은지가 아니다. 같은 날짜의 신호가 같은 owner·source·sweep·CHoCH·objective를 갖는지부터 비교한다. 차이가 있으면 승률을 높이기 전에 사건 귀속부터 수정한다.
+
+
+## Current V1 note
+
+현재 신규 deterministic EA baseline의 first-position 검증은 별도 protocol에서 다음을 확인해야 한다.
+
+- meaningful M1 CHoCH 뒤 같은 sweep-to-CHoCH causal leg에 fresh same-direction FVG가 존재하는가
+- valid FVG가 여러 개면 widest FVG가 선택되는가
+- selected FVG의 first authorized touch에서만 entry되는가
+- LONG entry = FVG top / SHORT entry = FVG bottom인가
+- LONG SL = FVG bottom - 20% width / SHORT SL = FVG top + 20% width인가
+
+기존 `MentorScenarioTraderEA` 결과는 이 새 baseline의 전략 성과로 간주하지 않는다.
