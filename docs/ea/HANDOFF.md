@@ -310,29 +310,68 @@ Broker transaction reconciliation
 → callback arrival order not trusted
 
 
-## Implementation Checkpoint — Phase 1 Structure/Bootstrap Core
+## Implementation Checkpoint — Phase 1.1 Structure/Bootstrap Core
 
-`mt5/experts/MentorDeterministicV1EA.mq5` implementation started.
+`mt5/experts/MentorDeterministicV1EA.mq5` implementation is active.
+
+Local compile result for Phase 1 / build 0.10:
+
+```text
+0 errors
+1 warning
+482 ms
+cpu='AVX2 + FMA3'
+```
+
+The exact warning text was not preserved in the repository.
+
+Post-compile authority review found implementation defects before tester validation:
+
+1. Market-structure waves incorrectly required clock-contiguous bars across session gaps.
+   - FIXED in Phase 1.1.
+   - Frozen clock-continuity requirement belongs only to M1 execution-FVG qualification.
+
+2. INITIAL_BOS / BOS could leave the new directional external delivery extreme unset.
+   - FIXED in Phase 1.1.
+   - Bullish break now creates/maintains the bullish delivery extreme.
+   - Bearish break is symmetric.
+
+3. If bootstrap completed while the market was closed, the final already-processed bar could be processed again at reopen.
+   - FIXED with explicit runtime cursor pending-state semantics.
+
+4. Historical closed-bar `available_at` was tied to next-bar open across a gap.
+   - FIXED to timeframe-slot close availability.
+   - No synthetic price path is created.
+
+5. Bootstrap event logging could become excessively large.
+   - Strategy calculation is unchanged.
+   - Detailed bootstrap event output is now optional and OFF by default.
+   - Runtime events and bootstrap final snapshots remain available.
 
 Current code status:
 
 - Phase: `STRUCTURE_ONLY`
-- Version: `0.10`
+- Internal build: `0.11`
+- MQL property version: `1.00`
 - Orders: intentionally disabled
-- MetaEditor compile: NOT YET VERIFIED locally
-- Strategy Tester parity: NOT STARTED
+- Phase 1 / build 0.10 MetaEditor compile: `0 errors / 1 warning`
+- Phase 1.1 recompile: REQUIRED
+- Strategy Tester structure smoke test: NOT YET PASSED
 
-Implemented in this checkpoint:
+Implemented:
 
 - H4 / H1 / M30 / M15 historical structure bootstrap backbone
 - H4 → H1 → M30 → M15 chronological bootstrap tie order
 - runtime H4 → H1 → M30 → M15 → M5 → M1 closed-bar scheduler
 - causal 3-candle wave confirmation
 - doji interruption
+- session gaps do NOT reset structure or invalidate the 3-bar wave sequence by clock discontinuity
 - body-close INITIAL_BOS / BOS
+- directional delivery extreme after INITIAL_BOS / BOS
 - protected-swing body-close break → TRANSITION
 - compact structure working state instead of full historical wave tree
 - execution epoch boundary logging
+- duplicate-safe reopen cursor
 - CSV structural/event logging
 
 Not implemented yet:
@@ -347,14 +386,12 @@ Not implemented yet:
 - objective / TP selection
 - broker order submission / cancellation / OnTradeTransaction reconciliation
 
-The next action is local MetaEditor compilation of the Phase 1 file before adding the next strategy layer.
-
 ## Next Task
 
-1. Compile `mt5/experts/MentorDeterministicV1EA.mq5` in MetaEditor and record every error/warning.
-2. Fix Phase 1 compile/runtime defects without changing the frozen strategy contract.
-3. Inspect bootstrap / wave / BOS / TRANSITION CSV logs on a short Strategy Tester run.
-4. Implement H4 liquidity index + V1 liquidity/sweep layer on the verified structure backbone.
+1. Recompile Phase 1.1 and require `0 errors`; if any warning remains, preserve the exact warning line.
+2. Run a short `Every tick based on real ticks` Strategy Tester structure smoke test.
+3. Inspect bootstrap final state plus runtime `WAVE_CONFIRMED`, `INITIAL_BOS`, `BOS`, and `PROTECTED_BREAK` ordering.
+4. Only after the structure smoke test passes, implement H4 long-horizon liquidity index + V1 liquidity/sweep layer.
 5. Continue Root/source → M1 execution → broker order layers, then run full parity before profitability optimization.
 
 ## Do Not Do Yet

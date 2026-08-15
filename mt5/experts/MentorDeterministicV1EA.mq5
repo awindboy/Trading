@@ -12,14 +12,15 @@
 //| Root/source, M1 execution, and broker-order layers are attached. |
 //+------------------------------------------------------------------+
 #property strict
-#property version   "0.10"
-#property description "Mentor deterministic V1 EA - Phase 1 structure/bootstrap core"
+#property version   "1.00"
+#property description "Mentor deterministic V1 EA - Phase 1.1 corrected structure/bootstrap core"
 
 //--- execution identity / diagnostics
-input long   InpMagicNumber       = 26081601;
-input bool   InpWriteEventCsv     = true;
-input bool   InpVerboseLog        = true;
-input string InpEventCsvFile      = "mentor_v1_structure_events.csv";
+input long   InpMagicNumber        = 26081601;
+input bool   InpWriteEventCsv      = true;
+input bool   InpVerboseLog         = false;
+input bool   InpLogBootstrapEvents = false;
+input string InpEventCsvFile       = "mentor_v1_structure_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
@@ -62,6 +63,7 @@ enum V1StructureEventType
 struct V1WaveRef
   {
    bool       valid;
+   bool       is_wave;
    string     id;
    int        side;
    double     price;
@@ -90,6 +92,7 @@ struct V1StructureState
    V1WaveRef       external_low;
    V1WaveRef       protected_high;
    V1WaveRef       protected_low;
+   V1WaveRef       break_reference;
 
    // Causal correction extremes after the current break reference occurred.
    V1WaveRef       correction_high;
@@ -134,6 +137,7 @@ ENUM_TIMEFRAMES g_timeframes[V1_TF_COUNT]=
 
 V1StructureState g_structure[V1_TF_COUNT];
 datetime         g_last_current_open[V1_TF_COUNT];
+bool             g_cursor_bar_pending[V1_TF_COUNT];
 datetime         g_history_first_date[V1_TF_COUNT];
 
 V1InitState      g_init_state=V1_INIT_SYNCING;
@@ -143,6 +147,7 @@ datetime         g_execution_epoch_start=0;
 int              g_log_handle=INVALID_HANDLE;
 bool             g_bootstrap_started=false;
 bool             g_bootstrap_finished=false;
+bool             g_in_bootstrap_replay=false;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -210,6 +215,7 @@ string InitStateName(const V1InitState state)
 void ClearWave(V1WaveRef &wave)
   {
    wave.valid=false;
+   wave.is_wave=false;
    wave.id="";
    wave.side=V1_SIDE_NONE;
    wave.price=0.0;
@@ -223,6 +229,7 @@ void ClearWave(V1WaveRef &wave)
 void CopyWave(const V1WaveRef &src,V1WaveRef &dst)
   {
    dst.valid=src.valid;
+   dst.is_wave=src.is_wave;
    dst.id=src.id;
    dst.side=src.side;
    dst.price=src.price;
@@ -233,10 +240,6 @@ void CopyWave(const V1WaveRef &src,V1WaveRef &dst)
    dst.available_at=src.available_at;
   }
 
-bool SameWave(const V1WaveRef &a,const V1WaveRef &b)
-  {
-   return a.valid && b.valid && a.id==b.id;
-  }
 
 int CandleColour(const MqlRates &bar)
   {
@@ -247,10 +250,6 @@ int CandleColour(const MqlRates &bar)
    return 0;
   }
 
-bool IsContiguous(const MqlRates &older,const MqlRates &newer,const int seconds)
-  {
-   return (newer.time-older.time)==seconds;
-  }
 
 void LogLine(const string event_name,
              const string tf,
@@ -258,6 +257,18 @@ void LogLine(const string event_name,
              const string object_id,
              const string detail)
   {
+   if(g_in_bootstrap_replay && !InpLogBootstrapEvents)
+     {
+      bool high_volume=
+         (event_name=="WAVE_CONFIRMED" ||
+          event_name=="STRUCTURE_INITIAL_BOS" ||
+          event_name=="STRUCTURE_BOS" ||
+          event_name=="STRUCTURE_PROTECTED_BREAK");
+
+      if(high_volume)
+         return;
+     }
+
    if(InpVerboseLog)
       PrintFormat("MentorV1 [%s] tf=%s available=%s id=%s %s",
                   event_name,
@@ -282,7 +293,7 @@ void LogLine(const string event_name,
 void LogStateSnapshot(const int tf_index,const datetime available_at,const string reason)
   {
    string detail=StringFormat(
-      "reason=%s trend=%s range_low=%.10f range_high=%.10f protected_low=%s protected_high=%s external_low=%s external_high=%s",
+      "reason=%s trend=%s range_low=%.10f range_high=%.10f protected_low=%s protected_high=%s external_low=%s external_high=%s break_reference=%s",
       reason,
       TrendName(g_structure[tf_index].trend),
       g_structure[tf_index].range_low,
@@ -290,7 +301,8 @@ void LogStateSnapshot(const int tf_index,const datetime available_at,const strin
       g_structure[tf_index].protected_low.valid ? DoubleToString(g_structure[tf_index].protected_low.price,_Digits) : "NA",
       g_structure[tf_index].protected_high.valid ? DoubleToString(g_structure[tf_index].protected_high.price,_Digits) : "NA",
       g_structure[tf_index].external_low.valid ? DoubleToString(g_structure[tf_index].external_low.price,_Digits) : "NA",
-      g_structure[tf_index].external_high.valid ? DoubleToString(g_structure[tf_index].external_high.price,_Digits) : "NA");
+      g_structure[tf_index].external_high.valid ? DoubleToString(g_structure[tf_index].external_high.price,_Digits) : "NA",
+      g_structure[tf_index].break_reference.valid ? DoubleToString(g_structure[tf_index].break_reference.price,_Digits) : "NA");
    LogLine("STRUCTURE_STATE",g_structure[tf_index].name,available_at,"",detail);
   }
 
@@ -310,6 +322,7 @@ void ResetStructureState(V1StructureState &s,const ENUM_TIMEFRAMES tf)
    ClearWave(s.external_low);
    ClearWave(s.protected_high);
    ClearWave(s.protected_low);
+   ClearWave(s.break_reference);
    ClearWave(s.correction_high);
    ClearWave(s.correction_low);
 
@@ -339,6 +352,7 @@ void InitializeAllStructureStates()
      {
       InitStructureState(i);
       g_last_current_open[i]=0;
+      g_cursor_bar_pending[i]=false;
       g_history_first_date[i]=0;
      }
   }
@@ -415,16 +429,12 @@ int ClosedCount(const MqlRates &rates[],const int seconds,const datetime now)
 
 datetime HistoricalAvailableAt(const MqlRates &rates[],
                                const int index,
-                               const int total,
-                               const datetime fallback_now)
+                               const int seconds)
   {
-   if(index+1<total)
-      return rates[index+1].time;
-
-   // If no later bar exists (for example the market is currently closed),
-   // initialization may know the completed history from the local database.
-   // No first-position execution is allowed before execution_epoch_start.
-   return fallback_now;
+   // Closed-bar information becomes causally available at the end of its
+   // timeframe slot. A weekend/session gap must NOT delay Friday structure
+   // availability until the first Monday bar.
+   return rates[index].time+seconds;
   }
 
 //+------------------------------------------------------------------+
@@ -482,6 +492,7 @@ bool BuildWaveFromLeg(V1StructureState &s,
    MqlRates extreme=leg[extreme_index];
 
    wave.valid=true;
+   wave.is_wave=true;
    wave.side=side;
    wave.confirmed_at=confirm_bar.time;
    wave.available_at=available_at;
@@ -505,6 +516,39 @@ bool BuildWaveFromLeg(V1StructureState &s,
                         SideName(side),
                         (long)wave.occurred_at);
    return true;
+  }
+
+void BuildDeliveryExtreme(V1StructureState &s,
+                          const int side,
+                          const MqlRates &bar,
+                          const datetime available_at,
+                          V1WaveRef &point)
+  {
+   ClearWave(point);
+   point.valid=true;
+   point.is_wave=false;
+   point.side=side;
+   point.occurred_at=bar.time;
+   point.confirmed_at=bar.time;
+   point.available_at=available_at;
+
+   if(side==V1_SIDE_HIGH)
+     {
+      point.price=bar.high;
+      point.wick_bottom=MathMax(bar.open,bar.close);
+      point.wick_top=bar.high;
+     }
+   else
+     {
+      point.price=bar.low;
+      point.wick_bottom=bar.low;
+      point.wick_top=MathMin(bar.open,bar.close);
+     }
+
+   point.id=StringFormat("%s:delivery:%s:%I64d",
+                         s.name,
+                         SideName(side),
+                         (long)bar.time);
   }
 
 void UpdateNeutralReferences(V1StructureState &s,const V1WaveRef &wave)
@@ -577,6 +621,7 @@ void EnterTransition(V1StructureState &s,
    ClearWave(s.external_low);
    ClearWave(s.protected_high);
    ClearWave(s.protected_low);
+   ClearWave(s.break_reference);
    ClearWave(s.correction_high);
    ClearWave(s.correction_low);
 
@@ -587,19 +632,24 @@ void EnterTransition(V1StructureState &s,
 void PromoteInitialTrend(V1StructureState &s,
                          const int direction,
                          const V1WaveRef &broken_wave,
+                         const MqlRates &break_bar,
                          const datetime available_at)
   {
+   ClearWave(s.break_reference);
+
    if(direction>0)
      {
       s.trend=V1_TREND_BULLISH;
       CopyWave(s.neutral_low,s.protected_low);
       CopyWave(s.protected_low,s.external_low);
       ClearWave(s.protected_high);
-      ClearWave(s.external_high);
+
+      BuildDeliveryExtreme(s,V1_SIDE_HIGH,break_bar,available_at,s.external_high);
+
       ClearWave(s.correction_low);
       ClearWave(s.correction_high);
       s.range_low=s.protected_low.valid ? s.protected_low.price : broken_wave.price;
-      s.range_high=broken_wave.price;
+      s.range_high=s.external_high.price;
      }
    else
      {
@@ -607,11 +657,13 @@ void PromoteInitialTrend(V1StructureState &s,
       CopyWave(s.neutral_high,s.protected_high);
       CopyWave(s.protected_high,s.external_high);
       ClearWave(s.protected_low);
-      ClearWave(s.external_low);
+
+      BuildDeliveryExtreme(s,V1_SIDE_LOW,break_bar,available_at,s.external_low);
+
       ClearWave(s.correction_low);
       ClearWave(s.correction_high);
       s.range_high=s.protected_high.valid ? s.protected_high.price : broken_wave.price;
-      s.range_low=broken_wave.price;
+      s.range_low=s.external_low.price;
      }
 
    s.transition_bias=0;
@@ -635,11 +687,12 @@ void LogStructureEvent(V1StructureState &s,
                           (long)bar.time);
 
    string detail=StringFormat(
-      "direction=%s bar_open=%s close=%.10f broken_id=%s broken_price=%.10f protected_id=%s protected_price=%s",
+      "direction=%s bar_open=%s close=%.10f broken_id=%s broken_kind=%s broken_price=%.10f protected_id=%s protected_price=%s",
       direction>0 ? "LONG" : "SHORT",
       TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
       bar.close,
       broken.valid ? broken.id : "NA",
+      broken.valid ? (broken.is_wave ? "WAVE" : "DELIVERY") : "NA",
       broken.valid ? broken.price : 0.0,
       protected_ref.valid ? protected_ref.id : "NA",
       protected_ref.valid ? DoubleToString(protected_ref.price,_Digits) : "NA");
@@ -671,6 +724,8 @@ void EvaluateExistingStructureBreaks(const int tf_index,
         {
          V1WaveRef broken;
          CopyWave(s.external_high,broken);
+         CopyWave(broken,s.break_reference);
+
          if(s.correction_low.valid)
             CopyWave(s.correction_low,s.protected_low);
 
@@ -678,8 +733,8 @@ void EvaluateExistingStructureBreaks(const int tf_index,
             CopyWave(s.protected_low,s.external_low);
 
          s.range_low=s.protected_low.valid ? s.protected_low.price : s.range_low;
-         s.range_high=MathMax(s.range_high,bar.high);
-         ClearWave(s.external_high);
+         BuildDeliveryExtreme(s,V1_SIDE_HIGH,bar,available_at,s.external_high);
+         s.range_high=s.external_high.price;
          ClearWave(s.correction_low);
 
          LogStructureEvent(s,V1_EVENT_BOS,1,
@@ -705,6 +760,8 @@ void EvaluateExistingStructureBreaks(const int tf_index,
         {
          V1WaveRef broken;
          CopyWave(s.external_low,broken);
+         CopyWave(broken,s.break_reference);
+
          if(s.correction_high.valid)
             CopyWave(s.correction_high,s.protected_high);
 
@@ -712,8 +769,8 @@ void EvaluateExistingStructureBreaks(const int tf_index,
             CopyWave(s.protected_high,s.external_high);
 
          s.range_high=s.protected_high.valid ? s.protected_high.price : s.range_high;
-         s.range_low=(s.range_low==0.0 ? bar.low : MathMin(s.range_low,bar.low));
-         ClearWave(s.external_low);
+         BuildDeliveryExtreme(s,V1_SIDE_LOW,bar,available_at,s.external_low);
+         s.range_low=s.external_low.price;
          ClearWave(s.correction_high);
 
          LogStructureEvent(s,V1_EVENT_BOS,-1,
@@ -734,7 +791,7 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          V1WaveRef protected_ref;
          CopyWave(s.neutral_low,protected_ref);
 
-         PromoteInitialTrend(s,1,broken,available_at);
+         PromoteInitialTrend(s,1,broken,bar,available_at);
          LogStructureEvent(s,V1_EVENT_INITIAL_BOS,1,
                            broken,protected_ref,bar,available_at);
          return;
@@ -747,7 +804,7 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          V1WaveRef protected_ref;
          CopyWave(s.neutral_high,protected_ref);
 
-         PromoteInitialTrend(s,-1,broken,available_at);
+         PromoteInitialTrend(s,-1,broken,bar,available_at);
          LogStructureEvent(s,V1_EVENT_INITIAL_BOS,-1,
                            broken,protected_ref,bar,available_at);
          return;
@@ -787,10 +844,10 @@ void ConfirmWaveIfAny(V1StructureState &s,
    MqlRates second=s.recent1;
    MqlRates third=bar;
 
-   if(!IsContiguous(first,second,s.seconds) ||
-      !IsContiguous(second,third,s.seconds))
-      return;
-
+   // "Three consecutive candles" means consecutive broker bars in the
+   // observed series. Clock continuity across a session gap is NOT required
+   // for market-structure waves; that strict gate belongs only to the later
+   // M1 execution-FVG qualification rule.
    int c1=CandleColour(first);
    int c2=CandleColour(second);
    int c3=CandleColour(third);
@@ -908,6 +965,7 @@ bool BootstrapStructureCore()
 
    g_init_state=V1_INIT_H4_INDEX;
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
+   g_in_bootstrap_replay=true;
 
    // Chronological multiway merge.
    // Tie priority is H4 -> H1 -> M30 -> M15.
@@ -923,13 +981,13 @@ bool BootstrapStructureCore()
 
          datetime available=0;
          if(k==0)
-            available=HistoricalAvailableAt(h4,pos[k],ArraySize(h4),now);
+            available=HistoricalAvailableAt(h4,pos[k],PeriodSeconds(PERIOD_H4));
          else if(k==1)
-            available=HistoricalAvailableAt(h1,pos[k],ArraySize(h1),now);
+            available=HistoricalAvailableAt(h1,pos[k],PeriodSeconds(PERIOD_H1));
          else if(k==2)
-            available=HistoricalAvailableAt(m30,pos[k],ArraySize(m30),now);
+            available=HistoricalAvailableAt(m30,pos[k],PeriodSeconds(PERIOD_M30));
          else
-            available=HistoricalAvailableAt(m15,pos[k],ArraySize(m15),now);
+            available=HistoricalAvailableAt(m15,pos[k],PeriodSeconds(PERIOD_M15));
 
          if(available>now)
             continue;
@@ -956,6 +1014,7 @@ bool BootstrapStructureCore()
          ProcessClosedBar(3,m15[pos[3]++],selected_available);
      }
 
+   g_in_bootstrap_replay=false;
    g_init_state=V1_INIT_ACTIVE_MAP;
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
@@ -966,7 +1025,29 @@ bool BootstrapStructureCore()
    LogLine("INIT_STATE","",now,"","PHASE1_STRUCTURE_CORE_SOURCE_LAYER_NOT_YET_ATTACHED");
 
    for(int i=0;i<V1_TF_COUNT;i++)
+     {
       g_last_current_open[i]=iTime(_Symbol,g_timeframes[i],0);
+      g_cursor_bar_pending[i]=false;
+
+      if(g_last_current_open[i]>0)
+        {
+         datetime theoretical_close=
+            g_last_current_open[i]+PeriodSeconds(g_timeframes[i]);
+
+         // If the latest visible slot is still open at READY, it must be
+         // processed once a later bar appears. If it already closed before
+         // READY (typical weekend/session closure), bootstrap has either
+         // processed it or Phase-1 runtime intentionally starts after it.
+         g_cursor_bar_pending[i]=(theoretical_close>now);
+        }
+
+      if(g_history_first_date[i]>0)
+         LogLine("HISTORY_FIRST_DATE",
+                 TfName(g_timeframes[i]),
+                 now,
+                 "",
+                 TimeToString(g_history_first_date[i],TIME_DATE|TIME_SECONDS));
+     }
 
    // M5 / M1 execution structure intentionally starts clean at READY.
    InitStructureState(4);
@@ -976,7 +1057,9 @@ bool BootstrapStructureCore()
    g_init_state=V1_READY;
    g_bootstrap_finished=true;
 
-   LogLine("INIT_STATE","",now,"","READY_STRUCTURE_ONLY");
+   LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
+           StringFormat("READY_STRUCTURE_ONLY ready_at=%s",
+                        TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS)));
 
    for(int i=0;i<4;i++)
       LogStateSnapshot(i,now,"BOOTSTRAP_COMPLETE");
@@ -1066,16 +1149,19 @@ void CollectNewClosedBars(const int tf_index,
       return;
      }
 
-   for(int i=0;i<copied-1;i++)
-     {
-      datetime available=rates[i+1].time;
+   int first_index=(g_cursor_bar_pending[tf_index] ? 0 : 1);
 
-      // The next real bar open is the causal availability timestamp.
-      // Across a market closure this naturally becomes the reopen bar time.
+   for(int i=first_index;i<copied-1;i++)
+     {
+      datetime available=rates[i].time+PeriodSeconds(tf);
+      if(available>observed_at)
+         available=observed_at;
+
       AddRuntimeEvent(events,tf_index,rates[i],available);
      }
 
    g_last_current_open[tf_index]=current_open;
+   g_cursor_bar_pending[tf_index]=true;
   }
 
 void SortRuntimeEvents(V1RuntimeBarEvent &events[])
@@ -1162,7 +1248,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("version=0.10 magic=%I64d phase=STRUCTURE_ONLY",
+           StringFormat("build=0.11 property_version=1.00 magic=%I64d phase=STRUCTURE_ONLY",
                         InpMagicNumber));
 
    // Do not fail initialization just because MT5 is still synchronizing history.

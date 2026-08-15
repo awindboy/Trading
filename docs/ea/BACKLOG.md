@@ -15,10 +15,11 @@
 
 ## Current implementation checkpoint
 
-- `mt5/experts/MentorDeterministicV1EA.mq5` Phase 1 structure/bootstrap core drafted.
-- Compile verification: pending local MetaEditor.
-- Trading/order submission: intentionally disabled in Phase 1.
-- Do not mark Market structure or bootstrap items complete until compile + short tester log inspection passes.
+- `mt5/experts/MentorDeterministicV1EA.mq5` Phase 1 compiled locally: `0 errors / 1 warning / 482 ms / AVX2 + FMA3`.
+- Exact Phase 1 warning text was not preserved.
+- Phase 1.1 corrects frozen-spec/session/cursor defects found in post-compile review.
+- Trading/order submission remains intentionally disabled.
+- Market structure stays incomplete until Phase 1.1 recompile + short Strategy Tester log inspection passes.
 
 ## P1 — Baseline implementation
 
@@ -43,7 +44,8 @@
 
 ## P2 — Validation
 
-- [ ] Compile with zero errors
+- [x] Compile Phase 1 with zero errors
+- [ ] Recompile Phase 1.1 and resolve behavior-affecting warnings
 - [ ] Visual Strategy Tester inspection
 - [ ] Known manual/Codex case regression
 - [ ] In-sample implementation validation
