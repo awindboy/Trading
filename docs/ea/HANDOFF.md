@@ -240,7 +240,7 @@ Session / killzone time filter
 
 1. Resolve warm-up / historical state reconstruction.
 2. Run final AGENTS / EA_SPEC / DECISIONS authority consistency check.
-3. Freeze deterministic V1 .v
+3. Freeze deterministic V1 specification.
 4. Implement minimum MQL5 EA.
 5. Validate MT5 implementation parity before profitability optimization.
 

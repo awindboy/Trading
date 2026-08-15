@@ -1173,9 +1173,6 @@ DEAL_PRICE
 
 Session gap을 이유로
 killzone / day-of-week / session-time strategy filter를 새로 추가하지 않는다.
-```
-
----
 
 ### SL
 
