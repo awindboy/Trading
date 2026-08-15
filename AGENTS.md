@@ -71,7 +71,7 @@ M1은 **시나리오를 만드는 시간봉이 아니라 이미 존재하는 시
 
 ### 3.1 목적 유동성을 먼저 정한다
 
-진입 방향을 생각하기 전에 scenario scope와 그 scope가 설명할 수 있는 최종 목적 유동성을 하나 정한다. 목적지는 가까운 순서만으로 정하지 않고 **외부 구조를 계속 전달하는 거래인지, 외부 범위 안에서 잠시 회전하는 거래인지**를 먼저 구분한다.
+진입 방향을 생각하기 전에 scenario scope와 그 scope가 설명할 수 있는 ordered objective family를 정한다. 최종 TP 하나는 아직 정하지 않으며, Entry와 hard SL이 확정된 뒤 pre-frozen family에서 planned R `>= 1`인 가장 가까운 scope-compatible candidate를 선택한다. 목적 후보군은 가까운 순서만으로 구성하지 않고 **외부 구조를 계속 전달하는 거래인지, 외부 범위 안에서 잠시 회전하는 거래인지**를 먼저 구분한다.
 
 - PLAN은 임의의 TP 하나를 미리 확정하는 것이 아니라 동일 owner 경로의 순서가 고정된 `objective family`를 Entry/SL geometry가 알려지기 전에 동결한다.
 - PLAN 시점에 `scenario_scope`, `owner`, `direction`, `objective_candidate_ids`, 각 candidate의 가격/종류/순서를 고정한다.
@@ -118,7 +118,7 @@ TP는 해당 유동성의 실제 wick 가격에 둔다. 스윕 가능성을 무�
 - H1/M30의 현재 external protected high와 low로 active dealing range를 정하고 EQ 50%를 표시한다.
 - `EXTERNAL_CONTINUATION` long은 discount에서만, short은 premium에서만 준비한다.
 - continuation 방향의 POI가 반대 절반에 있으면 OB가 선명해도 정보로만 남기고 주문 권한을 부여하지 않는다.
-- `INTERNAL_ROTATION`은 range의 반대편 외부 유동성까지 확대하지 않고 현재 range 안의 첫 내부 objective에서 끝낸다.
+- `INTERNAL_ROTATION`은 range의 반대편 external liquidity까지 확대하지 않는다. 현재 range 안의 mature M15+ internal objective family에서 planned R `>= 1`인 가장 가까운 candidate를 최종 TP로 선택하며, 그보다 가까운 `<1R` internal liquidity는 `INTERMEDIATE_DELIVERY`로 기록한다.
 - premium/discount 위치는 단독 진입 신호가 아니다. 올바른 위치에 있더라도 root OB, causal refinement, mature sweep, M1 trigger가 모두 필요하다.
 
 ## 4. HTF root OB
@@ -333,14 +333,22 @@ SL = FVG.top + buffer
 
 ### TP
 
-- 진입 전에 동결한 동일한 objective family를 사용하며, Entry·SL 확정 시 그 family에 결정론적 선택 규칙을 적용해 TP 하나를 확정한다.
-- 유동성보다 더 멀리 임의 buffer를 두지 않는다.
-- RR fallback, 최대 R 제한, 최소 R을 맞추기 위한 TP 이동을 사용하지 않는다.
-- TP가 지나치게 멀다고 느껴지면 목적 유동성과 scenario scope를 다시 검토한다.
-- EXTERNAL_CONTINUATION TP는 H1/M30 외부 방향의 다음 미소진 external liquidity다. 그 사이의 internal liquidity는 주문 전에 중간 전달 지점으로 기록하되 TP로 대체하지 않는다.
-- INTERNAL_ROTATION TP는 현재 dealing range 안의 첫 미소진 내부 유동성이다. H1 external body break가 없으면 그 너머 external liquidity까지 목표를 확장하지 않는다.
-- EXTERNAL_REVERSAL TP는 H1/M30 protected swing의 몸통 파괴와 새 owner 확인 뒤 선택한 새 방향 external liquidity다. M1 반전만으로 이 계약을 사용할 수 없다.
-- 목표 wick을 정확히 맞히는 대신 체결 안정성을 위해 front-run할 경우, 주문 전에 선언하고 actual spread 또는 1 tick 안쪽 범위로만 제한한다. 유동성 바깥으로 TP를 더 멀리 두는 것은 금지한다.
+- PLAN 단계에서 Entry/SL geometry를 알기 전에 동일 owner와 scenario scope의 ordered objective family를 동결한다.
+- Entry와 hard SL이 확정된 뒤 pre-frozen family를 방향상 가까운 순서대로 검사한다.
+- 아직 미소진이고 scope-compatible하며 planned R `>= 1`인 최초 candidate를 final TP로 선택한다.
+- planned R `< 1`인 valid liquidity는 삭제하지 않고 `INTERMEDIATE_DELIVERY`로 기록하며 final TP 자격만 제외한다.
+- planned R은 objective-candidate eligibility에만 사용한다. 더 큰 R을 만들기 위해 TP를 새로 찾거나 candidate 순서를 바꾸거나 SL을 줄이지 않는다.
+- 같은 tier에서는 R이 더 큰 candidate가 아니라 가장 가까운 R-eligible candidate를 선택한다.
+- EXTERNAL_CONTINUATION의 current tier는 현재 owner 방향의 미소진 H1/M30 external liquidity다. 그 사이의 internal liquidity는 `INTERMEDIATE_DELIVERY`로 기록한다.
+- INTERNAL_ROTATION의 current tier는 active dealing range 안의 mature M15+ internal liquidity다. 가장 가까운 internal liquidity가 `<1R`이면 intermediate로 남기고 다음 internal candidate를 평가한다. External liquidity로 scope를 확장하지 않는다.
+- EXTERNAL_REVERSAL은 H1/M30 protected swing body break와 새 owner 확인 뒤 새 방향 external objective family를 사용한다. M1 반전만으로 이 계약을 사용할 수 없다.
+- External scenario에서 current tier에 R-eligible candidate가 없을 때만 PLAN 단계에서 pre-frozen된 historical H1 fallback tier를 평가한다.
+- Final TP가 선택된 뒤에는 같은 scenario에서 다음 objective로 rollover하지 않는다.
+- Final TP가 fill 전에 delivered되면 scenario와 pending order를 취소한다.
+- V1 strategy TP는 selected liquidity의 actual structural price를 사용한다. Swing liquidity는 actual wick price를 사용한다.
+- 유동성보다 더 멀리 임의 buffer를 두거나 RR을 높이기 위해 TP를 이동하지 않는다.
+- V1 baseline에서 spread/1-tick inward TP front-run을 사용하지 않는다. 필요하면 향후 별도 immutable execution-optimization variant로 비교한다.
+- LONG TP는 Bid-side, SHORT TP는 Ask-side broker execution semantics를 따른다.
 
 ### 체결 후
 
@@ -353,7 +361,7 @@ SL = FVG.top + buffer
 다음 중 하나라도 해당하면 거래하지 않는다.
 
 1. 목적 유동성이 명확하지 않다.
-2. 목적지가 이미 소진됐다.
+2. Final TP로 선택된 objective가 pending fill 전에 이미 소진됐다.
 3. H1/M30에서 외부와 내부 구조를 구분하지 못했다.
 4. 의미 있는 swing 근처의 HTF root OB가 없다.
 5. source가 HTF FVG뿐이다.
@@ -369,7 +377,7 @@ SL = FVG.top + buffer
 14. TP를 정확한 유동성 가격으로 설명할 수 없다.
 15. 필수 구조를 차트에 표시할 수 없다.
 16. continuation long이 active range의 premium에 있거나 continuation short이 discount에 있다.
-17. INTERNAL_ROTATION에서 entry와 objective 사이의 더 가까운 성숙한 internal liquidity를 건너뛰었거나, EXTERNAL_CONTINUATION에서 중간 internal liquidity를 원장에 기록하지 않았다.
+17. INTERNAL_ROTATION에서 selected TP보다 가까운 mature internal liquidity를 candidate family에서 누락했거나, planned R `>=1`인 더 가까운 candidate를 건너뛰었거나, planned R `<1`인 가까운 liquidity를 `INTERMEDIATE_DELIVERY`로 기록하지 않았다. EXTERNAL_CONTINUATION에서는 entry와 selected external TP 사이의 internal liquidity를 `INTERMEDIATE_DELIVERY`로 기록하지 않으면 비매매다.
 18. sweep 대상 고저점이 현재 reaction leg에서 방금 생겼고 아직 완결된 반응으로 성숙하지 않았다.
 19. pending order 뒤 새 H1/M15 확정봉이 생겼지만 마지막 재승인 기록이 없다.
 20. M5는 반대 방향 correction을 유지하는데 M1 micro CHoCH만으로 전환을 선언했다.
@@ -380,11 +388,11 @@ SL = FVG.top + buffer
 
 ## 10. 블라인드 재생 규율
 
-1. H1/M30에서 map, objective, root OB를 먼저 동결한다.
+1. H1/M30에서 map, scenario scope, ordered objective family, root OB를 먼저 동결한다. Final TP 하나는 Entry와 hard SL이 확정된 뒤 pre-frozen family에서 선택한다.
 2. M30/M15/M5에서 refinement 경로를 차트에 표시한다.
 3. 가격이 refined OB에 접근하기 전에는 M1을 보지 않는다.
 4. root OB 접근 뒤에는 M15/M5로 refinement와 correction을 확인하고, refined OB 실제 접촉 뒤에만 M1을 한 봉씩 확인한다.
-5. **사건 기반 판단 게이트:** map을 만들 때 `root OB 접근 경계 / refined OB 접근 경계 / objective / source 무효화 / protected swing 몸통 돌파` 가격을 먼저 동결한다. 그 뒤에는 이 중 가장 먼저 발생하는 사건까지 빠르게 재생할 수 있으며, 사건에서 멈춘 뒤 `주문 동결 / 대기 / 비매매`를 기록하기 전에는 더 진행하지 않는다.
+5. **사건 기반 판단 게이트:** map을 만들 때 `root OB 접근 경계 / refined OB 접근 경계 / pre-frozen objective candidate levels / source 무효화 / protected swing 몸통 돌파`를 먼저 동결한다. Final TP가 선택되기 전에는 objective-family candidate의 소진 여부를 사건으로 추적하고, Final TP가 선택된 뒤에는 selected objective의 delivery가 cancellation authority를 가진다. 사건에서 멈춘 뒤 `주문 동결 / 대기 / 비매매`를 기록하기 전에는 더 진행하지 않는다.
 6. 지나간 진입을 사후 주문으로 복원하지 않는다.
 7. 주문 전에 entry, SL, TP와 모든 원인 ID를 기록한다.
 8. 거래 결과를 본 뒤 OB, liquidity, CHoCH, SL, TP를 다시 그리지 않는다.
@@ -403,8 +411,11 @@ SL = FVG.top + buffer
 
 - map TF와 scenario scope
 - active dealing range, EQ, 현재 premium/discount 위치
-- 정확한 목적 유동성 가격
-- entry와 objective 사이의 더 가까운 competing liquidity 검토 결과
+- PLAN에서 pre-frozen된 ordered objective family의 candidate ID / 가격 / 종류 / tier / 순서
+- 각 objective candidate의 consumed 여부, planned R, eligibility, role
+- planned R `<1`이라 final TP에서 제외된 더 가까운 liquidity의 `INTERMEDIATE_DELIVERY` 기록
+- selected final objective의 ID / 정확한 가격 / planned R / 선택 시각
+- 같은 tier의 더 가까운 R-eligible liquidity를 건너뛰지 않았다는 증거
 - HTF root OB의 시간, 상단, 하단
 - refinement 경로와 각 child OB의 시간, 상단, 하단
 - parent-child가 같은 displacement인 이유
@@ -475,10 +486,11 @@ TP에 도달한 프로토콜 위반 거래도 성공 사례가 아니다. SL에 
 주문 전 다음 문장을 빈칸 없이 답해야 한다.
 
 ```text
-목적 유동성은 ________ 이다.
+PLAN에서 동결한 objective family는 ________ 이며 candidate 순서는 ________ 이다.
 H1/M30 map과 scenario scope는 ________ 이다.
 active dealing range는 ________ ~ ________, EQ는 ________, 현재 위치는 premium / discount 중 ________ 이다.
-entry와 objective 사이의 더 가까운 미소진 liquidity는 ________ 이며, 이를 건너뛰지 않는 이유는 ________ 이다.
+Final TP보다 가까운 liquidity candidate는 ________ 이며, 각각의 planned R / role은 ________ 이다.
+Final TP로 ________ 을 선택했으며 planned R은 ________ R이고, 이것이 같은 tier에서 가장 가까운 R-eligible candidate인 이유는 ________ 이다.
 root OB는 ________ TF의 ________ 가격 영역이다.
 그 OB의 causal child는 ________ TF의 ________ 가격 영역이다.
 두 OB가 같은 원인인 이유는 ________ 이다.
@@ -490,7 +502,7 @@ selected FVG의 first retest는 ________ 이다.
 Entry는 ________, FVG width는 ________, 20% SL buffer는 ________, hard SL은 ________, TP는 ________ 이다.
 actual spread는 ________, broker stops level은 ________ 이다.
 SL이 FVG 규칙에 맞는 이유는 ________ 이다.
-TP가 목적 유동성인 이유는 ________ 이다.
+TP가 scenario scope와 일치하는 structural liquidity이고 objective-family selection rule을 만족하는 이유는 ________ 이다.
 pending order의 마지막 H1/M15 재승인 시각은 ________ 이다.
 execution model은 INITIAL_CHOCH_FVG / DELIVERY_FVG_REPLACEMENT / DELIVERY_FVG_ADDON 중 ________ 이다.
 DELIVERY_FVG_REPLACEMENT는 현재 V1에서 비활성이며, 재감사 전에는 N/A로 기록한다.
@@ -532,7 +544,7 @@ DELIVERY_FVG_REPLACEMENT는 현재 V1에서 비활성이며, 재감사 전에는
 
 ## 17. 2025-08-25~29 목적 유동성 회귀 검사
 
-> 이 절의 과거 execution OB entry/SL 숫자는 legacy 기록이며 현재 최초 진입 authority가 아니다. 이 절은 scenario scope와 objective 종류 회귀를 보존하며, 현재 entry/SL은 제7~8장의 `INITIAL_CHOCH_FVG` 규칙으로 재산출한다.
+> 이 절의 과거 execution OB entry/SL 숫자와 당시 단일 objective 선택 결과는 legacy 기록이다. 현재 최초 진입의 Entry/SL은 제7~8장의 `INITIAL_CHOCH_FVG` 규칙으로 재산출하고, final TP도 현재의 pre-frozen objective family + planned R `>=1` eligibility + nearest-eligible selection 규칙으로 다시 판정한다. 아래 사례의 핵심 회귀 목적은 `EXTERNAL_CONTINUATION`과 `INTERNAL_ROTATION`의 scope를 혼동하지 않는 것이며, 과거에 적힌 특정 TP 숫자가 새 geometry에서도 자동으로 current authority가 되는 것은 아니다.
 
 scenario scope와 TP 종류를 혼동하지 않기 위해 다음 세 사례를 고정 회귀로 사용한다.
 
@@ -570,7 +582,9 @@ scenario scope와 TP 종류를 혼동하지 않기 위해 다음 세 사례를 �
 - liquidity 후보는 H1/M30의 external swing·반복 방어·range edge·reaction trap과 M15 이상 internal liquidity를 형성 시점부터 소진 시점까지 추적한다. 단순 2-bar pivot은 모델이 검토할 원시 후보일 뿐 자동으로 목적 유동성이 되지 않는다.
 - 후보 수나 prompt 크기 때문에 family를 삭제하지 않는다. 결정론적 paging을 사용하고, page별 입력 family ID와 응답 family ID의 집합이 정확히 일치해야 한다.
 - PLAN은 같은 owner·scope·lineage의 순서가 고정된 objective family를 동결한다. 모델은 family 구성원의 가격이나 순서를 다시 쓰지 않는다.
+- Final TP는 Entry와 normalized strategy SL이 확정된 뒤 pre-frozen family에서 planned R `>=1`인 가장 가까운 scope-compatible candidate를 선택한다. Entry/SL 확인 뒤 새 candidate를 추가하거나 더 큰 R을 위해 candidate 순서를 바꾸지 않는다.
 - objective family의 장기 이력 구간에는 현재가에서 방향상 가장 가까운 미소진 H1 liquidity를 최대 `2개`만 포함한다. 장기 M30 이하 후보는 포함하지 않으며, 현재 구조 objective가 주문 기하상 적격이면 장기 후보는 비활성 상태를 유지한다.
+- objective family의 historical fallback tier에는 current-structure family 바깥 방향의 causally-known 미소진 H1 external liquidity를 방향상 가장 가까운 순서로 최대 `2개`만 포함한다. 장기 M30 이하 후보는 포함하지 않는다. 이 tier는 EXTERNAL_CONTINUATION / EXTERNAL_REVERSAL에서만 허용하며, current-structure tier에 planned R `>=1`인 valid candidate가 있으면 비활성 상태를 유지한다.
 - 정답 거래의 최초 판단 가능 시각 packet에 root·child·objective family 역할 ID가 하나라도 없으면 `MODEL_MISS`가 아니라 `ENGINE_CANDIDATE_MISS`다.
 
 ### 18.2 다중 scenario lane과 위험 슬롯
