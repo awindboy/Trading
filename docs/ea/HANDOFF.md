@@ -111,12 +111,35 @@ Time-based strategy cancellation
 Pending survival authority
 → causal state only
 
+Objective candidate family
+→ FROZEN before Entry/SL geometry
+
+Minimum objective eligibility
+→ planned R >= 1
+
+planned R role
+→ objective-candidate filter
+→ NOT max-R optimization
+
+Final TP selection
+→ nearest scope-compatible R-eligible candidate
+
+Historical H1 fallback
+→ external scenarios only
+→ pre-frozen maximum 2 candidates
+
+Post-selection TP rollover
+→ FORBIDDEN
+
+Baseline TP price
+→ exact selected structural liquidity
+
 ## Next Task
 
 Create the first EA rule mapping for:
 
-1. Final Objective/TP audit.
-2. Full AGENTS / EA_SPEC / DECISIONS consistency audit.
+1. Full AGENTS / EA_SPEC / DECISIONS consistency audit.
+2. Resolve remaining non-Objective V1 H/U items required for implementation.
 3. Freeze deterministic V1 specification.
 4. Implement minimum MQL5 EA.
 5. Compile in MetaEditor.

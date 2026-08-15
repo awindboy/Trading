@@ -4403,15 +4403,386 @@ Section 11의 `EXECUTION_INFEASIBLE` 규칙을 적용한다.
 
 ## 10. Objective / TP
 
-Scenario scopes:
-- EXTERNAL_CONTINUATION
-- INTERNAL_ROTATION
-- EXTERNAL_REVERSAL
+Status: FROZEN FOR V1
 
-TP must follow the frozen objective family defined before entry.
+### 10.1 Purpose
 
-Exact deterministic objective selection:
-TBD.
+Classification: D
+
+V1의 Objective는 원하는 RR을 만들기 위해 임의로 선택하는 가격이 아니다.
+
+현재 scenario scope와 owner가 설명할 수 있는
+실제 structural liquidity candidate를 먼저 구성하고,
+Entry / SL geometry가 확정된 뒤
+그 pre-frozen family 안에서 final TP 자격을 판정한다.
+
+`planned R >= 1`은:
+
+objective-candidate eligibility filter
+
+다.
+
+다음이 아니다.
+
+trade-wide immediate rejection filter
+maximum-R optimizer
+permission to invent a farther TP
+permission to tighten SL
+
+### 10.2 Scenario Scopes
+
+Classification: D
+
+허용 scope:
+
+EXTERNAL_CONTINUATION
+INTERNAL_ROTATION
+EXTERNAL_REVERSAL
+
+Scenario scope가 objective candidate universe를 결정한다.
+
+R이 크다는 이유로 scope 밖 liquidity를 final TP로 승격하지 않는다.
+
+### 10.3 Objective Family Freeze
+
+Classification: D
+
+PLAN 단계에서 Entry / SL geometry를 알기 전에 다음을 freeze한다.
+
+scenario_id
+scenario_scope
+owner_id
+direction
+
+objective_candidate_ids
+objective_candidate_prices
+objective_candidate_types
+objective_candidate_order
+objective_candidate_available_at
+
+objective_family_frozen_at
+
+Entry / SL 확정 뒤 금지:
+
+add new liquidity candidate
+change candidate order
+insert better-R candidate
+search hindsight target
+
+### 10.4 EXTERNAL_CONTINUATION Family
+
+Classification: D
+
+Current owner direction의 미소진 H1/M30 external liquidity를
+current-structure objective family로 사용한다.
+
+Entry와 external objective 사이의 internal liquidity는:
+
+INTERMEDIATE_DELIVERY
+
+로 기록하며 final external TP candidate로 승격하지 않는다.
+
+### 10.5 INTERNAL_ROTATION Family
+
+Classification: D
+
+현재 active dealing range 안에서
+trade direction에 존재하는
+meaningful mature M15+ internal liquidity만 family에 포함한다.
+
+External liquidity는
+1R을 만들기 위한 INTERNAL_ROTATION TP fallback으로 사용하지 않는다.
+
+가장 가까운 internal liquidity가 1R 미만이어도
+즉시 scenario를 종료하지 않는다.
+
+Frozen internal family에서
+가장 가까운 R-eligible mature internal liquidity를 찾는다.
+
+### 10.6 EXTERNAL_REVERSAL Family
+
+Classification: D
+
+EXTERNAL_REVERSAL은:
+
+H1/M30 protected structure body break
++
+new-direction owner confirmation
+
+이후에만 생성한다.
+
+그 뒤 새 owner direction의
+미소진 H1/M30 external liquidity를 family로 사용한다.
+
+M1 CHoCH만으로 external reversal objective family를 만들지 않는다.
+
+### 10.7 Planned-R Geometry
+
+Classification: D
+
+Objective eligibility 계산은 frozen strategy geometry를 사용한다.
+
+LONG:
+
+risk = Entry - normalized_SL
+reward(candidate) = candidate_price - Entry
+planned_R = reward / risk
+
+SHORT:
+
+risk = normalized_SL - Entry
+reward(candidate) = Entry - candidate_price
+planned_R = reward / risk
+
+Required:
+
+risk > 0
+reward > 0
+
+Final TP eligibility:
+
+planned_R >= 1.0
+
+`normalized_SL`은 Section 9의
+outward tick-normalized 20% FVG-width strategy SL이다.
+
+Baseline planned-R eligibility 계산에는:
+
+commission
+swap
+future slippage
+spread-aware TP offset
+
+을 섞지 않는다.
+
+이들은 execution/economic reporting에서 별도로 기록한다.
+
+### 10.8 Candidate Selection
+
+Classification: D
+
+Selected FVG, Entry, normalized strategy SL이 확정된 뒤
+frozen objective family를 방향상 가까운 순서대로 검사한다.
+
+각 candidate:
+
+1. 이미 consumed이면 제외한다.
+2. scenario scope와 호환되지 않으면 제외한다.
+3. planned R을 계산한다.
+4. planned R < 1이면 final TP 자격을 제외하고 `INTERMEDIATE_DELIVERY`로 기록한다.
+5. planned R >= 1인 최초 candidate를 `FINAL_TP`로 선택한다.
+6. 첫 eligible candidate를 선택하면 current tier 검색을 종료한다.
+
+금지:
+
+max-R candidate selection
+farthest candidate selection
+RR-based candidate reordering
+
+### 10.9 Historical H1 Fallback Tier
+
+Classification: D for strategy / H for warm-up depth
+
+External scenario는 PLAN 단계에서
+current-structure family 바깥 방향의
+causally-known 미소진 H1 external liquidity 중
+가장 가까운 최대 2개를 inactive fallback tier로 freeze할 수 있다.
+
+Allowed:
+
+EXTERNAL_CONTINUATION
+EXTERNAL_REVERSAL
+
+Forbidden:
+
+INTERNAL_ROTATION
+
+Fallback candidate도 Entry / SL을 알기 전에
+ID / price / order가 freeze되어야 한다.
+
+Selection precedence:
+
+Tier 1 = CURRENT_STRUCTURE
+Tier 2 = HISTORICAL_H1_FALLBACK
+
+Current tier에 valid planned R >= 1 candidate가 하나라도 있으면
+fallback을 사용하지 않는다.
+
+Current tier에서 final TP를 찾지 못했을 때만
+fallback tier를 같은 nearest-first / >=1R 규칙으로 검사한다.
+
+Fallback에서 더 큰 R을 이유로
+더 먼 candidate를 선택하지 않는다.
+
+Historical data를 어디까지 복원해야 하는지는
+Section 2.18 warm-up requirement에서 별도로 결정한다.
+
+Permanent strategy rule에 특정 calendar start date를 사용하지 않는다.
+
+### 10.10 No Eligible Objective
+
+Classification: D
+
+다음을 모두 평가한 뒤에도:
+
+allowed current frozen family
++
+applicable pre-frozen fallback family
+
+planned R >= 1인 valid candidate가 없으면:
+
+NO TRADE
+reason = NO_R_ELIGIBLE_OBJECTIVE
+
+로 처리한다.
+
+첫 번째 1R 미만 liquidity 하나만 보고
+scenario를 즉시 폐기하지 않는다.
+
+### 10.11 Intermediate Delivery
+
+Classification: D
+
+Valid liquidity가 planned R < 1이라는 이유로
+시장 지도에서 삭제되지 않는다.
+
+해당 candidate는:
+
+INTERMEDIATE_DELIVERY
+
+로 기록한다.
+
+EXTERNAL_CONTINUATION에서는
+selected external objective·owner·source lineage가 유지되는 한
+intermediate delivery 자체만으로
+pending을 취소하거나 TP를 축소하지 않는다.
+
+INTERNAL_ROTATION에서도
+selected final objective가 아닌
+더 가까운 <1R internal liquidity의 delivery 자체만으로
+final TP를 자동 교체하지 않는다.
+
+### 10.12 Final TP Freeze Timing
+
+Classification: D
+
+Final TP selection은:
+
+meaningful CHoCH close
+→ widest valid FVG freeze
+→ Entry freeze
+→ normalized strategy SL freeze
+→ objective eligibility evaluation
+→ final TP freeze
+→ pending order submission
+
+순서다.
+
+Required:
+
+objective_family_frozen_at
+<
+entry_sl_geometry_known_at
+
+final_objective_selected_at
+<= pending_created_at
+
+### 10.13 No Post-Selection Rollover
+
+Classification: D
+
+Final TP가 선택된 뒤
+같은 scenario 안에서 다음 objective candidate로
+자동 rollover하지 않는다.
+
+Final objective가 pending fill 전에 delivered되면:
+
+CANCELED_OBJECTIVE_DELIVERED
+
+로 scenario와 pending order를 취소한다.
+
+새 objective가 필요하면
+map / scenario를 다시 평가한다.
+
+### 10.14 TP Price
+
+Classification: D
+
+Final TP는 selected liquidity의
+actual structural price를 사용한다.
+
+Swing liquidity:
+
+actual wick high / low
+
+를 사용한다.
+
+금지:
+
+move TP farther to improve R
+move TP because another candidate has higher R
+automatic max-R extension
+
+### 10.15 TP Execution Semantics
+
+Classification: D
+
+V1 baseline은 exact selected-liquidity TP를 사용한다.
+
+LONG TP:
+Bid-side execution
+
+SHORT TP:
+Ask-side execution
+
+Spread 또는 1-tick inward TP front-run은
+baseline strategy에 포함하지 않는다.
+
+필요하면 향후 별도 immutable
+execution-optimization variant로 비교한다.
+
+### 10.16 Required Objective State
+
+각 scenario는 최소 다음을 기록한다.
+
+scenario_scope
+owner_id
+direction
+
+objective_family_frozen_at
+
+objective_candidates[]:
+    id
+    liquidity_id
+    liquidity_type
+    price
+    available_at
+    family_tier
+    order_index
+    consumed
+    consumed_at
+    planned_R
+    eligibility
+    role
+
+family_tier:
+    CURRENT_STRUCTURE
+    HISTORICAL_H1_FALLBACK
+
+eligibility:
+    SCOPE_INELIGIBLE
+    CONSUMED
+    BELOW_1R
+    ELIGIBLE
+
+role:
+    FINAL_TP
+    INTERMEDIATE_DELIVERY
+    UNUSED_FUTURE
+
+final_objective_id
+final_objective_price
+final_objective_selected_at
 
 ## 11. Pending Order Lifecycle + MT5 Execution Constraints
 

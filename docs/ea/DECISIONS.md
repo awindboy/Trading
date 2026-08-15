@@ -1556,3 +1556,134 @@ entry boundary
 objective
 
 를 자동 수정하지 않는다.
+
+## D-066 — 1R is objective-candidate eligibility
+
+Status: ACTIVE / FROZEN
+
+V1에서 planned R >= 1은
+trade 전체를 첫 가까운 liquidity에서 즉시 거부하는 조건이 아니다.
+
+Scenario scope에 의해 사전에 frozen된 liquidity candidate 중
+final TP 자격을 판정하는 minimum-delivery 조건이다.
+
+planned R < 1인 valid liquidity는
+INTERMEDIATE_DELIVERY로 유지한다.
+
+Reason:
+
+현재 전략은 directional delivery를 거래하므로
+너무 가까운 liquidity를 final trend objective로 사용하지 않되,
+그 liquidity 하나 때문에 전체 POI/scenario를 즉시 폐기하지 않기 위함이다.
+
+---
+
+## D-067 — Objective family freezes before Entry/SL geometry
+
+Status: ACTIVE / FROZEN
+
+Scenario PLAN 단계에서
+objective candidate family와 candidate order를 freeze한다.
+
+Entry / SL 확정 뒤에는
+새 liquidity candidate를 추가하거나
+better-R candidate를 삽입하지 않는다.
+
+Final TP 하나는 Entry / SL geometry가 알려진 뒤
+pre-frozen family에서 선택한다.
+
+Reason:
+
+planned R 계산에는 Entry와 SL이 필요하지만,
+그 정보를 본 뒤 TP 후보 자체를 새로 찾으면
+hindsight RR optimization이 되기 때문이다.
+
+---
+
+## D-068 — Nearest R-eligible candidate wins
+
+Status: ACTIVE / FROZEN
+
+같은 candidate tier에서는
+planned R >= 1인 candidate 중
+trade direction으로 가장 가까운 valid liquidity를 final TP로 선택한다.
+
+더 큰 R을 제공한다는 이유만으로
+더 먼 candidate를 선택하지 않는다.
+
+---
+
+## D-069 — Scenario scope outranks R
+
+Status: ACTIVE / FROZEN
+
+R이 크더라도 scenario scope 밖 liquidity를 TP로 사용하지 않는다.
+
+INTERNAL_ROTATION:
+mature M15+ internal liquidity only.
+
+EXTERNAL_CONTINUATION / EXTERNAL_REVERSAL:
+external objective family.
+
+INTERNAL_ROTATION은
+1R을 만들기 위해 external H1 liquidity로 확장하지 않는다.
+
+---
+
+## D-070 — Historical H1 fallback is pre-frozen and external-only
+
+Status: ACTIVE / FROZEN FOR STRATEGY
+
+External scenario는 current-structure family 바깥 방향의
+가장 가까운 causally-known 미소진 H1 external liquidity
+최대 2개를 PLAN 시점에 inactive fallback으로 freeze할 수 있다.
+
+Fallback은:
+
+EXTERNAL_CONTINUATION
+EXTERNAL_REVERSAL
+
+에서만 허용한다.
+
+INTERNAL_ROTATION에서는 금지한다.
+
+Current-structure tier에 R-eligible candidate가 있으면
+fallback을 사용하지 않는다.
+
+Historical reconstruction depth 자체는
+warm-up infrastructure decision으로 분리한다.
+
+---
+
+## D-071 — No post-selection objective rollover
+
+Status: ACTIVE / FROZEN
+
+Final TP가 pending submission 전에 선택된 뒤에는
+같은 scenario에서 다음 family member로 자동 교체하지 않는다.
+
+Selected objective가 fill 전에 delivered되면:
+
+CANCELED_OBJECTIVE_DELIVERED
+
+이다.
+
+새 objective는 새 map/scenario evaluation을 요구한다.
+
+---
+
+## D-072 — Exact structural liquidity is baseline TP
+
+Status: ACTIVE / FROZEN
+
+V1 strategy TP는 selected liquidity의
+actual structural price를 사용한다.
+
+Swing liquidity는 actual wick price를 사용한다.
+
+Baseline에서 spread/1-tick TP front-run을 사용하지 않는다.
+
+LONG TP는 Bid-side,
+SHORT TP는 Ask-side execution semantics를 따른다.
+
+Front-run은 향후 별도 immutable execution optimization variant로만 검토한다.

@@ -73,23 +73,34 @@ M1은 **시나리오를 만드는 시간봉이 아니라 이미 존재하는 시
 
 진입 방향을 생각하기 전에 scenario scope와 그 scope가 설명할 수 있는 최종 목적 유동성을 하나 정한다. 목적지는 가까운 순서만으로 정하지 않고 **외부 구조를 계속 전달하는 거래인지, 외부 범위 안에서 잠시 회전하는 거래인지**를 먼저 구분한다.
 
-- PLAN은 임의의 TP 하나가 아니라 동일 owner 경로의 순서가 고정된 `objective family`를 동결한다.
-- `EXTERNAL_CONTINUATION` family는 현재 H1/M30 외부 방향의 미소진 H1/M30 external liquidity로만 구성한다.
-- `INTERNAL_ROTATION` family는 외부 구조가 바뀌었다고 확대하지 않고, 현재 dealing range 안의 의미 있는 M15 이상 internal liquidity로만 구성한다.
-- `EXTERNAL_REVERSAL`은 반대 방향 M1 CHoCH만으로 선언하지 않는다. H1/M30 protected swing의 몸통 파괴와 새 방향 owner가 확인된 뒤에만 새 방향 external liquidity를 목표로 한다.
-- `EXTERNAL_CONTINUATION`의 entry와 external objective 사이에 있는 내부 유동성은 최종 TP가 아니라 `INTERMEDIATE_DELIVERY`로 사전에 기록한다.
-- `INTERMEDIATE_DELIVERY`가 CHoCH 또는 delivery displacement 과정에서 소진돼도, 외부 objective·owner·source lineage가 그대로라면 그것만으로 pending order를 취소하거나 TP를 재지정하지 않는다.
-- 반대로 `INTERNAL_ROTATION`의 첫 internal objective가 entry 전에 소진되면 시나리오는 끝난다. 더 먼 internal/external liquidity로 TP를 갈아 끼우지 않는다.
+- PLAN은 임의의 TP 하나를 미리 확정하는 것이 아니라 동일 owner 경로의 순서가 고정된 `objective family`를 Entry/SL geometry가 알려지기 전에 동결한다.
+- PLAN 시점에 `scenario_scope`, `owner`, `direction`, `objective_candidate_ids`, 각 candidate의 가격/종류/순서를 고정한다.
+- Entry와 hard SL이 확정된 뒤에는 새로운 liquidity candidate를 추가하거나 후보 순서를 바꿀 수 없다.
+- `EXTERNAL_CONTINUATION` family는 현재 H1/M30 외부 방향의 미소진 H1/M30 external liquidity로 구성한다.
+- `INTERNAL_ROTATION` family는 외부 구조가 바뀌었다고 확대하지 않고, 현재 dealing range 안의 의미 있는 M15 이상 internal liquidity로 구성한다.
+- `EXTERNAL_REVERSAL`은 반대 방향 M1 CHoCH만으로 선언하지 않는다. H1/M30 protected swing의 몸통 파괴와 새 방향 owner가 확인된 뒤에만 새 방향 external liquidity family를 만든다.
+- `EXTERNAL_CONTINUATION`의 entry와 external objective 사이에 있는 내부 유동성은 최종 external TP 후보가 아니라 `INTERMEDIATE_DELIVERY`로 기록한다.
+- Entry와 hard SL이 확정되면 frozen objective family를 방향상 가까운 순서대로 검사한다.
+- 아직 미소진이고 scenario scope와 호환되며 planned R `>= 1`인 최초 candidate를 최종 TP로 선택한다.
+- planned R `< 1`인 valid liquidity는 삭제하지 않고 `INTERMEDIATE_DELIVERY`로 기록하며 final TP 자격만 제외한다.
+- `planned R >= 1`은 거래 전체를 즉시 거부하는 필터나 최대 RR을 찾는 최적화 규칙이 아니라 `objective candidate eligibility` 조건이다.
+- R이 더 크다는 이유만으로 더 먼 candidate를 선택하지 않는다. 같은 candidate tier에서는 가장 가까운 R-eligible liquidity가 우선한다.
+- `INTERNAL_ROTATION`에서도 가장 가까운 internal liquidity가 planned R `< 1`이라는 이유만으로 시나리오를 즉시 종료하지 않는다. frozen internal family 안에서 가장 가까운 R-eligible mature M15+ internal liquidity를 찾는다.
+- `INTERNAL_ROTATION`은 1R을 만들기 위해 external liquidity를 TP로 승격하지 않는다.
+- `INTERMEDIATE_DELIVERY`가 CHoCH 또는 delivery displacement 과정에서 소진돼도, selected objective·owner·source lineage가 그대로라면 그것만으로 pending order를 취소하거나 TP를 재지정하지 않는다.
 - 목적 유동성은 다른 참여자가 실제로 손절을 둘 만한 스윙, 반복 방어된 range edge, reaction trap 등이어야 한다.
 - 단순 최근 pivot, 라운드 넘버, 이미 소진된 고저점은 목적 유동성이 아니다.
 - 비교할 수 없는 owner 경로의 목적지가 여러 개 남으면 하나의 family로 섞지 않고 별도 scenario lane으로 유지한다.
-- PLAN packet은 현재 구조의 미소진 H1/M30 objective를 주 경로로 보존하고, `2023-12-01` 이후의 먼 과거 미소진 H1 liquidity 중 현재가에서 방향상 가장 가까운 최대 `2개`만 비활성 fallback으로 함께 동결할 수 있다. 오래된 M30 이하는 fallback이 될 수 없다.
-- 장기 H1 fallback은 Entry와 hard SL이 확정된 뒤 현재 구조 objective가 없거나 모두 planned R `1` 미만인 경우에만 활성화한다. 현재 objective가 하나라도 planned R `>=1`이면 장기 H1 후보를 TP로 선택하지 않는다.
-- Entry와 hard SL이 확정된 시점에 family 순서대로 검사하여 아직 미소진이고 planned R `>=1`인 최초 수준을 최종 TP로 선택한다. 그 앞 수준은 `INTERMEDIATE_DELIVERY`다.
-- `INTERNAL_ROTATION`에서는 진입가와 먼 유동성 사이의 더 가까운 성숙한 internal liquidity를 건너뛰지 않는다.
-- `EXTERNAL_CONTINUATION`에서는 더 가까운 내부 유동성을 숨기지 않고 중간 전달 지점으로 기록하되, 그것을 이유로 사전에 동결한 external objective를 내부 TP로 축소하지 않는다.
-- 처음 선택한 목적지가 멀수록 좋은 거래라고 판단하지 않는다. 큰 R은 올바른 원인과 가까운 구조 무효화에서 나오는 결과이지, TP를 먼 유동성으로 밀어서 만드는 수치가 아니다.
-- 주문 전 최종 objective가 먼저 소진되거나 더 가까운 opposing liquidity가 새 owner로 확정되면 기존 시나리오와 pending order를 취소하고 map부터 다시 작성한다.
+- External scenario의 PLAN packet은 current-structure family 바깥 방향의 causally-known 미소진 H1 external liquidity 중 방향상 가장 가까운 최대 `2개`를 비활성 fallback tier로 함께 동결할 수 있다.
+- Historical H1 fallback은 `EXTERNAL_CONTINUATION` 또는 `EXTERNAL_REVERSAL`에서만 사용할 수 있다. `INTERNAL_ROTATION`에서는 사용하지 않는다.
+- Historical H1 fallback도 Entry/SL geometry가 알려지기 전에 candidate와 순서가 동결되어 있어야 한다. Entry/SL을 본 뒤 새 fallback liquidity를 탐색해서 추가하지 않는다.
+- Current-structure tier에 planned R `>=1`인 valid candidate가 하나라도 있으면 historical fallback tier를 사용하지 않는다.
+- Current-structure candidate가 없거나, 모두 소진됐거나, 모두 planned R `<1`인 경우에만 pre-frozen historical H1 fallback tier를 평가한다.
+- Fallback tier에서도 planned R `>=1`인 가장 가까운 candidate를 선택한다. 가장 큰 R을 주는 candidate를 선택하지 않는다.
+- 허용된 current/fallback frozen family 전체에 R-eligible candidate가 하나도 없을 때만 `NO TRADE / NO_R_ELIGIBLE_OBJECTIVE`로 처리한다.
+- 처음 선택한 목적지가 멀수록 좋은 거래라고 판단하지 않는다. 큰 R은 올바른 원인과 가까운 구조 무효화에서 나오는 결과이지, TP를 임의의 먼 유동성으로 밀어서 만드는 수치가 아니다.
+- Final TP는 selected FVG Entry와 Section 9 규칙의 hard SL이 확정된 뒤, pending order 제출 전에 동결한다.
+- Final TP가 동결된 뒤 주문 체결 전에 해당 objective가 먼저 소진되면 기존 시나리오와 pending order를 취소한다. 같은 scenario 안에서 다음 family member로 TP를 자동 rollover하지 않는다.
 
 TP는 해당 유동성의 실제 wick 가격에 둔다. 스윕 가능성을 무시하고 유동성보다 더 멀리 TP를 밀지 않는다.
 
