@@ -2,7 +2,7 @@
 
 Last updated: 2026-08-16
 Status: V1 SPECIFICATION FROZEN
-Current phase: Phase 3A HTF Root OB core implementation
+Current phase: Phase 3B causal LTF OB refinement implementation
 
 ## Goal
 
@@ -55,6 +55,14 @@ Objective
 - `mt5/legacy/MentorSep2025ParityEA.mq5`
 
 ## Current Status
+
+Phase 3A HTF Root OB core
+→ IMPLEMENTED
+→ uploaded event CSV causal audit PASS within implemented scope
+→ Root lifecycle balance PASS
+→ session-gap rejection PASS
+→ scenario authority remained disabled
+→ profitability NOT evaluated
 
 Phase 2 liquidity/sweep
 → IMPLEMENTED
@@ -332,143 +340,195 @@ Broker transaction reconciliation
 → callback arrival order not trusted
 
 
-## Implementation Checkpoint — Phase 3A HTF Root OB Core
+## Implementation Checkpoint — Phase 3B Causal LTF OB Refinement
 
-Phase 2 liquidity/sweep verification is complete.
+Phase 3A Root core smoke test is complete.
 
-Verified:
-
-```text
-LIQUIDITY_CREATED            = 93
-LIQUIDITY_SWEEP              = 28
-LIQUIDITY_BODY_DELIVERY      = 48
-
-sweep rule violation         = 0
-body-delivery violation      = 0
-same-bar self-consumption    = 0
-duplicate consumption        = 0
-runtime MTF order violation  = 0
-future available_at          = 0
-```
-
-Bootstrap H4:
+Verified Phase 3A runtime:
 
 ```text
-EXTERNAL_SWING = 12
-DEFENDED_RANGE_EDGE = 0
-STRUCTURAL_REACTION = 0
+ROOT_CREATED      = 2
+ROOT_INVALIDATED  = 3
+ROOT_REJECTED     = 16
+
+Root causal-rule violations = 0
+Phase 1 structure regression = 0
+Phase 2 liquidity regression = 0
 ```
 
-Phase 3A code status:
+Full bootstrap + runtime Root lifecycle:
 
-- Phase: `ROOT_CORE`
-- Internal build: `0.30`
+```text
+created = 272
+price invalidated = 161
+structure invalidated = 110
+active at stop = 1
+
+161 + 110 + 1 = 272
+```
+
+Known Root coverage limitation:
+
+```text
+Independent completeness enumeration for every
+"structurally meaningful internal swing" Root context
+is not yet audited/complete.
+
+Therefore the full Root-spec backlog item stays open.
+```
+
+Phase 3B code status:
+
+- Phase: `REFINEMENT_CORE`
+- Internal build: `0.40`
 - MQL property version: `1.00`
 - Orders: intentionally disabled
-- Child refinement: intentionally disabled
 - Scenario authority: intentionally disabled
-- Phase 3A compile: PENDING LOCAL METAEDITOR
-- Phase 3A Root smoke test: NOT STARTED
+- Source contact: not yet active
+- Phase 3B compile: PENDING LOCAL METAEDITOR
+- Phase 3B refinement smoke test: NOT STARTED
 
-Implemented in Phase 3A:
+Implemented in Phase 3B:
 
-### Root timeframe
+### Targeted refinement only
 
-Only:
+Historical bootstrap does not build a global M5 source tree.
+
+Order:
 
 ```text
-H1
+H1/M30/M15 Root discovery
+→ retain current ACTIVE Roots
+→ targeted lower-TF reconstruction only for those Roots
+```
+
+Runtime Root refinement is also queued until every
+same-`available_at` timeframe close has been processed:
+
+```text
+H4
+→ H1
+→ M30
+→ M15
+→ M5
+→ M1
+→ refinement freeze
+```
+
+This prevents a higher-TF Root close from reading
+same-timestamp lower-TF information before the frozen scheduler order permits it.
+
+### Allowed child timeframes
+
+```text
 M30
 M15
+M5
 ```
 
-may create Root objects.
+A child must be lower than its direct parent.
 
-H4 / M5 / M1 cannot own a first-position Root.
+M1 is never used for source refinement.
 
-### Root structural confirmation
+### Recursive causal child logic
 
-Root creation is attached only to causally valid:
+Each child must independently satisfy:
 
 ```text
-INITIAL_BOS
-BOS
+meaningful lower-TF swing-origin context
++
+last opposite candle in child origin window
++
+same direction as parent
++
+lower-TF body-close structure delivery
++
+causal timing inside parent event
 ```
 
-body-delivery events in this checkpoint.
+### Time causality
 
-`PROTECTED_BREAK → TRANSITION` does not fabricate an opposite Root.
-
-### Swing-origin window
-
-Each confirmed wave now retains:
+Required:
 
 ```text
-origin_window_start
-origin_window_end
+parent origin
+<= child origin
+<= child structure confirmation
+<= parent linked structure confirmation
 ```
 
-Root candle search is restricted to that meaningful wave's
-causal swing-origin window.
+Child origin must also belong to the parent causal swing-origin window.
 
-### LAST_OPPOSITE_OB
+### Containment
 
-LONG Root:
+Preferred:
 
 ```text
-meaningful causal swing low
-→ last bearish candle inside its origin window
-→ same bullish causal path
-→ bullish INITIAL_BOS/BOS
+CONTAINED
+
+parent.bottom <= child.bottom
+AND
+child.top <= parent.top
 ```
 
-SHORT is symmetric.
-
-Doji is not an opposite candle.
-
-Root bounds:
+If not fully contained, Phase 3B allows only:
 
 ```text
-bottom = origin candle low
-top = origin candle high
+EVENT_ADJACENT
 ```
 
-### Continuation BOS fallback prohibition
+defined by parent-event time lineage and same directional delivery.
 
-A continuation BOS creates a Root only if the BOS close already has
-a confirmed causal correction swing.
+No fixed-point, ATR, percentage, or RR adjacency tolerance is used.
 
-No candidate:
+### Ambiguity
+
+For each lower timeframe, child candidates are causally deduplicated.
+
+If multiple comparable-authority candidates remain:
+
+First child stage:
 
 ```text
-→ no Root from that BOS
+AMBIGUOUS_FIRST
+→ no final child
+→ no first-position source authority
 ```
 
-The implementation does NOT fall back to an older protected swing,
-nearest opposite candle, or arbitrary previous candle.
-
-### Session-gap causal path
-
-If the selected opposite origin candle and linked structure delivery
-cross a market-closure/timeframe gap:
+After a higher child already exists:
 
 ```text
-ROOT_REJECTED
-reason = SESSION_GAP_CROSSED
+STOPPED_AMBIGUOUS
+→ keep the already selected higher child
+→ do not choose nearest/narrowest/newest candidate
 ```
 
-No previous-session candle is attached to a new displacement.
+### Deepest unambiguous child
 
-### Availability
+If exactly one valid child is found:
 
 ```text
-Root.occurred_at = origin candle time
-Root.available_at = linked structure event confirmation
+select child
+→ use it as direct parent
+→ continue to the next allowed lower timeframe
 ```
 
-No Root authority exists before structure delivery.
+Final child is the deepest unambiguous causal child.
 
-### Root strategy lifecycle
+Refinement is not forced to M5.
+
+### Snapshot validity vs ambiguity
+
+Ambiguity is determined at the Root/refinement freeze time.
+
+A child that was one of multiple causal candidates at freeze time
+cannot later disappear by invalidation and retrospectively
+make the older ambiguous decision unambiguous.
+
+Current snapshot validity is evaluated only after
+the causal candidate set has been frozen.
+
+### Child strategy lifecycle
 
 ```text
 ACTIVE
@@ -477,73 +537,84 @@ INVALIDATED
 
 only.
 
-Bullish Root:
+Bullish child:
 
 ```text
-Root-own-TF close < Root.bottom
+child-own-TF close < child.bottom
 → PRICE_INVALIDATED
 ```
 
-Bearish Root:
+Bearish child:
 
 ```text
-Root-own-TF close > Root.top
+child-own-TF close > child.top
 → PRICE_INVALIDATED
 ```
 
-Strict inequality.
+Parent invalidation propagates to all descendants.
 
-Wick-only distal penetration does not invalidate Root.
+### Lineage identity
 
-### Structure-owner invalidation
-
-On the Root timeframe:
+Each retained child stores:
 
 ```text
-protected swing body break
-→ old structure owner invalidated
-→ all ACTIVE Roots under that timeframe owner
-   STRUCTURE_INVALIDATED
+parent_zone_id
+root_zone_id
+origin_wave_id
+linked_structure_event_id
+containment_type
+occurred_at
+available_at
 ```
-
-Invalidated Root leaves the active in-memory working set after its audit event.
 
 ### Scenario authority
 
-Phase 3A Root objects are structurally valid source objects but:
+Even a valid final refined child remains:
 
 ```text
 scenario_owner_id = UNBOUND
 scenario_authority = false
 ```
 
-until objective/map/scenario binding exists.
+until map/objective/scenario binding is implemented.
 
-Therefore Root existence alone cannot authorize M1 trigger or order.
+### STRUCTURAL_REACTION
 
-### Child refinement
+Still intentionally dormant in Phase 3B.
 
-Not implemented in Phase 3A.
-
-Next checkpoint after Root smoke PASS:
+Reason:
 
 ```text
-Phase 3B
-→ targeted M30/M15/M5 child reconstruction
-→ same-event / same-displacement lineage
-→ deepest unambiguous child
-→ parent invalidation propagation
-→ final source freeze
-→ STRUCTURAL_REACTION activation
+Root/child ownership is now established,
+but safe structural-reaction creation also needs
+refined-source reaction/contact replay.
+
+No shortcut is introduced merely because a child exists.
 ```
+
+Activation is deferred to the source-reaction/contact checkpoint.
+
+Not implemented yet:
+
+- full Root completeness audit for structurally meaningful internal-swing contexts
+- scenario direction/objective binding
+- source contact
+- scenario-specific mature sweep authorization
+- STRUCTURAL_REACTION creation
+- meaningful M1 CHoCH binding
+- execution FVG
+- Entry / SL / TP
+- pending order execution/cancellation
+- OnTradeTransaction reconciliation
 
 ## Next Task
 
-1. Compile Phase 3A in MetaEditor and preserve all errors/warnings.
-2. Run the same short real-tick regression period.
-3. Audit `mentor_v1_phase3a_events.csv`.
-4. Verify Root creation/rejection/lifecycle invariants.
-5. Only after Phase 3A passes, implement Phase 3B child refinement.
+1. Compile Phase 3B in MetaEditor.
+2. Preserve all errors/warnings.
+3. Run the same real-tick regression period.
+4. Audit `mentor_v1_phase3b_events.csv`.
+5. Verify child time/price/parent lineage, ambiguity handling and invalidation propagation.
+6. Only after refinement passes, proceed to scenario/source-contact ownership.
 
 
 ## Do Not Do Yet

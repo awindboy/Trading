@@ -279,6 +279,128 @@ No order layer exists.
 ```
 
 
+## 2026-08-16 — Phase 3A HTF Root OB Core Smoke Test
+
+Status:
+
+```text
+PASS — Root core within implemented scope
+NOT A PROFITABILITY TEST
+```
+
+EA:
+
+```text
+MentorDeterministicV1EA
+latest compile-fix commit = 2b22d828773f8fb59e09e834dd7ff9a125ad784d
+internal build = 0.31
+phase = ROOT_CORE
+```
+
+Event CSV:
+
+```text
+rows = 668
+```
+
+Runtime regression counts:
+
+```text
+WAVE_CONFIRMED               = 252
+STRUCTURE_BOS                = 120
+STRUCTURE_INITIAL_BOS        = 28
+STRUCTURE_PROTECTED_BREAK    = 27
+
+LIQUIDITY_CREATED            = 93
+LIQUIDITY_SWEEP              = 28
+LIQUIDITY_BODY_DELIVERY      = 48
+```
+
+Root runtime:
+
+```text
+ROOT_CREATED      = 2
+ROOT_INVALIDATED  = 3
+ROOT_REJECTED     = 16
+ROOT_STATE        = 3
+```
+
+Rejections:
+
+```text
+NO_CAUSAL_CORRECTION_OR_MEANINGFUL_WAVE = 13
+SESSION_GAP_CROSSED                     = 3
+```
+
+Bootstrap Root state:
+
+```text
+H1  active = 0
+M30 active = 0
+M15 active = 2 short
+```
+
+Full Root lifecycle summary:
+
+```text
+roots_created               = 272
+root_price_invalidated      = 161
+root_structure_invalidated  = 110
+active_roots                = 1
+
+161 + 110 + 1 = 272
+```
+
+Automated causal checks:
+
+```text
+future available_at                              = 0
+invalid Root timeframe                           = 0
+wrong opposite-candle colour                     = 0
+wrong meaningful-wave side                       = 0
+origin outside origin window                     = 0
+scenario_authority != false                      = 0
+scenario_owner_id != UNBOUND                     = 0
+same_session_causal_path != true                 = 0
+linked structure event mismatch                  = 0
+invalid PRICE_INVALIDATED geometry               = 0
+STRUCTURE_INVALIDATED without protected break    = 0
+same-bar Root self-invalidation                  = 0
+unexpected rejection reason                      = 0
+rejection without matching structure event       = 0
+Phase 1 structure regression                     = 0
+Phase 2 liquidity regression                     = 0
+STRUCTURAL_REACTION creation                     = 0
+```
+
+Known completeness limitation:
+
+```text
+Independent enumeration/completeness of every
+"structurally meaningful internal swing" Root context
+has not yet been implemented/audited as a separate Root path.
+```
+
+Therefore:
+
+```text
+Phase 3A core = PASS
+Full Root-spec completeness = still open
+```
+
+Profitability:
+
+```text
+N/A
+```
+
+Reason:
+
+```text
+Scenario and order layers remain disabled.
+```
+
+
 ## Required reporting format
 
 For every significant V1 test record:

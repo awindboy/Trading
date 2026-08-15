@@ -15,21 +15,22 @@
 
 ## Current implementation checkpoint
 
-- Phase 1.1 structure/bootstrap smoke + causal log audit: PASS.
-- Phase 2 liquidity/sweep CSV audit: PASS.
-- Phase 2 H4 external-only invariant: PASS.
-- Phase 2 same-bar / single-consumption invariants: PASS.
-- `mt5/experts/MentorDeterministicV1EA.mq5` Phase 3A HTF Root OB core drafted.
-- Phase 3A compile/smoke verification: pending local MetaEditor/Strategy Tester.
-- Child refinement/scenario/order submission remain disabled.
+- Phase 1.1 structure/bootstrap causal audit: PASS.
+- Phase 2 liquidity/sweep causal audit: PASS.
+- Phase 3A HTF Root OB core causal audit: PASS within implemented scope.
+- Root lifecycle balance: `272 = 161 PRICE_INVALIDATED + 110 STRUCTURE_INVALIDATED + 1 ACTIVE`.
+- Full Root completeness for independent structurally-meaningful internal-swing contexts remains open.
+- Phase 3B targeted M30/M15/M5 causal refinement implemented.
+- Phase 3B compile/smoke verification: pending.
+- Scenario/source-contact/order authority remains disabled.
 
 ## P1 — Baseline implementation
 
 - [x] Market structure
 - [x] Liquidity — Phase 2 core verified
 - [ ] Objective selection
-- [ ] Root OB — Phase 3A implemented; compile/smoke pending
-- [ ] LTF refinement
+- [ ] Root OB — Phase 3A core verified; internal-swing completeness audit still open
+- [ ] LTF refinement — Phase 3B implemented; compile/smoke pending
 - [ ] Source touch
 - [x] Sweep — physical detector verified
 - [ ] M1 CHoCH
@@ -46,6 +47,7 @@
 
 ## P2 — Validation
 
+- [x] Phase 3A Root core smoke / causal CSV audit
 - [x] Phase 2 liquidity/sweep smoke / CSV causal audit
 - [x] Phase 1.1 structure smoke / causal log audit
 - [x] Compile Phase 1 with zero errors

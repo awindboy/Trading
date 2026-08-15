@@ -1,30 +1,30 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - Phase 3A HTF Root OB core         |
+//| Deterministic Mentor EA V1 - Phase 3B causal refinement core   |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| Phase 3A intentionally DOES NOT submit orders.                   |
-//| Structure + liquidity are verified. This build adds causal HTF   |
-//| Root OB discovery and Root lifecycle. Child refinement, scenario  |
-//| binding, M1 execution, and broker-order layers remain disabled.   |
+//| Phase 3B intentionally DOES NOT submit orders.                   |
+//| Structure/liquidity/Root core is verified. This build adds      |
+//| targeted causal LTF child refinement and final-source ownership. |
+//| M1 trigger/scenario/order layers remain disabled.                |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - Phase 3A HTF Root OB core"
+#property description "Mentor deterministic V1 EA - Phase 3B causal refinement core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
 input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
-input string InpEventCsvFile       = "mentor_v1_phase3a_events.csv";
+input string InpEventCsvFile       = "mentor_v1_phase3b_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
-// but are intentionally not active in this Phase 3A source-only build.
+// but are intentionally not active in this Phase 3B source-refinement build.
 
 enum V1InitState
   {
@@ -86,6 +86,16 @@ enum V1SourceState
    V1_SOURCE_INVALIDATED
   };
 
+enum V1RefinementStatus
+  {
+   V1_REFINE_WAITING=0,
+   V1_REFINE_READY,
+   V1_REFINE_NO_CHILD,
+   V1_REFINE_AMBIGUOUS_FIRST,
+   V1_REFINE_STOPPED_AMBIGUOUS,
+   V1_REFINE_INVALIDATED
+  };
+
 struct V1SourceZone
   {
    bool              valid;
@@ -114,6 +124,10 @@ struct V1SourceZone
    string            root_zone_id;
    string            scenario_owner_id;
 
+   string            containment_type;
+   int               linked_event_type;
+   datetime          linked_event_bar_open;
+
    int               strategy_state;
    datetime          invalidated_at;
    string            invalidation_reason;
@@ -136,6 +150,54 @@ struct V1WaveRef
    // Deterministic swing-origin window used by Root/child OB discovery.
    datetime   origin_window_start;
    datetime   origin_window_end;
+  };
+
+struct V1RefinementEvent
+  {
+   bool              valid;
+   int               event_type;
+   int               direction;
+   datetime          available_at;
+   MqlRates          break_bar;
+   V1WaveRef         meaningful_wave;
+   string            event_id;
+  };
+
+struct V1ChildCandidate
+  {
+   bool              valid;
+   ENUM_TIMEFRAMES   tf;
+   int               direction;
+
+   double            bottom;
+   double            top;
+   double            origin_open;
+   double            origin_close;
+
+   datetime          origin_time;
+   datetime          available_at;
+   datetime          origin_window_start;
+   datetime          origin_window_end;
+
+   V1WaveRef         meaningful_wave;
+   int               linked_event_type;
+   datetime          linked_event_bar_open;
+   double            linked_event_close;
+   string            linked_structure_event_id;
+   string            containment_type;
+  };
+
+struct V1RefinementLineage
+  {
+   bool              valid;
+   string            root_zone_id;
+   string            final_child_id;
+   string            path;
+   int               child_count;
+   int               status;
+   datetime          frozen_at;
+   datetime          snapshot_at;
+   string            stop_reason;
   };
 
 struct V1StructureState
@@ -232,6 +294,8 @@ ENUM_TIMEFRAMES g_timeframes[V1_TF_COUNT]=
 V1StructureState g_structure[V1_TF_COUNT];
 V1LiquidityPool g_liquidity[];
 V1SourceZone     g_sources[];
+V1RefinementLineage g_refinements[];
+string           g_pending_refinement_root_ids[];
 datetime         g_last_current_open[V1_TF_COUNT];
 bool             g_cursor_bar_pending[V1_TF_COUNT];
 datetime         g_history_first_date[V1_TF_COUNT];
@@ -251,6 +315,11 @@ long             g_liquidity_body_deliveries=0;
 long             g_roots_created=0;
 long             g_roots_price_invalidated=0;
 long             g_roots_structure_invalidated=0;
+long             g_children_created=0;
+long             g_children_invalidated=0;
+long             g_refinements_ready=0;
+long             g_refinements_no_child=0;
+long             g_refinements_ambiguous=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -344,6 +413,35 @@ string DirectionName(const int direction)
 bool IsRootTimeframeIndex(const int tf_index)
   {
    return (tf_index==1 || tf_index==2 || tf_index==3);
+  }
+
+bool IsRefinementTimeframe(const ENUM_TIMEFRAMES tf)
+  {
+   return (tf==PERIOD_M30 || tf==PERIOD_M15 || tf==PERIOD_M5);
+  }
+
+int TimeframeHierarchyRank(const ENUM_TIMEFRAMES tf)
+  {
+   if(tf==PERIOD_H1)  return 1;
+   if(tf==PERIOD_M30) return 2;
+   if(tf==PERIOD_M15) return 3;
+   if(tf==PERIOD_M5)  return 4;
+   if(tf==PERIOD_M1)  return 5;
+   return 0;
+  }
+
+string RefinementStatusName(const int status)
+  {
+   switch(status)
+     {
+      case V1_REFINE_WAITING:           return "WAITING";
+      case V1_REFINE_READY:             return "READY";
+      case V1_REFINE_NO_CHILD:          return "NO_CHILD";
+      case V1_REFINE_AMBIGUOUS_FIRST:   return "AMBIGUOUS_FIRST";
+      case V1_REFINE_STOPPED_AMBIGUOUS: return "STOPPED_AMBIGUOUS";
+      case V1_REFINE_INVALIDATED:       return "INVALIDATED";
+     }
+   return "UNKNOWN";
   }
 
 string InitStateName(const V1InitState state)
@@ -520,12 +618,19 @@ void InitializeAllStructureStates()
   {
    ArrayResize(g_liquidity,0);
    ArrayResize(g_sources,0);
+   ArrayResize(g_refinements,0);
+   ArrayResize(g_pending_refinement_root_ids,0);
    g_liquidity_created=0;
    g_liquidity_sweeps=0;
    g_liquidity_body_deliveries=0;
    g_roots_created=0;
    g_roots_price_invalidated=0;
    g_roots_structure_invalidated=0;
+   g_children_created=0;
+   g_children_invalidated=0;
+   g_refinements_ready=0;
+   g_refinements_no_child=0;
+   g_refinements_ambiguous=0;
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -1119,8 +1224,13 @@ void LogLiquiditySnapshot(const int tf_index,const datetime available_at)
            detail);
   }
 
+bool BuildRefinementForRoot(const string root_id,const datetime snapshot_at);
+void BuildRefinementsForActiveRoots(const datetime snapshot_at);
+void QueueRefinementRoot(const string root_id);
+void ProcessPendingRefinements(const datetime snapshot_at);
+
 //+------------------------------------------------------------------+
-//| Phase 3A Root/source working-set logic                           |
+//| Phase 3B Root/source working-set logic                           |
 //+------------------------------------------------------------------+
 int FindActiveSourceById(const string id)
   {
@@ -1419,12 +1529,19 @@ bool AddRootFromStructureEvent(const int tf_index,
    g_sources[n].parent_zone_id="";
    g_sources[n].root_zone_id=root_id;
    g_sources[n].scenario_owner_id="";
+   g_sources[n].containment_type="ROOT";
+   g_sources[n].linked_event_type=event_type;
+   g_sources[n].linked_event_bar_open=break_bar.time;
    g_sources[n].strategy_state=V1_SOURCE_ACTIVE;
    g_sources[n].invalidated_at=0;
    g_sources[n].invalidation_reason="";
 
    g_roots_created++;
    LogRootCreated(g_sources[n],event_type,break_bar);
+
+   if(!g_in_bootstrap_replay)
+      QueueRefinementRoot(root_id);
+
    return true;
   }
 
@@ -1452,6 +1569,160 @@ void LogRootInvalidated(const V1SourceZone &root,
            detail);
   }
 
+int FindRefinementByRootId(const string root_id)
+  {
+   for(int i=0;i<ArraySize(g_refinements);i++)
+      if(g_refinements[i].valid && g_refinements[i].root_zone_id==root_id)
+         return i;
+   return -1;
+  }
+
+void MarkRefinementInvalidated(const string root_id,
+                               const datetime available_at,
+                               const string reason)
+  {
+   int index=FindRefinementByRootId(root_id);
+   if(index<0)
+      return;
+
+   if(g_refinements[index].status==V1_REFINE_INVALIDATED)
+      return;
+
+   g_refinements[index].status=V1_REFINE_INVALIDATED;
+   g_refinements[index].snapshot_at=available_at;
+   g_refinements[index].stop_reason=reason;
+
+   LogLine("REFINEMENT_INVALIDATED",
+           "",
+           available_at,
+           root_id,
+           StringFormat("status=INVALIDATED final_child_id=%s child_count=%d reason=%s",
+                        g_refinements[index].final_child_id=="" ? "NA" : g_refinements[index].final_child_id,
+                        g_refinements[index].child_count,
+                        reason));
+  }
+
+void LogChildInvalidated(const V1SourceZone &child,
+                         const datetime available_at,
+                         const string reason,
+                         const MqlRates &bar)
+  {
+   string detail=StringFormat(
+      "kind=CHILD state=INVALIDATED direction=%s parent_zone_id=%s root_zone_id=%s bottom=%.10f top=%.10f close=%.10f bar_open=%s reason=%s linked_structure_event_id=%s origin_wave_id=%s containment_type=%s",
+      DirectionName(child.direction),
+      child.parent_zone_id,
+      child.root_zone_id,
+      child.bottom,
+      child.top,
+      bar.close,
+      TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+      reason,
+      child.linked_structure_event_id,
+      child.origin_wave_id,
+      child.containment_type);
+
+   LogLine("CHILD_INVALIDATED",
+           TfName(child.tf),
+           available_at,
+           child.id,
+           detail);
+  }
+
+void InvalidateChildDescendants(const string parent_id,
+                                const datetime available_at,
+                                const string reason,
+                                const MqlRates &bar)
+  {
+   bool found=true;
+   while(found)
+     {
+      found=false;
+
+      for(int i=0;i<ArraySize(g_sources);i++)
+        {
+         if(!g_sources[i].valid ||
+            g_sources[i].kind!=V1_SOURCE_CHILD ||
+            g_sources[i].strategy_state!=V1_SOURCE_ACTIVE ||
+            g_sources[i].parent_zone_id!=parent_id)
+            continue;
+
+         string child_id=g_sources[i].id;
+         string root_id=g_sources[i].root_zone_id;
+
+         InvalidateChildDescendants(child_id,available_at,reason,bar);
+
+         int current=FindActiveSourceById(child_id);
+         if(current>=0)
+           {
+            V1SourceZone audit=g_sources[current];
+            audit.strategy_state=V1_SOURCE_INVALIDATED;
+            audit.invalidated_at=available_at;
+            audit.invalidation_reason=reason;
+            LogChildInvalidated(audit,available_at,reason,bar);
+            RemoveSourceAt(current);
+            g_children_invalidated++;
+           }
+
+         MarkRefinementInvalidated(root_id,available_at,reason);
+         found=true;
+         break;
+        }
+     }
+  }
+
+void EvaluateChildPriceInvalidation(const int tf_index,
+                                    const MqlRates &bar,
+                                    const datetime available_at)
+  {
+   ENUM_TIMEFRAMES tf=g_timeframes[tf_index];
+
+   bool found=true;
+   while(found)
+     {
+      found=false;
+
+      for(int i=0;i<ArraySize(g_sources);i++)
+        {
+         if(!g_sources[i].valid ||
+            g_sources[i].kind!=V1_SOURCE_CHILD ||
+            g_sources[i].tf!=tf ||
+            g_sources[i].strategy_state!=V1_SOURCE_ACTIVE ||
+            g_sources[i].available_at>=available_at)
+            continue;
+
+         bool invalid=false;
+         if(g_sources[i].direction>0)
+            invalid=(bar.close<g_sources[i].bottom);
+         else if(g_sources[i].direction<0)
+            invalid=(bar.close>g_sources[i].top);
+
+         if(!invalid)
+            continue;
+
+         string child_id=g_sources[i].id;
+         string root_id=g_sources[i].root_zone_id;
+
+         InvalidateChildDescendants(child_id,available_at,"PARENT_INVALIDATED",bar);
+
+         int current=FindActiveSourceById(child_id);
+         if(current>=0)
+           {
+            V1SourceZone audit=g_sources[current];
+            audit.strategy_state=V1_SOURCE_INVALIDATED;
+            audit.invalidated_at=available_at;
+            audit.invalidation_reason="PRICE_INVALIDATED";
+            LogChildInvalidated(audit,available_at,"PRICE_INVALIDATED",bar);
+            RemoveSourceAt(current);
+            g_children_invalidated++;
+           }
+
+         MarkRefinementInvalidated(root_id,available_at,"PRICE_INVALIDATED");
+         found=true;
+         break;
+        }
+     }
+  }
+
 void InvalidateRootsForStructureOwner(const int tf_index,
                                       const datetime available_at,
                                       const MqlRates &bar)
@@ -1470,19 +1741,28 @@ void InvalidateRootsForStructureOwner(const int tf_index,
          continue;
         }
 
-      g_sources[i].strategy_state=V1_SOURCE_INVALIDATED;
-      g_sources[i].invalidated_at=available_at;
-      g_sources[i].invalidation_reason="STRUCTURE_INVALIDATED";
+      string root_id=g_sources[i].id;
+      InvalidateChildDescendants(root_id,
+                                 available_at,
+                                 "PARENT_INVALIDATED",
+                                 bar);
 
-      LogRootInvalidated(g_sources[i],
+      int current=FindActiveSourceById(root_id);
+      if(current<0)
+         continue;
+
+      g_sources[current].strategy_state=V1_SOURCE_INVALIDATED;
+      g_sources[current].invalidated_at=available_at;
+      g_sources[current].invalidation_reason="STRUCTURE_INVALIDATED";
+
+      LogRootInvalidated(g_sources[current],
                          available_at,
                          "STRUCTURE_INVALIDATED",
                          bar);
       g_roots_structure_invalidated++;
+      MarkRefinementInvalidated(root_id,available_at,"STRUCTURE_INVALIDATED");
 
-      // No active scenario/child references exist yet in Phase 3A.
-      // Audit remains in the event ledger, so the inactive object can leave RAM.
-      RemoveSourceAt(i);
+      RemoveSourceAt(current);
      }
   }
 
@@ -1520,17 +1800,28 @@ void EvaluateRootPriceInvalidation(const int tf_index,
          continue;
         }
 
-      g_sources[i].strategy_state=V1_SOURCE_INVALIDATED;
-      g_sources[i].invalidated_at=available_at;
-      g_sources[i].invalidation_reason="PRICE_INVALIDATED";
+      string root_id=g_sources[i].id;
+      InvalidateChildDescendants(root_id,
+                                 available_at,
+                                 "PARENT_INVALIDATED",
+                                 bar);
 
-      LogRootInvalidated(g_sources[i],
+      int current=FindActiveSourceById(root_id);
+      if(current<0)
+         continue;
+
+      g_sources[current].strategy_state=V1_SOURCE_INVALIDATED;
+      g_sources[current].invalidated_at=available_at;
+      g_sources[current].invalidation_reason="PRICE_INVALIDATED";
+
+      LogRootInvalidated(g_sources[current],
                          available_at,
                          "PRICE_INVALIDATED",
                          bar);
       g_roots_price_invalidated++;
+      MarkRefinementInvalidated(root_id,available_at,"PRICE_INVALIDATED");
 
-      RemoveSourceAt(i);
+      RemoveSourceAt(current);
      }
   }
 
@@ -1562,7 +1853,7 @@ void LogRootSnapshot(const int tf_index,const datetime available_at)
    int shorts=CountActiveRoots(g_timeframes[tf_index],-1);
 
    string detail=StringFormat(
-      "active_total=%d long=%d short=%d child_count=0 refinement_status=WAITING_PHASE3B",
+      "active_total=%d long=%d short=%d refinement_status=SEE_REFINEMENT_STATE",
       longs+shorts,
       longs,
       shorts);
@@ -2100,6 +2391,956 @@ void UpdateDirectionalRanges(V1StructureState &s,const MqlRates &bar)
      }
   }
 
+
+//+------------------------------------------------------------------+
+//| Phase 3B targeted causal LTF refinement                          |
+//+------------------------------------------------------------------+
+void ClearRefinementEvent(V1RefinementEvent &event)
+  {
+   event.valid=false;
+   event.event_type=V1_EVENT_NONE;
+   event.direction=0;
+   event.available_at=0;
+   ZeroMemory(event.break_bar);
+   ClearWave(event.meaningful_wave);
+   event.event_id="";
+  }
+
+void ClearChildCandidate(V1ChildCandidate &candidate)
+  {
+   candidate.valid=false;
+   candidate.tf=PERIOD_CURRENT;
+   candidate.direction=0;
+   candidate.bottom=0.0;
+   candidate.top=0.0;
+   candidate.origin_open=0.0;
+   candidate.origin_close=0.0;
+   candidate.origin_time=0;
+   candidate.available_at=0;
+   candidate.origin_window_start=0;
+   candidate.origin_window_end=0;
+   ClearWave(candidate.meaningful_wave);
+   candidate.linked_event_type=V1_EVENT_NONE;
+   candidate.linked_event_bar_open=0;
+   candidate.linked_event_close=0.0;
+   candidate.linked_structure_event_id="";
+   candidate.containment_type="";
+  }
+
+ENUM_TIMEFRAMES RefinementTimeframeByRank(const int rank)
+  {
+   if(rank==2) return PERIOD_M30;
+   if(rank==3) return PERIOD_M15;
+   if(rank==4) return PERIOD_M5;
+   return PERIOD_CURRENT;
+  }
+
+bool ConfirmWaveQuiet(V1StructureState &state,
+                      const MqlRates &bar,
+                      const datetime available_at)
+  {
+   if(state.recent_count<2)
+      return false;
+
+   MqlRates first=state.recent0;
+   MqlRates second=state.recent1;
+   MqlRates third=bar;
+
+   int c1=CandleColour(first);
+   int c2=CandleColour(second);
+   int c3=CandleColour(third);
+
+   int side=V1_SIDE_NONE;
+   if(c1==-1 && c2==-1 && c3==-1)
+      side=V1_SIDE_HIGH;
+   else if(c1==1 && c2==1 && c3==1)
+      side=V1_SIDE_LOW;
+
+   if(side==V1_SIDE_NONE)
+      return false;
+
+   if(state.last_wave.valid && state.last_wave.side==side)
+      return false;
+
+   V1WaveRef wave;
+   if(!BuildWaveFromLeg(state,side,third,available_at,wave))
+      return false;
+
+   state.confirmed_waves++;
+   CopyWave(wave,state.last_wave);
+
+   if(state.trend==V1_TREND_NEUTRAL ||
+      state.trend==V1_TREND_TRANSITION)
+      UpdateNeutralReferences(state,wave);
+   else
+      UpdateDirectionalWaveRoles(state,wave);
+
+   state.leg_initialized=true;
+   state.leg_start_time=wave.occurred_at+state.seconds;
+   return true;
+  }
+
+bool EvaluateLocalRefinementBreak(V1StructureState &state,
+                                  const MqlRates &bar,
+                                  const datetime available_at,
+                                  V1RefinementEvent &event)
+  {
+   ClearRefinementEvent(event);
+
+   if(state.trend==V1_TREND_BULLISH)
+     {
+      if(state.protected_low.valid &&
+         bar.close<state.protected_low.price)
+        {
+         EnterTransition(state,-1,available_at);
+         return false;
+        }
+
+      if(state.external_high.valid &&
+         bar.close>state.external_high.price)
+        {
+         V1WaveRef broken,root_origin;
+         CopyWave(state.external_high,broken);
+         CopyWave(broken,state.break_reference);
+         ClearWave(root_origin);
+
+         if(state.correction_low.valid)
+           {
+            CopyWave(state.correction_low,root_origin);
+            CopyWave(state.correction_low,state.protected_low);
+           }
+
+         if(state.protected_low.valid)
+            CopyWave(state.protected_low,state.external_low);
+
+         state.range_low=
+            state.protected_low.valid ? state.protected_low.price : state.range_low;
+         BuildDeliveryExtreme(state,
+                              V1_SIDE_HIGH,
+                              bar,
+                              available_at,
+                              state.external_high);
+         state.range_high=state.external_high.price;
+         ClearWave(state.correction_low);
+
+         if(root_origin.valid && root_origin.is_wave)
+           {
+            event.valid=true;
+            event.event_type=V1_EVENT_BOS;
+            event.direction=1;
+            event.available_at=available_at;
+            event.break_bar=bar;
+            CopyWave(root_origin,event.meaningful_wave);
+            event.event_id=BuildStructureEventId(state,V1_EVENT_BOS,bar);
+            return true;
+           }
+
+         return false;
+        }
+     }
+   else if(state.trend==V1_TREND_BEARISH)
+     {
+      if(state.protected_high.valid &&
+         bar.close>state.protected_high.price)
+        {
+         EnterTransition(state,1,available_at);
+         return false;
+        }
+
+      if(state.external_low.valid &&
+         bar.close<state.external_low.price)
+        {
+         V1WaveRef broken,root_origin;
+         CopyWave(state.external_low,broken);
+         CopyWave(broken,state.break_reference);
+         ClearWave(root_origin);
+
+         if(state.correction_high.valid)
+           {
+            CopyWave(state.correction_high,root_origin);
+            CopyWave(state.correction_high,state.protected_high);
+           }
+
+         if(state.protected_high.valid)
+            CopyWave(state.protected_high,state.external_high);
+
+         state.range_high=
+            state.protected_high.valid ? state.protected_high.price : state.range_high;
+         BuildDeliveryExtreme(state,
+                              V1_SIDE_LOW,
+                              bar,
+                              available_at,
+                              state.external_low);
+         state.range_low=state.external_low.price;
+         ClearWave(state.correction_high);
+
+         if(root_origin.valid && root_origin.is_wave)
+           {
+            event.valid=true;
+            event.event_type=V1_EVENT_BOS;
+            event.direction=-1;
+            event.available_at=available_at;
+            event.break_bar=bar;
+            CopyWave(root_origin,event.meaningful_wave);
+            event.event_id=BuildStructureEventId(state,V1_EVENT_BOS,bar);
+            return true;
+           }
+
+         return false;
+        }
+     }
+   else
+     {
+      if(!state.neutral_high.valid || !state.neutral_low.valid)
+         return false;
+
+      if(bar.close>state.neutral_high.price)
+        {
+         V1WaveRef broken,protected_ref;
+         CopyWave(state.neutral_high,broken);
+         CopyWave(state.neutral_low,protected_ref);
+
+         PromoteInitialTrend(state,1,broken,bar,available_at);
+
+         event.valid=true;
+         event.event_type=V1_EVENT_INITIAL_BOS;
+         event.direction=1;
+         event.available_at=available_at;
+         event.break_bar=bar;
+         CopyWave(protected_ref,event.meaningful_wave);
+         event.event_id=
+            BuildStructureEventId(state,V1_EVENT_INITIAL_BOS,bar);
+         return true;
+        }
+
+      if(bar.close<state.neutral_low.price)
+        {
+         V1WaveRef broken,protected_ref;
+         CopyWave(state.neutral_low,broken);
+         CopyWave(state.neutral_high,protected_ref);
+
+         PromoteInitialTrend(state,-1,broken,bar,available_at);
+
+         event.valid=true;
+         event.event_type=V1_EVENT_INITIAL_BOS;
+         event.direction=-1;
+         event.available_at=available_at;
+         event.break_bar=bar;
+         CopyWave(protected_ref,event.meaningful_wave);
+         event.event_id=
+            BuildStructureEventId(state,V1_EVENT_INITIAL_BOS,bar);
+         return true;
+        }
+     }
+
+   return false;
+  }
+
+bool GeometryActiveThrough(const ENUM_TIMEFRAMES tf,
+                           const int direction,
+                           const double bottom,
+                           const double top,
+                           const datetime source_available_at,
+                           const datetime through_at)
+  {
+   if(through_at<=source_available_at)
+      return true;
+
+   MqlRates bars[];
+   ArraySetAsSeries(bars,false);
+
+   ResetLastError();
+   int copied=CopyRates(_Symbol,
+                        tf,
+                        source_available_at,
+                        through_at,
+                        bars);
+   if(copied<0)
+     {
+      LogLine("SOURCE_DETECTOR_ERROR",
+              TfName(tf),
+              through_at,
+              "",
+              StringFormat("reason=REFINEMENT_VALIDITY_COPYRATES_FAILED from=%s to=%s error=%d",
+                           TimeToString(source_available_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(through_at,TIME_DATE|TIME_SECONDS),
+                           GetLastError()));
+      return false;
+     }
+
+   int seconds=PeriodSeconds(tf);
+   for(int i=0;i<copied;i++)
+     {
+      datetime close_at=bars[i].time+seconds;
+      if(close_at<=source_available_at || close_at>through_at)
+         continue;
+
+      if(direction>0 && bars[i].close<bottom)
+         return false;
+
+      if(direction<0 && bars[i].close>top)
+         return false;
+     }
+
+   return true;
+  }
+
+bool SameChildCandidate(const V1ChildCandidate &a,
+                        const V1ChildCandidate &b)
+  {
+   double epsilon=MathMax(_Point,1.0e-10)*0.1;
+   return (a.tf==b.tf &&
+           a.direction==b.direction &&
+           a.origin_time==b.origin_time &&
+           MathAbs(a.bottom-b.bottom)<=epsilon &&
+           MathAbs(a.top-b.top)<=epsilon);
+  }
+
+void AddChildCandidateUnique(V1ChildCandidate &candidates[],
+                             const V1ChildCandidate &candidate)
+  {
+   for(int i=0;i<ArraySize(candidates);i++)
+     {
+      if(!SameChildCandidate(candidates[i],candidate))
+         continue;
+
+      // The same source candle can create more than one later structure
+      // delivery event. Its first causal confirmation owns availability.
+      if(candidate.available_at<candidates[i].available_at)
+         candidates[i]=candidate;
+      return;
+     }
+
+   int n=ArraySize(candidates);
+   if(ArrayResize(candidates,n+1,32)<0)
+      return;
+
+   candidates[n]=candidate;
+  }
+
+bool CandidateEventAdjacent(const V1SourceZone &parent,
+                            const V1ChildCandidate &candidate)
+  {
+   if(candidate.origin_time<parent.origin_time)
+      return false;
+
+   if(parent.origin_window_end>0 &&
+      candidate.origin_time>parent.origin_window_end)
+      return false;
+
+   if(candidate.meaningful_wave.origin_window_start<
+      parent.origin_window_start)
+      return false;
+
+   if(candidate.available_at>parent.available_at)
+      return false;
+
+   return true;
+  }
+
+bool DiscoverChildCandidates(const V1SourceZone &parent,
+                             const ENUM_TIMEFRAMES child_tf,
+                             const datetime lineage_freeze_at,
+                             V1ChildCandidate &candidates[])
+  {
+   ArrayResize(candidates,0);
+
+   if(!IsRefinementTimeframe(child_tf))
+      return true;
+
+   int parent_rank=TimeframeHierarchyRank(parent.tf);
+   int child_rank=TimeframeHierarchyRank(child_tf);
+   if(child_rank<=parent_rank)
+      return true;
+
+   datetime scan_start=parent.origin_window_start;
+   if(scan_start<=0)
+      scan_start=parent.origin_time;
+
+   datetime scan_end=parent.available_at;
+   if(scan_end<=scan_start)
+      return true;
+
+   MqlRates bars[];
+   ArraySetAsSeries(bars,false);
+
+   ResetLastError();
+   int copied=CopyRates(_Symbol,child_tf,scan_start,scan_end,bars);
+   if(copied<=0)
+     {
+      LogLine("SOURCE_DETECTOR_ERROR",
+              TfName(child_tf),
+              lineage_freeze_at,
+              parent.id,
+              StringFormat("reason=REFINEMENT_REPLAY_COPYRATES_FAILED parent=%s start=%s end=%s error=%d",
+                           parent.id,
+                           TimeToString(scan_start,TIME_DATE|TIME_SECONDS),
+                           TimeToString(scan_end,TIME_DATE|TIME_SECONDS),
+                           GetLastError()));
+      return false;
+     }
+
+   V1StructureState local_state;
+   ResetStructureState(local_state,child_tf);
+
+   int seconds=PeriodSeconds(child_tf);
+
+   for(int i=0;i<copied;i++)
+     {
+      datetime available=bars[i].time+seconds;
+      if(available>parent.available_at)
+         continue;
+
+      local_state.processed_bars++;
+      EnsureLegStart(local_state,bars[i]);
+
+      V1RefinementEvent event;
+      bool has_event=
+         EvaluateLocalRefinementBreak(local_state,
+                                      bars[i],
+                                      available,
+                                      event);
+
+      UpdateDirectionalRanges(local_state,bars[i]);
+      ConfirmWaveQuiet(local_state,bars[i],available);
+      ShiftRecentBars(local_state,bars[i]);
+
+      if(!has_event ||
+         !event.valid ||
+         event.direction!=parent.direction)
+         continue;
+
+      MqlRates origin_bar;
+      ZeroMemory(origin_bar);
+
+      if(!FindLastOppositeCandleInSwingOrigin(child_tf,
+                                              event.direction,
+                                              event.meaningful_wave,
+                                              origin_bar))
+         continue;
+
+      // Frozen same-price-event time relation.
+      if(origin_bar.time<parent.origin_time ||
+         (parent.origin_window_end>0 &&
+          origin_bar.time>parent.origin_window_end) ||
+         origin_bar.time>event.available_at ||
+         event.available_at>parent.available_at)
+         continue;
+
+      if(SourcePathHasSessionGap(child_tf,
+                                 origin_bar.time,
+                                 event.break_bar.time))
+         continue;
+
+      V1ChildCandidate candidate;
+      ClearChildCandidate(candidate);
+
+      candidate.valid=true;
+      candidate.tf=child_tf;
+      candidate.direction=event.direction;
+      candidate.bottom=origin_bar.low;
+      candidate.top=origin_bar.high;
+      candidate.origin_open=origin_bar.open;
+      candidate.origin_close=origin_bar.close;
+      candidate.origin_time=origin_bar.time;
+      candidate.available_at=event.available_at;
+      candidate.origin_window_start=
+         event.meaningful_wave.origin_window_start;
+      candidate.origin_window_end=
+         event.meaningful_wave.origin_window_end;
+      CopyWave(event.meaningful_wave,candidate.meaningful_wave);
+      candidate.linked_event_type=event.event_type;
+      candidate.linked_event_bar_open=event.break_bar.time;
+      candidate.linked_event_close=event.break_bar.close;
+      candidate.linked_structure_event_id=event.event_id;
+
+      bool contained=
+         (parent.bottom<=candidate.bottom &&
+          candidate.top<=parent.top);
+
+      if(contained)
+         candidate.containment_type="CONTAINED";
+      else if(CandidateEventAdjacent(parent,candidate))
+         candidate.containment_type="EVENT_ADJACENT";
+      else
+         continue;
+
+      // Candidate must still be structurally ACTIVE when the Root lineage
+      // is first frozen. Later invalidation must not resolve an ambiguity
+      // retrospectively.
+      if(!GeometryActiveThrough(child_tf,
+                                candidate.direction,
+                                candidate.bottom,
+                                candidate.top,
+                                candidate.available_at,
+                                lineage_freeze_at))
+         continue;
+
+      AddChildCandidateUnique(candidates,candidate);
+     }
+
+   return true;
+  }
+
+string BuildChildId(const V1SourceZone &parent,
+                    const V1ChildCandidate &candidate)
+  {
+   return StringFormat("%s:child:%s:%I64d:%s:parent:%s",
+                       TfName(candidate.tf),
+                       DirectionName(candidate.direction),
+                       (long)candidate.origin_time,
+                       candidate.linked_structure_event_id,
+                       parent.id);
+  }
+
+void CandidateToSourcePreview(const V1SourceZone &parent,
+                              const V1SourceZone &root,
+                              const V1ChildCandidate &candidate,
+                              V1SourceZone &child)
+  {
+   child.valid=true;
+   child.id=BuildChildId(parent,candidate);
+   child.kind=V1_SOURCE_CHILD;
+   child.tf=candidate.tf;
+   child.direction=candidate.direction;
+
+   child.bottom=candidate.bottom;
+   child.top=candidate.top;
+   child.origin_open=candidate.origin_open;
+   child.origin_close=candidate.origin_close;
+
+   child.origin_index=iBarShift(_Symbol,
+                                candidate.tf,
+                                candidate.origin_time,
+                                true);
+   child.origin_time=candidate.origin_time;
+   child.occurred_at=candidate.origin_time;
+   child.available_at=candidate.available_at;
+   child.origin_window_start=candidate.origin_window_start;
+   child.origin_window_end=candidate.origin_window_end;
+
+   child.origin_wave_id=candidate.meaningful_wave.id;
+   child.meaningful_swing_id=candidate.meaningful_wave.id;
+   child.linked_structure_event_id=
+      candidate.linked_structure_event_id;
+
+   child.parent_zone_id=parent.id;
+   child.root_zone_id=root.id;
+   child.scenario_owner_id="";
+
+   child.containment_type=candidate.containment_type;
+   child.linked_event_type=candidate.linked_event_type;
+   child.linked_event_bar_open=
+      candidate.linked_event_bar_open;
+
+   child.strategy_state=V1_SOURCE_ACTIVE;
+   child.invalidated_at=0;
+   child.invalidation_reason="";
+  }
+
+void LogChildCreated(const V1SourceZone &child,
+                     const datetime lineage_frozen_at)
+  {
+   string detail=StringFormat(
+      "kind=CHILD state=ACTIVE direction=%s parent_zone_id=%s root_zone_id=%s bottom=%.10f top=%.10f origin_open=%.10f origin_close=%.10f origin_time=%s origin_window_start=%s origin_window_end=%s origin_wave_id=%s linked_event_type=%s linked_structure_event_id=%s linked_event_bar_open=%s containment_type=%s child_available_at=%s lineage_frozen_at=%s scenario_owner_id=UNBOUND scenario_authority=false",
+      DirectionName(child.direction),
+      child.parent_zone_id,
+      child.root_zone_id,
+      child.bottom,
+      child.top,
+      child.origin_open,
+      child.origin_close,
+      TimeToString(child.origin_time,TIME_DATE|TIME_SECONDS),
+      TimeToString(child.origin_window_start,TIME_DATE|TIME_SECONDS),
+      TimeToString(child.origin_window_end,TIME_DATE|TIME_SECONDS),
+      child.origin_wave_id,
+      EventName(child.linked_event_type),
+      child.linked_structure_event_id,
+      TimeToString(child.linked_event_bar_open,TIME_DATE|TIME_SECONDS),
+      child.containment_type,
+      TimeToString(child.available_at,TIME_DATE|TIME_SECONDS),
+      TimeToString(lineage_frozen_at,TIME_DATE|TIME_SECONDS));
+
+   LogLine("CHILD_CREATED",
+           TfName(child.tf),
+           lineage_frozen_at,
+           child.id,
+           detail);
+  }
+
+bool AddActiveChildSource(const V1SourceZone &child,
+                          const datetime lineage_frozen_at)
+  {
+   if(FindActiveSourceById(child.id)>=0)
+      return true;
+
+   int n=ArraySize(g_sources);
+   if(ArrayResize(g_sources,n+1,128)<0)
+     {
+      LogLine("SOURCE_DETECTOR_ERROR",
+              TfName(child.tf),
+              lineage_frozen_at,
+              child.root_zone_id,
+              "reason=CHILD_SOURCE_ARRAY_RESIZE_FAILED");
+      return false;
+     }
+
+   g_sources[n]=child;
+   g_children_created++;
+   LogChildCreated(g_sources[n],lineage_frozen_at);
+   return true;
+  }
+
+void StoreRefinementLineage(const V1RefinementLineage &lineage)
+  {
+   int existing=FindRefinementByRootId(lineage.root_zone_id);
+   if(existing>=0)
+     {
+      g_refinements[existing]=lineage;
+      return;
+     }
+
+   int n=ArraySize(g_refinements);
+   if(ArrayResize(g_refinements,n+1,64)<0)
+      return;
+
+   g_refinements[n]=lineage;
+  }
+
+void LogRefinementFrozen(const V1RefinementLineage &lineage)
+  {
+   string detail=StringFormat(
+      "status=%s child_count=%d final_child_id=%s path=%s frozen_at=%s snapshot_at=%s stop_reason=%s scenario_authority=false",
+      RefinementStatusName(lineage.status),
+      lineage.child_count,
+      lineage.final_child_id=="" ? "NA" : lineage.final_child_id,
+      lineage.path=="" ? lineage.root_zone_id : lineage.path,
+      TimeToString(lineage.frozen_at,TIME_DATE|TIME_SECONDS),
+      TimeToString(lineage.snapshot_at,TIME_DATE|TIME_SECONDS),
+      lineage.stop_reason=="" ? "NA" : lineage.stop_reason);
+
+   LogLine("REFINEMENT_FROZEN",
+           "",
+           lineage.frozen_at,
+           lineage.root_zone_id,
+           detail);
+  }
+
+bool BuildRefinementForRoot(const string root_id,
+                            const datetime snapshot_at)
+  {
+   if(FindRefinementByRootId(root_id)>=0)
+      return true;
+
+   int root_index=FindActiveSourceById(root_id);
+   if(root_index<0 ||
+      g_sources[root_index].kind!=V1_SOURCE_ROOT)
+      return false;
+
+   V1SourceZone root=g_sources[root_index];
+   datetime freeze_at=root.available_at;
+   datetime snapshot=(snapshot_at>freeze_at ? snapshot_at : freeze_at);
+
+   V1SourceZone selected_sources[];
+   ArrayResize(selected_sources,0);
+
+   V1SourceZone current_parent=root;
+
+   int status=V1_REFINE_WAITING;
+   string stop_reason="";
+
+   int start_rank=TimeframeHierarchyRank(root.tf)+1;
+
+   for(int rank=start_rank;rank<=4;rank++)
+     {
+      ENUM_TIMEFRAMES child_tf=RefinementTimeframeByRank(rank);
+      if(child_tf==PERIOD_CURRENT)
+         continue;
+
+      V1ChildCandidate candidates[];
+      ArrayResize(candidates,0);
+
+      if(!DiscoverChildCandidates(current_parent,
+                                  child_tf,
+                                  freeze_at,
+                                  candidates))
+        {
+         status=(ArraySize(selected_sources)==0 ?
+                 V1_REFINE_NO_CHILD :
+                 V1_REFINE_READY);
+         stop_reason="REFINEMENT_REPLAY_ERROR_FAIL_CLOSED";
+         break;
+        }
+
+      int contained_count=0;
+      for(int i=0;i<ArraySize(candidates);i++)
+         if(candidates[i].containment_type=="CONTAINED")
+            contained_count++;
+
+      V1ChildCandidate preferred[];
+      ArrayResize(preferred,0);
+
+      for(int i=0;i<ArraySize(candidates);i++)
+        {
+         if(contained_count>0 &&
+            candidates[i].containment_type!="CONTAINED")
+            continue;
+
+         int n=ArraySize(preferred);
+         if(ArrayResize(preferred,n+1,16)<0)
+            continue;
+         preferred[n]=candidates[i];
+        }
+
+      if(ArraySize(preferred)==0)
+         continue;
+
+      if(ArraySize(preferred)>1)
+        {
+         if(ArraySize(selected_sources)==0)
+           {
+            status=V1_REFINE_AMBIGUOUS_FIRST;
+            stop_reason=StringFormat("AMBIGUOUS_%s_CHILD_COUNT_%d",
+                                     TfName(child_tf),
+                                     ArraySize(preferred));
+            g_refinements_ambiguous++;
+           }
+         else
+           {
+            status=V1_REFINE_STOPPED_AMBIGUOUS;
+            stop_reason=StringFormat("STOPPED_AT_AMBIGUOUS_%s_CHILD_COUNT_%d",
+                                     TfName(child_tf),
+                                     ArraySize(preferred));
+            g_refinements_ambiguous++;
+           }
+         break;
+        }
+
+      V1SourceZone preview;
+      CandidateToSourcePreview(current_parent,
+                               root,
+                               preferred[0],
+                               preview);
+
+      int n=ArraySize(selected_sources);
+      if(ArrayResize(selected_sources,n+1,8)<0)
+        {
+         status=(n==0 ? V1_REFINE_NO_CHILD : V1_REFINE_READY);
+         stop_reason="SELECTED_CHILD_ARRAY_RESIZE_FAILED";
+         break;
+        }
+
+      selected_sources[n]=preview;
+      current_parent=preview;
+     }
+
+   if(status==V1_REFINE_WAITING)
+     {
+      if(ArraySize(selected_sources)==0)
+        {
+         status=V1_REFINE_NO_CHILD;
+         stop_reason="NO_CAUSAL_LOWER_TF_CHILD";
+        }
+      else
+         status=V1_REFINE_READY;
+     }
+
+   string path=root.id;
+   string final_child_id="";
+
+   for(int i=0;i<ArraySize(selected_sources);i++)
+     {
+      path=path+">"+selected_sources[i].id;
+      final_child_id=selected_sources[i].id;
+     }
+
+   // Bootstrap snapshot can be later than the historical lineage-freeze time.
+   // Do not let a child that was later price-invalidated remain in the active
+   // working set. This does not use later invalidation to resolve ambiguity;
+   // ambiguity was already decided using freeze_at above.
+   bool active_at_snapshot=true;
+   for(int i=0;i<ArraySize(selected_sources);i++)
+     {
+      if(!GeometryActiveThrough(selected_sources[i].tf,
+                                selected_sources[i].direction,
+                                selected_sources[i].bottom,
+                                selected_sources[i].top,
+                                freeze_at,
+                                snapshot))
+        {
+         active_at_snapshot=false;
+         stop_reason="SELECTED_CHILD_INVALID_AT_SNAPSHOT";
+         status=V1_REFINE_INVALIDATED;
+         break;
+        }
+     }
+
+   if(active_at_snapshot &&
+      ArraySize(selected_sources)>0 &&
+      status!=V1_REFINE_AMBIGUOUS_FIRST &&
+      status!=V1_REFINE_NO_CHILD)
+     {
+      for(int i=0;i<ArraySize(selected_sources);i++)
+        {
+         if(!AddActiveChildSource(selected_sources[i],freeze_at))
+           {
+            status=V1_REFINE_INVALIDATED;
+            stop_reason="CHILD_PUBLICATION_FAILED";
+            active_at_snapshot=false;
+            break;
+           }
+
+        }
+     }
+
+   V1RefinementLineage lineage;
+   lineage.valid=true;
+   lineage.root_zone_id=root.id;
+   lineage.final_child_id=final_child_id;
+   lineage.path=path;
+   lineage.child_count=ArraySize(selected_sources);
+   lineage.status=status;
+   lineage.frozen_at=freeze_at;
+   lineage.snapshot_at=snapshot;
+   lineage.stop_reason=stop_reason;
+
+   StoreRefinementLineage(lineage);
+
+   if(status==V1_REFINE_READY ||
+      status==V1_REFINE_STOPPED_AMBIGUOUS)
+      g_refinements_ready++;
+   else if(status==V1_REFINE_NO_CHILD)
+      g_refinements_no_child++;
+   else if(status==V1_REFINE_AMBIGUOUS_FIRST)
+     {
+      // Counter already incremented above.
+     }
+
+   LogRefinementFrozen(lineage);
+   return true;
+  }
+
+void BuildRefinementsForActiveRoots(const datetime snapshot_at)
+  {
+   string root_ids[];
+   ArrayResize(root_ids,0);
+
+   for(int i=0;i<ArraySize(g_sources);i++)
+     {
+      if(!g_sources[i].valid ||
+         g_sources[i].kind!=V1_SOURCE_ROOT ||
+         g_sources[i].strategy_state!=V1_SOURCE_ACTIVE)
+         continue;
+
+      int n=ArraySize(root_ids);
+      if(ArrayResize(root_ids,n+1,32)<0)
+         continue;
+      root_ids[n]=g_sources[i].id;
+     }
+
+   for(int i=0;i<ArraySize(root_ids);i++)
+      BuildRefinementForRoot(root_ids[i],snapshot_at);
+  }
+
+void QueueRefinementRoot(const string root_id)
+  {
+   if(root_id=="")
+      return;
+
+   for(int i=0;i<ArraySize(g_pending_refinement_root_ids);i++)
+      if(g_pending_refinement_root_ids[i]==root_id)
+         return;
+
+   int n=ArraySize(g_pending_refinement_root_ids);
+   if(ArrayResize(g_pending_refinement_root_ids,n+1,16)<0)
+      return;
+
+   g_pending_refinement_root_ids[n]=root_id;
+  }
+
+void ProcessPendingRefinements(const datetime snapshot_at)
+  {
+   if(ArraySize(g_pending_refinement_root_ids)==0)
+      return;
+
+   string pending[];
+   ArrayResize(pending,ArraySize(g_pending_refinement_root_ids));
+
+   for(int i=0;i<ArraySize(g_pending_refinement_root_ids);i++)
+      pending[i]=g_pending_refinement_root_ids[i];
+
+   ArrayResize(g_pending_refinement_root_ids,0);
+
+   for(int i=0;i<ArraySize(pending);i++)
+      BuildRefinementForRoot(pending[i],snapshot_at);
+  }
+
+int CountActiveChildren(const ENUM_TIMEFRAMES tf)
+  {
+   int count=0;
+   for(int i=0;i<ArraySize(g_sources);i++)
+     {
+      if(g_sources[i].valid &&
+         g_sources[i].kind==V1_SOURCE_CHILD &&
+         g_sources[i].strategy_state==V1_SOURCE_ACTIVE &&
+         g_sources[i].tf==tf)
+         count++;
+     }
+   return count;
+  }
+
+void LogRefinementSnapshot(const int tf_index,
+                           const datetime available_at)
+  {
+   if(!IsRootTimeframeIndex(tf_index))
+      return;
+
+   int ready=0;
+   int no_child=0;
+   int ambiguous=0;
+   int invalidated=0;
+
+   ENUM_TIMEFRAMES root_tf=g_timeframes[tf_index];
+
+   for(int i=0;i<ArraySize(g_refinements);i++)
+     {
+      if(!g_refinements[i].valid)
+         continue;
+
+      int root_index=FindActiveSourceById(g_refinements[i].root_zone_id);
+      if(root_index<0 ||
+         g_sources[root_index].kind!=V1_SOURCE_ROOT ||
+         g_sources[root_index].tf!=root_tf)
+         continue;
+
+      if(g_refinements[i].status==V1_REFINE_READY ||
+         g_refinements[i].status==V1_REFINE_STOPPED_AMBIGUOUS)
+         ready++;
+      else if(g_refinements[i].status==V1_REFINE_NO_CHILD)
+         no_child++;
+      else if(g_refinements[i].status==V1_REFINE_AMBIGUOUS_FIRST)
+         ambiguous++;
+      else if(g_refinements[i].status==V1_REFINE_INVALIDATED)
+         invalidated++;
+     }
+
+   string detail=StringFormat(
+      "ready=%d no_child=%d ambiguous_first=%d invalidated=%d active_m30_children=%d active_m15_children=%d active_m5_children=%d structural_reaction=DEFERRED_TO_REFINED_SOURCE_REACTION_REPLAY",
+      ready,
+      no_child,
+      ambiguous,
+      invalidated,
+      CountActiveChildren(PERIOD_M30),
+      CountActiveChildren(PERIOD_M15),
+      CountActiveChildren(PERIOD_M5));
+
+   LogLine("REFINEMENT_STATE",
+           TfName(root_tf),
+           available_at,
+           "",
+           detail);
+  }
+
 void ProcessClosedBar(const int tf_index,
                       const MqlRates &bar,
                       const datetime available_at)
@@ -2118,6 +3359,7 @@ void ProcessClosedBar(const int tf_index,
    // can never self-sweep from the bar's already-completed wick.
    EvaluateLiquidityConsumption(tf_index,bar,available_at);
    EvaluateRootPriceInvalidation(tf_index,bar,available_at);
+   EvaluateChildPriceInvalidation(tf_index,bar,available_at);
 
    EvaluateExistingStructureBreaks(tf_index,
                                    g_structure[tf_index],
@@ -2212,13 +3454,16 @@ bool BootstrapStructureCore()
      }
 
    g_in_bootstrap_replay=false;
+
+   // Hierarchical bootstrap: first reconstruct active H1/M30/M15 Roots,
+   // then perform targeted lower-TF replay only for those surviving Roots.
+   BuildRefinementsForActiveRoots(now);
+
    g_init_state=V1_INIT_ACTIVE_MAP;
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
-   // Phase 3A reconstructs active H1/M30/M15 Root OBs on the same causal
-   // replay. Child refinement and scenario binding are intentionally later.
    g_init_state=V1_INIT_SOURCE_CONTEXT;
-   LogLine("INIT_STATE","",now,"","PHASE3A_ROOT_READY_CHILD_REFINEMENT_NOT_YET_ATTACHED");
+   LogLine("INIT_STATE","",now,"","PHASE3B_REFINEMENT_READY_SCENARIO_BINDING_NOT_YET_ATTACHED");
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -2257,7 +3502,7 @@ bool BootstrapStructureCore()
       CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
 
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_PHASE3A_ROOT ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_roots=%d",
+           StringFormat("READY_PHASE3B_REFINEMENT ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d",
                         TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
                         h4_long_horizon_count,
                         ArraySize(g_liquidity),
@@ -2268,6 +3513,7 @@ bool BootstrapStructureCore()
       LogStateSnapshot(i,now,"BOOTSTRAP_COMPLETE");
       LogLiquiditySnapshot(i,now);
       LogRootSnapshot(i,now);
+      LogRefinementSnapshot(i,now);
      }
 
    return true;
@@ -2407,16 +3653,30 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
 
    SortRuntimeEvents(events);
 
+   datetime group_time=0;
+
    for(int i=0;i<ArraySize(events);i++)
      {
+      if(group_time!=0 &&
+         events[i].available_at!=group_time)
+        {
+         // Dependent source refinement is evaluated only after every
+         // H4/H1/M30/M15/M5/M1 close sharing the timestamp has been processed.
+         ProcessPendingRefinements(group_time);
+        }
+
+      group_time=events[i].available_at;
+
       ProcessClosedBar(events[i].tf_index,
                        events[i].bar,
                        events[i].available_at);
      }
 
-   // Frozen architecture point:
-   // Scenario/order authorization runs only AFTER all same-timeframe-close
-   // structure/liquidity updates. Trading layer is intentionally absent in Phase 2.
+   if(group_time!=0)
+      ProcessPendingRefinements(group_time);
+
+   // Scenario/order authorization will be attached after source lineage
+   // validation. It must remain after same-timestamp MTF processing.
   }
 
 //+------------------------------------------------------------------+
@@ -2454,7 +3714,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.31 property_version=1.00 magic=%I64d phase=ROOT_CORE",
+           StringFormat("build=0.40 property_version=1.00 magic=%I64d phase=REFINEMENT_CORE",
                         InpMagicNumber));
 
    // Do not fail initialization just because MT5 is still synchronizing history.
@@ -2467,7 +3727,7 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_roots=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d children_created=%I64d children_invalidated=%I64d refinements_ready=%I64d refinements_no_child=%I64d refinements_ambiguous=%I64d",
                         reason,
                         InitStateName(g_init_state),
                         ArraySize(g_liquidity),
@@ -2477,7 +3737,12 @@ void OnDeinit(const int reason)
                         ArraySize(g_sources),
                         g_roots_created,
                         g_roots_price_invalidated,
-                        g_roots_structure_invalidated));
+                        g_roots_structure_invalidated,
+                        g_children_created,
+                        g_children_invalidated,
+                        g_refinements_ready,
+                        g_refinements_no_child,
+                        g_refinements_ambiguous));
 
    if(g_log_handle!=INVALID_HANDLE)
      {
@@ -2510,11 +3775,11 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              "Phase3A trading disabled; runtime structure/liquidity/root events start here");
+              "Phase3B trading disabled; runtime structure/liquidity/root/refinement events start here");
      }
 
    ProcessRuntimeClosedBars((datetime)tick.time);
 
-   // No trade submission in Phase 3A.
+   // No trade submission in Phase 3B.
   }
 //+------------------------------------------------------------------+
