@@ -1592,8 +1592,11 @@ open-to-high
 
 등으로 임의 축소하지 않는다.
 
-실제 execution geometry와 SL 축소는
+Root 자체의 source precision은
 causal LTF refinement가 담당한다.
+
+최초 포지션의 실제 entry / SL geometry는
+후속 M1 CHoCH displacement FVG 규칙이 담당한다.
 
 ### 4.12 Occurrence and Availability
 
@@ -1963,7 +1966,8 @@ M1은 이후:
 ```text
 sweep
 CHoCH
-execution OB
+CHoCH displacement FVG
+entry execution
 ```
 
 를 담당한다.
@@ -2273,25 +2277,22 @@ Ambiguity 없이 causal lineage가 유지되는
 
 Final child는:
 
-```text
 price contact zone
 trigger-location authority
-SL geometry source
-```
+source/context invalidation reference
 
 를 담당한다.
 
+최초 포지션의 실제 entry와 기본 SL geometry는
+후속 M1 CHoCH displacement FVG 규칙이 담당한다.
+
 단:
 
-```text
 더 좁아서 선택
-```
 
 하는 것이 아니라:
 
-```text
 같은 원인이 더 낮은 TF에서도 명확해서 선택
-```
 
 하는 것이다.
 
@@ -2671,13 +2672,13 @@ Source contact의 의미는:
 
 Required chain remains:
 
-```text
 source contact
 → mature liquidity sweep
 → meaningful M1 CHoCH
-→ causal execution OB
-→ retest
-```
+→ same sweep-to-CHoCH causal leg의 fresh same-direction FVG
+→ widest valid FVG selection
+→ first retest
+→ entry
 
 ### 6.5 Trigger Search Activation
 
@@ -3337,16 +3338,17 @@ Classification: D
 
 V1 first-position trigger는 다음 순서를 요구한다.
 
-```text
 final source frozen
 → source contact
 → authorized mature liquidity sweep
 → meaningful M1 CHoCH
-→ causal M1 execution OB
-```
+→ same sweep-to-CHoCH causal leg의 fresh same-direction FVG
+→ widest valid FVG selection
+→ first retest
+→ entry
 
 앞 단계가 없으면
-뒤 단계의 M1 structure event가 아무리 선명해도
+뒤 단계의 M1 structure event 또는 execution event가 아무리 선명해도
 현재 scenario의 trade authority가 아니다.
 
 ### 7.3 Meaningful CHoCH Reference
@@ -3718,52 +3720,78 @@ new-direction owner confirmation
 
 이 필요하다.
 
-### 7.18 CHoCH Displacement vs CHoCH Validity
+### 7.18 CHoCH Validity vs Executable Displacement
 
 Classification: D
 
-Structure event 자체의 CHoCH validity는:
+Structure event 자체의 meaningful CHoCH validity는:
 
-```text
 body close through frozen protected swing
-```
 
 으로 결정한다.
 
-별도:
+따라서 FVG가 없더라도
+meaningful M1 CHoCH structure event 자체는 존재할 수 있다.
 
-```text
-minimum candle size
+그러나 V1 first-position execution authorization에는
+추가로 다음이 필요하다.
+
+authorized sweep
++
+meaningful M1 CHoCH
++
+same sweep-to-CHoCH causal leg 안의
+fresh same-direction 3-candle FVG
+
+즉:
+
+meaningful CHoCH + no causal FVG
+→ valid CHoCH structure event
+→ NO BASE ENTRY
+
+V1은 executable displacement를 판정하기 위해
+별도의:
+
 ATR displacement threshold
-mandatory FVG
-```
+minimum body size
+minimum consecutive directional candle count
+displacement quality score
 
-를 CHoCH 조건으로 추가하지 않는다.
+를 추가하지 않는다.
 
-다만 이후 execution OB는
-이 CHoCH를 실제로 만들어낸 directional leg의
-causal source여야 한다.
+현재 V1에서:
 
-그 causality는 다음
-`Causal M1 Execution OB + Retest Entry`
-단계에서 결정한다.
+meaningful CHoCH
++
+same causal leg의 fresh FVG
 
-### 7.19 CHoCH FVG Is Not Mandatory
+를 first-position executable displacement의 최소 증거로 사용한다.
 
-Classification: Authority / Frozen
+### 7.19 CHoCH Displacement FVG Is Required for Base Entry
 
-CHoCH displacement 과정에 FVG가 존재하면
-delivery evidence로 기록할 수 있다.
+Classification: D for V1 first-position execution
 
-하지만 V1 first-position CHoCH authorization에:
+FVG는 meaningful CHoCH structure event 자체를 정의하기 위한
+필수 조건이 아니다.
 
-```text
-FVG required
-```
+그러나 V1 최초 포지션을 실제로 authorize하려면
+해당 CHoCH directional displacement가 만든
+valid causal FVG가 최소 하나 필요하다.
 
-조건을 넣지 않는다.
+Initial execution FVG는 반드시:
 
-Initial FVG execution은 별도 research variant다.
+1. authorized sweep 이후의 causal reaction leg에 속한다.
+2. meaningful CHoCH와 같은 방향이다.
+3. sweep → CHoCH를 만든 동일 M1 directional leg에 속한다.
+4. 주문 authorization 시점에 이미 확정되어 있다.
+
+FVG가 CHoCH candle 자체를 반드시 포함할 필요는 없다.
+
+CHoCH 이전에 같은 sweep-to-CHoCH causal displacement 안에서
+형성된 FVG도 candidate가 될 수 있다.
+
+HTF/LTF OB lineage가 누락된 상태에서
+FVG만으로 새로운 first-position scenario를 만들지는 않는다.
 
 ### 7.20 Additional BOS Is Not Mandatory
 
@@ -3771,25 +3799,25 @@ Classification: Authority / Frozen
 
 V1 baseline은:
 
-```text
 authorized sweep
 → meaningful M1 CHoCH
-→ causal execution OB
-```
+→ causal displacement FVG
+→ FVG retest
+→ entry
 
-이다.
+를 사용한다.
 
 다음은 별도 research variant로 유지한다.
 
-```text
 authorized sweep
 → CHoCH
 → additional BOS
+→ BOS displacement FVG
 → entry
-```
 
 따라서 second BOS가 없다는 이유만으로
-valid V1 CHoCH를 거부하지 않는다.
+valid V1 CHoCH 또는 valid initial CHoCH-FVG execution을 거부하지 않는다.
+
 
 ### 7.21 INITIAL_BOS Cannot Substitute for CHoCH
 
@@ -3905,7 +3933,7 @@ INITIAL_BOS fallback
 same-bar sweep + CHoCH
 ATR break threshold
 CHoCH quality score
-mandatory CHoCH FVG
+FVG as a requirement to define the CHoCH structure event itself
 mandatory second BOS
 M5-only trigger
 M1 CHoCH as HTF reversal authority
@@ -3936,7 +3964,16 @@ M1 close > frozen protected HIGH
         ↓
 bullish meaningful CHoCH
         ↓
-enable causal execution OB search
+collect fresh bullish FVGs
+belonging to the same sweep-to-CHoCH causal leg
+        ↓
+if none:
+    NO BASE ENTRY
+        ↓
+if one or more:
+    select widest valid FVG
+        ↓
+wait for first authorized retest
 ```
 
 ### 7.27 V1 SHORT Protocol
@@ -3963,31 +4000,271 @@ M1 close < frozen protected LOW
         ↓
 bearish meaningful CHoCH
         ↓
-enable causal execution OB search
+collect fresh bearish FVGs
+belonging to the same sweep-to-CHoCH causal leg
+        ↓
+if none:
+    NO BASE ENTRY
+        ↓
+if one or more:
+    select widest valid FVG
+        ↓
+wait for first authorized retest
 ```
 
 ---
 
 
-## 8. Entry
+## 8. CHoCH Displacement FVG + Entry
 
-Baseline:
-causal execution OB retest.
+Status: FROZEN FOR V1 CORE ENTRY RULES
 
-Exact price:
-TBD.
+Primary authority:
+- `AGENTS.md`
 
-Variants such as initial FVG entry are excluded from baseline unless explicitly promoted later.
+Secondary references:
+- `research/mentor-youtube/MENTOR_RULE_CONTRACT.md`
+- `research/mentor-youtube/MENTOR_MINIMAL_METHOD.md`
+
+### 8.1 Purpose
+
+V1 최초 포지션의 actual execution zone은
+causal M1 execution OB가 아니라
+meaningful M1 CHoCH를 전달한 directional displacement의 FVG다.
+
+HTF Root OB와 causal LTF refinement는
+scenario source/context authority로 계속 필요하다.
+
+즉:
+
+HTF/LTF OB lineage
+≠ actual first-position entry zone
+
+CHoCH displacement FVG
+= actual first-position execution zone
+
+### 8.2 Three-Candle FVG Definition
+
+Classification: D
+
+Bullish FVG:
+
+Candle3.low > Candle1.high
+
+Bounds:
+
+bottom = Candle1.high
+top = Candle3.low
+width = top - bottom
+
+Bearish FVG:
+
+Candle3.high < Candle1.low
+
+Bounds:
+
+bottom = Candle3.high
+top = Candle1.low
+width = top - bottom
+
+Required:
+
+width > 0
+
+FVG는 Candle 3가 close된 이후에만 available하다.
+
+### 8.3 Causal Execution-FVG Qualification
+
+Classification: D for V1
+
+Initial execution FVG candidate는 반드시:
+
+authorized sweep
+→ meaningful CHoCH
+
+를 만든 동일 causal M1 directional leg에 속해야 한다.
+
+LONG:
+
+authorized sell-side sweep
+→ bullish causal leg
+→ bullish FVG
+→ bullish meaningful CHoCH
+
+SHORT:
+
+authorized buy-side sweep
+→ bearish causal leg
+→ bearish FVG
+→ bearish meaningful CHoCH
+
+을 요구한다.
+
+Sweep 이전의 unrelated FVG 또는
+CHoCH 이후 별도 delivery leg에서 새로 생긴 FVG를
+현재 `INITIAL_CHOCH_FVG` 후보로 사용하지 않는다.
+
+Meaningful CHoCH가 있어도
+valid causal FVG가 하나도 없으면:
+
+NO BASE FIRST-POSITION ENTRY
+
+다.
+
+### 8.4 Multiple FVG Selection
+
+Classification: D
+
+같은 authorized sweep → meaningful CHoCH causal displacement 안에
+valid FVG가 여러 개 존재하면:
+
+selected_FVG =
+argmax(FVG.top - FVG.bottom)
+
+을 사용한다.
+
+즉 가장 가격 폭이 넓은 FVG를 선택한다.
+
+다음 기준은 사용하지 않는다.
+
+nearest FVG
+latest FVG
+first FVG
+closest-to-source FVG
+best-RR FVG
+
+Symbol tick normalization 이후에도
+최대 width가 정확히 같은 FVG가 둘 이상이면:
+
+AMBIGUOUS_EXECUTION_FVG
+→ NO TRADE
+
+로 처리한다.
+
+### 8.5 Retest
+
+Classification: D
+
+Selected FVG와 meaningful CHoCH가 모두 available된 이후
+가격이 selected FVG와 처음 교차하면
+first retest로 정의한다.
+
+Intersection:
+
+bar.high >= FVG.bottom
+AND
+bar.low <= FVG.top
+
+FVG 생성 candle 내부의 과거 movement 또는
+CHoCH/order authorization 전에 이미 지나간 touch를
+사후 retest로 복원하지 않는다.
+
+같은 first-position execution chain에서
+두 번째 이후 touch는 재사용하지 않는다.
+
+### 8.6 Entry Price
+
+Classification: D
+
+LONG:
+
+entry = selected bullish FVG.top
+
+SHORT:
+
+entry = selected bearish FVG.bottom
+
+즉 가격이 되돌아올 때 먼저 닿는
+FVG near-side boundary에 limit entry를 둔다.
+
+V1 base first-position에서는 사용하지 않는다.
+
+FVG midpoint
+50% / CE
+causal execution OB retest
+market chase
+RR-optimized internal FVG price
+
+### 8.7 Required Entry State
+
+Minimum state:
+
+selected_fvg_id
+direction
+
+fvg_bottom
+fvg_top
+fvg_width
+
+fvg_available_at
+choch_available_at
+
+candidate_fvg_ids
+candidate_fvg_widths
+
+first_retest_at
+entry_price
+
+execution_model = INITIAL_CHOCH_FVG
 
 ## 9. Stop Loss
 
-Must lie beyond:
-- sweep extreme
-- entry zone distal boundary
-- applicable causal source invalidation
+Status: FROZEN FOR V1 STRATEGY GEOMETRY
 
-Broker spread/tick/stops-level handling:
-TBD.
+V1 `INITIAL_CHOCH_FVG` first-position SL은
+selected FVG의 geometry로 결정한다.
+
+FVG width:
+
+width = FVG.top - FVG.bottom
+
+SL buffer:
+
+buffer = width * 0.20
+
+LONG:
+
+entry = FVG.top
+SL = FVG.bottom - buffer
+
+SHORT:
+
+entry = FVG.bottom
+SL = FVG.top + buffer
+
+즉:
+
+LONG
+→ bullish FVG lower/distal boundary 아래로
+  FVG 폭의 20% 추가
+
+SHORT
+→ bearish FVG upper/distal boundary 위로
+  FVG 폭의 20% 추가
+
+를 사용한다.
+
+다음은 V1 base first-position SL 가격을 대체하지 않는다.
+
+sweep extreme
+execution OB distal
+final child OB distal
+arbitrary M1 pivot
+ATR stop
+fixed point stop
+
+이 구조 정보들은 scenario/source lifecycle 또는
+audit reference로 보존할 수 있지만
+`INITIAL_CHOCH_FVG`의 전략 SL 가격 자체를 변경하지 않는다.
+
+실제 주문 가격은 symbol의 valid tick size에 맞게 normalize한다.
+
+Broker spread / stops level / Bid-Ask execution constraint를
+이 전략 SL과 정확히 어떻게 연결할지는
+execution-infrastructure 단계에서 별도로 확정한다.
+
+그 결정 전까지 broker constraint를 이유로
+위 전략 SL 공식을 임의 변경하지 않는다.
 
 ## 10. Objective / TP
 
