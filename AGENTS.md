@@ -213,6 +213,117 @@ minimum bar count
 Wave의 크기가 아니라
 현재 external structure 안에서 맡는 causal role로 external 여부를 결정한다.
 
+### 3.2.2 H1/M30 map owner와 scenario scope
+
+H1과 M30의 trend state는 독립적으로 유지한다.
+
+Directional owner로 사용할 수 있는 state는 BULLISH / BEARISH뿐이다.
+NEUTRAL과 TRANSITION은 directional owner가 아니다.
+
+#### H1이 mature directional일 때
+
+H1이 BULLISH 또는 BEARISH라면:
+
+parent_owner_tf = H1
+highest_active_map = H1
+
+이다.
+
+M30은 H1 range 안의 nested sub-structure로 해석한다.
+
+trade direction == H1 direction
+→ EXTERNAL_CONTINUATION
+
+trade direction == opposite-direction mature M30
+AND H1 external owner still valid
+→ INTERNAL_ROTATION
+
+M30 opposite trend가 존재한다는 이유만으로 H1 EXTERNAL_CONTINUATION lane을 자동 취소하지 않는다.
+
+H1 continuation과 M30 internal rotation은 서로 다른 scenario lane으로 독립 유지할 수 있다.
+
+각 lane은 반드시 서로 다른:
+scenario_id
+scope
+owner relation
+objective family
+Root/source lineage
+trigger chain
+을 가진다.
+
+#### H1이 NEUTRAL 또는 TRANSITION일 때
+
+H1은 directional owner authority를 갖지 않는다.
+
+이때 M30이 mature BULLISH / BEARISH라면:
+
+active_map_tf = M30
+scenario direction = M30 direction
+scope = EXTERNAL_CONTINUATION relative to the active M30 map
+
+으로 사용할 수 있다.
+
+이 M30-primary scenario는 M30 dealing range와 M30 external objective family를 사용한다.
+
+H1 historical external fallback을 사용하지 않는다.
+
+H1이 다시 mature directional state가 되는 순간 기존 M30-primary scenario를 새 H1 owner에 자동 승계하지 않는다.
+
+기존 M30-primary scenario는 map re-evaluation 대상이며, 새 H1 owner 기준으로 새 scenario를 만들어야 한다.
+
+#### H1 TRANSITION
+
+H1 protected swing body-break가 발생하면 old H1 owner와 그 dealing range는 즉시 authority를 잃는다.
+
+Old H1 owner에 의존하던:
+H1 EXTERNAL_CONTINUATION
+M30 INTERNAL_ROTATION
+scenario는 같은 category로 계속 유지하지 않는다.
+
+필요하면 현재 M30 mature map 또는 향후 새 H1 owner를 기준으로 새 scenario를 만든다.
+
+#### EXTERNAL_REVERSAL
+
+H1 TRANSITION 이후 새 mature H1 direction이 직전 mature H1 direction과 반대로 확정되면 새 H1 owner의 phase를 REVERSAL로 시작한다.
+
+이 owner phase에서 생성되는 H1-direction external scenario는 EXTERNAL_REVERSAL이다.
+
+새 H1 owner가 이후 같은 방향의 continuation BOS를 한 번 확정하면:
+
+owner_phase = ESTABLISHED
+
+로 전환한다.
+
+그 이후 새 H1-direction scenario는 EXTERNAL_CONTINUATION으로 분류한다.
+
+Entry/SL/TP를 이미 freeze한 기존 scenario의 scope를 사후에 REVERSAL ↔ CONTINUATION으로 재분류하지 않는다.
+
+#### Scope와 dealing range
+
+H1 EXTERNAL_CONTINUATION:
+→ H1 active dealing range
+→ continuation premium/discount gate 사용
+
+M30-primary EXTERNAL_CONTINUATION:
+→ M30 active dealing range
+→ continuation premium/discount gate 사용
+
+H1 EXTERNAL_REVERSAL:
+→ new H1 owner의 external range와 objective family 사용
+→ continuation 전용 50% gate를 새로 강제하지 않는다
+
+M30 INTERNAL_ROTATION inside mature H1:
+→ H1 parent range 안에서만 scope 유지
+→ mature M15+ internal liquidity objective family
+→ historical H1 fallback 금지
+→ 별도의 새로운 50% authorization gate를 추가하지 않는다
+
+Scenario direction과 Root/source direction은 반드시 일치해야 한다.
+
+Root.direction = scenario.direction
+
+M1은 이 map owner 또는 scope를 생성하거나 덮어쓸 수 없다.
+
 ### 3.3 dealing range 위치를 진입 권한에 포함한다
 
 - H1/M30의 현재 external protected high와 low로 active dealing range를 정하고 EQ 50%를 표시한다.

@@ -162,20 +162,47 @@ Post-selection TP rollover
 Baseline TP price
 → exact selected structural liquidity
 
+H1/M30 owner hierarchy
+→ FROZEN
+
+H1 mature directional
+→ parent external owner = H1
+
+H1 NEUTRAL / TRANSITION + mature directional M30
+→ temporary active map = M30
+
+H1-direction trade under valid H1
+→ EXTERNAL_CONTINUATION
+
+opposite mature M30 trade inside valid H1
+→ INTERNAL_ROTATION
+
+new opposite mature H1 owner after transition
+→ EXTERNAL_REVERSAL phase
+
+new owner first same-direction H1 BOS
+→ owner phase becomes ESTABLISHED
+→ future scenarios EXTERNAL_CONTINUATION
+
+parallel H1/M30 opposite planning lanes
+→ ALLOWED
+
+simultaneous opposite order-ready execution
+→ UNRESOLVED / separate risk policy
+
 ## Next Task
 
 Create the first EA rule mapping for:
 
-1. Validate the frozen trend-state semantics visually and during implementation parity testing.
-2. Return to H1/M30 map-owner + scenario-scope assignment using the frozen trend engine.
-3. Resolve selected-FVG exact invalidation / consumption.
-4. Resolve final refined-source exact invalidation.
-5. Resolve session-gap handling.
-6. Resolve warm-up/state reconstruction.
-7. Run final AGENTS / EA_SPEC / DECISIONS consistency audit.
-8. Freeze deterministic V1 specification.
-9. Implement minimum MQL5 EA.
-10. Validate implementation parity before profitability optimization.
+1. Resolve simultaneous opposing order-ready lane policy.
+2. Resolve selected-FVG exact invalidation / consumption.
+3. Resolve final refined-source exact invalidation.
+4. Resolve session-gap handling.
+5. Resolve warm-up/state reconstruction.
+6. Run final AGENTS / EA_SPEC / DECISIONS consistency audit.
+7. Freeze deterministic V1 specification.
+8. Implement minimum MQL5 EA.
+9. Validate implementation parity before profitability optimization.
 
 Each rule must be classified as:
 

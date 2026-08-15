@@ -1803,3 +1803,103 @@ protected causal correction role
 BOS/CHoCH structure relationship
 
 All other confirmed waves remain internal by default.
+
+## D-079 — H1 is the parent owner only while H1 is mature directional
+
+Status: ACTIVE / FROZEN
+
+H1 BULLISH / BEARISH:
+→ H1 is parent external owner and highest active map.
+
+H1 NEUTRAL / TRANSITION:
+→ H1 has no directional owner authority.
+
+If H1 is non-directional and M30 is mature directional:
+→ M30 may become temporary highest active directional map.
+
+---
+
+## D-080 — Opposite mature M30 under valid H1 is an internal sub-owner
+
+Status: ACTIVE / FROZEN
+
+When H1 is mature directional and M30 is mature in the opposite direction:
+
+H1 direction scenario
+→ EXTERNAL_CONTINUATION
+
+M30 direction scenario
+→ INTERNAL_ROTATION
+
+M30 opposite direction alone does not flip or invalidate H1 external trend.
+
+---
+
+## D-081 — H1 owner invalidation terminates parent-dependent scope
+
+Status: ACTIVE / FROZEN
+
+H1 protected-swing body break:
+
+old H1 owner = INVALIDATED
+H1 = TRANSITION
+
+Old H1 EXTERNAL_CONTINUATION and M30 INTERNAL_ROTATION lanes nested under that H1 owner cannot remain authorized under the old map.
+
+They require cancellation / map reevaluation.
+
+---
+
+## D-082 — M30 may be the temporary primary map while H1 is non-directional
+
+Status: ACTIVE / FROZEN
+
+If H1 is NEUTRAL or TRANSITION and M30 is mature directional:
+
+M30 = temporary highest active map
+scope = EXTERNAL_CONTINUATION relative to M30
+
+Use M30 dealing range and M30 external objective family.
+
+Historical H1 fallback is disabled for this M30-primary scenario.
+
+If H1 later becomes mature directional, the old M30-primary scenario is not silently inherited by H1.
+
+---
+
+## D-083 — New opposite H1 owner starts in REVERSAL phase
+
+Status: ACTIVE / FROZEN
+
+If an old mature H1 owner is invalidated, then a new mature H1 owner forms in the opposite direction:
+
+owner_phase = REVERSAL
+
+External H1 scenarios in this phase are EXTERNAL_REVERSAL.
+
+After the first same-direction H1 continuation BOS:
+
+owner_phase = ESTABLISHED
+
+Future new H1 scenarios are EXTERNAL_CONTINUATION.
+
+Existing scenarios are never relabeled retroactively.
+
+---
+
+## D-084 — Parallel H1 continuation and M30 internal-rotation planning lanes are allowed
+
+Status: ACTIVE / FROZEN FOR PLANNING
+
+When H1 is mature directional and M30 is mature opposite directional, both structural hypotheses may coexist as separate planning lanes.
+
+They must use separate:
+scenario_id
+scope
+objective family
+Root/source lineage
+trigger chain
+
+This does not yet authorize simultaneous opposite live pending orders.
+
+Opposing order-ready arbitration remains a separate execution/risk decision.

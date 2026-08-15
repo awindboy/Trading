@@ -233,39 +233,15 @@ NO INITIAL TREND
 한쪽 swing break만으로
 protected swing이 없는 directional state를 만들지 않는다.
 
-#### Bullish INITIAL_BOS
-
-```text
-close > latest confirmed swing high
-```
-
-이면 bullish INITIAL_BOS다.
-
-이때 최근 유효한 반대편 swing low가 새로운 protected low 후보가 된다.
-
-#### Bearish INITIAL_BOS
-
-```text
-close < latest confirmed swing low
-```
-
-이면 bearish INITIAL_BOS다.
-
-이때 최근 유효한 반대편 swing high가 새로운 protected high 후보가 된다.
-
-Wick만 swing level을 통과하는 것은 INITIAL_BOS가 아니다.
-
 ### 2.6 Bullish External Structure State
 
 Classification: D
 
 Bullish external state에서는:
 
-```text
 trend = BULLISH
 protected_low = current bullish structure invalidation swing
 external_high = current bullish delivery extreme
-```
 
 를 유지한다.
 
@@ -279,11 +255,7 @@ bullish BOS가 발생한다.
 
 BOS 후에도 external bullish direction은 유지된다.
 
-BOS가 돌파한 기존 external high를:
-
-break_reference_high
-
-로 freeze한다.
+BOS가 돌파한 기존 external high를 `break_reference_high`로 freeze한다.
 
 Causal correction window:
 
@@ -296,8 +268,7 @@ candidate.side = LOW
 candidate.occurred_at > break_reference_high.occurred_at
 candidate.available_at <= BOS.available_at
 
-을 만족하는 confirmed swing low만
-causal correction candidate로 사용한다.
+을 만족하는 confirmed swing low만 causal correction candidate로 사용한다.
 
 Candidate가 하나 이상이면:
 
@@ -315,35 +286,26 @@ protected_low remains unchanged
 
 이다.
 
-단순 latest swing low 또는
-BOS candle에 가장 가까운 swing low를
-자동 protected low로 사용하지 않는다.
-```
-
-Keep the existing Bearish CHoCH body-close rule in 2.6, but append:
-
-```text
-Protected low body-break가 발생하면
-기존 bullish external state는 invalidated되고
-trend state는 `TRANSITION`으로 이동한다.
-
-완성된 new bearish external state는
-새 opposite protected structure가 deterministic하게 성립한 뒤에만 확정한다.
+단순 latest swing low 또는 BOS candle에 가장 가까운 swing low를 자동 protected low로 사용하지 않는다.
 
 #### Bearish CHoCH
 
 현재 protected low를 body close로 하향 돌파하면:
 
-```text
 close < protected_low
-```
 
-bearish CHoCH가 발생한다.
+bearish external CHoCH가 발생한다.
 
-이 시점부터 기존 bullish external structure는 invalidated된다.
+Result:
 
-새 bearish state는
-반대편 confirmed swing 구조를 이용해 새 protected high와 external low를 구성한다.
+old bullish external owner = INVALIDATED
+trend_state = TRANSITION
+
+Wick-only breach는 external CHoCH가 아니다.
+
+`TRANSITION`에서는 기존 bullish dealing range를 continuation authorization에 재사용하지 않는다.
+
+완성된 new bearish external state는 새 two-sided structure와 body-close directional confirmation이 deterministic하게 성립한 뒤에만 확정한다.
 
 ### 2.7 Bearish External Structure State
 
@@ -351,11 +313,9 @@ Classification: D
 
 Bearish external state에서는:
 
-```text
 trend = BEARISH
 protected_high = current bearish structure invalidation swing
 external_low = current bearish delivery extreme
-```
 
 를 유지한다.
 
@@ -369,11 +329,7 @@ bearish BOS가 발생한다.
 
 BOS 후에도 external bearish direction은 유지된다.
 
-BOS가 돌파한 기존 external low를:
-
-break_reference_low
-
-로 freeze한다.
+BOS가 돌파한 기존 external low를 `break_reference_low`로 freeze한다.
 
 Causal correction window:
 
@@ -386,8 +342,7 @@ candidate.side = HIGH
 candidate.occurred_at > break_reference_low.occurred_at
 candidate.available_at <= BOS.available_at
 
-을 만족하는 confirmed swing high만
-causal correction candidate로 사용한다.
+을 만족하는 confirmed swing high만 causal correction candidate로 사용한다.
 
 Candidate가 하나 이상이면:
 
@@ -405,32 +360,26 @@ protected_high remains unchanged
 
 이다.
 
-단순 latest swing high 또는
-BOS candle에 가장 가까운 swing high를
-자동 protected high로 사용하지 않는다.
-```
-
-Keep the existing Bullish CHoCH body-close rule in 2.7, but append:
-
-```text
-Protected high body-break가 발생하면
-기존 bearish external state는 invalidated되고
-trend state는 `TRANSITION`으로 이동한다.
-
-완성된 new bullish external state는
-새 opposite protected structure가 deterministic하게 성립한 뒤에만 확정한다.
+단순 latest swing high 또는 BOS candle에 가장 가까운 swing high를 자동 protected high로 사용하지 않는다.
 
 #### Bullish CHoCH
 
 현재 protected high를 body close로 상향 돌파하면:
 
-```text
 close > protected_high
-```
 
-bullish CHoCH가 발생한다.
+bullish external CHoCH가 발생한다.
 
-이 시점부터 기존 bearish external structure는 invalidated된다.
+Result:
+
+old bearish external owner = INVALIDATED
+trend_state = TRANSITION
+
+Wick-only breach는 external CHoCH가 아니다.
+
+`TRANSITION`에서는 기존 bearish dealing range를 continuation authorization에 재사용하지 않는다.
+
+완성된 new bullish external state는 새 two-sided structure와 body-close directional confirmation이 deterministic하게 성립한 뒤에만 확정한다.
 
 ### 2.8 BOS vs CHoCH
 
@@ -893,8 +842,239 @@ Core invariants:
 11. Wick-only protected breach is not trend reversal.
 12. External/internal promotion uses structural role, not ATR/point/percentage thresholds.
 
+### 2.20 H1/M30 Map Ownership and Scenario Scope
 
-### 2.20 Required Structure State
+Status: FROZEN FOR V1
+Classification: D
+
+#### 2.20.1 Directional Owner Eligibility
+
+Only mature BULLISH / BEARISH structure states may act as directional map owners.
+
+NEUTRAL and TRANSITION are non-directional.
+
+#### 2.20.2 Owner Hierarchy
+
+if H1 is directional:
+    parent_owner_tf = H1
+    highest_active_map = H1
+
+if H1 is NEUTRAL or TRANSITION
+and M30 is directional:
+    parent_owner_tf = NONE
+    highest_active_map = M30
+
+if neither H1 nor M30 is directional:
+    NO DIRECTIONAL SCENARIO
+
+#### 2.20.3 H1 EXTERNAL_CONTINUATION
+
+Required:
+
+H1 = mature BULLISH / BEARISH
+scenario.direction = H1.direction
+H1 owner valid
+
+Scope:
+EXTERNAL_CONTINUATION
+
+Active map:
+H1
+
+M30 may be SAME_DIRECTION, OPPOSITE_DIRECTION, NEUTRAL, or TRANSITION.
+
+M30 opposite state alone does not invalidate the H1 continuation lane.
+
+Use:
+H1 dealing range
+H1 continuation premium/discount gate
+external objective family
+
+#### 2.20.4 M30 INTERNAL_ROTATION under mature H1
+
+Required:
+
+H1 = mature directional
+M30 = mature directional
+M30.direction != H1.direction
+scenario.direction = M30.direction
+H1 owner still valid
+
+Scope:
+INTERNAL_ROTATION
+
+Parent owner:
+H1
+
+Active nested map:
+M30
+
+Restrictions:
+objective family = mature M15+ internal liquidity inside H1 parent range
+historical H1 fallback = FORBIDDEN
+external H1 target expansion = FORBIDDEN
+new mandatory premium/discount gate = NONE
+
+Root/source lineage must align with M30 scenario direction.
+
+#### 2.20.5 Temporary M30 Primary Map
+
+If:
+H1 = NEUTRAL or TRANSITION
+M30 = mature directional
+
+then M30 becomes the temporary highest active directional map.
+
+Scope:
+EXTERNAL_CONTINUATION relative to M30.
+
+Use:
+M30 dealing range
+M30 continuation premium/discount gate
+M30 external objective family
+
+Forbidden:
+historical H1 fallback
+automatic inheritance of old H1 range
+automatic inheritance into a future H1 owner
+
+When H1 later becomes mature directional:
+existing M30-primary scenario
+→ MAP_REEVALUATION_REQUIRED
+
+No silent owner promotion.
+
+#### 2.20.6 H1 Owner Invalidation
+
+If H1 protected swing is body-broken:
+
+old H1 owner = INVALIDATED
+H1 = TRANSITION
+
+All scenarios whose scope depends on that parent H1 owner require cancellation / map reevaluation.
+
+This includes:
+H1 EXTERNAL_CONTINUATION
+M30 INTERNAL_ROTATION nested under that H1 owner
+
+The old H1 dealing range cannot authorize new continuation setups.
+
+#### 2.20.7 H1 EXTERNAL_REVERSAL Phase
+
+When H1 was previously mature in direction OLD,
+entered TRANSITION through protected-swing body break,
+and later matures in direction NEW where NEW != OLD:
+
+create new H1 owner_id
+owner_phase = REVERSAL
+
+H1-direction external scenarios created while owner_phase = REVERSAL use:
+scenario_scope = EXTERNAL_REVERSAL
+
+After the first same-direction H1 continuation BOS under the new owner:
+owner_phase = ESTABLISHED
+
+Future new scenarios then use:
+scenario_scope = EXTERNAL_CONTINUATION
+
+Existing frozen scenarios are not relabeled retroactively.
+
+#### 2.20.8 H1 Re-establishment in Same Direction
+
+If H1 enters TRANSITION but later matures again in the same direction as the previous H1 owner:
+
+new owner_id is created
+owner_phase = ESTABLISHED
+scope = EXTERNAL_CONTINUATION
+
+It is not EXTERNAL_REVERSAL.
+
+#### 2.20.9 Parallel Structural Lanes
+
+When:
+H1 = mature directional
+M30 = mature opposite directional
+
+the engine may maintain two independent planning lanes:
+
+Lane A:
+H1 direction
+EXTERNAL_CONTINUATION
+
+Lane B:
+M30 direction
+INTERNAL_ROTATION
+
+They must never share:
+scenario_id
+objective family
+Root/source lineage
+sweep
+CHoCH
+selected FVG
+pending-order identity
+
+This authorizes parallel analysis/planning only.
+
+Whether opposite order-ready lanes may simultaneously place live pending orders is a separate V1 execution/risk decision.
+
+#### 2.20.10 Scenario Scope Is Frozen
+
+Once a scenario PLAN is frozen:
+
+scenario_scope
+parent_owner_id
+active_map_tf
+scenario_direction
+objective family
+
+do not change category in place.
+
+If owner hierarchy changes materially:
+
+old scenario
+→ cancel / reevaluate
+
+new map
+→ new scenario_id
+
+No hindsight scope promotion.
+
+#### 2.20.11 Required Map State
+
+scenario_id
+scenario_scope
+scenario_direction
+
+parent_owner_tf
+parent_owner_id
+parent_owner_direction
+
+active_map_tf
+active_map_owner_id
+active_map_direction
+
+h1_trend_state
+h1_owner_id
+h1_owner_phase
+
+m30_trend_state
+m30_owner_id
+
+parent_range_high
+parent_range_low
+
+active_range_high
+active_range_low
+
+premium_discount_gate_required
+premium_discount_gate_result
+
+created_at
+map_invalidated_at
+map_invalidation_reason
+
+### 2.21 Required Structure State
 
 각 timeframe별 엔진은 최소 다음 상태를 노출한다.
 
@@ -957,7 +1137,7 @@ occurred_at
 available_at
 ```
 
-### 2.21 Baseline Exclusions
+### 2.22 Baseline Exclusions
 
 Market Structure baseline에는 다음을 넣지 않는다.
 
