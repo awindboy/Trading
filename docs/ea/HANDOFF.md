@@ -1,8 +1,8 @@
 # EA Development Handoff
 
-Last updated: 2026-08-15
+Last updated: 2026-08-16
 Status: V1 SPECIFICATION FROZEN
-Current phase: Minimum MQL5 baseline implementation
+Current phase: Phase 2 Liquidity / Sweep core implementation
 
 ## Goal
 
@@ -55,6 +55,20 @@ Objective
 - `mt5/legacy/MentorSep2025ParityEA.mq5`
 
 ## Current Status
+
+Phase 1.1 structure/bootstrap
+→ IMPLEMENTED
+→ Strategy Tester smoke PASS
+→ causal log audit PASS
+→ profitability NOT evaluated
+
+Phase 1.1 verified runtime
+→ GOLD / XMGlobal-MT5 12
+→ 2025-01-06 ~ 2025-01-08
+→ Every tick based on real ticks
+→ 476,672 ticks / 2,758 M1 bars
+→ orders/deals 0
+→ runtime fatal error 0
 
 Three-candle wave detector
 → FROZEN
@@ -310,89 +324,162 @@ Broker transaction reconciliation
 → callback arrival order not trusted
 
 
-## Implementation Checkpoint — Phase 1.1 Structure/Bootstrap Core
+## Implementation Checkpoint — Phase 2 Liquidity/Sweep Core
 
-`mt5/experts/MentorDeterministicV1EA.mq5` implementation is active.
+Phase 1.1 structure/bootstrap verification is complete.
 
-Local compile result for Phase 1 / build 0.10:
+Verified from the short real-tick smoke run:
 
 ```text
-0 errors
-1 warning
-482 ms
-cpu='AVX2 + FMA3'
+duplicate structure event        = 0
+future available_at              = 0
+MTF tie-order violation          = 0
+same-side consecutive wave       = 0
+INITIAL_BOS opposite ref missing = 0
+body-close break violation       = 0
+protected break transition error = 0
 ```
 
-The exact warning text was not preserved in the repository.
+One logging-only defect was found:
 
-Post-compile authority review found implementation defects before tester validation:
+```text
+InpLogBootstrapEvents=false
+but bootstrap PROTECTED_BREAK STRUCTURE_STATE rows were still emitted
+```
 
-1. Market-structure waves incorrectly required clock-contiguous bars across session gaps.
-   - FIXED in Phase 1.1.
-   - Frozen clock-continuity requirement belongs only to M1 execution-FVG qualification.
-
-2. INITIAL_BOS / BOS could leave the new directional external delivery extreme unset.
-   - FIXED in Phase 1.1.
-   - Bullish break now creates/maintains the bullish delivery extreme.
-   - Bearish break is symmetric.
-
-3. If bootstrap completed while the market was closed, the final already-processed bar could be processed again at reopen.
-   - FIXED with explicit runtime cursor pending-state semantics.
-
-4. Historical closed-bar `available_at` was tied to next-bar open across a gap.
-   - FIXED to timeframe-slot close availability.
-   - No synthetic price path is created.
-
-5. Bootstrap event logging could become excessively large.
-   - Strategy calculation is unchanged.
-   - Detailed bootstrap event output is now optional and OFF by default.
-   - Runtime events and bootstrap final snapshots remain available.
+Phase 2 fixes this without changing strategy calculation.
 
 Current code status:
 
-- Phase: `STRUCTURE_ONLY`
-- Internal build: `0.11`
+- Phase: `LIQUIDITY_CORE`
+- Internal build: `0.20`
 - MQL property version: `1.00`
 - Orders: intentionally disabled
-- Phase 1 / build 0.10 MetaEditor compile: `0 errors / 1 warning`
-- Phase 1.1 recompile: REQUIRED
-- Strategy Tester structure smoke test: NOT YET PASSED
+- Phase 2 compile: PENDING LOCAL METAEDITOR
+- Phase 2 liquidity smoke test: NOT STARTED
 
-Implemented:
+Implemented in Phase 2:
 
-- H4 / H1 / M30 / M15 historical structure bootstrap backbone
-- H4 → H1 → M30 → M15 chronological bootstrap tie order
-- runtime H4 → H1 → M30 → M15 → M5 → M1 closed-bar scheduler
-- causal 3-candle wave confirmation
-- doji interruption
-- session gaps do NOT reset structure or invalidate the 3-bar wave sequence by clock discontinuity
-- body-close INITIAL_BOS / BOS
-- directional delivery extreme after INITIAL_BOS / BOS
-- protected-swing body-close break → TRANSITION
-- compact structure working state instead of full historical wave tree
-- execution epoch boundary logging
-- duplicate-safe reopen cursor
-- CSV structural/event logging
+### EXTERNAL_SWING
+
+- confirmed WAVE only
+- protected/external structural promotion required
+- synthetic delivery extreme itself cannot create liquidity
+- wick interval stored as `bottom/top`
+- rank/promotion time becomes liquidity `available_at`
+- H4 uses the same family with `timeframe=H4`
+- H4 remains long-horizon liquidity memory only
+
+### H4 LONG_HORIZON_LIQUIDITY_INDEX
+
+- H4 creates only `EXTERNAL_SWING`
+- H4 `DEFENDED_RANGE_EDGE` is explicitly blocked
+- consumed H4 pools are removed from the active index
+- H4 index grants no map/source/entry authority
+
+### DEFENDED_RANGE_EDGE
+
+- four confirmed alternating waves
+- HIGH/HIGH wick intervals must overlap
+- LOW/LOW wick intervals must overlap
+- body close must remain inside the defended box through fourth-wave confirmation
+- both HIGH and LOW edge pools become available only at fourth-wave confirmation
+- independent equal-high/equal-low detection is not added
+- H4 defended-range generation is disabled
+
+### Physical sweep / body delivery
+
+HIGH pool sweep:
+
+```text
+high penetrates pool.top by at least one tick
+AND
+close <= pool.top
+```
+
+LOW pool sweep:
+
+```text
+low penetrates pool.bottom by at least one tick
+AND
+close >= pool.bottom
+```
+
+Body delivery has precedence:
+
+```text
+HIGH: close > pool.top
+LOW : close < pool.bottom
+```
+
+A sweep or body delivery consumes the pool once.
+
+### Same-bar self-sweep prevention
+
+Liquidity consumption is processed before
+new structure/liquidity publication on each closed bar.
+
+Additionally:
+
+```text
+pool.available_at >= current_bar.available_at
+```
+
+cannot be consumed by that bar.
+
+### Active-memory compression
+
+Consumed pools are removed from the in-memory active array
+after their audit event is written.
+
+### STRUCTURAL_REACTION
+
+The family/type remains part of the V1 object model.
+
+Actual creation is intentionally dormant in Phase 2 because the frozen rule requires:
+
+```text
+pre-existing causal OB
++
+structural ownership
++
+actual OB touch
++
+confirmed reaction wave
+```
+
+Root/source ownership is attached in the next implementation layer.
+No FVG-only or arbitrary reaction substitute is introduced.
 
 Not implemented yet:
 
-- H4 long-horizon liquidity index objects
-- liquidity families / sweep engine
-- Root OB detection
-- causal LTF child refinement
+- causal Root OB discovery
+- Root/source ownership registry
+- STRUCTURAL_REACTION activation
+- targeted M30/M15/M5 child refinement
 - source contact / source lifecycle
-- M1 meaningful CHoCH scenario authorization
+- scenario-specific mature sweep authorization
+- meaningful M1 CHoCH binding
 - execution FVG selection
 - objective / TP selection
-- broker order submission / cancellation / OnTradeTransaction reconciliation
+- pending order submission / cancellation
+- `OnTradeTransaction` reconciliation
 
 ## Next Task
 
-1. Recompile Phase 1.1 and require `0 errors`; if any warning remains, preserve the exact warning line.
-2. Run a short `Every tick based on real ticks` Strategy Tester structure smoke test.
-3. Inspect bootstrap final state plus runtime `WAVE_CONFIRMED`, `INITIAL_BOS`, `BOS`, and `PROTECTED_BREAK` ordering.
-4. Only after the structure smoke test passes, implement H4 long-horizon liquidity index + V1 liquidity/sweep layer.
-5. Continue Root/source → M1 execution → broker order layers, then run full parity before profitability optimization.
+1. Compile Phase 2 in MetaEditor and preserve the complete compile result.
+2. Run the Phase 2 liquidity smoke test with `Every tick based on real ticks`.
+3. Audit the generated `mentor_v1_phase2_events.csv` for:
+   - EXTERNAL_SWING causal promotion
+   - H4 external-only invariant
+   - four-wave defended-range causality
+   - one-tick sweep
+   - body-delivery precedence
+   - same-bar self-sweep prevention
+   - single-consumption invariant
+4. After Phase 2 passes, implement Root OB + causal child/source ownership.
+5. Activate `STRUCTURAL_REACTION` only after that ownership layer exists.
+
 
 ## Do Not Do Yet
 

@@ -15,35 +15,37 @@
 
 ## Current implementation checkpoint
 
-- `mt5/experts/MentorDeterministicV1EA.mq5` Phase 1 compiled locally: `0 errors / 1 warning / 482 ms / AVX2 + FMA3`.
-- Exact Phase 1 warning text was not preserved.
-- Phase 1.1 corrects frozen-spec/session/cursor defects found in post-compile review.
+- Phase 1.1 structure/bootstrap smoke test: PASS.
+- Causal log audit: PASS.
+- Phase 1.1 bootstrap `STRUCTURE_STATE` over-logging: fixed in Phase 2.
+- `mt5/experts/MentorDeterministicV1EA.mq5` Phase 2 liquidity/sweep core drafted.
+- Phase 2 compile verification: pending local MetaEditor.
 - Trading/order submission remains intentionally disabled.
-- Market structure stays incomplete until Phase 1.1 recompile + short Strategy Tester log inspection passes.
 
 ## P1 — Baseline implementation
 
-- [ ] Market structure
-- [ ] Liquidity
+- [x] Market structure
+- [ ] Liquidity — Phase 2 core implemented; compile/smoke pending
 - [ ] Objective selection
 - [ ] Root OB
 - [ ] LTF refinement
 - [ ] Source touch
-- [ ] Sweep
+- [ ] Sweep — physical detector implemented; compile/smoke pending
 - [ ] M1 CHoCH
 - [ ] Entry
 - [ ] SL
 - [ ] TP
 - [ ] Pending cancellation
-- [ ] H4 long-horizon liquidity index
+- [ ] H4 long-horizon liquidity index — implemented; compile/smoke pending
 - [ ] Hierarchical bootstrap / working-set pruning
 - [ ] Managed scenario/exposure identity by symbol + magic
 - [ ] Minimum-volume parity sizing
-- [ ] Same-timestamp MTF processing order
+- [x] Same-timestamp MTF processing order
 - [ ] OnTradeTransaction ticket/history reconciliation
 
 ## P2 — Validation
 
+- [x] Phase 1.1 structure smoke / causal log audit
 - [x] Compile Phase 1 with zero errors
 - [ ] Recompile Phase 1.1 and resolve behavior-affecting warnings
 - [ ] Visual Strategy Tester inspection

@@ -1,26 +1,26 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - Phase 1 structure/bootstrap core    |
+//| Deterministic Mentor EA V1 - Phase 2 liquidity/sweep core       |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| Phase 1 intentionally DOES NOT submit orders.                    |
-//| It implements the deterministic initialization/event backbone    |
-//| and causal market-structure engine required before liquidity,    |
-//| Root/source, M1 execution, and broker-order layers are attached. |
+//| Phase 2 intentionally DOES NOT submit orders.                    |
+//| Structure/bootstrap is verified. This build adds active liquidity |
+//| pools plus physical sweep/body-delivery consumption. Root/source, |
+//| M1 execution, and broker-order layers remain disabled.            |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - Phase 1.1 corrected structure/bootstrap core"
+#property description "Mentor deterministic V1 EA - Phase 2 liquidity/sweep core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
 input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
-input string InpEventCsvFile       = "mentor_v1_structure_events.csv";
+input string InpEventCsvFile       = "mentor_v1_phase2_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
@@ -60,10 +60,25 @@ enum V1StructureEventType
    V1_EVENT_PROTECTED_BREAK
   };
 
+enum V1LiquidityFamily
+  {
+   V1_LIQ_EXTERNAL_SWING=0,
+   V1_LIQ_DEFENDED_RANGE_EDGE,
+   V1_LIQ_STRUCTURAL_REACTION
+  };
+
+enum V1LiquidityConsumption
+  {
+   V1_LIQ_CONSUME_NONE=0,
+   V1_LIQ_CONSUME_SWEEP,
+   V1_LIQ_CONSUME_BODY_DELIVERY
+  };
+
 struct V1WaveRef
   {
    bool       valid;
    bool       is_wave;
+   bool       liquidity_registered;
    string     id;
    int        side;
    double     price;
@@ -110,9 +125,39 @@ struct V1StructureState
    bool            leg_initialized;
    datetime        leg_start_time;
 
+   // Rolling confirmed-wave window used only for the deterministic
+   // four-wave DEFENDED_RANGE_EDGE detector.
+   V1WaveRef       range_wave0;
+   V1WaveRef       range_wave1;
+   V1WaveRef       range_wave2;
+   V1WaveRef       range_wave3;
+   int             range_wave_count;
+
    long            processed_bars;
    long            confirmed_waves;
    long            structure_events;
+  };
+
+struct V1LiquidityPool
+  {
+   bool              valid;
+   string            id;
+   int               family;
+   ENUM_TIMEFRAMES   tf;
+   int               side;
+
+   double            bottom;
+   double            top;
+
+   string            source_id;
+   string            source_reason;
+
+   datetime          occurred_at;
+   datetime          available_at;
+
+   bool              consumed;
+   datetime          consumed_at;
+   int               consumption_type;
   };
 
 struct V1RuntimeBarEvent
@@ -136,6 +181,7 @@ ENUM_TIMEFRAMES g_timeframes[V1_TF_COUNT]=
   };
 
 V1StructureState g_structure[V1_TF_COUNT];
+V1LiquidityPool g_liquidity[];
 datetime         g_last_current_open[V1_TF_COUNT];
 bool             g_cursor_bar_pending[V1_TF_COUNT];
 datetime         g_history_first_date[V1_TF_COUNT];
@@ -148,6 +194,10 @@ int              g_log_handle=INVALID_HANDLE;
 bool             g_bootstrap_started=false;
 bool             g_bootstrap_finished=false;
 bool             g_in_bootstrap_replay=false;
+
+long             g_liquidity_created=0;
+long             g_liquidity_sweeps=0;
+long             g_liquidity_body_deliveries=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -197,6 +247,27 @@ string EventName(const int event_type)
    return "NONE";
   }
 
+string LiquidityFamilyName(const int family)
+  {
+   switch(family)
+     {
+      case V1_LIQ_EXTERNAL_SWING:       return "EXTERNAL_SWING";
+      case V1_LIQ_DEFENDED_RANGE_EDGE: return "DEFENDED_RANGE_EDGE";
+      case V1_LIQ_STRUCTURAL_REACTION: return "STRUCTURAL_REACTION";
+     }
+   return "UNKNOWN";
+  }
+
+string LiquidityConsumptionName(const int consumption)
+  {
+   switch(consumption)
+     {
+      case V1_LIQ_CONSUME_SWEEP:         return "SWEEP";
+      case V1_LIQ_CONSUME_BODY_DELIVERY: return "BODY_DELIVERY";
+     }
+   return "NONE";
+  }
+
 string InitStateName(const V1InitState state)
   {
    switch(state)
@@ -216,6 +287,7 @@ void ClearWave(V1WaveRef &wave)
   {
    wave.valid=false;
    wave.is_wave=false;
+   wave.liquidity_registered=false;
    wave.id="";
    wave.side=V1_SIDE_NONE;
    wave.price=0.0;
@@ -230,6 +302,7 @@ void CopyWave(const V1WaveRef &src,V1WaveRef &dst)
   {
    dst.valid=src.valid;
    dst.is_wave=src.is_wave;
+   dst.liquidity_registered=src.liquidity_registered;
    dst.id=src.id;
    dst.side=src.side;
    dst.price=src.price;
@@ -263,7 +336,10 @@ void LogLine(const string event_name,
          (event_name=="WAVE_CONFIRMED" ||
           event_name=="STRUCTURE_INITIAL_BOS" ||
           event_name=="STRUCTURE_BOS" ||
-          event_name=="STRUCTURE_PROTECTED_BREAK");
+          event_name=="STRUCTURE_PROTECTED_BREAK" ||
+          event_name=="LIQUIDITY_CREATED" ||
+          event_name=="LIQUIDITY_SWEEP" ||
+          event_name=="LIQUIDITY_BODY_DELIVERY");
 
       if(high_volume)
          return;
@@ -292,6 +368,9 @@ void LogLine(const string event_name,
 
 void LogStateSnapshot(const int tf_index,const datetime available_at,const string reason)
   {
+   if(g_in_bootstrap_replay && !InpLogBootstrapEvents && reason=="PROTECTED_BREAK")
+      return;
+
    string detail=StringFormat(
       "reason=%s trend=%s range_low=%.10f range_high=%.10f protected_low=%s protected_high=%s external_low=%s external_high=%s break_reference=%s",
       reason,
@@ -336,6 +415,12 @@ void ResetStructureState(V1StructureState &s,const ENUM_TIMEFRAMES tf)
    s.leg_initialized=false;
    s.leg_start_time=0;
 
+   ClearWave(s.range_wave0);
+   ClearWave(s.range_wave1);
+   ClearWave(s.range_wave2);
+   ClearWave(s.range_wave3);
+   s.range_wave_count=0;
+
    s.processed_bars=0;
    s.confirmed_waves=0;
    s.structure_events=0;
@@ -348,6 +433,11 @@ void InitStructureState(const int tf_index)
 
 void InitializeAllStructureStates()
   {
+   ArrayResize(g_liquidity,0);
+   g_liquidity_created=0;
+   g_liquidity_sweeps=0;
+   g_liquidity_body_deliveries=0;
+
    for(int i=0;i<V1_TF_COUNT;i++)
      {
       InitStructureState(i);
@@ -435,6 +525,509 @@ datetime HistoricalAvailableAt(const MqlRates &rates[],
    // timeframe slot. A weekend/session gap must NOT delay Friday structure
    // availability until the first Monday bar.
    return rates[index].time+seconds;
+  }
+
+
+//+------------------------------------------------------------------+
+//| Liquidity working-set logic                                      |
+//+------------------------------------------------------------------+
+double LiquidityTickSize()
+  {
+   double tick=SymbolInfoDouble(_Symbol,SYMBOL_TRADE_TICK_SIZE);
+   if(tick<=0.0)
+      tick=_Point;
+   return tick;
+  }
+
+bool HasOneTickAbove(const double price,const double level)
+  {
+   double tick=LiquidityTickSize();
+   double epsilon=tick*1.0e-6;
+   return (price-level)>=tick-epsilon;
+  }
+
+bool HasOneTickBelow(const double price,const double level)
+  {
+   double tick=LiquidityTickSize();
+   double epsilon=tick*1.0e-6;
+   return (level-price)>=tick-epsilon;
+  }
+
+int FindActiveLiquidityById(const string id)
+  {
+   for(int i=0;i<ArraySize(g_liquidity);i++)
+      if(g_liquidity[i].valid && g_liquidity[i].id==id)
+         return i;
+   return -1;
+  }
+
+void RemoveLiquidityAt(const int index)
+  {
+   int n=ArraySize(g_liquidity);
+   if(index<0 || index>=n)
+      return;
+
+   if(index<n-1)
+      g_liquidity[index]=g_liquidity[n-1];
+
+   ArrayResize(g_liquidity,n-1);
+  }
+
+void MarkWaveRegisteredIfMatch(V1WaveRef &wave,const string source_id)
+  {
+   if(wave.valid && wave.id==source_id)
+      wave.liquidity_registered=true;
+  }
+
+void MarkAllCurrentWaveCopiesRegistered(const int tf_index,const string source_id)
+  {
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].last_wave,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].neutral_high,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].neutral_low,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].external_high,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].external_low,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].protected_high,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].protected_low,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].break_reference,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].correction_high,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].correction_low,source_id);
+
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].range_wave0,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].range_wave1,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].range_wave2,source_id);
+   MarkWaveRegisteredIfMatch(g_structure[tf_index].range_wave3,source_id);
+  }
+
+bool AddLiquidityPool(const int tf_index,
+                      const int family,
+                      const int side,
+                      const double bottom,
+                      const double top,
+                      const string source_id,
+                      const string source_reason,
+                      const datetime occurred_at,
+                      const datetime available_at,
+                      const string explicit_id="")
+  {
+   if(side!=V1_SIDE_HIGH && side!=V1_SIDE_LOW)
+      return false;
+
+   // Frozen D-104: H4 is a long-horizon EXTERNAL_SWING index only.
+   if(tf_index==0 && family!=V1_LIQ_EXTERNAL_SWING)
+      return false;
+
+   double normalized_bottom=MathMin(bottom,top);
+   double normalized_top=MathMax(bottom,top);
+
+   string id=explicit_id;
+   if(id=="")
+      id=StringFormat("%s:liquidity:%s:%s:%s",
+                      TfName(g_timeframes[tf_index]),
+                      LiquidityFamilyName(family),
+                      SideName(side),
+                      source_id);
+
+   if(FindActiveLiquidityById(id)>=0)
+      return false;
+
+   int n=ArraySize(g_liquidity);
+   if(ArrayResize(g_liquidity,n+1,256)<0)
+     {
+      LogLine("LIQUIDITY_DETECTOR_ERROR",
+              TfName(g_timeframes[tf_index]),
+              available_at,
+              "",
+              "reason=LIQUIDITY_ARRAY_RESIZE_FAILED");
+      return false;
+     }
+
+   g_liquidity[n].valid=true;
+   g_liquidity[n].id=id;
+   g_liquidity[n].family=family;
+   g_liquidity[n].tf=g_timeframes[tf_index];
+   g_liquidity[n].side=side;
+   g_liquidity[n].bottom=normalized_bottom;
+   g_liquidity[n].top=normalized_top;
+   g_liquidity[n].source_id=source_id;
+   g_liquidity[n].source_reason=source_reason;
+   g_liquidity[n].occurred_at=occurred_at;
+   g_liquidity[n].available_at=available_at;
+   g_liquidity[n].consumed=false;
+   g_liquidity[n].consumed_at=0;
+   g_liquidity[n].consumption_type=V1_LIQ_CONSUME_NONE;
+
+   g_liquidity_created++;
+
+   string detail=StringFormat(
+      "family=%s side=%s bottom=%.10f top=%.10f source_id=%s source_reason=%s occurred_at=%s available_at=%s",
+      LiquidityFamilyName(family),
+      SideName(side),
+      normalized_bottom,
+      normalized_top,
+      source_id,
+      source_reason,
+      TimeToString(occurred_at,TIME_DATE|TIME_SECONDS),
+      TimeToString(available_at,TIME_DATE|TIME_SECONDS));
+
+   LogLine("LIQUIDITY_CREATED",
+           TfName(g_timeframes[tf_index]),
+           available_at,
+           id,
+           detail);
+
+   return true;
+  }
+
+void EnsureExternalSwingLiquidity(const int tf_index,
+                                  V1WaveRef &wave,
+                                  const datetime rank_available_at,
+                                  const string role_reason)
+  {
+   if(!wave.valid || !wave.is_wave || wave.liquidity_registered)
+      return;
+
+   string pool_id=StringFormat("%s:liquidity:EXTERNAL_SWING:%s:%s",
+                               TfName(g_timeframes[tf_index]),
+                               SideName(wave.side),
+                               wave.id);
+
+   if(FindActiveLiquidityById(pool_id)<0)
+     {
+      AddLiquidityPool(tf_index,
+                       V1_LIQ_EXTERNAL_SWING,
+                       wave.side,
+                       wave.wick_bottom,
+                       wave.wick_top,
+                       wave.id,
+                       role_reason,
+                       wave.occurred_at,
+                       rank_available_at,
+                       pool_id);
+     }
+
+   // Mark every live copy, not just this reference. This prevents the same
+   // structural reason from being resurrected after the pool is consumed.
+   MarkAllCurrentWaveCopiesRegistered(tf_index,wave.id);
+  }
+
+void RegisterCurrentExternalLiquidity(const int tf_index,
+                                      const datetime available_at)
+  {
+   // Protected references first so a swing that is both protected and
+   // structural external is attributed to the stronger causal reason.
+   EnsureExternalSwingLiquidity(tf_index,
+                                g_structure[tf_index].protected_high,
+                                available_at,
+                                "PROTECTED_PROMOTION");
+   EnsureExternalSwingLiquidity(tf_index,
+                                g_structure[tf_index].protected_low,
+                                available_at,
+                                "PROTECTED_PROMOTION");
+   EnsureExternalSwingLiquidity(tf_index,
+                                g_structure[tf_index].external_high,
+                                available_at,
+                                "EXTERNAL_EXTREME_PROMOTION");
+   EnsureExternalSwingLiquidity(tf_index,
+                                g_structure[tf_index].external_low,
+                                available_at,
+                                "EXTERNAL_EXTREME_PROMOTION");
+  }
+
+void PushRangeWave(V1StructureState &s,const V1WaveRef &wave)
+  {
+   if(s.range_wave_count==0)
+     {
+      CopyWave(wave,s.range_wave0);
+      s.range_wave_count=1;
+      return;
+     }
+
+   if(s.range_wave_count==1)
+     {
+      CopyWave(wave,s.range_wave1);
+      s.range_wave_count=2;
+      return;
+     }
+
+   if(s.range_wave_count==2)
+     {
+      CopyWave(wave,s.range_wave2);
+      s.range_wave_count=3;
+      return;
+     }
+
+   if(s.range_wave_count==3)
+     {
+      CopyWave(wave,s.range_wave3);
+      s.range_wave_count=4;
+      return;
+     }
+
+   CopyWave(s.range_wave1,s.range_wave0);
+   CopyWave(s.range_wave2,s.range_wave1);
+   CopyWave(s.range_wave3,s.range_wave2);
+   CopyWave(wave,s.range_wave3);
+   s.range_wave_count=4;
+  }
+
+bool RangeBodyContained(const V1StructureState &s,
+                        const datetime start_time,
+                        const datetime end_time,
+                        const double high_outer,
+                        const double low_outer)
+  {
+   MqlRates bars[];
+   ArraySetAsSeries(bars,false);
+
+   ResetLastError();
+   int copied=CopyRates(_Symbol,s.tf,start_time,end_time,bars);
+   if(copied<=0)
+     {
+      LogLine("LIQUIDITY_DETECTOR_ERROR",
+              s.name,
+              end_time+s.seconds,
+              "",
+              StringFormat("reason=RANGE_COPYRATES_FAILED start=%s end=%s error=%d",
+                           TimeToString(start_time,TIME_DATE|TIME_SECONDS),
+                           TimeToString(end_time,TIME_DATE|TIME_SECONDS),
+                           GetLastError()));
+      return false;
+     }
+
+   for(int i=0;i<copied;i++)
+     {
+      if(bars[i].close>high_outer || bars[i].close<low_outer)
+         return false;
+     }
+
+   return true;
+  }
+
+void TryCreateDefendedRangeLiquidity(const int tf_index,
+                                     const MqlRates &confirmation_bar,
+                                     const datetime available_at)
+  {
+   // H4 archive is intentionally EXTERNAL_SWING-only in V1.
+   if(tf_index==0)
+      return;
+
+   if(g_structure[tf_index].range_wave_count<4)
+      return;
+
+   V1WaveRef high1,high2,low1,low2;
+   ClearWave(high1);
+   ClearWave(high2);
+   ClearWave(low1);
+   ClearWave(low2);
+
+   bool pattern_high_first=
+      (g_structure[tf_index].range_wave0.side==V1_SIDE_HIGH &&
+       g_structure[tf_index].range_wave1.side==V1_SIDE_LOW &&
+       g_structure[tf_index].range_wave2.side==V1_SIDE_HIGH &&
+       g_structure[tf_index].range_wave3.side==V1_SIDE_LOW);
+
+   bool pattern_low_first=
+      (g_structure[tf_index].range_wave0.side==V1_SIDE_LOW &&
+       g_structure[tf_index].range_wave1.side==V1_SIDE_HIGH &&
+       g_structure[tf_index].range_wave2.side==V1_SIDE_LOW &&
+       g_structure[tf_index].range_wave3.side==V1_SIDE_HIGH);
+
+   if(!pattern_high_first && !pattern_low_first)
+      return;
+
+   if(pattern_high_first)
+     {
+      CopyWave(g_structure[tf_index].range_wave0,high1);
+      CopyWave(g_structure[tf_index].range_wave2,high2);
+      CopyWave(g_structure[tf_index].range_wave1,low1);
+      CopyWave(g_structure[tf_index].range_wave3,low2);
+     }
+   else
+     {
+      CopyWave(g_structure[tf_index].range_wave1,high1);
+      CopyWave(g_structure[tf_index].range_wave3,high2);
+      CopyWave(g_structure[tf_index].range_wave0,low1);
+      CopyWave(g_structure[tf_index].range_wave2,low2);
+     }
+
+   double high_bottom=MathMax(high1.wick_bottom,high2.wick_bottom);
+   double high_top=MathMin(high1.wick_top,high2.wick_top);
+   double low_bottom=MathMax(low1.wick_bottom,low2.wick_bottom);
+   double low_top=MathMin(low1.wick_top,low2.wick_top);
+
+   if(high_top<high_bottom || low_top<low_bottom)
+      return;
+
+   // The defended box must remain body-contained through the fourth
+   // confirmation bar. Physical wick excursions alone do not disqualify it.
+   if(!RangeBodyContained(g_structure[tf_index],
+                          g_structure[tf_index].range_wave0.occurred_at,
+                          confirmation_bar.time,
+                          high_top,
+                          low_bottom))
+      return;
+
+   string source_id=StringFormat("range:%s|%s|%s|%s",
+                                 g_structure[tf_index].range_wave0.id,
+                                 g_structure[tf_index].range_wave1.id,
+                                 g_structure[tf_index].range_wave2.id,
+                                 g_structure[tf_index].range_wave3.id);
+
+   datetime occurred_at=g_structure[tf_index].range_wave3.occurred_at;
+
+   AddLiquidityPool(tf_index,
+                    V1_LIQ_DEFENDED_RANGE_EDGE,
+                    V1_SIDE_HIGH,
+                    high_bottom,
+                    high_top,
+                    source_id,
+                    "FOUR_WAVE_DEFENDED_RANGE",
+                    occurred_at,
+                    available_at);
+
+   AddLiquidityPool(tf_index,
+                    V1_LIQ_DEFENDED_RANGE_EDGE,
+                    V1_SIDE_LOW,
+                    low_bottom,
+                    low_top,
+                    source_id,
+                    "FOUR_WAVE_DEFENDED_RANGE",
+                    occurred_at,
+                    available_at);
+  }
+
+void LogLiquidityConsumption(const V1LiquidityPool &pool,
+                             const MqlRates &bar,
+                             const datetime available_at,
+                             const int consumption_type)
+  {
+   double outer=(pool.side==V1_SIDE_HIGH ? pool.top : pool.bottom);
+   double extreme=(pool.side==V1_SIDE_HIGH ? bar.high : bar.low);
+   double tick=LiquidityTickSize();
+   double penetration_ticks=
+      (pool.side==V1_SIDE_HIGH ?
+       (bar.high-pool.top)/tick :
+       (pool.bottom-bar.low)/tick);
+
+   string detail=StringFormat(
+      "family=%s side=%s bottom=%.10f top=%.10f outer=%.10f pool_available_at=%s bar_open=%s high=%.10f low=%.10f close=%.10f extreme=%.10f penetration_ticks=%.4f consumption=%s",
+      LiquidityFamilyName(pool.family),
+      SideName(pool.side),
+      pool.bottom,
+      pool.top,
+      outer,
+      TimeToString(pool.available_at,TIME_DATE|TIME_SECONDS),
+      TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+      bar.high,
+      bar.low,
+      bar.close,
+      extreme,
+      penetration_ticks,
+      LiquidityConsumptionName(consumption_type));
+
+   LogLine(consumption_type==V1_LIQ_CONSUME_SWEEP ?
+              "LIQUIDITY_SWEEP" :
+              "LIQUIDITY_BODY_DELIVERY",
+           TfName(pool.tf),
+           available_at,
+           pool.id,
+           detail);
+  }
+
+void EvaluateLiquidityConsumption(const int tf_index,
+                                  const MqlRates &bar,
+                                  const datetime available_at)
+  {
+   ENUM_TIMEFRAMES tf=g_timeframes[tf_index];
+
+   int i=0;
+   while(i<ArraySize(g_liquidity))
+     {
+      if(!g_liquidity[i].valid ||
+         g_liquidity[i].tf!=tf ||
+         g_liquidity[i].available_at>=available_at)
+        {
+         i++;
+         continue;
+        }
+
+      int consumption=V1_LIQ_CONSUME_NONE;
+
+      if(g_liquidity[i].side==V1_SIDE_HIGH)
+        {
+         if(bar.close>g_liquidity[i].top)
+            consumption=V1_LIQ_CONSUME_BODY_DELIVERY;
+         else if(HasOneTickAbove(bar.high,g_liquidity[i].top) &&
+                 bar.close<=g_liquidity[i].top)
+            consumption=V1_LIQ_CONSUME_SWEEP;
+        }
+      else if(g_liquidity[i].side==V1_SIDE_LOW)
+        {
+         if(bar.close<g_liquidity[i].bottom)
+            consumption=V1_LIQ_CONSUME_BODY_DELIVERY;
+         else if(HasOneTickBelow(bar.low,g_liquidity[i].bottom) &&
+                 bar.close>=g_liquidity[i].bottom)
+            consumption=V1_LIQ_CONSUME_SWEEP;
+        }
+
+      if(consumption==V1_LIQ_CONSUME_NONE)
+        {
+         i++;
+         continue;
+        }
+
+      g_liquidity[i].consumed=true;
+      g_liquidity[i].consumed_at=available_at;
+      g_liquidity[i].consumption_type=consumption;
+
+      LogLiquidityConsumption(g_liquidity[i],bar,available_at,consumption);
+
+      if(consumption==V1_LIQ_CONSUME_SWEEP)
+         g_liquidity_sweeps++;
+      else
+         g_liquidity_body_deliveries++;
+
+      // Active-memory compression: consumed liquidity leaves the working set.
+      // The event log remains the audit ledger.
+      RemoveLiquidityAt(i);
+     }
+  }
+
+int CountActiveLiquidity(const ENUM_TIMEFRAMES tf,const int family=-1)
+  {
+   int count=0;
+   for(int i=0;i<ArraySize(g_liquidity);i++)
+     {
+      if(!g_liquidity[i].valid || g_liquidity[i].tf!=tf)
+         continue;
+      if(family>=0 && g_liquidity[i].family!=family)
+         continue;
+      count++;
+     }
+   return count;
+  }
+
+void LogLiquiditySnapshot(const int tf_index,const datetime available_at)
+  {
+   ENUM_TIMEFRAMES tf=g_timeframes[tf_index];
+
+   int external_count=CountActiveLiquidity(tf,V1_LIQ_EXTERNAL_SWING);
+   int range_count=CountActiveLiquidity(tf,V1_LIQ_DEFENDED_RANGE_EDGE);
+   int reaction_count=CountActiveLiquidity(tf,V1_LIQ_STRUCTURAL_REACTION);
+
+   string detail=StringFormat(
+      "active_total=%d external_swing=%d defended_range_edge=%d structural_reaction=%d structural_reaction_status=%s",
+      external_count+range_count+reaction_count,
+      external_count,
+      range_count,
+      reaction_count,
+      "WAITING_ROOT_SOURCE_LAYER");
+
+   LogLine("LIQUIDITY_STATE",
+           TfName(tf),
+           available_at,
+           "",
+           detail);
   }
 
 //+------------------------------------------------------------------+
@@ -832,13 +1425,13 @@ void ShiftRecentBars(V1StructureState &s,const MqlRates &bar)
    s.recent1=bar;
   }
 
-void ConfirmWaveIfAny(V1StructureState &s,
+bool ConfirmWaveIfAny(V1StructureState &s,
                       const MqlRates &bar,
                       const datetime available_at)
   {
    // We need the two previous closed bars plus this newly closed bar.
    if(s.recent_count<2)
-      return;
+      return false;
 
    MqlRates first=s.recent0;
    MqlRates second=s.recent1;
@@ -860,16 +1453,16 @@ void ConfirmWaveIfAny(V1StructureState &s,
 
    // Doji automatically interrupts because its colour is 0.
    if(side==V1_SIDE_NONE)
-      return;
+      return false;
 
    // Alternating confirmed-wave contract: do not confirm the same side twice
    // without an opposite confirmed wave in between.
    if(s.last_wave.valid && s.last_wave.side==side)
-      return;
+      return false;
 
    V1WaveRef wave;
    if(!BuildWaveFromLeg(s,side,third,available_at,wave))
-      return;
+      return false;
    s.confirmed_waves++;
 
    string detail=StringFormat(
@@ -884,6 +1477,7 @@ void ConfirmWaveIfAny(V1StructureState &s,
    LogLine("WAVE_CONFIRMED",s.name,available_at,wave.id,detail);
 
    CopyWave(wave,s.last_wave);
+   PushRangeWave(s,wave);
 
    if(s.trend==V1_TREND_NEUTRAL || s.trend==V1_TREND_TRANSITION)
       UpdateNeutralReferences(s,wave);
@@ -894,7 +1488,9 @@ void ConfirmWaveIfAny(V1StructureState &s,
    // not after the later confirmation bar.
    s.leg_initialized=true;
    s.leg_start_time=wave.occurred_at+s.seconds;
+   return true;
   }
+
 
 void UpdateDirectionalRanges(V1StructureState &s,const MqlRates &bar)
   {
@@ -929,15 +1525,31 @@ void ProcessClosedBar(const int tf_index,
    EnsureLegStart(g_structure[tf_index],bar);
 
    // Frozen within-close order:
-   // 1) pre-existing object invalidation / structure break
-   // 2) structure state update
-   // 3) newly confirmed object availability
+   // 1) consume/invalidate pre-existing objects
+   // 2) update structure state
+   // 3) publish newly confirmed objects
+   // 4) dependent authorization (not yet attached)
+   //
+   // Liquidity consumption comes first so a pool created at this same close
+   // can never self-sweep from the bar's already-completed wick.
+   EvaluateLiquidityConsumption(tf_index,bar,available_at);
+
    EvaluateExistingStructureBreaks(tf_index,
                                    g_structure[tf_index],
                                    bar,
                                    available_at);
    UpdateDirectionalRanges(g_structure[tf_index],bar);
-   ConfirmWaveIfAny(g_structure[tf_index],bar,available_at);
+
+   bool new_wave=ConfirmWaveIfAny(g_structure[tf_index],bar,available_at);
+
+   // Structural rank may have changed either through BOS/INITIAL_BOS or through
+   // the newly confirmed wave. Only confirmed WAVE references can create
+   // EXTERNAL_SWING liquidity; synthetic delivery extremes cannot.
+   RegisterCurrentExternalLiquidity(tf_index,available_at);
+
+   if(new_wave)
+      TryCreateDefendedRangeLiquidity(tf_index,bar,available_at);
+
    ShiftRecentBars(g_structure[tf_index],bar);
   }
 
@@ -1018,11 +1630,11 @@ bool BootstrapStructureCore()
    g_init_state=V1_INIT_ACTIVE_MAP;
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
-   // Root/source/liquidity phases will be attached to this exact replay
-   // backbone in later milestones. For Phase 1, structure states are the
-   // authoritative output and trading remains disabled.
+   // Phase 2 reconstructs active H4/H1/M30/M15 liquidity on the same causal
+   // replay. Root/source ownership is still a later layer, so
+   // STRUCTURAL_REACTION remains dormant.
    g_init_state=V1_INIT_SOURCE_CONTEXT;
-   LogLine("INIT_STATE","",now,"","PHASE1_STRUCTURE_CORE_SOURCE_LAYER_NOT_YET_ATTACHED");
+   LogLine("INIT_STATE","",now,"","PHASE2_LIQUIDITY_READY_ROOT_SOURCE_NOT_YET_ATTACHED");
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -1057,12 +1669,20 @@ bool BootstrapStructureCore()
    g_init_state=V1_READY;
    g_bootstrap_finished=true;
 
+   int h4_long_horizon_count=
+      CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
+
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_STRUCTURE_ONLY ready_at=%s",
-                        TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS)));
+           StringFormat("READY_PHASE2_LIQUIDITY ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d",
+                        TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
+                        h4_long_horizon_count,
+                        ArraySize(g_liquidity)));
 
    for(int i=0;i<4;i++)
+     {
       LogStateSnapshot(i,now,"BOOTSTRAP_COMPLETE");
+      LogLiquiditySnapshot(i,now);
+     }
 
    return true;
   }
@@ -1210,7 +1830,7 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
 
    // Frozen architecture point:
    // Scenario/order authorization runs only AFTER all same-timeframe-close
-   // structure/object updates. Trading layer is intentionally absent in Phase 1.
+   // structure/liquidity updates. Trading layer is intentionally absent in Phase 2.
   }
 
 //+------------------------------------------------------------------+
@@ -1248,7 +1868,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.11 property_version=1.00 magic=%I64d phase=STRUCTURE_ONLY",
+           StringFormat("build=0.21 property_version=1.00 magic=%I64d phase=LIQUIDITY_CORE",
                         InpMagicNumber));
 
    // Do not fail initialization just because MT5 is still synchronizing history.
@@ -1261,9 +1881,13 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d created=%I64d sweeps=%I64d body_deliveries=%I64d",
                         reason,
-                        InitStateName(g_init_state)));
+                        InitStateName(g_init_state),
+                        ArraySize(g_liquidity),
+                        g_liquidity_created,
+                        g_liquidity_sweeps,
+                        g_liquidity_body_deliveries));
 
    if(g_log_handle!=INVALID_HANDLE)
      {
@@ -1296,11 +1920,11 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              "Phase1 trading disabled; new runtime structure events start here");
+              "Phase2 trading disabled; runtime structure/liquidity events start here");
      }
 
    ProcessRuntimeClosedBars((datetime)tick.time);
 
-   // No trade submission in Phase 1.
+   // No trade submission in Phase 2.
   }
 //+------------------------------------------------------------------+
