@@ -56,24 +56,70 @@ Objective
 
 ## Current Status
 
-No new EA baseline has been implemented yet.
+INITIAL_CHOCH_FVG core entry
+→ FROZEN
 
-The next task is not MQL5 coding.
-The next task is to finish the remaining execution-lifecycle rules around the now-frozen initial CHoCH-FVG entry geometry and compare them with existing implementations.
+FVG availability
+→ FROZEN
+→ Candle3 close
+
+Candidate snapshot / widest-FVG freeze
+→ FROZEN
+→ meaningful M1 CHoCH candle close
+
+Post-CHoCH FVG inclusion
+→ FORBIDDEN
+
+Pre-authorization FVG retest
+→ candidate excluded
+
+Baseline pending entry
+→ LONG BUY_LIMIT at FVG.top
+→ SHORT SELL_LIMIT at FVG.bottom
+
+Spread-adjusted entry
+→ NOT BASELINE
+→ future optimization variant
+
+Strategy SL
+→ LONG: FVG.bottom - 20% width
+→ SHORT: FVG.top + 20% width
+
+Tick normalization
+→ entry: preserve strategy boundary
+→ LONG SL: outward/down
+→ SHORT SL: outward/up
+
+Bid/Ask execution semantics
+→ FROZEN
+
+StopsLevel violation
+→ EXECUTION_INFEASIBLE / NO ORDER
+
+FreezeLevel cancellation failure
+→ EXECUTION_DIVERGENCE tracking
+
+Pending MT5 lifetime
+→ ORDER_TIME_GTC
+
+Causal pending cancellation
+→ FROZEN
+
+Time-based strategy cancellation
+→ TBD
 
 ## Next Task
 
 Create the first EA rule mapping for:
 
-1. Market Structure
-2. Liquidity
-3. HTF Root OB
-4. Causal LTF Refinement
-5. Sweep
-6. M1 CHoCH
-7. FVG availability / selection / first-retest lifecycle
-8. Pending-order cancellation and broker execution constraints
-9. Objective / TP
+1. Decide whether V1 needs time-based pending cancellation.
+2. Final Objective/TP audit.
+3. Full AGENTS / EA_SPEC / DECISIONS consistency audit.
+4. Freeze deterministic V1 specification.
+5. Implement minimum MQL5 EA.
+6. Compile in MetaEditor.
+7. Run MT5 Strategy Tester with Every tick based on real ticks.
+8. Validate implementation parity before profitability optimization.
 
 Each rule must be classified as:
 

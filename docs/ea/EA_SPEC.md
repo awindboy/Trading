@@ -4071,7 +4071,12 @@ Required:
 
 width > 0
 
-FVG는 Candle 3가 close된 이후에만 available하다.
+FVG는 Candle 3가 완전히 close된 이후에만 available하다.
+
+FVG.available_at = Candle3 close
+
+진행 중인 Candle3를 이용해
+FVG candidate를 미리 생성하거나 주문을 authorize하지 않는다.
 
 ### 8.3 Causal Execution-FVG Qualification
 
@@ -4111,9 +4116,41 @@ NO BASE FIRST-POSITION ENTRY
 
 다.
 
-### 8.4 Multiple FVG Selection
+``` text
+Candidate eligibility는 meaningful CHoCH candle close 시점에 판정한다.
+
+해당 시점까지 candidate FVG는 반드시:
+
+1. 이미 available 상태여야 한다.
+2. meaningful CHoCH와 같은 방향이어야 한다.
+3. 같은 authorized sweep-to-CHoCH causal leg에 속해야 한다.
+4. 형성 이후 아직 retest되지 않았어야 한다.
+5. 아직 consumed / invalidated되지 않았어야 한다.
+
+FVG가 available된 뒤
+meaningful CHoCH candle close 전에 가격이 해당 FVG를 다시 접촉했다면:
+
+FVG available
+→ pre-authorization retest
+→ candidate 제외
+
+로 처리한다.
+
+이미 지나간 retest를
+CHoCH 확정 뒤 사후 entry로 복원하지 않는다.
+```
+
+### 8.4 Multiple FVG Selection and Freeze
 
 Classification: D
+
+Meaningful CHoCH를 만든 M1 candle이 close되는 순간
+현재 first-position execution candidate set을 freeze한다.
+
+candidate_freeze_at = CHoCH candle close
+
+이 시점에 Section 8.3의 eligibility를 만족하는
+valid FVG만 snapshot한다.
 
 같은 authorized sweep → meaningful CHoCH causal displacement 안에
 valid FVG가 여러 개 존재하면:
@@ -4141,23 +4178,47 @@ AMBIGUOUS_EXECUTION_FVG
 
 로 처리한다.
 
-### 8.5 Retest
+CHoCH candle close 이후 새로 형성되는 FVG는
+현재 `INITIAL_CHOCH_FVG` candidate set에 추가하지 않는다.
+
+이미 freeze된 selected FVG를
+이후 생성된 더 넓은 FVG로 교체하지 않는다.
+
+CHoCH close 시점에 eligible FVG가 하나도 없으면:
+
+NO BASE FIRST-POSITION ENTRY
+
+다.
+
+### 8.5 First Retest
 
 Classification: D
 
-Selected FVG와 meaningful CHoCH가 모두 available된 이후
-가격이 selected FVG와 처음 교차하면
-first retest로 정의한다.
+Selected FVG는 meaningful CHoCH candle close에서 freeze된다.
 
-Intersection:
+그 이후 selected FVG의 direction-specific entry boundary에
+처음 다시 도달하는 것을 first authorized retest로 정의한다.
 
-bar.high >= FVG.bottom
-AND
-bar.low <= FVG.top
+LONG:
 
-FVG 생성 candle 내부의 과거 movement 또는
-CHoCH/order authorization 전에 이미 지나간 touch를
-사후 retest로 복원하지 않는다.
+price reaches selected bullish FVG.top
+
+SHORT:
+
+price reaches selected bearish FVG.bottom
+
+실제 baseline execution은
+해당 boundary에 pending limit order를 미리 제출하는 방식이다.
+
+따라서 first authorized retest와
+pending order activation/fill은
+MT5의 실제 Bid/Ask execution semantics에 따라 기록한다.
+
+FVG 생성 이후 CHoCH/order authorization 전에 이미 발생한 touch는
+first authorized retest가 아니다.
+
+그 FVG는 Section 8.3에 따라
+candidate에서 제외되어야 한다.
 
 같은 first-position execution chain에서
 두 번째 이후 touch는 재사용하지 않는다.
@@ -4185,6 +4246,26 @@ causal execution OB retest
 market chase
 RR-optimized internal FVG price
 
+MT5 baseline order type:
+
+LONG:
+BUY_LIMIT at selected bullish FVG.top
+
+SHORT:
+SELL_LIMIT at selected bearish FVG.bottom
+
+V1 baseline은 strategy entry에
+spread offset을 추가하지 않는다.
+
+향후 optimization 단계에서:
+
+spread-aware pending-price adjustment
+
+를 별도 execution variant로 비교할 수 있다.
+
+해당 variant는 baseline strategy geometry를
+사후 변경하지 않는다.
+
 ### 8.7 Required Entry State
 
 Minimum state:
@@ -4204,6 +4285,22 @@ candidate_fvg_widths
 
 first_retest_at
 entry_price
+
+candidate_freeze_at
+
+excluded_pre_retested_fvg_ids
+excluded_consumed_fvg_ids
+
+selected_fvg_frozen_at
+
+strategy_entry_price
+normalized_entry_price
+
+pending_created_at
+
+bid_at_authorization
+ask_at_authorization
+spread_at_authorization
 
 execution_model = INITIAL_CHOCH_FVG
 
@@ -4257,14 +4354,52 @@ fixed point stop
 audit reference로 보존할 수 있지만
 `INITIAL_CHOCH_FVG`의 전략 SL 가격 자체를 변경하지 않는다.
 
-실제 주문 가격은 symbol의 valid tick size에 맞게 normalize한다.
+실제 주문 가격은 symbol의:
 
-Broker spread / stops level / Bid-Ask execution constraint를
-이 전략 SL과 정확히 어떻게 연결할지는
-execution-infrastructure 단계에서 별도로 확정한다.
+SYMBOL_TRADE_TICK_SIZE
 
-그 결정 전까지 broker constraint를 이유로
-위 전략 SL 공식을 임의 변경하지 않는다.
+에 맞는 valid trade-price grid를 사용한다.
+
+Digits 또는 SYMBOL_POINT만으로
+실제 executable price increment를 가정하지 않는다.
+
+Entry FVG boundary는 OHLC 기반 가격이므로
+원칙적으로 tick grid 위에 있어야 한다.
+
+floating-point 표현 오차 제거를 넘어
+entry의 경제적 가격 자체를 이동해야만 valid tick이 된다면:
+
+EXECUTION_PRICE_NOT_REPRESENTABLE
+→ NO TRADE
+
+로 처리한다.
+
+20% FVG-width SL 계산값이 tick grid 사이에 위치하면
+전략 SL을 좁히지 않는 방향으로 normalize한다.
+
+LONG:
+
+raw_SL = FVG.bottom - 0.20 * FVG.width
+normalized_SL =
+greatest valid tick price <= raw_SL
+
+SHORT:
+
+raw_SL = FVG.top + 0.20 * FVG.width
+normalized_SL =
+smallest valid tick price >= raw_SL
+
+즉 tick normalization은
+원래 전략 stop distance를 유지하거나
+최소 tick만큼 더 넓힐 수는 있지만
+절대로 더 좁히지 않는다.
+
+Broker execution constraint 때문에
+FVG selection, entry boundary 또는
+20% FVG-width strategy SL을 임의 변경하지 않는다.
+
+해당 frozen geometry가 broker constraint를 만족하지 못하면
+Section 11의 `EXECUTION_INFEASIBLE` 규칙을 적용한다.
 
 ## 10. Objective / TP
 
@@ -4278,16 +4413,375 @@ TP must follow the frozen objective family defined before entry.
 Exact deterministic objective selection:
 TBD.
 
-## 11. Pending Order Cancellation
+## 11. Pending Order Lifecycle + MT5 Execution Constraints
 
-Current contract includes:
-- source invalidation
-- objective delivery before fill
-- entry zone consumption / invalidation
-- new opposing owner where applicable
+Status: PARTIALLY FROZEN FOR V1
 
-Exact state machine:
-TBD.
+### 11.1 Strategy vs Execution State
+
+Classification: D
+
+Strategy validity와 broker execution feasibility를 분리한다.
+
+예:
+
+valid strategy signal
++
+broker constraint violation
+
+은:
+
+strategy_signal = VALID
+execution_state = EXECUTION_INFEASIBLE
+
+로 기록한다.
+
+Broker constraint 때문에
+전략 geometry를 사후 변경하지 않는다.
+
+### 11.2 Bid / Ask Semantics
+
+Classification: D
+
+MT5 pending execution은 side-specific market price를 사용한다.
+
+BUY_LIMIT:
+
+Ask-side execution / activation semantics
+
+SELL_LIMIT:
+
+Bid-side execution / activation semantics
+
+Protective stop:
+
+LONG SL
+→ Bid-side execution
+
+SHORT SL
+→ Ask-side execution
+
+따라서 execution-sensitive event에서는
+Bid와 Ask를 모두 기록한다.
+
+### 11.3 StopsLevel
+
+Classification: D
+
+Order authorization 시:
+
+SYMBOL_TRADE_STOPS_LEVEL
+SYMBOL_POINT
+
+를 읽어 broker minimum distance를 price unit으로 계산한다.
+
+Pending entry legality:
+
+BUY_LIMIT:
+
+Ask - entry
+>= broker minimum distance
+
+SELL_LIMIT:
+
+entry - Bid
+>= broker minimum distance
+
+Attached SL / TP도
+broker가 요구하는 applicable minimum-distance constraint를 만족해야 한다.
+
+만약 frozen strategy geometry가
+broker minimum-distance constraint를 만족하지 못하면:
+
+EXECUTION_INFEASIBLE
+→ NO ORDER
+
+이다.
+
+금지:
+
+move FVG entry
+widen strategy SL only to satisfy broker
+replace selected FVG
+change frozen objective
+
+Strategy validity와 broker feasibility는
+ledger에서 별도로 기록한다.
+
+### 11.4 FreezeLevel
+
+Classification: D
+
+EA는:
+
+SYMBOL_TRADE_FREEZE_LEVEL
+
+을 읽고 기록한다.
+
+Strategy cancellation event가 발생하면
+strategy state는 즉시:
+
+CANCELED
+
+가 된다.
+
+그 뒤 EA는 실제 MT5 pending order 삭제를 요청한다.
+
+Broker freeze restriction 또는 server constraint 때문에
+삭제가 거부되면:
+
+strategy_state = CANCELED
+execution_state = CANCEL_REJECTED_BY_BROKER
+
+로 기록한다.
+
+그 broker order가 이후 실제 체결되면:
+
+EXECUTION_DIVERGENCE
+
+로 분류한다.
+
+이 체결은 strategy-parity performance에서 제외하고
+execution-infrastructure failure로 별도 집계한다.
+
+### 11.5 Pending Order Lifetime
+
+Classification: D for infrastructure
+
+현재 time-based strategy cancellation은 아직 확정하지 않는다.
+
+time_based_strategy_cancellation = TBD
+
+그 전까지 MT5 pending order 자체는:
+
+ORDER_TIME_GTC
+
+를 사용한다.
+
+즉 임의 broker expiration을
+아직 미확정인 strategy timeout의 대체 규칙으로 사용하지 않는다.
+
+Causal cancellation event가 발생하면
+EA가 직접 pending order 삭제를 요청한다.
+
+### 11.6 Pending Filling Policy
+
+Classification: D for V1 infrastructure
+
+Pending order request는 baseline에서:
+
+ORDER_FILLING_RETURN
+
+을 사용한다.
+
+단, broker/server가 해당 symbol에서
+다른 filling policy를 강제하는 경우
+symbol capability를 먼저 확인한다.
+
+Trade request 결과는 반드시
+trade-server retcode까지 확인한다.
+
+Local function return만으로
+주문이 server에 정상 수락되었다고 판정하지 않는다.
+
+Record:
+
+order_send_result
+trade_server_retcode
+broker_order_ticket
+rejection_reason
+
+Server rejection이면:
+
+strategy signal may remain VALID
+execution = REJECTED
+
+로 기록한다.
+
+### 11.7 Preflight Validation
+
+Classification: D
+
+OrderSend 전에
+OrderCheck-equivalent preflight와
+symbol-property validation을 수행한다.
+
+최소 검사:
+
+trade mode permits requested direction
+pending order type supported
+entry on valid tick grid
+SL on valid tick grid
+TP on valid tick grid
+entry respects StopsLevel
+SL / TP respect applicable broker distance
+volume respects min / max / step
+margin / request check acceptable
+
+실패:
+
+EXECUTION_INFEASIBLE
+→ NO ORDER
+
+Strategy signal은 research ledger에 남긴다.
+
+### 11.8 No Automatic Strategy-Price Repair
+
+Classification: D
+
+Execution layer가 자동 변경해서는 안 되는 항목:
+
+selected FVG
+FVG entry boundary
+20% FVG-width strategy SL
+frozen objective / TP
+
+허용되는 자동 변환:
+
+floating-point cleanup
+Section 9의 directional tick normalization
+기존 risk-sizing contract에 따른 valid lot-step normalization
+
+Frozen strategy geometry가
+broker에 합법적으로 제출될 수 없다면:
+
+EXECUTION_INFEASIBLE
+→ NO ORDER
+
+이다.
+
+### 11.9 Causal Pending Cancellation
+
+Classification: D
+
+Time-only cancellation을 제외한
+현재 frozen causal cancellation condition은 유지한다.
+
+다음 중 applicable condition이 발생하면
+pending strategy order를 취소한다.
+
+frozen objective delivered before fill
+HTF Root / parent owner invalidated
+final refined source invalidated
+trigger protected structure invalidated
+selected FVG invalidated / consumed before valid fill
+opposing owner confirmed where applicable
+source episode terminated where applicable
+
+Event 발생 즉시:
+
+strategy_state = CANCELED
+
+로 변경하고
+MT5 pending order 삭제를 요청한다.
+
+이미 지나간 retest/fill을
+사후 복원하지 않는다.
+
+### 11.10 Time-Based Cancellation
+
+Classification: U
+
+아직 확정하지 않는다.
+
+N bars
+N minutes
+session close
+next day
+
+등 시간 경과만으로 pending order를 취소할지는:
+
+TBD
+
+다.
+
+결정 전까지 arbitrary timeout을 구현하지 않는다.
+
+### 11.11 Execution State Machine
+
+PREPARED
+→ ARMED
+→ SWEEP_CONFIRMED
+→ CHOCH_CONFIRMED
+
+at CHOCH candle close:
+    snapshot already-available causal FVGs
+    exclude pre-retested / consumed FVGs
+    select widest
+    ignore all future FVGs
+
+→ FVG_SELECTED
+
+execution preflight:
+    tick-grid validation
+    Bid/Ask legality
+    StopsLevel
+    trade mode
+    volume
+    margin / request validation
+
+if infeasible:
+    → EXECUTION_INFEASIBLE
+    → NO ORDER
+
+if feasible:
+    → PENDING
+    → MT5 limit order
+
+then:
+
+valid activation / fill
+→ FILLED
+
+or:
+
+causal strategy cancellation
+→ CANCELED
+→ request MT5 pending deletion
+
+if broker refuses deletion and order later fills:
+→ EXECUTION_DIVERGENCE
+
+### 11.12 Required Execution Ledger
+
+Minimum fields:
+
+symbol_tick_size
+symbol_point
+symbol_digits
+symbol_stops_level
+symbol_freeze_level
+
+strategy_entry_price
+normalized_entry_price
+
+raw_strategy_sl
+normalized_sl
+
+bid_at_authorization
+ask_at_authorization
+spread_at_authorization
+
+order_type
+order_time_type
+order_filling_type
+
+preflight_result
+order_send_retcode
+broker_order_ticket
+
+pending_created_at
+
+first_retest_at
+fill_at
+fill_price
+
+strategy_cancel_at
+strategy_cancel_reason
+broker_cancel_result
+
+execution_status
+execution_divergence_reason
 
 ## 12. Explicitly Excluded From Baseline
 

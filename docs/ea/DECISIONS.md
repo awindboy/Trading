@@ -1315,3 +1315,205 @@ Status: ACTIVE
 
 기존 문서 내용은 역사/연구 기록으로 보존하며
 재감사 전 임의로 새 baseline에 맞춰 재작성하지 않는다.
+
+## D-055 — FVG becomes available only after Candle3 closes
+
+Status: ACTIVE
+
+A three-candle FVG becomes usable only after Candle3 is fully closed.
+
+FVG.available_at = Candle3 close
+
+An in-progress Candle3 cannot create an execution candidate.
+
+---
+
+## D-056 — Initial FVG candidate set freezes at meaningful CHoCH close
+
+Status: ACTIVE
+
+Meaningful M1 CHoCH를 만든 candle이 close되는 순간
+현재 first-position candidate set을 freeze한다.
+
+Eligible candidate는 그 시점까지:
+
+already available
+same causal sweep-to-CHoCH leg
+same direction
+not previously retested
+not consumed / invalidated
+
+이어야 한다.
+
+그 시점의 valid FVG 중 가장 넓은 FVG를 선택한다.
+
+CHoCH close 이후 형성되는 FVG는
+현재 candidate set에 추가하지 않으며
+selected FVG를 교체하지 않는다.
+
+---
+
+## D-057 — Pre-authorization FVG retest makes the FVG ineligible
+
+Status: ACTIVE
+
+Available FVG가 meaningful CHoCH close 전에
+이미 retest / fill / consumption을 겪었다면
+현재 first-position candidate에서 제외한다.
+
+과거 retest를 authorization 이후
+사후 entry로 복원하지 않는다.
+
+---
+
+## D-058 — Baseline entry is an exact FVG-boundary pending limit
+
+Status: ACTIVE
+
+LONG:
+BUY_LIMIT at bullish FVG.top
+
+SHORT:
+SELL_LIMIT at bearish FVG.bottom
+
+V1 baseline은 strategy entry에 spread offset을 적용하지 않는다.
+
+Spread-aware pending-price adjustment는
+향후 별도 optimization variant로 비교한다.
+
+---
+
+## D-059 — Time-based pending cancellation remains unresolved
+
+Status: ACTIVE / PARTIALLY OPEN
+
+Causal/event-driven cancellation은 사용한다.
+
+Pure time-based cancellation은:
+
+TBD
+
+로 유지한다.
+
+임의 N-bar / N-minute / session-close timeout을
+현재 baseline에 추가하지 않는다.
+
+---
+
+## D-060 — Tick size defines executable price granularity
+
+Status: ACTIVE
+
+MT5 executable price는
+SYMBOL_TRADE_TICK_SIZE를 기준으로 검증한다.
+
+Entry boundary는 floating-point cleanup을 넘어
+경제적 가격을 이동해서 맞추지 않는다.
+
+20% FVG-width SL은 stop을 좁히지 않는 방향으로 normalize한다.
+
+LONG:
+greatest valid tick <= raw SL
+
+SHORT:
+smallest valid tick >= raw SL
+
+---
+
+## D-061 — Broker minimum-distance constraints do not redefine strategy geometry
+
+Status: ACTIVE
+
+Frozen entry / SL / TP가
+SYMBOL_TRADE_STOPS_LEVEL 등 broker constraint를 만족하지 못하면:
+
+EXECUTION_INFEASIBLE
+→ NO ORDER
+
+로 처리한다.
+
+Entry, selected FVG, 20% strategy SL 또는 objective를
+broker constraint 통과 목적으로 임의 변경하지 않는다.
+
+---
+
+## D-062 — Bid / Ask execution semantics are explicit
+
+Status: ACTIVE
+
+BUY_LIMIT:
+Ask-side execution semantics
+
+SELL_LIMIT:
+Bid-side execution semantics
+
+LONG SL:
+Bid-side execution
+
+SHORT SL:
+Ask-side execution
+
+Execution-sensitive event에서
+Bid와 Ask를 모두 기록한다.
+
+---
+
+## D-063 — Pending orders use GTC until strategy timeout is separately frozen
+
+Status: ACTIVE
+
+Time-based strategy cancellation이 확정되기 전까지:
+
+ORDER_TIME_GTC
+
+를 사용한다.
+
+Causal cancellation event가 발생하면
+EA가 pending order 삭제를 요청한다.
+
+---
+
+## D-064 — Broker cancellation failure is execution divergence
+
+Status: ACTIVE
+
+Strategy cancellation 뒤
+FreezeLevel/server restriction 때문에
+pending order 삭제가 실패하면:
+
+strategy = CANCELED
+execution = CANCEL_REJECTED_BY_BROKER
+
+로 기록한다.
+
+그 주문이 이후 체결되면:
+
+EXECUTION_DIVERGENCE
+
+로 분류하고
+strategy-parity performance에서 제외한다.
+
+---
+
+## D-065 — Execution layer fails instead of silently repairing strategy geometry
+
+Status: ACTIVE
+
+OrderSend 전에
+tick grid, Bid/Ask legality, StopsLevel,
+trade mode, volume, margin/request feasibility를 검증한다.
+
+Frozen strategy geometry가 실행 불가능하면:
+
+EXECUTION_INFEASIBLE
+
+로 종료한다.
+
+Execution layer는:
+
+selected FVG
+entry boundary
+20% FVG-width SL
+objective
+
+를 자동 수정하지 않는다.
