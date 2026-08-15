@@ -1,14 +1,14 @@
-# 스승님식 수동 매매 절대 실행 계약
+# 스승님식 Deterministic EA V1 전략 실행 계약
 
-- 상태: `FROZEN / MANUAL-TRADING AUTHORITY`
+- 상태: `FROZEN / CURRENT V1 STRATEGY AUTHORITY`
 - 제정일: `2026-08-01`
-- 최근 개정: `2026-08-15` (`최초 진입을 CHoCH displacement FVG retest로 정정하고 widest-FVG 선택·FVG 기반 SL 규칙 추가`)
-- 적용 범위: 수동 차트 분석, 블라인드 리플레이, 데모 매매 판단
+- 최근 개정: `2026-08-15` (`최종 authority consistency audit 및 pre-implementation freeze`)
+- 적용 범위: deterministic EA, MT5 Strategy Tester, current V1 수동/블라인드 리플레이 검증
 
 ## 1. 문서의 지위
 
-이 문서는 사용자가 `스승님식으로 매매해`, `스승님 방식으로 차트를 봐`, `직접 매매해`라고 요청했을 때
-내가 가장 먼저 적용해야 하는 수동 매매 실행 계약이다.
+이 문서는 current deterministic Mentor EA V1의 최상위 전략 authority다.
+수동 차트 분석과 블라인드 리플레이도 current V1을 검증할 때 이 계약을 따른다.
 
 - 전략 근거는 이 폴더에 정리된 스승님의 21개 영상으로 제한한다.
 - 일반 ICT/SMC 지식, 기존 EA, V32, 점수 모델, 역설계 결과는 거래를 허가할 수 없다.
@@ -36,57 +36,39 @@
 
 이 순서에서 앞 단계가 없으면 뒷 단계는 아무리 선명해도 거래 근거가 아니다.
 
-아래 `DELIVERY_FVG_REPLACEMENT` 대체 실행 경로는 기존 계약을 역사적으로 보존한다. 최초 포지션 기본형이 `INITIAL_CHOCH_FVG`로 정정되었으므로 **현재 V1에서는 RE-AUDIT REQUIRED / 주문 권한 비활성**이며, 별도 감사 전까지 새 주문에 사용하지 않는다.
-
-기존 계약은 다음과 같다.
-
-```text
-동결된 owner / 방향 / objective / HTF-to-LTF OB lineage
--> 원래 OB 주문 미체결
--> 목적지 방향의 명확한 displacement와 구조 전달 재확인
--> displacement가 만든 fresh FVG와 causal OB
--> 기존 넓은 OB pending 취소
--> fresh FVG의 첫 되돌림
--> DELIVERY_FVG_REPLACEMENT 진입
--> displacement causal OB / protected swing / 원래 시나리오 무효화 바깥 SL
--> 처음 동결한 동일 objective TP
-```
-
-이 경로는 FVG가 새 시나리오를 만드는 것이 아니다. 이미 완성된 HTF 시나리오가 가격 전달로 확인됐을 때 **미체결 원주문의 실행 위치만 교체**한다.
+`DELIVERY_FVG_REPLACEMENT`, `DELIVERY_FVG_ADDON`, OB-only first entry 등
+비활성 execution variant의 상세 계약은 Git history와 research 문서에만 보존한다.
+Current V1 주문 권한에는 사용하지 않는다.
 
 ## 2. 시간봉의 고정 역할
 
-Active trading timeframes:
+| 역할 | 시간봉 | 권한 |
+| --- | --- | --- |
+| Long-horizon liquidity index | H4 | 오래된 ACTIVE external-swing liquidity만 압축 보존한다. |
+| Active map | H1, M30 | 방향, external/internal structure, dealing range, reversal permission의 authority다. |
+| Root/source candidate | H1, M30, M15 | current map과 causal displacement를 설명하는 Root 후보를 만들 수 있다. |
+| Refinement / context | M30, M15, M5 | Root의 lower-TF causal child와 correction context를 확인한다. |
+| Trigger | M1 | source reaction의 sweep, meaningful CHoCH, execution FVG를 확인한다. |
 
-Map:
-H1 / M30
+H4는 `LONG_HORIZON_LIQUIDITY_INDEX` 전용 frame이다.
 
-Refinement / context:
-M30 / M15 / M5
+H4는 다음 권한을 갖지 않는다.
 
-Trigger:
-M1
+```text
+scenario direction
+dealing range
+reversal permission
+Root/source
+entry
+```
 
-H4는 active trading map, Root/source, reversal permission,
-entry 판단에는 사용하지 않는다.
+H1/M30이 active trading map authority다.
 
-단,
-H4는 `LONG_HORIZON_LIQUIDITY_INDEX` 전용 frame으로 허용한다.
+M15는 active map authority는 아니지만
+current H1/M30 causal context 안에서 Root candidate가 될 수 있다.
 
-H4의 역할은
-수개월 단위의 아직 미소진인 의미 있는 external swing liquidity를
-압축해서 보존하고,
-current H1/M30 directional horizon 바깥의
-장기 objective candidate를 제공하는 것뿐이다.
-
-| 역할 | 시간봉 | 해야 하는 일 | 해서는 안 되는 일 |
-| --- | --- | --- | --- |
-| Map | H1, M30 | 외부/내부 구조, 현재 파동, 목적 유동성, 의미 있는 스윙과 root OB를 정한다. | 최근 고저점을 무조건 외부 유동성으로 승격하지 않는다. |
-| Refinement | M30, M15, M5 | 상위 OB와 같은 스윙 및 displacement를 설명하는 하위 OB를 찾는다. | 가격이 겹친다는 이유만으로 무관한 작은 OB를 연결하지 않는다. |
-| Correction context | M5 | refined OB 안에서 진행되는 correction과 sweep 후보의 맥락을 확인한다. | M5 신호만으로 최초 포지션을 허가하지 않는다. |
-| Trigger | M1 | OB 접촉 뒤 sweep, 의미 있는 CHoCH, execution zone을 확인한다. | POI가 정해지기 전에 M1에서 진입 후보부터 찾지 않는다. |
-
-M1은 **시나리오를 만드는 시간봉이 아니라 이미 존재하는 시나리오의 반응을 확인하는 시간봉**이다.
+M1은 시나리오를 만드는 시간봉이 아니라
+이미 존재하는 시나리오의 실행 반응을 확인하는 시간봉이다.
 
 ## 3. 목적지와 시장 지도
 
@@ -309,40 +291,106 @@ SHORT TP는 Ask-side execution semantics를 따른다.
 
 Current H1/M30 objective authority가 항상 우선한다.
 
-H4는 active map이 아니라
-장기 historical external-liquidity index다.
+PLAN 시점에:
 
-PLAN에서 먼저 current H1/M30 direction-ahead
-scope-compatible candidate를 수집한다.
+```text
+plan_reference_price
+=
+objective family freeze 시각까지 available한
+가장 최근 closed M1 candle의 close
+```
 
-그 뒤 current H1/M30 directional horizon 바깥의
-ACTIVE H4 EXTERNAL_SWING liquidity를
-같은 ordered family의 뒤쪽 candidate로 freeze할 수 있다.
+를 기록한다.
+
+먼저 current H1/M30의:
+
+```text
+causally-known
+unconsumed
+direction-ahead
+scope-compatible
+```
+
+primary candidate를 수집한다.
+
+Primary candidate가 하나 이상이면:
 
 LONG:
-H4 candidate > current H1/M30 directional horizon
+```text
+primary_directional_horizon
+=
+가장 높은 primary candidate price
+```
 
 SHORT:
-H4 candidate < current H1/M30 directional horizon
+```text
+primary_directional_horizon
+=
+가장 낮은 primary candidate price
+```
 
-Current H1/M30 direction-ahead candidate가 없다면
-현재 strategy price를 directional horizon으로 사용한다.
+다.
 
-H4 candidate는
-current H1/M30 objective를 대체하거나
-그보다 안쪽 target으로 사용하지 않는다.
+Primary candidate가 없으면:
 
-Entry/SL 이후에는 기존 nearest-first / 1R eligibility 규칙을 그대로 적용한다.
+```text
+primary_directional_horizon
+=
+plan_reference_price
+```
 
-H4는:
-trend authority
-dealing-range authority
-Root authority
-source authority
-reversal permission authority
-entry authority
+다.
 
-를 갖지 않는다.
+그 뒤 다음 H4 liquidity만
+동일 frozen ordered family의 바깥쪽 extension candidate로 추가할 수 있다.
+
+```text
+family = EXTERNAL_SWING
+timeframe = H4
+state = ACTIVE
+```
+
+LONG:
+
+```text
+H4 price > primary_directional_horizon
+```
+
+SHORT:
+
+```text
+H4 price < primary_directional_horizon
+```
+
+H4 extension은 다음 scope에서만 허용한다.
+
+```text
+EXTERNAL_CONTINUATION
+
+EXTERNAL_REVERSAL
+only after a new mature opposite H1 owner exists
+```
+
+다음 early reversal에는 H4 extension을 사용하지 않는다.
+
+```text
+old H1 owner still active
++
+reversal permission OPEN
++
+opposite M30-led early EXTERNAL_REVERSAL
+```
+
+이 경우 objective authority는
+기존 규칙대로 opposite mature M30 external liquidity에 한정한다.
+
+H4 candidate는 current H1/M30 horizon 안쪽 target을 대체하거나
+더 큰 R을 만들기 위해 삽입되지 않는다.
+
+PLAN freeze 후 Entry/SL이 알려지면
+기존 nearest-first / `planned R >= 1` eligibility 규칙만 적용한다.
+
+H4는 active direction/source/entry authority가 아니다.
 
 ### 3.2 외부와 내부를 혼동하지 않는다
 
@@ -766,26 +814,64 @@ M1은 HTF reversal permission 또는 map owner를
 
 ## 4. HTF root OB
 
-최초 포지션의 원인은 사전에 존재하는 `H1`, `M30`, 또는 `M15` root OB여야 한다.
+최초 포지션의 Root는 사전에 존재하는 `H1`, `M30`, 또는 `M15` causal OB여야 한다.
 
-root OB는 다음을 모두 설명해야 한다.
+Root는 다음을 모두 설명해야 한다.
 
-1. 의미 있는 스윙 고점 또는 저점 부근에 있다.
-2. 그 위치에서 실제 displacement가 출발했다.
-3. 그 displacement가 의미 있는 구조 전달이나 몸통 돌파를 만들었다.
-4. 아직 완전히 소비되거나 구조적으로 무효화되지 않았다.
-5. 현재 목적 유동성 방향과 연결되는 이유를 말로 설명할 수 있다.
+1. 의미 있는 external/protected 또는 structurally meaningful internal swing의 origin context에 있다.
+2. 해당 origin window 안의 마지막 opposite candle이다.
+3. 그 candle에서 시작한 same causal directional leg가 의미 있는 structure level을 body close로 전달했다.
+4. 현재 scenario direction/objective와 causal하게 연결된다.
+5. `strategy_state = ACTIVE`다.
 
-다음은 root OB가 아니다.
+Root strategy state는:
+
+```text
+ACTIVE
+INVALIDATED
+```
+
+두 개만 사용한다.
+
+Bullish Root:
+
+```text
+Root-own-timeframe close < Root.bottom
+→ INVALIDATED
+```
+
+Bearish Root:
+
+```text
+Root-own-timeframe close > Root.top
+→ INVALIDATED
+```
+
+Owner/causal structure invalidation도 Root를 invalidated한다.
+
+다음은 Root invalidation이 아니다.
+
+```text
+touch
+partial mitigation
+wick-only distal penetration followed by recovery
+N touches
+age
+```
+
+따라서 `fully consumed`, `fresh/mitigated/consumed` 같은 별도 Root strategy state를 사용하지 않는다.
+
+다음은 Root가 아니다.
 
 - 화면에서 가장 가까운 반대색 캔들
-- M1 반응을 보고 사후에 선택한 HTF 캔들
-- 구조 전달을 만들지 않은 임의의 캔들 묶음
-- 단순히 FVG와 겹치는 캔들
-- 이미 여러 번 완전히 체결된 OB
+- M1 반응을 보고 사후 선택한 HTF 캔들
+- structure delivery를 만들지 않은 임의 candle
+- FVG overlap만 있는 candle
 - HTF FVG 자체
+- 이미 `INVALIDATED`된 Root
 
-HTF FVG는 가격 전달의 비효율을 보여줄 수 있지만 **최초 포지션의 root source가 될 수 없다.**
+HTF FVG는 delivery inefficiency evidence일 수 있지만
+standalone Root/source authority를 갖지 않는다.
 
 ## 5. causal LTF OB refinement
 
@@ -1237,46 +1323,175 @@ killzone / day-of-week / session-time strategy filter를 새로 추가하지 않
 ### Hierarchical bootstrap / historical compression
 
 EA startup은 과거 모든 structure / OB / FVG / CHoCH를
-현재까지 영구 복원하지 않는다.
+현재까지 영구 보존하지 않는다.
 
-Bootstrap 역할:
+Bootstrap order:
 
-H4
-→ LONG_HORIZON_LIQUIDITY_INDEX
+```text
+1. H4 long-horizon liquidity index
+2. H1 / M30 / M15 chronological root-discovery stream
+3. current scenario-relevant ACTIVE Roots freeze
+4. targeted M30 / M15 / M5 child refinement
+5. current-source local M5 / M1 liquidity reconstruction
+6. READY
+```
+
+H4:
+
+```text
+→ same causal structure detector를 streaming replay
 → ACTIVE H4 EXTERNAL_SWING liquidity만 장기 보존
+```
 
+H1/M30/M15 root-discovery stream:
+
+```text
 H1/M30
-→ current active trading map 복원
-→ current owner / protected swing / dealing range / reversal state
-→ current-owner-relevant active liquidity / Root만 보존
+→ active map authority
 
-M30/M15/M5
-→ current active Root의 causal child/source window만 targeted reconstruction
+M15
+→ map authority 없음
+→ current H1/M30 causal context 아래 Root detector 역할만 가능
+```
 
-M1
-→ historical trigger tree를 보존하지 않음
-→ current source에 필요한 ACTIVE local liquidity만 압축 가능
-→ runtime first-position trigger는 startup 이후 새 event만 사용
+Historical M15 object tree 전체를 보존하지 않는다.
 
-Historical object가 현재 판단에 더 이상 영향을 주지 않으면
-full object tree를 memory에서 제거할 수 있다.
+Current scenario와 관계가 끝난 historical object는
+다음 active working-set에서 제거할 수 있다.
 
-Bootstrap 완료 후:
+다만 아래 중 하나가 reference하면 RAM에서 제거할 수 없다.
 
+```text
+current neutral-range construction
+current protected/external structure
+open BOS correction window
+ACTIVE liquidity
+ACTIVE Root/child/source
+active scenario
+active CHoCH reference
+H4 ACTIVE liquidity index
+```
+
+Consumed / invalidated / unreferenced object는:
+
+```text
+append-only audit storage에 기록
+→ in-memory working set에서 eviction 가능
+```
+
+이다.
+
+Audit log 자체를 전부 RAM에 보존할 필요는 없다.
+
+Bootstrap 완료 뒤:
+
+```text
 execution_epoch_start
+```
 
 를 freeze한다.
 
-Pre-start CHoCH/FVG/trigger/pending hypothesis는
-runtime order authorization에 사용하지 않는다.
+다음 first-position execution event는 모두
+`execution_epoch_start` 이후 새 event여야 한다.
 
-Startup이 source 내부에서 시작되면
-새 contact로 소급 처리하지 않고
-exit 후 later re-entry를 요구한다.
+```text
+source contact
+authorized sweep
+meaningful M1 CHoCH
+execution FVG
+```
+
+Pre-start CHoCH/FVG/pending hypothesis는 runtime order authority가 아니다.
+
+Startup 첫 observable price가 이미 final source 내부라면:
+
+```text
+STARTED_INSIDE_SOURCE
+```
+
+만 기록한다.
+
+새 contact를 소급 생성하지 않는다.
+
+```text
+exit source
+→ later re-entry
+→ new source contact
+```
+
+가 필요하다.
+
+### Closed-bar multi-timeframe processing order
+
+동일 timestamp에 여러 timeframe candle이 close되면:
+
+```text
+H4
+→ H1
+→ M30
+→ M15
+→ M5
+→ M1
+→ scenario/order authorization
+```
+
+순서로 처리한다.
+
+각 timeframe close 내부에서는:
+
+```text
+1. pre-existing object invalidation / consumption update
+2. structure-state update
+3. newly confirmed object availability
+4. dependent authorization
+```
+
+순서를 사용한다.
+
+이 순서는 look-ahead를 추가하는 것이 아니라
+동일 available timestamp의 deterministic tie-breaker다.
+
+### First-position concurrency / exposure
+
+Current V1은 risk-slot arbitration을 사용하지 않는다.
+
+한 symbol + EA magic 기준:
+
+```text
+max one live scenario per direction
+
+max one accepted first-position exposure:
+PENDING + FILLED <= 1
+```
+
+Reversal permission이 CLOSED이면
+active-map direction scenario만 first-position authority를 가진다.
+
+Reversal permission이 OPEN된 뒤에는
+opposite `EXTERNAL_REVERSAL` watch scenario가 존재할 수 있다.
+
+하지만 하나의 scenario가 broker에 accepted된 pending을 가지거나
+position이 fill되면
+다른 scenario는 새 first-position order를 제출할 수 없다.
+
+Blocked trigger chain을 exposure 종료 뒤 늦게 제출하지 않는다.
+새 order에는 새 execution chain이 필요하다.
+
+동일 processing epoch에서
+서로 반대 방향의 first-position order가 동시에 완성되면:
+
+```text
+NO_TRADE
+reason = AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+```
+
+로 처리한다.
+
+점수나 임의 direction priority를 만들지 않는다.
 
 ### SL
 
-`INITIAL_CHOCH_FVG` 최초 진입의 전략 SL은 selected FVG geometry로 정한다.
+`INITIAL_CHOCH_FVG` strategy SL:
 
 ```text
 width = FVG.top - FVG.bottom
@@ -1295,11 +1510,66 @@ SHORT:
 SL = FVG.top + buffer
 ```
 
-- 전략 SL은 symbol tick size에 맞게 가격 단위만 normalize한다.
-- broker spread / stops level / Bid-Ask 체결 제약을 전략 SL과 정확히 어떻게 연결할지는 execution infrastructure 단계에서 별도로 확정한다. 이 미결정을 이유로 전략 SL 공식을 임의 변경하지 않는다.
-- buffer 때문에 risk가 커지면 lot을 줄인다.
+Strategy SL은 `SYMBOL_TRADE_TICK_SIZE`에 맞춰
+risk를 줄이지 않는 방향으로만 normalize한다.
 
-`DELIVERY_FVG_REPLACEMENT`와 `DELIVERY_FVG_ADDON`의 SL 계약은 현재 최초 진입 규칙과 별개이며, 재감사/승격 전까지 새 V1 주문에 사용하지 않는다.
+Broker:
+
+```text
+Bid / Ask
+StopsLevel
+FreezeLevel
+trade mode
+margin
+```
+
+제약은 strategy geometry를 바꾸지 않는다.
+
+Frozen geometry가 실행 불가능하면:
+
+```text
+EXECUTION_INFEASIBLE
+→ NO ORDER
+```
+
+다.
+
+### V1 parity volume
+
+Strategy correctness / parity baseline은:
+
+```text
+sizing_mode = MINIMUM_VOLUME_PARITY
+order_volume = SYMBOL_VOLUME_MIN
+```
+
+을 사용한다.
+
+Volume은:
+
+```text
+SYMBOL_VOLUME_MIN
+SYMBOL_VOLUME_MAX
+SYMBOL_VOLUME_STEP
+```
+
+를 검증한다.
+
+Minimum volume 자체가 margin/request constraint를 통과하지 못하면:
+
+```text
+EXECUTION_INFEASIBLE
+→ NO ORDER
+```
+
+다.
+
+V1 parity 단계에서는 arbitrary risk-percent parameter를 추가하지 않는다.
+
+성과의 전략 비교 단위는 우선 R이다.
+
+Account-risk-percent sizing은
+implementation parity 완료 뒤 별도 execution/risk policy로 검토한다.
 
 ### TP
 
@@ -1351,66 +1621,74 @@ current V1 no-trade branch에 포함하지 않는다.
 
 ## 10. 블라인드 재생 규율
 
-1. H1/M30에서 map, scenario scope, ordered objective family, root OB를 먼저 동결한다. Final TP 하나는 Entry와 hard SL이 확정된 뒤 pre-frozen family에서 선택한다.
-2. M30/M15/M5에서 refinement 경로를 차트에 표시한다.
-3. 가격이 refined OB에 접근하기 전에는 M1을 보지 않는다.
-4. root OB 접근 뒤에는 M15/M5로 refinement와 correction을 확인하고, refined OB 실제 접촉 뒤에만 M1을 한 봉씩 확인한다.
-5. **사건 기반 판단 게이트:** map을 만들 때 `root OB 접근 경계 / refined OB 접근 경계 / pre-frozen objective candidate levels / source 무효화 / protected swing 몸통 돌파`를 먼저 동결한다. Final TP가 선택되기 전에는 objective-family candidate의 소진 여부를 사건으로 추적하고, Final TP가 선택된 뒤에는 selected objective의 delivery가 cancellation authority를 가진다. 사건에서 멈춘 뒤 `주문 동결 / 대기 / 비매매`를 기록하기 전에는 더 진행하지 않는다.
-6. 지나간 진입을 사후 주문으로 복원하지 않는다.
-7. 주문 전에 entry, SL, TP와 모든 원인 ID를 기록한다.
-8. 거래 결과를 본 뒤 OB, liquidity, CHoCH, SL, TP를 다시 그리지 않는다.
-9. 재생 제어 오류로 미래 데이터가 보이면 해당 세션을 즉시 폐기한다.
-10. 코드, 지표, 기존 후보 원장, 이후 가격은 매매 판단에 사용하지 않는다.
-11. `[RE-AUDIT REQUIRED / 현재 V1 비활성]` 기존 Delivery FVG replacement 절차에서는 원주문 미체결 뒤 시장가로 따라가지 않고 후속 fresh FVG의 첫 되돌림만 검토했다. 이 절차는 별도 재감사 전까지 새 V1 주문에 사용하지 않는다.
-12. `DELIVERY_FVG_REPLACEMENT`를 준비할 때도 해당 FVG가 나타난 시점까지의 데이터만 보고 owner·objective 유지, 구조 전달, causal OB, protected swing을 다시 동결한다.
-13. 재생을 빨리 넘겨 후보를 뒤늦게 발견한 것은 시장의 `미체결`이나 정상적인 `놓친 거래`가 아니라 **분석자 재생 절차 실패**다. 해당 거래일은 블라인드 성과 통계에서 제외하고 새 미사용 기간으로 다시 검증한다.
-14. 넓은 시간 구간의 OHLC를 한꺼번에 출력하거나 이후 봉을 먼저 열어 본 뒤 과거 시점의 판단을 복원하는 행위를 금지한다. 단, 사전에 동결한 사건 가격 중 하나에 도달할 때까지만 재생기가 자동 탐색하는 것은 허용한다. 이때 사건 이전의 이후 차트는 판단자에게 노출하지 않는다.
-15. `PREPARED` 상태에서 가격이 root OB와 충분히 떨어져 있고 동결된 무효화 사건도 없다면 H1 봉마다 같은 분석을 반복하지 않는다. root OB 접근 시 M15/M5로 전환하고, refined OB 실제 접촉 뒤에만 M1을 한 봉씩 진행한다.
-16. 빠른 재생 중 정지 조건은 사전에 가격으로 선언한 사건에 한정한다. 재생 결과를 본 뒤 더 유리한 POI나 정지 가격을 소급해서 추가할 수 없다.
+1. H1/M30에서 current map, scenario scope, ordered objective family와 Root context를 먼저 결정한다.
+2. M30/M15/M5에서 causal refinement를 확인한다.
+3. 가격이 final source에 도달하기 전에는 current scenario의 M1 trigger를 탐색하지 않는다.
+4. Source contact 뒤에만 eligible pre-existing liquidity sweep과 M1 CHoCH를 본다.
+5. PLAN에서 objective candidate family와 order를 먼저 freeze한다. Final TP 하나는 Entry/SL이 알려진 뒤 frozen family에서 선택한다.
+6. 지나간 entry/retest를 사후 주문으로 복원하지 않는다.
+7. 주문 전에 causal IDs, Entry, SL, TP, volume과 execution preflight를 기록한다.
+8. 결과를 본 뒤 Root/liquidity/CHoCH/FVG/SL/TP를 다시 그리지 않는다.
+9. 미래 데이터가 노출된 replay session은 protocol result에서 제외한다.
+10. `PLANNED / WAITING_TRIGGER` 상태에서 가격이 source와 멀리 있고 causal invalidation도 없다면 동일 분석을 불필요하게 반복하지 않는다.
+11. 사전에 선언된 structural/objective/source event에서만 replay를 정지한다.
+12. 비활성 Delivery-FVG/OB-only/add-on variant는 current V1 blind-replay 판단에 사용하지 않는다.
 
 ## 11. 주문 전 필수 증거
 
-아래 항목을 주문 전에 deterministic ledger에 기록한다.
-
-- scenario_id
-- scenario_scope
-- current owner / parent context
-- reversal permission origin if applicable
-- active dealing range / EQ / premium-discount position
-- frozen ordered objective family
-- candidate order
-- selected final objective
-- selected final objective planned R
-- HTF Root ID / timeframe / bounds
-- final causal child ID / timeframe / bounds
-- parent-child causal relation
-- source invalidation boundary
-- source contact time
-- active authorized sweep ID
-- swept liquidity ID / side / availability
-- M1 CHoCH reference swing ID / level
-- meaningful CHoCH event ID
-- eligible causal FVG IDs / widths
-- selected widest FVG ID / bounds / width
-- Entry
-- raw SL
-- normalized strategy SL
-- TP
-- Bid / Ask / spread at order submission
-- StopsLevel / FreezeLevel
-- execution preflight result
-- order-send retcode / broker ticket
-
-다음은 current V1 필수 전략 증거가 아니다.
+주문 전에 최소 다음을 deterministic ledger에 기록한다.
 
 ```text
-historical fallback tier
-candidate max-2 rule
-periodic H1/M15 re-approval timestamp
-DELIVERY_FVG_REPLACEMENT state
-DELIVERY_FVG_ADDON state
-GT V2 / Gemini / API latency state
+scenario_id
+scenario_scope
+scenario_direction
+active_map_tf
+owner / parent context
+
+plan_reference_price
+primary_directional_horizon
+frozen ordered objective family
+each candidate:
+    liquidity_id
+    family
+    timeframe
+    price
+    order_index
+
+selected final objective
+selected final objective planned_R
+
+Root ID / timeframe / bounds
+final child ID / timeframe / bounds
+parent-child lineage
+source invalidation boundary
+
+source_contact_at
+active_sweep_event_id
+active_choch_reference_swing_id
+meaningful CHoCH event ID
+
+eligible FVG IDs / widths
+selected FVG ID / bounds / width
+
+strategy Entry
+raw SL
+normalized SL
+TP
+
+sizing_mode
+order_volume
+EA magic number
+
+Bid / Ask / spread
+StopsLevel / FreezeLevel
+GTC capability
+execution preflight result
+order-send retcode / broker ticket
+strategy terminal reason if no order
 ```
+
+Historical inactive variant state는 current V1 필수 증거가 아니다.
 
 ## 12. 성과 분류
 
@@ -1570,7 +1848,7 @@ source invalidated before fill
 owner/direction authority revoked before fill
 ```
 
-## 18. Ground Truth / AI pipeline status
+## 17. Ground Truth / AI pipeline status
 
 Ground Truth V2,
 Gemini replay,

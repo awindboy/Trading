@@ -50,14 +50,20 @@
 
 ```text
 Market Structure
--> Liquidity
--> Source / Context Zone
+-> Liquidity / Objective
+-> Root / Causal LTF Source
+-> Source Contact
 -> Sweep
--> M1 CHoCH
--> Entry
--> Structural SL
--> Objective / TP
+-> Meaningful M1 CHoCH
+-> Causal CHoCH Displacement FVG
+-> Widest FVG
+-> FVG Near-Side Limit Entry
+-> FVG Distal ± 20% Width SL
+-> Frozen Objective / TP
 ```
+
+H4 is used only as a long-horizon external-liquidity index.
+It is not active map/source/entry authority.
 
 FVG add-on, mandatory extra BOS, quality scoring, complex challenger states, arbitrary RR fallback 등의 추가 규칙은 baseline에 포함하지 않는다.
 

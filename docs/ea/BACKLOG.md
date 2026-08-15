@@ -26,6 +26,12 @@
 - [ ] SL
 - [ ] TP
 - [ ] Pending cancellation
+- [ ] H4 long-horizon liquidity index
+- [ ] Hierarchical bootstrap / working-set pruning
+- [ ] Managed scenario/exposure identity by symbol + magic
+- [ ] Minimum-volume parity sizing
+- [ ] Same-timestamp MTF processing order
+- [ ] OnTradeTransaction ticket/history reconciliation
 
 ## P2 — Validation
 
@@ -37,7 +43,7 @@
 
 ## Deferred
 
-- [ ] FVG first-entry variant
+- [ ] OB-only first-entry variant
 - [ ] CHoCH+BOS variant
 - [ ] Delivery FVG replacement
 - [ ] Add-on positions

@@ -1,6 +1,6 @@
 # Mentor Baseline EA Specification
 
-Status: DRAFT
+Status: FROZEN FOR V1 IMPLEMENTATION
 Authority: `AGENTS.md`
 
 ## Rule Classification
@@ -13,40 +13,74 @@ Authority: `AGENTS.md`
 ## 1. Timeframes
 
 Long-horizon liquidity index:
+
+```text
 H4
+```
 
 Active map:
+
+```text
 H1
 M30
+```
+
+Root/source candidate:
+
+```text
+H1
+M30
+M15
+```
 
 Refinement:
+
+```text
 M30
 M15
 M5
+```
 
 Correction context:
+
+```text
 M5
+```
 
 Trigger:
+
+```text
 M1
+```
 
 H4 is not an active scenario-direction timeframe.
 
 H4 may not authorize:
 
+```text
 scenario direction
 dealing range
 reversal permission
 Root/source
-M1 trigger
 entry
+```
 
-Its only V1 output is:
-ACTIVE long-horizon EXTERNAL_SWING liquidity.
+Its only V1 strategy output is:
+
+```text
+ACTIVE EXTERNAL_SWING liquidity
+with timeframe = H4
+for LONG_HORIZON_LIQUIDITY_INDEX
+```
+
+M15 may own a Root candidate,
+but it does not own the H1/M30 active directional map.
+
+Only causally available closed-bar information may authorize strategy decisions.
 
 ## 2. Market Structure
 
-Status: PARTIALLY FROZEN
+Status: FROZEN FOR V1
 
 Primary authority:
 - `AGENTS.md`
@@ -745,68 +779,49 @@ Swing 또는 rank가 나중에 확정되더라도
 
 ### 2.17 Session Gap Handling
 
-Classification: H
+Classification: D / Frozen for V1
 
-`mentor_engine/structure.py`에는 market closure / gap이
-physical displacement나 3-candle wave confirmation으로 잘못 처리되지 않도록
-operational gap logic이 존재한다.
+Session closure itself does not reset or reverse structure.
 
-특히 기존 Python engine은:
+Do not fabricate synthetic bars or price paths across a no-quote interval.
 
-- non-contiguous bars가 3-candle wave를 완성하지 못하게 함
-- session gap 자체를 body break로 사용하지 않음
-- M1의 긴 closure 뒤 execution structure 일부를 reset함
+Actual closed bars after reopen may update structure normally
+under the same body-close / wave rules.
 
-현재 이 동작은 sensible implementation safeguard이지만
-`AGENTS.md`의 직접적인 전략 규칙은 아니다.
+Execution-FVG clock continuity and broker gap execution
+are specified in Section 11.13.
 
-Baseline EA에 정확히 어떻게 적용할지는 별도 decision으로 확정한다.
+### 2.18 Historical Bootstrap Requirement
 
-Status:
+Classification: D / Frozen for V1
 
-```text
-H — pending implementation decision
-```
+V1 does not use an arbitrary global N-bar warm-up.
 
-### 2.18 Warm-Up Requirement
+Historical initialization uses the hierarchical compressed bootstrap
+defined in Section 11.14.
 
-Classification: H
+Market Structure retains only the active working set
+needed for current/future causal decisions.
 
-Structure state는 테스트 시작 시점 이전의 과거 bars가 필요하다.
-
-Warm-up의 목적은:
-
-- active H1/M30 trend 복원
-- protected swing 복원
-- active dealing range 복원
-- 아직 살아 있는 external liquidity context 복원
-
-이다.
-
-고정된 arbitrary bar count는 아직 확정하지 않는다.
-
-Strategy Tester의 economic counting start보다 충분히 앞선 기간에서
-structure state를 재구성해야 한다.
-
-Exact warm-up requirement:
-
-```text
-TBD
-```
+Historical bars may be replayed without retaining
+the complete historical object tree in RAM.
 
 ### 2.19 Trend Engine State and Required Fields
 
 Classification: D
 
-Each timeframe maintains:
+Each active structure detector maintains the compact state required for
+future causal decisions.
 
+```text
 trend_state:
     NEUTRAL
     BULLISH
     BEARISH
     TRANSITION
 
-confirmed_waves[]
+neutral_range_high_id
+neutral_range_low_id
 
 external_high_id
 external_low_id
@@ -816,7 +831,7 @@ protected_low_id
 
 break_reference_id
 
-causal_correction_candidate_ids
+open_correction_candidate_ids
 causal_correction_extreme_id
 
 last_bos_id
@@ -824,9 +839,11 @@ last_choch_id
 
 range_high
 range_low
+```
 
-Each confirmed wave records:
+Each retained wave reference records:
 
+```text
 wave_id
 side
 price
@@ -839,6 +856,24 @@ role:
     EXTERNAL_EXTREME
     CAUSAL_CORRECTION
     PROTECTED
+```
+
+V1 does not require an unbounded in-memory `confirmed_waves[]` archive.
+
+A historical wave may be evicted from the in-memory working set only when it is not referenced by:
+
+```text
+neutral-range construction
+current protected/external structure
+open correction window
+ACTIVE liquidity
+ACTIVE Root/child/source
+active scenario
+active CHoCH reference
+H4 ACTIVE liquidity index
+```
+
+Evicted event metadata may be written to append-only audit storage.
 
 Core invariants:
 
@@ -853,7 +888,7 @@ Core invariants:
 9. Internal break cannot flip H1/M30 external trend.
 10. External trend invalidation requires body close through the current protected swing.
 11. Wick-only protected breach is not trend reversal.
-12. External/internal promotion uses structural role, not ATR/point/percentage thresholds.
+12. External/internal promotion uses structural role, not size thresholds.
 
 ### 2.20 H1/M30 Map Ownership, Trend Bias, and Reversal Permission
 
@@ -1164,13 +1199,19 @@ Market Structure baseline에는 다음을 넣지 않는다.
 - AI-based swing selection
 ```
 
+`H4 map` exclusion does not prohibit the Section 11.14
+`LONG_HORIZON_LIQUIDITY_INDEX`.
+
+The H4 index has liquidity-memory authority only,
+not map/scenario authority.
+
 이들은 필요하면 별도 research variant로만 검토한다.
 
 ---
 
 ## 3. Liquidity
 
-Status: PARTIALLY FROZEN
+Status: FROZEN FOR V1
 
 Primary authority:
 - `AGENTS.md`
@@ -1262,6 +1303,12 @@ H1/M30 meaningful previous low
 
 단, 해당 level은 현재 Market Structure engine에서
 external/protected structure의 일부로 인정되어야 한다.
+
+H4 protected/external swings may also create `EXTERNAL_SWING` liquidity,
+but only for `LONG_HORIZON_LIQUIDITY_INDEX`.
+
+H4 liquidity cannot be used as first-position source/sweep authority
+solely because it exists in the long-horizon index.
 
 ### 3.4 Defended Range Edge
 
@@ -1698,6 +1745,8 @@ family:
     DEFENDED_RANGE_EDGE
     STRUCTURAL_REACTION
 
+timeframe
+
 side:
     HIGH
     LOW
@@ -1719,26 +1768,23 @@ consumption_type:
     BODY_DELIVERY
 ```
 
-### 3.18 Remaining Dependencies
-
-Liquidity semantics는 V1 기준으로 대부분 확정하지만,
-`STRUCTURAL_REACTION`의 실제 활성화는
-zone engine의 다음 규칙이 확정되어야 완성된다.
+H4 long-horizon liquidity is represented as:
 
 ```text
-HTF Root OB
-Causal LTF Refinement
-OB ownership
-OB validity / invalidation
+family = EXTERNAL_SWING
+timeframe = H4
 ```
 
-따라서 Liquidity section status는 현재:
+No separate `H4_EXTERNAL_SWING` family is created.
 
-```text
-PARTIALLY FROZEN
-```
+### 3.18 Dependency Status
 
-으로 유지한다.
+Classification: D / Frozen for V1
+
+The Root/refinement/OB validity dependencies required by
+`STRUCTURAL_REACTION` are now frozen in Sections 4 and 5.
+
+Therefore the Liquidity section is fully frozen for V1 implementation.
 
 ---
 
@@ -2048,7 +2094,7 @@ same causal leg
 valid opposite candle
 meaningful structure body-break
 scenario direction alignment
-freshness
+strategy_state = ACTIVE
 ```
 
 `FVG_ORIGIN_OB`는 V1 최초 Root source로 사용하지 않는다.
@@ -2287,7 +2333,7 @@ meaningful high body-close break
         ↓
 Root available
         ↓
-Root still fresh / structurally valid
+Root strategy_state = ACTIVE
         ↓
 search causal LTF child
 ```
@@ -2309,7 +2355,7 @@ meaningful low body-close break
         ↓
 Root available
         ↓
-Root still fresh / structurally valid
+Root strategy_state = ACTIVE
         ↓
 search causal LTF child
 ```
@@ -3638,34 +3684,39 @@ Sweep이 확정되기 전에
 
 ### 6.22 Scenario-Specific Sweep State
 
-각 scenario는 최소 다음 state를 보존한다.
+Minimum scenario-linked state:
 
 ```text
 scenario_id
-
 final_source_id
 
-source_contacted
 source_contact_at
 source_contact_bar
 
 eligible_pool_ids_at_contact
 
-authorized_sweep_ids
-sweep_confirmed_at
-
-sweep_search_enabled
-trigger_search_enabled
+active_sweep_event_id
+active_choch_reference_swing_id
 ```
 
-이 state는 audit 시 다음을 설명할 수 있어야 한다.
+Older sweep events remain in the global audit ledger.
+
+The following are derived conditions,
+not separate persistent strategy states:
 
 ```text
-어떤 source에 닿았는가?
-어떤 liquidity가 그 전에 이미 존재했는가?
-어떤 pool이 sweep됐는가?
-왜 그 sweep이 현재 scenario에 허용됐는가?
-언제부터 CHoCH를 찾기 시작했는가?
+sweep search enabled
+CHoCH search enabled
+```
+
+Current authorization must still explain:
+
+```text
+which source was contacted
+which liquidity pre-existed
+which pool was swept
+why it was eligible
+which protected swing became the active CHoCH reference
 ```
 
 ### 6.23 Global Detection vs Scenario Authorization
@@ -4093,18 +4144,29 @@ trigger chain을 종료한다.
 
 Classification: D
 
-CHoCH가 확정되기 전에 다음 중 하나가 발생하면
-현재 trigger chain은 종료된다.
+Before CHoCH, the active trigger chain terminates when:
 
 ```text
-final refined source structurally invalidated
-HTF Root / parent owner invalidated
-frozen objective delivered before entry
-final child fully consumed
-scenario map owner invalidated
+final refined source becomes INVALIDATED
+required parent Root/owner becomes INVALIDATED
+frozen final objective is delivered
+scenario direction authority is revoked
 ```
 
-시간 경과만으로 자동 폐기하지 않는다.
+`final child full consumption` is not an independent strategy state.
+
+Child/source validity is determined by Section 5:
+
+```text
+own-timeframe adverse body-close invalidation
+or
+parent/owner invalidation
+```
+
+Time alone does not terminate the chain.
+
+A newer authorized sweep may replace the active sweep/reference
+under Section 7.15 without creating a second concurrent trigger chain.
 
 ### 7.15 Latest Authorized Sweep Owns the Active Pre-CHoCH Trigger
 
@@ -4950,58 +5012,6 @@ Section 11의 `EXECUTION_INFEASIBLE` 규칙을 적용한다.
 
 Status: FROZEN FOR V1
 
-### Long-Horizon H4 Objective Extension
-
-Classification: D
-
-The primary objective set is always built from
-the current H1/M30 active map.
-
-Define:
-
-primary_directional_horizon
-
-LONG:
-highest current H1/M30 direction-ahead primary objective price
-
-SHORT:
-lowest current H1/M30 direction-ahead primary objective price
-
-If no primary direction-ahead objective exists:
-
-primary_directional_horizon = current strategy price
-
-Eligible H4 long-horizon candidate:
-
-state = ACTIVE
-family = H4_EXTERNAL_SWING
-scope direction compatible
-
-LONG:
-price > primary_directional_horizon
-
-SHORT:
-price < primary_directional_horizon
-
-At PLAN freeze:
-
-ordered_objective_family
-=
-primary H1/M30 candidates
-+
-eligible H4 candidates beyond the primary horizon
-
-sorted nearest-first in trade direction.
-
-This remains one frozen family,
-not two post-entry target tiers.
-
-After Entry/SL:
-the existing planned-R eligibility rules apply.
-
-H4 cannot displace an inside-the-horizon
-H1/M30 objective candidate.
-
 ### 10.1 Active V1 Scenario Scopes
 
 Active first-position scopes:
@@ -5093,6 +5103,100 @@ new H1/M30 owner-compatible external liquidity
 ```
 
 is used by new scenarios.
+
+### 10.4.1 Long-Horizon H4 Objective Extension
+
+Classification: D / Frozen for V1
+
+Primary objective authority is always the current H1/M30 active map.
+
+At PLAN freeze:
+
+```text
+plan_reference_price
+=
+latest closed M1 close available at objective_family_frozen_at
+```
+
+Build current H1/M30 primary candidates first.
+
+If at least one primary candidate exists:
+
+LONG:
+```text
+primary_directional_horizon
+=
+highest primary candidate price
+```
+
+SHORT:
+```text
+primary_directional_horizon
+=
+lowest primary candidate price
+```
+
+If no primary candidate exists:
+
+```text
+primary_directional_horizon
+=
+plan_reference_price
+```
+
+Eligible H4 extension candidate:
+
+```text
+family = EXTERNAL_SWING
+timeframe = H4
+state = ACTIVE
+```
+
+LONG:
+
+```text
+price > primary_directional_horizon
+```
+
+SHORT:
+
+```text
+price < primary_directional_horizon
+```
+
+Scope restriction:
+
+Allowed:
+
+```text
+EXTERNAL_CONTINUATION
+
+EXTERNAL_REVERSAL
+after a new mature opposite H1 owner exists
+```
+
+Forbidden:
+
+```text
+early EXTERNAL_REVERSAL
+while the old H1 owner is still active
+```
+
+At PLAN:
+
+```text
+ordered_objective_family
+=
+primary H1/M30 candidates
++
+eligible H4 candidates beyond primary_directional_horizon
+```
+
+sorted nearest-first in trade direction.
+
+This remains one frozen family.
+
+H4 cannot replace an H1/M30 candidate inside the primary horizon.
 
 ### 10.5 Planned-R Geometry
 
@@ -5237,10 +5341,14 @@ owner_id
 direction
 
 objective_family_frozen_at
+plan_reference_price
+primary_directional_horizon
 
 objective_candidates[]:
     id
     liquidity_id
+    family
+    timeframe
     price
     available_at
     order_index
@@ -5259,7 +5367,7 @@ final_objective_selected_at
 
 ## 11. Pending Order Lifecycle + MT5 Execution Constraints
 
-Status: PARTIALLY FROZEN FOR V1
+Status: FROZEN FOR V1
 
 ### 11.1 Strategy vs Execution State
 
@@ -5549,7 +5657,7 @@ frozen objective / TP
 
 floating-point cleanup
 Section 9의 directional tick normalization
-기존 risk-sizing contract에 따른 valid lot-step normalization
+Section 11.15의 MINIMUM_VOLUME_PARITY volume validation
 
 Frozen strategy geometry가
 broker에 합법적으로 제출될 수 없다면:
@@ -5668,25 +5776,6 @@ CANCELED
 NO_TRADE
 ```
 
-Flow:
-
-```text
-PLANNED
-→ WAITING_TRIGGER
-```
-
-Inside `WAITING_TRIGGER`,
-the ledger may record:
-
-```text
-source contact
-active authorized sweep
-meaningful CHoCH
-selected widest FVG
-```
-
-but these do not need separate persistent scenario states.
-
 At meaningful CHoCH decision:
 
 ```text
@@ -5695,62 +5784,68 @@ eligible FVG snapshot
 → Entry
 → SL
 → Final TP
+→ volume
 → execution preflight
 → submit pending
 ```
 
-If no R-eligible objective:
+If strategy requirements fail:
 
 ```text
 → NO_TRADE
 ```
 
-If strategy is valid but broker preflight is infeasible:
+If strategy signal is valid but broker preflight is infeasible:
 
 ```text
-strategy signal remains research-valid
-execution = EXECUTION_INFEASIBLE
-→ NO ORDER
+strategy_signal_valid = true
+execution_status = EXECUTION_INFEASIBLE
+scenario_state = NO_TRADE
+terminal_reason = EXECUTION_INFEASIBLE
 ```
 
 If server rejects submission:
 
 ```text
-execution = REJECTED
-→ NO ORDER
+strategy_signal_valid = true
+execution_status = REJECTED
+scenario_state = NO_TRADE
+terminal_reason = ORDER_REJECTED
 ```
 
-If accepted:
+Both are terminal for that execution chain.
+
+Do not retry the old signal on a later tick/session.
+
+A future order requires a new valid execution chain.
+
+If server accepts:
 
 ```text
-→ PENDING
+scenario_state = PENDING
 ```
 
 PENDING:
 
 ```text
-valid broker fill
+valid fill
 → FILLED
-```
 
-or:
-
-```text
-causal strategy cancellation
+causal strategy invalidation
 → CANCELED
 → request broker deletion
 ```
 
-If broker refuses deletion:
+If broker cancellation fails and the order later fills:
 
 ```text
-execution divergence tracking
+EXECUTION_DIVERGENCE
 ```
 
 FILLED:
 
 ```text
-original SL / TP only
+original frozen SL / TP
 ```
 
 decide the experiment.
@@ -5762,16 +5857,21 @@ Strategy minimum:
 ```text
 scenario_id
 strategy_state
+strategy_signal_valid
+terminal_reason
+
+scenario_direction
+scenario_scope
 
 source_contact_at
 active_sweep_event_id
+active_choch_reference_swing_id
 choch_event_id
 selected_fvg_id
 
 final_objective_id
 
 pending_submitted_at
-
 strategy_cancel_at
 strategy_cancel_reason
 ```
@@ -5779,9 +5879,17 @@ strategy_cancel_reason
 Execution minimum:
 
 ```text
+magic_number
+
+sizing_mode
+order_volume
+
 symbol_tick_size
 symbol_point
 symbol_digits
+symbol_volume_min
+symbol_volume_max
+symbol_volume_step
 symbol_stops_level
 symbol_freeze_level
 
@@ -5799,10 +5907,13 @@ order_filling_type
 
 preflight_result
 order_send_retcode
+request_id
 broker_order_ticket
 
 fill_at
 fill_price
+broker_deal_ticket
+broker_position_ticket
 
 broker_cancel_result
 
@@ -5810,8 +5921,8 @@ execution_status
 execution_divergence_reason
 ```
 
-Additional audit fields may be stored,
-but they are not trade-authorization requirements.
+Additional audit fields may be streamed to append-only storage
+without remaining in the active in-memory working set.
 
 ### 11.13 Session and Gap Handling
 
@@ -6035,107 +6146,199 @@ execution source of truth.
 Status: FROZEN FOR V1
 Classification: D / Infrastructure
 
-#### H4 long-horizon index
+#### 11.14.1 No global historical object tree
+
+Historical bars may be replayed,
+but V1 retains only state that can still affect current/future decisions.
+
+No arbitrary fixed N-bar memory cap is a strategy parameter.
+
+#### 11.14.2 H4 long-horizon index
 
 Replay available H4 history oldest → newest.
 
-Use the existing causal three-candle structure logic
-only to identify protected/external H4 swings.
+Use the same causal three-candle/protected-external logic
+only to identify meaningful H4 external swing liquidity.
 
 Retain only:
 
-ACTIVE H4 external high liquidity
-ACTIVE H4 external low liquidity
+```text
+ACTIVE H4 EXTERNAL_SWING highs
+ACTIVE H4 EXTERNAL_SWING lows
+```
 
-Consumed levels are removed from the active index.
+Consumed H4 levels leave the active index.
 
 Do not retain historical H4:
 
+```text
 FVG
 OB
 internal swing tree
 trigger chain
 source lineage
+```
 
-for V1 bootstrap memory.
+for V1 active memory.
 
-#### H1/M30 active map
+#### 11.14.3 H1/M30/M15 chronological root-discovery stream
 
-Replay causally and retain only state
-that can still affect the current active map:
+Bootstrap Root discovery is not performed
+after assuming that current ACTIVE Roots are already known.
 
-trend
-owner
-protected swing
-external extreme
-dealing range
-reversal reference / permission
-current-owner active liquidity
-current relevant ACTIVE Roots
+Process available:
 
-Historical branches with no current authority
-may be discarded after their state effect is resolved.
+```text
+H1
+M30
+M15
+```
 
-#### Targeted lower-TF reconstruction
+closed bars chronologically.
 
-After active H1/M30 state is known,
-reconstruct M30/M15/M5 only for
-currently relevant ACTIVE Root causal windows.
+Roles:
+
+```text
+H1/M30
+→ active map authority
+→ Root detection allowed
+
+M15
+→ no active-map direction authority
+→ Root detection allowed only inside causal H1/M30 context
+```
+
+Root candidates are created causally as their structure-delivery evidence becomes available.
+
+Retain only Roots that remain:
+
+```text
+strategy_state = ACTIVE
+and
+relevant to the current active scenario/map context
+```
+
+Historical invalidated/unreferenced Roots may be evicted from RAM.
+
+#### 11.14.4 Targeted causal refinement
+
+After current relevant ACTIVE Roots are known:
+
+```text
+Root causal window
+→ targeted M30/M15/M5 replay
+→ deepest unambiguous causal child
+→ final source
+```
 
 Do not build a global historical lower-TF zone database.
 
-Retain:
+#### 11.14.5 M1/local-liquidity bootstrap
 
-current Root
-current child path
-current final source
-source validity
+Do not retain pre-start M1 execution CHoCH/FVG chains.
 
-#### M1 bootstrap
+Historical M5/M1 processing is allowed only as needed to reconstruct:
 
-Do not retain pre-start execution CHoCH/FVG chains.
+```text
+currently ACTIVE eligible local liquidity
+for the current final-source context
+```
 
-Historical M1/M5 processing is permitted only as needed
-to identify currently ACTIVE eligible local liquidity
-for the current source context.
+No pre-start trigger authorizes a runtime first-position order.
 
-No pre-start trigger event authorizes a runtime first-position order.
+#### 11.14.6 Working-set eviction rule
 
-#### Execution epoch
+An object referenced by any of the following must remain in RAM:
+
+```text
+current neutral-range construction
+current protected/external structure
+open BOS correction window
+ACTIVE liquidity
+ACTIVE Root/child/source
+active scenario
+active CHoCH reference
+H4 ACTIVE liquidity index
+```
+
+Otherwise consumed/invalidated/unreferenced objects may be:
+
+```text
+write minimal audit record
+→ evict from active memory
+```
+
+The append-only audit ledger may be file-backed.
+
+#### 11.14.7 Execution epoch
 
 After bootstrap:
 
+```text
 initialization_state = READY
+```
 
-first processed runtime/test tick
-=
+The first processed runtime/test tick defines:
+
+```text
 execution_epoch_start
+```
 
-Required new first-position events:
+New first-position execution events must satisfy:
 
-source contact
-sweep
-meaningful M1 CHoCH
-execution FVG
+```text
+source_contact_at >= execution_epoch_start
+sweep_at >= execution_epoch_start
+choch_at >= execution_epoch_start
+execution_fvg.available_at >= execution_epoch_start
+```
 
-must occur at or after execution_epoch_start.
+Pre-start and post-start execution chains are never spliced.
 
-#### Started inside source
+#### 11.14.8 Started inside source
 
-If runtime starts with price already overlapping the source:
+If runtime starts with price already overlapping the final source:
 
-STARTED_INSIDE_SOURCE
+```text
+startup_source_context = STARTED_INSIDE_SOURCE
+```
 
-No retroactive source contact is created.
+This is not a new source contact.
 
 Require:
 
+```text
 exit source
 → later re-entry
 → new source contact
+```
 
-#### Initialization states
+#### 11.14.9 Same-timestamp closed-bar order
 
+When multiple bars become available at the same timestamp:
+
+```text
+H4
+→ H1
+→ M30
+→ M15
+→ M5
+→ M1
+→ scenario/order authorization
+```
+
+Within one timeframe close:
+
+```text
+1. invalidate/consume pre-existing objects
+2. update structure
+3. publish newly available objects
+4. run dependent authorization
+```
+
+#### 11.14.10 Initialization states
+
+```text
 INIT_SYNCING
 INIT_H4_INDEX
 INIT_ACTIVE_MAP
@@ -6143,12 +6346,14 @@ INIT_SOURCE_CONTEXT
 READY
 INIT_EXECUTION_RECOVERY_REQUIRED
 INIT_ERROR
+```
 
 These are infrastructure states,
-not strategy scenario states.
+not scenario states.
 
-#### Required bootstrap ledger
+#### 11.14.11 Required bootstrap ledger
 
+```text
 H4_history_first_date
 H1_history_first_date
 M30_history_first_date
@@ -6161,13 +6366,127 @@ H4_active_long_horizon_liquidity_count
 active_h1_owner_id
 active_m30_owner_id
 
-active_root_count
+active_root_ids
 final_source_id
 
 execution_epoch_start
 startup_source_context
 
 initialization_state
+```
+
+### 11.15 Managed Exposure, Identity, and V1 Parity Volume
+
+Classification: D / Infrastructure
+
+Managed identity:
+
+```text
+symbol
++
+magic_number
+```
+
+`magic_number` is an explicit EA execution input
+and must be recorded in every test.
+
+V1 does not use legacy multi-risk-slot arbitration.
+
+Per symbol + magic:
+
+```text
+max one live scenario per direction
+
+max one accepted first-position exposure:
+PENDING + FILLED <= 1
+```
+
+Before reversal permission:
+
+```text
+only active-map direction may own a first-position scenario
+```
+
+After reversal permission:
+
+```text
+one opposite EXTERNAL_REVERSAL watch scenario may coexist
+```
+
+If an accepted pending/position already exists,
+another scenario cannot submit a first-position order.
+
+A blocked old trigger is not delayed until exposure ends.
+
+If opposite first-position orders become fully authorizable
+in the same processing epoch with no exposure:
+
+```text
+NO_TRADE
+reason = AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+```
+
+V1 correctness/parity sizing:
+
+```text
+sizing_mode = MINIMUM_VOLUME_PARITY
+order_volume = SYMBOL_VOLUME_MIN
+```
+
+Validate:
+
+```text
+SYMBOL_VOLUME_MIN
+SYMBOL_VOLUME_MAX
+SYMBOL_VOLUME_STEP
+margin/request feasibility
+```
+
+If the broker minimum volume is infeasible:
+
+```text
+EXECUTION_INFEASIBLE
+→ scenario_state = NO_TRADE
+```
+
+No risk-percent sizing parameter is part of V1 strategy parity.
+
+### 11.16 Broker Transaction Reconciliation
+
+Classification: D / Infrastructure
+
+The arrival sequence of `OnTradeTransaction()` callbacks
+is not used as authoritative economic event order.
+
+One request may generate multiple transaction events.
+
+Reconcile execution state using stable identity/history:
+
+```text
+request_id
+order ticket
+deal ticket
+position ticket
+
+Orders / Positions current state
+
+HistoryOrder*
+HistoryDeal*
+```
+
+The handler must be idempotent.
+
+A callback may observe account state
+that has already advanced beyond the transaction being processed.
+
+Therefore:
+
+```text
+callback arrival sequence
+≠ strategy/execution causality
+```
+
+Broker history/ticket relations are the final execution ledger authority.
 
 ## 12. Explicitly Excluded From Baseline
 

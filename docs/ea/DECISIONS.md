@@ -356,62 +356,51 @@ Reason:
 
 ## D-019 — V1 initial Root uses causal LAST_OPPOSITE_OB lineage
 
-Status: ACTIVE
+Status: ACTIVE / FROZEN
 
-V1 first-position Root source는
-`LAST_OPPOSITE_OB` 계열을 사용한다.
-
-하지만 모든 last-opposite detector 결과를 사용하지 않는다.
-
-Required filters:
+V1 first-position Root uses the `LAST_OPPOSITE_OB` family
+only after all causal filters pass:
 
 ```text
 meaningful swing ownership
 same causal leg
-opposite candle direction
+valid opposite candle
 meaningful structure body-break
 scenario/objective direction alignment
-freshness
+strategy_state = ACTIVE
 ```
 
-`FVG_ORIGIN_OB`는 V1 initial Root source 권한을 갖지 않는다.
+`FVG_ORIGIN_OB` and HTF FVG-only source authority are excluded.
 
-HTF FVG 자체도 Root source가 아니다.
-
-향후 FVG-origin Root 방식은
-별도 immutable research variant로 비교할 수 있다.
+No separate Root freshness score/state exists.
 
 ---
 
-## D-020 — Root freshness uses structural state, not arbitrary expiry
+## D-020 — Root validity uses ACTIVE / INVALIDATED only
 
-Status: ACTIVE
+Status: ACTIVE / FROZEN
+Supersedes the old full-consumption lifecycle wording.
 
-Root OB는:
-
-```text
-fully consumed
-or
-causal structure invalidated
-```
-
-될 때 first-position source 권한을 잃는다.
-
-단순 touch만으로 즉시 폐기하지 않는다.
-
-V1에서는 다음을 사용하지 않는다.
+Bullish Root:
 
 ```text
-N-touch expiry
-N-bar expiry
-ATR age decay
-quality score
+own-TF close < bottom
+→ INVALIDATED
 ```
 
-Reason:
+Bearish Root:
 
-Root의 생존 여부를 임의 score가 아니라
-실제 price interaction과 causal structure state로 판단하기 위함이다.
+```text
+own-TF close > top
+→ INVALIDATED
+```
+
+Owner/causal-structure invalidation also invalidates the Root.
+
+Touch, partial mitigation, and wick-only distal penetration
+are audit facts and do not create additional Root strategy states.
+
+No N-touch/N-bar/age/quality expiry is used.
 
 ---
 
@@ -606,28 +595,27 @@ live execution과 동일한 information order를 유지하기 위함이다.
 
 ## D-028 — Parent invalidation propagates downward
 
-Status: ACTIVE
-
-Causal ownership은 parent에서 child로 흐른다.
+Status: ACTIVE / FROZEN
 
 ```text
 parent invalidated
 → descendants invalidated
 ```
 
-Final child가 완전히 consumed되면
-그 child를 사용하는 current execution lane은 종료한다.
+Child strategy validity uses the same exact rule as D-090:
 
-그러나 child consumption만으로
-항상 HTF Root 전체를 구조적으로 invalid 처리하지는 않는다.
+```text
+own-TF adverse body-close through distal
+or
+parent/owner invalidation
+```
 
-Root가 여전히 유효하다면
-새로운 causal child가 별도 chain으로 형성될 수 있다.
+There is no independent `final child full consumption` strategy state.
 
-Reason:
+If an old child is invalidated while the Root remains ACTIVE,
+a later newly formed causal child may become a new lineage object.
 
-Root ownership과 execution precision zone lifecycle을
-동일한 상태로 뭉개지 않기 위함이다.
+The invalidated child is never revived.
 
 ---
 
@@ -989,27 +977,24 @@ OHLC만으로 동일 candle 내부의
 
 ---
 
-## D-042 — CHoCH waiting uses causal invalidation, not fixed timeout
+## D-042 — CHoCH waiting uses causal invalidation, not timeout
 
-Status: ACTIVE
+Status: ACTIVE / FROZEN
 
-Sweep 이후 CHoCH까지
-고정 N-bar/N-minute timeout을 두지 않는다.
-
-현재 trigger chain은 다음 causal event로 종료된다.
+The active pre-CHoCH chain ends when:
 
 ```text
-final source invalidation
-Root/parent owner invalidation
-objective delivery before entry
-final child full consumption
-map owner invalidation
+final source INVALIDATED
+required Root/parent owner INVALIDATED
+final objective delivered
+scenario direction authority revoked
 ```
 
-Reason:
+`final child full consumption` is not an independent strategy state.
 
-근거 없는 시간 parameter를 추가하지 않고
-scenario 자체의 원인이 사라질 때 setup을 종료하기 위함이다.
+Source/child validity is defined by D-090.
+
+No N-bar/N-minute timeout is used.
 
 ---
 
@@ -1219,9 +1204,11 @@ SL = top + buffer
 즉 SL은 FVG distal boundary 바깥으로
 FVG 전체 폭의 20%만큼 추가 여유를 둔다.
 
-Broker spread / stops-level / Bid-Ask 제약과
-전략 SL을 연결하는 방식은 execution infrastructure 단계에서 별도 확정한다.
-그 전에는 위 전략 SL 공식을 임의 변경하지 않는다.
+Broker Bid/Ask, tick-grid, StopsLevel, FreezeLevel,
+GTC and execution-feasibility handling are frozen by
+D-060 through D-065, D-099 through D-101, and EA_SPEC Section 11.
+
+Those constraints never redefine the 20% strategy SL geometry.
 
 Reason:
 
@@ -1342,39 +1329,39 @@ An in-progress Candle3 cannot create an execution candidate.
 
 ## D-056 — Initial FVG candidate set freezes at meaningful CHoCH close
 
-Status: ACTIVE
+Status: ACTIVE / FROZEN
 
-Meaningful M1 CHoCH를 만든 candle이 close되는 순간
-현재 first-position candidate set을 freeze한다.
+At meaningful CHoCH close,
+freeze all causal same-direction FVGs that:
 
-Eligible candidate는 그 시점까지:
+```text
+are already available
+belong to the authorized sweep-to-CHoCH leg
+have no PRE_SELECTION_RETEST
+```
 
-already available
-same causal sweep-to-CHoCH leg
-same direction
-not previously retested
-not consumed / invalidated
+The exact pre-selection freshness rule is D-088.
 
-이어야 한다.
+Select the widest eligible FVG.
 
-그 시점의 valid FVG 중 가장 넓은 FVG를 선택한다.
-
-CHoCH close 이후 형성되는 FVG는
-현재 candidate set에 추가하지 않으며
-selected FVG를 교체하지 않는다.
+FVGs formed after CHoCH close cannot enter this candidate set.
 
 ---
 
-## D-057 — Pre-authorization FVG retest makes the FVG ineligible
+## D-057 — Pre-selection overlap makes an FVG ineligible
 
-Status: ACTIVE
+Status: ACTIVE / FROZEN
+Consolidated with D-088.
 
-Available FVG가 meaningful CHoCH close 전에
-이미 retest / fill / consumption을 겪었다면
-현재 first-position candidate에서 제외한다.
+Starting from the next causal bar after FVG availability,
+any FVG overlap before meaningful CHoCH close is:
 
-과거 retest를 authorization 이후
-사후 entry로 복원하지 않는다.
+```text
+PRE_SELECTION_RETEST
+→ candidate excluded
+```
+
+No 50%, partial-fill, distal, or generic consumption threshold is used.
 
 ---
 
@@ -1614,16 +1601,23 @@ hindsight RR optimization이 되기 때문이다.
 
 ---
 
-## D-068 — Nearest R-eligible candidate wins
+## D-068 — Nearest R-eligible candidate wins in the single frozen family
 
 Status: ACTIVE / FROZEN
 
-같은 candidate tier에서는
-planned R >= 1인 candidate 중
-trade direction으로 가장 가까운 valid liquidity를 final TP로 선택한다.
+V1 has one frozen ordered objective family.
 
-더 큰 R을 제공한다는 이유만으로
-더 먼 candidate를 선택하지 않는다.
+Scan nearest-first in trade direction.
+
+The first valid candidate with:
+
+```text
+planned R >= 1
+```
+
+becomes Final TP.
+
+No candidate tier, max-R selection, or farthest-target optimization is used.
 
 ---
 
@@ -1913,7 +1907,10 @@ scope = EXTERNAL_CONTINUATION relative to M30
 
 Use M30 dealing range and M30 external objective family.
 
-Historical H1 fallback is disabled for this M30-primary scenario.
+Old H1 objective/range state is not inherited by this M30-primary scenario.
+
+Any H4 long-horizon extension must satisfy D-105 and the current V1
+H4 objective-extension contract; it is not an old-H1 fallback.
 
 If H1 later becomes mature directional, the old M30-primary scenario is not silently inherited by H1.
 
@@ -2373,18 +2370,57 @@ This keeps the historical memory minimal and explainable.
 
 ---
 
-## D-105 — H4 objective candidates may only extend beyond the current H1/M30 horizon
+## D-105 — H4 objective candidates only extend beyond the current H1/M30 horizon
 
 Status: ACTIVE / FROZEN
 
 Current H1/M30 objective authority always comes first.
 
-H4 ACTIVE external liquidity may enter
-the frozen ordered objective family only outside
-the current H1/M30 directional horizon.
+At PLAN:
 
-H4 may not replace an H1/M30 objective
-inside that horizon.
+```text
+plan_reference_price
+=
+latest closed M1 close available at family freeze
+```
+
+Primary horizon:
+
+```text
+LONG  = highest current H1/M30 primary candidate
+SHORT = lowest current H1/M30 primary candidate
+```
+
+If no primary candidate exists:
+
+```text
+primary_directional_horizon = plan_reference_price
+```
+
+H4 candidate representation:
+
+```text
+family = EXTERNAL_SWING
+timeframe = H4
+state = ACTIVE
+```
+
+It must lie beyond the primary horizon.
+
+Allowed:
+
+```text
+EXTERNAL_CONTINUATION
+EXTERNAL_REVERSAL after new opposite mature H1 owner
+```
+
+Forbidden:
+
+```text
+early EXTERNAL_REVERSAL while old H1 owner remains active
+```
+
+H4 never replaces an inside-horizon H1/M30 objective.
 
 ---
 
@@ -2441,3 +2477,153 @@ A new first-position trigger chain requires:
 exit
 → later re-entry
 → new source contact
+
+---
+
+## D-109 — Bootstrap uses a compressed working set
+
+Status: ACTIVE / FROZEN
+
+Historical bars may be replayed without retaining
+every historical object in active memory.
+
+Keep an object in RAM only while referenced by:
+
+current structure
+open correction window
+ACTIVE liquidity
+ACTIVE Root/child/source
+active scenario/CHoCH reference
+H4 ACTIVE liquidity index
+
+Resolved unreferenced objects may be written to
+append-only audit storage and evicted from RAM.
+
+---
+
+## D-110 — V1 parity sizing uses broker minimum volume
+
+Status: ACTIVE / FROZEN
+
+Initial Strategy Tester implementation correctness uses:
+
+sizing_mode = MINIMUM_VOLUME_PARITY
+order_volume = SYMBOL_VOLUME_MIN
+
+Volume min/max/step and margin/request feasibility must pass.
+
+No arbitrary risk-percent input is part of V1 parity.
+
+Performance comparison is primarily R-based until
+a separate risk-sizing policy is approved.
+
+---
+
+## D-111 — V1 has one accepted first-position exposure per symbol and magic
+
+Status: ACTIVE / FROZEN
+
+Per symbol + magic:
+
+max one scenario per direction
+max one accepted PENDING/FILLED exposure
+
+An opposite EXTERNAL_REVERSAL watch scenario is allowed
+only after reversal permission opens.
+
+Once one order is accepted,
+other first-position chains cannot submit until exposure is terminal.
+
+Blocked old chains are not delayed/reused.
+
+Simultaneous opposite authorization with no existing exposure:
+
+NO_TRADE
+reason = AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+
+---
+
+## D-112 — Execution failure terminates that execution chain
+
+Status: ACTIVE / FROZEN
+
+If a valid strategy signal cannot be submitted in its decision cycle:
+
+EXECUTION_INFEASIBLE
+or
+server REJECTED
+
+then:
+
+scenario_state = NO_TRADE
+
+for that execution chain.
+
+Do not retry the old signal on later ticks or sessions.
+
+A future order requires a new causal execution chain.
+
+---
+
+## D-113 — Same-timestamp bar processing is higher timeframe first
+
+Status: ACTIVE / FROZEN
+
+When multiple closed bars become available at the same timestamp:
+
+H4
+→ H1
+→ M30
+→ M15
+→ M5
+→ M1
+→ scenario/order authorization
+
+Within each timeframe:
+
+existing-object invalidation/consumption
+→ structure update
+→ new object availability
+→ dependent authorization
+
+This is a deterministic tie-breaker for simultaneously available information.
+
+---
+
+## D-114 — Broker transaction callback order is not execution causality
+
+Status: ACTIVE / FROZEN
+
+Do not rely on OnTradeTransaction callback arrival order.
+
+Reconcile using:
+
+request_id
+order ticket
+deal ticket
+position ticket
+current order/position state
+broker history
+
+Execution handlers must be idempotent.
+
+---
+
+## D-115 — Bootstrap discovers Roots before targeted refinement
+
+Status: ACTIVE / FROZEN
+
+Bootstrap order:
+
+H4 index
+→ H1/M30/M15 chronological Root-discovery stream
+→ retain current relevant ACTIVE Roots
+→ targeted M30/M15/M5 causal refinement
+→ current-source local liquidity reconstruction
+→ READY
+
+M15 may detect Root candidates under H1/M30 causal context
+without becoming an active map authority.
+
+This removes circular dependency between
+"known active Root" and lower-TF reconstruction.

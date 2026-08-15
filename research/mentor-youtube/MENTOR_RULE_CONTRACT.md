@@ -2,10 +2,10 @@
 
 ## Purpose
 
-This contract is the only trading-rule source for `mentor_engine`. It is based
-only on the 21 mentor videos in this directory. Legacy V5-V32 rules may supply
-clock, identity, replay, and audit infrastructure, but they may not authorize a
-trade.
+This contract preserves the mentor-video research evidence and causal principles
+used by `mentor_engine`. It is based only on the 21 mentor videos in this
+directory. Legacy V5-V32 rules may supply clock, identity, replay, and audit
+infrastructure, but they may not authorize a current V1 trade.
 
 For the current deterministic EA V1, the controlling strategy authority is
 the repository-root `AGENTS.md`, with `docs/ea/EA_SPEC.md` as its deterministic
@@ -31,6 +31,9 @@ authority.
    already active at the trade boundary; 2025 Q1 therefore uses 2024-10-01
    through 2024-12-31 as state warm-up, while economic counting starts on
    2025-01-01.
+   The dated 2024-10 warm-up example above is a historical research fixture.
+   Current deterministic EA V1 initialization follows the hierarchical,
+   compressed bootstrap contract in `docs/ea/EA_SPEC.md` Section 11.14.
 2. Confirm a wave when three consecutive opposite-colour candle bodies close.
    A doji belongs to neither direction and interrupts the sequence.
 3. A body close through the protected structure level is BOS/CHoCH. A wick
@@ -108,6 +111,8 @@ authority.
 
 - CHoCH plus an additional BOS confirmation.
 - H4 context or owner above the active H1 map.
+  This does not include current V1's `LONG_HORIZON_LIQUIDITY_INDEX`,
+  which stores H4 external liquidity only and grants no H4 map/owner authority.
 - Direct M5 trigger execution without an M1 confirmation.
 - In-position continuation/add-on entry at a delivery FVG retracement.
 - OB-only precision entry.

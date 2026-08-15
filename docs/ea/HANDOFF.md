@@ -1,8 +1,8 @@
 # EA Development Handoff
 
 Last updated: 2026-08-15
-Status: PRE-IMPLEMENTATION
-Current phase: Rule formalization
+Status: V1 SPECIFICATION FROZEN
+Current phase: Minimum MQL5 baseline implementation
 
 ## Goal
 
@@ -268,12 +268,53 @@ Execution epoch
 Startup inside source
 → require exit + later re-entry
 
+Final authority consistency audit
+→ COMPLETE
+
+EA_SPEC status
+→ FROZEN FOR V1 IMPLEMENTATION
+
+Source lifecycle
+→ ACTIVE / INVALIDATED only
+→ no independent full-consumption state
+
+H4 extension
+→ EXTERNAL_SWING + timeframe H4
+→ beyond H1/M30 horizon only
+→ forbidden for old-H1 early EXTERNAL_REVERSAL
+
+Bootstrap Root discovery
+→ H1/M30/M15 chronological stream
+→ targeted child refinement afterward
+
+Active-memory policy
+→ compressed working set
+→ resolved history may be file-backed audit only
+
+V1 parity volume
+→ MINIMUM_VOLUME_PARITY
+→ SYMBOL_VOLUME_MIN
+
+Managed exposure
+→ max one accepted PENDING/FILLED first-position exposure per symbol+magic
+
+Execution infeasible/rejected
+→ NO_TRADE terminal for that chain
+→ no delayed retry
+
+Same-timestamp MTF order
+→ H4 → H1 → M30 → M15 → M5 → M1 → authorization
+
+Broker transaction reconciliation
+→ ticket/history based
+→ callback arrival order not trusted
+
 ## Next Task
 
-1. Run final AGENTS / EA_SPEC / DECISIONS authority consistency check.
-2. Freeze deterministic V1 specification.
-3. Implement minimum MQL5 EA.
-4. Validate MT5 implementation parity before profitability optimization.
+1. Implement the minimum deterministic MQL5 EA from `AGENTS.md` + `EA_SPEC.md`.
+2. Compile with zero errors/warnings that affect behavior.
+3. Build structural/event logging required for parity inspection.
+4. Run MT5 Strategy Tester parity tests before profitability optimization.
 
 ## Do Not Do Yet
 
