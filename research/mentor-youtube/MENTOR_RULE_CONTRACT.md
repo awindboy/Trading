@@ -7,10 +7,12 @@ only on the 21 mentor videos in this directory. Legacy V5-V32 rules may supply
 clock, identity, replay, and audit infrastructure, but they may not authorize a
 trade.
 
-For manual chart trading or blind replay, the controlling execution document is
-[`MENTOR_STYLE_MANUAL_TRADING_MANDATE.md`](MENTOR_STYLE_MANUAL_TRADING_MANDATE.md).
-Its HTF root OB and causal LTF refinement gates must be completed before M1 is
-allowed to authorize a trade.
+For the current deterministic EA V1, the controlling strategy authority is
+the repository-root `AGENTS.md`, with `docs/ea/EA_SPEC.md` as its deterministic
+specification. This research contract preserves mentor-video evidence and causal
+principles. `MENTOR_STYLE_MANUAL_TRADING_MANDATE.md` is a historical
+manual-trading snapshot unless explicitly brought back into sync with current V1
+authority.
 
 ## Evidence classes
 
@@ -76,13 +78,23 @@ allowed to authorize a trade.
     `FVG.top + 0.20 * width`. Broker spread, stops-level, and Bid/Ask handling
     remain execution-infrastructure concerns; they must not silently redefine
     this strategy geometry before that infrastructure policy is frozen.
-13. Match TP to scenario scope. External continuation targets external
-    liquidity; internal rotation targets the first internal liquidity or
-    unfilled delivery zone before the external invalidation; confirmed external
-    reversal targets new external liquidity.
-14. Before fill, cancel when the entry zone is consumed, the objective is
-    delivered, or the source structure is invalidated. After fill, the original
-    SL and TP decide the experiment.
+13. Match TP to the active V1 scenario scope. Current first-position order
+    scopes are `EXTERNAL_CONTINUATION` and `EXTERNAL_REVERSAL`.
+    Ordinary counter-H1 `INTERNAL_ROTATION` is not an active V1 order scope;
+    opposite LTF structure remains correction context until HTF reversal
+    permission opens. Freeze the causally-known, unconsumed, direction-ahead,
+    scope-compatible liquidity family before Entry/SL geometry is known, then
+    use the nearest candidate with planned R >= 1 after Entry/SL are available.
+14. Before FVG selection, an already-available causal FVG that is retested after
+    its availability and before the meaningful CHoCH close is not fresh enough
+    for the base first-position candidate set. At CHoCH close, select the widest
+    eligible FVG, calculate Entry/SL/TP, and submit the pending order immediately.
+    Once the pending order is normally registered at the FVG near-side boundary,
+    later FVG mitigation or distal traversal is not a separate strategy
+    cancellation rule. Before fill, cancel only when the selected objective is
+    delivered, required source lineage is invalidated, or the scenario's
+    direction authority is revoked. Broker submission/fill/cancellation failures
+    are execution-infrastructure outcomes, not new strategy states.
 15. A re-entry after a completed or invalidated scenario requires a new OB,
     sweep, CHoCH, and entry-zone chain. There is no count cap, RR fallback,
     maximum R, arbitrary time exit, ATR quality filter, or weighted score.

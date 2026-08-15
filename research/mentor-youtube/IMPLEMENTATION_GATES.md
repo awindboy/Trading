@@ -1,5 +1,18 @@
 # Mentor Engine Implementation Gates
 
+> **LEGACY IMPLEMENTATION GATES**
+>
+> 이 문서에는 old OB-entry SL 및
+> Delivery-FVG replacement/add-on gate가 포함되어 있다.
+>
+> Current deterministic EA V1의 implementation gate authority는:
+>
+> - `AGENTS.md`
+> - `docs/ea/EA_SPEC.md`
+>
+> 이 문서는 historical research rationale로만 보존하며
+> current V1 pass/fail contract로 직접 사용하지 않는다.
+
 이 문서는 수익률을 보고 나중에 붙이는 필터가 아니라, 구현이 스승님의 판단
 순서를 거꾸로 만들지 못하게 막는 불변 조건이다. 아래 조건을 하나라도 위반한
 빌드는 Q1 결과와 관계없이 폐기한다.

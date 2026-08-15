@@ -31,6 +31,8 @@ H4 is excluded from the baseline.
 
 Only information available from closed bars may authorize a decision.
 
+## 2. Market Structure` 섹션을 아래 내용으로 교체한다.
+
 ## 2. Market Structure
 
 Status: PARTIALLY FROZEN
@@ -618,14 +620,6 @@ Active dealing range는 단순 최근 pivot high / low가 아니다.
 H1/M30의 현재 external structure를 구성하는 protected extreme과
 directional delivery extreme을 사용한다.
 
-`TRANSITION` 상태에서는
-이전 trend의 dealing range를
-새 continuation authorization에 재사용하지 않는다.
-
-새 mature directional external state가 확정된 뒤
-새 protected extreme과 directional external extreme으로
-새 active dealing range를 구성한다.
-
 #### Bullish structure
 
 ```text
@@ -656,6 +650,14 @@ short -> premium
 조건을 적용한다.
 
 Premium / discount 자체는 entry signal이 아니다.
+
+`TRANSITION` 상태에서는
+이전 trend의 dealing range를
+새 continuation authorization에 재사용하지 않는다.
+
+새 mature directional external state가 확정된 뒤
+새 protected extreme과 directional external extreme으로
+새 active dealing range를 구성한다.
 
 ### 2.14 Timeframe Independence
 
@@ -849,259 +851,271 @@ Classification: D
 
 #### 2.20.1 Directional Owner Hierarchy
 
-Only mature BULLISH / BEARISH states act as directional owners.
+Mature BULLISH / BEARISH state만 directional owner authority를 가진다.
 
 If H1 is mature directional:
 
+```text
 highest_active_map = H1
 parent_owner_tf = H1
-
-M30 remains nested structure/context.
+```
 
 If H1 is NEUTRAL or TRANSITION
 and M30 is mature directional:
 
+```text
 highest_active_map = M30
 parent_owner_tf = NONE
+```
 
-If neither H1 nor M30 is mature directional:
+If neither is mature directional:
 
+```text
 NO DIRECTIONAL SCENARIO
+```
 
-#### 2.20.2 Default HTF Trend-Follow Bias
+#### 2.20.2 Default Trade Bias
 
 When H1 is mature directional:
 
+```text
 default_trade_bias = H1.direction
+```
 
 As long as:
 
+```text
 reversal_permission = CLOSED
+```
 
 an opposite M30/LTF trend is:
 
+```text
 HTF_INTERNAL_CORRECTION_CONTEXT
+```
 
-not an independent opposite first-position lane.
+not an independent first-position order scope.
 
-H1 BULLISH + M30 BEARISH + permission CLOSED
-→ LONG-direction planning only
+`INTERNAL_ROTATION` is not an active V1 first-position scenario scope.
 
-H1 BEARISH + M30 BULLISH + permission CLOSED
-→ SHORT-direction planning only
+#### 2.20.3 Reversal Reference
 
-#### 2.20.3 Reversal Reference Extreme
+Bullish H1:
 
-Mature bullish H1:
-
-reversal_reference_type = EXTERNAL_HIGH
-reversal_reference_price =
-highest currently valid structural external high
+```text
+reversal_reference_price
+= highest currently valid structural external high
 of the current H1 owner flow
+```
 
-Mature bearish H1:
+Bearish H1:
 
-reversal_reference_type = EXTERNAL_LOW
-reversal_reference_price =
-lowest currently valid structural external low
+```text
+reversal_reference_price
+= lowest currently valid structural external low
 of the current H1 owner flow
+```
 
-The reversal reference is not:
+Reversal reference is not:
+
+```text
 latest pivot
 nearest swing
 protected swing
 round number
-
-If a new higher bullish external extreme forms:
-→ replace bullish reference with the new highest valid extreme.
-
-If a new lower bearish external extreme forms:
-→ replace bearish reference with the new lowest valid extreme.
-
-Lower highs do not replace a higher bullish reference.
-Higher lows do not replace a lower bearish reference.
+```
 
 #### 2.20.4 Reference Availability
 
 Required:
 
+```text
 reversal_reference_available_at
+```
 
-Only movement after the reference is causally available
-may create an interaction.
+Only movement after this time may interact with the reference.
 
-Forbidden:
+No same-bar retrospective self-interaction is allowed
+when the new reference becomes available at the current close.
 
-new reference available at current close
-→ use earlier movement from that same bar
-→ retrospective self-interaction
-
-#### 2.20.5 Reversal Permission Opening
+#### 2.20.5 Reference Event Precedence
 
 Bullish H1:
 
-bar.high >= reversal_reference_price
-→ reversal_permission = OPEN_FOR_SHORT
+```text
+1. close > reference_high
+   → CONTINUATION_BODY_BREAK
+
+2. high > reference_high
+   AND close <= reference_high
+   → SWEEP_REJECTION
+
+3. high >= reference_high
+   → TOUCH
+```
 
 Bearish H1:
 
-bar.low <= reversal_reference_price
-→ reversal_permission = OPEN_FOR_LONG
+```text
+1. close < reference_low
+   → CONTINUATION_BODY_BREAK
 
-Exact touch is sufficient.
+2. low < reference_low
+   AND close >= reference_low
+   → SWEEP_REJECTION
 
-This event does NOT:
-change H1 trend_state
+3. low <= reference_low
+   → TOUCH
+```
+
+Only one event is emitted for the closed bar.
+
+#### 2.20.6 Reversal Permission
+
+TOUCH or SWEEP_REJECTION:
+
+Bullish H1:
+
+```text
+reversal_permission = OPEN_FOR_SHORT
+```
+
+Bearish H1:
+
+```text
+reversal_permission = OPEN_FOR_LONG
+```
+
+This does not:
+
+```text
+flip H1 trend
 authorize order
 confirm reversal
 select Root
 select Entry
+```
 
-It only permits opposite LTF evidence
-to be evaluated as a potential external-reversal hypothesis.
+#### 2.20.7 Continuation Through Reference
 
-#### 2.20.6 Extreme Sweep / Rejection
+Current-trend body close beyond reference:
 
-Bullish:
+```text
+reversal_permission = CLOSED
+```
 
-high > reference_high
-AND close <= reference_high
-→ EXTREME_SWEEP_REJECTION_HIGH
+and standard continuation BOS / protected-swing lifecycle runs.
 
-Bearish:
-
-low < reference_low
-AND close >= reference_low
-→ EXTREME_SWEEP_REJECTION_LOW
-
-Record as reversal/liquidity context.
-No score and no automatic order.
-
-#### 2.20.7 Body-Close Continuation Through Reference
-
-Bullish:
-close > reference_high
-
-Bearish:
-close < reference_low
-
-→ continuation-direction BOS evidence
-
-Result:
-
-reference-specific reversal_permission = CLOSED
-old reversal watch = TERMINATED_BY_CONTINUATION
-run normal BOS / protected-swing lifecycle
-
-When the new directional external extreme becomes causally available,
-use it as the new reversal reference.
-
-Do not use the same BOS bar's earlier movement
-as interaction with the new reference.
+When a new directional external extreme becomes causally available,
+it becomes the next reversal reference.
 
 #### 2.20.8 Opposite LTF Before Permission
 
-If reversal_permission = CLOSED:
+If permission is CLOSED:
 
-opposite M30/LTF mature structure
+```text
+opposite M30/LTF structure
 → correction context only
+```
 
-No:
-counter-HTF Root authorization
-counter-HTF first-position lane
-counter-HTF pending order
+No counter-HTF first-position order is allowed.
 
-is allowed solely from that LTF trend.
-
-#### 2.20.9 Early EXTERNAL_REVERSAL Hypothesis
+#### 2.20.9 Early EXTERNAL_REVERSAL
 
 If:
 
-H1 = mature directional
-reversal_permission = OPEN opposite H1 direction
-opposite M30/LTF structure is deterministic
-opposite structural source can be identified
+```text
+mature H1 trend exists
+reversal permission is OPEN opposite H1 direction
+opposite M30/LTF context is deterministic
+valid opposite Root/source lineage exists
+```
 
-then the engine may create:
+then:
 
+```text
 scenario_scope = EXTERNAL_REVERSAL
+```
 
-before H1 trend_state itself flips.
+may exist before H1 trend_state itself flips.
 
-H1 may still be BULLISH while a SHORT external-reversal scenario exists,
-or BEARISH while a LONG external-reversal scenario exists.
-
-Order authorization still requires the complete baseline execution chain.
+Order authorization still requires the complete base execution chain.
 
 #### 2.20.10 Early-Reversal Active Map
 
-While old H1 trend remains mature but reversal permission is OPEN:
+While old H1 remains mature:
 
-parent context / permission origin = H1
-early reversal active map = mature opposite M30 if available
+```text
+permission origin / parent context = H1
+active early-reversal map = mature opposite M30 if available
+```
 
-The early reversal scenario must not inherit
-the old H1 continuation objective family.
+Objective family follows Section 10.
 
-Objective rules follow Section 10.6.
+Old H1 continuation objective family is not inherited.
 
 #### 2.20.11 H1 Protected-Swing Break
 
 If current H1 protected swing is body-broken:
 
+```text
 old H1 owner = INVALIDATED
 H1 = TRANSITION
+```
 
-Old H1 continuation scenario
-→ invalidated / reevaluate
+Existing frozen early-reversal scenario is not retrospectively renamed.
 
-Already frozen early-reversal scenario is not retrospectively renamed.
-Its own frozen causal lifecycle applies.
-
-New scenarios require new scenario_id.
+New map interpretation requires new scenario_id.
 
 #### 2.20.12 H1 Non-Directional / M30 Primary
 
-If H1 = NEUTRAL or TRANSITION
-and M30 = mature directional:
+If:
 
+```text
+H1 = NEUTRAL or TRANSITION
+M30 = mature directional
+```
+
+then:
+
+```text
 highest_active_map = M30
-scope = EXTERNAL_CONTINUATION relative to M30
+scenario_scope = EXTERNAL_CONTINUATION relative to M30
+```
 
-Use M30 dealing range and M30 external objective family.
+Use current M30 dealing range and M30 external objectives only.
 
-Do not inherit:
-old H1 dealing range
-old H1 reversal reference
-historical H1 fallback
+Do not inherit old H1 range/reference/objective family.
 
-#### 2.20.13 Scenario Scope Freeze
+#### 2.20.13 Scope Freeze
 
 Once PLAN is frozen:
 
+```text
 scenario_scope
 scenario_direction
 parent_context_id
 active_map_tf
 reversal_reference_id
-reversal_permission_event_id
 objective family
 Root/source lineage
+```
 
 do not change category in place.
 
-Material map change:
-old scenario → lifecycle decides cancel/continue
-new interpretation → new scenario_id
+Material map change requires a new scenario_id
+unless current scenario is simply invalidated.
 
-#### 2.20.14 Required Reversal State
+#### 2.20.14 Required Strategy State
 
+```text
 h1_trend_state
 h1_owner_id
-h1_direction
+
+m30_trend_state
+m30_owner_id
 
 reversal_reference_id
-reversal_reference_type
 reversal_reference_price
 reversal_reference_available_at
 
@@ -1115,84 +1129,16 @@ reversal_permission_event_type:
     TOUCH
     SWEEP_REJECTION
 
-reversal_watch_terminated_at
-reversal_watch_termination_reason:
-    CONTINUATION_BODY_BREAK
-    OWNER_INVALIDATION
-    REFERENCE_REPLACED
-
-m30_trend_state
-m30_owner_id
-
 scenario_scope
 scenario_direction
 active_map_tf
 parent_context_id
-
-### 2.21 Required Structure State
-
-각 timeframe별 엔진은 최소 다음 상태를 노출한다.
-
-```text
-timeframe
-
-trend:
-    NEUTRAL
-    BULLISH
-    BEARISH
-
-latest_confirmed_high
-latest_confirmed_low
-
-protected_high
-protected_low
-
-external_high
-external_low
-
-range_high
-range_low
-eq
-
-confirmed_waves[]
-structure_events[]
 ```
 
-각 wave:
+Detailed watch-termination history may be stored in the audit ledger
+but is not required strategy state.
 
-```text
-id
-side
-price
-occurred_at
-confirmed_at
-available_at
-rank
-rank_available_at
-```
-
-각 structure event:
-
-```text
-id
-type:
-    INITIAL_BOS
-    BOS
-    CHOCH
-
-direction
-
-broken_swing_id
-broken_level
-
-protected_swing_id
-protected_level
-
-occurred_at
-available_at
-```
-
-### 2.22 Baseline Exclusions
+### 2.21 Baseline Exclusions
 
 Market Structure baseline에는 다음을 넣지 않는다.
 
@@ -1211,6 +1157,9 @@ Market Structure baseline에는 다음을 넣지 않는다.
 
 ---
 
+---
+
+## 3. Liquidity` 섹션을 아래 내용으로 교체한다.
 
 ## 3. Liquidity
 
@@ -1786,6 +1735,7 @@ PARTIALLY FROZEN
 
 ---
 
+---
 
 ## 4. HTF Root OB
 
@@ -2168,73 +2118,62 @@ upper external liquidity
 반대 방향 OB가 기술적으로 valid하더라도
 현재 scenario의 Root로 사용하지 않는다.
 
-### 4.14 Freshness and Lifecycle
+### 4.14 Root Strategy Validity
 
 Classification: D
 
-Root OB는 scenario planning 시점에 active해야 한다.
-
-Minimum lifecycle state:
+Root strategy state:
 
 ```text
-FRESH
-TOUCHED
-PARTIALLY_MITIGATED
-CONSUMED
-STRUCTURALLY_INVALIDATED
+ACTIVE
+INVALIDATED
 ```
 
-단순 첫 touch만으로 Root를 폐기하지 않는다.
-
-임의의:
-
-```text
-touch_count >= N
-age >= N bars
-ATR decay
-quality decay
-```
-
-규칙은 V1에 넣지 않는다.
-
-### 4.15 Full Consumption
-
-Classification: D
+Touch와 partial mitigation은 audit information이며
+별도 strategy branch가 아니다.
 
 Bullish Root:
 
 ```text
-price fully delivers through Root distal
+Root 자신의 timeframe에서
+close < Root.bottom
+→ INVALIDATED
+reason = PRICE_INVALIDATED
 ```
 
-즉 Root 전체가 완전히 관통되면 consumed 처리한다.
-
-Bearish Root도 반대로 동일하다.
-
-기존 zone lifecycle infrastructure를 재사용할 수 있으나,
-Root lifecycle과 FVG partial-fill semantics를 혼동하지 않는다.
-
-Consumed Root는 신규 first-position source로 재사용하지 않는다.
-
-### 4.16 Structural Invalidation
-
-Classification: D
-
-Root가 속한 causal structure premise가 무효화되면
-Root 자체도 source authority를 잃는다.
-
-즉 candle zone이 물리적으로 남아 있더라도:
+Bearish Root:
 
 ```text
-owner invalidated
-scenario scope invalidated
-causal structure invalidated
+Root 자신의 timeframe에서
+close > Root.top
+→ INVALIDATED
+reason = PRICE_INVALIDATED
 ```
 
-이면 Root는 active source가 아니다.
+Strict inequality를 사용한다.
 
-정확한 invalidation event는
-Market Structure / Scenario Scope state와 연결한다.
+Wick-only distal penetration 뒤
+Root-own-timeframe close가 zone 안으로 회복되면
+Root는 ACTIVE를 유지한다.
+
+Root가 속한 owner / causal structure premise가 invalidated되면:
+
+```text
+Root = INVALIDATED
+reason = OWNER_INVALIDATED
+or STRUCTURE_INVALIDATED
+```
+
+임의의:
+
+```text
+N-touch expiry
+N-bar expiry
+ATR age decay
+quality score
+```
+
+는 사용하지 않는다.
 
 ### 4.17 Multiple Root Candidates
 
@@ -2285,15 +2224,8 @@ Minimum state:
 
 ```text
 id
-
-timeframe:
-    H1
-    M30
-    M15
-
-direction:
-    LONG
-    SHORT
+timeframe
+direction
 
 origin_index
 occurred_at
@@ -2307,22 +2239,27 @@ meaningful_swing_id
 linked_structure_event_id
 
 scenario_owner_id
-objective_family_id
 
-state:
-    FRESH
-    TOUCHED
-    PARTIALLY_MITIGATED
-    CONSUMED
-    STRUCTURALLY_INVALIDATED
+strategy_state:
+    ACTIVE
+    INVALIDATED
 
-first_touch_at
-consumed_at
 invalidated_at
+invalidation_reason:
+    PRICE_INVALIDATED
+    OWNER_INVALIDATED
+    STRUCTURE_INVALIDATED
 ```
 
-Implementation에서 모든 field가 즉시 필요하지 않더라도
-causal ownership과 replay 검증에 필요한 식별자를 보존한다.
+Optional audit fields:
+
+```text
+first_touch_at
+max_penetration
+partial_mitigation
+```
+
+Audit fields do not create additional strategy states.
 
 ### 4.20 V1 Root Protocol Summary
 
@@ -2372,6 +2309,7 @@ search causal LTF child
 
 ---
 
+---
 
 ## 5. Causal LTF OB Refinement
 
@@ -2878,70 +2816,60 @@ Source contact 이후에만
 Source Contact의 세부 event contract는
 다음 `Source Contact + Mature Sweep` 단계에서 확정한다.
 
-### 5.17 Child Lifecycle
+### 5.17 Child Strategy Validity
 
 Classification: D
 
-Child state는 최소:
+Each child uses:
 
 ```text
-FRESH
-TOUCHED
-PARTIALLY_MITIGATED
-CONSUMED
-STRUCTURALLY_INVALIDATED
+ACTIVE
+INVALIDATED
 ```
 
-를 유지한다.
+as strategy state.
 
-단순 touch만으로 child를 즉시 invalid 처리하지 않는다.
-
-V1에서는:
+Bullish child:
 
 ```text
-N-touch expiry
-N-bar expiry
-age score
-quality score
+child-own-timeframe close < child.bottom
+→ INVALIDATED
 ```
 
-를 사용하지 않는다.
+Bearish child:
+
+```text
+child-own-timeframe close > child.top
+→ INVALIDATED
+```
+
+Wick-only distal penetration does not invalidate the child.
+
+Touch / partial mitigation remain optional audit facts.
 
 ### 5.18 Parent Invalidation Propagation
 
 Classification: D
-
-Ownership은 상위에서 하위로 흐른다.
 
 ```text
 Parent Root invalidated
 → all descendants invalidated
 ```
 
-상위 owner가 사라지면
-lower-TF child가 차트상 untouched여도
-source authority를 잃는다.
+A descendant cannot retain source authority
+after its required parent lineage is invalidated.
 
-### 5.19 Child Consumption
+### 5.19 Final Child Reuse
 
 Classification: D
 
-Final child가 완전히 소비되면
-그 child를 사용하는 execution lane은 종료된다.
+An INVALIDATED final child is not reused
+for a new trigger chain.
 
-```text
-final child consumed
-→ current lane invalid
-```
+If the Root remains ACTIVE,
+a new causal child may later form as a new lineage object.
 
-다만 child consumption이
-항상 HTF Root 자체의 구조적 invalidation을 뜻하는 것은 아니다.
-
-Root가 살아 있다면
-향후 새로운 causal child가 형성될 가능성은 있다.
-
-하지만 같은 consumed child를
-재사용해서 새 M1 trigger를 기다리지는 않는다.
+The old invalidated child is not revived.
 
 ### 5.20 Parent-Child Identity
 
@@ -3036,13 +2964,16 @@ for each child:
         CONTAINED
         EVENT_ADJACENT
 
-    state:
-        FRESH
-        TOUCHED
-        PARTIALLY_MITIGATED
-        CONSUMED
-        STRUCTURALLY_INVALIDATED
+    strategy_state:
+        ACTIVE
+        INVALIDATED
+
+    invalidated_at
+    invalidation_reason
 ```
+
+Optional audit fields may record touch and mitigation,
+but they do not create additional strategy states.
 
 ### 5.23 Explicit V1 Exclusions
 
@@ -3093,6 +3024,7 @@ SHORT는 반대다.
 
 ---
 
+---
 
 ## 6. Source Contact + Mature Sweep
 
@@ -3201,6 +3133,7 @@ Source contact의 의미는:
 
 Required chain remains:
 
+```text
 source contact
 → mature liquidity sweep
 → meaningful M1 CHoCH
@@ -3208,6 +3141,7 @@ source contact
 → widest valid FVG selection
 → first retest
 → entry
+```
 
 ### 6.5 Trigger Search Activation
 
@@ -3451,27 +3385,38 @@ sweep bar intersects final refined source
 
 Classification: D
 
-Sweep bar가 final source와 교차해야 하지만
-sweep extreme 자체가 source bounds 안에 있을 필요는 없다.
+Sweep bar must intersect the final source,
+but the sweep extreme itself may extend beyond source distal.
 
 LONG example:
 
 ```text
-bullish refined source
-        ↓
-price enters source
-        ↓
-wick extends below source distal
-        ↓
-pre-existing sell-side liquidity swept
-        ↓
-close recovers
+price enters bullish final source
+→ wick extends below source.bottom
+→ pre-existing sell-side liquidity is swept
+→ bar recovers
 ```
 
-은 유효할 수 있다.
+This can remain a valid source reaction.
 
-즉 source는 reaction context이고
-liquidity sweep extreme은 source 바깥까지 확장될 수 있다.
+Source invalidation is not decided by wick penetration alone.
+
+Bullish source invalidation requires:
+
+```text
+source-own-timeframe close < source.bottom
+```
+
+Bearish source invalidation requires:
+
+```text
+source-own-timeframe close > source.top
+```
+
+Therefore a wick that both sweeps liquidity
+and extends outside the source does not simultaneously
+invalidate the source unless the source-own-timeframe body close
+also confirms distal failure.
 
 ### 6.14 Physical Sweep Condition
 
@@ -3813,6 +3758,7 @@ M1 CHoCH search enabled
 
 ---
 
+---
 
 ## 7. M1 Meaningful CHoCH
 
@@ -4153,31 +4099,32 @@ scenario map owner invalidated
 
 시간 경과만으로 자동 폐기하지 않는다.
 
-### 7.15 Multiple Authorized Sweeps Before CHoCH
+### 7.15 Latest Authorized Sweep Owns the Active Pre-CHoCH Trigger
 
 Classification: D
 
-CHoCH 전에 새로운 direction-compatible authorized sweep이
-같은 valid source에서 발생할 수 있다.
+A scenario maintains only one active pre-CHoCH sweep/reference pair.
 
-각 sweep은 독립 trigger chain으로 기록한다.
+Required strategy fields:
 
 ```text
-trigger_chain_A
-trigger_chain_B
+active_sweep_event_id
+active_choch_reference_swing_id
 ```
 
-새 sweep B가 발생하면
-B 시점의 valid M1 correction protected swing을
-새 reference로 snapshot할 수 있다.
+If a newer direction-compatible authorized sweep
+occurs at the same still-valid source before CHoCH:
 
-이는 새로운 physical sweep event가 발생했기 때문에
-retrospective fitting이 아니다.
+```text
+active_sweep_event_id = new sweep
+active_choch_reference_swing_id
+= protected swing snapshot at new sweep
+```
 
-과거 chain A의 기록은 삭제하지 않는다.
+Older sweep events remain in the global audit ledger
+but do not remain as concurrent live strategy branches.
 
-Execution authorization에는
-현재 유효한 latest trigger chain을 사용한다.
+CHoCH authorization uses only the current active sweep/reference.
 
 ### 7.16 M5 Correction Context
 
@@ -4213,41 +4160,34 @@ M5 candle-colour confirmation
 
 M5 단독 event는 first-position order를 authorize하지 않는다.
 
-### 7.17 M1 CHoCH Does Not Change HTF Owner
+### 7.17 M1 CHoCH Is Execution Confirmation, Not Reversal-Permission Authority
 
 Classification: Authority / Frozen
 
-M1 meaningful CHoCH는
-현재 frozen scenario scope 안에서만 의미가 있다.
-
-예:
+M1 meaningful CHoCH alone cannot:
 
 ```text
-INTERNAL_ROTATION LONG
-+
-bullish M1 CHoCH
+open HTF reversal permission
+flip H1 trend_state
+create EXTERNAL_REVERSAL from nothing
 ```
 
-는:
+However, if HTF reversal permission is already OPEN
+from the active H1 reversal-reference interaction,
+a valid opposite-direction M1 CHoCH may confirm execution
+for the already valid early EXTERNAL_REVERSAL scenario.
+
+Thus:
 
 ```text
-internal bullish execution reaction confirmed
+M1 CHoCH alone
+→ no HTF reversal authority
+
+HTF reversal permission
++ deterministic opposite map/source
++ valid M1 CHoCH
+→ early EXTERNAL_REVERSAL execution confirmation possible
 ```
-
-을 의미할 뿐이다.
-
-이것만으로 H1/M30 external structure를
-bullish reversal로 변경하지 않는다.
-
-External reversal은 별도로:
-
-```text
-H1/M30 protected swing body break
-+
-new-direction owner confirmation
-```
-
-이 필요하다.
 
 ### 7.18 CHoCH Validity vs Executable Displacement
 
@@ -4347,7 +4287,6 @@ authorized sweep
 따라서 second BOS가 없다는 이유만으로
 valid V1 CHoCH 또는 valid initial CHoCH-FVG execution을 거부하지 않는다.
 
-
 ### 7.21 INITIAL_BOS Cannot Substitute for CHoCH
 
 Classification: D for V1
@@ -4415,17 +4354,16 @@ trade authority가 생기지 않는다.
 
 ### 7.24 Required CHoCH Object
 
-Minimum state:
+Minimum strategy state:
 
 ```text
 choch_event_id
 scenario_id
-trigger_chain_id
 
 direction
 
 source_id
-sweep_event_id
+active_sweep_event_id
 
 reference_swing_id
 reference_swing_level
@@ -4439,15 +4377,16 @@ close_price
 break_type = BODY_CLOSE
 ```
 
-Audit fields:
+Optional audit fields:
 
 ```text
 m1_trend_before
-reference_side
-reference_rank
 source_contact_at
 sweep_confirmed_at
 ```
+
+No persistent `trigger_chain_id` is required in V1 strategy state.
+Past sweep history remains available through the event ledger.
 
 ### 7.25 Explicit V1 Exclusions
 
@@ -4462,7 +4401,11 @@ INITIAL_BOS fallback
 same-bar sweep + CHoCH
 ATR break threshold
 CHoCH quality score
-FVG as a requirement to define the CHoCH structure event itself
+CHoCH structure-event definition
+→ FVG 불필요
+
+V1 first-position execution authorization
+→ causal displacement FVG 필요
 mandatory second BOS
 M5-only trigger
 M1 CHoCH as HTF reversal authority
@@ -4543,6 +4486,7 @@ wait for first authorized retest
 
 ---
 
+---
 
 ## 8. CHoCH Displacement FVG + Entry
 
@@ -4611,63 +4555,53 @@ FVG candidate를 미리 생성하거나 주문을 authorize하지 않는다.
 
 Classification: D for V1
 
-Initial execution FVG candidate는 반드시:
+Initial execution FVG candidate must belong to the same:
 
+```text
 authorized sweep
 → meaningful CHoCH
-
-를 만든 동일 causal M1 directional leg에 속해야 한다.
-
-LONG:
-
-authorized sell-side sweep
-→ bullish causal leg
-→ bullish FVG
-→ bullish meaningful CHoCH
-
-SHORT:
-
-authorized buy-side sweep
-→ bearish causal leg
-→ bearish FVG
-→ bearish meaningful CHoCH
-
-을 요구한다.
-
-Sweep 이전의 unrelated FVG 또는
-CHoCH 이후 별도 delivery leg에서 새로 생긴 FVG를
-현재 `INITIAL_CHOCH_FVG` 후보로 사용하지 않는다.
-
-Meaningful CHoCH가 있어도
-valid causal FVG가 하나도 없으면:
-
-NO BASE FIRST-POSITION ENTRY
-
-다.
-
-``` text
-Candidate eligibility는 meaningful CHoCH candle close 시점에 판정한다.
-
-해당 시점까지 candidate FVG는 반드시:
-
-1. 이미 available 상태여야 한다.
-2. meaningful CHoCH와 같은 방향이어야 한다.
-3. 같은 authorized sweep-to-CHoCH causal leg에 속해야 한다.
-4. 형성 이후 아직 retest되지 않았어야 한다.
-5. 아직 consumed / invalidated되지 않았어야 한다.
-
-FVG가 available된 뒤
-meaningful CHoCH candle close 전에 가격이 해당 FVG를 다시 접촉했다면:
-
-FVG available
-→ pre-authorization retest
-→ candidate 제외
-
-로 처리한다.
-
-이미 지나간 retest를
-CHoCH 확정 뒤 사후 entry로 복원하지 않는다.
 ```
+
+causal M1 directional leg.
+
+Required:
+
+```text
+1. FVG is already available by meaningful CHoCH close.
+2. FVG direction == scenario direction.
+3. FVG belongs to the authorized sweep-to-CHoCH causal leg.
+4. No later bar after FVG availability and before CHoCH selection has retested it.
+```
+
+FVG formation bar itself is not treated as its own retest.
+
+Starting from the next causal bar after FVG availability,
+if before meaningful CHoCH close:
+
+```text
+bar.high >= FVG.bottom
+AND
+bar.low <= FVG.top
+```
+
+then:
+
+```text
+PRE_SELECTION_RETEST
+→ candidate excluded
+```
+
+Candidate freshness does not use:
+
+```text
+50% mitigation
+partial-fill percentage
+distal penetration threshold
+body-close threshold
+```
+
+A meaningful CHoCH with no valid causal fresh FVG remains
+a valid structure event but authorizes no base first-position order.
 
 ### 8.4 Multiple FVG Selection and Freeze
 
@@ -4719,38 +4653,59 @@ NO BASE FIRST-POSITION ENTRY
 
 다.
 
-### 8.5 First Retest
+### 8.5 First Retest and Pending Submission
 
 Classification: D
 
-Selected FVG는 meaningful CHoCH candle close에서 freeze된다.
+At meaningful CHoCH close:
 
-그 이후 selected FVG의 direction-specific entry boundary에
-처음 다시 도달하는 것을 first authorized retest로 정의한다.
+```text
+eligible fresh FVG snapshot
+→ widest FVG freeze
+→ Entry calculation
+→ SL calculation
+→ frozen objective family eligibility
+→ Final TP freeze
+→ execution preflight
+→ pending order submission
+```
+
+all occur in the same EA decision cycle.
 
 LONG:
 
-price reaches selected bullish FVG.top
+```text
+BUY LIMIT at selected bullish FVG.top
+```
 
 SHORT:
 
-price reaches selected bearish FVG.bottom
+```text
+SELL LIMIT at selected bearish FVG.bottom
+```
 
-실제 baseline execution은
-해당 boundary에 pending limit order를 미리 제출하는 방식이다.
+A normally accepted pending order waits for the market
+to reach its FVG near-side boundary.
 
-따라서 first authorized retest와
-pending order activation/fill은
-MT5의 실제 Bid/Ask execution semantics에 따라 기록한다.
+Selected FVG:
 
-FVG 생성 이후 CHoCH/order authorization 전에 이미 발생한 touch는
-first authorized retest가 아니다.
+```text
+50% mitigation
+partial mitigation
+distal penetration
+full traversal
+body-close-through-FVG
+```
 
-그 FVG는 Section 8.3에 따라
-candidate에서 제외되어야 한다.
+are not separate strategy cancellation rules after pending registration.
 
-같은 first-position execution chain에서
-두 번째 이후 touch는 재사용하지 않는다.
+Actual activation / fill uses Section 11 MT5 Bid/Ask semantics.
+
+Broker submission or fill failure is an execution outcome,
+not a new FVG strategy state.
+
+A later second touch is not reinterpreted
+as a new first-retest opportunity for the same execution chain.
 
 ### 8.6 Entry Price
 
@@ -4799,6 +4754,7 @@ spread-aware pending-price adjustment
 
 Minimum state:
 
+```text
 selected_fvg_id
 direction
 
@@ -4808,30 +4764,23 @@ fvg_width
 
 fvg_available_at
 choch_available_at
+candidate_freeze_at
 
 candidate_fvg_ids
 candidate_fvg_widths
-
-first_retest_at
-entry_price
-
-candidate_freeze_at
-
 excluded_pre_retested_fvg_ids
-excluded_consumed_fvg_ids
+
+entry_price
+strategy_entry_price
 
 selected_fvg_frozen_at
+pending_submitted_at
+```
 
-strategy_entry_price
-normalized_entry_price
+Execution-sensitive Bid/Ask and broker result fields
+belong to Section 11 execution ledger.
 
-pending_created_at
-
-bid_at_authorization
-ask_at_authorization
-spread_at_authorization
-
-execution_model = INITIAL_CHOCH_FVG
+No selected-FVG consumed/mitigated strategy state is required.
 
 ## 9. Stop Loss
 
@@ -4892,16 +4841,22 @@ SYMBOL_TRADE_TICK_SIZE
 Digits 또는 SYMBOL_POINT만으로
 실제 executable price increment를 가정하지 않는다.
 
-Entry FVG boundary는 OHLC 기반 가격이므로
-원칙적으로 tick grid 위에 있어야 한다.
+Entry FVG boundary는 broker OHLC에서 나온 실제 가격이므로
+정상 data에서는 executable tick grid와 일치해야 한다.
 
-floating-point 표현 오차 제거를 넘어
-entry의 경제적 가격 자체를 이동해야만 valid tick이 된다면:
+Floating-point representation error는
+동일 economic tick으로 cleanup한다.
 
-EXECUTION_PRICE_NOT_REPRESENTABLE
-→ NO TRADE
+만약 정상 broker OHLC boundary 자체가
+symbol tick grid와 일치하지 않는 비정상 상태가 발견되면:
 
-로 처리한다.
+```text
+DATA_OR_EXECUTION_ERROR
+```
+
+로 기록한다.
+
+이를 별도의 strategy `NO_TRADE` pattern으로 사용하지 않는다.
 
 20% FVG-width SL 계산값이 tick grid 사이에 위치하면
 전략 SL을 좁히지 않는 방향으로 normalize한다.
@@ -4930,397 +4885,240 @@ FVG selection, entry boundary 또는
 해당 frozen geometry가 broker constraint를 만족하지 못하면
 Section 11의 `EXECUTION_INFEASIBLE` 규칙을 적용한다.
 
-## 10. Objective / TP
+## 10. Objective / Take Profit
 
 Status: FROZEN FOR V1
 
-### 10.1 Purpose
+### 10.1 Active V1 Scenario Scopes
 
-Classification: D
+Active first-position scopes:
 
-V1의 Objective는 원하는 RR을 만들기 위해 임의로 선택하는 가격이 아니다.
-
-현재 scenario scope와 owner가 설명할 수 있는
-실제 structural liquidity candidate를 먼저 구성하고,
-Entry / SL geometry가 확정된 뒤
-그 pre-frozen family 안에서 final TP 자격을 판정한다.
-
-`planned R >= 1`은:
-
-objective-candidate eligibility filter
-
-다.
-
-다음이 아니다.
-
-trade-wide immediate rejection filter
-maximum-R optimizer
-permission to invent a farther TP
-permission to tighten SL
-
-### 10.2 Scenario Scopes
-
-Classification: D
-
-허용 scope:
-
+```text
 EXTERNAL_CONTINUATION
-INTERNAL_ROTATION
 EXTERNAL_REVERSAL
+```
 
-Scenario scope가 objective candidate universe를 결정한다.
+Research-only / no current V1 first-position order authority:
 
-R이 크다는 이유로 scope 밖 liquidity를 final TP로 승격하지 않는다.
-
-V1 first-position direction authority:
-
-EXTERNAL_CONTINUATION
-→ default while mature H1 trend has no reversal permission.
-
+```text
 INTERNAL_ROTATION
-→ opposite M30 trend alone does not authorize an ordinary counter-H1 first position.
+```
 
-EXTERNAL_REVERSAL
-→ may be created before H1 trend label flips,
-  but only after the current HTF reversal-reference extreme
-  opens opposite-direction reversal permission.
+### 10.2 Objective Family Freeze
 
-### 10.3 Objective Family Freeze
+PLAN 단계에서
+현재 causally-known, unconsumed, direction-ahead,
+scope-compatible liquidity candidate 전체를
+trade direction으로 가까운 순서대로 freeze한다.
 
-Classification: D
+별도의:
 
-PLAN 단계에서 Entry / SL geometry를 알기 전에 다음을 freeze한다.
+```text
+CURRENT_STRUCTURE tier
+HISTORICAL_H1_FALLBACK tier
+maximum-two-candidate cap
+```
 
-scenario_id
-scenario_scope
-owner_id
-direction
+을 사용하지 않는다.
 
-objective_candidate_ids
-objective_candidate_prices
-objective_candidate_types
-objective_candidate_order
-objective_candidate_available_at
+Entry / SL 확인 뒤:
 
-objective_family_frozen_at
+```text
+새 candidate 추가
+candidate order 변경
+better-R candidate 삽입
+```
 
-Entry / SL 확정 뒤 금지:
+을 금지한다.
 
-add new liquidity candidate
-change candidate order
-insert better-R candidate
-search hindsight target
+### 10.3 EXTERNAL_CONTINUATION Family
 
-### 10.4 EXTERNAL_CONTINUATION Family
+H1-owned continuation:
 
-Classification: D
+```text
+current H1/M30 owner-compatible external liquidity
+```
 
-Current owner direction의 미소진 H1/M30 external liquidity를
-current-structure objective family로 사용한다.
+M30-primary continuation:
 
-Entry와 external objective 사이의 internal liquidity는:
+```text
+current M30 external liquidity only
+```
 
+Internal liquidity between Entry and final external target
+may be recorded as:
+
+```text
 INTERMEDIATE_DELIVERY
+```
 
-로 기록하며 final external TP candidate로 승격하지 않는다.
+but is not promoted to final external TP.
 
-### 10.5 INTERNAL_ROTATION Family
+### 10.4 EXTERNAL_REVERSAL Family
 
-Classification: D
+Early reversal while old H1 owner is still active:
 
-INTERNAL_ROTATION remains a structural/objective concept,
-but V1 does not use opposite M30 trend alone
-to authorize a counter-H1 first position.
+```text
+opposite mature M30 external liquidity
+```
 
-If mature H1 direction is active
-and reversal permission is CLOSED:
-
-opposite M30/LTF structure
-→ HTF_INTERNAL_CORRECTION_CONTEXT
-
-not:
-
-authorized INTERNAL_ROTATION trade
-
-An ordinary internal target may not bypass
-the HTF trend-follow / reversal-permission gate.
-
-### 10.6 EXTERNAL_REVERSAL Family
-
-Classification: D
-
-EXTERNAL_REVERSAL does not require
-the H1 trend label to have already flipped
-before the scenario can be planned.
-
-Required for an early external-reversal scenario:
-
-1. mature H1 trend exists
-2. current H1 reversal-reference external extreme has been reached
-3. opposite-direction reversal_permission is OPEN
-4. opposite M30/LTF structure is deterministic enough to define the scenario
-5. valid opposite Root/source lineage exists
-
-While old H1 trend remains mature,
-the opposite mature M30 map supplies
-the early-reversal objective context.
-
-Current-tier objective family:
-
-opposite-direction unconsumed M30 external liquidity
-that is structurally valid under the reversal scenario
+only.
 
 Do not use:
-old H1 continuation objective family
-old-trend historical H1 fallback
-arbitrary far H1 target to improve R
 
-Standard:
+```text
+old H1 continuation objective
+old H1 historical liquidity
+```
 
-planned R >= 1
-nearest eligible candidate
+for early-reversal TP extension.
 
-rules still apply.
+After a new mature opposite H1 owner exists:
 
-If H1 later enters TRANSITION or matures in the new direction,
-the already frozen scenario is not rewritten.
+```text
+new H1/M30 owner-compatible external liquidity
+```
 
-New post-transition scenarios come from the new map.
+is used by new scenarios.
 
-M1 CHoCH alone can never open external-reversal permission.
-
-Permission must originate from
-the active HTF external-extreme interaction.
-
-### 10.7 Planned-R Geometry
-
-Classification: D
-
-Objective eligibility 계산은 frozen strategy geometry를 사용한다.
+### 10.5 Planned-R Geometry
 
 LONG:
 
+```text
 risk = Entry - normalized_SL
-reward(candidate) = candidate_price - Entry
+reward = candidate_price - Entry
 planned_R = reward / risk
+```
 
 SHORT:
 
+```text
 risk = normalized_SL - Entry
-reward(candidate) = Entry - candidate_price
+reward = Entry - candidate_price
 planned_R = reward / risk
+```
 
 Required:
 
+```text
 risk > 0
 reward > 0
+```
 
 Final TP eligibility:
 
+```text
 planned_R >= 1.0
+```
 
-`normalized_SL`은 Section 9의
-outward tick-normalized 20% FVG-width strategy SL이다.
+Commission, swap, future slippage,
+and execution-cost reporting are not mixed into this strategy geometry.
 
-Baseline planned-R eligibility 계산에는:
+### 10.6 Candidate Selection
 
-commission
-swap
-future slippage
-spread-aware TP offset
+Frozen objective family is scanned nearest-first.
 
-을 섞지 않는다.
+For each candidate:
 
-이들은 execution/economic reporting에서 별도로 기록한다.
+```text
+consumed
+→ skip
 
-### 10.8 Candidate Selection
+wrong scope
+→ skip
 
-Classification: D
+reward <= 0
+→ skip
 
-Selected FVG, Entry, normalized strategy SL이 확정된 뒤
-frozen objective family를 방향상 가까운 순서대로 검사한다.
+planned R < 1
+→ not FINAL_TP
+→ optional INTERMEDIATE_DELIVERY mark
 
-각 candidate:
+first planned R >= 1
+→ FINAL_TP
+→ stop search
+```
 
-1. 이미 consumed이면 제외한다.
-2. scenario scope와 호환되지 않으면 제외한다.
-3. planned R을 계산한다.
-4. planned R < 1이면 final TP 자격을 제외하고 `INTERMEDIATE_DELIVERY`로 기록한다.
-5. planned R >= 1인 최초 candidate를 `FINAL_TP`로 선택한다.
-6. 첫 eligible candidate를 선택하면 current tier 검색을 종료한다.
+Do not use:
 
-금지:
+```text
+max-R selection
+farthest candidate
+RR-based reordering
+```
 
-max-R candidate selection
-farthest candidate selection
-RR-based candidate reordering
+### 10.7 No Eligible Objective
 
-### 10.9 Historical H1 Fallback Tier
+If the entire frozen family contains
+no valid planned R `>= 1` candidate:
 
-Classification: D for strategy / H for warm-up depth
-
-External scenario는 PLAN 단계에서
-current-structure family 바깥 방향의
-causally-known 미소진 H1 external liquidity 중
-가장 가까운 최대 2개를 inactive fallback tier로 freeze할 수 있다.
-
-Allowed:
-H1-owned EXTERNAL_CONTINUATION
-HTF-confirmed EXTERNAL_REVERSAL under a new mature H1 owner
-
-Forbidden:
-early LTF-led EXTERNAL_REVERSAL while old H1 owner is still active
-M30-primary EXTERNAL_CONTINUATION
-INTERNAL_ROTATION
-
-Fallback candidate도 Entry / SL을 알기 전에
-ID / price / order가 freeze되어야 한다.
-
-Selection precedence:
-
-Tier 1 = CURRENT_STRUCTURE
-Tier 2 = HISTORICAL_H1_FALLBACK
-
-Current tier에 valid planned R >= 1 candidate가 하나라도 있으면
-fallback을 사용하지 않는다.
-
-Current tier에서 final TP를 찾지 못했을 때만
-fallback tier를 같은 nearest-first / >=1R 규칙으로 검사한다.
-
-Fallback에서 더 큰 R을 이유로
-더 먼 candidate를 선택하지 않는다.
-
-Historical data를 어디까지 복원해야 하는지는
-Section 2.18 warm-up requirement에서 별도로 결정한다.
-
-Permanent strategy rule에 특정 calendar start date를 사용하지 않는다.
-
-### 10.10 No Eligible Objective
-
-Classification: D
-
-다음을 모두 평가한 뒤에도:
-
-allowed current frozen family
-+
-applicable pre-frozen fallback family
-
-planned R >= 1인 valid candidate가 없으면:
-
-NO TRADE
+```text
+NO_TRADE
 reason = NO_R_ELIGIBLE_OBJECTIVE
+```
 
-로 처리한다.
+### 10.8 Intermediate Delivery
 
-첫 번째 1R 미만 liquidity 하나만 보고
-scenario를 즉시 폐기하지 않는다.
+A valid planned R `< 1` candidate
+is not deleted from the market map.
 
-### 10.11 Intermediate Delivery
+It simply does not qualify as FINAL_TP.
 
-Classification: D
+Its later delivery alone does not cause
+selected TP rollover.
 
-Valid liquidity가 planned R < 1이라는 이유로
-시장 지도에서 삭제되지 않는다.
+### 10.9 Final TP Freeze Timing
 
-해당 candidate는:
+Required order:
 
-INTERMEDIATE_DELIVERY
-
-로 기록한다.
-
-EXTERNAL_CONTINUATION에서는
-selected external objective·owner·source lineage가 유지되는 한
-intermediate delivery 자체만으로
-pending을 취소하거나 TP를 축소하지 않는다.
-
-INTERNAL_ROTATION에서도
-selected final objective가 아닌
-더 가까운 <1R internal liquidity의 delivery 자체만으로
-final TP를 자동 교체하지 않는다.
-
-### 10.12 Final TP Freeze Timing
-
-Classification: D
-
-Final TP selection은:
-
-meaningful CHoCH close
-→ widest valid FVG freeze
-→ Entry freeze
-→ normalized strategy SL freeze
-→ objective eligibility evaluation
-→ final TP freeze
-→ pending order submission
-
-순서다.
-
-Required:
-
-objective_family_frozen_at
+```text
+objective family freeze
 <
-entry_sl_geometry_known_at
+Entry / SL geometry known
+<
+Final TP selection
+<=
+pending submission
+```
 
-final_objective_selected_at
-<= pending_created_at
+### 10.10 No Post-Selection Rollover
 
-### 10.13 No Post-Selection Rollover
+If selected final objective is delivered before fill:
 
-Classification: D
-
-Final TP가 선택된 뒤
-같은 scenario 안에서 다음 objective candidate로
-자동 rollover하지 않는다.
-
-Final objective가 pending fill 전에 delivered되면:
-
+```text
 CANCELED_OBJECTIVE_DELIVERED
+```
 
-로 scenario와 pending order를 취소한다.
+Same scenario does not roll to the next objective.
 
-새 objective가 필요하면
-map / scenario를 다시 평가한다.
+### 10.11 TP Price / Execution
 
-### 10.14 TP Price
-
-Classification: D
-
-Final TP는 selected liquidity의
-actual structural price를 사용한다.
+Use actual selected structural liquidity price.
 
 Swing liquidity:
 
+```text
 actual wick high / low
-
-를 사용한다.
-
-금지:
-
-move TP farther to improve R
-move TP because another candidate has higher R
-automatic max-R extension
-
-### 10.15 TP Execution Semantics
-
-Classification: D
-
-V1 baseline은 exact selected-liquidity TP를 사용한다.
+```
 
 LONG TP:
-Bid-side execution
+
+```text
+Bid-side
+```
 
 SHORT TP:
-Ask-side execution
 
-Spread 또는 1-tick inward TP front-run은
-baseline strategy에 포함하지 않는다.
+```text
+Ask-side
+```
 
-필요하면 향후 별도 immutable
-execution-optimization variant로 비교한다.
+No baseline TP front-run or R-extension.
 
-### 10.16 Required Objective State
+### 10.12 Required Objective State
 
-각 scenario는 최소 다음을 기록한다.
-
+```text
 scenario_scope
 owner_id
 direction
@@ -5330,35 +5128,21 @@ objective_family_frozen_at
 objective_candidates[]:
     id
     liquidity_id
-    liquidity_type
     price
     available_at
-    family_tier
     order_index
     consumed
-    consumed_at
     planned_R
-    eligibility
-    role
-
-family_tier:
-    CURRENT_STRUCTURE
-    HISTORICAL_H1_FALLBACK
-
-eligibility:
-    SCOPE_INELIGIBLE
-    CONSUMED
-    BELOW_1R
-    ELIGIBLE
-
-role:
-    FINAL_TP
-    INTERMEDIATE_DELIVERY
-    UNUSED_FUTURE
+    eligibility:
+        CONSUMED
+        WRONG_SCOPE
+        BELOW_1R
+        ELIGIBLE
 
 final_objective_id
 final_objective_price
 final_objective_selected_at
+```
 
 ## 11. Pending Order Lifecycle + MT5 Execution Constraints
 
@@ -5617,126 +5401,222 @@ EXECUTION_INFEASIBLE
 
 Classification: D
 
-V1 pending order cancellation은
-아래 causal invalidation event만 사용한다.
+Before fill,
+strategy survival authority is limited to:
 
-Time-only cancellation은 사용하지 않는다.
+```text
+1. final objective validity
+2. required source-lineage validity
+3. scenario-direction authority
+```
 
-다음 중 applicable condition이 발생하면
-pending strategy order를 취소한다.
+Cancel when:
 
-frozen objective delivered before fill
-HTF Root / parent owner invalidated
-final refined source invalidated
-trigger protected structure invalidated
-selected FVG invalidated / consumed before valid fill
-opposing owner confirmed where applicable
-source episode terminated where applicable
+```text
+final objective delivered
+→ CANCELED_OBJECTIVE_DELIVERED
 
-Event 발생 즉시:
+required final source / parent Root invalidated
+→ CANCELED_SOURCE_INVALIDATED
 
+active continuation owner invalidated
+→ CANCELED_DIRECTION_AUTHORITY
+
+early-reversal permission terminated
+by current-trend continuation body-break
+→ CANCELED_DIRECTION_AUTHORITY
+```
+
+Selected FVG mitigation/full-fill is not
+a separate post-registration cancellation authority.
+
+M1 trigger protected-structure drift,
+generic source-episode flags,
+periodic reapproval,
+and generic opposing-owner flags
+do not create additional independent cancellation branches.
+
+On strategy cancellation:
+
+```text
 strategy_state = CANCELED
+```
 
-로 변경하고
-MT5 pending order 삭제를 요청한다.
+then request MT5 pending-order deletion.
 
-이미 지나간 retest/fill을
-사후 복원하지 않는다.
+If broker deletion fails:
+
+```text
+strategy = CANCELED
+execution = CANCEL_REJECTED
+```
+
+and any later fill is:
+
+```text
+EXECUTION_DIVERGENCE
+```
 
 ### 11.10 No Time-Based Cancellation
 
 Classification: D / Frozen for V1
 
-V1에서는 시간 경과 자체를
-pending order invalidation reason으로 사용하지 않는다.
+Time-only strategy cancellation is not used.
 
-금지:
+Not cancellation authority:
 
-N-bar timeout
-N-minute timeout
-session-close timeout
-day-change timeout
-next-day automatic cancellation
-age-decay cancellation
+```text
+N bars
+N minutes
+session close
+day change
+next trading day
+arbitrary order age
+periodic H1/M15 reapproval absence
+```
 
-Pending order의 생존 여부는
-elapsed time이 아니라
-현재 scenario의 causal validity로 결정한다.
+Strategy pending survival requires only:
 
-유지 조건:
+```text
+final objective valid
+required source lineage valid
+scenario direction authority valid
+```
 
-objective still valid
-Root / owner still valid
-final refined source still valid
-trigger protected structure still valid
-selected FVG still valid
-no opposing owner confirmation
-source episode still valid
+If these remain valid:
 
-위 조건이 유지되면
-주문이 오래 대기했더라도 pending을 유지한다.
-
-반대로 시간이 거의 지나지 않았더라도
-Section 11.9의 causal invalidation event가 발생하면
-즉시 취소한다.
-
-따라서:
-
-time_based_strategy_cancellation = NONE
+```text
 MT5_pending_lifetime = ORDER_TIME_GTC
-cancellation_authority = CAUSAL_EVENTS_ONLY
+```
+
+and the pending may remain.
+
+Elapsed time alone never cancels the strategy.
 
 ### 11.11 Execution State Machine
 
-PREPARED
-→ ARMED
-→ SWEEP_CONFIRMED
-→ CHOCH_CONFIRMED
+First-position strategy state:
 
-at CHOCH candle close:
-    snapshot already-available causal FVGs
-    exclude pre-retested / consumed FVGs
-    select widest
-    ignore all future FVGs
+```text
+PLANNED
+WAITING_TRIGGER
+PENDING
+FILLED
+CANCELED
+NO_TRADE
+```
 
-→ FVG_SELECTED
+Flow:
 
-execution preflight:
-    tick-grid validation
-    Bid/Ask legality
-    StopsLevel
-    trade mode
-    volume
-    margin / request validation
+```text
+PLANNED
+→ WAITING_TRIGGER
+```
 
-if infeasible:
-    → EXECUTION_INFEASIBLE
-    → NO ORDER
+Inside `WAITING_TRIGGER`,
+the ledger may record:
 
-if feasible:
-    → PENDING
-    → MT5 limit order
+```text
+source contact
+active authorized sweep
+meaningful CHoCH
+selected widest FVG
+```
 
-then:
+but these do not need separate persistent scenario states.
 
-valid activation / fill
+At meaningful CHoCH decision:
+
+```text
+eligible FVG snapshot
+→ widest FVG freeze
+→ Entry
+→ SL
+→ Final TP
+→ execution preflight
+→ submit pending
+```
+
+If no R-eligible objective:
+
+```text
+→ NO_TRADE
+```
+
+If strategy is valid but broker preflight is infeasible:
+
+```text
+strategy signal remains research-valid
+execution = EXECUTION_INFEASIBLE
+→ NO ORDER
+```
+
+If server rejects submission:
+
+```text
+execution = REJECTED
+→ NO ORDER
+```
+
+If accepted:
+
+```text
+→ PENDING
+```
+
+PENDING:
+
+```text
+valid broker fill
 → FILLED
+```
 
 or:
 
+```text
 causal strategy cancellation
 → CANCELED
-→ request MT5 pending deletion
+→ request broker deletion
+```
 
-if broker refuses deletion and order later fills:
-→ EXECUTION_DIVERGENCE
+If broker refuses deletion:
 
-Elapsed time alone never transitions PENDING to CANCELED in V1.
+```text
+execution divergence tracking
+```
+
+FILLED:
+
+```text
+original SL / TP only
+```
+
+decide the experiment.
 
 ### 11.12 Required Execution Ledger
 
-Minimum fields:
+Strategy minimum:
 
+```text
+scenario_id
+strategy_state
+
+source_contact_at
+active_sweep_event_id
+choch_event_id
+selected_fvg_id
+
+final_objective_id
+
+pending_submitted_at
+
+strategy_cancel_at
+strategy_cancel_reason
+```
+
+Execution minimum:
+
+```text
 symbol_tick_size
 symbol_point
 symbol_digits
@@ -5744,14 +5624,12 @@ symbol_stops_level
 symbol_freeze_level
 
 strategy_entry_price
-normalized_entry_price
-
-raw_strategy_sl
 normalized_sl
+tp
 
-bid_at_authorization
-ask_at_authorization
-spread_at_authorization
+bid_at_submission
+ask_at_submission
+spread_at_submission
 
 order_type
 order_time_type
@@ -5761,18 +5639,17 @@ preflight_result
 order_send_retcode
 broker_order_ticket
 
-pending_created_at
-
-first_retest_at
 fill_at
 fill_price
 
-strategy_cancel_at
-strategy_cancel_reason
 broker_cancel_result
 
 execution_status
 execution_divergence_reason
+```
+
+Additional audit fields may be stored,
+but they are not trade-authorization requirements.
 
 ## 12. Explicitly Excluded From Baseline
 
@@ -5785,4 +5662,3 @@ execution_divergence_reason
 - FVG add-on
 - discretionary partial profit
 - live trading
-

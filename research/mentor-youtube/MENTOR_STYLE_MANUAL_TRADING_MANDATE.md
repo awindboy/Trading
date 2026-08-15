@@ -1,6 +1,20 @@
 # 스승님식 수동 매매 절대 실행 계약
 
-- 상태: `FROZEN / MANUAL-TRADING AUTHORITY`
+> **LEGACY / SUPERSEDED NOTICE**
+>
+> 이 문서는 과거 OB-first-entry manual-trading snapshot이다.
+> 현재 deterministic Mentor EA V1 및 current V1 수동 판단의 authority는
+> repository root `AGENTS.md`와 `docs/ea/EA_SPEC.md`다.
+>
+> 이 문서의 causal-execution-OB first entry,
+> old SL geometry,
+> INTERNAL_ROTATION order scope,
+> stale-pending / periodic re-approval 규칙은
+> current V1 주문 권한으로 사용하지 않는다.
+>
+> Historical research record로만 보존한다.
+
+- 상태: `LEGACY / SUPERSEDED FOR CURRENT V1`
 - 제정일: `2026-08-01`
 - 적용 범위: 수동 차트 분석, 블라인드 리플레이, 데모 매매 판단
 

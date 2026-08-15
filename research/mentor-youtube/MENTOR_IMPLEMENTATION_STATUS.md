@@ -1,5 +1,19 @@
 # Mentor Protocol Implementation Status
 
+> **LEGACY IMPLEMENTATION SNAPSHOT — 2026-07-30**
+>
+> 이 문서는 당시 OB-first-entry 연구 엔진 상태 기록이다.
+> Current V1 strategy / implementation authority는:
+>
+> - `AGENTS.md`
+> - `docs/ea/EA_SPEC.md`
+> - `docs/ea/HANDOFF.md`
+>
+> 이 문서의 OB-only first-position,
+> sweep-based SL,
+> legacy planner state를
+> current V1 계약으로 사용하지 않는다.
+
 ## Current Boundary - 2026-07-30
 
 - Strategy source: `MENTOR_RULE_CONTRACT.md`

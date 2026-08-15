@@ -69,10 +69,6 @@ Protected swing selection
 → BOS-producing causal correction extreme
 → NOT latest opposite swing
 
-Protected swing availability
-→ BOS-close information only
-→ no retroactive promotion
-
 External trend invalidation
 → body close through current protected swing
 
@@ -80,152 +76,143 @@ Post-external-CHoCH state
 → TRANSITION
 → no immediate fabricated opposite mature trend
 
-External/internal wave promotion
-→ structural role based
-→ no ATR/point/percentage threshold
-
-INITIAL_CHOCH_FVG core entry
-→ FROZEN
-
-FVG availability
-→ FROZEN
-→ Candle3 close
-
-Candidate snapshot / widest-FVG freeze
-→ FROZEN
-→ meaningful M1 CHoCH candle close
-
-Post-CHoCH FVG inclusion
-→ FORBIDDEN
-
-Pre-authorization FVG retest
-→ candidate excluded
-
-Baseline pending entry
-→ LONG BUY_LIMIT at FVG.top
-→ SHORT SELL_LIMIT at FVG.bottom
-
-Spread-adjusted entry
-→ NOT BASELINE
-→ future optimization variant
-
-Strategy SL
-→ LONG: FVG.bottom - 20% width
-→ SHORT: FVG.top + 20% width
-
-Tick normalization
-→ entry: preserve strategy boundary
-→ LONG SL: outward/down
-→ SHORT SL: outward/up
-
-Bid/Ask execution semantics
-→ FROZEN
-
-StopsLevel violation
-→ EXECUTION_INFEASIBLE / NO ORDER
-
-FreezeLevel cancellation failure
-→ EXECUTION_DIVERGENCE tracking
-
-Pending MT5 lifetime
-→ ORDER_TIME_GTC
-
-Causal pending cancellation
-→ FROZEN
-
-Time-based strategy cancellation
-→ NONE / FROZEN
-
-Pending survival authority
-→ causal state only
-
-Objective candidate family
-→ FROZEN before Entry/SL geometry
-
-Minimum objective eligibility
-→ planned R >= 1
-
-planned R role
-→ objective-candidate filter
-→ NOT max-R optimization
-
-Final TP selection
-→ nearest scope-compatible R-eligible candidate
-
-Historical H1 fallback
-→ external scenarios only
-→ pre-frozen maximum 2 candidates
-
-Post-selection TP rollover
-→ FORBIDDEN
-
-Baseline TP price
-→ exact selected structural liquidity
-
-H1/M30 owner hierarchy
-→ FROZEN
-
-H1 mature directional
-→ parent external owner = H1
-
-H1 NEUTRAL / TRANSITION + mature directional M30
-→ temporary active map = M30
-
-HTF trade-direction authority
+H1/M30 trade-direction authority
 → trend-follow first / FROZEN
-
-H1 mature directional
-→ default first-position bias = H1 direction
-
-Opposite M30 while reversal permission CLOSED
-→ correction context only
-→ no ordinary counter-H1 first-position lane
 
 Reversal reference
 → bullish H1: current-flow highest valid external high
 → bearish H1: current-flow lowest valid external low
 
-External-extreme reach
-→ reversal permission OPEN
-→ NOT trend flip
-→ NOT entry
+Reversal reference event precedence
+→ continuation body break
+→ sweep/rejection
+→ touch
 
-External-extreme sweep/rejection
-→ reversal context evidence
-→ no score / no automatic order
+Opposite M30 while permission CLOSED
+→ correction context only
 
-Body-close continuation beyond reference
-→ old reversal watch closed
-→ normal BOS/protected-swing update
-→ new causal extreme becomes next reference
+Active V1 first-position scenario scopes
+→ EXTERNAL_CONTINUATION
+→ EXTERNAL_REVERSAL
+
+INTERNAL_ROTATION
+→ research-only
+→ no current V1 first-position authority
 
 Early EXTERNAL_REVERSAL
 → allowed after HTF reversal permission
 → may occur before H1 trend label flips
-→ requires deterministic opposite LTF context + full base entry chain
 
-Ordinary parallel H1 continuation + opposite M30 internal trade
-→ REMOVED from V1
+Objective family
+→ one frozen nearest-first ordered family
+→ no historical fallback tier
+→ no arbitrary candidate cap
+
+Minimum objective eligibility
+→ planned R >= 1
+
+Final TP
+→ nearest scope-compatible R-eligible candidate
+
+Post-selection TP rollover
+→ FORBIDDEN
+
+Root / child strategy state
+→ ACTIVE / INVALIDATED
+
+Source price invalidation
+→ adverse body close through distal
+→ evaluated on source's own timeframe
+
+Wick through source distal
+→ may remain valid sweep context
+→ not automatic source invalidation
+
+Minimum one causal lower-TF child
+→ REQUIRED
+
+Source contact
+→ REQUIRED before trigger search
+
+Mature sweep
+→ pre-existing eligible liquidity
+→ same-bar penetration + recovery
+→ one-tick minimum
+
+Active pre-CHoCH sweep/reference
+→ one per scenario
+→ newer valid sweep replaces active reference
+
+Meaningful M1 CHoCH
+→ body-close break of frozen correction protected swing
+
+Same-bar sweep + CHoCH
+→ EXCLUDED in V1
+
+INITIAL_CHOCH_FVG
+→ FROZEN core entry model
+
+FVG availability
+→ Candle3 close
+
+Pre-selection FVG retest
+→ candidate excluded
+
+FVG selection
+→ widest eligible FVG at CHoCH close
+
+Entry
+→ LONG BUY_LIMIT at FVG.top
+→ SHORT SELL_LIMIT at FVG.bottom
+
+Strategy SL
+→ LONG FVG.bottom - 20% width
+→ SHORT FVG.top + 20% width
+
+Pending submission
+→ same CHoCH decision cycle after Entry / SL / TP
+
+Pending lifetime
+→ ORDER_TIME_GTC
+
+Post-registration FVG mitigation
+→ no separate cancellation branch
+
+Pending strategy survival authority
+→ final objective validity
+→ required source-lineage validity
+→ scenario-direction authority
+
+Time-based cancellation
+→ NONE
+
+Periodic H1/M15 pending reapproval
+→ REMOVED
+
+Bid/Ask execution semantics
+→ FROZEN
+
+StopsLevel infeasibility
+→ execution failure / NO ORDER
+→ strategy geometry not repaired
+
+FreezeLevel cancellation failure
+→ execution divergence tracking
+
+Delivery FVG replacement/add-on
+→ research-only / inactive
+
+Ground Truth V2 / Gemini runtime state
+→ outside deterministic EA baseline
 
 ## Next Task
 
-Create the first EA rule mapping for:
-
-1. Audit reversal-permission rule against remaining objective/source contracts.
-2. Resolve selected-FVG exact invalidation / consumption.
-3. Resolve final refined-source exact invalidation.
-4. Resolve session-gap handling.
-5. Resolve warm-up/state reconstruction.
-6. Run final consistency audit.
-7. Freeze deterministic V1 specification.
-8. Implement minimum MQL5 EA.
-9. Validate implementation parity before profitability optimization.
-
-Each rule must be classified as:
-
-- D: already deterministic
-- H: deterministic after an explicit heuristic is chosen
-- U: unresolved / discretionary and requires a design decision
+1. Resolve session-gap handling.
+2. Resolve warm-up / historical state reconstruction.
+3. Run final AGENTS / EA_SPEC / DECISIONS authority consistency check.
+4. Freeze deterministic V1 specification.
+5. Implement minimum MQL5 EA.
+6. Validate MT5 implementation parity before profitability optimization.
 
 ## Do Not Do Yet
 

@@ -1013,24 +1013,34 @@ scenario 자체의 원인이 사라질 때 setup을 종료하기 위함이다.
 
 ---
 
-## D-043 — M1 CHoCH is execution confirmation, not HTF reversal authority
+## D-043 — M1 CHoCH confirms execution but does not create HTF reversal permission
 
-Status: ACTIVE
+Status: ACTIVE / FROZEN
 
-M1 meaningful CHoCH는
-현재 frozen scenario의 실행 방향을 확인할 뿐이다.
+M1 meaningful CHoCH alone cannot:
 
-M1 CHoCH만으로 H1/M30 external owner 또는 trend를
-반전시키지 않는다.
+```text
+open HTF reversal permission
+flip H1 trend_state
+create EXTERNAL_REVERSAL from nothing
+```
 
-External reversal은 별도의
-H1/M30 protected structure body break와
-new-direction owner confirmation이 필요하다.
+However, when HTF reversal permission is already OPEN
+from the active H1 reversal-reference interaction,
+a valid opposite M1 CHoCH may confirm execution
+for an early EXTERNAL_REVERSAL scenario.
 
-Reason:
+Thus:
 
-internal reaction과 external structural reversal을
-혼동하지 않기 위함이다.
+```text
+M1 CHoCH alone
+→ no HTF reversal authority
+
+HTF permission
++ valid opposite context/source
++ M1 CHoCH
+→ early reversal execution confirmation allowed
+```
 
 ---
 
@@ -1304,7 +1314,7 @@ order authorization 이전에 이미 지나간 touch를
 
 ## D-054 — Delivery FVG replacement/add-on require re-audit after base-entry correction
 
-Status: ACTIVE
+Status: RESEARCH-ONLY / INACTIVE IN V1
 
 기존 `DELIVERY_FVG_REPLACEMENT`와 `DELIVERY_FVG_ADDON` 계약은
 과거 OB-first-entry baseline을 전제로 작성된 부분이 있다.
@@ -1315,6 +1325,8 @@ Status: ACTIVE
 
 기존 문서 내용은 역사/연구 기록으로 보존하며
 재감사 전 임의로 새 baseline에 맞춰 재작성하지 않는다.
+
+---
 
 ## D-055 — FVG becomes available only after Candle3 closes
 
@@ -1385,7 +1397,7 @@ Spread-aware pending-price adjustment는
 
 ## D-059 — V1 has no time-based pending cancellation
 
-Status: ACTIVE / FROZEN
+Status: CONSOLIDATED INTO D-063
 
 V1 pending order는
 시간 경과만으로 취소하지 않는다.
@@ -1557,6 +1569,8 @@ objective
 
 를 자동 수정하지 않는다.
 
+---
+
 ## D-066 — 1R is objective-candidate eligibility
 
 Status: ACTIVE / FROZEN
@@ -1617,22 +1631,24 @@ trade direction으로 가장 가까운 valid liquidity를 final TP로 선택한�
 
 Status: ACTIVE / FROZEN
 
-R이 크더라도 scenario scope 밖 liquidity를 TP로 사용하지 않는다.
+Current V1 active first-position scopes:
 
-INTERNAL_ROTATION:
-mature M15+ internal liquidity only.
+```text
+EXTERNAL_CONTINUATION
+EXTERNAL_REVERSAL
+```
 
-EXTERNAL_CONTINUATION / EXTERNAL_REVERSAL:
-external objective family.
+R이 크더라도
+현재 scenario scope가 설명할 수 없는 liquidity를
+TP로 사용하지 않는다.
 
-INTERNAL_ROTATION은
-1R을 만들기 위해 external H1 liquidity로 확장하지 않는다.
+`INTERNAL_ROTATION`은 current V1 first-position order scope가 아니다.
 
 ---
 
 ## D-070 — Historical H1 fallback is pre-frozen and restricted to H1-owned external scenarios
 
-Status: ACTIVE / FROZEN FOR STRATEGY
+Status: SUPERSEDED BY D-092
 
 An eligible H1-owned external scenario may freeze
 up to the nearest two causally-known unconsumed H1 external liquidity candidates
@@ -1699,6 +1715,8 @@ LONG TP는 Bid-side,
 SHORT TP는 Ask-side execution semantics를 따른다.
 
 Front-run은 향후 별도 immutable execution optimization variant로만 검토한다.
+
+---
 
 ## D-073 — Three-candle waves are swing candidates, not trend states
 
@@ -1815,6 +1833,8 @@ protected causal correction role
 BOS/CHoCH structure relationship
 
 All other confirmed waves remain internal by default.
+
+---
 
 ## D-079 — H1 is the parent owner only while H1 is mature directional
 
@@ -2016,3 +2036,164 @@ permission originated from the old trend's major external extreme.
 
 Actual order still requires the frozen:
 Root/source → contact → sweep → M1 CHoCH → FVG → entry chain.
+
+---
+
+## D-088 — Pre-selection FVG touch removes first-retest freshness
+
+Status: ACTIVE / FROZEN
+
+Starting from the next causal bar after FVG availability,
+if price overlaps the FVG before meaningful CHoCH close:
+
+PRE_SELECTION_RETEST
+→ candidate excluded
+
+No 50% or partial-fill threshold is used.
+
+---
+
+## D-089 — Selected FVG order is submitted in the CHoCH decision cycle
+
+Status: ACTIVE / FROZEN
+
+At meaningful CHoCH close:
+
+eligible FVG snapshot
+→ widest FVG freeze
+→ Entry / SL / TP
+→ preflight
+→ pending submission
+
+occur in the same EA decision cycle.
+
+No strategic arming or periodic reapproval delay exists.
+
+---
+
+## D-090 — Source validity uses adverse body close through distal
+
+Status: ACTIVE / FROZEN
+
+Bullish Root / child:
+
+own-timeframe close < bottom
+→ invalidated
+
+Bearish Root / child:
+
+own-timeframe close > top
+→ invalidated
+
+Wick-only distal penetration does not invalidate the source.
+
+Touch / partial mitigation are audit facts, not strategy states.
+
+---
+
+## D-091 — Strategy state is smaller than the audit ledger
+
+Status: ACTIVE / FROZEN
+
+Persistent first-position strategy state:
+
+PLANNED
+WAITING_TRIGGER
+PENDING
+FILLED
+CANCELED
+NO_TRADE
+
+Source contact, sweep, CHoCH, FVG selection,
+touch and mitigation details remain event-ledger fields
+rather than separate strategy branches.
+
+---
+
+## D-092 — V1 uses one ordered objective family with no historical fallback tier
+
+Status: ACTIVE / FROZEN
+
+At PLAN time freeze all currently known:
+
+causally-valid
+unconsumed
+scope-compatible
+direction-ahead
+
+objective candidates in nearest-first order.
+
+Do not create:
+
+CURRENT_STRUCTURE tier
+HISTORICAL_H1_FALLBACK tier
+maximum-two-candidate cap
+
+After Entry / SL:
+the first candidate with planned R >= 1 becomes Final TP.
+
+---
+
+## D-093 — INTERNAL_ROTATION is research-only in current V1 first-position authorization
+
+Status: ACTIVE / FROZEN
+
+Ordinary opposite-M30 structure under mature H1
+is correction context.
+
+Counter-HTF first-position permission requires
+HTF reversal permission
+and is classified as EXTERNAL_REVERSAL.
+
+Therefore INTERNAL_ROTATION is not
+an active V1 first-position scenario_scope.
+
+---
+
+## D-094 — Only one pre-CHoCH sweep/reference is active per scenario
+
+Status: ACTIVE / FROZEN
+
+A newer valid authorized sweep before CHoCH
+replaces the active sweep/reference.
+
+Older sweeps remain in the audit ledger
+but do not create concurrent live strategy trigger chains.
+
+---
+
+## D-095 — Pending cancellation uses three causal survival authorities
+
+Status: ACTIVE / FROZEN
+
+Before fill:
+
+final objective validity
+required source-lineage validity
+scenario-direction authority
+
+are the only strategy-level survival authorities.
+
+Selected-FVG mitigation,
+M1 trigger-state drift,
+undefined source episodes,
+periodic reapproval,
+and elapsed time
+do not add independent cancellation branches.
+
+---
+
+## D-096 — Disabled variants and Ground Truth orchestration are not baseline authority
+
+Status: ACTIVE / FROZEN
+
+Current deterministic V1 does not instantiate:
+
+DELIVERY_FVG_REPLACEMENT
+DELIVERY_FVG_ADDON
+OB-only first entry
+GT V2 / Gemini runtime states
+API latency states
+AI risk-slot arbitration
+
+Historical contracts remain research history only.
