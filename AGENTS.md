@@ -78,7 +78,7 @@ M1은 **시나리오를 만드는 시간봉이 아니라 이미 존재하는 시
 - Entry와 hard SL이 확정된 뒤에는 새로운 liquidity candidate를 추가하거나 후보 순서를 바꿀 수 없다.
 - `EXTERNAL_CONTINUATION` family는 현재 H1/M30 외부 방향의 미소진 H1/M30 external liquidity로 구성한다.
 - `INTERNAL_ROTATION` family는 외부 구조가 바뀌었다고 확대하지 않고, 현재 dealing range 안의 의미 있는 M15 이상 internal liquidity로 구성한다.
-- `EXTERNAL_REVERSAL`은 반대 방향 M1 CHoCH만으로 선언하지 않는다. H1/M30 protected swing의 몸통 파괴와 새 방향 owner가 확인된 뒤에만 새 방향 external liquidity family를 만든다.
+- `EXTERNAL_REVERSAL`은 반대 방향 M1 CHoCH만으로 선언하지 않는다. Mature H1 owner가 유지되는 동안에는 Section 3.2.2의 reversal-reference external extreme interaction으로 반대 방향 reversal permission이 먼저 열려야 한다. Permission이 열린 뒤 deterministic한 opposite M30/LTF structure와 valid opposite Root/source lineage가 형성되면 H1 trend label이 아직 기존 방향이어도 early `EXTERNAL_REVERSAL` scenario를 만들 수 있다. H1 protected swing body-break와 새 mature H1 owner 확인은 early reversal의 선행조건이 아니다.
 - `EXTERNAL_CONTINUATION`의 entry와 external objective 사이에 있는 내부 유동성은 최종 external TP 후보가 아니라 `INTERMEDIATE_DELIVERY`로 기록한다.
 - Entry와 hard SL이 확정되면 frozen objective family를 방향상 가까운 순서대로 검사한다.
 - 아직 미소진이고 scenario scope와 호환되며 planned R `>= 1`인 최초 candidate를 최종 TP로 선택한다.
@@ -92,7 +92,7 @@ M1은 **시나리오를 만드는 시간봉이 아니라 이미 존재하는 시
 - 단순 최근 pivot, 라운드 넘버, 이미 소진된 고저점은 목적 유동성이 아니다.
 - 비교할 수 없는 owner 경로의 목적지가 여러 개 남으면 하나의 family로 섞지 않고 별도 scenario lane으로 유지한다.
 - External scenario의 PLAN packet은 current-structure family 바깥 방향의 causally-known 미소진 H1 external liquidity 중 방향상 가장 가까운 최대 `2개`를 비활성 fallback tier로 함께 동결할 수 있다.
-- Historical H1 fallback은 `EXTERNAL_CONTINUATION` 또는 `EXTERNAL_REVERSAL`에서만 사용할 수 있다. `INTERNAL_ROTATION`에서는 사용하지 않는다.
+- Historical H1 fallback은 H1-owned `EXTERNAL_CONTINUATION` 또는 old owner가 무효화되고 새 mature H1 owner가 확정된 이후의 HTF-confirmed `EXTERNAL_REVERSAL`에서만 사용할 수 있다. Old H1 owner가 아직 active한 상태에서 reversal permission을 기반으로 생성된 early LTF-led `EXTERNAL_REVERSAL`, M30-primary `EXTERNAL_CONTINUATION`, `INTERNAL_ROTATION`에서는 사용하지 않는다.
 - Historical H1 fallback도 Entry/SL geometry가 알려지기 전에 candidate와 순서가 동결되어 있어야 한다. Entry/SL을 본 뒤 새 fallback liquidity를 탐색해서 추가하지 않는다.
 - Current-structure tier에 planned R `>=1`인 valid candidate가 하나라도 있으면 historical fallback tier를 사용하지 않는다.
 - Current-structure candidate가 없거나, 모두 소진됐거나, 모두 planned R `<1`인 경우에만 pre-frozen historical H1 fallback tier를 평가한다.

@@ -1630,28 +1630,40 @@ INTERNAL_ROTATION은
 
 ---
 
-## D-070 — Historical H1 fallback is pre-frozen and external-only
+## D-070 — Historical H1 fallback is pre-frozen and restricted to H1-owned external scenarios
 
 Status: ACTIVE / FROZEN FOR STRATEGY
 
-External scenario는 current-structure family 바깥 방향의
-가장 가까운 causally-known 미소진 H1 external liquidity
-최대 2개를 PLAN 시점에 inactive fallback으로 freeze할 수 있다.
+An eligible H1-owned external scenario may freeze
+up to the nearest two causally-known unconsumed H1 external liquidity candidates
+outside the current-structure family
+as an inactive historical fallback tier at PLAN time.
 
-Fallback은:
+Allowed:
 
-EXTERNAL_CONTINUATION
-EXTERNAL_REVERSAL
+H1-owned EXTERNAL_CONTINUATION
 
-에서만 허용한다.
+HTF-confirmed EXTERNAL_REVERSAL
+under a new mature H1 owner
 
-INTERNAL_ROTATION에서는 금지한다.
+Forbidden:
 
-Current-structure tier에 R-eligible candidate가 있으면
-fallback을 사용하지 않는다.
+early LTF-led EXTERNAL_REVERSAL
+while the old H1 owner is still active
 
-Historical reconstruction depth 자체는
-warm-up infrastructure decision으로 분리한다.
+M30-primary EXTERNAL_CONTINUATION
+
+INTERNAL_ROTATION
+
+Fallback candidate ID / price / order
+must be frozen before Entry / SL geometry is known.
+
+If the current-structure tier contains
+any valid planned R >= 1 candidate,
+historical fallback is not used.
+
+Historical reconstruction depth itself
+remains a separate warm-up infrastructure decision.
 
 ---
 
@@ -1843,7 +1855,7 @@ does not by itself authorize LONG.
 
 ---
 
-## D-081 — H1 owner invalidation terminates parent-dependent scope
+## D-081 — H1 owner invalidation terminates old-owner-dependent scenarios
 
 Status: ACTIVE / FROZEN
 
@@ -1852,9 +1864,21 @@ H1 protected-swing body break:
 old H1 owner = INVALIDATED
 H1 = TRANSITION
 
-Old H1 EXTERNAL_CONTINUATION and M30 INTERNAL_ROTATION lanes nested under that H1 owner cannot remain authorized under the old map.
+The old H1 EXTERNAL_CONTINUATION scenario
+cannot remain authorized under the invalidated owner.
 
-They require cancellation / map reevaluation.
+Any opposite M30 structure that existed before reversal permission
+does not retroactively become an old-owner INTERNAL_ROTATION trade.
+
+An already-frozen early EXTERNAL_REVERSAL scenario
+that was validly created after HTF reversal permission opened
+is not retrospectively renamed or rewritten merely because
+the H1 trend_state later enters TRANSITION.
+
+Its own frozen causal lifecycle determines whether it survives.
+
+New interpretations under the changed map
+require a new scenario_id.
 
 ---
 

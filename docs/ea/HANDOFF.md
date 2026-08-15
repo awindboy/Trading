@@ -171,25 +171,6 @@ H1 mature directional
 H1 NEUTRAL / TRANSITION + mature directional M30
 → temporary active map = M30
 
-H1-direction trade under valid H1
-→ EXTERNAL_CONTINUATION
-
-opposite mature M30 trade inside valid H1
-→ INTERNAL_ROTATION
-
-new opposite mature H1 owner after transition
-→ EXTERNAL_REVERSAL phase
-
-new owner first same-direction H1 BOS
-→ owner phase becomes ESTABLISHED
-→ future scenarios EXTERNAL_CONTINUATION
-
-parallel H1/M30 opposite planning lanes
-→ ALLOWED
-
-simultaneous opposite order-ready execution
-→ UNRESOLVED / separate risk policy
-
 HTF trade-direction authority
 → trend-follow first / FROZEN
 
