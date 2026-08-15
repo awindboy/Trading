@@ -147,6 +147,138 @@ Phase 1.1 intentionally contains no order layer.
 ```
 
 
+## 2026-08-16 — Phase 2 Liquidity / Sweep Smoke Test
+
+Status:
+
+```text
+PASS — liquidity/sweep implementation scope
+NOT A PROFITABILITY TEST
+```
+
+EA:
+
+```text
+MentorDeterministicV1EA
+repository commit = 2a921a43b4e0ea91f611d0428065f618ff667b6d
+runtime internal build = 0.21
+property version = 1.00
+phase = LIQUIDITY_CORE
+```
+
+Event CSV:
+
+```text
+rows = 644
+```
+
+Runtime structure regression:
+
+```text
+WAVE_CONFIRMED            = 252
+STRUCTURE_BOS             = 120
+STRUCTURE_INITIAL_BOS     = 28
+STRUCTURE_PROTECTED_BREAK = 27
+```
+
+These counts match the verified Phase 1.1 smoke run.
+
+Liquidity:
+
+```text
+LIQUIDITY_CREATED       = 93
+LIQUIDITY_SWEEP         = 28
+LIQUIDITY_BODY_DELIVERY = 48
+```
+
+Runtime EXTERNAL_SWING source reasons:
+
+```text
+EXTERNAL_EXTREME_PROMOTION = 51
+PROTECTED_PROMOTION        = 42
+```
+
+Bootstrap active liquidity:
+
+```text
+H4  total=12 external=12 defended=0 reaction=0
+H1  total=20 external=19 defended=1 reaction=0
+M30 total=31 external=30 defended=1 reaction=0
+M15 total=49 external=47 defended=2 reaction=0
+```
+
+Automated checks:
+
+```text
+duplicate LIQUIDITY_CREATED id     = 0
+duplicate pool consumption         = 0
+same-bar self-consumption          = 0
+physical-sweep rule violation      = 0
+body-delivery rule violation       = 0
+future available_at                = 0
+runtime MTF order violation        = 0
+within-TF event order violation    = 0
+liquidity detector error event     = 0
+```
+
+Sweep penetration:
+
+```text
+minimum = 2 ticks
+```
+
+Body-delivery penetration:
+
+```text
+minimum = 4 ticks
+```
+
+Phase 1.1 logging regression:
+
+```text
+bootstrap PROTECTED_BREAK STRUCTURE_STATE over-logging
+→ resolved
+```
+
+DEFENDED_RANGE_EDGE coverage note:
+
+```text
+No new defended-range creation/consumption occurred in the short runtime window.
+Bootstrap restored:
+H1=1, M30=1, M15=2 active defended-range pools.
+Static source review confirms the four-wave / overlap / body-contained / H4-block guards.
+Continue per-object defended-range regression in later longer tests.
+```
+
+STRUCTURAL_REACTION:
+
+```text
+0
+```
+
+Expected because Root/source ownership is not yet attached in Phase 2.
+
+Compile note:
+
+```text
+The Phase 2.0 reference-alias compile errors were fixed in internal build 0.21.
+A Strategy Tester executable for build 0.21 produced this CSV.
+Exact warning count was not supplied, so warning status is not inferred.
+```
+
+Profitability:
+
+```text
+N/A
+```
+
+Reason:
+
+```text
+No order layer exists.
+```
+
+
 ## Required reporting format
 
 For every significant V1 test record:

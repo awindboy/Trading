@@ -15,28 +15,29 @@
 
 ## Current implementation checkpoint
 
-- Phase 1.1 structure/bootstrap smoke test: PASS.
-- Causal log audit: PASS.
-- Phase 1.1 bootstrap `STRUCTURE_STATE` over-logging: fixed in Phase 2.
-- `mt5/experts/MentorDeterministicV1EA.mq5` Phase 2 liquidity/sweep core drafted.
-- Phase 2 compile verification: pending local MetaEditor.
-- Trading/order submission remains intentionally disabled.
+- Phase 1.1 structure/bootstrap smoke + causal log audit: PASS.
+- Phase 2 liquidity/sweep CSV audit: PASS.
+- Phase 2 H4 external-only invariant: PASS.
+- Phase 2 same-bar / single-consumption invariants: PASS.
+- `mt5/experts/MentorDeterministicV1EA.mq5` Phase 3A HTF Root OB core drafted.
+- Phase 3A compile/smoke verification: pending local MetaEditor/Strategy Tester.
+- Child refinement/scenario/order submission remain disabled.
 
 ## P1 — Baseline implementation
 
 - [x] Market structure
-- [ ] Liquidity — Phase 2 core implemented; compile/smoke pending
+- [x] Liquidity — Phase 2 core verified
 - [ ] Objective selection
-- [ ] Root OB
+- [ ] Root OB — Phase 3A implemented; compile/smoke pending
 - [ ] LTF refinement
 - [ ] Source touch
-- [ ] Sweep — physical detector implemented; compile/smoke pending
+- [x] Sweep — physical detector verified
 - [ ] M1 CHoCH
 - [ ] Entry
 - [ ] SL
 - [ ] TP
 - [ ] Pending cancellation
-- [ ] H4 long-horizon liquidity index — implemented; compile/smoke pending
+- [x] H4 long-horizon liquidity index — Phase 2 invariant verified
 - [ ] Hierarchical bootstrap / working-set pruning
 - [ ] Managed scenario/exposure identity by symbol + magic
 - [ ] Minimum-volume parity sizing
@@ -45,6 +46,7 @@
 
 ## P2 — Validation
 
+- [x] Phase 2 liquidity/sweep smoke / CSV causal audit
 - [x] Phase 1.1 structure smoke / causal log audit
 - [x] Compile Phase 1 with zero errors
 - [ ] Recompile Phase 1.1 and resolve behavior-affecting warnings

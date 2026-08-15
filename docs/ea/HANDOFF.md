@@ -2,7 +2,7 @@
 
 Last updated: 2026-08-16
 Status: V1 SPECIFICATION FROZEN
-Current phase: Phase 2 Liquidity / Sweep core implementation
+Current phase: Phase 3A HTF Root OB core implementation
 
 ## Goal
 
@@ -55,6 +55,14 @@ Objective
 - `mt5/legacy/MentorSep2025ParityEA.mq5`
 
 ## Current Status
+
+Phase 2 liquidity/sweep
+→ IMPLEMENTED
+→ uploaded event CSV audit PASS
+→ EXTERNAL_SWING / SWEEP / BODY_DELIVERY causal checks PASS
+→ H4 external-only invariant PASS
+→ Phase 1.1 structure regression PASS
+→ profitability NOT evaluated
 
 Phase 1.1 structure/bootstrap
 → IMPLEMENTED
@@ -324,161 +332,218 @@ Broker transaction reconciliation
 → callback arrival order not trusted
 
 
-## Implementation Checkpoint — Phase 2 Liquidity/Sweep Core
+## Implementation Checkpoint — Phase 3A HTF Root OB Core
 
-Phase 1.1 structure/bootstrap verification is complete.
+Phase 2 liquidity/sweep verification is complete.
 
-Verified from the short real-tick smoke run:
-
-```text
-duplicate structure event        = 0
-future available_at              = 0
-MTF tie-order violation          = 0
-same-side consecutive wave       = 0
-INITIAL_BOS opposite ref missing = 0
-body-close break violation       = 0
-protected break transition error = 0
-```
-
-One logging-only defect was found:
+Verified:
 
 ```text
-InpLogBootstrapEvents=false
-but bootstrap PROTECTED_BREAK STRUCTURE_STATE rows were still emitted
+LIQUIDITY_CREATED            = 93
+LIQUIDITY_SWEEP              = 28
+LIQUIDITY_BODY_DELIVERY      = 48
+
+sweep rule violation         = 0
+body-delivery violation      = 0
+same-bar self-consumption    = 0
+duplicate consumption        = 0
+runtime MTF order violation  = 0
+future available_at          = 0
 ```
 
-Phase 2 fixes this without changing strategy calculation.
+Bootstrap H4:
 
-Current code status:
+```text
+EXTERNAL_SWING = 12
+DEFENDED_RANGE_EDGE = 0
+STRUCTURAL_REACTION = 0
+```
 
-- Phase: `LIQUIDITY_CORE`
-- Internal build: `0.20`
+Phase 3A code status:
+
+- Phase: `ROOT_CORE`
+- Internal build: `0.30`
 - MQL property version: `1.00`
 - Orders: intentionally disabled
-- Phase 2 compile: PENDING LOCAL METAEDITOR
-- Phase 2 liquidity smoke test: NOT STARTED
+- Child refinement: intentionally disabled
+- Scenario authority: intentionally disabled
+- Phase 3A compile: PENDING LOCAL METAEDITOR
+- Phase 3A Root smoke test: NOT STARTED
 
-Implemented in Phase 2:
+Implemented in Phase 3A:
 
-### EXTERNAL_SWING
+### Root timeframe
 
-- confirmed WAVE only
-- protected/external structural promotion required
-- synthetic delivery extreme itself cannot create liquidity
-- wick interval stored as `bottom/top`
-- rank/promotion time becomes liquidity `available_at`
-- H4 uses the same family with `timeframe=H4`
-- H4 remains long-horizon liquidity memory only
-
-### H4 LONG_HORIZON_LIQUIDITY_INDEX
-
-- H4 creates only `EXTERNAL_SWING`
-- H4 `DEFENDED_RANGE_EDGE` is explicitly blocked
-- consumed H4 pools are removed from the active index
-- H4 index grants no map/source/entry authority
-
-### DEFENDED_RANGE_EDGE
-
-- four confirmed alternating waves
-- HIGH/HIGH wick intervals must overlap
-- LOW/LOW wick intervals must overlap
-- body close must remain inside the defended box through fourth-wave confirmation
-- both HIGH and LOW edge pools become available only at fourth-wave confirmation
-- independent equal-high/equal-low detection is not added
-- H4 defended-range generation is disabled
-
-### Physical sweep / body delivery
-
-HIGH pool sweep:
+Only:
 
 ```text
-high penetrates pool.top by at least one tick
-AND
-close <= pool.top
+H1
+M30
+M15
 ```
 
-LOW pool sweep:
+may create Root objects.
+
+H4 / M5 / M1 cannot own a first-position Root.
+
+### Root structural confirmation
+
+Root creation is attached only to causally valid:
 
 ```text
-low penetrates pool.bottom by at least one tick
-AND
-close >= pool.bottom
+INITIAL_BOS
+BOS
 ```
 
-Body delivery has precedence:
+body-delivery events in this checkpoint.
+
+`PROTECTED_BREAK → TRANSITION` does not fabricate an opposite Root.
+
+### Swing-origin window
+
+Each confirmed wave now retains:
 
 ```text
-HIGH: close > pool.top
-LOW : close < pool.bottom
+origin_window_start
+origin_window_end
 ```
 
-A sweep or body delivery consumes the pool once.
+Root candle search is restricted to that meaningful wave's
+causal swing-origin window.
 
-### Same-bar self-sweep prevention
+### LAST_OPPOSITE_OB
 
-Liquidity consumption is processed before
-new structure/liquidity publication on each closed bar.
-
-Additionally:
+LONG Root:
 
 ```text
-pool.available_at >= current_bar.available_at
+meaningful causal swing low
+→ last bearish candle inside its origin window
+→ same bullish causal path
+→ bullish INITIAL_BOS/BOS
 ```
 
-cannot be consumed by that bar.
+SHORT is symmetric.
 
-### Active-memory compression
+Doji is not an opposite candle.
 
-Consumed pools are removed from the in-memory active array
-after their audit event is written.
-
-### STRUCTURAL_REACTION
-
-The family/type remains part of the V1 object model.
-
-Actual creation is intentionally dormant in Phase 2 because the frozen rule requires:
+Root bounds:
 
 ```text
-pre-existing causal OB
-+
-structural ownership
-+
-actual OB touch
-+
-confirmed reaction wave
+bottom = origin candle low
+top = origin candle high
 ```
 
-Root/source ownership is attached in the next implementation layer.
-No FVG-only or arbitrary reaction substitute is introduced.
+### Continuation BOS fallback prohibition
 
-Not implemented yet:
+A continuation BOS creates a Root only if the BOS close already has
+a confirmed causal correction swing.
 
-- causal Root OB discovery
-- Root/source ownership registry
-- STRUCTURAL_REACTION activation
-- targeted M30/M15/M5 child refinement
-- source contact / source lifecycle
-- scenario-specific mature sweep authorization
-- meaningful M1 CHoCH binding
-- execution FVG selection
-- objective / TP selection
-- pending order submission / cancellation
-- `OnTradeTransaction` reconciliation
+No candidate:
+
+```text
+→ no Root from that BOS
+```
+
+The implementation does NOT fall back to an older protected swing,
+nearest opposite candle, or arbitrary previous candle.
+
+### Session-gap causal path
+
+If the selected opposite origin candle and linked structure delivery
+cross a market-closure/timeframe gap:
+
+```text
+ROOT_REJECTED
+reason = SESSION_GAP_CROSSED
+```
+
+No previous-session candle is attached to a new displacement.
+
+### Availability
+
+```text
+Root.occurred_at = origin candle time
+Root.available_at = linked structure event confirmation
+```
+
+No Root authority exists before structure delivery.
+
+### Root strategy lifecycle
+
+```text
+ACTIVE
+INVALIDATED
+```
+
+only.
+
+Bullish Root:
+
+```text
+Root-own-TF close < Root.bottom
+→ PRICE_INVALIDATED
+```
+
+Bearish Root:
+
+```text
+Root-own-TF close > Root.top
+→ PRICE_INVALIDATED
+```
+
+Strict inequality.
+
+Wick-only distal penetration does not invalidate Root.
+
+### Structure-owner invalidation
+
+On the Root timeframe:
+
+```text
+protected swing body break
+→ old structure owner invalidated
+→ all ACTIVE Roots under that timeframe owner
+   STRUCTURE_INVALIDATED
+```
+
+Invalidated Root leaves the active in-memory working set after its audit event.
+
+### Scenario authority
+
+Phase 3A Root objects are structurally valid source objects but:
+
+```text
+scenario_owner_id = UNBOUND
+scenario_authority = false
+```
+
+until objective/map/scenario binding exists.
+
+Therefore Root existence alone cannot authorize M1 trigger or order.
+
+### Child refinement
+
+Not implemented in Phase 3A.
+
+Next checkpoint after Root smoke PASS:
+
+```text
+Phase 3B
+→ targeted M30/M15/M5 child reconstruction
+→ same-event / same-displacement lineage
+→ deepest unambiguous child
+→ parent invalidation propagation
+→ final source freeze
+→ STRUCTURAL_REACTION activation
+```
 
 ## Next Task
 
-1. Compile Phase 2 in MetaEditor and preserve the complete compile result.
-2. Run the Phase 2 liquidity smoke test with `Every tick based on real ticks`.
-3. Audit the generated `mentor_v1_phase2_events.csv` for:
-   - EXTERNAL_SWING causal promotion
-   - H4 external-only invariant
-   - four-wave defended-range causality
-   - one-tick sweep
-   - body-delivery precedence
-   - same-bar self-sweep prevention
-   - single-consumption invariant
-4. After Phase 2 passes, implement Root OB + causal child/source ownership.
-5. Activate `STRUCTURAL_REACTION` only after that ownership layer exists.
+1. Compile Phase 3A in MetaEditor and preserve all errors/warnings.
+2. Run the same short real-tick regression period.
+3. Audit `mentor_v1_phase3a_events.csv`.
+4. Verify Root creation/rejection/lifecycle invariants.
+5. Only after Phase 3A passes, implement Phase 3B child refinement.
 
 
 ## Do Not Do Yet

@@ -1,30 +1,30 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - Phase 2 liquidity/sweep core       |
+//| Deterministic Mentor EA V1 - Phase 3A HTF Root OB core         |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| Phase 2 intentionally DOES NOT submit orders.                    |
-//| Structure/bootstrap is verified. This build adds active liquidity |
-//| pools plus physical sweep/body-delivery consumption. Root/source, |
-//| M1 execution, and broker-order layers remain disabled.            |
+//| Phase 3A intentionally DOES NOT submit orders.                   |
+//| Structure + liquidity are verified. This build adds causal HTF   |
+//| Root OB discovery and Root lifecycle. Child refinement, scenario  |
+//| binding, M1 execution, and broker-order layers remain disabled.   |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - Phase 2 liquidity/sweep core"
+#property description "Mentor deterministic V1 EA - Phase 3A HTF Root OB core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
 input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
-input string InpEventCsvFile       = "mentor_v1_phase2_events.csv";
+input string InpEventCsvFile       = "mentor_v1_phase3a_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
-// but are intentionally not active in this Phase 1 structure-only build.
+// but are intentionally not active in this Phase 3A source-only build.
 
 enum V1InitState
   {
@@ -74,6 +74,51 @@ enum V1LiquidityConsumption
    V1_LIQ_CONSUME_BODY_DELIVERY
   };
 
+enum V1SourceKind
+  {
+   V1_SOURCE_ROOT=0,
+   V1_SOURCE_CHILD
+  };
+
+enum V1SourceState
+  {
+   V1_SOURCE_ACTIVE=0,
+   V1_SOURCE_INVALIDATED
+  };
+
+struct V1SourceZone
+  {
+   bool              valid;
+   string            id;
+   int               kind;
+   ENUM_TIMEFRAMES   tf;
+   int               direction;
+
+   double            bottom;
+   double            top;
+   double            origin_open;
+   double            origin_close;
+
+   int               origin_index;
+   datetime          origin_time;
+   datetime          occurred_at;
+   datetime          available_at;
+   datetime          origin_window_start;
+   datetime          origin_window_end;
+
+   string            origin_wave_id;
+   string            meaningful_swing_id;
+   string            linked_structure_event_id;
+
+   string            parent_zone_id;
+   string            root_zone_id;
+   string            scenario_owner_id;
+
+   int               strategy_state;
+   datetime          invalidated_at;
+   string            invalidation_reason;
+  };
+
 struct V1WaveRef
   {
    bool       valid;
@@ -87,6 +132,10 @@ struct V1WaveRef
    datetime   occurred_at;
    datetime   confirmed_at;
    datetime   available_at;
+
+   // Deterministic swing-origin window used by Root/child OB discovery.
+   datetime   origin_window_start;
+   datetime   origin_window_end;
   };
 
 struct V1StructureState
@@ -182,6 +231,7 @@ ENUM_TIMEFRAMES g_timeframes[V1_TF_COUNT]=
 
 V1StructureState g_structure[V1_TF_COUNT];
 V1LiquidityPool g_liquidity[];
+V1SourceZone     g_sources[];
 datetime         g_last_current_open[V1_TF_COUNT];
 bool             g_cursor_bar_pending[V1_TF_COUNT];
 datetime         g_history_first_date[V1_TF_COUNT];
@@ -198,6 +248,9 @@ bool             g_in_bootstrap_replay=false;
 long             g_liquidity_created=0;
 long             g_liquidity_sweeps=0;
 long             g_liquidity_body_deliveries=0;
+long             g_roots_created=0;
+long             g_roots_price_invalidated=0;
+long             g_roots_structure_invalidated=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -268,6 +321,31 @@ string LiquidityConsumptionName(const int consumption)
    return "NONE";
   }
 
+string SourceKindName(const int kind)
+  {
+   switch(kind)
+     {
+      case V1_SOURCE_ROOT:  return "ROOT";
+      case V1_SOURCE_CHILD: return "CHILD";
+     }
+   return "UNKNOWN";
+  }
+
+
+string DirectionName(const int direction)
+  {
+   if(direction>0)
+      return "LONG";
+   if(direction<0)
+      return "SHORT";
+   return "NONE";
+  }
+
+bool IsRootTimeframeIndex(const int tf_index)
+  {
+   return (tf_index==1 || tf_index==2 || tf_index==3);
+  }
+
 string InitStateName(const V1InitState state)
   {
    switch(state)
@@ -296,6 +374,8 @@ void ClearWave(V1WaveRef &wave)
    wave.occurred_at=0;
    wave.confirmed_at=0;
    wave.available_at=0;
+   wave.origin_window_start=0;
+   wave.origin_window_end=0;
   }
 
 void CopyWave(const V1WaveRef &src,V1WaveRef &dst)
@@ -311,6 +391,8 @@ void CopyWave(const V1WaveRef &src,V1WaveRef &dst)
    dst.occurred_at=src.occurred_at;
    dst.confirmed_at=src.confirmed_at;
    dst.available_at=src.available_at;
+   dst.origin_window_start=src.origin_window_start;
+   dst.origin_window_end=src.origin_window_end;
   }
 
 
@@ -339,7 +421,10 @@ void LogLine(const string event_name,
           event_name=="STRUCTURE_PROTECTED_BREAK" ||
           event_name=="LIQUIDITY_CREATED" ||
           event_name=="LIQUIDITY_SWEEP" ||
-          event_name=="LIQUIDITY_BODY_DELIVERY");
+          event_name=="LIQUIDITY_BODY_DELIVERY" ||
+          event_name=="ROOT_CREATED" ||
+          event_name=="ROOT_INVALIDATED" ||
+          event_name=="ROOT_REJECTED");
 
       if(high_volume)
          return;
@@ -434,9 +519,13 @@ void InitStructureState(const int tf_index)
 void InitializeAllStructureStates()
   {
    ArrayResize(g_liquidity,0);
+   ArrayResize(g_sources,0);
    g_liquidity_created=0;
    g_liquidity_sweeps=0;
    g_liquidity_body_deliveries=0;
+   g_roots_created=0;
+   g_roots_price_invalidated=0;
+   g_roots_structure_invalidated=0;
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -1031,6 +1120,461 @@ void LogLiquiditySnapshot(const int tf_index,const datetime available_at)
   }
 
 //+------------------------------------------------------------------+
+//| Phase 3A Root/source working-set logic                           |
+//+------------------------------------------------------------------+
+int FindActiveSourceById(const string id)
+  {
+   for(int i=0;i<ArraySize(g_sources);i++)
+     {
+      if(g_sources[i].valid &&
+         g_sources[i].strategy_state==V1_SOURCE_ACTIVE &&
+         g_sources[i].id==id)
+         return i;
+     }
+   return -1;
+  }
+
+void RemoveSourceAt(const int index)
+  {
+   int n=ArraySize(g_sources);
+   if(index<0 || index>=n)
+      return;
+
+   for(int i=index;i<n-1;i++)
+      g_sources[i]=g_sources[i+1];
+
+   ArrayResize(g_sources,n-1);
+  }
+
+bool SourcePathHasSessionGap(const ENUM_TIMEFRAMES tf,
+                             const datetime start_time,
+                             const datetime end_time)
+  {
+   if(start_time<=0 || end_time<=start_time)
+      return false;
+
+   MqlRates bars[];
+   ArraySetAsSeries(bars,false);
+   ResetLastError();
+   int copied=CopyRates(_Symbol,tf,start_time,end_time,bars);
+   if(copied<=0)
+     {
+      LogLine("SOURCE_DETECTOR_ERROR",
+              TfName(tf),
+              end_time+PeriodSeconds(tf),
+              "",
+              StringFormat("reason=ROOT_CAUSAL_PATH_COPYRATES_FAILED start=%s end=%s error=%d",
+                           TimeToString(start_time,TIME_DATE|TIME_SECONDS),
+                           TimeToString(end_time,TIME_DATE|TIME_SECONDS),
+                           GetLastError()));
+      return true;
+     }
+
+   if(copied==1)
+      return false;
+
+   int seconds=PeriodSeconds(tf);
+   for(int i=1;i<copied;i++)
+     {
+      if((bars[i].time-bars[i-1].time)!=seconds)
+         return true;
+     }
+
+   return false;
+  }
+
+bool FindLastOppositeCandleInSwingOrigin(const ENUM_TIMEFRAMES tf,
+                                         const int direction,
+                                         const V1WaveRef &meaningful_wave,
+                                         MqlRates &origin_bar)
+  {
+   if(!meaningful_wave.valid || !meaningful_wave.is_wave)
+     {
+      LogRootRejected(tf_index,
+                      available_at,
+                      event_type,
+                      direction,
+                      "NO_CAUSAL_CORRECTION_OR_MEANINGFUL_WAVE",
+                      "");
+      return false;
+     }
+
+   datetime start_time=meaningful_wave.origin_window_start;
+   datetime end_time=meaningful_wave.origin_window_end;
+
+   if(start_time<=0)
+      start_time=meaningful_wave.occurred_at;
+   if(end_time<=0)
+      end_time=meaningful_wave.occurred_at;
+   if(end_time<start_time)
+      return false;
+
+   MqlRates bars[];
+   ArraySetAsSeries(bars,false);
+
+   ResetLastError();
+   int copied=CopyRates(_Symbol,tf,start_time,end_time,bars);
+   if(copied<=0)
+     {
+      LogLine("SOURCE_DETECTOR_ERROR",
+              TfName(tf),
+              end_time+PeriodSeconds(tf),
+              meaningful_wave.id,
+              StringFormat("reason=ROOT_ORIGIN_COPYRATES_FAILED start=%s end=%s error=%d",
+                           TimeToString(start_time,TIME_DATE|TIME_SECONDS),
+                           TimeToString(end_time,TIME_DATE|TIME_SECONDS),
+                           GetLastError()));
+      return false;
+     }
+
+   for(int i=copied-1;i>=0;i--)
+     {
+      int colour=CandleColour(bars[i]);
+
+      if(direction>0 && colour<0)
+        {
+         origin_bar=bars[i];
+         return true;
+        }
+
+      if(direction<0 && colour>0)
+        {
+         origin_bar=bars[i];
+         return true;
+        }
+     }
+
+   return false;
+  }
+
+string BuildStructureEventId(const V1StructureState &s,
+                             const int event_type,
+                             const MqlRates &bar)
+  {
+   return StringFormat("%s:structure:%s:%I64d",
+                       s.name,
+                       EventName(event_type),
+                       (long)bar.time);
+  }
+
+void LogRootCreated(const V1SourceZone &root,
+                    const int event_type,
+                    const MqlRates &break_bar)
+  {
+   string detail=StringFormat(
+      "kind=ROOT state=ACTIVE direction=%s source_reason=LAST_OPPOSITE_OB bottom=%.10f top=%.10f origin_open=%.10f origin_close=%.10f origin_index=%d origin_time=%s origin_window_start=%s origin_window_end=%s origin_wave_id=%s linked_event_type=%s linked_structure_event_id=%s break_bar_open=%s break_close=%.10f root_zone_id=%s scenario_owner_id=%s scenario_authority=false same_session_causal_path=true",
+      DirectionName(root.direction),
+      root.bottom,
+      root.top,
+      root.origin_open,
+      root.origin_close,
+      root.origin_index,
+      TimeToString(root.origin_time,TIME_DATE|TIME_SECONDS),
+      TimeToString(root.origin_window_start,TIME_DATE|TIME_SECONDS),
+      TimeToString(root.origin_window_end,TIME_DATE|TIME_SECONDS),
+      root.origin_wave_id,
+      EventName(event_type),
+      root.linked_structure_event_id,
+      TimeToString(break_bar.time,TIME_DATE|TIME_SECONDS),
+      break_bar.close,
+      root.root_zone_id,
+      root.scenario_owner_id=="" ? "UNBOUND" : root.scenario_owner_id);
+
+   LogLine("ROOT_CREATED",
+           TfName(root.tf),
+           root.available_at,
+           root.id,
+           detail);
+  }
+
+void LogRootRejected(const int tf_index,
+                     const datetime available_at,
+                     const int event_type,
+                     const int direction,
+                     const string reason,
+                     const string wave_id)
+  {
+   if(!IsRootTimeframeIndex(tf_index))
+      return;
+
+   string detail=StringFormat(
+      "direction=%s event_type=%s reason=%s origin_wave_id=%s",
+      DirectionName(direction),
+      EventName(event_type),
+      reason,
+      wave_id=="" ? "NA" : wave_id);
+
+   LogLine("ROOT_REJECTED",
+           TfName(g_timeframes[tf_index]),
+           available_at,
+           "",
+           detail);
+  }
+
+bool AddRootFromStructureEvent(const int tf_index,
+                               const int event_type,
+                               const int direction,
+                               const V1WaveRef &meaningful_wave,
+                               const MqlRates &break_bar,
+                               const datetime available_at)
+  {
+   if(!IsRootTimeframeIndex(tf_index))
+      return false;
+
+   // Phase 3A only promotes Roots from mature directional delivery events.
+   // Protected-break/TRANSITION events do not fabricate a new Root because
+   // the current event contract does not yet own an unambiguous opposite
+   // meaningful swing-origin reference.
+   if(event_type!=V1_EVENT_INITIAL_BOS &&
+      event_type!=V1_EVENT_BOS)
+      return false;
+
+   if(!meaningful_wave.valid || !meaningful_wave.is_wave)
+      return false;
+
+   MqlRates origin_bar;
+   ZeroMemory(origin_bar);
+
+   if(!FindLastOppositeCandleInSwingOrigin(g_timeframes[tf_index],
+                                           direction,
+                                           meaningful_wave,
+                                           origin_bar))
+     {
+      LogRootRejected(tf_index,
+                      available_at,
+                      event_type,
+                      direction,
+                      "NO_OPPOSITE_CANDLE_IN_ORIGIN_WINDOW",
+                      meaningful_wave.id);
+      return false;
+     }
+
+   // A previous-session opposite candle cannot be attached to a displacement
+   // whose causal path crosses a market closure.
+   if(SourcePathHasSessionGap(g_timeframes[tf_index],
+                              origin_bar.time,
+                              break_bar.time))
+     {
+      LogRootRejected(tf_index,
+                      available_at,
+                      event_type,
+                      direction,
+                      "SESSION_GAP_CROSSED",
+                      meaningful_wave.id);
+      return false;
+     }
+
+   string event_id=
+      BuildStructureEventId(g_structure[tf_index],event_type,break_bar);
+
+   string root_id=StringFormat("%s:root:%s:%I64d:%s",
+                               TfName(g_timeframes[tf_index]),
+                               DirectionName(direction),
+                               (long)origin_bar.time,
+                               event_id);
+
+   if(FindActiveSourceById(root_id)>=0)
+     {
+      LogRootRejected(tf_index,
+                      available_at,
+                      event_type,
+                      direction,
+                      "DUPLICATE_ACTIVE_ROOT",
+                      meaningful_wave.id);
+      return false;
+     }
+
+   int n=ArraySize(g_sources);
+   if(ArrayResize(g_sources,n+1,128)<0)
+     {
+      LogLine("SOURCE_DETECTOR_ERROR",
+              TfName(g_timeframes[tf_index]),
+              available_at,
+              "",
+              "reason=SOURCE_ARRAY_RESIZE_FAILED");
+      return false;
+     }
+
+   g_sources[n].valid=true;
+   g_sources[n].id=root_id;
+   g_sources[n].kind=V1_SOURCE_ROOT;
+   g_sources[n].tf=g_timeframes[tf_index];
+   g_sources[n].direction=direction;
+   g_sources[n].bottom=origin_bar.low;
+   g_sources[n].top=origin_bar.high;
+   g_sources[n].origin_open=origin_bar.open;
+   g_sources[n].origin_close=origin_bar.close;
+   g_sources[n].origin_index=iBarShift(_Symbol,
+                                       g_timeframes[tf_index],
+                                       origin_bar.time,
+                                       true);
+   g_sources[n].origin_time=origin_bar.time;
+   g_sources[n].occurred_at=origin_bar.time;
+   g_sources[n].available_at=available_at;
+   g_sources[n].origin_window_start=meaningful_wave.origin_window_start;
+   g_sources[n].origin_window_end=meaningful_wave.origin_window_end;
+   g_sources[n].origin_wave_id=meaningful_wave.id;
+   g_sources[n].meaningful_swing_id=meaningful_wave.id;
+   g_sources[n].linked_structure_event_id=event_id;
+   g_sources[n].parent_zone_id="";
+   g_sources[n].root_zone_id=root_id;
+   g_sources[n].scenario_owner_id="";
+   g_sources[n].strategy_state=V1_SOURCE_ACTIVE;
+   g_sources[n].invalidated_at=0;
+   g_sources[n].invalidation_reason="";
+
+   g_roots_created++;
+   LogRootCreated(g_sources[n],event_type,break_bar);
+   return true;
+  }
+
+void LogRootInvalidated(const V1SourceZone &root,
+                        const datetime available_at,
+                        const string reason,
+                        const MqlRates &bar)
+  {
+   string detail=StringFormat(
+      "kind=%s state=INVALIDATED direction=%s bottom=%.10f top=%.10f close=%.10f bar_open=%s reason=%s linked_structure_event_id=%s origin_wave_id=%s",
+      SourceKindName(root.kind),
+      DirectionName(root.direction),
+      root.bottom,
+      root.top,
+      bar.close,
+      TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+      reason,
+      root.linked_structure_event_id,
+      root.origin_wave_id);
+
+   LogLine("ROOT_INVALIDATED",
+           TfName(root.tf),
+           available_at,
+           root.id,
+           detail);
+  }
+
+void InvalidateRootsForStructureOwner(const int tf_index,
+                                      const datetime available_at,
+                                      const MqlRates &bar)
+  {
+   ENUM_TIMEFRAMES tf=g_timeframes[tf_index];
+
+   int i=0;
+   while(i<ArraySize(g_sources))
+     {
+      if(!g_sources[i].valid ||
+         g_sources[i].kind!=V1_SOURCE_ROOT ||
+         g_sources[i].tf!=tf ||
+         g_sources[i].strategy_state!=V1_SOURCE_ACTIVE)
+        {
+         i++;
+         continue;
+        }
+
+      g_sources[i].strategy_state=V1_SOURCE_INVALIDATED;
+      g_sources[i].invalidated_at=available_at;
+      g_sources[i].invalidation_reason="STRUCTURE_INVALIDATED";
+
+      LogRootInvalidated(g_sources[i],
+                         available_at,
+                         "STRUCTURE_INVALIDATED",
+                         bar);
+      g_roots_structure_invalidated++;
+
+      // No active scenario/child references exist yet in Phase 3A.
+      // Audit remains in the event ledger, so the inactive object can leave RAM.
+      RemoveSourceAt(i);
+     }
+  }
+
+void EvaluateRootPriceInvalidation(const int tf_index,
+                                   const MqlRates &bar,
+                                   const datetime available_at)
+  {
+   if(!IsRootTimeframeIndex(tf_index))
+      return;
+
+   ENUM_TIMEFRAMES tf=g_timeframes[tf_index];
+
+   int i=0;
+   while(i<ArraySize(g_sources))
+     {
+      if(!g_sources[i].valid ||
+         g_sources[i].kind!=V1_SOURCE_ROOT ||
+         g_sources[i].tf!=tf ||
+         g_sources[i].strategy_state!=V1_SOURCE_ACTIVE ||
+         g_sources[i].available_at>=available_at)
+        {
+         i++;
+         continue;
+        }
+
+      bool invalid=false;
+      if(g_sources[i].direction>0)
+         invalid=(bar.close<g_sources[i].bottom);
+      else if(g_sources[i].direction<0)
+         invalid=(bar.close>g_sources[i].top);
+
+      if(!invalid)
+        {
+         i++;
+         continue;
+        }
+
+      g_sources[i].strategy_state=V1_SOURCE_INVALIDATED;
+      g_sources[i].invalidated_at=available_at;
+      g_sources[i].invalidation_reason="PRICE_INVALIDATED";
+
+      LogRootInvalidated(g_sources[i],
+                         available_at,
+                         "PRICE_INVALIDATED",
+                         bar);
+      g_roots_price_invalidated++;
+
+      RemoveSourceAt(i);
+     }
+  }
+
+int CountActiveRoots(const ENUM_TIMEFRAMES tf,const int direction=0)
+  {
+   int count=0;
+   for(int i=0;i<ArraySize(g_sources);i++)
+     {
+      if(!g_sources[i].valid ||
+         g_sources[i].kind!=V1_SOURCE_ROOT ||
+         g_sources[i].tf!=tf ||
+         g_sources[i].strategy_state!=V1_SOURCE_ACTIVE)
+         continue;
+
+      if(direction!=0 && g_sources[i].direction!=direction)
+         continue;
+
+      count++;
+     }
+   return count;
+  }
+
+void LogRootSnapshot(const int tf_index,const datetime available_at)
+  {
+   if(!IsRootTimeframeIndex(tf_index))
+      return;
+
+   int longs=CountActiveRoots(g_timeframes[tf_index],1);
+   int shorts=CountActiveRoots(g_timeframes[tf_index],-1);
+
+   string detail=StringFormat(
+      "active_total=%d long=%d short=%d child_count=0 refinement_status=WAITING_PHASE3B",
+      longs+shorts,
+      longs,
+      shorts);
+
+   LogLine("ROOT_STATE",
+           TfName(g_timeframes[tf_index]),
+           available_at,
+           "",
+           detail);
+  }
+
+//+------------------------------------------------------------------+
 //| Structure working-set logic                                      |
 //+------------------------------------------------------------------+
 void EnsureLegStart(V1StructureState &s,const MqlRates &bar)
@@ -1104,6 +1648,9 @@ bool BuildWaveFromLeg(V1StructureState &s,
       wave.wick_top=MathMin(extreme.open,extreme.close);
      }
 
+   wave.origin_window_start=start_time;
+   wave.origin_window_end=wave.occurred_at;
+
    wave.id=StringFormat("%s:wave:%s:%I64d",
                         s.name,
                         SideName(side),
@@ -1137,6 +1684,9 @@ void BuildDeliveryExtreme(V1StructureState &s,
       point.wick_bottom=bar.low;
       point.wick_top=MathMin(bar.open,bar.close);
      }
+
+   point.origin_window_start=bar.time;
+   point.origin_window_end=bar.time;
 
    point.id=StringFormat("%s:delivery:%s:%I64d",
                          s.name,
@@ -1274,10 +1824,7 @@ void LogStructureEvent(V1StructureState &s,
                        const datetime available_at)
   {
    s.structure_events++;
-   string id=StringFormat("%s:structure:%s:%I64d",
-                          s.name,
-                          EventName(event_type),
-                          (long)bar.time);
+   string id=BuildStructureEventId(s,event_type,bar);
 
    string detail=StringFormat(
       "direction=%s bar_open=%s close=%.10f broken_id=%s broken_kind=%s broken_price=%.10f protected_id=%s protected_price=%s",
@@ -1308,6 +1855,7 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          ClearWave(empty);
          LogStructureEvent(s,V1_EVENT_PROTECTED_BREAK,-1,
                            broken,empty,bar,available_at);
+         InvalidateRootsForStructureOwner(tf_index,available_at,bar);
          EnterTransition(s,-1,available_at);
          LogStateSnapshot(tf_index,available_at,"PROTECTED_BREAK");
          return;
@@ -1315,12 +1863,19 @@ void EvaluateExistingStructureBreaks(const int tf_index,
 
       if(s.external_high.valid && bar.close>s.external_high.price)
         {
-         V1WaveRef broken;
+         V1WaveRef broken,root_origin;
          CopyWave(s.external_high,broken);
          CopyWave(broken,s.break_reference);
+         ClearWave(root_origin);
 
+         // A continuation Root must come from the correction that actually
+         // produced this BOS. If no confirmed causal correction exists at the
+         // BOS close, Phase 3A does not fall back to an older protected swing.
          if(s.correction_low.valid)
+           {
+            CopyWave(s.correction_low,root_origin);
             CopyWave(s.correction_low,s.protected_low);
+           }
 
          if(s.protected_low.valid)
             CopyWave(s.protected_low,s.external_low);
@@ -1332,6 +1887,12 @@ void EvaluateExistingStructureBreaks(const int tf_index,
 
          LogStructureEvent(s,V1_EVENT_BOS,1,
                            broken,s.protected_low,bar,available_at);
+         AddRootFromStructureEvent(tf_index,
+                                   V1_EVENT_BOS,
+                                   1,
+                                   root_origin,
+                                   bar,
+                                   available_at);
          return;
         }
      }
@@ -1344,6 +1905,7 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          ClearWave(empty);
          LogStructureEvent(s,V1_EVENT_PROTECTED_BREAK,1,
                            broken,empty,bar,available_at);
+         InvalidateRootsForStructureOwner(tf_index,available_at,bar);
          EnterTransition(s,1,available_at);
          LogStateSnapshot(tf_index,available_at,"PROTECTED_BREAK");
          return;
@@ -1351,12 +1913,16 @@ void EvaluateExistingStructureBreaks(const int tf_index,
 
       if(s.external_low.valid && bar.close<s.external_low.price)
         {
-         V1WaveRef broken;
+         V1WaveRef broken,root_origin;
          CopyWave(s.external_low,broken);
          CopyWave(broken,s.break_reference);
+         ClearWave(root_origin);
 
          if(s.correction_high.valid)
+           {
+            CopyWave(s.correction_high,root_origin);
             CopyWave(s.correction_high,s.protected_high);
+           }
 
          if(s.protected_high.valid)
             CopyWave(s.protected_high,s.external_high);
@@ -1368,6 +1934,12 @@ void EvaluateExistingStructureBreaks(const int tf_index,
 
          LogStructureEvent(s,V1_EVENT_BOS,-1,
                            broken,s.protected_high,bar,available_at);
+         AddRootFromStructureEvent(tf_index,
+                                   V1_EVENT_BOS,
+                                   -1,
+                                   root_origin,
+                                   bar,
+                                   available_at);
          return;
         }
      }
@@ -1387,6 +1959,12 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          PromoteInitialTrend(s,1,broken,bar,available_at);
          LogStructureEvent(s,V1_EVENT_INITIAL_BOS,1,
                            broken,protected_ref,bar,available_at);
+         AddRootFromStructureEvent(tf_index,
+                                   V1_EVENT_INITIAL_BOS,
+                                   1,
+                                   protected_ref,
+                                   bar,
+                                   available_at);
          return;
         }
 
@@ -1400,6 +1978,12 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          PromoteInitialTrend(s,-1,broken,bar,available_at);
          LogStructureEvent(s,V1_EVENT_INITIAL_BOS,-1,
                            broken,protected_ref,bar,available_at);
+         AddRootFromStructureEvent(tf_index,
+                                   V1_EVENT_INITIAL_BOS,
+                                   -1,
+                                   protected_ref,
+                                   bar,
+                                   available_at);
          return;
         }
      }
@@ -1533,6 +2117,7 @@ void ProcessClosedBar(const int tf_index,
    // Liquidity consumption comes first so a pool created at this same close
    // can never self-sweep from the bar's already-completed wick.
    EvaluateLiquidityConsumption(tf_index,bar,available_at);
+   EvaluateRootPriceInvalidation(tf_index,bar,available_at);
 
    EvaluateExistingStructureBreaks(tf_index,
                                    g_structure[tf_index],
@@ -1630,11 +2215,10 @@ bool BootstrapStructureCore()
    g_init_state=V1_INIT_ACTIVE_MAP;
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
-   // Phase 2 reconstructs active H4/H1/M30/M15 liquidity on the same causal
-   // replay. Root/source ownership is still a later layer, so
-   // STRUCTURAL_REACTION remains dormant.
+   // Phase 3A reconstructs active H1/M30/M15 Root OBs on the same causal
+   // replay. Child refinement and scenario binding are intentionally later.
    g_init_state=V1_INIT_SOURCE_CONTEXT;
-   LogLine("INIT_STATE","",now,"","PHASE2_LIQUIDITY_READY_ROOT_SOURCE_NOT_YET_ATTACHED");
+   LogLine("INIT_STATE","",now,"","PHASE3A_ROOT_READY_CHILD_REFINEMENT_NOT_YET_ATTACHED");
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -1673,15 +2257,17 @@ bool BootstrapStructureCore()
       CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
 
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_PHASE2_LIQUIDITY ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d",
+           StringFormat("READY_PHASE3A_ROOT ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_roots=%d",
                         TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
                         h4_long_horizon_count,
-                        ArraySize(g_liquidity)));
+                        ArraySize(g_liquidity),
+                        ArraySize(g_sources)));
 
    for(int i=0;i<4;i++)
      {
       LogStateSnapshot(i,now,"BOOTSTRAP_COMPLETE");
       LogLiquiditySnapshot(i,now);
+      LogRootSnapshot(i,now);
      }
 
    return true;
@@ -1868,7 +2454,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.21 property_version=1.00 magic=%I64d phase=LIQUIDITY_CORE",
+           StringFormat("build=0.30 property_version=1.00 magic=%I64d phase=ROOT_CORE",
                         InpMagicNumber));
 
    // Do not fail initialization just because MT5 is still synchronizing history.
@@ -1881,13 +2467,17 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s active_liquidity=%d created=%I64d sweeps=%I64d body_deliveries=%I64d",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_roots=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d",
                         reason,
                         InitStateName(g_init_state),
                         ArraySize(g_liquidity),
                         g_liquidity_created,
                         g_liquidity_sweeps,
-                        g_liquidity_body_deliveries));
+                        g_liquidity_body_deliveries,
+                        ArraySize(g_sources),
+                        g_roots_created,
+                        g_roots_price_invalidated,
+                        g_roots_structure_invalidated));
 
    if(g_log_handle!=INVALID_HANDLE)
      {
@@ -1920,11 +2510,11 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              "Phase2 trading disabled; runtime structure/liquidity events start here");
+              "Phase3A trading disabled; runtime structure/liquidity/root events start here");
      }
 
    ProcessRuntimeClosedBars((datetime)tick.time);
 
-   // No trade submission in Phase 2.
+   // No trade submission in Phase 3A.
   }
 //+------------------------------------------------------------------+
