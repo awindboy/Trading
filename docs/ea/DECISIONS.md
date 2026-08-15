@@ -2311,3 +2311,133 @@ The EA does not queue the old signal
 and place it after the market reopens.
 
 A future order requires a new valid execution chain.
+
+
+## D-102 — H4 is a long-horizon liquidity index, not an active trading map
+
+Status: ACTIVE / FROZEN
+
+H4 is permitted in V1 only as:
+
+LONG_HORIZON_LIQUIDITY_INDEX
+
+It may identify and maintain
+ACTIVE H4 external-swing liquidity.
+
+H4 does not authorize:
+
+scenario direction
+dealing range
+reversal permission
+Root/source
+entry
+
+H1/M30 remain the active trading map.
+
+---
+
+## D-103 — Historical bootstrap retains active meaning, not complete historical trees
+
+Status: ACTIVE / FROZEN
+
+Historical bars may be replayed,
+but V1 does not permanently retain every historical:
+
+swing
+OB
+FVG
+CHoCH
+trigger chain
+source lineage
+
+Only state that can still affect the current decision is retained.
+
+---
+
+## D-104 — Long-horizon H4 liquidity is restricted to EXTERNAL_SWING in V1
+
+Status: ACTIVE / FROZEN
+
+The V1 long-horizon archive stores only
+H4 protected/external swing highs and lows.
+
+It does not bootstrap H4:
+
+FVG
+OB
+internal pivot archive
+defended-range liquidity
+structural-reaction liquidity
+
+This keeps the historical memory minimal and explainable.
+
+---
+
+## D-105 — H4 objective candidates may only extend beyond the current H1/M30 horizon
+
+Status: ACTIVE / FROZEN
+
+Current H1/M30 objective authority always comes first.
+
+H4 ACTIVE external liquidity may enter
+the frozen ordered objective family only outside
+the current H1/M30 directional horizon.
+
+H4 may not replace an H1/M30 objective
+inside that horizon.
+
+---
+
+## D-106 — Lower-timeframe bootstrap is targeted to the current active Root/source
+
+Status: ACTIVE / FROZEN
+
+M30/M15/M5 historical reconstruction is not global.
+
+After the current H1/M30 active map is reconstructed,
+lower-TF replay is limited to causal windows needed
+to resolve currently relevant ACTIVE Root/source lineage.
+
+Old unrelated lower-TF zone trees are not retained.
+
+---
+
+## D-107 — Pre-start execution triggers are never carried into runtime orders
+
+Status: ACTIVE / FROZEN
+
+Warm-up may identify current market state and
+pre-existing eligible liquidity.
+
+But pre-start:
+
+source-contact execution episode
+sweep authorization
+M1 CHoCH
+execution FVG
+pending hypothesis
+
+cannot authorize a new runtime first-position order.
+
+A new execution chain begins after execution_epoch_start.
+
+---
+
+## D-108 — Startup inside a source requires exit and later re-entry
+
+Status: ACTIVE / FROZEN
+
+If startup begins with current price already inside
+the final source:
+
+STARTED_INSIDE_SOURCE
+
+is recorded.
+
+No retroactive contact is created.
+
+A new first-position trigger chain requires:
+
+exit
+→ later re-entry
+→ new source contact

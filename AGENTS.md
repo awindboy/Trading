@@ -56,7 +56,28 @@
 
 ## 2. 시간봉의 고정 역할
 
-사용 시간봉은 `H1 / M30 / M15 / M5 / M1`이다. H4는 기본 매매 판단에서 사용하지 않는다.
+Active trading timeframes:
+
+Map:
+H1 / M30
+
+Refinement / context:
+M30 / M15 / M5
+
+Trigger:
+M1
+
+H4는 active trading map, Root/source, reversal permission,
+entry 판단에는 사용하지 않는다.
+
+단,
+H4는 `LONG_HORIZON_LIQUIDITY_INDEX` 전용 frame으로 허용한다.
+
+H4의 역할은
+수개월 단위의 아직 미소진인 의미 있는 external swing liquidity를
+압축해서 보존하고,
+current H1/M30 directional horizon 바깥의
+장기 objective candidate를 제공하는 것뿐이다.
 
 | 역할 | 시간봉 | 해야 하는 일 | 해서는 안 되는 일 |
 | --- | --- | --- | --- |
@@ -283,6 +304,45 @@ spread-based TP extension
 
 LONG TP는 Bid-side,
 SHORT TP는 Ask-side execution semantics를 따른다.
+
+#### Long-horizon H4 liquidity extension
+
+Current H1/M30 objective authority가 항상 우선한다.
+
+H4는 active map이 아니라
+장기 historical external-liquidity index다.
+
+PLAN에서 먼저 current H1/M30 direction-ahead
+scope-compatible candidate를 수집한다.
+
+그 뒤 current H1/M30 directional horizon 바깥의
+ACTIVE H4 EXTERNAL_SWING liquidity를
+같은 ordered family의 뒤쪽 candidate로 freeze할 수 있다.
+
+LONG:
+H4 candidate > current H1/M30 directional horizon
+
+SHORT:
+H4 candidate < current H1/M30 directional horizon
+
+Current H1/M30 direction-ahead candidate가 없다면
+현재 strategy price를 directional horizon으로 사용한다.
+
+H4 candidate는
+current H1/M30 objective를 대체하거나
+그보다 안쪽 target으로 사용하지 않는다.
+
+Entry/SL 이후에는 기존 nearest-first / 1R eligibility 규칙을 그대로 적용한다.
+
+H4는:
+trend authority
+dealing-range authority
+Root authority
+source authority
+reversal permission authority
+entry authority
+
+를 갖지 않는다.
 
 ### 3.2 외부와 내부를 혼동하지 않는다
 
@@ -1173,6 +1233,46 @@ DEAL_PRICE
 
 Session gap을 이유로
 killzone / day-of-week / session-time strategy filter를 새로 추가하지 않는다.
+
+### Hierarchical bootstrap / historical compression
+
+EA startup은 과거 모든 structure / OB / FVG / CHoCH를
+현재까지 영구 복원하지 않는다.
+
+Bootstrap 역할:
+
+H4
+→ LONG_HORIZON_LIQUIDITY_INDEX
+→ ACTIVE H4 EXTERNAL_SWING liquidity만 장기 보존
+
+H1/M30
+→ current active trading map 복원
+→ current owner / protected swing / dealing range / reversal state
+→ current-owner-relevant active liquidity / Root만 보존
+
+M30/M15/M5
+→ current active Root의 causal child/source window만 targeted reconstruction
+
+M1
+→ historical trigger tree를 보존하지 않음
+→ current source에 필요한 ACTIVE local liquidity만 압축 가능
+→ runtime first-position trigger는 startup 이후 새 event만 사용
+
+Historical object가 현재 판단에 더 이상 영향을 주지 않으면
+full object tree를 memory에서 제거할 수 있다.
+
+Bootstrap 완료 후:
+
+execution_epoch_start
+
+를 freeze한다.
+
+Pre-start CHoCH/FVG/trigger/pending hypothesis는
+runtime order authorization에 사용하지 않는다.
+
+Startup이 source 내부에서 시작되면
+새 contact로 소급 처리하지 않고
+exit 후 later re-entry를 요구한다.
 
 ### SL
 

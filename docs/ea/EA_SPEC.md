@@ -12,24 +12,37 @@ Authority: `AGENTS.md`
 
 ## 1. Timeframes
 
-Map:
-- H1
-- M30
+Long-horizon liquidity index:
+H4
+
+Active map:
+H1
+M30
 
 Refinement:
-- M30
-- M15
-- M5
+M30
+M15
+M5
 
 Correction context:
-- M5
+M5
 
 Trigger:
-- M1
+M1
 
-H4 is excluded from the baseline.
+H4 is not an active scenario-direction timeframe.
 
-Only information available from closed bars may authorize a decision.
+H4 may not authorize:
+
+scenario direction
+dealing range
+reversal permission
+Root/source
+M1 trigger
+entry
+
+Its only V1 output is:
+ACTIVE long-horizon EXTERNAL_SWING liquidity.
 
 ## 2. Market Structure
 
@@ -4937,6 +4950,58 @@ Section 11의 `EXECUTION_INFEASIBLE` 규칙을 적용한다.
 
 Status: FROZEN FOR V1
 
+### Long-Horizon H4 Objective Extension
+
+Classification: D
+
+The primary objective set is always built from
+the current H1/M30 active map.
+
+Define:
+
+primary_directional_horizon
+
+LONG:
+highest current H1/M30 direction-ahead primary objective price
+
+SHORT:
+lowest current H1/M30 direction-ahead primary objective price
+
+If no primary direction-ahead objective exists:
+
+primary_directional_horizon = current strategy price
+
+Eligible H4 long-horizon candidate:
+
+state = ACTIVE
+family = H4_EXTERNAL_SWING
+scope direction compatible
+
+LONG:
+price > primary_directional_horizon
+
+SHORT:
+price < primary_directional_horizon
+
+At PLAN freeze:
+
+ordered_objective_family
+=
+primary H1/M30 candidates
++
+eligible H4 candidates beyond the primary horizon
+
+sorted nearest-first in trade direction.
+
+This remains one frozen family,
+not two post-entry target tiers.
+
+After Entry/SL:
+the existing planned-R eligibility rules apply.
+
+H4 cannot displace an inside-the-horizon
+H1/M30 objective candidate.
+
 ### 10.1 Active V1 Scenario Scopes
 
 Active first-position scopes:
@@ -5964,6 +6029,145 @@ the requested strategy prices.
 
 MT5's actual tester order/deal result is the
 execution source of truth.
+
+### 11.14 Hierarchical Bootstrap and Historical Compression
+
+Status: FROZEN FOR V1
+Classification: D / Infrastructure
+
+#### H4 long-horizon index
+
+Replay available H4 history oldest → newest.
+
+Use the existing causal three-candle structure logic
+only to identify protected/external H4 swings.
+
+Retain only:
+
+ACTIVE H4 external high liquidity
+ACTIVE H4 external low liquidity
+
+Consumed levels are removed from the active index.
+
+Do not retain historical H4:
+
+FVG
+OB
+internal swing tree
+trigger chain
+source lineage
+
+for V1 bootstrap memory.
+
+#### H1/M30 active map
+
+Replay causally and retain only state
+that can still affect the current active map:
+
+trend
+owner
+protected swing
+external extreme
+dealing range
+reversal reference / permission
+current-owner active liquidity
+current relevant ACTIVE Roots
+
+Historical branches with no current authority
+may be discarded after their state effect is resolved.
+
+#### Targeted lower-TF reconstruction
+
+After active H1/M30 state is known,
+reconstruct M30/M15/M5 only for
+currently relevant ACTIVE Root causal windows.
+
+Do not build a global historical lower-TF zone database.
+
+Retain:
+
+current Root
+current child path
+current final source
+source validity
+
+#### M1 bootstrap
+
+Do not retain pre-start execution CHoCH/FVG chains.
+
+Historical M1/M5 processing is permitted only as needed
+to identify currently ACTIVE eligible local liquidity
+for the current source context.
+
+No pre-start trigger event authorizes a runtime first-position order.
+
+#### Execution epoch
+
+After bootstrap:
+
+initialization_state = READY
+
+first processed runtime/test tick
+=
+execution_epoch_start
+
+Required new first-position events:
+
+source contact
+sweep
+meaningful M1 CHoCH
+execution FVG
+
+must occur at or after execution_epoch_start.
+
+#### Started inside source
+
+If runtime starts with price already overlapping the source:
+
+STARTED_INSIDE_SOURCE
+
+No retroactive source contact is created.
+
+Require:
+
+exit source
+→ later re-entry
+→ new source contact
+
+#### Initialization states
+
+INIT_SYNCING
+INIT_H4_INDEX
+INIT_ACTIVE_MAP
+INIT_SOURCE_CONTEXT
+READY
+INIT_EXECUTION_RECOVERY_REQUIRED
+INIT_ERROR
+
+These are infrastructure states,
+not strategy scenario states.
+
+#### Required bootstrap ledger
+
+H4_history_first_date
+H1_history_first_date
+M30_history_first_date
+M15_history_first_date
+M5_history_first_date
+M1_history_first_date
+
+H4_active_long_horizon_liquidity_count
+
+active_h1_owner_id
+active_m30_owner_id
+
+active_root_count
+final_source_id
+
+execution_epoch_start
+startup_source_context
+
+initialization_state
 
 ## 12. Explicitly Excluded From Baseline
 

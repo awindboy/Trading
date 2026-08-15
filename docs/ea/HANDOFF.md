@@ -236,13 +236,44 @@ Gap SL / TP
 Session / killzone time filter
 → NOT ADDED
 
+Historical-memory philosophy
+→ retain active meaning, not complete historical object trees
+
+H4 role
+→ LONG_HORIZON_LIQUIDITY_INDEX only
+→ no active direction/source/entry authority
+
+H4 retained archive
+→ ACTIVE H4 EXTERNAL_SWING liquidity only
+
+H1/M30 bootstrap
+→ reconstruct current active map
+→ retain current-owner relevant state only
+
+M30/M15/M5 bootstrap
+→ targeted reconstruction for current ACTIVE Root/source only
+
+M1 bootstrap
+→ no historical trigger-tree carry-in
+→ current-source ACTIVE local liquidity may be reconstructed
+
+Objective family
+→ H1/M30 primary authority first
+→ H4 candidate allowed only beyond current H1/M30 directional horizon
+→ still one frozen nearest-first family
+
+Execution epoch
+→ pre-start CHoCH/FVG/sweep chain cannot authorize runtime order
+
+Startup inside source
+→ require exit + later re-entry
+
 ## Next Task
 
-1. Resolve warm-up / historical state reconstruction.
-2. Run final AGENTS / EA_SPEC / DECISIONS authority consistency check.
-3. Freeze deterministic V1 specification.
-4. Implement minimum MQL5 EA.
-5. Validate MT5 implementation parity before profitability optimization.
+1. Run final AGENTS / EA_SPEC / DECISIONS authority consistency check.
+2. Freeze deterministic V1 specification.
+3. Implement minimum MQL5 EA.
+4. Validate MT5 implementation parity before profitability optimization.
 
 ## Do Not Do Yet
 
