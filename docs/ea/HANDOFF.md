@@ -386,7 +386,22 @@ Phase 3B code status:
 - Scenario authority: intentionally disabled
 - Source contact: not yet active
 - Phase 3B compile: PENDING LOCAL METAEDITOR
-- Phase 3B refinement smoke test: NOT STARTED
+- Phase 3B short smoke: NO_CHILD path PASS / child path NOT COVERED
+
+Short smoke result:
+
+```text
+REFINEMENT_FROZEN = 4
+NO_CHILD = 4
+CHILD_CREATED = 0
+REFINEMENT_READY = 0
+
+NO_CHILD causal path = PASS
+child creation path = NOT COVERED
+Phase 3B final status = COVERAGE INCOMPLETE
+```
+
+No frozen rule is relaxed based only on missing short-window child coverage.
 
 Implemented in Phase 3B:
 
@@ -609,13 +624,11 @@ Not implemented yet:
 
 ## Next Task
 
-1. Compile Phase 3B in MetaEditor.
-2. Preserve all errors/warnings.
-3. Run the same real-tick regression period.
-4. Audit `mentor_v1_phase3b_events.csv`.
-5. Verify child time/price/parent lineage, ambiguity handling and invalidation propagation.
-6. Only after refinement passes, proceed to scenario/source-contact ownership.
-
+1. Keep Phase 3B build 0.40 unchanged.
+2. Run extended real-tick coverage: `2025-01-06 ~ 2025-02-01`.
+3. Require at least one `CHILD_CREATED` before final Phase 3B PASS.
+4. If the extended run still produces zero children, add candidate-rejection diagnostics before changing any causal rule.
+5. Do not begin scenario/source-contact implementation until child creation lineage is actually log-verified.
 
 ## Do Not Do Yet
 

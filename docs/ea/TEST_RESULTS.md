@@ -401,6 +401,116 @@ Scenario and order layers remain disabled.
 ```
 
 
+## 2026-08-16 — Phase 3B Short Refinement Smoke Test
+
+Status:
+
+```text
+PASS — NO_CHILD / fail-closed path
+COVERAGE INCOMPLETE — CHILD_CREATED path not exercised
+NOT A PROFITABILITY TEST
+```
+
+EA:
+
+```text
+MentorDeterministicV1EA
+repository commit = 72e7e99409a5b12354c1da653308d0e17a9cf471
+internal build = 0.40
+phase = REFINEMENT_CORE
+```
+
+CSV:
+
+```text
+event rows = 678
+```
+
+Refinement:
+
+```text
+REFINEMENT_FROZEN      = 4
+REFINEMENT_INVALIDATED = 3
+CHILD_CREATED          = 0
+CHILD_INVALIDATED      = 0
+```
+
+EA stop summary:
+
+```text
+roots_created=272
+root_price_invalidated=161
+root_structure_invalidated=110
+
+children_created=0
+children_invalidated=0
+
+refinements_ready=0
+refinements_no_child=4
+refinements_ambiguous=0
+```
+
+Regression:
+
+```text
+future available_at                    = 0
+same-timestamp MTF order violation     = 0
+refinement early-freeze violation      = 0
+structure event counts changed         = 0
+liquidity event counts changed         = 0
+Root runtime event counts changed      = 0
+STRUCTURAL_REACTION created            = 0
+```
+
+Runtime Root #1:
+
+```text
+M15 LONG
+root available = 2025-01-06 13:45
+root origin = 09:30
+parent origin window = 03:30 ~ 09:30
+refinement = NO_CHILD
+```
+
+Same timestamp contained an M5 bullish BOS,
+but its causal source did not satisfy the parent's frozen origin-time relation.
+
+Runtime Root #2:
+
+```text
+M15 LONG
+root available = 2025-01-07 14:00
+root origin = 09:30
+parent origin window = 08:15 ~ 09:45
+refinement = NO_CHILD
+```
+
+Relevant later M5 causal structure did not satisfy the frozen parent origin window.
+
+Conclusion:
+
+```text
+The short test supports conservative NO_CHILD behavior.
+It does not validate CHILD_CREATED, deepest-child selection,
+ambiguity handling, or child invalidation.
+```
+
+Required next validation:
+
+```text
+extended real-tick run
+2025-01-06 ~ 2025-02-01
+CHILD_CREATED >= 1 required for final Phase 3B PASS
+```
+
+If zero children still occur:
+
+```text
+add diagnostic rejection counters first
+do not loosen causal rules blindly
+```
+
+
 ## Required reporting format
 
 For every significant V1 test record:
