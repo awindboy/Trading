@@ -30,7 +30,7 @@
 - [x] Liquidity — Phase 2 core verified
 - [ ] Objective selection
 - [ ] Root OB — Phase 3A core verified; internal-swing completeness audit still open
-- [ ] LTF refinement — NO_CHILD path verified; CHILD_CREATED path coverage pending
+- [x] LTF refinement — Phase 3B extended child-path validation PASS
 - [ ] Source touch
 - [x] Sweep — physical detector verified
 - [ ] M1 CHoCH
@@ -47,7 +47,8 @@
 
 ## P2 — Validation
 
-- [ ] Phase 3B extended refinement coverage — require CHILD_CREATED >= 1
+- [ ] Phase 4A map/reversal-permission smoke
+- [x] Phase 3B extended refinement coverage — CHILD_CREATED=7 / CHILD_INVALIDATED=6
 - [x] Phase 3A Root core smoke / causal CSV audit
 - [x] Phase 2 liquidity/sweep smoke / CSV causal audit
 - [x] Phase 1.1 structure smoke / causal log audit

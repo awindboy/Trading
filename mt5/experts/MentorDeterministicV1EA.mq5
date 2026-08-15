@@ -1,30 +1,30 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - Phase 3B causal refinement core   |
+//| Deterministic Mentor EA V1 - Phase 4A map/reversal core   |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| Phase 3B intentionally DOES NOT submit orders.                   |
-//| Structure/liquidity/Root core is verified. This build adds      |
-//| targeted causal LTF child refinement and final-source ownership. |
-//| M1 trigger/scenario/order layers remain disabled.                |
+//| Phase 4A intentionally DOES NOT submit orders.                   |
+//| Structure/liquidity/Root/refinement core is verified. This build |
+//| adds H1/M30 directional-owner and reversal-reference permission. |
+//| Scenario/objective/source-contact/order layers remain disabled.                |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - Phase 3B causal refinement core"
+#property description "Mentor deterministic V1 EA - Phase 4A map/reversal core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
 input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
-input string InpEventCsvFile       = "mentor_v1_phase3b_events.csv";
+input string InpEventCsvFile       = "mentor_v1_phase4a_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
-// but are intentionally not active in this Phase 3B source-refinement build.
+// but are intentionally not active in this Phase 4A map/reversal build.
 
 enum V1InitState
   {
@@ -94,6 +94,43 @@ enum V1RefinementStatus
    V1_REFINE_AMBIGUOUS_FIRST,
    V1_REFINE_STOPPED_AMBIGUOUS,
    V1_REFINE_INVALIDATED
+  };
+
+enum V1ReversalPermission
+  {
+   V1_REVERSAL_CLOSED=0,
+   V1_REVERSAL_OPEN_FOR_LONG,
+   V1_REVERSAL_OPEN_FOR_SHORT
+  };
+
+enum V1ReferenceEventType
+  {
+   V1_REFERENCE_NONE=0,
+   V1_REFERENCE_TOUCH,
+   V1_REFERENCE_SWEEP_REJECTION,
+   V1_REFERENCE_CONTINUATION_BODY_BREAK
+  };
+
+struct V1MapControl
+  {
+   string            h1_owner_id;
+   datetime          h1_owner_started_at;
+   string            m30_owner_id;
+   datetime          m30_owner_started_at;
+
+   string            reversal_reference_id;
+   string            reversal_reference_owner_id;
+   int               reversal_reference_side;
+   double            reversal_reference_price;
+   datetime          reversal_reference_available_at;
+
+   int               reversal_permission;
+   datetime          reversal_permission_opened_at;
+   int               reversal_permission_event_type;
+   string            permission_reference_id;
+   double            permission_reference_price;
+
+   string            last_snapshot_signature;
   };
 
 struct V1SourceZone
@@ -210,6 +247,11 @@ struct V1StructureState
    int             transition_bias;
    datetime        transition_started_at;
 
+   // Directional owner identity is created only by INITIAL_BOS and remains
+   // stable across continuation BOS until the protected boundary is broken.
+   string          owner_id;
+   datetime        owner_started_at;
+
    // Compact working-set references. Historical wave trees are not retained.
    V1WaveRef       last_wave;
    V1WaveRef       neutral_high;
@@ -296,6 +338,7 @@ V1LiquidityPool g_liquidity[];
 V1SourceZone     g_sources[];
 V1RefinementLineage g_refinements[];
 string           g_pending_refinement_root_ids[];
+V1MapControl      g_map;
 datetime         g_last_current_open[V1_TF_COUNT];
 bool             g_cursor_bar_pending[V1_TF_COUNT];
 datetime         g_history_first_date[V1_TF_COUNT];
@@ -320,6 +363,11 @@ long             g_children_invalidated=0;
 long             g_refinements_ready=0;
 long             g_refinements_no_child=0;
 long             g_refinements_ambiguous=0;
+long             g_reference_touches=0;
+long             g_reference_sweeps=0;
+long             g_reference_continuations=0;
+long             g_permission_opens=0;
+long             g_permission_closes=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -444,6 +492,41 @@ string RefinementStatusName(const int status)
    return "UNKNOWN";
   }
 
+string ReversalPermissionName(const int permission)
+  {
+   switch(permission)
+     {
+      case V1_REVERSAL_OPEN_FOR_LONG:  return "OPEN_FOR_LONG";
+      case V1_REVERSAL_OPEN_FOR_SHORT: return "OPEN_FOR_SHORT";
+     }
+   return "CLOSED";
+  }
+
+string ReferenceEventName(const int event_type)
+  {
+   switch(event_type)
+     {
+      case V1_REFERENCE_TOUCH:                   return "TOUCH";
+      case V1_REFERENCE_SWEEP_REJECTION:         return "SWEEP_REJECTION";
+      case V1_REFERENCE_CONTINUATION_BODY_BREAK: return "CONTINUATION_BODY_BREAK";
+     }
+   return "NONE";
+  }
+
+bool IsMatureDirectionalTrend(const int trend)
+  {
+   return (trend==V1_TREND_BULLISH || trend==V1_TREND_BEARISH);
+  }
+
+int TrendDirection(const int trend)
+  {
+   if(trend==V1_TREND_BULLISH)
+      return 1;
+   if(trend==V1_TREND_BEARISH)
+      return -1;
+   return 0;
+  }
+
 string InitStateName(const V1InitState state)
   {
    switch(state)
@@ -457,6 +540,28 @@ string InitStateName(const V1InitState state)
       case V1_INIT_ERROR:                       return "INIT_ERROR";
      }
    return "UNKNOWN";
+  }
+
+void ResetMapControl()
+  {
+   g_map.h1_owner_id="";
+   g_map.h1_owner_started_at=0;
+   g_map.m30_owner_id="";
+   g_map.m30_owner_started_at=0;
+
+   g_map.reversal_reference_id="";
+   g_map.reversal_reference_owner_id="";
+   g_map.reversal_reference_side=V1_SIDE_NONE;
+   g_map.reversal_reference_price=0.0;
+   g_map.reversal_reference_available_at=0;
+
+   g_map.reversal_permission=V1_REVERSAL_CLOSED;
+   g_map.reversal_permission_opened_at=0;
+   g_map.reversal_permission_event_type=V1_REFERENCE_NONE;
+   g_map.permission_reference_id="";
+   g_map.permission_reference_price=0.0;
+
+   g_map.last_snapshot_signature="";
   }
 
 void ClearWave(V1WaveRef &wave)
@@ -555,9 +660,11 @@ void LogStateSnapshot(const int tf_index,const datetime available_at,const strin
       return;
 
    string detail=StringFormat(
-      "reason=%s trend=%s range_low=%.10f range_high=%.10f protected_low=%s protected_high=%s external_low=%s external_high=%s break_reference=%s",
+      "reason=%s trend=%s owner_id=%s owner_started_at=%s range_low=%.10f range_high=%.10f protected_low=%s protected_high=%s external_low=%s external_high=%s break_reference=%s",
       reason,
       TrendName(g_structure[tf_index].trend),
+      g_structure[tf_index].owner_id=="" ? "NA" : g_structure[tf_index].owner_id,
+      g_structure[tf_index].owner_started_at>0 ? TimeToString(g_structure[tf_index].owner_started_at,TIME_DATE|TIME_SECONDS) : "NA",
       g_structure[tf_index].range_low,
       g_structure[tf_index].range_high,
       g_structure[tf_index].protected_low.valid ? DoubleToString(g_structure[tf_index].protected_low.price,_Digits) : "NA",
@@ -576,6 +683,8 @@ void ResetStructureState(V1StructureState &s,const ENUM_TIMEFRAMES tf)
    s.trend=V1_TREND_NEUTRAL;
    s.transition_bias=0;
    s.transition_started_at=0;
+   s.owner_id="";
+   s.owner_started_at=0;
 
    ClearWave(s.last_wave);
    ClearWave(s.neutral_high);
@@ -631,6 +740,12 @@ void InitializeAllStructureStates()
    g_refinements_ready=0;
    g_refinements_no_child=0;
    g_refinements_ambiguous=0;
+   g_reference_touches=0;
+   g_reference_sweeps=0;
+   g_reference_continuations=0;
+   g_permission_opens=0;
+   g_permission_closes=0;
+   ResetMapControl();
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -2046,6 +2161,8 @@ void EnterTransition(V1StructureState &s,
    s.trend=V1_TREND_TRANSITION;
    s.transition_bias=broken_direction;
    s.transition_started_at=available_at;
+   s.owner_id="";
+   s.owner_started_at=0;
 
    // A mature opposite trend is NOT fabricated here.
    // Build a fresh two-sided post-break range before another INITIAL_BOS.
@@ -2248,6 +2365,8 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          CopyWave(s.neutral_low,protected_ref);
 
          PromoteInitialTrend(s,1,broken,bar,available_at);
+         s.owner_id=BuildStructureEventId(s,V1_EVENT_INITIAL_BOS,bar);
+         s.owner_started_at=available_at;
          LogStructureEvent(s,V1_EVENT_INITIAL_BOS,1,
                            broken,protected_ref,bar,available_at);
          AddRootFromStructureEvent(tf_index,
@@ -2267,6 +2386,8 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          CopyWave(s.neutral_high,protected_ref);
 
          PromoteInitialTrend(s,-1,broken,bar,available_at);
+         s.owner_id=BuildStructureEventId(s,V1_EVENT_INITIAL_BOS,bar);
+         s.owner_started_at=available_at;
          LogStructureEvent(s,V1_EVENT_INITIAL_BOS,-1,
                            broken,protected_ref,bar,available_at);
          AddRootFromStructureEvent(tf_index,
@@ -2278,6 +2399,359 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          return;
         }
      }
+  }
+
+
+//+------------------------------------------------------------------+
+//| Phase 4A H1/M30 map ownership and reversal permission            |
+//+------------------------------------------------------------------+
+void ClearReversalPermission(const datetime available_at,
+                             const string reason)
+  {
+   if(g_map.reversal_permission!=V1_REVERSAL_CLOSED)
+     {
+      string detail=StringFormat(
+         "state=CLOSED previous=%s reason=%s opened_at=%s permission_event=%s permission_reference_id=%s permission_reference_price=%.10f",
+         ReversalPermissionName(g_map.reversal_permission),
+         reason,
+         g_map.reversal_permission_opened_at>0 ?
+            TimeToString(g_map.reversal_permission_opened_at,TIME_DATE|TIME_SECONDS) : "NA",
+         ReferenceEventName(g_map.reversal_permission_event_type),
+         g_map.permission_reference_id=="" ? "NA" : g_map.permission_reference_id,
+         g_map.permission_reference_price);
+
+      LogLine("REVERSAL_PERMISSION_STATE",
+              "H1",
+              available_at,
+              g_map.permission_reference_id,
+              detail);
+      g_permission_closes++;
+     }
+
+   g_map.reversal_permission=V1_REVERSAL_CLOSED;
+   g_map.reversal_permission_opened_at=0;
+   g_map.reversal_permission_event_type=V1_REFERENCE_NONE;
+   g_map.permission_reference_id="";
+   g_map.permission_reference_price=0.0;
+  }
+
+void ClearReversalReference(const datetime available_at,
+                            const string reason)
+  {
+   if(g_map.reversal_reference_id!="")
+     {
+      string detail=StringFormat(
+         "reason=%s old_reference_id=%s old_owner_id=%s side=%s price=%.10f reference_available_at=%s",
+         reason,
+         g_map.reversal_reference_id,
+         g_map.reversal_reference_owner_id=="" ? "NA" : g_map.reversal_reference_owner_id,
+         SideName(g_map.reversal_reference_side),
+         g_map.reversal_reference_price,
+         g_map.reversal_reference_available_at>0 ?
+            TimeToString(g_map.reversal_reference_available_at,TIME_DATE|TIME_SECONDS) : "NA");
+
+      LogLine("REVERSAL_REFERENCE_CLEARED",
+              "H1",
+              available_at,
+              g_map.reversal_reference_id,
+              detail);
+     }
+
+   g_map.reversal_reference_id="";
+   g_map.reversal_reference_owner_id="";
+   g_map.reversal_reference_side=V1_SIDE_NONE;
+   g_map.reversal_reference_price=0.0;
+   g_map.reversal_reference_available_at=0;
+  }
+
+void OpenReversalPermission(const int desired_permission,
+                            const int event_type,
+                            const datetime available_at)
+  {
+   if(desired_permission==V1_REVERSAL_CLOSED)
+      return;
+
+   if(g_map.reversal_permission==desired_permission)
+      return;
+
+   // A different open direction can only be valid after an owner transition.
+   // Fail closed rather than silently rewriting the permission in place.
+   if(g_map.reversal_permission!=V1_REVERSAL_CLOSED)
+      ClearReversalPermission(available_at,"PERMISSION_DIRECTION_CHANGED");
+
+   g_map.reversal_permission=desired_permission;
+   g_map.reversal_permission_opened_at=available_at;
+   g_map.reversal_permission_event_type=event_type;
+   g_map.permission_reference_id=g_map.reversal_reference_id;
+   g_map.permission_reference_price=g_map.reversal_reference_price;
+
+   string detail=StringFormat(
+      "state=%s opened_at=%s permission_event=%s permission_reference_id=%s permission_reference_price=%.10f current_h1_owner_id=%s",
+      ReversalPermissionName(g_map.reversal_permission),
+      TimeToString(available_at,TIME_DATE|TIME_SECONDS),
+      ReferenceEventName(event_type),
+      g_map.permission_reference_id,
+      g_map.permission_reference_price,
+      g_map.h1_owner_id=="" ? "NA" : g_map.h1_owner_id);
+
+   LogLine("REVERSAL_PERMISSION_STATE",
+           "H1",
+           available_at,
+           g_map.permission_reference_id,
+           detail);
+   g_permission_opens++;
+  }
+
+void EvaluateH1ReversalReference(const MqlRates &bar,
+                                 const datetime available_at)
+  {
+   if(!IsMatureDirectionalTrend(g_structure[1].trend) ||
+      g_structure[1].owner_id=="" ||
+      g_map.reversal_reference_id=="" ||
+      g_map.reversal_reference_owner_id!=g_structure[1].owner_id ||
+      g_map.reversal_reference_available_at<=0 ||
+      g_map.reversal_reference_available_at>=available_at)
+      return;
+
+   int event_type=V1_REFERENCE_NONE;
+   int direction=TrendDirection(g_structure[1].trend);
+   double ref=g_map.reversal_reference_price;
+
+   // Frozen precedence:
+   // 1) continuation body break
+   // 2) wick penetration + close recovery
+   // 3) touch
+   if(direction>0)
+     {
+      if(bar.close>ref)
+         event_type=V1_REFERENCE_CONTINUATION_BODY_BREAK;
+      else if(bar.high>ref && bar.close<=ref)
+         event_type=V1_REFERENCE_SWEEP_REJECTION;
+      else if(bar.high>=ref)
+         event_type=V1_REFERENCE_TOUCH;
+     }
+   else if(direction<0)
+     {
+      if(bar.close<ref)
+         event_type=V1_REFERENCE_CONTINUATION_BODY_BREAK;
+      else if(bar.low<ref && bar.close>=ref)
+         event_type=V1_REFERENCE_SWEEP_REJECTION;
+      else if(bar.low<=ref)
+         event_type=V1_REFERENCE_TOUCH;
+     }
+
+   if(event_type==V1_REFERENCE_NONE)
+      return;
+
+   string detail=StringFormat(
+      "event=%s h1_direction=%s owner_id=%s reference_id=%s reference_price=%.10f reference_available_at=%s bar_open=%s open=%.10f high=%.10f low=%.10f close=%.10f permission_before=%s",
+      ReferenceEventName(event_type),
+      DirectionName(direction),
+      g_structure[1].owner_id,
+      g_map.reversal_reference_id,
+      ref,
+      TimeToString(g_map.reversal_reference_available_at,TIME_DATE|TIME_SECONDS),
+      TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+      bar.open,
+      bar.high,
+      bar.low,
+      bar.close,
+      ReversalPermissionName(g_map.reversal_permission));
+
+   LogLine("REVERSAL_REFERENCE_EVENT",
+           "H1",
+           available_at,
+           g_map.reversal_reference_id,
+           detail);
+
+   if(event_type==V1_REFERENCE_CONTINUATION_BODY_BREAK)
+     {
+      g_reference_continuations++;
+      ClearReversalPermission(available_at,"TERMINATED_BY_CONTINUATION");
+      return;
+     }
+
+   int desired=(direction>0 ?
+                V1_REVERSAL_OPEN_FOR_SHORT :
+                V1_REVERSAL_OPEN_FOR_LONG);
+
+   if(event_type==V1_REFERENCE_SWEEP_REJECTION)
+      g_reference_sweeps++;
+   else
+      g_reference_touches++;
+
+   OpenReversalPermission(desired,event_type,available_at);
+  }
+
+void SetReversalReference(const V1WaveRef &reference,
+                          const string owner_id,
+                          const datetime available_at)
+  {
+   g_map.reversal_reference_id=reference.id;
+   g_map.reversal_reference_owner_id=owner_id;
+   g_map.reversal_reference_side=reference.side;
+   g_map.reversal_reference_price=reference.price;
+   g_map.reversal_reference_available_at=reference.available_at;
+
+   string detail=StringFormat(
+      "owner_id=%s side=%s price=%.10f reference_available_at=%s kind=%s permission=%s",
+      owner_id,
+      SideName(reference.side),
+      reference.price,
+      TimeToString(reference.available_at,TIME_DATE|TIME_SECONDS),
+      reference.is_wave ? "WAVE" : "DELIVERY",
+      ReversalPermissionName(g_map.reversal_permission));
+
+   LogLine("REVERSAL_REFERENCE_SET",
+           "H1",
+           available_at,
+           reference.id,
+           detail);
+  }
+
+string HighestActiveMapName()
+  {
+   if(IsMatureDirectionalTrend(g_structure[1].trend) &&
+      g_structure[1].owner_id!="")
+      return "H1";
+
+   if(IsMatureDirectionalTrend(g_structure[2].trend) &&
+      g_structure[2].owner_id!="")
+      return "M30";
+
+   return "NONE";
+  }
+
+int HighestActiveMapDirection()
+  {
+   if(IsMatureDirectionalTrend(g_structure[1].trend) &&
+      g_structure[1].owner_id!="")
+      return TrendDirection(g_structure[1].trend);
+
+   if(IsMatureDirectionalTrend(g_structure[2].trend) &&
+      g_structure[2].owner_id!="")
+      return TrendDirection(g_structure[2].trend);
+
+   return 0;
+  }
+
+void LogMapSnapshot(const datetime available_at,
+                    const string reason,
+                    const bool force=false)
+  {
+   string signature=StringFormat(
+      "h1=%s|%s|m30=%s|%s|ref=%s|%.10f|perm=%s|permref=%s",
+      TrendName(g_structure[1].trend),
+      g_structure[1].owner_id,
+      TrendName(g_structure[2].trend),
+      g_structure[2].owner_id,
+      g_map.reversal_reference_id,
+      g_map.reversal_reference_price,
+      ReversalPermissionName(g_map.reversal_permission),
+      g_map.permission_reference_id);
+
+   if(!force && signature==g_map.last_snapshot_signature)
+      return;
+
+   g_map.last_snapshot_signature=signature;
+
+   string detail=StringFormat(
+      "reason=%s highest_active_map=%s direction=%s h1_trend=%s h1_owner_id=%s h1_owner_started_at=%s m30_trend=%s m30_owner_id=%s m30_owner_started_at=%s reversal_reference_id=%s reversal_reference_price=%s reversal_reference_available_at=%s reversal_permission=%s permission_opened_at=%s permission_event=%s permission_reference_id=%s",
+      reason,
+      HighestActiveMapName(),
+      DirectionName(HighestActiveMapDirection()),
+      TrendName(g_structure[1].trend),
+      g_structure[1].owner_id=="" ? "NA" : g_structure[1].owner_id,
+      g_structure[1].owner_started_at>0 ?
+         TimeToString(g_structure[1].owner_started_at,TIME_DATE|TIME_SECONDS) : "NA",
+      TrendName(g_structure[2].trend),
+      g_structure[2].owner_id=="" ? "NA" : g_structure[2].owner_id,
+      g_structure[2].owner_started_at>0 ?
+         TimeToString(g_structure[2].owner_started_at,TIME_DATE|TIME_SECONDS) : "NA",
+      g_map.reversal_reference_id=="" ? "NA" : g_map.reversal_reference_id,
+      g_map.reversal_reference_id=="" ? "NA" : DoubleToString(g_map.reversal_reference_price,_Digits),
+      g_map.reversal_reference_available_at>0 ?
+         TimeToString(g_map.reversal_reference_available_at,TIME_DATE|TIME_SECONDS) : "NA",
+      ReversalPermissionName(g_map.reversal_permission),
+      g_map.reversal_permission_opened_at>0 ?
+         TimeToString(g_map.reversal_permission_opened_at,TIME_DATE|TIME_SECONDS) : "NA",
+      ReferenceEventName(g_map.reversal_permission_event_type),
+      g_map.permission_reference_id=="" ? "NA" : g_map.permission_reference_id);
+
+   LogLine("MAP_STATE","",available_at,"",detail);
+  }
+
+void RefreshMapControlAfterStructure(const datetime available_at)
+  {
+   bool h1_mature=
+      IsMatureDirectionalTrend(g_structure[1].trend) &&
+      g_structure[1].owner_id!="";
+
+   string new_h1_owner=(h1_mature ? g_structure[1].owner_id : "");
+
+   if(new_h1_owner!=g_map.h1_owner_id)
+     {
+      if(g_map.reversal_permission!=V1_REVERSAL_CLOSED)
+         ClearReversalPermission(available_at,"H1_OWNER_CHANGED");
+
+      ClearReversalReference(available_at,"H1_OWNER_CHANGED");
+
+      g_map.h1_owner_id=new_h1_owner;
+      g_map.h1_owner_started_at=
+         (new_h1_owner=="" ? 0 : g_structure[1].owner_started_at);
+     }
+
+   bool m30_mature=
+      IsMatureDirectionalTrend(g_structure[2].trend) &&
+      g_structure[2].owner_id!="";
+
+   g_map.m30_owner_id=(m30_mature ? g_structure[2].owner_id : "");
+   g_map.m30_owner_started_at=
+      (m30_mature ? g_structure[2].owner_started_at : 0);
+
+   if(!h1_mature)
+     {
+      if(g_map.reversal_permission!=V1_REVERSAL_CLOSED)
+         ClearReversalPermission(available_at,"H1_NOT_DIRECTIONAL");
+
+      if(g_map.reversal_reference_id!="")
+         ClearReversalReference(available_at,"H1_NOT_DIRECTIONAL");
+
+      LogMapSnapshot(available_at,"MAP_REFRESH");
+      return;
+     }
+
+   V1WaveRef reference;
+   ClearWave(reference);
+
+   if(g_structure[1].trend==V1_TREND_BULLISH)
+      CopyWave(g_structure[1].external_high,reference);
+   else
+      CopyWave(g_structure[1].external_low,reference);
+
+   if(!reference.valid)
+     {
+      ClearReversalReference(available_at,"MISSING_H1_EXTERNAL_REFERENCE");
+      LogMapSnapshot(available_at,"MAP_REFRESH");
+      return;
+     }
+
+   bool set_reference=false;
+
+   if(g_map.reversal_reference_id=="" ||
+      g_map.reversal_reference_owner_id!=g_structure[1].owner_id)
+      set_reference=true;
+   else if(g_structure[1].trend==V1_TREND_BULLISH &&
+           reference.price>g_map.reversal_reference_price)
+      set_reference=true;
+   else if(g_structure[1].trend==V1_TREND_BEARISH &&
+           reference.price<g_map.reversal_reference_price)
+      set_reference=true;
+
+   if(set_reference)
+      SetReversalReference(reference,g_structure[1].owner_id,available_at);
+
+   LogMapSnapshot(available_at,"MAP_REFRESH");
   }
 
 void ShiftRecentBars(V1StructureState &s,const MqlRates &bar)
@@ -2601,6 +3075,8 @@ bool EvaluateLocalRefinementBreak(V1StructureState &state,
          CopyWave(state.neutral_low,protected_ref);
 
          PromoteInitialTrend(state,1,broken,bar,available_at);
+         state.owner_id=BuildStructureEventId(state,V1_EVENT_INITIAL_BOS,bar);
+         state.owner_started_at=available_at;
 
          event.valid=true;
          event.event_type=V1_EVENT_INITIAL_BOS;
@@ -2620,6 +3096,8 @@ bool EvaluateLocalRefinementBreak(V1StructureState &state,
          CopyWave(state.neutral_high,protected_ref);
 
          PromoteInitialTrend(state,-1,broken,bar,available_at);
+         state.owner_id=BuildStructureEventId(state,V1_EVENT_INITIAL_BOS,bar);
+         state.owner_started_at=available_at;
 
          event.valid=true;
          event.event_type=V1_EVENT_INITIAL_BOS;
@@ -3361,6 +3839,11 @@ void ProcessClosedBar(const int tf_index,
    EvaluateRootPriceInvalidation(tf_index,bar,available_at);
    EvaluateChildPriceInvalidation(tf_index,bar,available_at);
 
+   // H1 reversal-reference interaction uses only the reference that existed
+   // before this close. New references are published after structure update.
+   if(tf_index==1)
+      EvaluateH1ReversalReference(bar,available_at);
+
    EvaluateExistingStructureBreaks(tf_index,
                                    g_structure[tf_index],
                                    bar,
@@ -3378,6 +3861,9 @@ void ProcessClosedBar(const int tf_index,
       TryCreateDefendedRangeLiquidity(tf_index,bar,available_at);
 
    ShiftRecentBars(g_structure[tf_index],bar);
+
+   if(tf_index==1 || tf_index==2)
+      RefreshMapControlAfterStructure(available_at);
   }
 
 //+------------------------------------------------------------------+
@@ -3463,7 +3949,7 @@ bool BootstrapStructureCore()
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
    g_init_state=V1_INIT_SOURCE_CONTEXT;
-   LogLine("INIT_STATE","",now,"","PHASE3B_REFINEMENT_READY_SCENARIO_BINDING_NOT_YET_ATTACHED");
+   LogLine("INIT_STATE","",now,"","PHASE4A_MAP_REVERSAL_READY_SCENARIO_BINDING_NOT_YET_ATTACHED");
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -3502,7 +3988,7 @@ bool BootstrapStructureCore()
       CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
 
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_PHASE3B_REFINEMENT ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d",
+           StringFormat("READY_PHASE4A_MAP_REVERSAL ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d",
                         TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
                         h4_long_horizon_count,
                         ArraySize(g_liquidity),
@@ -3515,6 +4001,8 @@ bool BootstrapStructureCore()
       LogRootSnapshot(i,now);
       LogRefinementSnapshot(i,now);
      }
+
+   LogMapSnapshot(now,"BOOTSTRAP_COMPLETE",true);
 
    return true;
   }
@@ -3714,7 +4202,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.40 property_version=1.00 magic=%I64d phase=REFINEMENT_CORE",
+           StringFormat("build=0.50 property_version=1.00 magic=%I64d phase=MAP_REVERSAL_CORE",
                         InpMagicNumber));
 
    // Do not fail initialization just because MT5 is still synchronizing history.
@@ -3727,7 +4215,7 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d children_created=%I64d children_invalidated=%I64d refinements_ready=%I64d refinements_no_child=%I64d refinements_ambiguous=%I64d",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d children_created=%I64d children_invalidated=%I64d refinements_ready=%I64d refinements_no_child=%I64d refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s",
                         reason,
                         InitStateName(g_init_state),
                         ArraySize(g_liquidity),
@@ -3742,7 +4230,13 @@ void OnDeinit(const int reason)
                         g_children_invalidated,
                         g_refinements_ready,
                         g_refinements_no_child,
-                        g_refinements_ambiguous));
+                        g_refinements_ambiguous,
+                        g_reference_touches,
+                        g_reference_sweeps,
+                        g_reference_continuations,
+                        g_permission_opens,
+                        g_permission_closes,
+                        ReversalPermissionName(g_map.reversal_permission)));
 
    if(g_log_handle!=INVALID_HANDLE)
      {
@@ -3775,11 +4269,11 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              "Phase3B trading disabled; runtime structure/liquidity/root/refinement events start here");
+              "Phase4A trading disabled; runtime map/reversal events start here");
      }
 
    ProcessRuntimeClosedBars((datetime)tick.time);
 
-   // No trade submission in Phase 3B.
+   // No trade submission in Phase 4A.
   }
 //+------------------------------------------------------------------+

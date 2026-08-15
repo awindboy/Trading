@@ -2627,3 +2627,93 @@ without becoming an active map authority.
 
 This removes circular dependency between
 "known active Root" and lower-TF reconstruction.
+
+---
+
+## D-116 — Directional owner identity is the INITIAL_BOS event identity
+
+Status: ACTIVE / IMPLEMENTATION-FROZEN
+
+For H1/M30 deterministic owner bookkeeping:
+
+```text
+NEUTRAL / TRANSITION
+→ INITIAL_BOS
+→ mature directional owner
+```
+
+sets:
+
+```text
+owner_id = INITIAL_BOS structure event ID
+owner_started_at = INITIAL_BOS available_at
+```
+
+Continuation BOS remains inside the same owner flow
+and does not create a new owner ID.
+
+Protected-swing body break:
+
+```text
+old owner invalidated
+→ owner_id cleared
+→ TRANSITION
+```
+
+A new mature direction receives a new owner ID only
+after the next valid two-sided INITIAL_BOS.
+
+Reason:
+
+The frozen strategy refers to the "current H1/M30 owner flow".
+Using INITIAL_BOS as the stable owner identity prevents
+every continuation BOS from being misclassified as a new map owner.
+
+---
+
+## D-117 — Permission origin is preserved separately from the moving current reversal reference
+
+Status: ACTIVE / IMPLEMENTATION-FROZEN
+
+The current H1 reversal reference may move outward
+when a new valid structural external extreme becomes causally available.
+
+If reversal permission was already opened by an earlier:
+
+```text
+TOUCH
+or
+SWEEP_REJECTION
+```
+
+the causal event that opened that permission remains recorded as:
+
+```text
+permission_reference_id
+permission_reference_price
+permission_opened_at
+permission_event_type
+```
+
+until the permission is closed.
+
+The current map reference and the historical permission-opening reference
+are separate audit identities.
+
+This does not create a second trading authority or a score.
+
+Permission still closes under the frozen:
+
+```text
+continuation body break
+or
+H1 owner invalidation/change
+```
+
+contract.
+
+Reason:
+
+Do not rewrite the causal origin of an already-open permission
+when the current owner later publishes a farther external extreme.
+

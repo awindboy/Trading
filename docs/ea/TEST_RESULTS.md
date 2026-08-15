@@ -511,6 +511,116 @@ do not loosen causal rules blindly
 ```
 
 
+## 2026-08-16 — Phase 3B Extended Causal Refinement Validation
+
+Status:
+
+```text
+PASS — Phase 3B refinement core
+NOT A PROFITABILITY TEST
+```
+
+EA:
+
+```text
+internal build = 0.40
+phase = REFINEMENT_CORE
+code commit = 72e7e99409a5b12354c1da653308d0e17a9cf471
+validation-doc commit = 7c695233eceed2bb69af5e222715657aaa8938f7
+```
+
+CSV:
+
+```text
+event rows = 6727
+```
+
+Refinement:
+
+```text
+REFINEMENT_FROZEN = 21
+READY = 7
+NO_CHILD = 14
+AMBIGUOUS = 0
+
+CHILD_CREATED = 7
+CHILD_INVALIDATED = 6
+```
+
+Child geometry:
+
+```text
+M15 = 5
+M5 = 2
+
+CONTAINED = 5
+EVENT_ADJACENT = 2
+```
+
+Automated checks:
+
+```text
+missing direct parent = 0
+child timeframe not lower than parent = 0
+direction mismatch = 0
+wrong opposite origin candle = 0
+parent/child time causality violation = 0
+child origin outside parent window = 0
+invalid containment type = 0
+CONTAINED geometry mismatch = 0
+scenario authority violation = 0
+duplicate child ID = 0
+
+invalid PRICE_INVALIDATED geometry = 0
+missing parent invalidation propagation = 0
+
+future available_at = 0
+same-timestamp MTF order violation = 0
+early refinement freeze = 0
+```
+
+Lifecycle:
+
+```text
+Root:
+289 created
+167 PRICE_INVALIDATED
+120 STRUCTURE_INVALIDATED
+2 ACTIVE
+
+Child:
+7 created
+6 invalidated
+1 ACTIVE
+
+active_sources = 3
+```
+
+Coverage still not observed:
+
+```text
+SHORT child
+AMBIGUOUS_FIRST
+STOPPED_AMBIGUOUS
+multi-level child chain
+```
+
+These remain future regression coverage and are not used as a reason
+to relax frozen causal rules.
+
+Profitability:
+
+```text
+N/A
+```
+
+Reason:
+
+```text
+No scenario/order layer exists.
+```
+
+
 ## Required reporting format
 
 For every significant V1 test record:
