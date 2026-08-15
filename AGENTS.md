@@ -864,6 +864,11 @@ FVG를 보았다는 이유로 최초 시나리오를 만들지 않는다.
 - CHoCH가 있어도 causal FVG가 없으면 structure event만 기록하고 `NO ENTRY`다.
 - valid FVG가 여러 개면 `width = top - bottom`이 가장 큰 FVG를 선택한다.
 - symbol tick 기준으로 최대 폭이 정확히 같은 FVG가 둘 이상이면 임의 선택하지 않고 `NO TRADE`다.
+- `INITIAL_CHOCH_FVG`의 3개 구성 M1 candle은 실제 시간상 연속된 M1 bar여야 한다.
+- Required: `Candle2.open_time = Candle1.open_time + 60 seconds` AND `Candle3.open_time = Candle2.open_time + 60 seconds`.
+- session close, weekend, trading halt 또는 missing-M1 interval을 사이에 둔 3-candle pattern은 current V1 execution FVG가 아니다.
+- 즉 시장이 닫힌 동안 생긴 가격 공백 자체를 CHoCH displacement FVG로 해석하지 않는다.
+- 이 continuity rule은 execution FVG에만 적용한다. Session boundary 자체가 market structure, Root, source, sweep scenario를 자동 reset하지 않는다.
 - selected FVG와 meaningful CHoCH가 모두 확정된 이후 가격이 그 FVG에 처음 닿는 것을 first retest로 사용한다.
 - first retest의 가격 교차는 `bar.high >= FVG.bottom AND bar.low <= FVG.top`으로 판정하며, authorization 이전에 이미 지나간 touch를 사후 retest로 복원하지 않는다.
 - CHoCH FVG가 선명하더라도 누락된 root OB 또는 refinement를 대신할 수 없다.
@@ -1047,6 +1052,130 @@ Pending이 fill된 뒤에는
 
 Fill 후 source / owner / M1 state 변화로
 포지션을 임의 종료하지 않는다.
+
+### Session / market-gap handling
+
+Session close, daily pause, weekend 또는 scheduled market closure 자체는:
+
+```text
+scenario cancellation
+pending cancellation
+map reset
+source reset
+sweep reset
+```
+
+권한이 아니다.
+
+따라서 causal validity가 살아 있다면
+scenario state는 그대로 유지한다.
+
+V1은 session close 직전이라는 이유만으로
+pending을 미리 취소하지 않는다.
+
+단, 이 규칙을 실제 server pending으로 구현하려면
+symbol이 persistent GTC를 지원해야 한다.
+
+Order submission preflight에서 반드시 확인한다.
+
+```text
+SYMBOL_EXPIRATION_MODE supports SYMBOL_EXPIRATION_GTC
+
+AND
+
+SYMBOL_ORDER_GTC_MODE == SYMBOL_ORDERS_GTC
+```
+
+둘 중 하나라도 만족하지 않으면:
+
+```text
+strategy signal = VALID
+execution = EXECUTION_INFEASIBLE
+→ NO ORDER
+```
+
+다.
+
+Broker의 daily order deletion을
+EA가 다음 session에 재생성하는 방식으로
+baseline strategy를 우회 구현하지 않는다.
+
+CHoCH/FVG decision cycle 시점에
+현재 symbol의 trading session에서 주문 제출이 허용되지 않으면:
+
+```text
+EXECUTION_INFEASIBLE
+→ NO ORDER
+```
+
+로 처리한다.
+
+같은 execution chain을 저장해 두었다가
+다음 session open에 늦게 제출하지 않는다.
+
+No-quote interval에는
+가격이 어떤 경로로 움직였는지 추정하지 않는다.
+
+다만 session reopen 뒤 들어오는
+첫 실제 broker quote와 이후 실제 tick은
+정상 market information으로 처리한다.
+
+이미 server에 accepted된 GTC pending이
+reopen gap으로 activation되면:
+
+```text
+requested strategy entry
+≠ necessarily actual fill price
+```
+
+일 수 있다.
+
+Actual fill은 broker / MT5의:
+
+```text
+DEAL_PRICE
+```
+
+를 사용한다.
+
+Limit order가 gap으로 strategy entry보다 유리한 가격에 fill되어도:
+
+```text
+selected FVG
+strategy Entry
+strategy SL
+TP
+lot size
+planned R authorization
+```
+
+을 사후 재계산하지 않는다.
+
+Strategy geometry와 actual execution result를 둘 다 기록한다.
+
+Gap fill 또는 gap SL/TP execution은
+정상적인 market execution event이며
+그 사실만으로 `EXECUTION_DIVERGENCE`로 분류하지 않는다.
+
+Open position이 session gap을 넘어가고
+reopen 첫 quote가 SL 또는 TP trigger를 이미 넘어선 경우에도
+requested SL/TP 가격으로 임의 체결을 재구성하지 않는다.
+
+MT5 history의:
+
+```text
+DEAL_REASON_SL
+DEAL_REASON_TP
+DEAL_PRICE
+```
+
+를 actual execution source of truth로 사용한다.
+
+Session gap을 이유로
+killzone / day-of-week / session-time strategy filter를 새로 추가하지 않는다.
+```
+
+---
 
 ### SL
 

@@ -31,8 +31,6 @@ H4 is excluded from the baseline.
 
 Only information available from closed bars may authorize a decision.
 
-## 2. Market Structure` 섹션을 아래 내용으로 교체한다.
-
 ## 2. Market Structure
 
 Status: PARTIALLY FROZEN
@@ -1156,10 +1154,6 @@ Market Structure baseline에는 다음을 넣지 않는다.
 이들은 필요하면 별도 research variant로만 검토한다.
 
 ---
-
----
-
-## 3. Liquidity` 섹션을 아래 내용으로 교체한다.
 
 ## 3. Liquidity
 
@@ -4571,7 +4565,61 @@ Required:
 2. FVG direction == scenario direction.
 3. FVG belongs to the authorized sweep-to-CHoCH causal leg.
 4. No later bar after FVG availability and before CHoCH selection has retested it.
+5. Candle1 / Candle2 / Candle3 are contiguous M1 bars in actual clock time.
 ```
+Execution-FVG session continuity:
+
+```text
+Candle2.open_time
+= Candle1.open_time + 60 seconds
+
+Candle3.open_time
+= Candle2.open_time + 60 seconds
+```
+
+Required:
+
+```text
+both conditions true
+```
+
+If false:
+
+```text
+SESSION_OR_DATA_GAP_FVG
+→ candidate excluded
+```
+
+이다.
+
+따라서:
+
+```text
+Friday / pre-close candle
+→ session or weekend gap
+→ reopen candle
+```
+
+이 만드는 price void를
+`INITIAL_CHOCH_FVG` execution candidate로 사용하지 않는다.
+
+이 rule의 목적은
+실제 traded displacement와
+market-closed discontinuity를 구분하는 것이다.
+
+이 continuity requirement는
+M1 execution FVG qualification에만 적용한다.
+
+Session boundary 자체는:
+
+```text
+trend reset
+scenario reset
+source reset
+active sweep reset
+```
+
+을 만들지 않는다.
 
 FVG formation bar itself is not treated as its own retest.
 
@@ -5364,6 +5412,55 @@ entry respects StopsLevel
 SL / TP respect applicable broker distance
 volume respects min / max / step
 margin / request check acceptable
+current trading session permits new order submission
+
+SYMBOL_EXPIRATION_MODE supports SYMBOL_EXPIRATION_GTC
+
+SYMBOL_ORDER_GTC_MODE == SYMBOL_ORDERS_GTC
+
+Persistent-GTC requirement:
+
+Current V1 strategy has no
+time/session-based pending cancellation.
+
+Therefore server-side execution is compatible with V1 only when:
+
+```text
+SYMBOL_EXPIRATION_GTC supported
+AND
+SYMBOL_ORDER_GTC_MODE == SYMBOL_ORDERS_GTC
+```
+
+If the broker/symbol applies:
+
+```text
+SYMBOL_ORDERS_DAILY
+or
+SYMBOL_ORDERS_DAILY_EXCLUDING_STOPS
+```
+
+then the server may delete the pending order at trade-day change.
+
+V1 does not recreate that deleted order on the next session.
+
+Result:
+
+```text
+strategy_signal = VALID
+execution = EXECUTION_INFEASIBLE
+→ NO ORDER
+```
+
+If the CHoCH/FVG decision becomes ready while
+the symbol's trading session does not permit order submission:
+
+```text
+EXECUTION_INFEASIBLE
+→ NO ORDER
+```
+
+Do not queue the same first-position order
+for delayed submission at the next session open.
 
 실패:
 
@@ -5650,6 +5747,345 @@ execution_divergence_reason
 
 Additional audit fields may be stored,
 but they are not trade-authorization requirements.
+
+### 11.13 Session and Gap Handling
+
+Classification: D / Frozen for V1
+
+#### 11.13.1 Session closure is not strategy cancellation
+
+A scheduled:
+
+```text
+daily pause
+session close
+weekend
+market closure
+```
+
+does not by itself change:
+
+```text
+trend_state
+scenario_scope
+source validity
+active sweep/reference
+pending strategy validity
+```
+
+No day/session reset is added to V1.
+
+#### 11.13.2 No synthetic price path across a closed interval
+
+During an interval with no actual quote:
+
+```text
+do not interpolate ticks
+do not fabricate touches
+do not fabricate source traversal
+do not fabricate FVG mitigation
+```
+
+The first actual quote after reopen
+is the first new observable market state.
+
+Existing closed-bar strategy rules continue from
+actual broker bars/ticks only.
+
+Exact-price structural/liquidity levels may be
+reached or crossed by the first available quote.
+
+Zone contact/mitigation is not inferred from
+an imaginary path between the last pre-close quote
+and first post-open quote.
+
+#### 11.13.3 Execution FVG cannot be created by the session gap itself
+
+For `INITIAL_CHOCH_FVG`,
+the three M1 component bars must satisfy:
+
+```text
+bar2.open_time = bar1.open_time + 60 sec
+bar3.open_time = bar2.open_time + 60 sec
+```
+
+Otherwise:
+
+```text
+SESSION_OR_DATA_GAP_FVG
+→ candidate excluded
+```
+
+This prevents market-closed discontinuity
+from being interpreted as causal M1 displacement inefficiency.
+
+#### 11.13.4 Existing GTC pending across session closure
+
+If a pending order was already server-accepted
+and persistent-GTC capability was verified:
+
+```text
+session closure
+→ order remains server-side
+```
+
+The EA does not cancel/recreate it merely because
+the session changes.
+
+At reopen,
+actual broker pending-order activation is authoritative.
+
+LONG Buy Limit:
+actual Ask-side execution semantics
+
+SHORT Sell Limit:
+actual Bid-side execution semantics
+
+Requested strategy entry remains frozen for
+strategy authorization / planned-R history.
+
+Actual fill uses:
+
+```text
+DEAL_PRICE
+```
+
+for economic execution reporting.
+
+Do not recalculate:
+
+```text
+lot
+strategy SL
+TP
+selected FVG
+planned authorization
+```
+
+after a gap fill.
+
+#### 11.13.5 Gap-through SL / TP
+
+If an already open position
+reopens beyond its frozen SL or TP:
+
+```text
+do not simulate a fill at the requested level
+```
+
+Use actual MT5 server history:
+
+```text
+DEAL_REASON_SL
+DEAL_REASON_TP
+DEAL_PRICE
+```
+
+as execution truth.
+
+A market gap can therefore create
+execution slippage versus the strategy level.
+
+This is:
+
+```text
+MARKET_GAP_EXECUTION
+```
+
+audit context.
+
+It is not automatically:
+
+```text
+EXECUTION_DIVERGENCE
+```
+
+and remains part of economic backtest/live execution results.
+
+#### 11.13.6 No delayed first-position submission
+
+If the first-position CHoCH/FVG decision becomes ready
+when new order submission is not allowed by
+the symbol's current trading session:
+
+```text
+EXECUTION_INFEASIBLE
+→ NO ORDER
+```
+
+The EA does not wait for next session open
+and submit the old signal later.
+
+A later order requires a new valid execution chain.
+
+#### 11.13.7 Session metadata
+
+Execution audit should record where available:
+
+```text
+quote_session_open
+trade_session_open
+
+symbol_expiration_mode
+symbol_order_gtc_mode
+
+last_quote_before_session_gap
+first_quote_after_session_gap
+
+gap_entry:
+    true / false
+
+gap_exit:
+    NONE
+    SL
+    TP
+
+strategy_entry_price
+actual_fill_price
+```
+
+These are audit / execution fields.
+
+They do not create additional strategy states.
+
+#### 11.13.8 Strategy Tester
+
+Gap-sensitive parity tests must use:
+
+```text
+Every tick based on real ticks
+```
+
+when the broker history supports it.
+
+Do not implement a custom bar-level rule that
+forces gap pending/SL/TP execution at
+the requested strategy prices.
+
+MT5's actual tester order/deal result is the
+execution source of truth.
+```
+
+---
+
+# 3. `docs/ea/DECISIONS.md`
+
+현재 마지막 decision 뒤에 다음을 추가한다.
+
+```text
+## D-097 — Session boundaries do not reset or cancel V1 strategy state
+
+Status: ACTIVE / FROZEN
+
+Daily pause, session close, weekend,
+or scheduled market closure alone does not:
+
+cancel a scenario
+cancel a valid pending
+reset market structure
+reset source lineage
+reset active sweep/reference
+
+V1 adds no session-time expiry.
+
+---
+
+## D-098 — An execution FVG must use clock-contiguous M1 bars
+
+Status: ACTIVE / FROZEN
+
+`INITIAL_CHOCH_FVG` requires:
+
+Candle2.open_time
+= Candle1.open_time + 60 seconds
+
+AND
+
+Candle3.open_time
+= Candle2.open_time + 60 seconds
+
+Otherwise:
+
+SESSION_OR_DATA_GAP_FVG
+→ candidate excluded
+
+A market-closed price discontinuity is not
+treated as CHoCH displacement FVG.
+
+This continuity gate applies to the execution FVG,
+not as a global market-structure reset.
+
+---
+
+## D-099 — Persistent GTC support is an execution prerequisite
+
+Status: ACTIVE / FROZEN
+
+Because V1 has no time/session pending expiration,
+the symbol must support:
+
+SYMBOL_EXPIRATION_GTC
+
+and:
+
+SYMBOL_ORDER_GTC_MODE == SYMBOL_ORDERS_GTC
+
+before a first-position pending order is submitted.
+
+If the broker/symbol uses daily pending deletion:
+
+strategy signal may remain VALID
+execution = EXECUTION_INFEASIBLE
+→ NO ORDER
+
+V1 does not recreate a broker-deleted pending
+at the next session.
+
+---
+
+## D-100 — Gap fills use actual broker execution without strategy re-optimization
+
+Status: ACTIVE / FROZEN
+
+A server-accepted GTC limit order may activate
+on the first available quote after a session gap.
+
+Requested strategy Entry remains the frozen
+strategy geometry.
+
+Actual execution uses the broker deal price.
+
+After a gap fill do not recalculate:
+
+selected FVG
+Entry authority
+SL
+TP
+lot
+planned-R authorization
+
+Gap SL/TP execution likewise uses actual MT5
+deal reason and deal price.
+
+Normal market-gap execution is not automatically
+EXECUTION_DIVERGENCE and remains in economic results.
+
+---
+
+## D-101 — A signal that cannot be submitted in its decision cycle is not delayed to the next session
+
+Status: ACTIVE / FROZEN
+
+If trading-session restrictions prevent
+order submission in the CHoCH/FVG decision cycle:
+
+EXECUTION_INFEASIBLE
+→ NO ORDER
+
+The EA does not queue the old signal
+and place it after the market reopens.
+
+A future order requires a new valid execution chain.
 
 ## 12. Explicitly Excluded From Baseline
 

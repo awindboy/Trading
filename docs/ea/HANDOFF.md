@@ -205,14 +205,44 @@ Delivery FVG replacement/add-on
 Ground Truth V2 / Gemini runtime state
 → outside deterministic EA baseline
 
+Session boundary
+→ no strategy reset / no time-based cancellation
+
+M1 execution FVG session continuity
+→ Candle1 / Candle2 / Candle3 must be clock-contiguous M1 bars
+→ market-closed gap cannot create INITIAL_CHOCH_FVG
+
+Persistent pending across session
+→ requires SYMBOL_EXPIRATION_GTC support
+→ requires SYMBOL_ORDER_GTC_MODE == SYMBOL_ORDERS_GTC
+
+Broker daily pending deletion
+→ EXECUTION_INFEASIBLE
+→ no next-session order recreation
+
+Signal generated while trade session disallows submission
+→ EXECUTION_INFEASIBLE / NO ORDER
+→ no delayed next-session submission
+
+Gap pending fill
+→ actual MT5 DEAL_PRICE
+→ strategy geometry remains frozen
+
+Gap SL / TP
+→ actual DEAL_REASON + DEAL_PRICE
+→ MARKET_GAP_EXECUTION
+→ not automatically execution divergence
+
+Session / killzone time filter
+→ NOT ADDED
+
 ## Next Task
 
-1. Resolve session-gap handling.
-2. Resolve warm-up / historical state reconstruction.
-3. Run final AGENTS / EA_SPEC / DECISIONS authority consistency check.
-4. Freeze deterministic V1 specification.
-5. Implement minimum MQL5 EA.
-6. Validate MT5 implementation parity before profitability optimization.
+1. Resolve warm-up / historical state reconstruction.
+2. Run final AGENTS / EA_SPEC / DECISIONS authority consistency check.
+3. Freeze deterministic V1 .v
+4. Implement minimum MQL5 EA.
+5. Validate MT5 implementation parity before profitability optimization.
 
 ## Do Not Do Yet
 
