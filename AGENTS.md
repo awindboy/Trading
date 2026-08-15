@@ -213,123 +213,219 @@ minimum bar count
 Wave의 크기가 아니라
 현재 external structure 안에서 맡는 causal role로 external 여부를 결정한다.
 
-### 3.2.2 H1/M30 map owner와 scenario scope
+### 3.2.2 HTF trend-follow bias와 reversal permission
 
-H1과 M30의 trend state는 독립적으로 유지한다.
+H1과 M30의 structure state는 독립적으로 유지하지만
+매매 방향 authority는 동등하게 취급하지 않는다.
 
-Directional owner로 사용할 수 있는 state는 BULLISH / BEARISH뿐이다.
-NEUTRAL과 TRANSITION은 directional owner가 아니다.
+기본 원칙:
 
-#### H1이 mature directional일 때
+현재 mature HTF trend를 우선한다.
 
-H1이 BULLISH 또는 BEARISH라면:
+H1이 mature BULLISH / BEARISH라면
+H1이 가장 높은 directional owner다.
 
-parent_owner_tf = H1
-highest_active_map = H1
+H1 trend가 유효하고
+현재 H1 directional external extreme과 아직 interaction하지 않았다면:
 
-이다.
+trade direction = H1 direction
 
-M30은 H1 range 안의 nested sub-structure로 해석한다.
+만 first-position planning authority를 가진다.
 
-trade direction == H1 direction
-→ EXTERNAL_CONTINUATION
+예:
 
-trade direction == opposite-direction mature M30
-AND H1 external owner still valid
-→ INTERNAL_ROTATION
+H1 BULLISH
+M30 BEARISH
+H1 reversal reference high 미도달
 
-M30 opposite trend가 존재한다는 이유만으로 H1 EXTERNAL_CONTINUATION lane을 자동 취소하지 않는다.
+이면:
 
-H1 continuation과 M30 internal rotation은 서로 다른 scenario lane으로 독립 유지할 수 있다.
+M30 bearish
+= H1 bullish trend 내부 correction context
 
-각 lane은 반드시 서로 다른:
-scenario_id
-scope
-owner relation
-objective family
-Root/source lineage
-trigger chain
-을 가진다.
+이며
+그 사실만으로 SHORT trading lane을 만들지 않는다.
 
-#### H1이 NEUTRAL 또는 TRANSITION일 때
+M30 opposite structure는 correction의 진행 정도와
+향후 HTF-direction continuation 재개를 판단하는 context로 유지한다.
 
-H1은 directional owner authority를 갖지 않는다.
+#### Reversal reference extreme
 
-이때 M30이 mature BULLISH / BEARISH라면:
+Mature bullish H1 owner:
 
-active_map_tf = M30
-scenario direction = M30 direction
-scope = EXTERNAL_CONTINUATION relative to the active M30 map
+현재 owner 흐름이 만들어낸
+가장 높은 valid structural external high
+= reversal-reference buy-side liquidity
 
-으로 사용할 수 있다.
+Mature bearish H1 owner:
 
-이 M30-primary scenario는 M30 dealing range와 M30 external objective family를 사용한다.
+현재 owner 흐름이 만들어낸
+가장 낮은 valid structural external low
+= reversal-reference sell-side liquidity
 
-H1 historical external fallback을 사용하지 않는다.
+Protected swing:
+→ current H1 trend invalidation boundary
 
-H1이 다시 mature directional state가 되는 순간 기존 M30-primary scenario를 새 H1 owner에 자동 승계하지 않는다.
+Reversal reference extreme:
+→ opposite-direction reversal hypothesis permission boundary
 
-기존 M30-primary scenario는 map re-evaluation 대상이며, 새 H1 owner 기준으로 새 scenario를 만들어야 한다.
+#### Reversal permission
 
-#### H1 TRANSITION
+Bullish H1:
 
-H1 protected swing body-break가 발생하면 old H1 owner와 그 dealing range는 즉시 authority를 잃는다.
+bar.high >= reversal_reference_high
+→ SHORT reversal permission OPEN
 
-Old H1 owner에 의존하던:
-H1 EXTERNAL_CONTINUATION
-M30 INTERNAL_ROTATION
-scenario는 같은 category로 계속 유지하지 않는다.
+Bearish H1:
 
-필요하면 현재 M30 mature map 또는 향후 새 H1 owner를 기준으로 새 scenario를 만든다.
+bar.low <= reversal_reference_low
+→ LONG reversal permission OPEN
 
-#### EXTERNAL_REVERSAL
+Reference가 available된 이후의 movement만 interaction으로 인정한다.
 
-H1 TRANSITION 이후 새 mature H1 direction이 직전 mature H1 direction과 반대로 확정되면 새 H1 owner의 phase를 REVERSAL로 시작한다.
+External extreme interaction은:
 
-이 owner phase에서 생성되는 H1-direction external scenario는 EXTERNAL_REVERSAL이다.
+H1 trend reversal
+entry signal
+automatic counter-trend trade
 
-새 H1 owner가 이후 같은 방향의 continuation BOS를 한 번 확정하면:
+가 아니다.
 
-owner_phase = ESTABLISHED
+그 event는 단지:
 
-로 전환한다.
+반대 방향 LTF structure를
+평범한 correction이 아니라
+potential external-reversal evidence로 평가할 permission
 
-그 이후 새 H1-direction scenario는 EXTERNAL_CONTINUATION으로 분류한다.
+을 연다.
 
-Entry/SL/TP를 이미 freeze한 기존 scenario의 scope를 사후에 REVERSAL ↔ CONTINUATION으로 재분류하지 않는다.
+#### Sweep / rejection
 
-#### Scope와 dealing range
+Bullish extreme:
 
-H1 EXTERNAL_CONTINUATION:
-→ H1 active dealing range
-→ continuation premium/discount gate 사용
+high > reference_high
+AND
+close <= reference_high
 
-M30-primary EXTERNAL_CONTINUATION:
-→ M30 active dealing range
-→ continuation premium/discount gate 사용
+Bearish extreme:
 
-H1 EXTERNAL_REVERSAL:
-→ new H1 owner의 external range와 objective family 사용
-→ continuation 전용 50% gate를 새로 강제하지 않는다
+low < reference_low
+AND
+close >= reference_low
 
-M30 INTERNAL_ROTATION inside mature H1:
-→ H1 parent range 안에서만 scope 유지
-→ mature M15+ internal liquidity objective family
-→ historical H1 fallback 금지
-→ 별도의 새로운 50% authorization gate를 추가하지 않는다
+이면 external liquidity sweep/rejection interaction으로 기록한다.
 
-Scenario direction과 Root/source direction은 반드시 일치해야 한다.
+이 event는 reversal context를 강화하지만
+점수나 자동 주문을 만들지 않는다.
 
-Root.direction = scenario.direction
+Actual reversal order에는 여전히:
 
-M1은 이 map owner 또는 scope를 생성하거나 덮어쓸 수 없다.
+valid opposite scenario
+→ Root/source lineage
+→ source contact
+→ mature pre-existing sweep
+→ meaningful M1 CHoCH
+→ causal displacement FVG
+→ first retest
+
+전체 chain이 필요하다.
+
+#### Body-close continuation
+
+Bullish:
+
+close > reference_high
+
+Bearish:
+
+close < reference_low
+
+이면 기존 trend 방향의 structure delivery/BOS로 처리한다.
+
+old reference reversal permission
+→ CLOSED
+
+standard continuation BOS / protected-swing update
+→ 실행
+
+새 external extreme이 causal하게 확정되면
+그 extreme을 다음 reversal reference로 사용한다.
+
+#### Opposite M30 before reversal permission
+
+H1 mature trend가 유지되는 동안
+reversal permission이 CLOSED라면
+opposite mature M30은 거래 가능한 역추세 owner가 아니다.
+
+기존의:
+
+H1 continuation lane
++
+opposite M30 INTERNAL_ROTATION trading lane
+
+병렬 first-position planning은 V1에서 사용하지 않는다.
+
+M30 opposite trend는 correction context로만 추적한다.
+
+#### Opposite LTF after reversal permission
+
+HTF external extreme interaction으로
+reversal permission이 OPEN된 뒤에는
+opposite-direction M30/LTF structure를
+external reversal hypothesis의 evidence로 사용할 수 있다.
+
+단순 M30 opposite trend 하나만으로 order를 허가하지 않는다.
+
+최소:
+
+1. reversal permission OPEN
+2. opposite-direction map/context가 deterministic하게 설명 가능
+3. opposite Root/source lineage 존재
+4. 기존 base execution chain 완료
+
+가 필요하다.
+
+H1 trend_state는 protected swing이 body-close로 깨지기 전까지
+기존 BULLISH / BEARISH를 유지할 수 있다.
+
+즉:
+
+trade hypothesis may reverse before H1 trend label flips.
+
+#### H1 owner invalidation
+
+H1 protected swing body-break:
+
+old H1 trend invalidated
+→ H1 TRANSITION
+
+이미 frozen된 early reversal scenario를
+사후에 다른 scope로 다시 쓰지 않는다.
+
+새 H1 owner 아래의 후속 scenario는
+새 scenario_id로 생성한다.
+
+#### H1 NEUTRAL / TRANSITION
+
+H1에 mature directional owner가 없으면
+mature M30을 temporary highest active map으로 사용할 수 있다.
+
+M30 direction
+→ M30-primary EXTERNAL_CONTINUATION
+
+M30 dealing range와 M30 external objective family를 사용한다.
+
+Old H1 dealing range와 historical H1 fallback을 자동 상속하지 않는다.
+
+M1은 HTF reversal permission 또는 map owner를 생성하거나 덮어쓰지 않는다.
 
 ### 3.3 dealing range 위치를 진입 권한에 포함한다
 
 - H1/M30의 현재 external protected high와 low로 active dealing range를 정하고 EQ 50%를 표시한다.
 - `EXTERNAL_CONTINUATION` long은 discount에서만, short은 premium에서만 준비한다.
 - continuation 방향의 POI가 반대 절반에 있으면 OB가 선명해도 정보로만 남기고 주문 권한을 부여하지 않는다.
-- `INTERNAL_ROTATION`은 range의 반대편 external liquidity까지 확대하지 않는다. 현재 range 안의 mature M15+ internal objective family에서 planned R `>= 1`인 가장 가까운 candidate를 최종 TP로 선택하며, 그보다 가까운 `<1R` internal liquidity는 `INTERMEDIATE_DELIVERY`로 기록한다.
+- H1 mature trend가 유효하고 reversal permission이 CLOSED인 동안, 반대 방향 M30/LTF 구조는 기본적으로 HTF 내부 correction context다. V1은 이 상태에서 독립적인 역추세 first-position `INTERNAL_ROTATION` 주문을 허가하지 않는다.
+- HTF reversal-reference extreme interaction으로 reversal permission이 OPEN된 뒤에만 opposite LTF structure를 external-reversal hypothesis의 context로 승격해 평가할 수 있다.
 - premium/discount 위치는 단독 진입 신호가 아니다. 올바른 위치에 있더라도 root OB, causal refinement, mature sweep, M1 trigger가 모두 필요하다.
 
 ## 4. HTF root OB

@@ -1819,19 +1819,27 @@ If H1 is non-directional and M30 is mature directional:
 
 ---
 
-## D-080 — Opposite mature M30 under valid H1 is an internal sub-owner
+## D-080 — Opposite M30 under mature H1 is correction context by default
 
 Status: ACTIVE / FROZEN
 
-When H1 is mature directional and M30 is mature in the opposite direction:
+When H1 is mature directional,
+an opposite mature M30 structure does not automatically create
+an opposite first-position trading lane.
 
-H1 direction scenario
-→ EXTERNAL_CONTINUATION
+Before HTF reversal permission opens:
 
-M30 direction scenario
-→ INTERNAL_ROTATION
+H1 direction
+→ default first-position trade authority
 
-M30 opposite direction alone does not flip or invalidate H1 external trend.
+opposite M30 direction
+→ HTF internal correction context
+
+H1 BULLISH + M30 BEARISH
+does not by itself authorize SHORT.
+
+H1 BEARISH + M30 BULLISH
+does not by itself authorize LONG.
 
 ---
 
@@ -1867,39 +1875,120 @@ If H1 later becomes mature directional, the old M30-primary scenario is not sile
 
 ---
 
-## D-083 — New opposite H1 owner starts in REVERSAL phase
+## D-083 — External reversal permission opens at the active HTF directional extreme
 
 Status: ACTIVE / FROZEN
 
-If an old mature H1 owner is invalidated, then a new mature H1 owner forms in the opposite direction:
+Mature bullish H1:
 
-owner_phase = REVERSAL
+current flow highest valid external high
+→ reversal-reference BSL
 
-External H1 scenarios in this phase are EXTERNAL_REVERSAL.
+Mature bearish H1:
 
-After the first same-direction H1 continuation BOS:
+current flow lowest valid external low
+→ reversal-reference SSL
 
-owner_phase = ESTABLISHED
+Price reaching that extreme opens
+opposite-direction reversal permission.
 
-Future new H1 scenarios are EXTERNAL_CONTINUATION.
+Bullish:
+high >= reference high
+→ OPEN_FOR_SHORT
 
-Existing scenarios are never relabeled retroactively.
+Bearish:
+low <= reference low
+→ OPEN_FOR_LONG
+
+This does not flip H1 trend or authorize an order.
+
+It only allows opposite LTF structure
+to be evaluated as an external-reversal hypothesis.
 
 ---
 
-## D-084 — Parallel H1 continuation and M30 internal-rotation planning lanes are allowed
+## D-084 — V1 does not run ordinary opposing H1/M30 first-position lanes in parallel
 
-Status: ACTIVE / FROZEN FOR PLANNING
+Status: ACTIVE / FROZEN
 
-When H1 is mature directional and M30 is mature opposite directional, both structural hypotheses may coexist as separate planning lanes.
+The previous rule allowing:
 
-They must use separate:
-scenario_id
-scope
-objective family
-Root/source lineage
-trigger chain
+H1-direction EXTERNAL_CONTINUATION
++
+opposite M30 INTERNAL_ROTATION
 
-This does not yet authorize simultaneous opposite live pending orders.
+as ordinary parallel first-position lanes is removed.
 
-Opposing order-ready arbitration remains a separate execution/risk decision.
+While reversal_permission = CLOSED:
+
+only the mature H1 direction has first-position trade authority.
+
+Opposite M30 remains correction context.
+
+After reversal_permission = OPEN:
+
+an opposite EXTERNAL_REVERSAL hypothesis may be created,
+but it must satisfy its own complete causal chain.
+
+This is a context-gated reversal exception,
+not blind simultaneous hedging.
+
+---
+
+## D-085 — Reversal reference is the current trend-flow extreme, not the latest swing
+
+Status: ACTIVE / FROZEN
+
+Bullish:
+highest valid structural external high of current H1 owner flow.
+
+Bearish:
+lowest valid structural external low of current H1 owner flow.
+
+Lower highs do not replace a higher bullish reference.
+Higher lows do not replace a lower bearish reference.
+
+Protected swing:
+→ trend invalidation
+
+Reversal reference:
+→ reversal-hypothesis permission
+
+---
+
+## D-086 — Touch, sweep, and continuation break are distinct extreme events
+
+Status: ACTIVE / FROZEN
+
+TOUCH:
+price reaches reference
+→ reversal permission opens
+
+SWEEP_REJECTION:
+wick penetrates reference and closes back inside
+→ reversal/liquidity context evidence
+→ no automatic order
+
+CONTINUATION_BODY_BREAK:
+body close beyond reference in current trend direction
+→ terminate old reference watch
+→ normal BOS lifecycle
+→ future new causal extreme becomes next reference
+
+No event alone bypasses the base execution chain.
+
+---
+
+## D-087 — Early external reversal may precede H1 trend-label flip
+
+Status: ACTIVE / FROZEN
+
+After HTF reversal permission opens,
+opposite M30/LTF structure may support an EXTERNAL_REVERSAL scenario
+while H1 trend_state still carries the old mature direction.
+
+This is allowed only because
+permission originated from the old trend's major external extreme.
+
+Actual order still requires the frozen:
+Root/source → contact → sweep → M1 CHoCH → FVG → entry chain.

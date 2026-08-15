@@ -842,237 +842,292 @@ Core invariants:
 11. Wick-only protected breach is not trend reversal.
 12. External/internal promotion uses structural role, not ATR/point/percentage thresholds.
 
-### 2.20 H1/M30 Map Ownership and Scenario Scope
+### 2.20 H1/M30 Map Ownership, Trend Bias, and Reversal Permission
 
 Status: FROZEN FOR V1
 Classification: D
 
-#### 2.20.1 Directional Owner Eligibility
+#### 2.20.1 Directional Owner Hierarchy
 
-Only mature BULLISH / BEARISH structure states may act as directional map owners.
+Only mature BULLISH / BEARISH states act as directional owners.
 
-NEUTRAL and TRANSITION are non-directional.
+If H1 is mature directional:
 
-#### 2.20.2 Owner Hierarchy
+highest_active_map = H1
+parent_owner_tf = H1
 
-if H1 is directional:
-    parent_owner_tf = H1
-    highest_active_map = H1
+M30 remains nested structure/context.
 
-if H1 is NEUTRAL or TRANSITION
-and M30 is directional:
-    parent_owner_tf = NONE
-    highest_active_map = M30
+If H1 is NEUTRAL or TRANSITION
+and M30 is mature directional:
 
-if neither H1 nor M30 is directional:
-    NO DIRECTIONAL SCENARIO
+highest_active_map = M30
+parent_owner_tf = NONE
 
-#### 2.20.3 H1 EXTERNAL_CONTINUATION
+If neither H1 nor M30 is mature directional:
+
+NO DIRECTIONAL SCENARIO
+
+#### 2.20.2 Default HTF Trend-Follow Bias
+
+When H1 is mature directional:
+
+default_trade_bias = H1.direction
+
+As long as:
+
+reversal_permission = CLOSED
+
+an opposite M30/LTF trend is:
+
+HTF_INTERNAL_CORRECTION_CONTEXT
+
+not an independent opposite first-position lane.
+
+H1 BULLISH + M30 BEARISH + permission CLOSED
+→ LONG-direction planning only
+
+H1 BEARISH + M30 BULLISH + permission CLOSED
+→ SHORT-direction planning only
+
+#### 2.20.3 Reversal Reference Extreme
+
+Mature bullish H1:
+
+reversal_reference_type = EXTERNAL_HIGH
+reversal_reference_price =
+highest currently valid structural external high
+of the current H1 owner flow
+
+Mature bearish H1:
+
+reversal_reference_type = EXTERNAL_LOW
+reversal_reference_price =
+lowest currently valid structural external low
+of the current H1 owner flow
+
+The reversal reference is not:
+latest pivot
+nearest swing
+protected swing
+round number
+
+If a new higher bullish external extreme forms:
+→ replace bullish reference with the new highest valid extreme.
+
+If a new lower bearish external extreme forms:
+→ replace bearish reference with the new lowest valid extreme.
+
+Lower highs do not replace a higher bullish reference.
+Higher lows do not replace a lower bearish reference.
+
+#### 2.20.4 Reference Availability
 
 Required:
 
-H1 = mature BULLISH / BEARISH
-scenario.direction = H1.direction
-H1 owner valid
+reversal_reference_available_at
 
-Scope:
-EXTERNAL_CONTINUATION
-
-Active map:
-H1
-
-M30 may be SAME_DIRECTION, OPPOSITE_DIRECTION, NEUTRAL, or TRANSITION.
-
-M30 opposite state alone does not invalidate the H1 continuation lane.
-
-Use:
-H1 dealing range
-H1 continuation premium/discount gate
-external objective family
-
-#### 2.20.4 M30 INTERNAL_ROTATION under mature H1
-
-Required:
-
-H1 = mature directional
-M30 = mature directional
-M30.direction != H1.direction
-scenario.direction = M30.direction
-H1 owner still valid
-
-Scope:
-INTERNAL_ROTATION
-
-Parent owner:
-H1
-
-Active nested map:
-M30
-
-Restrictions:
-objective family = mature M15+ internal liquidity inside H1 parent range
-historical H1 fallback = FORBIDDEN
-external H1 target expansion = FORBIDDEN
-new mandatory premium/discount gate = NONE
-
-Root/source lineage must align with M30 scenario direction.
-
-#### 2.20.5 Temporary M30 Primary Map
-
-If:
-H1 = NEUTRAL or TRANSITION
-M30 = mature directional
-
-then M30 becomes the temporary highest active directional map.
-
-Scope:
-EXTERNAL_CONTINUATION relative to M30.
-
-Use:
-M30 dealing range
-M30 continuation premium/discount gate
-M30 external objective family
+Only movement after the reference is causally available
+may create an interaction.
 
 Forbidden:
-historical H1 fallback
-automatic inheritance of old H1 range
-automatic inheritance into a future H1 owner
 
-When H1 later becomes mature directional:
-existing M30-primary scenario
-→ MAP_REEVALUATION_REQUIRED
+new reference available at current close
+→ use earlier movement from that same bar
+→ retrospective self-interaction
 
-No silent owner promotion.
+#### 2.20.5 Reversal Permission Opening
 
-#### 2.20.6 H1 Owner Invalidation
+Bullish H1:
 
-If H1 protected swing is body-broken:
+bar.high >= reversal_reference_price
+→ reversal_permission = OPEN_FOR_SHORT
+
+Bearish H1:
+
+bar.low <= reversal_reference_price
+→ reversal_permission = OPEN_FOR_LONG
+
+Exact touch is sufficient.
+
+This event does NOT:
+change H1 trend_state
+authorize order
+confirm reversal
+select Root
+select Entry
+
+It only permits opposite LTF evidence
+to be evaluated as a potential external-reversal hypothesis.
+
+#### 2.20.6 Extreme Sweep / Rejection
+
+Bullish:
+
+high > reference_high
+AND close <= reference_high
+→ EXTREME_SWEEP_REJECTION_HIGH
+
+Bearish:
+
+low < reference_low
+AND close >= reference_low
+→ EXTREME_SWEEP_REJECTION_LOW
+
+Record as reversal/liquidity context.
+No score and no automatic order.
+
+#### 2.20.7 Body-Close Continuation Through Reference
+
+Bullish:
+close > reference_high
+
+Bearish:
+close < reference_low
+
+→ continuation-direction BOS evidence
+
+Result:
+
+reference-specific reversal_permission = CLOSED
+old reversal watch = TERMINATED_BY_CONTINUATION
+run normal BOS / protected-swing lifecycle
+
+When the new directional external extreme becomes causally available,
+use it as the new reversal reference.
+
+Do not use the same BOS bar's earlier movement
+as interaction with the new reference.
+
+#### 2.20.8 Opposite LTF Before Permission
+
+If reversal_permission = CLOSED:
+
+opposite M30/LTF mature structure
+→ correction context only
+
+No:
+counter-HTF Root authorization
+counter-HTF first-position lane
+counter-HTF pending order
+
+is allowed solely from that LTF trend.
+
+#### 2.20.9 Early EXTERNAL_REVERSAL Hypothesis
+
+If:
+
+H1 = mature directional
+reversal_permission = OPEN opposite H1 direction
+opposite M30/LTF structure is deterministic
+opposite structural source can be identified
+
+then the engine may create:
+
+scenario_scope = EXTERNAL_REVERSAL
+
+before H1 trend_state itself flips.
+
+H1 may still be BULLISH while a SHORT external-reversal scenario exists,
+or BEARISH while a LONG external-reversal scenario exists.
+
+Order authorization still requires the complete baseline execution chain.
+
+#### 2.20.10 Early-Reversal Active Map
+
+While old H1 trend remains mature but reversal permission is OPEN:
+
+parent context / permission origin = H1
+early reversal active map = mature opposite M30 if available
+
+The early reversal scenario must not inherit
+the old H1 continuation objective family.
+
+Objective rules follow Section 10.6.
+
+#### 2.20.11 H1 Protected-Swing Break
+
+If current H1 protected swing is body-broken:
 
 old H1 owner = INVALIDATED
 H1 = TRANSITION
 
-All scenarios whose scope depends on that parent H1 owner require cancellation / map reevaluation.
+Old H1 continuation scenario
+→ invalidated / reevaluate
 
-This includes:
-H1 EXTERNAL_CONTINUATION
-M30 INTERNAL_ROTATION nested under that H1 owner
+Already frozen early-reversal scenario is not retrospectively renamed.
+Its own frozen causal lifecycle applies.
 
-The old H1 dealing range cannot authorize new continuation setups.
+New scenarios require new scenario_id.
 
-#### 2.20.7 H1 EXTERNAL_REVERSAL Phase
+#### 2.20.12 H1 Non-Directional / M30 Primary
 
-When H1 was previously mature in direction OLD,
-entered TRANSITION through protected-swing body break,
-and later matures in direction NEW where NEW != OLD:
+If H1 = NEUTRAL or TRANSITION
+and M30 = mature directional:
 
-create new H1 owner_id
-owner_phase = REVERSAL
+highest_active_map = M30
+scope = EXTERNAL_CONTINUATION relative to M30
 
-H1-direction external scenarios created while owner_phase = REVERSAL use:
-scenario_scope = EXTERNAL_REVERSAL
+Use M30 dealing range and M30 external objective family.
 
-After the first same-direction H1 continuation BOS under the new owner:
-owner_phase = ESTABLISHED
+Do not inherit:
+old H1 dealing range
+old H1 reversal reference
+historical H1 fallback
 
-Future new scenarios then use:
-scenario_scope = EXTERNAL_CONTINUATION
+#### 2.20.13 Scenario Scope Freeze
 
-Existing frozen scenarios are not relabeled retroactively.
-
-#### 2.20.8 H1 Re-establishment in Same Direction
-
-If H1 enters TRANSITION but later matures again in the same direction as the previous H1 owner:
-
-new owner_id is created
-owner_phase = ESTABLISHED
-scope = EXTERNAL_CONTINUATION
-
-It is not EXTERNAL_REVERSAL.
-
-#### 2.20.9 Parallel Structural Lanes
-
-When:
-H1 = mature directional
-M30 = mature opposite directional
-
-the engine may maintain two independent planning lanes:
-
-Lane A:
-H1 direction
-EXTERNAL_CONTINUATION
-
-Lane B:
-M30 direction
-INTERNAL_ROTATION
-
-They must never share:
-scenario_id
-objective family
-Root/source lineage
-sweep
-CHoCH
-selected FVG
-pending-order identity
-
-This authorizes parallel analysis/planning only.
-
-Whether opposite order-ready lanes may simultaneously place live pending orders is a separate V1 execution/risk decision.
-
-#### 2.20.10 Scenario Scope Is Frozen
-
-Once a scenario PLAN is frozen:
+Once PLAN is frozen:
 
 scenario_scope
-parent_owner_id
-active_map_tf
 scenario_direction
+parent_context_id
+active_map_tf
+reversal_reference_id
+reversal_permission_event_id
 objective family
+Root/source lineage
 
 do not change category in place.
 
-If owner hierarchy changes materially:
+Material map change:
+old scenario → lifecycle decides cancel/continue
+new interpretation → new scenario_id
 
-old scenario
-→ cancel / reevaluate
-
-new map
-→ new scenario_id
-
-No hindsight scope promotion.
-
-#### 2.20.11 Required Map State
-
-scenario_id
-scenario_scope
-scenario_direction
-
-parent_owner_tf
-parent_owner_id
-parent_owner_direction
-
-active_map_tf
-active_map_owner_id
-active_map_direction
+#### 2.20.14 Required Reversal State
 
 h1_trend_state
 h1_owner_id
-h1_owner_phase
+h1_direction
+
+reversal_reference_id
+reversal_reference_type
+reversal_reference_price
+reversal_reference_available_at
+
+reversal_permission:
+    CLOSED
+    OPEN_FOR_LONG
+    OPEN_FOR_SHORT
+
+reversal_permission_opened_at
+reversal_permission_event_type:
+    TOUCH
+    SWEEP_REJECTION
+
+reversal_watch_terminated_at
+reversal_watch_termination_reason:
+    CONTINUATION_BODY_BREAK
+    OWNER_INVALIDATION
+    REFERENCE_REPLACED
 
 m30_trend_state
 m30_owner_id
 
-parent_range_high
-parent_range_low
-
-active_range_high
-active_range_low
-
-premium_discount_gate_required
-premium_discount_gate_result
-
-created_at
-map_invalidated_at
-map_invalidation_reason
+scenario_scope
+scenario_direction
+active_map_tf
+parent_context_id
 
 ### 2.21 Required Structure State
 
@@ -4917,6 +4972,19 @@ Scenario scope가 objective candidate universe를 결정한다.
 
 R이 크다는 이유로 scope 밖 liquidity를 final TP로 승격하지 않는다.
 
+V1 first-position direction authority:
+
+EXTERNAL_CONTINUATION
+→ default while mature H1 trend has no reversal permission.
+
+INTERNAL_ROTATION
+→ opposite M30 trend alone does not authorize an ordinary counter-H1 first position.
+
+EXTERNAL_REVERSAL
+→ may be created before H1 trend label flips,
+  but only after the current HTF reversal-reference extreme
+  opens opposite-direction reversal permission.
+
 ### 10.3 Objective Family Freeze
 
 Classification: D
@@ -4960,35 +5028,69 @@ INTERMEDIATE_DELIVERY
 
 Classification: D
 
-현재 active dealing range 안에서
-trade direction에 존재하는
-meaningful mature M15+ internal liquidity만 family에 포함한다.
+INTERNAL_ROTATION remains a structural/objective concept,
+but V1 does not use opposite M30 trend alone
+to authorize a counter-H1 first position.
 
-External liquidity는
-1R을 만들기 위한 INTERNAL_ROTATION TP fallback으로 사용하지 않는다.
+If mature H1 direction is active
+and reversal permission is CLOSED:
 
-가장 가까운 internal liquidity가 1R 미만이어도
-즉시 scenario를 종료하지 않는다.
+opposite M30/LTF structure
+→ HTF_INTERNAL_CORRECTION_CONTEXT
 
-Frozen internal family에서
-가장 가까운 R-eligible mature internal liquidity를 찾는다.
+not:
+
+authorized INTERNAL_ROTATION trade
+
+An ordinary internal target may not bypass
+the HTF trend-follow / reversal-permission gate.
 
 ### 10.6 EXTERNAL_REVERSAL Family
 
 Classification: D
 
-EXTERNAL_REVERSAL은:
+EXTERNAL_REVERSAL does not require
+the H1 trend label to have already flipped
+before the scenario can be planned.
 
-H1/M30 protected structure body break
-+
-new-direction owner confirmation
+Required for an early external-reversal scenario:
 
-이후에만 생성한다.
+1. mature H1 trend exists
+2. current H1 reversal-reference external extreme has been reached
+3. opposite-direction reversal_permission is OPEN
+4. opposite M30/LTF structure is deterministic enough to define the scenario
+5. valid opposite Root/source lineage exists
 
-그 뒤 새 owner direction의
-미소진 H1/M30 external liquidity를 family로 사용한다.
+While old H1 trend remains mature,
+the opposite mature M30 map supplies
+the early-reversal objective context.
 
-M1 CHoCH만으로 external reversal objective family를 만들지 않는다.
+Current-tier objective family:
+
+opposite-direction unconsumed M30 external liquidity
+that is structurally valid under the reversal scenario
+
+Do not use:
+old H1 continuation objective family
+old-trend historical H1 fallback
+arbitrary far H1 target to improve R
+
+Standard:
+
+planned R >= 1
+nearest eligible candidate
+
+rules still apply.
+
+If H1 later enters TRANSITION or matures in the new direction,
+the already frozen scenario is not rewritten.
+
+New post-transition scenarios come from the new map.
+
+M1 CHoCH alone can never open external-reversal permission.
+
+Permission must originate from
+the active HTF external-extreme interaction.
 
 ### 10.7 Planned-R Geometry
 
@@ -5063,12 +5165,12 @@ causally-known 미소진 H1 external liquidity 중
 가장 가까운 최대 2개를 inactive fallback tier로 freeze할 수 있다.
 
 Allowed:
-
-EXTERNAL_CONTINUATION
-EXTERNAL_REVERSAL
+H1-owned EXTERNAL_CONTINUATION
+HTF-confirmed EXTERNAL_REVERSAL under a new mature H1 owner
 
 Forbidden:
-
+early LTF-led EXTERNAL_REVERSAL while old H1 owner is still active
+M30-primary EXTERNAL_CONTINUATION
 INTERNAL_ROTATION
 
 Fallback candidate도 Entry / SL을 알기 전에

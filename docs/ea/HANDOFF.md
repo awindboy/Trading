@@ -190,16 +190,52 @@ parallel H1/M30 opposite planning lanes
 simultaneous opposite order-ready execution
 → UNRESOLVED / separate risk policy
 
+HTF trade-direction authority
+→ trend-follow first / FROZEN
+
+H1 mature directional
+→ default first-position bias = H1 direction
+
+Opposite M30 while reversal permission CLOSED
+→ correction context only
+→ no ordinary counter-H1 first-position lane
+
+Reversal reference
+→ bullish H1: current-flow highest valid external high
+→ bearish H1: current-flow lowest valid external low
+
+External-extreme reach
+→ reversal permission OPEN
+→ NOT trend flip
+→ NOT entry
+
+External-extreme sweep/rejection
+→ reversal context evidence
+→ no score / no automatic order
+
+Body-close continuation beyond reference
+→ old reversal watch closed
+→ normal BOS/protected-swing update
+→ new causal extreme becomes next reference
+
+Early EXTERNAL_REVERSAL
+→ allowed after HTF reversal permission
+→ may occur before H1 trend label flips
+→ requires deterministic opposite LTF context + full base entry chain
+
+Ordinary parallel H1 continuation + opposite M30 internal trade
+→ REMOVED from V1
+
 ## Next Task
 
 Create the first EA rule mapping for:
 
-1. Resolve simultaneous opposing order-ready lane policy.
+1. Audit reversal-permission rule against remaining objective/source contracts.
 2. Resolve selected-FVG exact invalidation / consumption.
 3. Resolve final refined-source exact invalidation.
 4. Resolve session-gap handling.
 5. Resolve warm-up/state reconstruction.
-6. Run final AGENTS / EA_SPEC / DECISIONS consistency audit.
+6. Run final consistency audit.
 7. Freeze deterministic V1 specification.
 8. Implement minimum MQL5 EA.
 9. Validate implementation parity before profitability optimization.
