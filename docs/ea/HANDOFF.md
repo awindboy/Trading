@@ -106,20 +106,22 @@ Causal pending cancellation
 → FROZEN
 
 Time-based strategy cancellation
-→ TBD
+→ NONE / FROZEN
+
+Pending survival authority
+→ causal state only
 
 ## Next Task
 
 Create the first EA rule mapping for:
 
-1. Decide whether V1 needs time-based pending cancellation.
-2. Final Objective/TP audit.
-3. Full AGENTS / EA_SPEC / DECISIONS consistency audit.
-4. Freeze deterministic V1 specification.
-5. Implement minimum MQL5 EA.
-6. Compile in MetaEditor.
-7. Run MT5 Strategy Tester with Every tick based on real ticks.
-8. Validate implementation parity before profitability optimization.
+1. Final Objective/TP audit.
+2. Full AGENTS / EA_SPEC / DECISIONS consistency audit.
+3. Freeze deterministic V1 specification.
+4. Implement minimum MQL5 EA.
+5. Compile in MetaEditor.
+6. Run MT5 Strategy Tester with Every tick based on real ticks.
+7. Validate implementation parity before profitability optimization.
 
 Each rule must be classified as:
 

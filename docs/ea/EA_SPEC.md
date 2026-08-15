@@ -4546,23 +4546,39 @@ execution-infrastructure failure로 별도 집계한다.
 
 ### 11.5 Pending Order Lifetime
 
-Classification: D for infrastructure
+Classification: D / Frozen for V1
 
-현재 time-based strategy cancellation은 아직 확정하지 않는다.
+V1은 time-based strategy cancellation을 사용하지 않는다.
 
-time_based_strategy_cancellation = TBD
+time_based_strategy_cancellation = NONE
 
-그 전까지 MT5 pending order 자체는:
+Pending order는 단순히 시간이 오래 지났다는 이유로
+취소하지 않는다.
+
+다음은 cancellation authority가 아니다.
+
+N bars elapsed
+N minutes elapsed
+session close
+calendar day change
+next trading day
+arbitrary age threshold
+
+Scenario의 causal state가 살아 있는 동안
+pending order는 계속 유지한다.
+
+MT5 pending order는:
 
 ORDER_TIME_GTC
 
 를 사용한다.
 
-즉 임의 broker expiration을
-아직 미확정인 strategy timeout의 대체 규칙으로 사용하지 않는다.
+Broker-side expiration을
+strategy cancellation 대신 사용하지 않는다.
 
-Causal cancellation event가 발생하면
-EA가 직접 pending order 삭제를 요청한다.
+주문은 Section 11.9의
+causal cancellation condition이 발생할 때만
+EA가 직접 삭제 요청한다.
 
 ### 11.6 Pending Filling Policy
 
@@ -4654,8 +4670,10 @@ EXECUTION_INFEASIBLE
 
 Classification: D
 
-Time-only cancellation을 제외한
-현재 frozen causal cancellation condition은 유지한다.
+V1 pending order cancellation은
+아래 causal invalidation event만 사용한다.
+
+Time-only cancellation은 사용하지 않는다.
 
 다음 중 applicable condition이 발생하면
 pending strategy order를 취소한다.
@@ -4678,24 +4696,48 @@ MT5 pending order 삭제를 요청한다.
 이미 지나간 retest/fill을
 사후 복원하지 않는다.
 
-### 11.10 Time-Based Cancellation
+### 11.10 No Time-Based Cancellation
 
-Classification: U
+Classification: D / Frozen for V1
 
-아직 확정하지 않는다.
+V1에서는 시간 경과 자체를
+pending order invalidation reason으로 사용하지 않는다.
 
-N bars
-N minutes
-session close
-next day
+금지:
 
-등 시간 경과만으로 pending order를 취소할지는:
+N-bar timeout
+N-minute timeout
+session-close timeout
+day-change timeout
+next-day automatic cancellation
+age-decay cancellation
 
-TBD
+Pending order의 생존 여부는
+elapsed time이 아니라
+현재 scenario의 causal validity로 결정한다.
 
-다.
+유지 조건:
 
-결정 전까지 arbitrary timeout을 구현하지 않는다.
+objective still valid
+Root / owner still valid
+final refined source still valid
+trigger protected structure still valid
+selected FVG still valid
+no opposing owner confirmation
+source episode still valid
+
+위 조건이 유지되면
+주문이 오래 대기했더라도 pending을 유지한다.
+
+반대로 시간이 거의 지나지 않았더라도
+Section 11.9의 causal invalidation event가 발생하면
+즉시 취소한다.
+
+따라서:
+
+time_based_strategy_cancellation = NONE
+MT5_pending_lifetime = ORDER_TIME_GTC
+cancellation_authority = CAUSAL_EVENTS_ONLY
 
 ### 11.11 Execution State Machine
 
@@ -4741,6 +4783,8 @@ causal strategy cancellation
 
 if broker refuses deletion and order later fills:
 → EXECUTION_DIVERGENCE
+
+Elapsed time alone never transitions PENDING to CANCELED in V1.
 
 ### 11.12 Required Execution Ledger
 

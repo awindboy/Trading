@@ -1383,20 +1383,45 @@ Spread-aware pending-price adjustment는
 
 ---
 
-## D-059 — Time-based pending cancellation remains unresolved
+## D-059 — V1 has no time-based pending cancellation
 
-Status: ACTIVE / PARTIALLY OPEN
+Status: ACTIVE / FROZEN
 
-Causal/event-driven cancellation은 사용한다.
+V1 pending order는
+시간 경과만으로 취소하지 않는다.
 
-Pure time-based cancellation은:
+사용하지 않는다.
 
-TBD
+N-bar timeout
+N-minute timeout
+session-close timeout
+day-change timeout
+next-day automatic cancellation
+arbitrary pending-age limit
 
-로 유지한다.
+Pending order의 생존 여부는
+elapsed time이 아니라
+scenario의 causal validity로 결정한다.
 
-임의 N-bar / N-minute / session-close timeout을
-현재 baseline에 추가하지 않는다.
+따라서:
+
+time_based_strategy_cancellation = NONE
+
+MT5 pending order는:
+
+ORDER_TIME_GTC
+
+를 사용한다.
+
+Pending cancellation authority는
+EA_SPEC Section 11.9의 causal invalidation events에만 있다.
+
+Reason:
+
+이미 objective, Root/owner, source,
+trigger structure, selected FVG 등
+시나리오의 실제 원인이 명시적으로 관리되고 있으므로
+단순 시간 경과를 별도의 무효화 이유로 추가할 근거가 없다.
 
 ---
 
@@ -1458,18 +1483,32 @@ Bid와 Ask를 모두 기록한다.
 
 ---
 
-## D-063 — Pending orders use GTC until strategy timeout is separately frozen
+## D-063 — Pending orders use GTC and causal cancellation only
 
-Status: ACTIVE
+Status: ACTIVE / FROZEN
 
-Time-based strategy cancellation이 확정되기 전까지:
+V1은 time-based strategy cancellation을 사용하지 않는다.
+
+따라서 MT5 pending order는:
 
 ORDER_TIME_GTC
 
 를 사용한다.
 
-Causal cancellation event가 발생하면
+Broker expiration time을 두지 않는다.
+
+Scenario의 causal state가 살아 있는 동안
+pending order를 유지한다.
+
+EA_SPEC Section 11.9의
+causal cancellation event가 발생하면
 EA가 pending order 삭제를 요청한다.
+
+Reason:
+
+MT5 order lifetime과
+strategy invalidation을 분리하고,
+시간 경과 자체가 전략 근거를 무효화하지 않도록 하기 위함이다.
 
 ---
 
