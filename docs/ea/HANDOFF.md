@@ -1,8 +1,8 @@
 # EA Development Handoff
 
 Last updated: 2026-08-16
-Status: V1 AUTHORITY CORRECTION IN PROGRESS
-Current phase: Post-contact LTF child sequencing correction before Phase 4C continuation
+Status: D122A POST-CONTACT REFINEMENT IMPLEMENTED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
+Current phase: D122A Root-contact → post-contact LTF child core
 
 ## Goal
 
@@ -96,10 +96,12 @@ Phase 4A H1/M30 map / reversal permission
 → Phase 1~3B regression PASS
 
 Phase 3B causal LTF refinement
-→ SUPERSEDED AS STRATEGY-PARITY TEST BY D-122
-→ old CHILD_CREATED 7 / READY 7 were historical children from the Root-forming displacement
-→ corrected child must form only after actual HTF Root contact
-→ reimplementation and new real-tick validation REQUIRED
+→ OLD PRE-CONTACT IMPLEMENTATION SUPERSEDED BY D-122
+→ D122A corrected implementation prepared in internal build 0.80
+→ Root watch → actual Root contact → post-contact child discovery implemented
+→ historical Root-forming-displacement child authorization removed from runtime path
+→ local MetaEditor compile PENDING
+→ real-tick causal validation PENDING
 → profitability NOT evaluated
 
 Phase 3A HTF Root OB core
@@ -219,14 +221,18 @@ HTF Root contact
 Post-contact child lineage
 → REQUIRED before current setup can authorize M1 execution trigger search
 
-Mature sweep
-→ pre-existing eligible liquidity
+Physical sweep geometry
 → same-bar penetration + recovery
 → one-tick minimum
+→ Phase 2 audit detector remains valid
+
+Strategic sweep authorization timing
+→ REQUIRES D-122 RE-AUDIT
+→ DISABLED in D122A
+→ exact liquidity-freeze anchor and child-retest requirement remain unresolved
 
 Active pre-CHoCH sweep/reference
-→ one per scenario
-→ newer valid sweep replaces active reference
+→ old Phase 4C ownership semantics SUPERSEDED pending timing re-audit
 
 Meaningful M1 CHoCH
 → body-close break of frozen correction protected swing
@@ -336,7 +342,9 @@ H1/M30 bootstrap
 → retain current-owner relevant state only
 
 M30/M15/M5 bootstrap
-→ targeted reconstruction for current ACTIVE Root/source only
+→ no historical child reconstruction for current setup
+→ lower-TF structure may supply causally known state at Root contact
+→ current child authorization begins only from future post-contact bars
 
 M1 bootstrap
 → no historical trigger-tree carry-in
@@ -350,14 +358,17 @@ Objective family
 Execution epoch
 → pre-start CHoCH/FVG/sweep chain cannot authorize runtime order
 
-Startup inside source
-→ require exit + later re-entry
+Startup inside eligible Root
+→ no pre-start contact fabrication
+→ require Root exit + later closed-M1 re-entry before runtime contact observation
 
 Final authority consistency audit
 → PREVIOUS AUDIT SUPERSEDED IN REFINEMENT/CONTACT ORDER BY D-122
 
 EA_SPEC status
-→ AUTHORITY-CORRECTED; POST-CONTACT CHILD / SWEEP TIMING REIMPLEMENTATION REQUIRED
+→ AUTHORITY-CORRECTED
+→ D122A post-contact child implementation prepared
+→ sweep timing / Phase 4B-4C authorization reimplementation still required
 
 Source lifecycle
 → ACTIVE / INVALIDATED only
@@ -397,51 +408,106 @@ Broker transaction reconciliation
 → callback arrival order not trusted
 
 
-## Implementation Checkpoint — D-122 Post-Contact Child Correction
+## Implementation Checkpoint — D122A Post-Contact Refinement Core
 
-The Phase 4C code currently in `MentorDeterministicV1EA.mq5` was built on the old temporal assumption:
+D-122 authority correction has now been mapped into an isolated MQL implementation candidate.
 
-```text
-Root
-→ historical child refinement
-→ final refined source frozen
-→ source contact
-```
-
-Current authority is:
+Code target:
 
 ```text
-pre-existing eligible HTF Root
-→ actual HTF Root contact
-→ post-contact LTF reaction
-→ newly formed causal child
-→ post-contact refinement lineage
+mt5/experts/MentorDeterministicV1EA.mq5
+internal build = 0.80
+phase = D122A_POST_CONTACT_REFINEMENT_CORE
+property version = 1.00
 ```
 
-Therefore:
+Current implementation boundary:
 
 ```text
-Phase 3B corrected refinement = NOT IMPLEMENTED
-Phase 4B corrected scenario planning = NOT IMPLEMENTED
-Phase 4C corrected contact/sweep ownership = NOT IMPLEMENTED
-Phase 5A = BLOCKED until the corrected sequence passes
+orders = DISABLED
+scenario authorization = DISABLED
+sweep authorization = DISABLED pending timing re-audit
+M1 CHoCH = DISABLED
+Entry / SL / final TP execution = DISABLED
 ```
 
-The previously implemented physical liquidity/sweep detector and one-tick penetration/recovery geometry are not discarded, but their strategy-authorization timing relative to the new child must be re-audited before reuse.
-
-The uploaded True/False OB experiment tests remain useful only for diagnosing the old implementation behavior. They do not establish current strategy opportunity frequency because both runs used pre-contact child discovery.
-
-Immediate next work:
+Implemented in D122A:
 
 ```text
-1. rewrite refinement state machine so HTF Root contact opens child discovery
-2. ensure child.available_at > qualifying_root_contact_at
-3. remove historical Root-forming-displacement child authorization
-4. replace PREPLAN_SOURCE_CONTACT rejection semantics
-5. re-audit when eligible sweep-liquidity is frozen relative to the new child
-6. rerun Phase 3B / 4B / 4C real-tick validation
-7. only then resume Phase 5A
+ACTIVE HTF Root first-reaction watch eligibility
+bootstrap prior-closed-M1-touch fail-closed guard for D122A fresh-reaction testing only
+(no general partial/full OB-consumption strategy rule frozen yet)
+startup-inside-Root exit/re-entry guard
+same-timestamp Root self-contact prevention
+ROOT_CONTACT_OBSERVED on later closed M1 data
+Root-contact-time M30/M15 causal state snapshot
+M5 structure-only context reconstruction through Root contact, with no historical child publication
+future-only post-contact child discovery
+LAST_OPPOSITE_OB baseline recognizer retained
+FVG_ORIGIN_OB experiment toggle retained
+same-candle dual-recognizer reason merge
+CONTAINED preference
+post-contact EVENT_ADJACENT without distance tolerance
+recursive deeper-child causal anchor = direct parent available_at
+child invalidation rollback to nearest active parent
+later new child allowed while Root remains ACTIVE
 ```
+
+Explicitly removed from the active runtime path:
+
+```text
+Root creation → historical child discovery
+PREPLAN_SOURCE_CONTACT rejection authority
+old Phase 4B RefreshScenarioLayer authorization
+old Phase 4C final-source SOURCE_CONTACT / sweep authorization
+old Structural-Reaction strategy ownership
+```
+
+Old Phase 4B/4C functions may remain in the source temporarily as compile-compatible dead code, but D122A has no runtime call path into them.
+
+Required local validation sequence:
+
+```text
+1. MetaEditor compile
+2. Every tick based on real ticks
+3. first run with InpEnableFvgOriginObExperiment=false
+4. inspect event CSV causal invariants
+5. only after baseline causal PASS, repeat with experiment=true if comparison is desired
+```
+
+D122A PASS requires at minimum:
+
+```text
+ROOT_CONTACT_OBSERVED > 0 on a sufficiently long sample
+all Root contacts occur after Root.available_at and execution_epoch_start
+all CHILD_CREATED events have root_contact_at
+all first-child origin_time >= root_contact_at
+all first-child available_at > root_contact_at
+all deeper child origins/availability follow direct-parent causal anchor
+historical pre-contact child authorization = 0
+SCENARIO_PLANNED = 0
+old Phase4C SOURCE_CONTACT = 0
+AUTHORIZED_SWEEP = 0
+new STRUCTURAL_REACTION authorization = 0
+orders/deals = 0
+```
+
+The exact sweep-liquidity freeze point and whether a separate child retest/contact is required remain unresolved by design. They must be decided only after D122A temporal parity passes.
+
+Next after D122A compile + causal PASS:
+
+```text
+Phase 4B correction
+→ qualify watched Root with current map / direction / objective authority
+→ define strategic scenario creation around the already-correct Root-contact episode
+
+then Phase 4C timing re-audit
+→ freeze the exact child/sweep ownership contract
+→ reattach authorized sweep
+```
+
+Phase 5A remains blocked until those corrected phases pass.
+
 
 ## Do Not Do Yet
 

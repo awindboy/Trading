@@ -51,9 +51,10 @@
 ```text
 Market Structure
 -> Liquidity / Objective
--> Root / Causal LTF Source
--> Source Contact
--> Sweep
+-> Pre-existing Eligible HTF Root
+-> Actual HTF Root Contact
+-> Newly Formed Post-Contact Causal LTF Child
+-> Valid Sweep Under The Frozen Post-Contact Timing Contract
 -> Meaningful M1 CHoCH
 -> Causal CHoCH Displacement FVG
 -> Widest FVG

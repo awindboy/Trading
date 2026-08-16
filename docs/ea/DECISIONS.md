@@ -3018,3 +3018,139 @@ Implementation consequence:
 
 Phase 3B refinement, Phase 4B scenario planning, and Phase 4C contact/sweep logic that depended on pre-contact child freeze must be reworked and revalidated before those phases can be considered strategy-parity PASS. Earlier test counts remain historical facts for the old implementation, not evidence of corrected V1 opportunity frequency.
 
+---
+
+## D-123 — D122A isolates physical Root-contact / post-contact-child parity from downstream strategy authorization
+
+Status: ACTIVE / IMPLEMENTATION-STAGING / COMPILE-TEST PENDING
+
+D-122 changes the causal order materially enough that the corrected lower-timeframe child path must be validated before Phase 4B/4C scenario and sweep authorization are reattached.
+
+The D122A implementation therefore has a deliberately narrow authority boundary.
+
+### Root watch eligibility
+
+Root strategy state remains exactly:
+
+```text
+ACTIVE
+INVALIDATED
+```
+
+D122A does **not** add a new Root strategy state such as `MITIGATED` or `CONSUMED`.
+
+For the isolated D122A causality test only, bootstrap uses a conservative fail-closed first-reaction watch guard: a Root is not armed as a fresh Root watch if a fully closed M1 bar, causally after `Root.available_at`, has already intersected the Root wick range.
+
+```text
+closed M1 intersection after Root.available_at
+→ not eligible for a new first-reaction Root watch
+→ Root strategy_state itself remains ACTIVE unless the existing invalidation rule fires
+```
+
+This is an execution-watch eligibility distinction, not a rewrite of D-090 body-close invalidation. It is **not yet promoted into a general strategy definition of partial/full OB consumption**; that semantic remains outside D122A. The guard exists so the post-contact-child test does not knowingly treat an already revisited historical Root as a fresh first-reaction fixture.
+No N-touch, mitigation percentage, age, ATR, point-distance, or quality score is introduced.
+
+If startup begins inside an otherwise eligible Root, D122A does not synthesize a historical contact. It requires:
+
+```text
+exit Root
+→ later closed-M1 re-entry
+→ new runtime Root-contact observation
+```
+
+### Runtime Root-contact observation
+
+A newly available runtime Root is registered only after the complete same-timestamp MTF processing group has finished.
+This prevents price movement that occurred before Root availability from being reused as a same-timestamp self-contact.
+
+D122A records a physical contact only from a newly closed M1 bar after both:
+
+```text
+Root.available_at
+Root-watch registration time
+```
+
+and after `execution_epoch_start` when runtime execution has begun.
+
+The D122A event is:
+
+```text
+ROOT_CONTACT_OBSERVED
+```
+
+and is intentionally logged with:
+
+```text
+strategy_authority = false
+map_objective_qualification = DEFERRED_PHASE4B
+```
+
+because Phase 4B must later decide whether the watched Root has full map / direction / objective authority.
+D122A validates temporal causality, not final trade authorization.
+
+### Post-contact child causality
+
+At Root contact, D122A snapshots the causally known M30/M15 structure state and reconstructs M5 **structure-only** context through the contact timestamp. That M5 reconstruction may establish prior structure context but may not publish any historical child/source authority.
+Only subsequently closed M30/M15/M5 bars may advance that Root's private reaction state for child authorization.
+
+A candidate child fails closed unless its causal evidence is strictly after the current parent anchor.
+For the first child the anchor is the Root contact; for a deeper child it is the direct parent's `available_at`.
+
+Required:
+
+```text
+structure_event.available_at > causal_anchor
+break_bar.open_time >= causal_anchor
+meaningful_reaction_wave.available_at > causal_anchor
+meaningful_reaction_wave.occurred_at >= causal_anchor
+child_origin_bar.open_time >= causal_anchor
+```
+
+A lower-TF bar that opened before the anchor is not used to prove a post-anchor child because OHLC alone cannot establish the intrabar ordering.
+
+The existing deterministic OB recognizers remain separate:
+
+```text
+LAST_OPPOSITE_OB            → always enabled baseline recognizer
+FVG_ORIGIN_OB               → only when the existing experiment toggle is true
+```
+
+If both recognize the same physical child candle, geometry is deduplicated and the recognition reasons are merged.
+Distinct physical child candidates remain distinct; no score or RR selection is added.
+
+Full containment is preferred. If the post-contact meaningful reaction wave itself intersects the current parent source, the existing event-defined adjacency principle may admit a boundary-crossing child without any fixed point/ATR tolerance.
+
+### Child invalidation
+
+D-028 remains active:
+
+```text
+child invalidated while Root remains ACTIVE
+→ invalidated child is not revived
+→ lineage rolls back to the nearest still-active parent
+→ a later newly formed post-contact child may be discovered
+```
+
+Root invalidation still invalidates the whole descendant lineage.
+
+### Explicitly disabled downstream authority
+
+D122A intentionally does not run the superseded Phase 4B/4C authorization path.
+Until the unresolved Section 6 timing questions are frozen, the following are disabled as strategy-authorizing runtime paths:
+
+```text
+SCENARIO_PLANNED
+old final-source SOURCE_CONTACT
+eligible sweep snapshot freeze
+AUTHORIZED_SWEEP
+STRUCTURAL_REACTION strategy ownership
+meaningful M1 CHoCH
+entry / order submission
+```
+
+The Phase-2 physical liquidity detector and sweep/body-delivery audit geometry remain intact.
+
+Reason:
+
+The corrected Root-contact → child order must first be proven independently. Reattaching objective, sweep, CHoCH, and order logic in the same change would mix a known authority correction with still-unresolved timing choices and make failures impossible to attribute cleanly.
+

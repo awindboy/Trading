@@ -1,20 +1,21 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - Phase 4C source-contact/sweep core   |
+//| Deterministic Mentor EA V1 - D122A post-contact child core       |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| Phase 4C intentionally DOES NOT submit orders.                   |
-//| Structure/liquidity/Root/refinement/map/PLAN core is verified.   |
-//| This build adds source contact, mature M1 sweep authorization,    |
-//| and structurally-owned OB reaction liquidity.                    |
-//| M1 CHoCH/execution/order layers remain disabled.                 |
+//| D122A intentionally DOES NOT submit orders.                     |
+//| Structure/liquidity/Root/map cores are retained.                 |
+//| This build corrects refinement ordering to: Root contact first,  |
+//| then newly formed post-contact LTF child discovery.              |
+//| Scenario/sweep/CHoCH/execution authorization is disabled pending |
+//| the separately frozen D-122 timing re-audit.                     |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - Phase 4C source-contact/sweep core"
+#property description "Mentor deterministic V1 EA - D122A post-contact child core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
@@ -22,11 +23,11 @@ input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
 input bool   InpEnableFvgOriginObExperiment = false;
-input string InpEventCsvFile       = "mentor_v1_phase4c_events.csv";
+input string InpEventCsvFile       = "mentor_v1_d122a_post_contact_child_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
-// but are intentionally not active in this Phase 4C source-contact/sweep build.
+// but are intentionally not active in this D122A post-contact-child build.
 
 enum V1InitState
   {
@@ -96,6 +97,18 @@ enum V1RefinementStatus
    V1_REFINE_AMBIGUOUS_FIRST,
    V1_REFINE_STOPPED_AMBIGUOUS,
    V1_REFINE_INVALIDATED
+  };
+
+enum V1RootReactionStatus
+  {
+   V1_ROOT_WATCH_WAITING_CONTACT=0,
+   V1_ROOT_WATCH_DISCOVERING_CHILD,
+   V1_ROOT_WATCH_READY,
+   V1_ROOT_WATCH_AMBIGUOUS_FIRST,
+   V1_ROOT_WATCH_STOPPED_AMBIGUOUS,
+   V1_ROOT_WATCH_INVALIDATED,
+   V1_ROOT_WATCH_INELIGIBLE_PRIOR_TOUCH,
+   V1_ROOT_WATCH_ERROR
   };
 
 enum V1ReversalPermission
@@ -193,6 +206,12 @@ struct V1SourceZone
    int               strategy_state;
    datetime          invalidated_at;
    string            invalidation_reason;
+
+   // D-122 audit: children must belong to a Root contact that occurred
+   // before the child formed. Root objects keep these at zero until the
+   // first causally observed runtime contact episode starts.
+   datetime          root_contact_at;
+   datetime          root_contact_bar_open;
   };
 
 struct V1WaveRef
@@ -262,9 +281,15 @@ struct V1RefinementLineage
    datetime          snapshot_at;
    string            stop_reason;
 
-   // Phase 4B audit: a source touched before PLAN freeze can never be
-   // retrospectively converted into a new scenario.
+   // Historical field retained only so the superseded Phase-4B code can
+   // remain compile-compatible while disabled under D-122. It has no current
+   // strategy authority.
    datetime          preplan_contact_at;
+
+   // D-122 causal anchor. This is a physical Root-contact observation in
+   // D122A; Phase 4B must separately qualify map/objective authority later.
+   datetime          root_contact_at;
+   datetime          root_contact_bar_open;
   };
 
 struct V1ObjectiveCandidate
@@ -483,6 +508,37 @@ struct V1RuntimeBarEvent
    datetime  available_at;
   };
 
+struct V1RootReactionTracker
+  {
+   bool              valid;
+   string            id;
+   string            root_zone_id;
+   ENUM_TIMEFRAMES   root_tf;
+   int               direction;
+   int               status;
+
+   datetime          watch_started_at;
+   bool              bootstrap_root;
+   bool              startup_inside_root;
+   bool              startup_exit_seen;
+
+   datetime          root_contact_at;
+   datetime          root_contact_bar_open;
+
+   string            current_parent_zone_id;
+   string            final_child_id;
+   string            path;
+   int               child_count;
+   datetime          lineage_updated_at;
+
+   // Causal lower-TF structure snapshots are taken only when Root contact is
+   // observed. Future child bars advance these private states incrementally;
+   // no Root-forming historical displacement is replayed for authorization.
+   V1StructureState  m30_state;
+   V1StructureState  m15_state;
+   V1StructureState  m5_state;
+  };
+
 // Frozen processing priority:
 // H4 -> H1 -> M30 -> M15 -> M5 -> M1 -> authorization.
 #define V1_TF_COUNT 6
@@ -500,6 +556,7 @@ V1StructureState g_structure[V1_TF_COUNT];
 V1LiquidityPool g_liquidity[];
 V1SourceZone     g_sources[];
 V1RefinementLineage g_refinements[];
+V1RootReactionTracker g_root_reactions[];
 string           g_pending_refinement_root_ids[];
 V1ObjectiveCandidate g_objective_candidates[];
 V1ScenarioPlan   g_scenarios[];
@@ -549,6 +606,10 @@ long             g_authorized_sweep_events=0;
 long             g_authorized_sweep_pools=0;
 long             g_strategy_m1_pool_consumptions=0;
 long             g_structural_reaction_created=0;
+long             g_root_watches_created=0;
+long             g_root_watches_prior_touch_rejected=0;
+long             g_root_contacts_observed=0;
+long             g_post_contact_child_events=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -671,6 +732,21 @@ string RefinementStatusName(const int status)
       case V1_REFINE_INVALIDATED:       return "INVALIDATED";
      }
    return "UNKNOWN";
+  }
+
+string RootReactionStatusName(const int status)
+  {
+   switch(status)
+     {
+      case V1_ROOT_WATCH_DISCOVERING_CHILD:       return "DISCOVERING_CHILD";
+      case V1_ROOT_WATCH_READY:                   return "READY";
+      case V1_ROOT_WATCH_AMBIGUOUS_FIRST:         return "AMBIGUOUS_FIRST";
+      case V1_ROOT_WATCH_STOPPED_AMBIGUOUS:       return "STOPPED_AMBIGUOUS";
+      case V1_ROOT_WATCH_INVALIDATED:             return "INVALIDATED";
+      case V1_ROOT_WATCH_INELIGIBLE_PRIOR_TOUCH:  return "INELIGIBLE_PRIOR_TOUCH";
+      case V1_ROOT_WATCH_ERROR:                   return "ERROR";
+     }
+   return "WAITING_CONTACT";
   }
 
 string ReversalPermissionName(const int permission)
@@ -943,6 +1019,7 @@ void InitializeAllStructureStates()
    ArrayResize(g_liquidity,0);
    ArrayResize(g_sources,0);
    ArrayResize(g_refinements,0);
+   ArrayResize(g_root_reactions,0);
    ArrayResize(g_pending_refinement_root_ids,0);
    ArrayResize(g_objective_candidates,0);
    ArrayResize(g_scenarios,0);
@@ -969,6 +1046,10 @@ void InitializeAllStructureStates()
    g_scenarios_no_objective=0;
    g_scenarios_precontact_rejected=0;
    g_objective_candidates_frozen=0;
+   g_root_watches_created=0;
+   g_root_watches_prior_touch_rejected=0;
+   g_root_contacts_observed=0;
+   g_post_contact_child_events=0;
    ResetMapControl();
 
    for(int i=0;i<V1_TF_COUNT;i++)
@@ -1579,7 +1660,7 @@ void LogLiquiditySnapshot(const int tf_index,const datetime available_at)
       external_count,
       range_count,
       reaction_count,
-      "STRUCTURAL_REACTION_ACTIVE_PHASE4C");
+      "STRUCTURAL_REACTION_AUTHORIZATION_DISABLED_D122_TIMING_REAUDIT");
 
    LogLine("LIQUIDITY_STATE",
            TfName(tf),
@@ -1588,10 +1669,12 @@ void LogLiquiditySnapshot(const int tf_index,const datetime available_at)
            detail);
   }
 
-bool BuildRefinementForRoot(const string root_id,const datetime snapshot_at);
-void BuildRefinementsForActiveRoots(const datetime snapshot_at);
-void QueueRefinementRoot(const string root_id);
-void ProcessPendingRefinements(const datetime snapshot_at);
+void EnsurePostContactRootWatches(const datetime snapshot_at,const bool bootstrap_scan);
+void ProcessPostContactRootContacts(const MqlRates &bar,const datetime available_at);
+void ProcessPostContactChildBar(const int tf_index,const MqlRates &bar,const datetime available_at);
+void InvalidatePostContactRootTracker(const string root_id,const datetime available_at,const string reason);
+void RollbackPostContactRefinementAfterChildInvalidation(const string root_id,const string child_id,const string parent_zone_id,const datetime available_at,const string reason);
+void StoreRefinementLineage(const V1RefinementLineage &lineage);
 
 //+------------------------------------------------------------------+
 //| Phase 3B Root/source working-set logic                           |
@@ -1974,12 +2057,15 @@ bool AddRootCandidateFromOrigin(const int tf_index,
    g_sources[n].strategy_state=V1_SOURCE_ACTIVE;
    g_sources[n].invalidated_at=0;
    g_sources[n].invalidation_reason="";
+   g_sources[n].root_contact_at=0;
+   g_sources[n].root_contact_bar_open=0;
 
    g_roots_created++;
    LogRootCreated(g_sources[n],event_type,break_bar);
 
-   if(!g_in_bootstrap_replay)
-      QueueRefinementRoot(root_id);
+   // D-122: Root creation never authorizes historical child refinement.
+   // Runtime Root watches are registered only after the full same-timestamp
+   // MTF group has completed, so a Root cannot self-contact on its creation bar.
 
    return true;
   }
@@ -2115,6 +2201,8 @@ void MarkRefinementInvalidated(const string root_id,
                                const datetime available_at,
                                const string reason)
   {
+   InvalidatePostContactRootTracker(root_id,available_at,reason);
+
    int index=FindRefinementByRootId(root_id);
    if(index<0)
       return;
@@ -2197,7 +2285,9 @@ void InvalidateChildDescendants(const string parent_id,
             g_children_invalidated++;
            }
 
-         MarkRefinementInvalidated(root_id,available_at,reason);
+         // Descendant removal alone does not invalidate the Root reaction.
+         // The owning caller decides whether this is a Root invalidation or
+         // a child-only rollback under D-028 / D-122.
          found=true;
          break;
         }
@@ -2235,6 +2325,7 @@ void EvaluateChildPriceInvalidation(const int tf_index,
 
          string child_id=g_sources[i].id;
          string root_id=g_sources[i].root_zone_id;
+         string parent_zone_id=g_sources[i].parent_zone_id;
 
          InvalidateChildDescendants(child_id,available_at,"PARENT_INVALIDATED",bar);
 
@@ -2250,7 +2341,11 @@ void EvaluateChildPriceInvalidation(const int tf_index,
             g_children_invalidated++;
            }
 
-         MarkRefinementInvalidated(root_id,available_at,"PRICE_INVALIDATED");
+         RollbackPostContactRefinementAfterChildInvalidation(root_id,
+                                                              child_id,
+                                                              parent_zone_id,
+                                                              available_at,
+                                                              "PRICE_INVALIDATED");
          found=true;
          break;
         }
@@ -5010,7 +5105,7 @@ void UpdateDirectionalRanges(V1StructureState &s,const MqlRates &bar)
 
 
 //+------------------------------------------------------------------+
-//| Phase 3B targeted causal LTF refinement                          |
+//| D122A post-contact causal LTF refinement                         |
 //+------------------------------------------------------------------+
 void ClearRefinementEvent(V1RefinementEvent &event)
   {
@@ -5043,14 +5138,6 @@ void ClearChildCandidate(V1ChildCandidate &candidate)
    candidate.linked_event_close=0.0;
    candidate.linked_structure_event_id="";
    candidate.containment_type="";
-  }
-
-ENUM_TIMEFRAMES RefinementTimeframeByRank(const int rank)
-  {
-   if(rank==2) return PERIOD_M30;
-   if(rank==3) return PERIOD_M15;
-   if(rank==4) return PERIOD_M5;
-   return PERIOD_CURRENT;
   }
 
 bool ConfirmWaveQuiet(V1StructureState &state,
@@ -5258,55 +5345,6 @@ bool EvaluateLocalRefinementBreak(V1StructureState &state,
    return false;
   }
 
-bool GeometryActiveThrough(const ENUM_TIMEFRAMES tf,
-                           const int direction,
-                           const double bottom,
-                           const double top,
-                           const datetime source_available_at,
-                           const datetime through_at)
-  {
-   if(through_at<=source_available_at)
-      return true;
-
-   MqlRates bars[];
-   ArraySetAsSeries(bars,false);
-
-   ResetLastError();
-   int copied=CopyRates(_Symbol,
-                        tf,
-                        source_available_at,
-                        through_at,
-                        bars);
-   if(copied<0)
-     {
-      LogLine("SOURCE_DETECTOR_ERROR",
-              TfName(tf),
-              through_at,
-              "",
-              StringFormat("reason=REFINEMENT_VALIDITY_COPYRATES_FAILED from=%s to=%s error=%d",
-                           TimeToString(source_available_at,TIME_DATE|TIME_SECONDS),
-                           TimeToString(through_at,TIME_DATE|TIME_SECONDS),
-                           GetLastError()));
-      return false;
-     }
-
-   int seconds=PeriodSeconds(tf);
-   for(int i=0;i<copied;i++)
-     {
-      datetime close_at=bars[i].time+seconds;
-      if(close_at<=source_available_at || close_at>through_at)
-         continue;
-
-      if(direction>0 && bars[i].close<bottom)
-         return false;
-
-      if(direction<0 && bars[i].close>top)
-         return false;
-     }
-
-   return true;
-  }
-
 bool SameChildCandidate(const V1ChildCandidate &a,
                         const V1ChildCandidate &b)
   {
@@ -5328,11 +5366,6 @@ void AddChildCandidateUnique(V1ChildCandidate &candidates[],
 
       string merged=MergeObSourceReason(candidates[i].source_reason,
                                         candidate.source_reason);
-
-      // The same physical source candle may be recognized by both OB rules or
-      // may create more than one later structure-delivery event. Keep one
-      // geometry, preserve the earliest causal availability, and merge only
-      // the recognition labels.
       if(candidate.available_at<candidates[i].available_at)
         {
          V1ChildCandidate replacement=candidate;
@@ -5347,44 +5380,494 @@ void AddChildCandidateUnique(V1ChildCandidate &candidates[],
    int n=ArraySize(candidates);
    if(ArrayResize(candidates,n+1,32)<0)
       return;
-
    candidates[n]=candidate;
   }
 
-bool CandidateEventAdjacent(const V1SourceZone &parent,
-                            const V1ChildCandidate &candidate)
+bool BarIntersectsZone(const MqlRates &bar,
+                       const double bottom,
+                       const double top)
   {
-   if(candidate.origin_time<parent.origin_time)
+   return (bar.high>=bottom && bar.low<=top);
+  }
+
+bool WaveIntersectsSource(const V1WaveRef &wave,
+                          const V1SourceZone &source)
+  {
+   if(!wave.valid || !source.valid)
       return false;
 
-   if(parent.origin_window_end>0 &&
-      candidate.origin_time>parent.origin_window_end)
+   double bottom=wave.wick_bottom;
+   double top=wave.wick_top;
+   if(top<bottom || (top==0.0 && bottom==0.0))
+     {
+      bottom=wave.price;
+      top=wave.price;
+     }
+
+   return (top>=source.bottom && bottom<=source.top);
+  }
+
+int FindRootReactionTrackerByRootId(const string root_id)
+  {
+   for(int i=0;i<ArraySize(g_root_reactions);i++)
+      if(g_root_reactions[i].valid &&
+         g_root_reactions[i].root_zone_id==root_id)
+         return i;
+   return -1;
+  }
+
+int CountChildrenInLineagePath(const string path)
+  {
+   int count=0;
+   int pos=0;
+   while(true)
+     {
+      int found=StringFind(path,">",pos);
+      if(found<0)
+         break;
+      count++;
+      pos=found+1;
+     }
+   return count;
+  }
+
+void RollbackPostContactRefinementAfterChildInvalidation(const string root_id,
+                                                         const string child_id,
+                                                         const string parent_zone_id,
+                                                         const datetime available_at,
+                                                         const string reason)
+  {
+   int index=FindRootReactionTrackerByRootId(root_id);
+   if(index<0)
+      return;
+
+   if(g_root_reactions[index].status==V1_ROOT_WATCH_INVALIDATED ||
+      g_root_reactions[index].status==V1_ROOT_WATCH_INELIGIBLE_PRIOR_TOUCH ||
+      g_root_reactions[index].status==V1_ROOT_WATCH_ERROR)
+      return;
+
+   string marker=">"+child_id;
+   int cut=StringFind(g_root_reactions[index].path,marker);
+   if(cut>=0)
+      g_root_reactions[index].path=StringSubstr(g_root_reactions[index].path,0,cut);
+
+   int parent_index=FindActiveSourceById(parent_zone_id);
+   if(parent_index<0)
+     {
+      InvalidatePostContactRootTracker(root_id,available_at,"ROLLBACK_PARENT_NOT_ACTIVE");
+      return;
+     }
+
+   g_root_reactions[index].current_parent_zone_id=parent_zone_id;
+   g_root_reactions[index].child_count=CountChildrenInLineagePath(g_root_reactions[index].path);
+   g_root_reactions[index].final_child_id=
+      (g_sources[parent_index].kind==V1_SOURCE_CHILD ? parent_zone_id : "");
+   g_root_reactions[index].status=
+      (g_root_reactions[index].child_count>0 ? V1_ROOT_WATCH_READY : V1_ROOT_WATCH_DISCOVERING_CHILD);
+   g_root_reactions[index].lineage_updated_at=available_at;
+
+   int refinement_index=FindRefinementByRootId(root_id);
+   if(refinement_index>=0)
+     {
+      g_refinements[refinement_index].final_child_id=g_root_reactions[index].final_child_id;
+      g_refinements[refinement_index].path=g_root_reactions[index].path;
+      g_refinements[refinement_index].child_count=g_root_reactions[index].child_count;
+      g_refinements[refinement_index].status=
+         (g_root_reactions[index].child_count>0 ? V1_REFINE_READY : V1_REFINE_WAITING);
+      g_refinements[refinement_index].frozen_at=
+         (g_root_reactions[index].child_count>0 ? available_at : 0);
+      g_refinements[refinement_index].snapshot_at=available_at;
+      g_refinements[refinement_index].stop_reason="CHILD_INVALIDATED_ROLLBACK";
+     }
+
+   LogLine("REFINEMENT_UPDATED",
+           "",
+           available_at,
+           root_id,
+           StringFormat("status=%s child_count=%d final_child_id=%s path=%s invalidated_child_id=%s rollback_parent_id=%s reason=%s Root_remains_ACTIVE=true new_post_contact_child_allowed=true strategy_authority=false",
+                        RootReactionStatusName(g_root_reactions[index].status),
+                        g_root_reactions[index].child_count,
+                        g_root_reactions[index].final_child_id=="" ? "NA" : g_root_reactions[index].final_child_id,
+                        g_root_reactions[index].path,
+                        child_id,
+                        parent_zone_id,
+                        reason));
+  }
+
+void InvalidatePostContactRootTracker(const string root_id,
+                                      const datetime available_at,
+                                      const string reason)
+  {
+   int index=FindRootReactionTrackerByRootId(root_id);
+   if(index<0)
+      return;
+
+   if(g_root_reactions[index].status==V1_ROOT_WATCH_INVALIDATED ||
+      g_root_reactions[index].status==V1_ROOT_WATCH_INELIGIBLE_PRIOR_TOUCH ||
+      g_root_reactions[index].status==V1_ROOT_WATCH_ERROR)
+      return;
+
+   bool no_child=(g_root_reactions[index].child_count==0);
+   g_root_reactions[index].status=V1_ROOT_WATCH_INVALIDATED;
+   g_root_reactions[index].lineage_updated_at=available_at;
+
+   LogLine("ROOT_REACTION_INVALIDATED",
+           TfName(g_root_reactions[index].root_tf),
+           available_at,
+           root_id,
+           StringFormat("status=INVALIDATED root_contact_at=%s child_count=%d final_child_id=%s no_post_contact_child=%s reason=%s strategy_authority=false",
+                        g_root_reactions[index].root_contact_at>0 ?
+                           TimeToString(g_root_reactions[index].root_contact_at,TIME_DATE|TIME_SECONDS) : "NA",
+                        g_root_reactions[index].child_count,
+                        g_root_reactions[index].final_child_id=="" ? "NA" : g_root_reactions[index].final_child_id,
+                        no_child ? "true" : "false",
+                        reason));
+  }
+
+bool RootHadClosedM1TouchAfterAvailability(const V1SourceZone &root,
+                                           const datetime through_at,
+                                           bool &prior_touch,
+                                           datetime &first_touch_at)
+  {
+   prior_touch=false;
+   first_touch_at=0;
+
+   if(root.available_at<=0 || through_at<=root.available_at)
+      return true;
+
+   MqlRates bars[];
+   ArraySetAsSeries(bars,false);
+
+   ResetLastError();
+   int copied=CopyRates(_Symbol,
+                        PERIOD_M1,
+                        root.available_at,
+                        through_at,
+                        bars);
+   if(copied<0)
+     {
+      LogLine("SOURCE_DETECTOR_ERROR",
+              "M1",
+              through_at,
+              root.id,
+              StringFormat("reason=ROOT_UNCONSUMED_AUDIT_COPYRATES_FAILED from=%s to=%s error=%d",
+                           TimeToString(root.available_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(through_at,TIME_DATE|TIME_SECONDS),
+                           GetLastError()));
+      return false;
+     }
+
+   for(int i=0;i<copied;i++)
+     {
+      datetime bar_available=bars[i].time+PeriodSeconds(PERIOD_M1);
+      if(bar_available<=root.available_at || bar_available>through_at)
+         continue;
+
+      if(!BarIntersectsZone(bars[i],root.bottom,root.top))
+         continue;
+
+      prior_touch=true;
+      first_touch_at=bar_available;
+      return true;
+     }
+
+   return true;
+  }
+
+bool ReconstructQuietStructureThrough(const ENUM_TIMEFRAMES tf,
+                                      const datetime through_at,
+                                      V1StructureState &state)
+  {
+   ResetStructureState(state,tf);
+
+   datetime start_at=0;
+   int tf_index=-1;
+   for(int k=0;k<V1_TF_COUNT;k++)
+      if(g_timeframes[k]==tf)
+        {
+         tf_index=k;
+         break;
+        }
+
+   if(tf_index>=0 && g_history_first_date[tf_index]>0)
+      start_at=g_history_first_date[tf_index];
+
+   MqlRates bars[];
+   ArraySetAsSeries(bars,false);
+   ResetLastError();
+   int copied=CopyRates(_Symbol,tf,start_at,through_at,bars);
+   if(copied<0)
       return false;
 
-   if(candidate.meaningful_wave.origin_window_start<
-      parent.origin_window_start)
-      return false;
+   int seconds=PeriodSeconds(tf);
+   for(int i=0;i<copied;i++)
+     {
+      datetime available_at=bars[i].time+seconds;
+      if(available_at>through_at)
+         continue;
 
-   if(candidate.available_at>parent.available_at)
+      state.processed_bars++;
+      EnsureLegStart(state,bars[i]);
+
+      V1RefinementEvent ignored_event;
+      EvaluateLocalRefinementBreak(state,bars[i],available_at,ignored_event);
+      UpdateDirectionalRanges(state,bars[i]);
+      ConfirmWaveQuiet(state,bars[i],available_at);
+      ShiftRecentBars(state,bars[i]);
+     }
+
+   return true;
+  }
+
+bool SnapshotReactionStates(V1RootReactionTracker &tracker,
+                            const datetime contact_at)
+  {
+   // H30/M15 already retain the full causal bootstrap map. M5 is intentionally
+   // not globally bootstrapped for execution, so rebuild M5 structure-only
+   // context here without publishing any historical child/source authority.
+   tracker.m30_state=g_structure[2];
+   tracker.m15_state=g_structure[3];
+
+   if(!ReconstructQuietStructureThrough(PERIOD_M5,contact_at,tracker.m5_state))
       return false;
 
    return true;
   }
 
-void TryAddChildCandidateFromOrigin(const V1SourceZone &parent,
-                                    const ENUM_TIMEFRAMES child_tf,
-                                    const datetime lineage_freeze_at,
-                                    const V1RefinementEvent &event,
-                                    const MqlRates &origin_bar,
-                                    const string source_reason,
-                                    V1ChildCandidate &candidates[])
+void StoreWaitingPostContactLineage(const V1RootReactionTracker &tracker)
   {
-   // Frozen same-price-event time relation.
-   if(origin_bar.time<parent.origin_time ||
-      (parent.origin_window_end>0 &&
-       origin_bar.time>parent.origin_window_end) ||
-      origin_bar.time>event.available_at ||
-      event.available_at>parent.available_at)
+   V1RefinementLineage lineage;
+   lineage.valid=true;
+   lineage.root_zone_id=tracker.root_zone_id;
+   lineage.final_child_id=tracker.final_child_id;
+   lineage.path=tracker.path;
+   lineage.child_count=tracker.child_count;
+   lineage.status=(tracker.child_count>0 ? V1_REFINE_READY : V1_REFINE_WAITING);
+   lineage.frozen_at=tracker.lineage_updated_at;
+   lineage.snapshot_at=tracker.lineage_updated_at;
+   lineage.stop_reason=(tracker.child_count>0 ? "POST_CONTACT_CHILD_READY" : "WAITING_POST_CONTACT_CHILD");
+   lineage.preplan_contact_at=0;
+   lineage.root_contact_at=tracker.root_contact_at;
+   lineage.root_contact_bar_open=tracker.root_contact_bar_open;
+   StoreRefinementLineage(lineage);
+  }
+
+void RegisterPostContactRootWatch(const V1SourceZone &root,
+                                  const datetime snapshot_at,
+                                  const bool bootstrap_scan)
+  {
+   if(!root.valid ||
+      root.kind!=V1_SOURCE_ROOT ||
+      root.strategy_state!=V1_SOURCE_ACTIVE ||
+      FindRootReactionTrackerByRootId(root.id)>=0)
+      return;
+
+   V1RootReactionTracker tracker;
+   tracker.valid=true;
+   tracker.id=StringFormat("rootwatch:%s:%I64d",root.id,(long)snapshot_at);
+   tracker.root_zone_id=root.id;
+   tracker.root_tf=root.tf;
+   tracker.direction=root.direction;
+   tracker.status=V1_ROOT_WATCH_WAITING_CONTACT;
+   tracker.watch_started_at=snapshot_at;
+   tracker.bootstrap_root=bootstrap_scan;
+   tracker.startup_inside_root=false;
+   tracker.startup_exit_seen=false;
+   tracker.root_contact_at=0;
+   tracker.root_contact_bar_open=0;
+   tracker.current_parent_zone_id=root.id;
+   tracker.final_child_id="";
+   tracker.path=root.id;
+   tracker.child_count=0;
+   tracker.lineage_updated_at=0;
+   ResetStructureState(tracker.m30_state,PERIOD_M30);
+   ResetStructureState(tracker.m15_state,PERIOD_M15);
+   ResetStructureState(tracker.m5_state,PERIOD_M5);
+
+   bool prior_touch=false;
+   datetime first_touch=0;
+   if(bootstrap_scan)
+     {
+      if(!RootHadClosedM1TouchAfterAvailability(root,
+                                                snapshot_at,
+                                                prior_touch,
+                                                first_touch))
+         tracker.status=V1_ROOT_WATCH_ERROR;
+      else if(prior_touch)
+         tracker.status=V1_ROOT_WATCH_INELIGIBLE_PRIOR_TOUCH;
+     }
+
+   double price=StartupReferencePrice();
+   if(tracker.status==V1_ROOT_WATCH_WAITING_CONTACT &&
+      price>0.0 &&
+      price>=root.bottom && price<=root.top)
+     {
+      tracker.startup_inside_root=true;
+      tracker.startup_exit_seen=false;
+     }
+
+   int n=ArraySize(g_root_reactions);
+   if(ArrayResize(g_root_reactions,n+1,64)<0)
+      return;
+   g_root_reactions[n]=tracker;
+
+   if(tracker.status==V1_ROOT_WATCH_INELIGIBLE_PRIOR_TOUCH)
+     {
+      g_root_watches_prior_touch_rejected++;
+      LogLine("ROOT_WATCH_SKIPPED",
+              TfName(root.tf),
+              snapshot_at,
+              root.id,
+              StringFormat("reason=PRIOR_CLOSED_M1_TOUCH root_available_at=%s first_touch_at=%s bottom=%.10f top=%.10f d122a_fresh_reaction_guard=FAIL Root_strategy_state_remains=ACTIVE consumption_semantics=NOT_GENERALIZED strategy_authority=false",
+                           TimeToString(root.available_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(first_touch,TIME_DATE|TIME_SECONDS),
+                           root.bottom,
+                           root.top));
+      return;
+     }
+
+   if(tracker.status==V1_ROOT_WATCH_ERROR)
+     {
+      LogLine("ROOT_WATCH_SKIPPED",
+              TfName(root.tf),
+              snapshot_at,
+              root.id,
+              "reason=UNCONSUMED_AUDIT_ERROR fail_closed=true strategy_authority=false");
+      return;
+     }
+
+   g_root_watches_created++;
+   LogLine("ROOT_WATCH_CREATED",
+           TfName(root.tf),
+           snapshot_at,
+           root.id,
+           StringFormat("status=WAITING_CONTACT direction=%s source_reason=%s root_available_at=%s bottom=%.10f top=%.10f bootstrap_root=%s startup_inside_root=%s prior_closed_touch=false d122a_fresh_reaction_guard=PASS consumption_semantics=NOT_GENERALIZED strategy_authority=false map_objective_qualification=DEFERRED_PHASE4B",
+                        DirectionName(root.direction),
+                        root.source_reason,
+                        TimeToString(root.available_at,TIME_DATE|TIME_SECONDS),
+                        root.bottom,
+                        root.top,
+                        bootstrap_scan ? "true" : "false",
+                        tracker.startup_inside_root ? "true" : "false"));
+  }
+
+void EnsurePostContactRootWatches(const datetime snapshot_at,
+                                  const bool bootstrap_scan)
+  {
+   for(int i=0;i<ArraySize(g_sources);i++)
+     {
+      if(!g_sources[i].valid ||
+         g_sources[i].kind!=V1_SOURCE_ROOT ||
+         g_sources[i].strategy_state!=V1_SOURCE_ACTIVE)
+         continue;
+
+      RegisterPostContactRootWatch(g_sources[i],snapshot_at,bootstrap_scan);
+     }
+  }
+
+void ProcessPostContactRootContacts(const MqlRates &bar,
+                                    const datetime available_at)
+  {
+   for(int i=0;i<ArraySize(g_root_reactions);i++)
+     {
+      if(!g_root_reactions[i].valid ||
+         g_root_reactions[i].status!=V1_ROOT_WATCH_WAITING_CONTACT)
+         continue;
+
+      int root_index=FindActiveSourceById(g_root_reactions[i].root_zone_id);
+      if(root_index<0 || g_sources[root_index].kind!=V1_SOURCE_ROOT)
+        {
+         InvalidatePostContactRootTracker(g_root_reactions[i].root_zone_id,
+                                          available_at,
+                                          "ROOT_NOT_ACTIVE");
+         continue;
+        }
+
+      V1SourceZone root=g_sources[root_index];
+      bool intersects=BarIntersectsZone(bar,root.bottom,root.top);
+
+      if(g_root_reactions[i].startup_inside_root &&
+         !g_root_reactions[i].startup_exit_seen)
+        {
+         if(!intersects)
+           {
+            g_root_reactions[i].startup_exit_seen=true;
+            LogLine("ROOT_WATCH_EXIT",
+                    "M1",
+                    available_at,
+                    root.id,
+                    StringFormat("bar_open=%s bottom=%.10f top=%.10f later_reentry_armed=true strategy_authority=false",
+                                 TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                                 root.bottom,
+                                 root.top));
+           }
+         continue;
+        }
+
+      if(!intersects ||
+         available_at<=root.available_at ||
+         available_at<=g_root_reactions[i].watch_started_at ||
+         (g_execution_epoch_start>0 && available_at<=g_execution_epoch_start))
+         continue;
+
+      g_root_reactions[i].status=V1_ROOT_WATCH_DISCOVERING_CHILD;
+      g_root_reactions[i].root_contact_at=available_at;
+      g_root_reactions[i].root_contact_bar_open=bar.time;
+      g_root_reactions[i].current_parent_zone_id=root.id;
+      g_root_reactions[i].path=root.id;
+      g_root_reactions[i].lineage_updated_at=available_at;
+      if(!SnapshotReactionStates(g_root_reactions[i],available_at))
+        {
+         g_root_reactions[i].status=V1_ROOT_WATCH_ERROR;
+         LogLine("ROOT_REACTION_ERROR",
+                 "M1",
+                 available_at,
+                 root.id,
+                 "reason=M5_STRUCTURE_CONTEXT_RECONSTRUCTION_FAILED fail_closed=true strategy_authority=false");
+         continue;
+        }
+
+      g_sources[root_index].root_contact_at=available_at;
+      g_sources[root_index].root_contact_bar_open=bar.time;
+
+      StoreWaitingPostContactLineage(g_root_reactions[i]);
+
+      g_root_contacts_observed++;
+      LogLine("ROOT_CONTACT_OBSERVED",
+              "M1",
+              available_at,
+              root.id,
+              StringFormat("direction=%s root_tf=%s root_available_at=%s contact_bar_open=%s bottom=%.10f top=%.10f child_discovery_enabled=true historical_child_authorization=false strategy_authority=false map_objective_qualification=DEFERRED_PHASE4B",
+                           DirectionName(root.direction),
+                           TfName(root.tf),
+                           TimeToString(root.available_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                           root.bottom,
+                           root.top));
+     }
+  }
+
+void TryAddPostContactChildCandidate(const V1RootReactionTracker &tracker,
+                                     const V1SourceZone &parent,
+                                     const ENUM_TIMEFRAMES child_tf,
+                                     const datetime parent_causal_after,
+                                     const V1RefinementEvent &event,
+                                     const MqlRates &origin_bar,
+                                     const string source_reason,
+                                     V1ChildCandidate &candidates[])
+  {
+   // Closed-bar fail-closed ordering. A lower-TF bar that opened before the
+   // causal anchor may contain both pre- and post-anchor movement, so D122A
+   // does not use it to prove a post-contact child.
+   if(event.available_at<=parent_causal_after ||
+      event.break_bar.time<parent_causal_after ||
+      event.meaningful_wave.available_at<=parent_causal_after ||
+      event.meaningful_wave.occurred_at<parent_causal_after ||
+      origin_bar.time<parent_causal_after)
+      return;
+
+   if(event.direction!=tracker.direction ||
+      !WaveIntersectsSource(event.meaningful_wave,parent))
       return;
 
    if(SourcePathHasSessionGap(child_tf,
@@ -5394,7 +5877,6 @@ void TryAddChildCandidateFromOrigin(const V1SourceZone &parent,
 
    V1ChildCandidate candidate;
    ClearChildCandidate(candidate);
-
    candidate.valid=true;
    candidate.tf=child_tf;
    candidate.direction=event.direction;
@@ -5409,15 +5891,12 @@ void TryAddChildCandidateFromOrigin(const V1SourceZone &parent,
    if(source_reason=="FVG_ORIGIN_OB")
      {
       candidate.origin_window_start=origin_bar.time;
-      candidate.origin_window_end=
-         origin_bar.time+PeriodSeconds(child_tf)-1;
+      candidate.origin_window_end=origin_bar.time+PeriodSeconds(child_tf)-1;
      }
    else
      {
-      candidate.origin_window_start=
-         event.meaningful_wave.origin_window_start;
-      candidate.origin_window_end=
-         event.meaningful_wave.origin_window_end;
+      candidate.origin_window_start=event.meaningful_wave.origin_window_start;
+      candidate.origin_window_end=event.meaningful_wave.origin_window_end;
      }
 
    CopyWave(event.meaningful_wave,candidate.meaningful_wave);
@@ -5426,141 +5905,18 @@ void TryAddChildCandidateFromOrigin(const V1SourceZone &parent,
    candidate.linked_event_close=event.break_bar.close;
    candidate.linked_structure_event_id=event.event_id;
 
-   bool contained=
-      (parent.bottom<=candidate.bottom &&
-       candidate.top<=parent.top);
-
+   bool contained=(parent.bottom<=candidate.bottom && candidate.top<=parent.top);
    if(contained)
       candidate.containment_type="CONTAINED";
-   else if(CandidateEventAdjacent(parent,candidate))
-      candidate.containment_type="EVENT_ADJACENT";
    else
-      return;
-
-   // Candidate must still be structurally ACTIVE when the Root lineage
-   // is first frozen. Later invalidation must not resolve an ambiguity
-   // retrospectively.
-   if(!GeometryActiveThrough(child_tf,
-                             candidate.direction,
-                             candidate.bottom,
-                             candidate.top,
-                             candidate.available_at,
-                             lineage_freeze_at))
-      return;
+     {
+      // Event-defined adjacency is permitted only because the post-contact
+      // meaningful reaction wave itself intersects the current parent source.
+      // No point/ATR/distance tolerance is introduced.
+      candidate.containment_type="EVENT_ADJACENT";
+     }
 
    AddChildCandidateUnique(candidates,candidate);
-  }
-
-bool DiscoverChildCandidates(const V1SourceZone &parent,
-                             const ENUM_TIMEFRAMES child_tf,
-                             const datetime lineage_freeze_at,
-                             V1ChildCandidate &candidates[])
-  {
-   ArrayResize(candidates,0);
-
-   if(!IsRefinementTimeframe(child_tf))
-      return true;
-
-   int parent_rank=TimeframeHierarchyRank(parent.tf);
-   int child_rank=TimeframeHierarchyRank(child_tf);
-   if(child_rank<=parent_rank)
-      return true;
-
-   datetime scan_start=parent.origin_window_start;
-   if(scan_start<=0)
-      scan_start=parent.origin_time;
-
-   datetime scan_end=parent.available_at;
-   if(scan_end<=scan_start)
-      return true;
-
-   MqlRates bars[];
-   ArraySetAsSeries(bars,false);
-
-   ResetLastError();
-   int copied=CopyRates(_Symbol,child_tf,scan_start,scan_end,bars);
-   if(copied<=0)
-     {
-      LogLine("SOURCE_DETECTOR_ERROR",
-              TfName(child_tf),
-              lineage_freeze_at,
-              parent.id,
-              StringFormat("reason=REFINEMENT_REPLAY_COPYRATES_FAILED parent=%s start=%s end=%s error=%d",
-                           parent.id,
-                           TimeToString(scan_start,TIME_DATE|TIME_SECONDS),
-                           TimeToString(scan_end,TIME_DATE|TIME_SECONDS),
-                           GetLastError()));
-      return false;
-     }
-
-   V1StructureState local_state;
-   ResetStructureState(local_state,child_tf);
-
-   int seconds=PeriodSeconds(child_tf);
-
-   for(int i=0;i<copied;i++)
-     {
-      datetime available=bars[i].time+seconds;
-      if(available>parent.available_at)
-         continue;
-
-      local_state.processed_bars++;
-      EnsureLegStart(local_state,bars[i]);
-
-      V1RefinementEvent event;
-      bool has_event=
-         EvaluateLocalRefinementBreak(local_state,
-                                      bars[i],
-                                      available,
-                                      event);
-
-      UpdateDirectionalRanges(local_state,bars[i]);
-      ConfirmWaveQuiet(local_state,bars[i],available);
-      ShiftRecentBars(local_state,bars[i]);
-
-      if(!has_event ||
-         !event.valid ||
-         event.direction!=parent.direction)
-         continue;
-
-      // Recognizer A: existing LAST_OPPOSITE_OB.
-      MqlRates opposite_origin;
-      ZeroMemory(opposite_origin);
-      if(FindLastOppositeCandleInSwingOrigin(child_tf,
-                                             event.direction,
-                                             event.meaningful_wave,
-                                             opposite_origin))
-         TryAddChildCandidateFromOrigin(parent,
-                                        child_tf,
-                                        lineage_freeze_at,
-                                        event,
-                                        opposite_origin,
-                                        "LAST_OPPOSITE_OB",
-                                        candidates);
-
-      // Recognizer B: all experimental FVG Candle1 OBs in the same lower-TF
-      // causal directional leg. They are additional candidates, not a
-      // replacement or priority rule over LAST_OPPOSITE_OB.
-      if(InpEnableFvgOriginObExperiment)
-        {
-         MqlRates fvg_origins[];
-         int fvg_count=CollectFvgOriginObBars(child_tf,
-                                              event.direction,
-                                              event.meaningful_wave,
-                                              event.break_bar,
-                                              fvg_origins);
-         for(int k=0;k<fvg_count;k++)
-            TryAddChildCandidateFromOrigin(parent,
-                                           child_tf,
-                                           lineage_freeze_at,
-                                           event,
-                                           fvg_origins[k],
-                                           "FVG_ORIGIN_OB",
-                                           candidates);
-        }
-     }
-
-   return true;
   }
 
 string BuildChildId(const V1SourceZone &parent,
@@ -5577,6 +5933,8 @@ string BuildChildId(const V1SourceZone &parent,
 void CandidateToSourcePreview(const V1SourceZone &parent,
                               const V1SourceZone &root,
                               const V1ChildCandidate &candidate,
+                              const datetime root_contact_at,
+                              const datetime root_contact_bar_open,
                               V1SourceZone &child)
   {
    child.valid=true;
@@ -5585,46 +5943,37 @@ void CandidateToSourcePreview(const V1SourceZone &parent,
    child.tf=candidate.tf;
    child.direction=candidate.direction;
    child.source_reason=candidate.source_reason;
-
    child.bottom=candidate.bottom;
    child.top=candidate.top;
    child.origin_open=candidate.origin_open;
    child.origin_close=candidate.origin_close;
-
-   child.origin_index=iBarShift(_Symbol,
-                                candidate.tf,
-                                candidate.origin_time,
-                                true);
+   child.origin_index=iBarShift(_Symbol,candidate.tf,candidate.origin_time,true);
    child.origin_time=candidate.origin_time;
    child.occurred_at=candidate.origin_time;
    child.available_at=candidate.available_at;
    child.origin_window_start=candidate.origin_window_start;
    child.origin_window_end=candidate.origin_window_end;
-
    child.origin_wave_id=candidate.meaningful_wave.id;
    child.meaningful_swing_id=candidate.meaningful_wave.id;
-   child.linked_structure_event_id=
-      candidate.linked_structure_event_id;
-
+   child.linked_structure_event_id=candidate.linked_structure_event_id;
    child.parent_zone_id=parent.id;
    child.root_zone_id=root.id;
    child.scenario_owner_id="";
-
    child.containment_type=candidate.containment_type;
    child.linked_event_type=candidate.linked_event_type;
-   child.linked_event_bar_open=
-      candidate.linked_event_bar_open;
-
+   child.linked_event_bar_open=candidate.linked_event_bar_open;
    child.strategy_state=V1_SOURCE_ACTIVE;
    child.invalidated_at=0;
    child.invalidation_reason="";
+   child.root_contact_at=root_contact_at;
+   child.root_contact_bar_open=root_contact_bar_open;
   }
 
 void LogChildCreated(const V1SourceZone &child,
                      const datetime lineage_frozen_at)
   {
    string detail=StringFormat(
-      "kind=CHILD state=ACTIVE direction=%s source_reason=%s parent_zone_id=%s root_zone_id=%s bottom=%.10f top=%.10f origin_open=%.10f origin_close=%.10f origin_time=%s origin_window_start=%s origin_window_end=%s origin_wave_id=%s linked_event_type=%s linked_structure_event_id=%s linked_event_bar_open=%s containment_type=%s child_available_at=%s lineage_frozen_at=%s scenario_owner_id=UNBOUND scenario_authority=false",
+      "kind=CHILD state=ACTIVE direction=%s source_reason=%s parent_zone_id=%s root_zone_id=%s bottom=%.10f top=%.10f origin_open=%.10f origin_close=%.10f origin_time=%s origin_window_start=%s origin_window_end=%s origin_wave_id=%s linked_event_type=%s linked_structure_event_id=%s linked_event_bar_open=%s containment_type=%s child_available_at=%s root_contact_at=%s root_contact_bar_open=%s post_contact=true lineage_frozen_at=%s scenario_owner_id=UNBOUND strategy_authority=false",
       DirectionName(child.direction),
       child.source_reason,
       child.parent_zone_id,
@@ -5642,6 +5991,8 @@ void LogChildCreated(const V1SourceZone &child,
       TimeToString(child.linked_event_bar_open,TIME_DATE|TIME_SECONDS),
       child.containment_type,
       TimeToString(child.available_at,TIME_DATE|TIME_SECONDS),
+      TimeToString(child.root_contact_at,TIME_DATE|TIME_SECONDS),
+      TimeToString(child.root_contact_bar_open,TIME_DATE|TIME_SECONDS),
       TimeToString(lineage_frozen_at,TIME_DATE|TIME_SECONDS));
 
    LogLine("CHILD_CREATED",
@@ -5670,6 +6021,7 @@ bool AddActiveChildSource(const V1SourceZone &child,
 
    g_sources[n]=child;
    g_children_created++;
+   g_post_contact_child_events++;
    LogChildCreated(g_sources[n],lineage_frozen_at);
    return true;
   }
@@ -5686,277 +6038,267 @@ void StoreRefinementLineage(const V1RefinementLineage &lineage)
    int n=ArraySize(g_refinements);
    if(ArrayResize(g_refinements,n+1,64)<0)
       return;
-
    g_refinements[n]=lineage;
   }
 
-void LogRefinementFrozen(const V1RefinementLineage &lineage)
+void LogPostContactRefinement(const string event_name,
+                              const V1RefinementLineage &lineage,
+                              const int tracker_status)
   {
-   string detail=StringFormat(
-      "status=%s child_count=%d final_child_id=%s path=%s frozen_at=%s snapshot_at=%s stop_reason=%s scenario_authority=false",
-      RefinementStatusName(lineage.status),
-      lineage.child_count,
-      lineage.final_child_id=="" ? "NA" : lineage.final_child_id,
-      lineage.path=="" ? lineage.root_zone_id : lineage.path,
-      TimeToString(lineage.frozen_at,TIME_DATE|TIME_SECONDS),
-      TimeToString(lineage.snapshot_at,TIME_DATE|TIME_SECONDS),
-      lineage.stop_reason=="" ? "NA" : lineage.stop_reason);
-
-   LogLine("REFINEMENT_FROZEN",
+   LogLine(event_name,
            "",
-           lineage.frozen_at,
+           lineage.snapshot_at,
            lineage.root_zone_id,
-           detail);
+           StringFormat("status=%s refinement_status=%s child_count=%d final_child_id=%s path=%s root_contact_at=%s root_contact_bar_open=%s frozen_at=%s stop_reason=%s post_contact=true scenario_authority=false sweep_authorization=DISABLED_PENDING_TIMING_REAUDIT",
+                        RootReactionStatusName(tracker_status),
+                        RefinementStatusName(lineage.status),
+                        lineage.child_count,
+                        lineage.final_child_id=="" ? "NA" : lineage.final_child_id,
+                        lineage.path,
+                        TimeToString(lineage.root_contact_at,TIME_DATE|TIME_SECONDS),
+                        TimeToString(lineage.root_contact_bar_open,TIME_DATE|TIME_SECONDS),
+                        TimeToString(lineage.frozen_at,TIME_DATE|TIME_SECONDS),
+                        lineage.stop_reason=="" ? "NA" : lineage.stop_reason));
   }
 
-bool BuildRefinementForRoot(const string root_id,
-                            const datetime snapshot_at)
+void PublishTrackerLineage(const int tracker_index,
+                           const datetime available_at,
+                           const string stop_reason,
+                           const string event_name)
   {
-   if(FindRefinementByRootId(root_id)>=0)
-      return true;
+   if(tracker_index<0 || tracker_index>=ArraySize(g_root_reactions))
+      return;
 
-   int root_index=FindActiveSourceById(root_id);
-   if(root_index<0 ||
-      g_sources[root_index].kind!=V1_SOURCE_ROOT)
-      return false;
-
-   V1SourceZone root=g_sources[root_index];
-   datetime freeze_at=root.available_at;
-   datetime snapshot=(snapshot_at>freeze_at ? snapshot_at : freeze_at);
-
-   V1SourceZone selected_sources[];
-   ArrayResize(selected_sources,0);
-
-   V1SourceZone current_parent=root;
-
-   int status=V1_REFINE_WAITING;
-   string stop_reason="";
-
-   int start_rank=TimeframeHierarchyRank(root.tf)+1;
-
-   for(int rank=start_rank;rank<=4;rank++)
-     {
-      ENUM_TIMEFRAMES child_tf=RefinementTimeframeByRank(rank);
-      if(child_tf==PERIOD_CURRENT)
-         continue;
-
-      V1ChildCandidate candidates[];
-      ArrayResize(candidates,0);
-
-      if(!DiscoverChildCandidates(current_parent,
-                                  child_tf,
-                                  freeze_at,
-                                  candidates))
-        {
-         status=(ArraySize(selected_sources)==0 ?
-                 V1_REFINE_NO_CHILD :
-                 V1_REFINE_READY);
-         stop_reason="REFINEMENT_REPLAY_ERROR_FAIL_CLOSED";
-         break;
-        }
-
-      int contained_count=0;
-      for(int i=0;i<ArraySize(candidates);i++)
-         if(candidates[i].containment_type=="CONTAINED")
-            contained_count++;
-
-      V1ChildCandidate preferred[];
-      ArrayResize(preferred,0);
-
-      for(int i=0;i<ArraySize(candidates);i++)
-        {
-         if(contained_count>0 &&
-            candidates[i].containment_type!="CONTAINED")
-            continue;
-
-         int n=ArraySize(preferred);
-         if(ArrayResize(preferred,n+1,16)<0)
-            continue;
-         preferred[n]=candidates[i];
-        }
-
-      if(ArraySize(preferred)==0)
-         continue;
-
-      if(ArraySize(preferred)>1)
-        {
-         if(ArraySize(selected_sources)==0)
-           {
-            status=V1_REFINE_AMBIGUOUS_FIRST;
-            stop_reason=StringFormat("AMBIGUOUS_%s_CHILD_COUNT_%d",
-                                     TfName(child_tf),
-                                     ArraySize(preferred));
-            g_refinements_ambiguous++;
-           }
-         else
-           {
-            status=V1_REFINE_STOPPED_AMBIGUOUS;
-            stop_reason=StringFormat("STOPPED_AT_AMBIGUOUS_%s_CHILD_COUNT_%d",
-                                     TfName(child_tf),
-                                     ArraySize(preferred));
-            g_refinements_ambiguous++;
-           }
-         break;
-        }
-
-      V1SourceZone preview;
-      CandidateToSourcePreview(current_parent,
-                               root,
-                               preferred[0],
-                               preview);
-
-      int n=ArraySize(selected_sources);
-      if(ArrayResize(selected_sources,n+1,8)<0)
-        {
-         status=(n==0 ? V1_REFINE_NO_CHILD : V1_REFINE_READY);
-         stop_reason="SELECTED_CHILD_ARRAY_RESIZE_FAILED";
-         break;
-        }
-
-      selected_sources[n]=preview;
-      current_parent=preview;
-     }
-
-   if(status==V1_REFINE_WAITING)
-     {
-      if(ArraySize(selected_sources)==0)
-        {
-         status=V1_REFINE_NO_CHILD;
-         stop_reason="NO_CAUSAL_LOWER_TF_CHILD";
-        }
-      else
-         status=V1_REFINE_READY;
-     }
-
-   string path=root.id;
-   string final_child_id="";
-
-   for(int i=0;i<ArraySize(selected_sources);i++)
-     {
-      path=path+">"+selected_sources[i].id;
-      final_child_id=selected_sources[i].id;
-     }
-
-   // Bootstrap snapshot can be later than the historical lineage-freeze time.
-   // Do not let a child that was later price-invalidated remain in the active
-   // working set. This does not use later invalidation to resolve ambiguity;
-   // ambiguity was already decided using freeze_at above.
-   bool active_at_snapshot=true;
-   for(int i=0;i<ArraySize(selected_sources);i++)
-     {
-      if(!GeometryActiveThrough(selected_sources[i].tf,
-                                selected_sources[i].direction,
-                                selected_sources[i].bottom,
-                                selected_sources[i].top,
-                                freeze_at,
-                                snapshot))
-        {
-         active_at_snapshot=false;
-         stop_reason="SELECTED_CHILD_INVALID_AT_SNAPSHOT";
-         status=V1_REFINE_INVALIDATED;
-         break;
-        }
-     }
-
-   if(active_at_snapshot &&
-      ArraySize(selected_sources)>0 &&
-      status!=V1_REFINE_AMBIGUOUS_FIRST &&
-      status!=V1_REFINE_NO_CHILD)
-     {
-      for(int i=0;i<ArraySize(selected_sources);i++)
-        {
-         if(!AddActiveChildSource(selected_sources[i],freeze_at))
-           {
-            status=V1_REFINE_INVALIDATED;
-            stop_reason="CHILD_PUBLICATION_FAILED";
-            active_at_snapshot=false;
-            break;
-           }
-
-        }
-     }
-
+   V1RootReactionTracker tracker=g_root_reactions[tracker_index];
    V1RefinementLineage lineage;
    lineage.valid=true;
-   lineage.root_zone_id=root.id;
-   lineage.final_child_id=final_child_id;
-   lineage.path=path;
-   lineage.child_count=ArraySize(selected_sources);
-   lineage.status=status;
-   lineage.frozen_at=freeze_at;
-   lineage.snapshot_at=snapshot;
+   lineage.root_zone_id=tracker.root_zone_id;
+   lineage.final_child_id=tracker.final_child_id;
+   lineage.path=tracker.path;
+   lineage.child_count=tracker.child_count;
+
+   if(tracker.status==V1_ROOT_WATCH_AMBIGUOUS_FIRST)
+      lineage.status=V1_REFINE_AMBIGUOUS_FIRST;
+   else if(tracker.status==V1_ROOT_WATCH_STOPPED_AMBIGUOUS)
+      lineage.status=V1_REFINE_STOPPED_AMBIGUOUS;
+   else if(tracker.status==V1_ROOT_WATCH_INVALIDATED)
+      lineage.status=V1_REFINE_INVALIDATED;
+   else if(tracker.child_count>0)
+      lineage.status=V1_REFINE_READY;
+   else
+      lineage.status=V1_REFINE_WAITING;
+
+   lineage.frozen_at=(tracker.child_count>0 ? tracker.lineage_updated_at : 0);
+   lineage.snapshot_at=available_at;
    lineage.stop_reason=stop_reason;
    lineage.preplan_contact_at=0;
-
+   lineage.root_contact_at=tracker.root_contact_at;
+   lineage.root_contact_bar_open=tracker.root_contact_bar_open;
    StoreRefinementLineage(lineage);
+   LogPostContactRefinement(event_name,lineage,tracker.status);
+  }
 
-   if(status==V1_REFINE_READY ||
-      status==V1_REFINE_STOPPED_AMBIGUOUS)
+void ProcessReactionStateForTracker(const int tracker_index,
+                                    V1StructureState &state,
+                                    const ENUM_TIMEFRAMES child_tf,
+                                    const MqlRates &bar,
+                                    const datetime available_at)
+  {
+   if(tracker_index<0 || tracker_index>=ArraySize(g_root_reactions))
+      return;
+
+   if(g_root_reactions[tracker_index].status!=V1_ROOT_WATCH_DISCOVERING_CHILD &&
+      g_root_reactions[tracker_index].status!=V1_ROOT_WATCH_READY)
+      return;
+
+   if(available_at<=g_root_reactions[tracker_index].root_contact_at)
+      return;
+
+   state.processed_bars++;
+   EnsureLegStart(state,bar);
+
+   V1RefinementEvent event;
+   bool has_event=EvaluateLocalRefinementBreak(state,bar,available_at,event);
+   UpdateDirectionalRanges(state,bar);
+   ConfirmWaveQuiet(state,bar,available_at);
+   ShiftRecentBars(state,bar);
+
+   if(!has_event || !event.valid ||
+      event.direction!=g_root_reactions[tracker_index].direction)
+      return;
+
+   int root_index=FindActiveSourceById(g_root_reactions[tracker_index].root_zone_id);
+   int parent_index=FindActiveSourceById(g_root_reactions[tracker_index].current_parent_zone_id);
+   if(root_index<0 || parent_index<0)
+     {
+      InvalidatePostContactRootTracker(g_root_reactions[tracker_index].root_zone_id,
+                                       available_at,
+                                       "REQUIRED_PARENT_NOT_ACTIVE");
+      return;
+     }
+
+   V1SourceZone root=g_sources[root_index];
+   V1SourceZone parent=g_sources[parent_index];
+   if(TimeframeHierarchyRank(child_tf)<=TimeframeHierarchyRank(parent.tf))
+      return;
+
+   datetime causal_after=(parent.kind==V1_SOURCE_ROOT ?
+                          g_root_reactions[tracker_index].root_contact_at :
+                          parent.available_at);
+
+   V1ChildCandidate candidates[];
+   ArrayResize(candidates,0);
+
+   MqlRates opposite_origin;
+   ZeroMemory(opposite_origin);
+   if(FindLastOppositeCandleInSwingOrigin(child_tf,
+                                          event.direction,
+                                          event.meaningful_wave,
+                                          opposite_origin))
+      TryAddPostContactChildCandidate(g_root_reactions[tracker_index],
+                                      parent,
+                                      child_tf,
+                                      causal_after,
+                                      event,
+                                      opposite_origin,
+                                      "LAST_OPPOSITE_OB",
+                                      candidates);
+
+   if(InpEnableFvgOriginObExperiment)
+     {
+      MqlRates fvg_origins[];
+      int fvg_count=CollectFvgOriginObBars(child_tf,
+                                           event.direction,
+                                           event.meaningful_wave,
+                                           event.break_bar,
+                                           fvg_origins);
+      for(int k=0;k<fvg_count;k++)
+         TryAddPostContactChildCandidate(g_root_reactions[tracker_index],
+                                         parent,
+                                         child_tf,
+                                         causal_after,
+                                         event,
+                                         fvg_origins[k],
+                                         "FVG_ORIGIN_OB",
+                                         candidates);
+     }
+
+   int contained_count=0;
+   for(int i=0;i<ArraySize(candidates);i++)
+      if(candidates[i].containment_type=="CONTAINED")
+         contained_count++;
+
+   V1ChildCandidate preferred[];
+   ArrayResize(preferred,0);
+   for(int i=0;i<ArraySize(candidates);i++)
+     {
+      if(contained_count>0 && candidates[i].containment_type!="CONTAINED")
+         continue;
+      int n=ArraySize(preferred);
+      if(ArrayResize(preferred,n+1,16)<0)
+         continue;
+      preferred[n]=candidates[i];
+     }
+
+   if(ArraySize(preferred)==0)
+      return;
+
+   if(ArraySize(preferred)>1)
+     {
+      if(g_root_reactions[tracker_index].child_count==0)
+         g_root_reactions[tracker_index].status=V1_ROOT_WATCH_AMBIGUOUS_FIRST;
+      else
+         g_root_reactions[tracker_index].status=V1_ROOT_WATCH_STOPPED_AMBIGUOUS;
+
+      g_root_reactions[tracker_index].lineage_updated_at=available_at;
+      g_refinements_ambiguous++;
+      PublishTrackerLineage(tracker_index,
+                            available_at,
+                            StringFormat("AMBIGUOUS_%s_POST_CONTACT_CHILD_COUNT_%d",
+                                         TfName(child_tf),
+                                         ArraySize(preferred)),
+                            "REFINEMENT_FROZEN");
+      return;
+     }
+
+   V1SourceZone child;
+   CandidateToSourcePreview(parent,
+                            root,
+                            preferred[0],
+                            g_root_reactions[tracker_index].root_contact_at,
+                            g_root_reactions[tracker_index].root_contact_bar_open,
+                            child);
+
+   if(child.available_at<=g_root_reactions[tracker_index].root_contact_at ||
+      child.origin_time<causal_after)
+      return;
+
+   if(!AddActiveChildSource(child,available_at))
+     {
+      g_root_reactions[tracker_index].status=V1_ROOT_WATCH_ERROR;
+      PublishTrackerLineage(tracker_index,
+                            available_at,
+                            "CHILD_PUBLICATION_FAILED",
+                            "REFINEMENT_FROZEN");
+      return;
+     }
+
+   bool first_child=(g_root_reactions[tracker_index].child_count==0);
+   g_root_reactions[tracker_index].child_count++;
+   g_root_reactions[tracker_index].final_child_id=child.id;
+   g_root_reactions[tracker_index].current_parent_zone_id=child.id;
+   g_root_reactions[tracker_index].path+=">"+child.id;
+   g_root_reactions[tracker_index].lineage_updated_at=available_at;
+   g_root_reactions[tracker_index].status=V1_ROOT_WATCH_READY;
+
+   if(first_child)
       g_refinements_ready++;
-   else if(status==V1_REFINE_NO_CHILD)
-      g_refinements_no_child++;
-   else if(status==V1_REFINE_AMBIGUOUS_FIRST)
-     {
-      // Counter already incremented above.
-     }
 
-   LogRefinementFrozen(lineage);
-   return true;
+   PublishTrackerLineage(tracker_index,
+                         available_at,
+                         first_child ? "FIRST_POST_CONTACT_CHILD_READY" : "DEEPER_POST_CONTACT_CHILD_READY",
+                         first_child ? "REFINEMENT_FROZEN" : "REFINEMENT_UPDATED");
   }
 
-void BuildRefinementsForActiveRoots(const datetime snapshot_at)
+void ProcessPostContactChildBar(const int tf_index,
+                                const MqlRates &bar,
+                                const datetime available_at)
   {
-   string root_ids[];
-   ArrayResize(root_ids,0);
+   if(tf_index<2 || tf_index>4)
+      return;
 
-   for(int i=0;i<ArraySize(g_sources);i++)
+   ENUM_TIMEFRAMES child_tf=g_timeframes[tf_index];
+
+   for(int i=0;i<ArraySize(g_root_reactions);i++)
      {
-      if(!g_sources[i].valid ||
-         g_sources[i].kind!=V1_SOURCE_ROOT ||
-         g_sources[i].strategy_state!=V1_SOURCE_ACTIVE)
+      if(!g_root_reactions[i].valid ||
+         (g_root_reactions[i].status!=V1_ROOT_WATCH_DISCOVERING_CHILD &&
+          g_root_reactions[i].status!=V1_ROOT_WATCH_READY))
          continue;
 
-      int n=ArraySize(root_ids);
-      if(ArrayResize(root_ids,n+1,32)<0)
+      if(g_root_reactions[i].root_contact_at<=0 ||
+         available_at<=g_root_reactions[i].root_contact_at)
          continue;
-      root_ids[n]=g_sources[i].id;
+
+      int parent_index=FindActiveSourceById(g_root_reactions[i].current_parent_zone_id);
+      if(parent_index<0)
+        {
+         InvalidatePostContactRootTracker(g_root_reactions[i].root_zone_id,
+                                          available_at,
+                                          "CURRENT_PARENT_NOT_ACTIVE");
+         continue;
+        }
+
+      if(TimeframeHierarchyRank(child_tf)<=TimeframeHierarchyRank(g_sources[parent_index].tf))
+         continue;
+
+      if(tf_index==2)
+         ProcessReactionStateForTracker(i,g_root_reactions[i].m30_state,child_tf,bar,available_at);
+      else if(tf_index==3)
+         ProcessReactionStateForTracker(i,g_root_reactions[i].m15_state,child_tf,bar,available_at);
+      else
+         ProcessReactionStateForTracker(i,g_root_reactions[i].m5_state,child_tf,bar,available_at);
      }
-
-   for(int i=0;i<ArraySize(root_ids);i++)
-      BuildRefinementForRoot(root_ids[i],snapshot_at);
-  }
-
-void QueueRefinementRoot(const string root_id)
-  {
-   if(root_id=="")
-      return;
-
-   for(int i=0;i<ArraySize(g_pending_refinement_root_ids);i++)
-      if(g_pending_refinement_root_ids[i]==root_id)
-         return;
-
-   int n=ArraySize(g_pending_refinement_root_ids);
-   if(ArrayResize(g_pending_refinement_root_ids,n+1,16)<0)
-      return;
-
-   g_pending_refinement_root_ids[n]=root_id;
-  }
-
-void ProcessPendingRefinements(const datetime snapshot_at)
-  {
-   if(ArraySize(g_pending_refinement_root_ids)==0)
-      return;
-
-   string pending[];
-   ArrayResize(pending,ArraySize(g_pending_refinement_root_ids));
-
-   for(int i=0;i<ArraySize(g_pending_refinement_root_ids);i++)
-      pending[i]=g_pending_refinement_root_ids[i];
-
-   ArrayResize(g_pending_refinement_root_ids,0);
-
-   for(int i=0;i<ArraySize(pending);i++)
-      BuildRefinementForRoot(pending[i],snapshot_at);
   }
 
 int CountActiveChildren(const ENUM_TIMEFRAMES tf)
@@ -6008,12 +6350,27 @@ void LogRefinementSnapshot(const int tf_index,
          invalidated++;
      }
 
+   int waiting_contact=0;
+   int discovering_child=0;
+   int prior_touch_ineligible=0;
+   for(int i=0;i<ArraySize(g_root_reactions);i++)
+     {
+      if(!g_root_reactions[i].valid || g_root_reactions[i].root_tf!=root_tf)
+         continue;
+      if(g_root_reactions[i].status==V1_ROOT_WATCH_WAITING_CONTACT) waiting_contact++;
+      else if(g_root_reactions[i].status==V1_ROOT_WATCH_DISCOVERING_CHILD) discovering_child++;
+      else if(g_root_reactions[i].status==V1_ROOT_WATCH_INELIGIBLE_PRIOR_TOUCH) prior_touch_ineligible++;
+     }
+
    string detail=StringFormat(
-      "ready=%d no_child=%d ambiguous_first=%d invalidated=%d active_m30_children=%d active_m15_children=%d active_m5_children=%d structural_reaction=DEFERRED_TO_REFINED_SOURCE_REACTION_REPLAY",
+      "ready=%d no_child_terminal=%d ambiguous_first=%d invalidated=%d waiting_root_contact=%d discovering_post_contact_child=%d prior_touch_ineligible=%d active_m30_children=%d active_m15_children=%d active_m5_children=%d historical_child_authorization=false sweep_authorization=DISABLED_PENDING_TIMING_REAUDIT",
       ready,
       no_child,
       ambiguous,
       invalidated,
+      waiting_contact,
+      discovering_child,
+      prior_touch_ineligible,
       CountActiveChildren(PERIOD_M30),
       CountActiveChildren(PERIOD_M15),
       CountActiveChildren(PERIOD_M5));
@@ -6066,20 +6423,23 @@ void ProcessClosedBar(const int tf_index,
    if(new_wave)
      {
       TryCreateDefendedRangeLiquidity(tf_index,bar,available_at);
-      // A structural-reaction pool requires a pre-existing scenario-owned OB,
-      // an actual source touch, and a later confirmed compatible reaction wave.
-      TryCreateStructuralReactionLiquidity(tf_index,available_at);
+      // D-122 timing correction: Structural-Reaction strategy ownership is
+      // explicitly disabled until the post-contact child / sweep anchor is
+      // re-audited. The Phase-2 liquidity detector remains untouched.
+      // TryCreateStructuralReactionLiquidity(tf_index,available_at);
      }
 
    ShiftRecentBars(g_structure[tf_index],bar);
 
+   if(tf_index==2 || tf_index==3 || tf_index==4)
+      ProcessPostContactChildBar(tf_index,bar,available_at);
+
    if(tf_index==5)
      {
-      // Frozen order: existing PLAN/source first, then current closed M1 bar
-      // may establish contact and authorize a mature sweep. The same bar is
-      // still available to the PREPLAN audit for lineages that have no PLAN.
-      ProcessScenarioSourceContactAndSweep(bar,available_at);
-      AuditPrePlanSourceContact(bar,available_at);
+      // D122A stops at physical Root contact + post-contact child lineage.
+      // Sweep/CHoCH authorization is intentionally disabled until Section 6.6
+      // timing is explicitly frozen.
+      ProcessPostContactRootContacts(bar,available_at);
      }
 
    if(tf_index==1 || tf_index==2)
@@ -6161,26 +6521,17 @@ bool BootstrapStructureCore()
 
    g_in_bootstrap_replay=false;
 
-   // Hierarchical bootstrap: first reconstruct active H1/M30/M15 Roots,
-   // then perform targeted lower-TF replay only for those surviving Roots.
-   BuildRefinementsForActiveRoots(now);
-
-   // A source already crossed after its refinement freeze cannot receive a
-   // retrospective scenario at startup.
-   AuditBootstrapPrePlanContacts(now);
-   RefreshScenarioLayer(now,true);
-
-   // A historical PLAN that starts the runtime while the current quote is
-   // already inside its final source must first observe a closed M1 exit and
-   // only then a later re-entry. This prevents startup from treating an
-   // already-in-progress source interaction as a fresh first contact.
-   InitializeStartupSourceReentryGuards(now);
+   // D-122 bootstrap: retain active HTF Roots, but never decompose their
+   // Root-forming historical displacement into current children. Only Roots
+   // with no closed-M1 touch after Root availability enter the fresh-reaction
+   // watchlist. Actual child discovery begins after a new runtime Root contact.
+   EnsurePostContactRootWatches(now,true);
 
    g_init_state=V1_INIT_ACTIVE_MAP;
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
    g_init_state=V1_INIT_SOURCE_CONTEXT;
-   LogLine("INIT_STATE","",now,"","PHASE4C_SOURCE_CONTACT_SWEEP_READY_CHOCH_NOT_YET_ATTACHED");
+   LogLine("INIT_STATE","",now,"","D122A_ROOT_WATCH_POST_CONTACT_CHILD_READY_SCENARIO_SWEEP_DISABLED");
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -6219,11 +6570,13 @@ bool BootstrapStructureCore()
       CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
 
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_PHASE4C_SOURCE_SWEEP ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d",
+           StringFormat("READY_D122A_POST_CONTACT_CHILD ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d root_watches_created=%I64d prior_touch_ineligible=%I64d scenario_authorization=false sweep_authorization=false",
                         TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
                         h4_long_horizon_count,
                         ArraySize(g_liquidity),
-                        ArraySize(g_sources)));
+                        ArraySize(g_sources),
+                        g_root_watches_created,
+                        g_root_watches_prior_touch_rejected));
 
    for(int i=0;i<4;i++)
      {
@@ -6234,7 +6587,6 @@ bool BootstrapStructureCore()
      }
 
    LogMapSnapshot(now,"BOOTSTRAP_COMPLETE",true);
-   LogScenarioSnapshot(now);
 
    return true;
   }
@@ -6381,18 +6733,13 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
         {
          if(group_time!=0)
            {
-            // Dependent source refinement and PLAN evaluation occur only after
-            // every H4/H1/M30/M15/M5/M1 close sharing the old timestamp.
-            ProcessPendingRefinements(group_time);
-            RefreshScenarioLayer(group_time);
+            // Register Roots only after the entire previous same-timestamp MTF
+            // group has completed. A Root created in that group therefore cannot
+            // self-contact using price movement that occurred before availability.
+            EnsurePostContactRootWatches(group_time,false);
            }
 
          group_time=events[i].available_at;
-
-         // Snapshot mature candidate pools at the beginning of the MTF group,
-         // before a higher-TF close at this same timestamp can remove a pool
-         // that was still valid when the M1 contact bar opened.
-         PrepareGroupContactPoolSnapshot(group_time);
         }
 
       ProcessClosedBar(events[i].tf_index,
@@ -6401,12 +6748,10 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
      }
 
    if(group_time!=0)
-     {
-      ProcessPendingRefinements(group_time);
-      RefreshScenarioLayer(group_time);
-     }
+      EnsurePostContactRootWatches(group_time,false);
 
-   // M1 CHoCH / execution / order authorization remains deferred.
+   // Scenario / sweep / M1 CHoCH / execution / order authorization remains
+   // intentionally disabled in D122A.
   }
 
 //+------------------------------------------------------------------+
@@ -6444,7 +6789,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.70 property_version=1.00 magic=%I64d phase=SOURCE_SWEEP_CORE fvg_origin_ob_experiment=%s",
+           StringFormat("build=0.80 property_version=1.00 magic=%I64d phase=D122A_POST_CONTACT_REFINEMENT_CORE fvg_origin_ob_experiment=%s",
                         InpMagicNumber,
                         InpEnableFvgOriginObExperiment ? "true" : "false"));
 
@@ -6458,7 +6803,7 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d children_created=%I64d children_invalidated=%I64d refinements_ready=%I64d refinements_no_child=%I64d refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_ambiguous=%I64d scenarios_no_objective=%I64d preplan_contact_rejected=%I64d objective_candidates_frozen=%I64d source_contacts=%I64d eligible_sweep_pools_frozen=%I64d authorized_sweep_events=%I64d authorized_sweep_pools=%I64d strategy_m1_pool_consumptions=%I64d structural_reaction_created=%I64d",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d children_created=%I64d post_contact_child_events=%I64d children_invalidated=%I64d refinements_ready=%I64d refinements_no_child=%I64d refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d source_contacts_old_phase4c=%I64d authorized_sweep_events_old_phase4c=%I64d structural_reaction_created_old_phase4c=%I64d",
                         reason,
                         InitStateName(g_init_state),
                         ArraySize(g_liquidity),
@@ -6469,7 +6814,11 @@ void OnDeinit(const int reason)
                         g_roots_created,
                         g_roots_price_invalidated,
                         g_roots_structure_invalidated,
+                        g_root_watches_created,
+                        g_root_watches_prior_touch_rejected,
+                        g_root_contacts_observed,
                         g_children_created,
+                        g_post_contact_child_events,
                         g_children_invalidated,
                         g_refinements_ready,
                         g_refinements_no_child,
@@ -6481,16 +6830,8 @@ void OnDeinit(const int reason)
                         g_permission_closes,
                         ReversalPermissionName(g_map.reversal_permission),
                         g_scenarios_planned,
-                        g_scenarios_canceled,
-                        g_scenarios_ambiguous,
-                        g_scenarios_no_objective,
-                        g_scenarios_precontact_rejected,
-                        g_objective_candidates_frozen,
                         g_source_contacts,
-                        g_eligible_sweep_pools_frozen,
                         g_authorized_sweep_events,
-                        g_authorized_sweep_pools,
-                        g_strategy_m1_pool_consumptions,
                         g_structural_reaction_created));
 
    if(g_log_handle!=INVALID_HANDLE)
@@ -6524,7 +6865,7 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              "Phase4C trading disabled; source-contact/sweep authorization active; M1 CHoCH deferred");
+              "D122A trading disabled; Root-contact observation and post-contact child discovery active; scenario/sweep/CHoCH authorization disabled");
      }
 
    ProcessRuntimeClosedBars((datetime)tick.time);
