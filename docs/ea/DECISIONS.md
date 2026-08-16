@@ -3914,3 +3914,211 @@ and downstream FVG / Entry / exposure arbitration / profitability are not yet te
 Do not select the recognizer variant by raw branch count. Carry both variants
 through the same FVG/execution pipeline and compare completed deterministic
 setups first.
+
+
+---
+
+## D-128A — FVG is an independent detector fact; scenario freezes only the causal fresh widest set
+
+Status: ACTIVE / IMPLEMENTED / VALIDATION DEFERRED TO INTEGRATED BUILD 1.50
+
+D-127 established the architecture:
+
+```text
+DETECT -> SEQUENCE -> EXECUTE
+```
+
+D-128A applies the same separation to M1 FVG instead of placing another compound
+filter inside `WAITING_FVG`.
+
+### Detector
+
+Global M1 FVG geometry is scenario-independent:
+
+```text
+Bullish: Candle3.low > Candle1.high
+Bearish: Candle3.high < Candle1.low
+```
+
+The three bars must be clock-contiguous M1 bars. Candle3 close is the FVG
+`available_at`. A price void spanning a missing/session interval is rejected as
+`SESSION_OR_DATA_GAP_FVG`.
+
+### Scenario causal boundary
+
+At `SCENARIO_CHOCH_ACCEPTED`, the candidate set is frozen from detector facts that
+satisfy only:
+
+```text
+direction == scenario.direction
+FVG.available_at > accepted Sweep close
+FVG.available_at <= accepted CHoCH close
+no post-formation/pre-selection retest
+```
+
+`Candle1 >= Sweep` is deliberately **not** required. A valid causal pattern may
+use a pre-Sweep Candle1, the Sweep/reversal as Candle2, and confirm the FVG only
+when Candle3 closes afterward.
+
+Same-Sweep-close FVG availability is fail-closed because closed M1 OHLC cannot
+prove Sweep-before-FVG ordering inside that bar.
+
+No minimum width, ATR/body/displacement score, Root re-touch, child confirmation,
+or extra candle-colour sequence is added.
+
+### Freshness
+
+Formation Candle3 is not its own retest. Every later completed M1 bar up to and
+including a later CHoCH bar is checked for:
+
+```text
+bar.high >= FVG.bottom
+AND
+bar.low <= FVG.top
+```
+
+Any such touch before selection excludes that candidate as `PRE_SELECTION_RETEST`.
+
+### Selection
+
+Eligible bounds are normalized to the symbol tick grid. Width is compared in
+integer tick units. The unique maximum width wins. Exact max-width tie:
+
+```text
+AMBIGUOUS_EXECUTION_FVG -> NO_TRADE
+```
+
+No eligible candidate:
+
+```text
+NO_CAUSAL_FRESH_FVG -> NO_TRADE
+```
+
+Unique widest candidate:
+
+```text
+SCENARIO_FVG_SELECTED
+-> WAITING_EXECUTION_GEOMETRY
+```
+
+### Isolation boundary
+
+Build `1.20` intentionally does not calculate or submit:
+
+```text
+Entry
+SL
+Final TP
+broker preflight
+pending order
+fill/cancel/reconciliation
+```
+
+Reason: FVG causality/freshness/widest selection must pass independently before
+execution geometry is attached. This also preserves the project's rule that a
+stage contributes one concept rather than hiding another multi-filter pipeline.
+
+
+---
+
+## D-128B — Selected FVG deterministically fixes Entry/SL and frozen-family TP
+
+Status: ACTIVE / IMPLEMENTED IN BUILD 1.50 / LOCAL VALIDATION PENDING
+
+After `SCENARIO_FVG_SELECTED`, no new strategy detector is introduced. Geometry is direct:
+
+```text
+LONG Entry  = bullish FVG.top
+LONG raw SL = FVG.bottom - 0.20 * FVG.width
+LONG normalized SL = greatest valid symbol tick <= raw SL
+
+SHORT Entry  = bearish FVG.bottom
+SHORT raw SL = FVG.top + 0.20 * FVG.width
+SHORT normalized SL = smallest valid symbol tick >= raw SL
+```
+
+The PLAN-time objective family is then scanned in its frozen nearest-first order. Consumed/nonpositive-reward candidates are skipped; planned R `<1` remains intermediate; the first planned R `>=1` becomes Final TP. No max-R optimization or objective reordering is allowed.
+Eligibility uses integer symbol-tick distances for the `1R` boundary (`reward_ticks >= risk_ticks`), avoiding any floating epsilon that could silently admit a mathematically sub-1R objective. `planned_r` is reported from those tick counts.
+
+---
+
+## D-129 — Fully-authorized same-epoch multi-Root branches fail closed until provenance merge is specified
+
+Status: ACTIVE / OPERATIONAL FREEZE / IMPLEMENTED IN BUILD 1.50
+
+V1 already freezes one accepted first-position exposure per symbol+magic and forbids arbitrary risk-slot scoring. D-127/FVG-origin testing demonstrated that several Root branches can converge on the same CHoCH.
+
+Current baseline therefore uses:
+
+```text
+fully_authorized_branch_count == 1
+→ execution may proceed
+
+fully_authorized_branch_count > 1
+→ all branches NO_TRADE
+→ AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+```
+
+This applies to same-direction as well as opposite-direction branches. It is not an extra Sweep/CHoCH/FVG quality filter; it is a one-exposure execution collision rule after complete strategy authorization.
+
+Forbidden tie-breaks:
+
+```text
+array order
+nearest/latest Root
+widest/narrowest Root
+best RR
+quality score
+manual visual preference
+```
+
+A future contributor/provenance merge may be researched separately, but it must define which Root(s) own pending survival after the merge before it can replace this fail-closed baseline.
+
+---
+
+## D-130 — Build 1.50 submits frozen geometry only in Strategy Tester
+
+Status: ACTIVE / IMPLEMENTED / LOCAL VALIDATION PENDING
+
+After exactly one fully-authorized branch survives arbitration, execution preflight checks symbol trade mode, limit/SL/TP support, tick grid, StopsLevel, minimum-volume parity, persistent GTC capability, current trade session, and `OrderCheck`.
+
+```text
+sizing = SYMBOL_VOLUME_MIN
+order = BUY_LIMIT / SELL_LIMIT
+time = ORDER_TIME_GTC
+filling = ORDER_FILLING_RETURN
+```
+
+No broker constraint may move Entry, tighten/widen the strategy SL, replace the selected FVG, or replace TP. Failure is terminal `EXECUTION_INFEASIBLE` or `ORDER_REJECTED`; the old signal is never delayed/retried.
+
+To enforce “same decision cycle” without an arbitrary age threshold, pending submission additionally requires `current M1 open == CHoCH bar open + 60 sec`. Closed-bar catch-up of older signals is therefore fail-closed rather than submitted late.
+
+Live execution remains hard-blocked; `OrderSend` authorization requires Strategy Tester environment.
+
+---
+
+## D-131 — Pending lifecycle uses only frozen objective, Root, and direction authority before fill
+
+Status: ACTIVE / IMPLEMENTED / LOCAL VALIDATION PENDING
+
+Pending survival authority remains exactly:
+
+```text
+final objective not delivered
+required HTF Root remains valid
+scenario direction authority remains valid
+```
+
+Objective delivery is checked using the frozen liquidity state and live side-specific quote (`LONG: Bid`, `SHORT: Ask`). Root/direction invalidation is inherited from the existing closed-bar scenario cancellation logic.
+
+On cancellation the strategy state becomes `CANCELED` first, then the EA requests `TRADE_ACTION_REMOVE`. Freeze/server rejection does not revive strategy validity; a later fill after failed cancellation is `EXECUTION_DIVERGENCE`.
+
+After valid fill, source/owner/M1 changes no longer cancel the position. Broker/server SL/TP and actual deal history determine the economic result. `OnTradeTransaction` is only a reconciliation trigger; callback arrival order is not treated as strategy causality.
+
+Startup with an already-existing symbol+magic pending/position enters `INIT_EXECUTION_RECOVERY_REQUIRED` rather than guessing prior scenario provenance.
+
+Partial fill is treated as an execution-state exception, not a second strategy signal. If
+a position is present while a residual pending from the same first-position order remains,
+the position keeps its frozen server SL/TP and the residual receives one cancel request.
+Residual survival/cancel rejection is `EXECUTION_DIVERGENCE`; the exposure lock remains
+held and no invented retry/re-entry path is created.

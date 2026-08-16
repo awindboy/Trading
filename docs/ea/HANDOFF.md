@@ -1,8 +1,9 @@
 # EA Development Handoff
 
-Last updated: 2026-08-16
-Status: D-127 LINEAR TRIGGER PIPELINE VALIDATED / FVG-ORIGIN OB EXPERIMENT CAUSAL SMOKE PASS
-Current phase: Causal FVG stage — compare LAST_OPPOSITE_OB baseline vs FVG_ORIGIN_OB experiment from WAITING_FVG onward
+Last updated: 2026-08-17
+Status: INTEGRATED BASELINE BUILD 1.50 IMPLEMENTED / LOCAL COMPILE + FINAL A/B REAL-TICK VALIDATION PENDING
+Current phase: D-128A..D-131 integrated — FVG -> Entry/SL -> frozen TP -> arbitration -> tester pending -> lifecycle/reconciliation
+Execution safety: same-cycle submission guard + objective/Root/direction pending cancellation + partial-fill residual cancellation/divergence lock
 
 ## Goal
 
@@ -112,8 +113,20 @@ Phase 5A M1 CHoCH
 → original baseline scenario rows remain exact subset of experiment-on run
 → no Root-reintersection / sweep-family / sweep-time-reference / child nested trigger gate
 → accepted scenario CHoCH -> WAITING_FVG
-→ FVG / orders still disabled
+→ D-127 validation build itself had FVG/order authorization disabled
 → FVG_ORIGIN_OB remains EXPERIMENTAL; do not treat 18 branches as 18 trades
+
+Phase 5B / D-128A causal M1 FVG
+→ IMPLEMENTED in internal build 1.20 / local validation pending
+→ M1_FVG_DETECTED is global detector-only geometry with strict M1 clock continuity
+→ scenario eligibility = same direction + FVG available strictly after accepted Sweep + available by CHoCH + no pre-selection retest
+→ Candle1 may precede Sweep; FVG must first become available after Sweep
+→ unique widest selected after tick normalization
+→ exact widest tie = AMBIGUOUS_EXECUTION_FVG / NO_TRADE
+→ no candidate = NO_CAUSAL_FRESH_FVG / NO_TRADE
+→ selected -> WAITING_EXECUTION_GEOMETRY
+→ Entry / SL / Final TP / broker order path remain disabled
+→ validate with both FVG_ORIGIN_OB=false and true before D-128B
 
 Phase 4A H1/M30 map / reversal permission
 → REAL-TICK EXTENDED TEST PASS
@@ -572,6 +585,39 @@ profitability = NOT TESTED
 
 Carry both recognizer modes through causal FVG and execution validation before
 promoting either interpretation on performance grounds.
+
+
+## Integrated baseline checkpoint — build 1.50
+
+Current code path now reaches the complete first-position baseline:
+
+```text
+Objective / Map
+→ pre-existing HTF Root
+→ Root contact
+→ detected direction-compatible Sweep
+→ later detected M1 CHoCH
+→ causal fresh widest M1 FVG
+→ FVG near-side Entry
+→ outward-normalized 20% FVG-width SL
+→ frozen objective family nearest-first planned-R>=1 TP
+→ same-epoch authorization arbitration
+→ Strategy Tester preflight + GTC pending
+→ fill or causal pending cancellation
+→ broker-history reconciliation
+```
+
+Important boundaries:
+
+- live trading hard-blocked; tester orders only.
+- no new hidden Sweep/CHoCH/FVG quality gate.
+- any `>1` fully-authorized branch in one epoch is explicit `AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION` until provenance-merge semantics are separately frozen.
+- already accepted exposure blocks later first-position chains; blocked chains are not delayed.
+- before fill only objective / Root / direction authority may cancel.
+- after fill source/direction changes do not discretionary-close the position.
+- startup with pre-existing symbol+magic exposure requires recovery instead of guessed provenance.
+
+Next action is **one final local validation cycle**, not another implementation split: compile build 1.50, run January `FVG_ORIGIN_OB=false`, then identical `true`, and audit the entire funnel through orders/deals.
 
 ## Do Not Do Yet
 

@@ -1348,11 +1348,24 @@ server cancellation failure는
 strategy invalidation이 아니라
 execution result로 별도 기록한다.
 
+Current build 1.50의 자동 주문 제출은 Strategy Tester에서만 허용한다. `MQL_TESTER=false` 환경에서는 detector/scenario audit는 가능하지만 live trade request는 hard-block한다.
+
 Pending이 fill된 뒤에는
 처음 freeze한 SL / TP가 실험 결과를 결정한다.
 
 Fill 후 source / owner / M1 state 변화로
 포지션을 임의 종료하지 않는다.
+
+부분체결로 position이 생긴 뒤 동일 first-position order의 residual pending이 남아 있으면
+이를 새로운 전략 진입기회로 보지 않는다. 이미 체결된 position은 frozen SL/TP로 유지하고,
+잔량 pending은 1회 취소 요청한다. residual cancellation 실패 또는 잔량이 계속 남는 경우:
+
+```text
+EXECUTION_DIVERGENCE
+reason = PARTIAL_FILL_WITH_RESIDUAL_PENDING
+```
+
+로 기록하고 symbol+magic exposure lock을 유지한다. 임의 재주문이나 잔량 재생성은 하지 않는다.
 
 ### Session / market-gap handling
 
@@ -1413,6 +1426,8 @@ EXECUTION_INFEASIBLE
 
 같은 execution chain을 저장해 두었다가
 다음 session open에 늦게 제출하지 않는다.
+
+Runtime catch-up에서도 동일하다. 주문 제출 시점의 current M1 open이 CHoCH bar 직후의 M1 slot이 아니면 old signal로 간주해 제출하지 않는다. 임의 N초/N분 timeout은 사용하지 않는다.
 
 No-quote interval에는
 가격이 어떤 경로로 움직였는지 추정하지 않는다.
@@ -1648,6 +1663,16 @@ reason = AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
 로 처리한다.
 
 점수나 임의 direction priority를 만들지 않는다.
+
+Current integrated baseline은 같은 방향의 여러 Root branch가 동일 processing epoch에서 모두 완전 authorization되더라도 임의 Root를 선택하지 않는다. Contributor merge 이후 어느 Root가 pending survival authority를 갖는지 아직 별도 정의되지 않았기 때문이다. 따라서 provenance-merge protocol이 별도로 freeze되기 전에는:
+
+```text
+fully_authorized_first_position_branches > 1
+→ NO_TRADE
+→ AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+```
+
+을 방향과 무관하게 적용한다. 이는 Sweep/CHoCH/FVG detector 내부 필터가 아니라 **완성된 first-position 신호들의 one-exposure 실행 충돌 처리**다.
 
 ### SL
 

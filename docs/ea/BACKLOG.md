@@ -39,16 +39,16 @@
 - [x] Scenario Sweep stage — D-127 first direction-compatible M1_SWEEP_DETECTED after Root contact; baseline 6/6, experiment-on 33/36
 - [ ] Structural Reaction liquidity authorization — corrected Root-based ownership/timing re-audit pending
 - [x] M1 CHoCH — D-127 M1_CHOCH_DETECTED mirrors STRUCTURE_PROTECTED_BREAK exactly; 2 baseline / 18 experiment scenario branches accepted
-- [ ] Entry
-- [ ] SL
-- [ ] TP
-- [ ] Pending cancellation
+- [x] Entry — D-128B implemented in integrated build 1.50; final validation pending
+- [x] SL — D-128B outward 20%-width tick normalization implemented; final validation pending
+- [x] TP — D-128B frozen-family nearest exact >=1R objective selection implemented; final validation pending
+- [x] Pending cancellation — D-131 objective/Root/direction authority + broker remove request implemented; final validation pending
 - [x] H4 long-horizon liquidity index — Phase 2 invariant verified
 - [ ] Hierarchical bootstrap / working-set pruning — D-125 bootstrap Root PLAN freeze smoke covered; broader pruning remains open
-- [ ] Managed scenario/exposure identity by symbol + magic
-- [ ] Minimum-volume parity sizing
+- [x] Managed scenario/exposure identity by symbol + magic — integrated execution lock implemented; final validation pending
+- [x] Minimum-volume parity sizing — SYMBOL_VOLUME_MIN implemented; final validation pending
 - [x] Same-timestamp MTF processing order
-- [ ] OnTradeTransaction ticket/history reconciliation
+- [x] OnTradeTransaction ticket/history reconciliation — idempotent account/history reconciliation implemented; final validation pending
 
 ## P2 — Validation
 
@@ -77,9 +77,19 @@
 - [x] Verify SCENARIO_CHOCH_ACCEPTED is strictly later than scenario Sweep and moves to WAITING_FVG
 - [x] Verify Root reintersection / sweep-time protected reference / latest-sweep replacement are absent
 - [x] FVG_ORIGIN_OB=true causal/additive smoke — baseline scenario rows preserved; 18 branches / 9 distinct accepted CHoCH events
-- [ ] Implement causal M1 FVG stage after SCENARIO_CHOCH_ACCEPTED
-- [ ] Run identical FVG/execution smoke with FVG_ORIGIN_OB=false and true
-- [ ] Resolve concurrent Root branches that converge on one CHoCH/FVG under one-exposure-per-symbol+magic policy without arbitrary score/nearest selection
+- [x] Implement D-128A causal M1 FVG detector/freshness/widest-selection stage after SCENARIO_CHOCH_ACCEPTED
+- [ ] Final integrated build 1.50 A/B run replaces the skipped isolated D-128A smoke; validate D-128A invariants inside the combined ledger
+- [ ] Verify every M1_FVG_DETECTED uses strict 60s Candle1->2->3 continuity
+- [ ] Verify every SCENARIO_FVG_CANDIDATE has FVG.available_at > scenario Sweep close and <= CHoCH close
+- [ ] Verify Candle1-before-Sweep / Candle2-Sweep / Candle3-after-Sweep causal cases are not falsely rejected
+- [ ] Verify PRE_SELECTION_RETEST excludes every post-formation touch through CHoCH selection
+- [ ] Verify selected FVG is unique widest in tick-normalized width; exact max tie is NO_TRADE
+- [ ] Verify no post-CHoCH FVG enters the frozen candidate set
+- [ ] Verify exact planned-R eligibility uses reward_ticks >= risk_ticks with no epsilon relaxation
+- [ ] Verify same-cycle submission guard rejects delayed catch-up signals
+- [ ] Verify partial-fill residual pending is canceled once and locks exposure on divergence
+- [x] Implement D-128B Entry / 20%-width SL / frozen-objective TP geometry in integrated build 1.50
+- [x] Resolve concurrent fully-authorized Root branches fail-closed as AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION; no arbitrary score/nearest selection
 - [x] Phase 4A map/reversal-permission smoke — independent scope remains valid
 - [x] Historical Phase 3B run preserved as old-implementation evidence only — CHILD_CREATED=7 / CHILD_INVALIDATED=6
 - [x] Phase 3A Root core smoke / causal CSV audit
@@ -99,3 +109,18 @@
 - [ ] Add-on positions
 - [ ] Optimization
 - [ ] Live execution
+
+
+## Integrated baseline execution — build 1.50
+
+- [x] D-128A independent causal fresh widest-FVG selection implemented.
+- [x] D-128B selected FVG -> Entry / outward 20% SL / frozen-family nearest R>=1 TP implemented.
+- [x] D-129 same-epoch fully-authorized branch arbitration implemented fail-closed; no arbitrary Root selector.
+- [x] D-130 Strategy Tester-only pending preflight/submission implemented with minimum-volume parity and persistent GTC checks.
+- [x] D-131 pending objective/Root/direction cancellation + ticket/history reconciliation implemented.
+- [ ] MetaEditor compile build 1.50.
+- [ ] January real-tick integrated run with `InpEnableFvgOriginObExperiment=false`.
+- [ ] Identical integrated run with `InpEnableFvgOriginObExperiment=true`.
+- [ ] Audit FVG -> geometry -> objective -> arbitration -> preflight -> orders -> fills -> exits/cancels.
+- [ ] Decide whether FVG_ORIGIN_OB remains experiment or is promoted only after completed-trade evidence.
+- [ ] Revisit same-direction provenance merge only if fail-closed arbitration materially discards otherwise identical completed signals; do not invent a selector.

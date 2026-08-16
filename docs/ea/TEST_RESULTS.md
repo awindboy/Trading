@@ -2,6 +2,39 @@
 
 구현 정확성 검증 결과를 아래에 기록한다. 아직 수익성 승인 결과는 없다.
 
+
+## 2026-08-17 — Integrated baseline build 1.50 implementation checkpoint
+
+Status:
+
+```text
+IMPLEMENTED
+METAEDITOR COMPILE + FINAL INTEGRATED A/B REAL-TICK VALIDATION PENDING
+NOT YET A PROFITABILITY RESULT
+```
+
+Build identity expected at next test:
+
+```text
+build = 1.50
+phase = D131_INTEGRATED_BASELINE_EXECUTION_CORE
+```
+
+Implemented downstream of validated D-127 trigger sequence:
+
+```text
+causal fresh widest FVG
+→ Entry
+→ 20% FVG-width SL with outward tick normalization
+→ frozen objective family nearest-first R>=1 Final TP
+→ simultaneous fully-authorized branch arbitration
+→ tester-only preflight / GTC pending submission
+→ fill / objective-Root-direction pending cancellation
+→ idempotent ticket/history reconciliation
+```
+
+Final validation must run both `InpEnableFvgOriginObExperiment=false` and `true` on the same January fixture. The test must preserve validated upstream D-127 counts before judging downstream execution. No result is recorded yet because the user intentionally chose to defer intermediate tests until the whole baseline was connected.
+
 ## 2026-08-16 — Authority correction note: Root-primary / optional-child semantics
 
 Status:
@@ -59,6 +92,86 @@ Historical Phase 4B / Phase 4C final-refined-source results
 ```
 
 All historical records below are intentionally preserved unchanged as test history.
+
+
+## 2026-08-17 — D-128A Causal M1 FVG Selection Implementation
+
+Status:
+
+```text
+IMPLEMENTED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
+NOT A PROFITABILITY TEST
+```
+
+Base repository checkpoint:
+
+```text
+commit = dc21ca385e5e1390c38fece08fd9b51a13012d27
+D-127 build 1.10 = PASS
+```
+
+Prepared build:
+
+```text
+internal build = 1.20
+phase = D128A_CAUSAL_FVG_SELECTION_CORE
+default CSV = mentor_v1_d128a_causal_fvg_events.csv
+orders = intentionally disabled
+```
+
+New isolated funnel:
+
+```text
+SCENARIO_CHOCH_ACCEPTED
+-> independent M1_FVG_DETECTED facts
+-> same-direction + post-Sweep availability + by-CHoCH availability
+-> pre-selection freshness
+-> eligible set freeze at CHoCH close
+-> unique widest after tick normalization
+-> WAITING_EXECUTION_GEOMETRY
+```
+
+Terminal D-128A results:
+
+```text
+NO_CAUSAL_FRESH_FVG -> NO_TRADE
+AMBIGUOUS_EXECUTION_FVG -> NO_TRADE
+```
+
+Validation must be run separately with:
+
+```text
+InpEnableFvgOriginObExperiment = false
+InpEnableFvgOriginObExperiment = true
+```
+
+Required invariants:
+
+```text
+M1_FVG_DETECTED has no Root/scenario/Sweep/CHoCH filter
+Candle1/2/3 clock continuity = 60s / 60s
+SCENARIO_FVG_CANDIDATE direction == scenario direction
+FVG.available_at > scenario_sweep_at
+FVG.available_at <= scenario_choch_at
+formation Candle3 != own retest
+any later touch before selection -> PRE_SELECTION_RETEST
+selected width = unique maximum tick-normalized width
+post-CHoCH FVG cannot enter candidate set
+Entry/SL/TP/order events = 0
+```
+
+Special regression case to inspect:
+
+```text
+Candle1 before Sweep
+Candle2 = Sweep/reversal
+Candle3 closes after Sweep and confirms FVG
+```
+
+This must remain eligible if all other D-128A conditions pass; Candle1 timing is
+not a separate gate.
+
+Profitability: N/A.
 
 ## 2026-08-16 — D-126 Root-Reaction Sweep Validation
 
@@ -1723,3 +1836,8 @@ For every significant V1 test record:
 - known implementation defects
 
 Profitability results are invalid if known protocol violations remain.
+
+
+### Integrated execution safety addendum
+
+Final build 1.50 validation must audit partial-fill residual handling: any position + residual pending overlap is execution divergence, receives one residual cancel request, and never creates a second strategy entry.

@@ -1,20 +1,20 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - D127 linear trigger pipeline core      |
+//| Deterministic Mentor EA V1 - integrated baseline execution core      |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| D127 intentionally DOES NOT submit orders.                       |
-//| D125 Root-specific pre-contact PLANs remain active.              |
-//| M1 sweep / CHoCH are detected independently of scenario filters. |
-//| Scenario logic only checks Root-contact -> Sweep -> CHoCH order.  |
-//| Child OBs remain audit-only; FVG/execution stays disabled.        |
+//| D128A-D131 integrated deterministic baseline.                    |
+//| Root -> Sweep -> CHoCH -> causal fresh widest FVG -> geometry.    |
+//| Entry/20% SL/frozen-objective TP -> arbitration -> tester order.  |
+//| Pending survival: objective / Root / direction authority only.   |
+//| Live trading remains hard-blocked; tester execution only.        |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - D127 linear trigger pipeline core"
+#property description "Mentor deterministic V1 EA - integrated baseline execution core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
@@ -22,12 +22,12 @@ input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
 input bool   InpEnableFvgOriginObExperiment = false;
-input string InpEventCsvFile       = "mentor_v1_d127_linear_trigger_events.csv";
+input string InpEventCsvFile       = "mentor_v1_integrated_baseline_events.csv";
 
 // IMPORTANT:
-// V1 parity trading volume and broker-order execution are frozen in the spec,
-// but are intentionally not active in this D127 linear-trigger build.
-// FVG selection and order authorization remain later phases.
+// This build may submit orders ONLY inside MT5 Strategy Tester. Live trading
+// remains hard-blocked even if terminal/account Algo Trading permissions exist.
+// V1 uses MINIMUM_VOLUME_PARITY and the frozen FVG/SL/TP geometry.
 
 enum V1InitState
   {
@@ -140,10 +140,27 @@ enum V1StrategyState
    V1_STRATEGY_WAITING_SWEEP,
    V1_STRATEGY_WAITING_TRIGGER, // active name shown as WAITING_CHOCH
    V1_STRATEGY_WAITING_FVG,
+   V1_STRATEGY_WAITING_EXECUTION_GEOMETRY,
    V1_STRATEGY_PENDING,
    V1_STRATEGY_FILLED,
    V1_STRATEGY_CANCELED,
    V1_STRATEGY_NO_TRADE
+  };
+
+enum V1ExecutionStatus
+  {
+   V1_EXEC_NONE=0,
+   V1_EXEC_STRATEGY_READY,
+   V1_EXEC_PREFLIGHT_OK,
+   V1_EXEC_PENDING_ACCEPTED,
+   V1_EXEC_FILLED,
+   V1_EXEC_EXECUTION_INFEASIBLE,
+   V1_EXEC_REJECTED,
+   V1_EXEC_CANCEL_REQUESTED,
+   V1_EXEC_CANCELED,
+   V1_EXEC_CANCEL_REJECTED,
+   V1_EXEC_DIVERGENCE,
+   V1_EXEC_CLOSED
   };
 
 struct V1MapControl
@@ -364,6 +381,55 @@ struct V1ScenarioPlan
    datetime          scenario_choch_bar_open;
    datetime          scenario_choch_at;
 
+   // D-128A causal FVG selection. Detector facts remain global; the
+   // scenario freezes only the eligible same-direction Sweep->CHoCH set.
+   int               eligible_fvg_count_at_choch;
+   string            selected_fvg_id;
+   int               selected_fvg_direction;
+   datetime          selected_fvg_candle1_open;
+   datetime          selected_fvg_candle2_open;
+   datetime          selected_fvg_candle3_open;
+   datetime          selected_fvg_available_at;
+   double            selected_fvg_bottom;
+   double            selected_fvg_top;
+   double            selected_fvg_width;
+   long              selected_fvg_width_ticks;
+   datetime          fvg_frozen_at;
+   datetime          no_trade_at;
+   string            no_trade_reason;
+
+   // D-128B deterministic execution geometry + frozen objective.
+   bool              strategy_signal_valid;
+   double            strategy_entry_price;
+   double            raw_strategy_sl;
+   double            normalized_sl;
+   string            final_objective_id;
+   string            final_objective_liquidity_id;
+   double            final_objective_price;
+   double            final_objective_planned_r;
+   datetime          final_objective_selected_at;
+
+   // D-129/D-130/D-131 execution and lifecycle ledger.
+   int               execution_status;
+   string            terminal_reason;
+   double            order_volume;
+   datetime          pending_submitted_at;
+   uint              request_id;
+   ulong             broker_order_ticket;
+   datetime          strategy_cancel_at;
+   string            strategy_cancel_reason;
+   bool              cancel_request_sent;
+   datetime          fill_at;
+   double            fill_price;
+   ulong             broker_deal_ticket;
+   ulong             broker_position_id;
+   datetime          position_closed_at;
+   double            exit_price;
+   long              exit_reason;
+   ulong             exit_deal_ticket;
+   bool              execution_divergence;
+   string            execution_divergence_reason;
+
    // Historical-bootstrap safety: if startup begins inside a frozen source,
    // contact authorization is disarmed until a closed M1 bar exits and a
    // later closed M1 bar re-enters the source.
@@ -485,6 +551,31 @@ struct V1M1ChochDetection
    double            broken_price;
    datetime          bar_open;
    datetime          available_at;
+  };
+
+// D-128A global M1 FVG detector fact. It knows nothing about Root/scenario.
+struct V1M1FvgDetection
+  {
+   bool              valid;
+   string            id;
+   int               direction;
+   datetime          candle1_open;
+   datetime          candle2_open;
+   datetime          candle3_open;
+   datetime          available_at;
+   double            bottom;
+   double            top;
+   double            width;
+   long              width_ticks;
+  };
+
+struct V1ExecutionCandidate
+  {
+   bool              valid;
+   int               scenario_index;
+   string            scenario_id;
+   int               direction;
+   datetime          authorization_at;
   };
 
 struct V1ScenarioDraft
@@ -651,6 +742,11 @@ datetime          g_sweep_snapshot_bar_open=0;
 V1M1SweepDetectorPool g_m1_sweep_detector_snapshot[];
 V1M1SweepDetection g_m1_sweep_detections[];
 V1M1ChochDetection g_m1_choch_detection;
+V1M1FvgDetection g_m1_fvg_detections[];
+V1ExecutionCandidate g_execution_candidates[];
+string            g_managed_scenario_id="";
+ulong             g_managed_order_ticket=0;
+ulong             g_managed_position_id=0;
 datetime          g_m1_sweep_detector_bar_open=0;
 V1MapControl      g_map;
 string            g_scenario_layer_signature="";
@@ -709,6 +805,25 @@ long             g_m1_sweep_detector_events=0;
 long             g_scenario_sweep_accepts=0;
 long             g_m1_choch_detector_events=0;
 long             g_scenario_choch_accepts=0;
+long             g_m1_fvg_detector_events=0;
+long             g_m1_fvg_gap_rejections=0;
+long             g_scenario_fvg_candidates=0;
+long             g_scenario_fvg_preselection_retests=0;
+long             g_scenario_fvg_selected=0;
+long             g_scenario_no_causal_fvg=0;
+long             g_scenario_ambiguous_fvg=0;
+long             g_execution_geometry_ready=0;
+long             g_no_r_eligible_objective=0;
+long             g_simultaneous_authorization_ambiguous=0;
+long             g_exposure_blocked=0;
+long             g_execution_infeasible=0;
+long             g_order_rejected=0;
+long             g_orders_accepted=0;
+long             g_positions_filled=0;
+long             g_pending_cancellations=0;
+long             g_cancel_rejected=0;
+long             g_execution_divergences=0;
+long             g_positions_closed=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -888,6 +1003,7 @@ string StrategyStateName(const int state)
       case V1_STRATEGY_WAITING_SWEEP:   return "WAITING_SWEEP";
       case V1_STRATEGY_WAITING_TRIGGER: return "WAITING_CHOCH";
       case V1_STRATEGY_WAITING_FVG:     return "WAITING_FVG";
+      case V1_STRATEGY_WAITING_EXECUTION_GEOMETRY: return "WAITING_EXECUTION_GEOMETRY";
       case V1_STRATEGY_PENDING:         return "PENDING";
       case V1_STRATEGY_FILLED:          return "FILLED";
       case V1_STRATEGY_CANCELED:        return "CANCELED";
@@ -895,6 +1011,25 @@ string StrategyStateName(const int state)
      }
    return "UNKNOWN";
   }
+string ExecutionStatusName(const int status)
+  {
+   switch(status)
+     {
+      case V1_EXEC_STRATEGY_READY:       return "STRATEGY_READY";
+      case V1_EXEC_PREFLIGHT_OK:         return "PREFLIGHT_OK";
+      case V1_EXEC_PENDING_ACCEPTED:     return "PENDING_ACCEPTED";
+      case V1_EXEC_FILLED:               return "FILLED";
+      case V1_EXEC_EXECUTION_INFEASIBLE: return "EXECUTION_INFEASIBLE";
+      case V1_EXEC_REJECTED:             return "REJECTED";
+      case V1_EXEC_CANCEL_REQUESTED:     return "CANCEL_REQUESTED";
+      case V1_EXEC_CANCELED:             return "CANCELED";
+      case V1_EXEC_CANCEL_REJECTED:      return "CANCEL_REJECTED";
+      case V1_EXEC_DIVERGENCE:           return "EXECUTION_DIVERGENCE";
+      case V1_EXEC_CLOSED:               return "CLOSED";
+     }
+   return "NONE";
+  }
+
 
 bool IsMatureDirectionalTrend(const int trend)
   {
@@ -1128,6 +1263,7 @@ void InitializeAllStructureStates()
    ArrayResize(g_scenarios,0);
    ArrayResize(g_m1_sweep_detector_snapshot,0);
    ArrayResize(g_m1_sweep_detections,0);
+   ArrayResize(g_m1_fvg_detections,0);
    g_m1_sweep_detector_bar_open=0;
    g_m1_choch_detection.valid=false;
    g_m1_choch_detection.id="";
@@ -1165,6 +1301,13 @@ void InitializeAllStructureStates()
    g_scenario_sweep_accepts=0;
    g_m1_choch_detector_events=0;
    g_scenario_choch_accepts=0;
+   g_m1_fvg_detector_events=0;
+   g_m1_fvg_gap_rejections=0;
+   g_scenario_fvg_candidates=0;
+   g_scenario_fvg_preselection_retests=0;
+   g_scenario_fvg_selected=0;
+   g_scenario_no_causal_fvg=0;
+   g_scenario_ambiguous_fvg=0;
    ResetMapControl();
 
    for(int i=0;i<V1_TF_COUNT;i++)
@@ -1645,6 +1788,12 @@ void PrepareD127M1SweepDetectorSnapshot(const datetime bar_open);
 void EvaluateD127M1SweepDetector(const MqlRates &bar,const datetime available_at);
 void ProcessD127ScenarioSweepStage(const MqlRates &bar,const datetime available_at);
 void ProcessD127ScenarioChochStage(const MqlRates &bar,const datetime available_at);
+void EvaluateD128AM1FvgDetector(const V1StructureState &state,const MqlRates &bar,const datetime available_at);
+void ProcessD128AScenarioFvgFreeze(const int scenario_index,const MqlRates &choch_bar,const datetime available_at);
+void PruneD128AM1FvgDetections();
+void ProcessIntegratedExecutionAuthorizationEpoch(const datetime available_at);
+void ManageIntegratedExecution(const MqlTick &tick);
+bool HasManagedAccountExposure();
 
 void LogLiquidityConsumption(const V1LiquidityPool &pool,
                              const MqlRates &bar,
@@ -4016,7 +4165,8 @@ void CancelInvalidScenarioPlans(const datetime available_at)
      {
       if(!g_scenarios[i].valid ||
          g_scenarios[i].strategy_state==V1_STRATEGY_CANCELED ||
-         g_scenarios[i].strategy_state==V1_STRATEGY_NO_TRADE)
+         g_scenarios[i].strategy_state==V1_STRATEGY_NO_TRADE ||
+         g_scenarios[i].strategy_state==V1_STRATEGY_FILLED)
          continue;
 
       string reason="";
@@ -4161,6 +4311,48 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
    g_scenarios[n].scenario_choch_event_id="";
    g_scenarios[n].scenario_choch_bar_open=0;
    g_scenarios[n].scenario_choch_at=0;
+   g_scenarios[n].eligible_fvg_count_at_choch=0;
+   g_scenarios[n].selected_fvg_id="";
+   g_scenarios[n].selected_fvg_direction=0;
+   g_scenarios[n].selected_fvg_candle1_open=0;
+   g_scenarios[n].selected_fvg_candle2_open=0;
+   g_scenarios[n].selected_fvg_candle3_open=0;
+   g_scenarios[n].selected_fvg_available_at=0;
+   g_scenarios[n].selected_fvg_bottom=0.0;
+   g_scenarios[n].selected_fvg_top=0.0;
+   g_scenarios[n].selected_fvg_width=0.0;
+   g_scenarios[n].selected_fvg_width_ticks=0;
+   g_scenarios[n].fvg_frozen_at=0;
+   g_scenarios[n].no_trade_at=0;
+   g_scenarios[n].no_trade_reason="";
+   g_scenarios[n].strategy_signal_valid=false;
+   g_scenarios[n].strategy_entry_price=0.0;
+   g_scenarios[n].raw_strategy_sl=0.0;
+   g_scenarios[n].normalized_sl=0.0;
+   g_scenarios[n].final_objective_id="";
+   g_scenarios[n].final_objective_liquidity_id="";
+   g_scenarios[n].final_objective_price=0.0;
+   g_scenarios[n].final_objective_planned_r=0.0;
+   g_scenarios[n].final_objective_selected_at=0;
+   g_scenarios[n].execution_status=V1_EXEC_NONE;
+   g_scenarios[n].terminal_reason="";
+   g_scenarios[n].order_volume=0.0;
+   g_scenarios[n].pending_submitted_at=0;
+   g_scenarios[n].request_id=0;
+   g_scenarios[n].broker_order_ticket=0;
+   g_scenarios[n].strategy_cancel_at=0;
+   g_scenarios[n].strategy_cancel_reason="";
+   g_scenarios[n].cancel_request_sent=false;
+   g_scenarios[n].fill_at=0;
+   g_scenarios[n].fill_price=0.0;
+   g_scenarios[n].broker_deal_ticket=0;
+   g_scenarios[n].broker_position_id=0;
+   g_scenarios[n].position_closed_at=0;
+   g_scenarios[n].exit_price=0.0;
+   g_scenarios[n].exit_reason=0;
+   g_scenarios[n].exit_deal_ticket=0;
+   g_scenarios[n].execution_divergence=false;
+   g_scenarios[n].execution_divergence_reason="";
    g_scenarios[n].startup_inside_source=false;
    g_scenarios[n].startup_exit_seen=false;
    g_scenarios[n].canceled_at=0;
@@ -4212,7 +4404,7 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
            TfName(draft.active_map_tf),
            frozen_at,
            scenario_id,
-           StringFormat("state=PLANNED scope=%s direction=%s active_map_tf=%s owner_id=%s parent_context_id=%s h1_trend_at_freeze=%s h1_owner_id_at_freeze=%s m30_trend_at_freeze=%s m30_owner_id_at_freeze=%s reversal_permission_at_freeze=%s permission_reference_id=%s permission_opened_at=%s root_zone_id=%s final_source_id=%s source_tf=%s source_bottom=%.10f source_top=%.10f map_range_low=%.10f map_range_high=%.10f map_eq=%.10f plan_reference_bar_open=%s plan_reference_price=%.10f primary_directional_horizon=%.10f objective_count=%d root_contact_required=true root_contact_at=NA strategy_source_kind=ROOT child_required=false linear_trigger_pipeline=true detector_sequence=ROOT_CONTACT_THEN_M1_SWEEP_THEN_M1_CHOCH fvg_search_enabled=false",
+           StringFormat("state=PLANNED scope=%s direction=%s active_map_tf=%s owner_id=%s parent_context_id=%s h1_trend_at_freeze=%s h1_owner_id_at_freeze=%s m30_trend_at_freeze=%s m30_owner_id_at_freeze=%s reversal_permission_at_freeze=%s permission_reference_id=%s permission_opened_at=%s root_zone_id=%s final_source_id=%s source_tf=%s source_bottom=%.10f source_top=%.10f map_range_low=%.10f map_range_high=%.10f map_eq=%.10f plan_reference_bar_open=%s plan_reference_price=%.10f primary_directional_horizon=%.10f objective_count=%d root_contact_required=true root_contact_at=NA strategy_source_kind=ROOT child_required=false linear_trigger_pipeline=true detector_sequence=ROOT_CONTACT_THEN_M1_SWEEP_THEN_M1_CHOCH fvg_search_enabled=true",
                         ScenarioScopeName(draft.scope),
                         DirectionName(draft.direction),
                         TfName(draft.active_map_tf),
@@ -4514,7 +4706,7 @@ void ProcessD127ScenarioChochStage(const MqlRates &bar,
               "M1",
               available_at,
               g_m1_choch_detection.id,
-              StringFormat("scenario_id=%s root_zone_id=%s direction=%s scenario_sweep_event_id=%s sweep_bar_open=%s choch_bar_open=%s broken_swing_id=%s broken_price=%.10f state=WAITING_FVG rule=SEQUENCE_ONLY detector_source=M1_CHOCH_DETECTED extra_reference_filter=false opposite_trend_at_sweep_filter=false initial_bos_fallback=false child_required=false fvg_search_enabled=false order_authorization=false",
+              StringFormat("scenario_id=%s root_zone_id=%s direction=%s scenario_sweep_event_id=%s sweep_bar_open=%s choch_bar_open=%s broken_swing_id=%s broken_price=%.10f state=WAITING_FVG rule=SEQUENCE_ONLY detector_source=M1_CHOCH_DETECTED extra_reference_filter=false opposite_trend_at_sweep_filter=false initial_bos_fallback=false child_required=false fvg_search_enabled=true order_authorization=false",
                            g_scenarios[sidx].id,
                            g_scenarios[sidx].root_zone_id,
                            DirectionName(g_scenarios[sidx].direction),
@@ -4523,7 +4715,1397 @@ void ProcessD127ScenarioChochStage(const MqlRates &bar,
                            TimeToString(g_m1_choch_detection.bar_open,TIME_DATE|TIME_SECONDS),
                            g_m1_choch_detection.broken_swing_id,
                            g_m1_choch_detection.broken_price));
+
+      // D-128A freezes the causal fresh FVG candidate set at this exact
+      // CHoCH close. No post-CHoCH FVG can enter this first-position set.
+      ProcessD128AScenarioFvgFreeze(sidx,bar,available_at);
      }
+  }
+
+
+//+------------------------------------------------------------------+
+//| D-128A independent M1 FVG detector + causal scenario selection   |
+//+------------------------------------------------------------------+
+double NormalizeD128APriceToTick(const double price)
+  {
+   double tick=LiquidityTickSize();
+   int digits=(int)SymbolInfoInteger(_Symbol,SYMBOL_DIGITS);
+   if(tick<=0.0)
+      return NormalizeDouble(price,digits);
+   return NormalizeDouble(MathRound(price/tick)*tick,digits);
+  }
+
+long D128AWidthTicks(const double bottom,const double top)
+  {
+   double tick=LiquidityTickSize();
+   if(tick<=0.0 || top<=bottom)
+      return 0;
+   return (long)MathRound((top-bottom)/tick);
+  }
+
+bool D128ABarIntersectsFvg(const MqlRates &bar,
+                           const V1M1FvgDetection &fvg)
+  {
+   return (bar.high>=fvg.bottom && bar.low<=fvg.top);
+  }
+
+void AddD128AM1FvgDetection(const int direction,
+                            const MqlRates &candle1,
+                            const MqlRates &candle2,
+                            const MqlRates &candle3,
+                            const datetime available_at,
+                            const double raw_bottom,
+                            const double raw_top)
+  {
+   double bottom=NormalizeD128APriceToTick(raw_bottom);
+   double top=NormalizeD128APriceToTick(raw_top);
+   long width_ticks=D128AWidthTicks(bottom,top);
+   if(width_ticks<=0 || top<=bottom)
+      return;
+
+   int n=ArraySize(g_m1_fvg_detections);
+   if(ArrayResize(g_m1_fvg_detections,n+1,128)<0)
+      return;
+
+   string id=StringFormat("M1:fvg:%s:%I64d:%I64d",
+                          DirectionName(direction),
+                          (long)candle1.time,
+                          (long)candle3.time);
+
+   g_m1_fvg_detections[n].valid=true;
+   g_m1_fvg_detections[n].id=id;
+   g_m1_fvg_detections[n].direction=direction;
+   g_m1_fvg_detections[n].candle1_open=candle1.time;
+   g_m1_fvg_detections[n].candle2_open=candle2.time;
+   g_m1_fvg_detections[n].candle3_open=candle3.time;
+   g_m1_fvg_detections[n].available_at=available_at;
+   g_m1_fvg_detections[n].bottom=bottom;
+   g_m1_fvg_detections[n].top=top;
+   g_m1_fvg_detections[n].width=top-bottom;
+   g_m1_fvg_detections[n].width_ticks=width_ticks;
+   g_m1_fvg_detector_events++;
+
+   LogLine("M1_FVG_DETECTED",
+           "M1",
+           available_at,
+           id,
+           StringFormat("direction=%s candle1_open=%s candle2_open=%s candle3_open=%s bottom=%.10f top=%.10f width=%.10f width_ticks=%I64d available_at=%s detector_only=true scenario_filter=false root_filter=false sweep_filter=false choch_filter=false clock_contiguous=true",
+                        DirectionName(direction),
+                        TimeToString(candle1.time,TIME_DATE|TIME_SECONDS),
+                        TimeToString(candle2.time,TIME_DATE|TIME_SECONDS),
+                        TimeToString(candle3.time,TIME_DATE|TIME_SECONDS),
+                        bottom,
+                        top,
+                        top-bottom,
+                        width_ticks,
+                        TimeToString(available_at,TIME_DATE|TIME_SECONDS)));
+  }
+
+void EvaluateD128AM1FvgDetector(const V1StructureState &state,
+                                const MqlRates &bar,
+                                const datetime available_at)
+  {
+   if(state.recent_count<2)
+      return;
+
+   MqlRates candle1=state.recent0;
+   MqlRates candle2=state.recent1;
+   MqlRates candle3=bar;
+
+   bool bullish_geometry=(candle3.low>candle1.high);
+   bool bearish_geometry=(candle3.high<candle1.low);
+   if(!bullish_geometry && !bearish_geometry)
+      return;
+
+   bool contiguous=((candle2.time-candle1.time)==60 &&
+                    (candle3.time-candle2.time)==60);
+   if(!contiguous)
+     {
+      g_m1_fvg_gap_rejections++;
+      LogLine("M1_FVG_REJECTED",
+              "M1",
+              available_at,
+              "",
+              StringFormat("reason=SESSION_OR_DATA_GAP_FVG direction=%s candle1_open=%s candle2_open=%s candle3_open=%s clock_contiguous=false strategy_authority=false",
+                           bullish_geometry ? "LONG" : "SHORT",
+                           TimeToString(candle1.time,TIME_DATE|TIME_SECONDS),
+                           TimeToString(candle2.time,TIME_DATE|TIME_SECONDS),
+                           TimeToString(candle3.time,TIME_DATE|TIME_SECONDS)));
+      return;
+     }
+
+   if(bullish_geometry)
+      AddD128AM1FvgDetection(1,
+                             candle1,
+                             candle2,
+                             candle3,
+                             available_at,
+                             candle1.high,
+                             candle3.low);
+   else
+      AddD128AM1FvgDetection(-1,
+                             candle1,
+                             candle2,
+                             candle3,
+                             available_at,
+                             candle3.high,
+                             candle1.low);
+  }
+
+bool D128AFvgWasRetestedBeforeSelection(const V1M1FvgDetection &fvg,
+                                        const MqlRates &choch_bar,
+                                        datetime &first_retest_bar_open,
+                                        bool &history_error)
+  {
+   first_retest_bar_open=0;
+   history_error=false;
+
+   // Formation bar is never its own retest. Begin with the next causal M1 bar.
+   datetime start=fvg.candle3_open+60;
+   datetime prior_end=choch_bar.time-60;
+
+   if(start<=prior_end)
+     {
+      MqlRates bars[];
+      ArraySetAsSeries(bars,false);
+      ResetLastError();
+      int copied=CopyRates(_Symbol,PERIOD_M1,start,prior_end,bars);
+      if(copied<0)
+        {
+         history_error=true;
+         return false;
+        }
+
+      for(int i=0;i<copied;i++)
+        {
+         if(D128ABarIntersectsFvg(bars[i],fvg))
+           {
+            first_retest_bar_open=bars[i].time;
+            return true;
+           }
+        }
+     }
+
+   // If the CHoCH bar is later than Candle3, it is also a completed bar before
+   // selection at its close and therefore counts as a pre-selection retest.
+   if(choch_bar.time>fvg.candle3_open && D128ABarIntersectsFvg(choch_bar,fvg))
+     {
+      first_retest_bar_open=choch_bar.time;
+      return true;
+     }
+
+   return false;
+  }
+
+void MarkD128AScenarioNoTrade(const int scenario_index,
+                              const datetime available_at,
+                              const string reason,
+                              const int eligible_count)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+      return;
+
+   g_scenarios[scenario_index].eligible_fvg_count_at_choch=eligible_count;
+   g_scenarios[scenario_index].strategy_state=V1_STRATEGY_NO_TRADE;
+   g_scenarios[scenario_index].no_trade_at=available_at;
+   g_scenarios[scenario_index].no_trade_reason=reason;
+   ReleaseRootScenarioOwner(g_scenarios[scenario_index].root_zone_id,
+                            g_scenarios[scenario_index].id);
+
+   if(reason=="NO_CAUSAL_FRESH_FVG")
+      g_scenario_no_causal_fvg++;
+   else if(reason=="AMBIGUOUS_EXECUTION_FVG")
+      g_scenario_ambiguous_fvg++;
+
+   LogLine("SCENARIO_FVG_NO_ENTRY",
+           "M1",
+           available_at,
+           g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s root_zone_id=%s direction=%s sweep_bar_open=%s choch_bar_open=%s eligible_fvg_count=%d reason=%s state=NO_TRADE entry_geometry_enabled=false order_authorization=false",
+                        g_scenarios[scenario_index].id,
+                        g_scenarios[scenario_index].root_zone_id,
+                        DirectionName(g_scenarios[scenario_index].direction),
+                        TimeToString(g_scenarios[scenario_index].active_sweep_bar_open,TIME_DATE|TIME_SECONDS),
+                        TimeToString(g_scenarios[scenario_index].scenario_choch_bar_open,TIME_DATE|TIME_SECONDS),
+                        eligible_count,
+                        reason));
+  }
+
+void ProcessD128AScenarioFvgFreeze(const int scenario_index,
+                                   const MqlRates &choch_bar,
+                                   const datetime available_at)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios) ||
+      !g_scenarios[scenario_index].valid ||
+      g_scenarios[scenario_index].strategy_state!=V1_STRATEGY_WAITING_FVG ||
+      g_scenarios[scenario_index].active_sweep_at<=0 ||
+      g_scenarios[scenario_index].scenario_choch_at<=0)
+      return;
+
+   int eligible_indices[];
+   ArrayResize(eligible_indices,0);
+
+   for(int i=0;i<ArraySize(g_m1_fvg_detections);i++)
+     {
+      if(!g_m1_fvg_detections[i].valid ||
+         g_m1_fvg_detections[i].direction!=g_scenarios[scenario_index].direction)
+         continue;
+
+      // D-128A operational causal-leg boundary. Candle1 may precede the Sweep;
+      // what matters is that the three-candle FVG becomes a confirmed detector
+      // fact strictly AFTER the accepted Sweep close and no later than CHoCH.
+      if(g_m1_fvg_detections[i].available_at<=g_scenarios[scenario_index].active_sweep_at ||
+         g_m1_fvg_detections[i].available_at>g_scenarios[scenario_index].scenario_choch_at)
+         continue;
+
+      datetime first_retest=0;
+      bool history_error=false;
+      bool retested=D128AFvgWasRetestedBeforeSelection(g_m1_fvg_detections[i],
+                                                        choch_bar,
+                                                        first_retest,
+                                                        history_error);
+      if(history_error)
+        {
+         LogLine("SCENARIO_FVG_EXCLUDED",
+                 "M1",
+                 available_at,
+                 g_m1_fvg_detections[i].id,
+                 StringFormat("scenario_id=%s reason=FVG_FRESHNESS_HISTORY_ERROR fail_closed=true",
+                              g_scenarios[scenario_index].id));
+         continue;
+        }
+
+      if(retested)
+        {
+         g_scenario_fvg_preselection_retests++;
+         LogLine("SCENARIO_FVG_EXCLUDED",
+                 "M1",
+                 available_at,
+                 g_m1_fvg_detections[i].id,
+                 StringFormat("scenario_id=%s reason=PRE_SELECTION_RETEST first_retest_bar_open=%s bottom=%.10f top=%.10f formation_bar_self_retest=false",
+                              g_scenarios[scenario_index].id,
+                              TimeToString(first_retest,TIME_DATE|TIME_SECONDS),
+                              g_m1_fvg_detections[i].bottom,
+                              g_m1_fvg_detections[i].top));
+         continue;
+        }
+
+      int n=ArraySize(eligible_indices);
+      if(ArrayResize(eligible_indices,n+1,16)<0)
+         continue;
+      eligible_indices[n]=i;
+      g_scenario_fvg_candidates++;
+
+      LogLine("SCENARIO_FVG_CANDIDATE",
+              "M1",
+              available_at,
+              g_m1_fvg_detections[i].id,
+              StringFormat("scenario_id=%s root_zone_id=%s direction=%s sweep_at=%s choch_at=%s candle1_open=%s candle2_open=%s candle3_open=%s fvg_available_at=%s bottom=%.10f top=%.10f width=%.10f width_ticks=%I64d fresh=true same_direction=true causal_availability_after_sweep=true candidate_freeze_at=%s",
+                           g_scenarios[scenario_index].id,
+                           g_scenarios[scenario_index].root_zone_id,
+                           DirectionName(g_scenarios[scenario_index].direction),
+                           TimeToString(g_scenarios[scenario_index].active_sweep_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(g_scenarios[scenario_index].scenario_choch_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(g_m1_fvg_detections[i].candle1_open,TIME_DATE|TIME_SECONDS),
+                           TimeToString(g_m1_fvg_detections[i].candle2_open,TIME_DATE|TIME_SECONDS),
+                           TimeToString(g_m1_fvg_detections[i].candle3_open,TIME_DATE|TIME_SECONDS),
+                           TimeToString(g_m1_fvg_detections[i].available_at,TIME_DATE|TIME_SECONDS),
+                           g_m1_fvg_detections[i].bottom,
+                           g_m1_fvg_detections[i].top,
+                           g_m1_fvg_detections[i].width,
+                           g_m1_fvg_detections[i].width_ticks,
+                           TimeToString(available_at,TIME_DATE|TIME_SECONDS)));
+     }
+
+   int eligible_count=ArraySize(eligible_indices);
+   g_scenarios[scenario_index].eligible_fvg_count_at_choch=eligible_count;
+   g_scenarios[scenario_index].fvg_frozen_at=available_at;
+
+   if(eligible_count<=0)
+     {
+      MarkD128AScenarioNoTrade(scenario_index,
+                              available_at,
+                              "NO_CAUSAL_FRESH_FVG",
+                              0);
+      return;
+     }
+
+   long max_ticks=-1;
+   int selected_index=-1;
+   int max_count=0;
+   for(int k=0;k<eligible_count;k++)
+     {
+      int idx=eligible_indices[k];
+      long ticks=g_m1_fvg_detections[idx].width_ticks;
+      if(ticks>max_ticks)
+        {
+         max_ticks=ticks;
+         selected_index=idx;
+         max_count=1;
+        }
+      else if(ticks==max_ticks)
+         max_count++;
+     }
+
+   if(selected_index<0 || max_count!=1)
+     {
+      MarkD128AScenarioNoTrade(scenario_index,
+                              available_at,
+                              "AMBIGUOUS_EXECUTION_FVG",
+                              eligible_count);
+      return;
+     }
+
+   V1M1FvgDetection selected=g_m1_fvg_detections[selected_index];
+   g_scenarios[scenario_index].selected_fvg_id=selected.id;
+   g_scenarios[scenario_index].selected_fvg_direction=selected.direction;
+   g_scenarios[scenario_index].selected_fvg_candle1_open=selected.candle1_open;
+   g_scenarios[scenario_index].selected_fvg_candle2_open=selected.candle2_open;
+   g_scenarios[scenario_index].selected_fvg_candle3_open=selected.candle3_open;
+   g_scenarios[scenario_index].selected_fvg_available_at=selected.available_at;
+   g_scenarios[scenario_index].selected_fvg_bottom=selected.bottom;
+   g_scenarios[scenario_index].selected_fvg_top=selected.top;
+   g_scenarios[scenario_index].selected_fvg_width=selected.width;
+   g_scenarios[scenario_index].selected_fvg_width_ticks=selected.width_ticks;
+   g_scenarios[scenario_index].strategy_state=V1_STRATEGY_WAITING_EXECUTION_GEOMETRY;
+   g_scenario_fvg_selected++;
+
+   LogLine("SCENARIO_FVG_SELECTED",
+           "M1",
+           available_at,
+           selected.id,
+           StringFormat("scenario_id=%s root_zone_id=%s direction=%s eligible_fvg_count=%d selection=WIDEST_TICK_NORMALIZED exact_max_tie=false candle1_open=%s candle2_open=%s candle3_open=%s available_at=%s bottom=%.10f top=%.10f width=%.10f width_ticks=%I64d fvg_frozen_at=%s state=WAITING_EXECUTION_GEOMETRY next_same_cycle=ENTRY_SL_TP_AND_EXECUTION_AUTHORIZATION",
+                        g_scenarios[scenario_index].id,
+                        g_scenarios[scenario_index].root_zone_id,
+                        DirectionName(g_scenarios[scenario_index].direction),
+                        eligible_count,
+                        TimeToString(selected.candle1_open,TIME_DATE|TIME_SECONDS),
+                        TimeToString(selected.candle2_open,TIME_DATE|TIME_SECONDS),
+                        TimeToString(selected.candle3_open,TIME_DATE|TIME_SECONDS),
+                        TimeToString(selected.available_at,TIME_DATE|TIME_SECONDS),
+                        selected.bottom,
+                        selected.top,
+                        selected.width,
+                        selected.width_ticks,
+                        TimeToString(available_at,TIME_DATE|TIME_SECONDS)));
+  }
+
+void PruneD128AM1FvgDetections()
+  {
+   datetime earliest_sweep=0;
+   for(int i=0;i<ArraySize(g_scenarios);i++)
+     {
+      if(!g_scenarios[i].valid ||
+         g_scenarios[i].strategy_state!=V1_STRATEGY_WAITING_TRIGGER ||
+         g_scenarios[i].active_sweep_at<=0)
+         continue;
+      if(earliest_sweep==0 || g_scenarios[i].active_sweep_at<earliest_sweep)
+         earliest_sweep=g_scenarios[i].active_sweep_at;
+     }
+
+   if(earliest_sweep==0)
+     {
+      ArrayResize(g_m1_fvg_detections,0);
+      return;
+     }
+
+   int write=0;
+   int n=ArraySize(g_m1_fvg_detections);
+   for(int i=0;i<n;i++)
+     {
+      if(!g_m1_fvg_detections[i].valid ||
+         g_m1_fvg_detections[i].available_at<=earliest_sweep)
+         continue;
+      if(write!=i)
+         g_m1_fvg_detections[write]=g_m1_fvg_detections[i];
+      write++;
+     }
+   ArrayResize(g_m1_fvg_detections,write);
+  }
+
+
+//+------------------------------------------------------------------+
+//| D-128B..D-131 integrated strategy geometry + MT5 execution       |
+//+------------------------------------------------------------------+
+double NormalizePriceFloorToTick(const double price)
+  {
+   double tick=LiquidityTickSize();
+   int digits=(int)SymbolInfoInteger(_Symbol,SYMBOL_DIGITS);
+   if(tick<=0.0)
+      return NormalizeDouble(price,digits);
+   double units=MathFloor(price/tick+1.0e-10);
+   return NormalizeDouble(units*tick,digits);
+  }
+
+double NormalizePriceCeilToTick(const double price)
+  {
+   double tick=LiquidityTickSize();
+   int digits=(int)SymbolInfoInteger(_Symbol,SYMBOL_DIGITS);
+   if(tick<=0.0)
+      return NormalizeDouble(price,digits);
+   double units=MathCeil(price/tick-1.0e-10);
+   return NormalizeDouble(units*tick,digits);
+  }
+
+bool IsPriceOnTickGrid(const double price)
+  {
+   double tick=LiquidityTickSize();
+   if(tick<=0.0)
+      return false;
+   double nearest=MathRound(price/tick)*tick;
+   return (MathAbs(price-nearest)<=tick*1.0e-6);
+  }
+
+void MarkExecutionNoTrade(const int scenario_index,
+                          const datetime available_at,
+                          const string reason,
+                          const int execution_status)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+      return;
+
+   if(!g_scenarios[scenario_index].valid || g_scenarios[scenario_index].strategy_state==V1_STRATEGY_FILLED)
+      return;
+
+   g_scenarios[scenario_index].strategy_state=V1_STRATEGY_NO_TRADE;
+   g_scenarios[scenario_index].no_trade_at=available_at;
+   g_scenarios[scenario_index].no_trade_reason=reason;
+   g_scenarios[scenario_index].terminal_reason=reason;
+   g_scenarios[scenario_index].execution_status=execution_status;
+   ReleaseRootScenarioOwner(g_scenarios[scenario_index].root_zone_id,g_scenarios[scenario_index].id);
+
+   LogLine("SCENARIO_EXECUTION_NO_TRADE",
+           "M1",
+           available_at,
+           g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s direction=%s selected_fvg_id=%s entry=%.10f sl=%.10f final_objective_id=%s tp=%.10f strategy_signal_valid=%s execution_status=%s reason=%s state=NO_TRADE retry=false",
+                        g_scenarios[scenario_index].id,
+                        DirectionName(g_scenarios[scenario_index].direction),
+                        g_scenarios[scenario_index].selected_fvg_id=="" ? "NA" : g_scenarios[scenario_index].selected_fvg_id,
+                        g_scenarios[scenario_index].strategy_entry_price,
+                        g_scenarios[scenario_index].normalized_sl,
+                        g_scenarios[scenario_index].final_objective_id=="" ? "NA" : g_scenarios[scenario_index].final_objective_id,
+                        g_scenarios[scenario_index].final_objective_price,
+                        g_scenarios[scenario_index].strategy_signal_valid ? "true" : "false",
+                        ExecutionStatusName(g_scenarios[scenario_index].execution_status),
+                        reason));
+  }
+
+bool ObjectiveCandidateConsumedNow(const V1ObjectiveCandidate &candidate)
+  {
+   if(candidate.consumed)
+      return true;
+   if(IsStrategyLiquidityConsumed(candidate.liquidity_id))
+      return true;
+   return (FindActiveLiquidityById(candidate.liquidity_id)<0);
+  }
+
+bool SelectFinalObjectiveForScenario(const int scenario_index,
+                                     const datetime available_at,
+                                     string &failure_reason)
+  {
+   failure_reason="";
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+     {
+      failure_reason="SCENARIO_INDEX_INVALID";
+      return false;
+     }
+
+   double entry=g_scenarios[scenario_index].strategy_entry_price;
+   double sl=g_scenarios[scenario_index].normalized_sl;
+   double tick_size=LiquidityTickSize();
+   if(tick_size<=0.0)
+     {
+      failure_reason="INVALID_SYMBOL_TICK_SIZE";
+      return false;
+     }
+   double risk=(g_scenarios[scenario_index].direction>0 ? entry-sl : sl-entry);
+   long risk_ticks=(long)MathRound(risk/tick_size);
+   if(risk<=0.0 || risk_ticks<=0)
+     {
+      failure_reason="INVALID_ENTRY_SL_RISK";
+      return false;
+     }
+
+   for(int order_index=0;order_index<g_scenarios[scenario_index].objective_count;order_index++)
+     {
+      int found=-1;
+      for(int i=0;i<ArraySize(g_objective_candidates);i++)
+        {
+         if(g_objective_candidates[i].valid &&
+            g_objective_candidates[i].scenario_id==g_scenarios[scenario_index].id &&
+            g_objective_candidates[i].order_index==order_index)
+           {
+            found=i;
+            break;
+           }
+        }
+      if(found<0)
+         continue;
+
+      V1ObjectiveCandidate candidate=g_objective_candidates[found];
+      if(ObjectiveCandidateConsumedNow(candidate))
+        {
+         LogLine("OBJECTIVE_ELIGIBILITY_EVALUATED",TfName(candidate.tf),available_at,candidate.id,
+                 StringFormat("scenario_id=%s order_index=%d result=SKIP_CONSUMED price=%.10f",
+                              g_scenarios[scenario_index].id,order_index,candidate.price));
+         continue;
+        }
+
+      double reward=(g_scenarios[scenario_index].direction>0 ? candidate.price-entry : entry-candidate.price);
+      if(reward<=0.0)
+        {
+         LogLine("OBJECTIVE_ELIGIBILITY_EVALUATED",TfName(candidate.tf),available_at,candidate.id,
+                 StringFormat("scenario_id=%s order_index=%d result=SKIP_NONPOSITIVE_REWARD price=%.10f entry=%.10f",
+                              g_scenarios[scenario_index].id,order_index,candidate.price,entry));
+         continue;
+        }
+
+      long reward_ticks=(long)MathRound(reward/tick_size);
+      if(reward_ticks<=0)
+        {
+         LogLine("OBJECTIVE_ELIGIBILITY_EVALUATED",TfName(candidate.tf),available_at,candidate.id,
+                 StringFormat("scenario_id=%s order_index=%d result=SKIP_NONPOSITIVE_REWARD_TICKS price=%.10f entry=%.10f reward_ticks=%I64d",
+                              g_scenarios[scenario_index].id,order_index,candidate.price,entry,reward_ticks));
+         continue;
+        }
+
+      double planned_r=(double)reward_ticks/(double)risk_ticks;
+      if(reward_ticks<risk_ticks)
+        {
+         LogLine("OBJECTIVE_ELIGIBILITY_EVALUATED",TfName(candidate.tf),available_at,candidate.id,
+                 StringFormat("scenario_id=%s order_index=%d result=INTERMEDIATE_BELOW_1R price=%.10f risk=%.10f reward=%.10f risk_ticks=%I64d reward_ticks=%I64d planned_r=%.8f",
+                              g_scenarios[scenario_index].id,order_index,candidate.price,risk,reward,risk_ticks,reward_ticks,planned_r));
+         continue;
+        }
+
+      g_scenarios[scenario_index].final_objective_id=candidate.id;
+      g_scenarios[scenario_index].final_objective_liquidity_id=candidate.liquidity_id;
+      g_scenarios[scenario_index].final_objective_price=candidate.price;
+      g_scenarios[scenario_index].final_objective_planned_r=planned_r;
+      g_scenarios[scenario_index].final_objective_selected_at=available_at;
+
+      LogLine("FINAL_OBJECTIVE_SELECTED",TfName(candidate.tf),available_at,candidate.id,
+              StringFormat("scenario_id=%s liquidity_id=%s order_index=%d selection=NEAREST_FIRST_R_GE_1 entry=%.10f sl=%.10f tp=%.10f risk=%.10f reward=%.10f risk_ticks=%I64d reward_ticks=%I64d planned_r=%.8f exact_1r_tick_comparison=true no_max_r_optimization=true",
+                           g_scenarios[scenario_index].id,candidate.liquidity_id,order_index,entry,sl,candidate.price,risk,reward,risk_ticks,reward_ticks,planned_r));
+      return true;
+     }
+
+   failure_reason="NO_R_ELIGIBLE_OBJECTIVE";
+   return false;
+  }
+
+bool BuildExecutionGeometryForScenario(const int scenario_index,
+                                       const datetime available_at)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+      return false;
+
+   if(!g_scenarios[scenario_index].valid ||
+      g_scenarios[scenario_index].strategy_state!=V1_STRATEGY_WAITING_EXECUTION_GEOMETRY ||
+      g_scenarios[scenario_index].selected_fvg_id=="" ||
+      g_scenarios[scenario_index].selected_fvg_width<=0.0)
+      return false;
+
+   double entry=(g_scenarios[scenario_index].direction>0 ? g_scenarios[scenario_index].selected_fvg_top : g_scenarios[scenario_index].selected_fvg_bottom);
+   double raw_sl=(g_scenarios[scenario_index].direction>0 ?
+                  g_scenarios[scenario_index].selected_fvg_bottom-0.20*g_scenarios[scenario_index].selected_fvg_width :
+                  g_scenarios[scenario_index].selected_fvg_top+0.20*g_scenarios[scenario_index].selected_fvg_width);
+   double normalized_sl=(g_scenarios[scenario_index].direction>0 ?
+                         NormalizePriceFloorToTick(raw_sl) :
+                         NormalizePriceCeilToTick(raw_sl));
+
+   if((g_scenarios[scenario_index].direction>0 && !(normalized_sl<entry)) ||
+      (g_scenarios[scenario_index].direction<0 && !(normalized_sl>entry)))
+     {
+      MarkExecutionNoTrade(scenario_index,available_at,"INVALID_FVG_ENTRY_SL_GEOMETRY",V1_EXEC_NONE);
+      return false;
+     }
+
+   g_scenarios[scenario_index].strategy_entry_price=entry;
+   g_scenarios[scenario_index].raw_strategy_sl=raw_sl;
+   g_scenarios[scenario_index].normalized_sl=normalized_sl;
+
+   string objective_failure="";
+   if(!SelectFinalObjectiveForScenario(scenario_index,available_at,objective_failure))
+     {
+      if(objective_failure=="NO_R_ELIGIBLE_OBJECTIVE")
+         g_no_r_eligible_objective++;
+      MarkExecutionNoTrade(scenario_index,available_at,objective_failure,V1_EXEC_NONE);
+      return false;
+     }
+
+   g_scenarios[scenario_index].strategy_signal_valid=true;
+   g_scenarios[scenario_index].execution_status=V1_EXEC_STRATEGY_READY;
+   g_scenarios[scenario_index].terminal_reason="";
+   g_execution_geometry_ready++;
+
+   LogLine("EXECUTION_GEOMETRY_READY","M1",available_at,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s direction=%s selected_fvg_id=%s fvg_bottom=%.10f fvg_top=%.10f fvg_width=%.10f entry=%.10f raw_sl=%.10f normalized_sl=%.10f sl_normalization=%s final_objective_id=%s tp=%.10f planned_r=%.8f sizing=MINIMUM_VOLUME_PARITY strategy_signal_valid=true",
+                        g_scenarios[scenario_index].id,
+                        DirectionName(g_scenarios[scenario_index].direction),
+                        g_scenarios[scenario_index].selected_fvg_id,
+                        g_scenarios[scenario_index].selected_fvg_bottom,
+                        g_scenarios[scenario_index].selected_fvg_top,
+                        g_scenarios[scenario_index].selected_fvg_width,
+                        g_scenarios[scenario_index].strategy_entry_price,
+                        g_scenarios[scenario_index].raw_strategy_sl,
+                        g_scenarios[scenario_index].normalized_sl,
+                        g_scenarios[scenario_index].direction>0 ? "FLOOR_OUTWARD" : "CEIL_OUTWARD",
+                        g_scenarios[scenario_index].final_objective_id,
+                        g_scenarios[scenario_index].final_objective_price,
+                        g_scenarios[scenario_index].final_objective_planned_r));
+   return true;
+  }
+
+bool FindManagedPendingTicket(ulong &ticket)
+  {
+   ticket=0;
+   for(int i=OrdersTotal()-1;i>=0;i--)
+     {
+      ulong t=OrderGetTicket(i);
+      if(t==0)
+         continue;
+      if(OrderGetString(ORDER_SYMBOL)!=_Symbol ||
+         (long)OrderGetInteger(ORDER_MAGIC)!=InpMagicNumber)
+         continue;
+      ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)OrderGetInteger(ORDER_TYPE);
+      if(type==ORDER_TYPE_BUY_LIMIT || type==ORDER_TYPE_SELL_LIMIT)
+        {
+         ticket=t;
+         return true;
+        }
+     }
+   return false;
+  }
+
+bool FindManagedPosition(ulong &ticket,ulong &identifier,double &open_price)
+  {
+   ticket=0;
+   identifier=0;
+   open_price=0.0;
+   for(int i=PositionsTotal()-1;i>=0;i--)
+     {
+      ulong t=PositionGetTicket(i);
+      if(t==0)
+         continue;
+      if(PositionGetString(POSITION_SYMBOL)!=_Symbol ||
+         (long)PositionGetInteger(POSITION_MAGIC)!=InpMagicNumber)
+         continue;
+      ticket=t;
+      identifier=(ulong)PositionGetInteger(POSITION_IDENTIFIER);
+      open_price=PositionGetDouble(POSITION_PRICE_OPEN);
+      return true;
+     }
+   return false;
+  }
+
+bool HasManagedAccountExposure()
+  {
+   ulong order_ticket=0;
+   if(FindManagedPendingTicket(order_ticket))
+      return true;
+   ulong position_ticket=0,identifier=0;
+   double open_price=0.0;
+   return FindManagedPosition(position_ticket,identifier,open_price);
+  }
+
+bool IsTesterExecutionEnvironment()
+  {
+   return ((bool)MQLInfoInteger(MQL_TESTER));
+  }
+
+bool IsCurrentTradeSessionOpen(const datetime when)
+  {
+   MqlDateTime now_parts;
+   TimeToStruct(when,now_parts);
+   ENUM_DAY_OF_WEEK day=(ENUM_DAY_OF_WEEK)now_parts.day_of_week;
+   int now_seconds=now_parts.hour*3600+now_parts.min*60+now_parts.sec;
+
+   for(uint index=0;index<32;index++)
+     {
+      datetime from=0,to=0;
+      if(!SymbolInfoSessionTrade(_Symbol,day,index,from,to))
+         break;
+      MqlDateTime f,t;
+      TimeToStruct(from,f);
+      TimeToStruct(to,t);
+      int fs=f.hour*3600+f.min*60+f.sec;
+      int ts=t.hour*3600+t.min*60+t.sec;
+      if(fs==ts)
+         return true;
+      if(fs<ts && now_seconds>=fs && now_seconds<ts)
+         return true;
+      if(fs>ts && (now_seconds>=fs || now_seconds<ts))
+         return true;
+     }
+   return false;
+  }
+
+bool VolumeOnStep(const double volume,const double minimum,const double step)
+  {
+   if(step<=0.0)
+      return false;
+   double units=(volume-minimum)/step;
+   return (MathAbs(units-MathRound(units))<=1.0e-8);
+  }
+
+bool IsAcceptableTradeRetcode(const uint retcode)
+  {
+   return (retcode==0 ||
+           retcode==TRADE_RETCODE_DONE ||
+           retcode==TRADE_RETCODE_PLACED ||
+           retcode==TRADE_RETCODE_DONE_PARTIAL);
+  }
+
+bool ObjectiveDeliveredAtTick(const V1ScenarioPlan &plan,const MqlTick &tick)
+  {
+   if(plan.final_objective_price<=0.0)
+      return false;
+   if(plan.direction>0)
+      return tick.bid>=plan.final_objective_price;
+   return tick.ask<=plan.final_objective_price;
+  }
+
+bool FinalObjectiveConsumed(const V1ScenarioPlan &plan)
+  {
+   if(plan.final_objective_liquidity_id=="")
+      return false;
+   if(IsStrategyLiquidityConsumed(plan.final_objective_liquidity_id))
+      return true;
+   for(int i=0;i<ArraySize(g_objective_candidates);i++)
+      if(g_objective_candidates[i].valid &&
+         g_objective_candidates[i].id==plan.final_objective_id)
+         return g_objective_candidates[i].consumed;
+   return false;
+  }
+
+bool BuildAndCheckPendingRequest(const int scenario_index,
+                                 const MqlTick &tick,
+                                 MqlTradeRequest &request,
+                                 MqlTradeCheckResult &check,
+                                 string &failure_reason)
+  {
+   ZeroMemory(request);
+   ZeroMemory(check);
+   failure_reason="";
+
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+     { failure_reason="SCENARIO_INDEX_INVALID"; return false; }
+
+   if(!g_scenarios[scenario_index].strategy_signal_valid)
+     { failure_reason="STRATEGY_SIGNAL_NOT_VALID"; return false; }
+
+   if(!IsTesterExecutionEnvironment())
+     { failure_reason="LIVE_EXECUTION_HARD_BLOCKED"; return false; }
+
+   // Same-decision-cycle execution: do not submit a closed-bar signal after
+   // terminal/tick catch-up or at a later session. The only current M1 bar
+   // allowed is the one that starts exactly when the CHoCH bar closed.
+   datetime current_m1_open=iTime(_Symbol,PERIOD_M1,0);
+   if(current_m1_open<=0 ||
+      current_m1_open!=g_scenarios[scenario_index].scenario_choch_bar_open+PeriodSeconds(PERIOD_M1))
+     { failure_reason="DELAYED_SIGNAL_NOT_CURRENT_DECISION_CYCLE"; return false; }
+
+   if(!(bool)TerminalInfoInteger(TERMINAL_TRADE_ALLOWED) ||
+      !(bool)MQLInfoInteger(MQL_TRADE_ALLOWED) ||
+      !(bool)AccountInfoInteger(ACCOUNT_TRADE_ALLOWED) ||
+      !(bool)AccountInfoInteger(ACCOUNT_TRADE_EXPERT))
+     { failure_reason="ALGO_OR_ACCOUNT_TRADING_NOT_ALLOWED"; return false; }
+
+   long trade_mode=SymbolInfoInteger(_Symbol,SYMBOL_TRADE_MODE);
+   if(trade_mode==SYMBOL_TRADE_MODE_DISABLED || trade_mode==SYMBOL_TRADE_MODE_CLOSEONLY)
+     { failure_reason="SYMBOL_TRADE_MODE_DISALLOWS_ENTRY"; return false; }
+   if(g_scenarios[scenario_index].direction>0 && trade_mode==SYMBOL_TRADE_MODE_SHORTONLY)
+     { failure_reason="SYMBOL_SHORT_ONLY"; return false; }
+   if(g_scenarios[scenario_index].direction<0 && trade_mode==SYMBOL_TRADE_MODE_LONGONLY)
+     { failure_reason="SYMBOL_LONG_ONLY"; return false; }
+
+   long order_mode=SymbolInfoInteger(_Symbol,SYMBOL_ORDER_MODE);
+   if((order_mode & SYMBOL_ORDER_LIMIT)==0)
+     { failure_reason="LIMIT_ORDER_NOT_SUPPORTED"; return false; }
+   if((order_mode & SYMBOL_ORDER_SL)==0 || (order_mode & SYMBOL_ORDER_TP)==0)
+     { failure_reason="ATTACHED_SL_TP_NOT_SUPPORTED"; return false; }
+
+   long expiration_mode=SymbolInfoInteger(_Symbol,SYMBOL_EXPIRATION_MODE);
+   long gtc_mode=SymbolInfoInteger(_Symbol,SYMBOL_ORDER_GTC_MODE);
+   if((expiration_mode & SYMBOL_EXPIRATION_GTC)==0 || gtc_mode!=SYMBOL_ORDERS_GTC)
+     { failure_reason="PERSISTENT_GTC_NOT_SUPPORTED"; return false; }
+
+   if(!IsCurrentTradeSessionOpen((datetime)tick.time))
+     { failure_reason="TRADE_SESSION_CLOSED_AT_SIGNAL"; return false; }
+
+   if(!IsPriceOnTickGrid(g_scenarios[scenario_index].strategy_entry_price) ||
+      !IsPriceOnTickGrid(g_scenarios[scenario_index].normalized_sl) ||
+      !IsPriceOnTickGrid(g_scenarios[scenario_index].final_objective_price))
+     { failure_reason="PRICE_NOT_ON_TICK_GRID"; return false; }
+
+   double point=SymbolInfoDouble(_Symbol,SYMBOL_POINT);
+   long stops_points=SymbolInfoInteger(_Symbol,SYMBOL_TRADE_STOPS_LEVEL);
+   double min_distance=MathMax(0.0,(double)stops_points*point);
+   double eps=LiquidityTickSize()*1.0e-6;
+
+   if(g_scenarios[scenario_index].direction>0)
+     {
+      if(tick.ask-g_scenarios[scenario_index].strategy_entry_price+eps<min_distance)
+        { failure_reason="BUY_LIMIT_STOPSLEVEL_ENTRY"; return false; }
+      if(g_scenarios[scenario_index].strategy_entry_price-g_scenarios[scenario_index].normalized_sl+eps<min_distance)
+        { failure_reason="LONG_SL_STOPSLEVEL"; return false; }
+      if(g_scenarios[scenario_index].final_objective_price-g_scenarios[scenario_index].strategy_entry_price+eps<min_distance)
+        { failure_reason="LONG_TP_STOPSLEVEL"; return false; }
+     }
+   else
+     {
+      if(g_scenarios[scenario_index].strategy_entry_price-tick.bid+eps<min_distance)
+        { failure_reason="SELL_LIMIT_STOPSLEVEL_ENTRY"; return false; }
+      if(g_scenarios[scenario_index].normalized_sl-g_scenarios[scenario_index].strategy_entry_price+eps<min_distance)
+        { failure_reason="SHORT_SL_STOPSLEVEL"; return false; }
+      if(g_scenarios[scenario_index].strategy_entry_price-g_scenarios[scenario_index].final_objective_price+eps<min_distance)
+        { failure_reason="SHORT_TP_STOPSLEVEL"; return false; }
+     }
+
+   double volume_min=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MIN);
+   double volume_max=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MAX);
+   double volume_step=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_STEP);
+   if(volume_min<=0.0 || volume_max<volume_min ||
+      !VolumeOnStep(volume_min,volume_min,volume_step))
+     { failure_reason="MINIMUM_VOLUME_PARITY_INVALID"; return false; }
+   g_scenarios[scenario_index].order_volume=volume_min;
+
+   request.action=TRADE_ACTION_PENDING;
+   request.magic=(ulong)InpMagicNumber;
+   request.symbol=_Symbol;
+   request.volume=g_scenarios[scenario_index].order_volume;
+   request.price=g_scenarios[scenario_index].strategy_entry_price;
+   request.sl=g_scenarios[scenario_index].normalized_sl;
+   request.tp=g_scenarios[scenario_index].final_objective_price;
+   request.type=(g_scenarios[scenario_index].direction>0 ? ORDER_TYPE_BUY_LIMIT : ORDER_TYPE_SELL_LIMIT);
+   request.type_filling=ORDER_FILLING_RETURN;
+   request.type_time=ORDER_TIME_GTC;
+   request.expiration=0;
+   request.comment=StringFormat("MV1-%d-%s",scenario_index,g_scenarios[scenario_index].direction>0 ? "L" : "S");
+
+   ResetLastError();
+   if(!OrderCheck(request,check))
+     {
+      failure_reason=StringFormat("ORDERCHECK_CALL_FAILED_%d",GetLastError());
+      return false;
+     }
+   if(!IsAcceptableTradeRetcode(check.retcode))
+     {
+      failure_reason=StringFormat("ORDERCHECK_RETCODE_%u_%s",check.retcode,check.comment);
+      return false;
+     }
+   return true;
+  }
+
+bool SubmitPendingForScenario(const int scenario_index,const datetime available_at)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+      return false;
+
+   MqlTick tick;
+   if(!SymbolInfoTick(_Symbol,tick))
+     {
+      g_execution_infeasible++;
+      MarkExecutionNoTrade(scenario_index,available_at,"NO_CURRENT_TICK_FOR_PREFLIGHT",V1_EXEC_EXECUTION_INFEASIBLE);
+      return false;
+     }
+
+   if(ObjectiveDeliveredAtTick(g_scenarios[scenario_index],tick) || FinalObjectiveConsumed(g_scenarios[scenario_index]))
+     {
+      g_scenarios[scenario_index].strategy_state=V1_STRATEGY_CANCELED;
+      g_scenarios[scenario_index].canceled_at=available_at;
+      g_scenarios[scenario_index].cancel_reason="CANCELED_OBJECTIVE_DELIVERED";
+      g_scenarios[scenario_index].strategy_cancel_at=available_at;
+      g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_OBJECTIVE_DELIVERED";
+      ReleaseRootScenarioOwner(g_scenarios[scenario_index].root_zone_id,g_scenarios[scenario_index].id);
+      LogScenarioCanceled(g_scenarios[scenario_index],available_at,"CANCELED_OBJECTIVE_DELIVERED");
+      g_scenarios_canceled++;
+      return false;
+     }
+
+   MqlTradeRequest request;
+   MqlTradeCheckResult check;
+   string failure_reason="";
+   if(!BuildAndCheckPendingRequest(scenario_index,tick,request,check,failure_reason))
+     {
+      g_execution_infeasible++;
+      MarkExecutionNoTrade(scenario_index,available_at,failure_reason,V1_EXEC_EXECUTION_INFEASIBLE);
+      LogLine("EXECUTION_PREFLIGHT_FAILED","M1",available_at,g_scenarios[scenario_index].id,
+              StringFormat("scenario_id=%s reason=%s bid=%.10f ask=%.10f entry=%.10f sl=%.10f tp=%.10f stops_level=%I64d freeze_level=%I64d strategy_geometry_unchanged=true",
+                           g_scenarios[scenario_index].id,failure_reason,tick.bid,tick.ask,g_scenarios[scenario_index].strategy_entry_price,g_scenarios[scenario_index].normalized_sl,g_scenarios[scenario_index].final_objective_price,
+                           SymbolInfoInteger(_Symbol,SYMBOL_TRADE_STOPS_LEVEL),
+                           SymbolInfoInteger(_Symbol,SYMBOL_TRADE_FREEZE_LEVEL)));
+      return false;
+     }
+
+   g_scenarios[scenario_index].execution_status=V1_EXEC_PREFLIGHT_OK;
+   LogLine("EXECUTION_PREFLIGHT_OK","M1",available_at,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s bid=%.10f ask=%.10f entry=%.10f sl=%.10f tp=%.10f volume=%.8f tick_size=%.10f point=%.10f stops_level=%I64d freeze_level=%I64d order_time=GTC filling=RETURN",
+                        g_scenarios[scenario_index].id,tick.bid,tick.ask,g_scenarios[scenario_index].strategy_entry_price,g_scenarios[scenario_index].normalized_sl,g_scenarios[scenario_index].final_objective_price,g_scenarios[scenario_index].order_volume,
+                        LiquidityTickSize(),SymbolInfoDouble(_Symbol,SYMBOL_POINT),
+                        SymbolInfoInteger(_Symbol,SYMBOL_TRADE_STOPS_LEVEL),
+                        SymbolInfoInteger(_Symbol,SYMBOL_TRADE_FREEZE_LEVEL)));
+
+   MqlTradeResult result;
+   ZeroMemory(result);
+   ResetLastError();
+   bool call_ok=OrderSend(request,result);
+   if(!call_ok || !IsAcceptableTradeRetcode(result.retcode) || result.order==0)
+     {
+      g_order_rejected++;
+      g_scenarios[scenario_index].request_id=result.request_id;
+      MarkExecutionNoTrade(scenario_index,available_at,
+                           StringFormat("ORDER_REJECTED_%u_%s",result.retcode,result.comment),
+                           V1_EXEC_REJECTED);
+      LogLine("ORDER_REJECTED","M1",available_at,g_scenarios[scenario_index].id,
+              StringFormat("scenario_id=%s call_ok=%s retcode=%u comment=%s request_id=%u order=%I64u deal=%I64u last_error=%d retry=false",
+                           g_scenarios[scenario_index].id,call_ok ? "true" : "false",result.retcode,result.comment,result.request_id,result.order,result.deal,GetLastError()));
+      return false;
+     }
+
+   g_scenarios[scenario_index].strategy_state=V1_STRATEGY_PENDING;
+   g_scenarios[scenario_index].execution_status=V1_EXEC_PENDING_ACCEPTED;
+   g_scenarios[scenario_index].pending_submitted_at=available_at;
+   g_scenarios[scenario_index].request_id=result.request_id;
+   g_scenarios[scenario_index].broker_order_ticket=result.order;
+   g_managed_scenario_id=g_scenarios[scenario_index].id;
+   g_managed_order_ticket=result.order;
+   g_managed_position_id=0;
+   g_orders_accepted++;
+
+   LogLine("PENDING_ORDER_ACCEPTED","M1",available_at,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s order_ticket=%I64u request_id=%u direction=%s entry=%.10f sl=%.10f tp=%.10f volume=%.8f order_time=GTC filling=RETURN strategy_state=PENDING",
+                        g_scenarios[scenario_index].id,result.order,result.request_id,DirectionName(g_scenarios[scenario_index].direction),g_scenarios[scenario_index].strategy_entry_price,g_scenarios[scenario_index].normalized_sl,g_scenarios[scenario_index].final_objective_price,g_scenarios[scenario_index].order_volume));
+   return true;
+  }
+
+void ProcessIntegratedExecutionAuthorizationEpoch(const datetime available_at)
+  {
+   ArrayResize(g_execution_candidates,0);
+
+   for(int i=0;i<ArraySize(g_scenarios);i++)
+     {
+      if(!g_scenarios[i].valid ||
+         g_scenarios[i].strategy_state!=V1_STRATEGY_WAITING_EXECUTION_GEOMETRY ||
+         g_scenarios[i].fvg_frozen_at!=available_at)
+         continue;
+      if(!BuildExecutionGeometryForScenario(i,available_at))
+         continue;
+
+      int n=ArraySize(g_execution_candidates);
+      if(ArrayResize(g_execution_candidates,n+1,16)<0)
+         continue;
+      g_execution_candidates[n].valid=true;
+      g_execution_candidates[n].scenario_index=i;
+      g_execution_candidates[n].scenario_id=g_scenarios[i].id;
+      g_execution_candidates[n].direction=g_scenarios[i].direction;
+      g_execution_candidates[n].authorization_at=available_at;
+     }
+
+   int count=ArraySize(g_execution_candidates);
+   if(count<=0)
+      return;
+
+   if(HasManagedAccountExposure() || g_managed_scenario_id!="")
+     {
+      for(int i=0;i<count;i++)
+        {
+         g_exposure_blocked++;
+         MarkExecutionNoTrade(g_execution_candidates[i].scenario_index,
+                              available_at,
+                              "EXPOSURE_ALREADY_ACCEPTED",
+                              V1_EXEC_NONE);
+        }
+      LogLine("EXECUTION_AUTHORIZATION_BLOCKED","M1",available_at,"",
+              StringFormat("reason=EXPOSURE_ALREADY_ACCEPTED candidate_count=%d delayed_submission=false",count));
+      return;
+     }
+
+   // D-129 explicit fail-closed arbitration: no score/latest/nearest Root tie-break.
+   // Current authority defines one accepted exposure but does not define how
+   // several fully-authorized Root branches should share source-survival state.
+   if(count>1)
+     {
+      g_simultaneous_authorization_ambiguous+=count;
+      for(int i=0;i<count;i++)
+         MarkExecutionNoTrade(g_execution_candidates[i].scenario_index,
+                              available_at,
+                              "AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION",
+                              V1_EXEC_NONE);
+      LogLine("AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION","M1",available_at,"",
+              StringFormat("candidate_count=%d same_direction_merge_disabled=true arbitrary_root_selection=false all_candidates_no_trade=true",count));
+      return;
+     }
+
+   SubmitPendingForScenario(g_execution_candidates[0].scenario_index,available_at);
+  }
+
+bool FindEntryDealForOrder(const ulong order_ticket,
+                           const datetime from_time,
+                           ulong &deal_ticket,
+                           ulong &position_id,
+                           datetime &deal_time,
+                           double &deal_price)
+  {
+   deal_ticket=0;
+   position_id=0;
+   deal_time=0;
+   deal_price=0.0;
+   datetime from=(from_time>86400 ? from_time-86400 : 0);
+   if(!HistorySelect(from,TimeCurrent()+60))
+      return false;
+   for(int i=HistoryDealsTotal()-1;i>=0;i--)
+     {
+      ulong deal=HistoryDealGetTicket(i);
+      if(deal==0)
+         continue;
+      if(HistoryDealGetString(deal,DEAL_SYMBOL)!=_Symbol ||
+         (long)HistoryDealGetInteger(deal,DEAL_MAGIC)!=InpMagicNumber ||
+         (ulong)HistoryDealGetInteger(deal,DEAL_ORDER)!=order_ticket)
+         continue;
+      ENUM_DEAL_ENTRY entry=(ENUM_DEAL_ENTRY)HistoryDealGetInteger(deal,DEAL_ENTRY);
+      if(entry!=DEAL_ENTRY_IN && entry!=DEAL_ENTRY_INOUT)
+         continue;
+      deal_ticket=deal;
+      position_id=(ulong)HistoryDealGetInteger(deal,DEAL_POSITION_ID);
+      deal_time=(datetime)HistoryDealGetInteger(deal,DEAL_TIME);
+      deal_price=HistoryDealGetDouble(deal,DEAL_PRICE);
+      return true;
+     }
+   return false;
+  }
+
+bool FindExitDealForPosition(const ulong position_id,
+                             const datetime from_time,
+                             ulong &deal_ticket,
+                             datetime &deal_time,
+                             double &deal_price,
+                             long &deal_reason)
+  {
+   deal_ticket=0;
+   deal_time=0;
+   deal_price=0.0;
+   deal_reason=0;
+   if(position_id==0)
+      return false;
+   datetime from=(from_time>86400 ? from_time-86400 : 0);
+   if(!HistorySelect(from,TimeCurrent()+60))
+      return false;
+   for(int i=HistoryDealsTotal()-1;i>=0;i--)
+     {
+      ulong deal=HistoryDealGetTicket(i);
+      if(deal==0)
+         continue;
+      if(HistoryDealGetString(deal,DEAL_SYMBOL)!=_Symbol ||
+         (long)HistoryDealGetInteger(deal,DEAL_MAGIC)!=InpMagicNumber ||
+         (ulong)HistoryDealGetInteger(deal,DEAL_POSITION_ID)!=position_id)
+         continue;
+      ENUM_DEAL_ENTRY entry=(ENUM_DEAL_ENTRY)HistoryDealGetInteger(deal,DEAL_ENTRY);
+      if(entry!=DEAL_ENTRY_OUT && entry!=DEAL_ENTRY_OUT_BY && entry!=DEAL_ENTRY_INOUT)
+         continue;
+      deal_ticket=deal;
+      deal_time=(datetime)HistoryDealGetInteger(deal,DEAL_TIME);
+      deal_price=HistoryDealGetDouble(deal,DEAL_PRICE);
+      deal_reason=HistoryDealGetInteger(deal,DEAL_REASON);
+      return true;
+     }
+   return false;
+  }
+
+void MarkScenarioFilled(const int scenario_index,
+                        const datetime observed_at,
+                        const ulong deal_ticket,
+                        const ulong position_id,
+                        const datetime fill_at,
+                        const double fill_price)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+      return;
+   if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_FILLED)
+      return;
+
+   bool canceled_before_fill=(g_scenarios[scenario_index].strategy_cancel_at>0 ||
+                              g_scenarios[scenario_index].execution_status==V1_EXEC_CANCEL_REJECTED ||
+                              g_scenarios[scenario_index].execution_status==V1_EXEC_CANCEL_REQUESTED ||
+                              g_scenarios[scenario_index].execution_status==V1_EXEC_CANCELED ||
+                              g_scenarios[scenario_index].strategy_state==V1_STRATEGY_CANCELED);
+
+   g_scenarios[scenario_index].strategy_state=V1_STRATEGY_FILLED;
+   g_scenarios[scenario_index].execution_status=(canceled_before_fill ? V1_EXEC_DIVERGENCE : V1_EXEC_FILLED);
+   g_scenarios[scenario_index].fill_at=fill_at>0 ? fill_at : observed_at;
+   g_scenarios[scenario_index].fill_price=fill_price;
+   g_scenarios[scenario_index].broker_deal_ticket=deal_ticket;
+   g_scenarios[scenario_index].broker_position_id=position_id;
+   g_managed_position_id=position_id;
+   g_positions_filled++;
+
+   if(canceled_before_fill)
+     {
+      g_scenarios[scenario_index].execution_divergence=true;
+      g_scenarios[scenario_index].execution_divergence_reason="FILLED_AFTER_STRATEGY_CANCELLATION";
+      g_execution_divergences++;
+     }
+
+   LogLine("POSITION_FILLED","M1",observed_at,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s order_ticket=%I64u deal_ticket=%I64u position_id=%I64u strategy_entry=%.10f actual_fill=%.10f fill_at=%s execution_status=%s divergence=%s",
+                        g_scenarios[scenario_index].id,g_scenarios[scenario_index].broker_order_ticket,deal_ticket,position_id,g_scenarios[scenario_index].strategy_entry_price,g_scenarios[scenario_index].fill_price,
+                        TimeToString(g_scenarios[scenario_index].fill_at,TIME_DATE|TIME_SECONDS),ExecutionStatusName(g_scenarios[scenario_index].execution_status),
+                        g_scenarios[scenario_index].execution_divergence ? "true" : "false"));
+  }
+
+bool RequestPendingCancellation(const int scenario_index,
+                                const datetime observed_at)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+      return false;
+   if(g_scenarios[scenario_index].broker_order_ticket==0)
+      return false;
+
+   if(!OrderSelect(g_scenarios[scenario_index].broker_order_ticket))
+      return false;
+
+   MqlTradeRequest request;
+   MqlTradeResult result;
+   ZeroMemory(request);
+   ZeroMemory(result);
+   request.action=TRADE_ACTION_REMOVE;
+   request.order=g_scenarios[scenario_index].broker_order_ticket;
+   request.symbol=_Symbol;
+   request.magic=(ulong)InpMagicNumber;
+
+   g_scenarios[scenario_index].cancel_request_sent=true;
+   g_scenarios[scenario_index].execution_status=V1_EXEC_CANCEL_REQUESTED;
+   g_pending_cancellations++;
+
+   bool call_ok=OrderSend(request,result);
+   if(call_ok && IsAcceptableTradeRetcode(result.retcode))
+     {
+      g_scenarios[scenario_index].execution_status=V1_EXEC_CANCELED;
+      LogLine("PENDING_CANCEL_ACCEPTED","M1",observed_at,g_scenarios[scenario_index].id,
+              StringFormat("scenario_id=%s order_ticket=%I64u retcode=%u comment=%s strategy_cancel_reason=%s",
+                           g_scenarios[scenario_index].id,g_scenarios[scenario_index].broker_order_ticket,result.retcode,result.comment,g_scenarios[scenario_index].strategy_cancel_reason));
+      return true;
+     }
+
+   g_scenarios[scenario_index].execution_status=V1_EXEC_CANCEL_REJECTED;
+   g_cancel_rejected++;
+   LogLine("PENDING_CANCEL_REJECTED","M1",observed_at,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s order_ticket=%I64u retcode=%u comment=%s strategy_state=CANCELED broker_order_may_survive=true",
+                        g_scenarios[scenario_index].id,g_scenarios[scenario_index].broker_order_ticket,result.retcode,result.comment));
+   return false;
+  }
+
+bool RequestResidualPendingCancellationAfterFill(const int scenario_index,
+                                                   const datetime observed_at,
+                                                   const ulong residual_order_ticket)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios) || residual_order_ticket==0)
+      return false;
+   if(!OrderSelect(residual_order_ticket))
+      return false;
+
+   MqlTradeRequest request;
+   MqlTradeResult result;
+   ZeroMemory(request);
+   ZeroMemory(result);
+   request.action=TRADE_ACTION_REMOVE;
+   request.order=residual_order_ticket;
+   request.symbol=_Symbol;
+   request.magic=(ulong)InpMagicNumber;
+
+   g_scenarios[scenario_index].cancel_request_sent=true;
+   if(!g_scenarios[scenario_index].execution_divergence)
+     {
+      g_scenarios[scenario_index].execution_divergence=true;
+      g_execution_divergences++;
+     }
+   g_scenarios[scenario_index].execution_divergence_reason="PARTIAL_FILL_WITH_RESIDUAL_PENDING";
+   g_scenarios[scenario_index].execution_status=V1_EXEC_DIVERGENCE;
+   g_pending_cancellations++;
+
+   bool call_ok=OrderSend(request,result);
+   if(call_ok && IsAcceptableTradeRetcode(result.retcode))
+     {
+      LogLine("PARTIAL_FILL_RESIDUAL_CANCEL_ACCEPTED","M1",observed_at,g_scenarios[scenario_index].id,
+              StringFormat("scenario_id=%s residual_order_ticket=%I64u retcode=%u comment=%s position_remains_managed=true",
+                           g_scenarios[scenario_index].id,residual_order_ticket,result.retcode,result.comment));
+      return true;
+     }
+
+   g_cancel_rejected++;
+   LogLine("PARTIAL_FILL_RESIDUAL_CANCEL_REJECTED","M1",observed_at,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s residual_order_ticket=%I64u call_ok=%s retcode=%u comment=%s retry=false exposure_lock_remains=true",
+                        g_scenarios[scenario_index].id,residual_order_ticket,call_ok ? "true" : "false",result.retcode,result.comment));
+   return false;
+  }
+
+void ReconcileManagedExecution(const datetime observed_at)
+  {
+   if(g_managed_scenario_id=="")
+      return;
+   int scenario_index=FindScenarioById(g_managed_scenario_id);
+   if(scenario_index<0)
+      return;
+
+   ulong position_ticket=0,position_id=0;
+   double position_open=0.0;
+   bool have_position=FindManagedPosition(position_ticket,position_id,position_open);
+   if(have_position)
+     {
+      ulong deal=0,deal_position_id=0;
+      datetime deal_time=0;
+      double deal_price=position_open;
+      FindEntryDealForOrder(g_scenarios[scenario_index].broker_order_ticket,g_scenarios[scenario_index].pending_submitted_at,
+                            deal,deal_position_id,deal_time,deal_price);
+      if(deal_position_id==0)
+         deal_position_id=position_id;
+      MarkScenarioFilled(scenario_index,observed_at,deal,deal_position_id,deal_time,deal_price);
+
+      ulong residual_order_ticket=0;
+      if(FindManagedPendingTicket(residual_order_ticket))
+        {
+         g_managed_order_ticket=residual_order_ticket;
+         if(!g_scenarios[scenario_index].cancel_request_sent)
+            RequestResidualPendingCancellationAfterFill(scenario_index,observed_at,residual_order_ticket);
+        }
+      else
+         g_managed_order_ticket=0;
+      return;
+     }
+
+   if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_PENDING ||
+      g_scenarios[scenario_index].execution_status==V1_EXEC_CANCEL_REJECTED ||
+      g_scenarios[scenario_index].execution_status==V1_EXEC_CANCEL_REQUESTED ||
+      g_scenarios[scenario_index].execution_status==V1_EXEC_CANCELED)
+     {
+      if(g_scenarios[scenario_index].broker_order_ticket>0 && OrderSelect(g_scenarios[scenario_index].broker_order_ticket))
+         return;
+
+      ulong deal=0,deal_position_id=0;
+      datetime deal_time=0;
+      double deal_price=0.0;
+      if(FindEntryDealForOrder(g_scenarios[scenario_index].broker_order_ticket,g_scenarios[scenario_index].pending_submitted_at,
+                               deal,deal_position_id,deal_time,deal_price))
+        {
+         MarkScenarioFilled(scenario_index,observed_at,deal,deal_position_id,deal_time,deal_price);
+         g_managed_order_ticket=0;
+         return;
+        }
+
+      if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_CANCELED || g_scenarios[scenario_index].execution_status==V1_EXEC_CANCELED)
+        {
+         g_managed_scenario_id="";
+         g_managed_order_ticket=0;
+         g_managed_position_id=0;
+         return;
+        }
+
+      g_scenarios[scenario_index].execution_status=V1_EXEC_DIVERGENCE;
+      g_scenarios[scenario_index].execution_divergence=true;
+      g_scenarios[scenario_index].execution_divergence_reason="PENDING_DISAPPEARED_WITHOUT_FILL_OR_STRATEGY_CANCEL";
+      g_execution_divergences++;
+      LogLine("EXECUTION_DIVERGENCE","M1",observed_at,g_scenarios[scenario_index].id,
+              StringFormat("scenario_id=%s reason=%s order_ticket=%I64u",
+                           g_scenarios[scenario_index].id,g_scenarios[scenario_index].execution_divergence_reason,g_scenarios[scenario_index].broker_order_ticket));
+      g_managed_scenario_id="";
+      g_managed_order_ticket=0;
+      g_managed_position_id=0;
+      return;
+     }
+
+   if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_FILLED)
+     {
+      ulong residual_order_ticket=0;
+      if(FindManagedPendingTicket(residual_order_ticket))
+        {
+         g_managed_order_ticket=residual_order_ticket;
+         if(!g_scenarios[scenario_index].execution_divergence)
+           {
+            g_scenarios[scenario_index].execution_divergence=true;
+            g_scenarios[scenario_index].execution_divergence_reason="RESIDUAL_PENDING_AFTER_FILL";
+            g_scenarios[scenario_index].execution_status=V1_EXEC_DIVERGENCE;
+            g_execution_divergences++;
+            LogLine("EXECUTION_DIVERGENCE","M1",observed_at,g_scenarios[scenario_index].id,
+                    StringFormat("scenario_id=%s reason=%s residual_order_ticket=%I64u exposure_lock_remains=true",
+                                 g_scenarios[scenario_index].id,g_scenarios[scenario_index].execution_divergence_reason,residual_order_ticket));
+           }
+         if(!g_scenarios[scenario_index].cancel_request_sent)
+            RequestResidualPendingCancellationAfterFill(scenario_index,observed_at,residual_order_ticket);
+         return;
+        }
+
+      g_managed_order_ticket=0;
+      ulong exit_deal=0;
+      datetime exit_time=0;
+      double exit_price=0.0;
+      long exit_reason=0;
+      if(FindExitDealForPosition(g_scenarios[scenario_index].broker_position_id,g_scenarios[scenario_index].fill_at,
+                                 exit_deal,exit_time,exit_price,exit_reason))
+        {
+         if(g_scenarios[scenario_index].position_closed_at==0)
+           {
+            g_scenarios[scenario_index].position_closed_at=exit_time;
+            g_scenarios[scenario_index].exit_price=exit_price;
+            g_scenarios[scenario_index].exit_reason=exit_reason;
+            g_scenarios[scenario_index].exit_deal_ticket=exit_deal;
+            if(!g_scenarios[scenario_index].execution_divergence)
+               g_scenarios[scenario_index].execution_status=V1_EXEC_CLOSED;
+            g_positions_closed++;
+            LogLine("POSITION_CLOSED","M1",observed_at,g_scenarios[scenario_index].id,
+                    StringFormat("scenario_id=%s exit_deal=%I64u position_id=%I64u exit_at=%s actual_exit=%.10f deal_reason=%I64d strategy_sl=%.10f strategy_tp=%.10f execution_status=%s",
+                                 g_scenarios[scenario_index].id,exit_deal,g_scenarios[scenario_index].broker_position_id,
+                                 TimeToString(exit_time,TIME_DATE|TIME_SECONDS),exit_price,exit_reason,
+                                 g_scenarios[scenario_index].normalized_sl,g_scenarios[scenario_index].final_objective_price,ExecutionStatusName(g_scenarios[scenario_index].execution_status)));
+           }
+         g_managed_scenario_id="";
+         g_managed_order_ticket=0;
+         g_managed_position_id=0;
+        }
+     }
+  }
+
+void ManageIntegratedExecution(const MqlTick &tick)
+  {
+   ReconcileManagedExecution((datetime)tick.time);
+   if(g_managed_scenario_id=="")
+      return;
+
+   int scenario_index=FindScenarioById(g_managed_scenario_id);
+   if(scenario_index<0)
+      return;
+
+   if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_FILLED)
+      return; // after fill, frozen server SL/TP decide the experiment.
+
+   if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_PENDING &&
+      (FinalObjectiveConsumed(g_scenarios[scenario_index]) || ObjectiveDeliveredAtTick(g_scenarios[scenario_index],tick)))
+     {
+      g_scenarios[scenario_index].strategy_state=V1_STRATEGY_CANCELED;
+      g_scenarios[scenario_index].canceled_at=(datetime)tick.time;
+      g_scenarios[scenario_index].cancel_reason="CANCELED_OBJECTIVE_DELIVERED";
+      g_scenarios[scenario_index].strategy_cancel_at=(datetime)tick.time;
+      g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_OBJECTIVE_DELIVERED";
+      ReleaseRootScenarioOwner(g_scenarios[scenario_index].root_zone_id,g_scenarios[scenario_index].id);
+      LogScenarioCanceled(g_scenarios[scenario_index],(datetime)tick.time,"CANCELED_OBJECTIVE_DELIVERED");
+      g_scenarios_canceled++;
+     }
+   else if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_CANCELED && g_scenarios[scenario_index].strategy_cancel_at==0)
+     {
+      g_scenarios[scenario_index].strategy_cancel_at=g_scenarios[scenario_index].canceled_at>0 ? g_scenarios[scenario_index].canceled_at : (datetime)tick.time;
+      if(g_scenarios[scenario_index].cancel_reason=="ROOT_INVALIDATED")
+         g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_SOURCE_INVALIDATED";
+      else
+         g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_DIRECTION_AUTHORITY";
+     }
+
+   if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_CANCELED &&
+      g_scenarios[scenario_index].broker_order_ticket>0 &&
+      !g_scenarios[scenario_index].cancel_request_sent)
+      RequestPendingCancellation(scenario_index,(datetime)tick.time);
+
+   ReconcileManagedExecution((datetime)tick.time);
   }
 
 //+------------------------------------------------------------------+
@@ -5479,7 +7061,7 @@ void LogScenarioSnapshot(const datetime available_at)
            "",
            available_at,
            "",
-           StringFormat("active_planned=%d continuation=%d early_reversal=%d canceled=%d objective_candidates_frozen=%I64d no_objective=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d strategy_source_kind=ROOT child_required=false linear_trigger_pipeline=true fvg_authorization=false",
+           StringFormat("active_planned=%d continuation=%d early_reversal=%d canceled=%d objective_candidates_frozen=%I64d no_objective=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d strategy_source_kind=ROOT child_required=false linear_trigger_pipeline=true fvg_authorization=true entry_sl_tp=true tester_pending_execution=true live_execution=false",
                         planned,
                         continuation,
                         reversal,
@@ -6997,6 +8579,11 @@ void ProcessClosedBar(const int tf_index,
 
    bool new_wave=ConfirmWaveIfAny(g_structure[tf_index],bar,available_at);
 
+   // D-128A FVG is a global M1 detector fact. Evaluate before ShiftRecentBars
+   // so recent0/recent1 are exactly Candle1/Candle2 and bar is Candle3.
+   if(tf_index==5)
+      EvaluateD128AM1FvgDetector(g_structure[tf_index],bar,available_at);
+
    // Structural rank may have changed either through BOS/INITIAL_BOS or through
    // the newly confirmed wave. Only confirmed WAVE references can create
    // EXTERNAL_SWING liquidity; synthetic delivery extremes cannot.
@@ -7035,6 +8622,15 @@ void ProcessClosedBar(const int tf_index,
       // bar. Scenario authority checks only that it is direction-compatible
       // and strictly later than the accepted scenario sweep.
       ProcessD127ScenarioChochStage(bar,available_at);
+
+      // D-128B..D-131: all scenarios that froze their FVG set on this CHoCH
+      // close now compute Entry/SL/TP, arbitrate one-exposure conflicts, and
+      // (tester only) submit the pending order in the SAME decision cycle.
+      ProcessIntegratedExecutionAuthorizationEpoch(available_at);
+
+      // Keep only detector facts that can still belong to an active
+      // Sweep->future-CHoCH chain. Audit history already lives in CSV.
+      PruneD128AM1FvgDetections();
      }
 
    if(tf_index==1 || tf_index==2)
@@ -7131,7 +8727,7 @@ bool BootstrapStructureCore()
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
    g_init_state=V1_INIT_SOURCE_CONTEXT;
-   LogLine("INIT_STATE","",now,"","D127_LINEAR_TRIGGER_PIPELINE_READY_FVG_DISABLED");
+   LogLine("INIT_STATE","",now,"","INTEGRATED_BASELINE_EXECUTION_READY_TESTER_ONLY");
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -7170,7 +8766,7 @@ bool BootstrapStructureCore()
       CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
 
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_D127_LINEAR_TRIGGER_PIPELINE ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d root_watches_created=%I64d prior_touch_ineligible=%I64d root_contexts_ready=%I64d scenarios_planned=%I64d phase4b_planning_enabled=true m1_sweep_detector=true scenario_sweep_sequence=true m1_choch_detector=true scenario_choch_sequence=true fvg_authorization=false",
+           StringFormat("READY_INTEGRATED_BASELINE_EXECUTION ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d root_watches_created=%I64d prior_touch_ineligible=%I64d root_contexts_ready=%I64d scenarios_planned=%I64d phase4b_planning_enabled=true m1_sweep_detector=true scenario_sweep_sequence=true m1_choch_detector=true scenario_choch_sequence=true fvg_authorization=true entry_sl_tp=true tester_pending_execution=true live_execution=false",
                         TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
                         h4_long_horizon_count,
                         ArraySize(g_liquidity),
@@ -7396,8 +8992,9 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
    ArrayResize(g_m1_sweep_detections,0);
    g_m1_sweep_detector_bar_open=0;
 
-   // D-127 enables the linear Contact -> Sweep -> CHoCH sequence.
-   // FVG execution / order authorization remains off.
+   // Integrated D-128A..D-131 processing is complete for this batch.
+   // FVG freeze, strategy geometry, authorization and tester execution are
+   // all emitted in the same causal close-timestamp pipeline.
   }
 
 //+------------------------------------------------------------------+
@@ -7435,9 +9032,17 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=1.10 property_version=1.00 magic=%I64d phase=D127_LINEAR_TRIGGER_PIPELINE_CORE fvg_origin_ob_experiment=%s",
+           StringFormat("build=1.50 property_version=1.00 magic=%I64d phase=D131_INTEGRATED_BASELINE_EXECUTION_CORE fvg_origin_ob_experiment=%s tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         InpEnableFvgOriginObExperiment ? "true" : "false"));
+
+   if(HasManagedAccountExposure())
+     {
+      g_init_state=V1_INIT_EXECUTION_RECOVERY_REQUIRED;
+      LogLine("INIT_EXECUTION_RECOVERY_REQUIRED","",TimeCurrent(),"",
+              "Existing symbol+magic pending/position detected at startup; this build will not guess scenario provenance or submit new exposure");
+      return INIT_SUCCEEDED;
+     }
 
    // Do not fail initialization just because MT5 is still synchronizing history.
    TryInitialize();
@@ -7449,7 +9054,7 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d root_contexts_ready=%I64d children_created_strategy_sources=%I64d optional_child_observations=%I64d post_contact_child_events=%I64d children_invalidated_strategy_sources=%I64d legacy_refinements_ready=%I64d legacy_refinements_no_child=%I64d legacy_refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_no_objective=%I64d objective_candidates_frozen=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d m1_sweep_detected=%I64d scenario_sweeps_accepted=%I64d m1_choch_detected=%I64d scenario_choch_accepted=%I64d d126_authorized_sweep_events_historical_runtime_dead=%I64d d126_authorized_sweep_pools_historical_runtime_dead=%I64d structural_reaction_created=%I64d source_contacts_superseded_phase4c=%I64d",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d root_contexts_ready=%I64d children_created_strategy_sources=%I64d optional_child_observations=%I64d post_contact_child_events=%I64d children_invalidated_strategy_sources=%I64d legacy_refinements_ready=%I64d legacy_refinements_no_child=%I64d legacy_refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_no_objective=%I64d objective_candidates_frozen=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d m1_sweep_detected=%I64d scenario_sweeps_accepted=%I64d m1_choch_detected=%I64d scenario_choch_accepted=%I64d m1_fvg_detected=%I64d m1_fvg_gap_rejected=%I64d scenario_fvg_candidates=%I64d scenario_fvg_preselection_retests=%I64d scenario_fvg_selected=%I64d scenario_no_causal_fvg=%I64d scenario_ambiguous_fvg=%I64d execution_geometry_ready=%I64d no_r_eligible_objective=%I64d simultaneous_authorization_ambiguous=%I64d exposure_blocked=%I64d execution_infeasible=%I64d order_rejected=%I64d orders_accepted=%I64d positions_filled=%I64d pending_cancellations=%I64d cancel_rejected=%I64d execution_divergences=%I64d positions_closed=%I64d d126_authorized_sweep_events_historical_runtime_dead=%I64d d126_authorized_sweep_pools_historical_runtime_dead=%I64d structural_reaction_created=%I64d source_contacts_superseded_phase4c=%I64d",
                         reason,
                         InitStateName(g_init_state),
                         ArraySize(g_liquidity),
@@ -7488,6 +9093,25 @@ void OnDeinit(const int reason)
                         g_scenario_sweep_accepts,
                         g_m1_choch_detector_events,
                         g_scenario_choch_accepts,
+                        g_m1_fvg_detector_events,
+                        g_m1_fvg_gap_rejections,
+                        g_scenario_fvg_candidates,
+                        g_scenario_fvg_preselection_retests,
+                        g_scenario_fvg_selected,
+                        g_scenario_no_causal_fvg,
+                        g_scenario_ambiguous_fvg,
+                        g_execution_geometry_ready,
+                        g_no_r_eligible_objective,
+                        g_simultaneous_authorization_ambiguous,
+                        g_exposure_blocked,
+                        g_execution_infeasible,
+                        g_order_rejected,
+                        g_orders_accepted,
+                        g_positions_filled,
+                        g_pending_cancellations,
+                        g_cancel_rejected,
+                        g_execution_divergences,
+                        g_positions_closed,
                         g_authorized_sweep_events,
                         g_authorized_sweep_pools,
                         g_structural_reaction_created,
@@ -7503,6 +9127,8 @@ void OnDeinit(const int reason)
 
 void OnTimer()
   {
+   if(g_init_state==V1_INIT_EXECUTION_RECOVERY_REQUIRED || g_init_state==V1_INIT_ERROR)
+      return;
    if(g_init_state!=V1_READY)
       TryInitialize();
   }
@@ -7515,6 +9141,8 @@ void OnTick()
 
    if(g_init_state!=V1_READY)
      {
+      if(g_init_state==V1_INIT_EXECUTION_RECOVERY_REQUIRED || g_init_state==V1_INIT_ERROR)
+         return;
       TryInitialize();
       if(g_init_state!=V1_READY)
          return;
@@ -7524,11 +9152,20 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              "D127 orders disabled; Root preplanning active; M1 sweep and CHoCH detected independently; scenario sequence Contact->Sweep->CHoCH active; FVG authorization disabled");
+              "Integrated deterministic baseline active: Root->Sweep->CHoCH->causal widest FVG->Entry/20pct SL->frozen objective TP->tester GTC pending; live execution hard-blocked");
      }
 
    ProcessRuntimeClosedBars((datetime)tick.time);
+   ManageIntegratedExecution(tick);
+  }
 
-   // No trade submission in D-127 / linear trigger pipeline.
+void OnTradeTransaction(const MqlTradeTransaction &trans,
+                        const MqlTradeRequest &request,
+                        const MqlTradeResult &result)
+  {
+   // Callback order is not causality. Reconciliation reads current account and
+   // broker history by stable symbol+magic/ticket identity and is idempotent.
+   if(g_init_state==V1_READY)
+      ReconcileManagedExecution(TimeCurrent());
   }
 //+------------------------------------------------------------------+

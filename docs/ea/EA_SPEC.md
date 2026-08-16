@@ -3,7 +3,7 @@
 Status: FROZEN FOR V1 IMPLEMENTATION
 Authority: `AGENTS.md`
 Latest authority correction: `2026-08-16 — HTF Root is the sole OB source; post-contact child is optional audit/context only`
-Latest implementation freeze: `2026-08-16 — D-127 detector/sequence separation and linear M1 trigger pipeline`
+Latest implementation freeze: `2026-08-17 — D-131 integrated baseline execution: FVG -> Entry/SL -> frozen TP -> tester pending lifecycle`
 
 ## Rule Classification
 
@@ -3607,6 +3607,44 @@ Required:
 4. No later bar after FVG availability and before CHoCH selection has retested it.
 5. Candle1 / Candle2 / Candle3 are contiguous M1 bars in actual clock time.
 ```
+
+D-128A operationalizes item 3 without adding another nested quality filter:
+
+```text
+FVG.available_at > scenario_sweep_available_at
+AND
+FVG.available_at <= scenario_choch_available_at
+AND
+FVG.direction == scenario.direction
+```
+
+`Candle1` itself is **not** required to occur after the Sweep. For example:
+
+```text
+Candle1 = pre-Sweep bar
+Candle2 = accepted Sweep / reversal bar
+Candle3 = continuation bar that closes and first confirms the FVG
+```
+
+may be causal because the FVG did not exist as a confirmed detector fact until
+Candle3 closed after the Sweep. Conversely, an FVG whose Candle3 closes on the
+same M1 bar as the accepted Sweep is excluded in the current closed-bar baseline
+because `Sweep -> FVG confirmation` ordering cannot be established from OHLC.
+
+The scenario layer does not add:
+
+```text
+minimum FVG width
+ATR threshold
+body-size threshold
+consecutive directional-body requirement
+nearest/latest FVG preference
+Root re-intersection
+child confirmation
+```
+
+The causal boundary is sequence + direction + freshness; widest selection remains
+a later selection rule inside the already eligible set.
 Execution-FVG session continuity:
 
 ```text
@@ -3741,6 +3779,44 @@ NO BASE FIRST-POSITION ENTRY
 
 다.
 
+### 8.4.1 D-128A Isolated Implementation Boundary
+
+Historical isolated checkpoint `1.20 / D128A_CAUSAL_FVG_SELECTION_CORE` implemented only:
+
+```text
+M1_FVG_DETECTED                   // global detector fact
+SCENARIO_FVG_CANDIDATE            // causal + same-direction + fresh
+SCENARIO_FVG_EXCLUDED             // PRE_SELECTION_RETEST / history fail-closed
+SCENARIO_FVG_SELECTED             // unique widest after tick normalization
+SCENARIO_FVG_NO_ENTRY             // no valid FVG or exact widest tie
+```
+
+Selected scenario state in this isolated build:
+
+```text
+WAITING_EXECUTION_GEOMETRY
+```
+
+This is an implementation checkpoint state only. D-128A does **not** calculate
+Entry, SL, Final TP, broker preflight, pending order, fill, or cancellation.
+That isolation remains useful test history. Current integrated build `1.50` now attaches the frozen Sections 8.5-11 execution contract directly after D-128A selection.
+
+If no eligible causal fresh FVG exists at CHoCH close:
+
+```text
+NO_CAUSAL_FRESH_FVG -> NO_TRADE
+```
+
+If two or more maximum-width candidates remain exactly tied after symbol-tick
+normalization:
+
+```text
+AMBIGUOUS_EXECUTION_FVG -> NO_TRADE
+```
+
+No FVG formed after CHoCH close may revive either terminal result for the same
+first-position trigger chain.
+
 ### 8.5 First Retest and Pending Submission
 
 Classification: D
@@ -3869,6 +3945,44 @@ Execution-sensitive Bid/Ask and broker result fields
 belong to Section 11 execution ledger.
 
 No selected-FVG consumed/mitigated strategy state is required.
+
+### 8.8 Current integrated implementation — build 1.50
+
+Implementation boundary:
+
+```text
+SCENARIO_FVG_SELECTED
+→ Entry = selected FVG near-side boundary
+→ directional outward 20% FVG-width SL tick normalization
+→ scan frozen objective family nearest-first
+→ first planned R >= 1 Final TP
+→ fully-authorized epoch arbitration
+→ broker preflight
+→ tester-only GTC pending submission
+→ fill / causal pending cancellation / reconciliation
+```
+
+No new FVG, CHoCH, Root, liquidity, ATR, score, or time-age filter is inserted in this attachment. Strategy geometry failure and broker execution infeasibility are logged separately.
+
+Current simultaneous-authorization baseline is fail-closed for **any** epoch containing more than one fully-authorized first-position branch, regardless of whether the branches point in the same or opposite direction:
+
+```text
+fully_authorized_branch_count > 1
+→ AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+→ all branches NO_TRADE
+```
+
+Reason: one-exposure policy is frozen, but same-direction multi-Root provenance aggregation and post-merge source-survival semantics are not. The implementation must not choose a Root by array order, latest/nearest, RR, score, or visual preference. A future provenance-merge protocol must be specified and tested separately before relaxing this fail-closed rule.
+
+Live order submission remains hard-blocked. Build 1.50 sends trade requests only when `MQL_TESTER=true`.
+
+Same-decision-cycle submission is enforced without an arbitrary seconds timeout:
+
+```text
+current M1 open == scenario CHoCH bar open + 60 seconds
+```
+
+If terminal/tick catch-up processes an older CHoCH after a later M1 bar has already opened, that old chain is `EXECUTION_INFEASIBLE / DELAYED_SIGNAL_NOT_CURRENT_DECISION_CYCLE` and is never submitted later.
 
 ## 9. Stop Loss
 
@@ -4193,6 +4307,14 @@ Final TP eligibility:
 ```text
 planned_R >= 1.0
 ```
+
+Implementation compares the tick-normalized distances exactly:
+
+```text
+reward_ticks >= risk_ticks
+```
+
+No epsilon relaxes the 1R strategy boundary.
 
 Commission, swap, future slippage,
 and execution-cost reporting are not mixed into this strategy geometry.
@@ -4736,6 +4858,7 @@ PLANNED
 WAITING_SWEEP
 WAITING_CHOCH
 WAITING_FVG
+WAITING_EXECUTION_GEOMETRY   // same decision-cycle transient
 PENDING
 FILLED
 CANCELED
@@ -5401,6 +5524,8 @@ NO_TRADE
 reason = AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
 ```
 
+Current integrated baseline extends the same fail-closed result to same-direction multi-Root branches in the same epoch. This is execution arbitration, not a detector filter. Until contributor provenance/survival semantics are separately frozen, `fully_authorizable_count > 1` is ambiguous and no Root is selected arbitrarily.
+
 V1 correctness/parity sizing:
 
 ```text
@@ -5462,6 +5587,19 @@ callback arrival sequence
 ```
 
 Broker history/ticket relations are the final execution ledger authority.
+
+Partial-fill handling is fail-safe infrastructure. If a managed position exists while
+the same symbol+magic first-position pending remainder still exists:
+
+```text
+position = keep frozen server SL/TP
+residual pending = one cancellation request
+execution_status = EXECUTION_DIVERGENCE
+```
+
+A rejected residual cancellation is not retried with invented timing logic. The
+symbol+magic exposure lock remains held until broker state is unambiguous. No new
+first-position order is authorized from that old chain.
 
 ## 12. Explicitly Excluded From Baseline
 
