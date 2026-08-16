@@ -2150,10 +2150,12 @@ Status: ACTIVE / FROZEN
 Before fill:
 
 final objective validity
-required source-lineage validity
+required HTF Root validity
 scenario-direction authority
 
 are the only strategy-level survival authorities.
+
+Under D-124, optional child validity is not part of pending survival authority.
 
 Selected-FVG mitigation,
 M1 trigger-state drift,
@@ -3256,3 +3258,156 @@ all later rules that require a child before sweep / CHoCH / Entry
 Reason:
 
 The baseline already performs its decisive execution filtering later through Root reaction, valid sweep, meaningful M1 CHoCH, and causal FVG first-retest geometry. Requiring an additional child OB at the source layer removes Root reactions before those intended confirmation stages and grants the child more authority than the strategy needs.
+
+---
+
+## D-125 — Corrected Phase 4B freezes each Root scenario and objective family before Root contact
+
+Status: ACTIVE / PHASE 4B IMPLEMENTATION-FREEZE / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
+
+D-124 establishes the HTF Root as the sole OB strategy source. Corrected Phase 4B therefore prepares strategy state around the **physical Root itself**, not around any child/refinement lineage.
+
+Required order for a Root contact to belong to a strategy scenario:
+
+```text
+causally known active H1/M30 map
++
+causally known objective family
++
+pre-existing ACTIVE HTF Root
+→ Root-specific PLAN frozen
+→ objective family frozen
+→ later qualifying Root contact
+```
+
+Required strict timing:
+
+```text
+scenario.frozen_at < qualifying_root_contact_at
+```
+
+A PLAN created at the same timestamp as the contact is not accepted for that contact. It is canceled fail-closed rather than surviving as a retrospective scenario.
+
+### Independent physical Root candidates
+
+Each distinct physical Root is evaluated independently.
+
+```text
+Root A under map X
+Root B under map X
+→ two independent Root candidates
+```
+
+The engine must not collapse them into one shared-context ambiguity veto.
+
+Forbidden:
+
+```text
+multiple valid Roots in same map
+→ AMBIGUOUS_ROOT_LINEAGE
+→ reject all
+```
+
+Also forbidden:
+
+```text
+choose nearest Root
+choose latest Root
+choose narrowest Root
+score Roots
+choose highest RR Root
+```
+
+A Root receives a PLAN only if that Root itself is compatible with the current frozen map/direction/scope and has at least one valid objective-family candidate under the existing objective rules.
+
+### Map / scope qualification
+
+Corrected Phase 4B reuses the already-frozen map authority:
+
+```text
+mature H1 + reversal permission CLOSED
+→ H1 EXTERNAL_CONTINUATION
+→ Root direction must match H1
+
+mature H1 + reversal permission OPEN
++ mature opposite M30 matching permission
+→ M30-led EXTERNAL_REVERSAL
+
+H1 not mature
++ mature M30
+→ M30-primary EXTERNAL_CONTINUATION
+```
+
+The Root must belong to the active map range. Premium/discount remains context-only and cannot veto the Root.
+
+### Objective family
+
+Objective-family construction keeps the frozen V1 contract:
+
+```text
+causally known
+unconsumed
+trade-direction ahead
+scope compatible
+nearest-first ordered family
+```
+
+H1-led continuation may use current H1/M30 primary external liquidity.
+M30-primary continuation and early reversal use M30 primary external liquidity.
+Eligible H4 liquidity remains extension-only under the existing H4 rules.
+
+`planned R >= 1` is **not** evaluated at Phase 4B because Entry/SL do not exist yet. Final TP eligibility remains deferred until M1 FVG Entry/SL geometry exists.
+
+### No retrospective plan
+
+A physical Root contact without an already-valid pre-contact PLAN remains a valid physical Root-contact audit event, but that contact cannot later be backfilled into a strategy scenario.
+
+```text
+Root contact
++
+no PLAN frozen strictly before contact
+→ ROOT_CONTACT_WITHOUT_PREPLAN
+→ no retrospective scenario for that contact
+```
+
+If a pre-contact PLAN is canceled because its map owner or reversal authority becomes invalid **before contact**, the still-ACTIVE and still-uncontacted Root may later receive a new PLAN only if a new valid map/objective context becomes causally available before its eventual contact.
+
+### Root remains the source
+
+For every Phase 4B PLAN:
+
+```text
+strategy_source_id = Root.id
+strategy_source_kind = ROOT
+child_required = false
+```
+
+Optional children remain D-124 audit/context only and cannot create, replace, select, cancel, or veto the PLAN.
+
+### Phase 4C remains disabled
+
+This decision does **not** resolve `EA_SPEC` Section 6.6.
+
+Build D-125 may maintain the D-119 M1 physical-consumption overlay so an already consumed liquidity pool is not newly frozen into a later objective family, but it must not authorize a strategic sweep.
+
+After Root contact, a successfully preplanned scenario enters:
+
+```text
+WAITING_SWEEP
+```
+
+not `WAITING_TRIGGER`.
+
+The following remain disabled until corrected Phase 4C freezes Root-reaction sweep ownership:
+
+```text
+eligible sweep-pool snapshot
+AUTHORIZED_SWEEP
+STRUCTURAL_REACTION strategy ownership
+meaningful M1 CHoCH authorization
+FVG / order execution
+```
+
+Reason:
+
+Phase 4B can be corrected deterministically from the already-frozen Objective → Map → Root → Contact order without inventing the unresolved sweep-freeze contract. Keeping Phase 4C disabled isolates this correction and prevents another timing rule from being guessed.

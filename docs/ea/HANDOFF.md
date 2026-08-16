@@ -1,8 +1,8 @@
 # EA Development Handoff
 
 Last updated: 2026-08-16
-Status: D-124 ROOT-PRIMARY / OPTIONAL-CHILD AUDIT PASS
-Current phase: Corrected Phase 4B/4C Root-based scenario and sweep reattachment
+Status: D-125 CORRECTED PHASE 4B IMPLEMENTED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
+Current phase: Root-specific pre-contact map/objective PLAN freeze; corrected Phase 4C remains blocked
 
 ## Goal
 
@@ -80,11 +80,15 @@ Consequences:
 ## Current Status
 
 Phase 4B Scenario / Objective Family
-→ HISTORICAL TEST PASS FOR OLD PRE-CONTACT-CHILD IMPLEMENTATION ONLY
-→ STRATEGY-PARITY STATUS SUPERSEDED BY D-122
-→ SCENARIO_PLANNED 2 and related counts remain audit history
-→ `PREPLAN_SOURCE_CONTACT` rejection semantics are obsolete under corrected ordering
-→ objective-family logic itself remains subject to normal regression after scenario-layer rework
+→ OLD PRE-CONTACT-CHILD IMPLEMENTATION SUPERSEDED
+→ corrected Root-primary implementation prepared in internal build 0.90 / D-125
+→ each physical Root is an independent candidate
+→ map / direction / objective family freeze strictly before Root contact
+→ same-map multiple Roots are not an ambiguity veto
+→ contact without a strictly earlier PLAN cannot be retrospectively attached
+→ Root remains strategy source; child has no role
+→ local MetaEditor compile PENDING
+→ real-tick causal validation PENDING
 → profitability NOT evaluated
 
 Phase 4A H1/M30 map / reversal permission
@@ -228,8 +232,8 @@ Physical sweep geometry
 → Phase 2 audit detector remains valid
 
 Strategic sweep authorization timing
-→ REQUIRES D-122 RE-AUDIT
-→ DISABLED in D122A
+→ EA_SPEC 6.6 RE-AUDIT STILL OPEN
+→ DISABLED in D-125
 → exact Root-reaction liquidity-freeze anchor remains unresolved; child is not part of that decision
 
 Active pre-CHoCH sweep/reference
@@ -272,7 +276,7 @@ Post-registration FVG mitigation
 
 Pending strategy survival authority
 → final objective validity
-→ required source-lineage validity
+→ required HTF Root validity
 → scenario-direction authority
 
 Time-based cancellation
@@ -368,8 +372,10 @@ Final authority consistency audit
 
 EA_SPEC status
 → AUTHORITY-CORRECTED
-→ D122A temporal child-observation implementation validated; D-124 Root-primary semantics prepared
-→ Root-based sweep timing / Phase 4B-4C authorization reimplementation still required
+→ D122A temporal causality validated
+→ D-124 Root-primary / optional-child semantics validated
+→ D-125 corrected Phase 4B implementation prepared
+→ corrected Phase 4C Root-reaction sweep timing still requires separate freeze
 
 Source lifecycle
 → ACTIVE / INVALIDATED only
@@ -409,85 +415,100 @@ Broker transaction reconciliation
 → callback arrival order not trusted
 
 
-## Implementation Checkpoint — D-124 Root-Primary / Optional-Child Consolidation
+## Implementation Checkpoint — D-125 Corrected Phase 4B
 
-D122A build `0.80` proved the corrected temporal fact that a logged child can be formed only after actual HTF Root contact.
-
-The 2026-08-16 real-tick test produced:
+D-124 build `0.81` passed the Root-primary / optional-child audit:
 
 ```text
-ROOT_WATCH_CREATED = 21
 ROOT_CONTACT_OBSERVED = 11
-post-contact child observed = 1
-historical pre-contact child authorization = 0
+ROOT_CONTEXT_READY = 11
+optional child observations = 2
+strategy-source children = 0
 ```
 
-D-124 changes the interpretation of those events:
-
-```text
-11 Root contacts = 11 Root-level reaction contexts before later strategy filters
-1 child = one optional audit observation
-missing child = not a rejection
-```
-
-Current consolidation target:
+Corrected Phase 4B is now prepared as:
 
 ```text
 mt5/experts/MentorDeterministicV1EA.mq5
-internal build = 0.81
-phase = D124_ROOT_PRIMARY_OPTIONAL_CHILD_AUDIT_CORE
+internal build = 0.90
+phase = D125_ROOT_PRECONTACT_SCENARIO_OBJECTIVE_CORE
 property version = 1.00
 ```
 
-Build `0.81` validation boundary:
+D-125 implementation boundary:
 
 ```text
-HTF Root remains strategy source after contact
-ROOT_CONTEXT_READY at qualifying Root contact
-optional child observations may be logged
-optional children are not added as strategy-source objects
-child absence / multiplicity / invalidation cannot veto Root context
-Entry / SL / TP remain M1-FVG authority
-scenario / strategic sweep / CHoCH / order authorization remain disabled for this isolated smoke
+each physical ACTIVE Root = independent scenario candidate
+current H1/M30 map / direction / scope qualification
+ordered objective family freeze
+scenario.frozen_at < Root contact required
+Root remains strategy source
+optional child remains audit-only
+multiple same-map Roots are not collapsed into an ambiguity veto
+D-119 M1 consumption overlay may exclude already consumed future objective candidates
+
+Root contact with valid preplan
+→ SCENARIO_ROOT_CONTACT_BOUND
+→ state = WAITING_SWEEP
+
+Root contact without strictly earlier preplan
+→ ROOT_CONTACT_WITHOUT_PREPLAN
+→ no retrospective scenario
 ```
 
-Expected baseline smoke characteristics for the same January sample:
+Explicitly still disabled:
 
 ```text
-ROOT_CONTACT_OBSERVED ≈ prior D122A physical-contact count
-ROOT_CONTEXT_READY = ROOT_CONTACT_OBSERVED for qualifying runtime contacts
-OPTIONAL_CHILD_OBSERVED may be 0..N and does not change Root readiness
-children_created_strategy_sources = 0
-SCENARIO_PLANNED = 0
+corrected Phase 4C eligible sweep-pool freeze
+AUTHORIZED_SWEEP
+STRUCTURAL_REACTION strategy ownership
+M1 CHoCH authorization
+FVG / order submission
+```
+
+Required local validation:
+
+```text
+1. MetaEditor compile
+2. Every tick based on real ticks
+3. InpEnableFvgOriginObExperiment = false
+4. same January fixture first
+5. audit event CSV
+```
+
+D-125 PASS requires at minimum:
+
+```text
+SCENARIO_PLANNED > 0 on the long sample
+
+every SCENARIO_PLANNED:
+    strategy_source_kind = ROOT
+    child_required = false
+    root_contact_at = NA at freeze
+
+AMBIGUOUS_ROOT_LINEAGE = 0
+
+every SCENARIO_ROOT_CONTACT_BOUND:
+    plan_frozen_at < root_contact_at
+    root_zone_id == strategy_source_id
+    state = WAITING_SWEEP
+
+ROOT_CONTACT_WITHOUT_PREPLAN may be > 0
+→ this is not itself a defect
+→ it means no valid map/objective PLAN existed strictly before that contact
+
 old Phase4C SOURCE_CONTACT = 0
 AUTHORIZED_SWEEP = 0
+STRUCTURAL_REACTION strategy authorization = 0
 orders/deals = 0
 ```
 
-After build `0.81` compiles and this isolated smoke passes, the next implementation is:
+After D-125 passes:
 
 ```text
-Corrected Phase 4B
-→ qualify pre-contact HTF Root against current map / direction / objective
-→ keep each distinct valid physical Root as an independent candidate; do not restore arbitrary multi-Root rejection
-
 Corrected Phase 4C
-→ attach strategic liquidity/sweep ownership directly to the Root reaction context
-→ child identity must not be a required key or gate
-
-then Phase 5A
-→ M1 meaningful CHoCH
-```
-
-Actual first-position execution remains:
-
-```text
-M1 CHoCH causal FVG
-→ widest valid FVG
-→ first retest
-→ FVG Entry
-→ FVG distal ± 20% width SL
-→ frozen objective TP
+→ freeze Root-reaction sweep ownership under EA_SPEC 6.6
+→ then Phase 5A M1 meaningful CHoCH
 ```
 
 ## Do Not Do Yet

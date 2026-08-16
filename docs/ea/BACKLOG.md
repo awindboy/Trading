@@ -23,14 +23,16 @@
 - Old Phase 3B pre-contact child refinement: SUPERSEDED by D-122.
 - D122A build 0.80 temporal causal test: PASS.
 - D-124 build 0.81 Root-primary / optional-child audit: PASS; 11 Root contacts → 11 ROOT_CONTEXT_READY, optional child observations=2, strategy-source children=0.
-- Old Phase 4B scenario planning and Phase 4C final-source contact/sweep authorization: SUPERSEDED pending corrected reimplementation.
+- Old Phase 4B/4C child/refined-source authorization: SUPERSEDED.
+- D-125 corrected Phase 4B Root-specific pre-contact scenario/objective implementation: prepared in build 0.90; compile/real-tick validation pending.
+- Corrected Phase 4C strategic Root-reaction sweep ownership remains disabled pending EA_SPEC 6.6 re-audit.
 - Phase 5A CHoCH work remains BLOCKED until corrected Phase 4B/4C Root-based ownership passes.
 
 ## P1 — Baseline implementation
 
 - [x] Market structure
 - [x] Liquidity — Phase 2 physical detector verified
-- [ ] Objective selection — old Phase 4B family logic retained for later regression; corrected scenario attachment pending
+- [ ] Objective selection — D-125 corrected Root-specific pre-contact family freeze implemented; compile/real-tick validation pending
 - [ ] Root OB — Phase 3A core verified; internal-swing completeness audit still open
 - [x] Optional LTF child audit — D-124 Root-primary/no-child-gate smoke PASS; audit-only observations do not alter strategy source
 - [x] HTF Root contact — D122A physical observation baseline causal PASS
@@ -42,7 +44,7 @@
 - [ ] TP
 - [ ] Pending cancellation
 - [x] H4 long-horizon liquidity index — Phase 2 invariant verified
-- [ ] Hierarchical bootstrap / working-set pruning — corrected Root-watch bootstrap pending validation
+- [ ] Hierarchical bootstrap / working-set pruning — D-125 bootstrap Root PLAN freeze added; validation pending
 - [ ] Managed scenario/exposure identity by symbol + magic
 - [ ] Minimum-volume parity sizing
 - [x] Same-timestamp MTF processing order
@@ -57,7 +59,11 @@
 - [x] Compile/run D-124 internal build 0.81
 - [x] Verify every qualifying Root contact becomes Root context READY regardless of child
 - [x] Verify optional child observations never create strategy-source children or veto Root context
-- [ ] Corrected Phase 4B scenario/objective-family smoke
+- [ ] Compile/run D-125 internal build 0.90
+- [ ] Corrected Phase 4B Root-specific scenario/objective-family smoke
+- [ ] Verify every bound Root contact has plan_frozen_at < root_contact_at
+- [ ] Verify same-map multiple Roots are never rejected as AMBIGUOUS_ROOT_LINEAGE
+- [ ] Verify Root contact without preplan is not retrospectively planned
 - [ ] Corrected Phase 4C Root/sweep ownership smoke
 - [x] Phase 4A map/reversal-permission smoke — independent scope remains valid
 - [x] Historical Phase 3B run preserved as old-implementation evidence only — CHILD_CREATED=7 / CHILD_INVALIDATED=6

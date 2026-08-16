@@ -2715,6 +2715,70 @@ Root direction / map qualification causally known at the relevant strategy-freez
 
 The Root may not be chosen retrospectively after seeing the later reaction.
 
+### 6.2.1 Pre-Contact Root Scenario / Objective Freeze
+
+Classification: D
+
+For a qualifying Root contact to belong to a current first-position strategy scenario, map/direction/scope qualification and the ordered objective family must already be frozen for that **specific physical Root** before the contact.
+
+Required:
+
+```text
+Root strategy_state = ACTIVE
+Root first-reaction watch = WAITING_CONTACT
+current map / direction / scope valid
+ordered objective family available
+→ Root-specific PLAN freeze
+→ later qualifying Root contact
+```
+
+Strict timing:
+
+```text
+scenario.frozen_at < qualifying_root_contact_at
+```
+
+Same-timestamp creation is not enough. If:
+
+```text
+scenario.frozen_at >= qualifying_root_contact_at
+```
+
+that PLAN cannot authorize the observed contact and is canceled fail-closed.
+
+Each physical Root is independent:
+
+```text
+Root A + valid map/objective
+→ candidate A
+
+Root B + same valid map/objective
+→ candidate B
+```
+
+Multiple Roots sharing the same map/owner are **not** a strategy ambiguity by themselves. Do not reject all of them and do not choose one with distance, recency, width, score, or RR ranking.
+
+For every PLAN:
+
+```text
+strategy_source_id = Root.id
+strategy_source_kind = ROOT
+child_required = false
+```
+
+If no valid PLAN existed strictly before the physical Root contact:
+
+```text
+physical Root contact remains an audit fact
+retrospective strategy PLAN for that contact = FORBIDDEN
+```
+
+A PLAN canceled before contact because its frozen map/scope authority is invalidated releases that Root from the old scenario. If the Root itself remains ACTIVE and uncontacted, a materially new valid map/objective context may later freeze a new PLAN before a future contact.
+
+Objective-family construction remains Section 10 authority. Phase 4B freezes the ordered family before Entry/SL exist; it does not perform final `planned R >= 1` TP eligibility until the M1 FVG Entry/SL geometry is known.
+
+Optional child observations have no role in this freeze.
+
 ### 6.3 Qualifying HTF Root Contact
 
 Classification: D
@@ -2778,7 +2842,7 @@ how Root-zone intersection constrains sweep ownership
 
 Child availability, child geometry, or child ambiguity has **no role** in those decisions.
 
-Until corrected Phase 4C freezes that contract, the Phase-2 physical sweep detector remains valid but strategic sweep authorization stays disabled in the isolated D124 build.
+Until corrected Phase 4C freezes that contract, the Phase-2 physical sweep detector remains valid but strategic sweep authorization stays disabled. D-125 may re-enable pre-contact Phase 4B planning only; it does not cross this boundary.
 
 ### 6.7 Direction-Compatible Sweep
 
@@ -4792,7 +4856,7 @@ strategy survival authority is limited to:
 
 ```text
 1. final objective validity
-2. required source-lineage validity
+2. required HTF Root validity
 3. scenario-direction authority
 ```
 
@@ -4802,7 +4866,7 @@ Cancel when:
 final objective delivered
 → CANCELED_OBJECTIVE_DELIVERED
 
-required final source / parent Root invalidated
+required HTF Root invalidated
 → CANCELED_SOURCE_INVALIDATED
 
 active continuation owner invalidated

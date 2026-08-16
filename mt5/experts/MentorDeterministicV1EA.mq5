@@ -1,21 +1,21 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - D124 Root-primary child-audit core |
+//| Deterministic Mentor EA V1 - D125 pre-contact scenario core     |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| D124 intentionally DOES NOT submit orders.                       |
+//| D125 intentionally DOES NOT submit orders.                       |
 //| Structure/liquidity/Root/map cores are retained.                 |
-//| HTF Root remains the only strategy source owner after contact.  |
-//| Post-contact child OBs are optional audit/context observations.  |
-//| Scenario/sweep/CHoCH/execution authorization is disabled pending |
-//| the separately frozen D-122 timing re-audit.                     |
+//| Each physical HTF Root may freeze its own map/objective PLAN     |
+//| before Root contact. Child OBs remain audit-only.                |
+//| Strategic sweep/CHoCH/execution authorization remains disabled   |
+//| until the separate Phase-4C timing contract is frozen.           |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - D124 Root-primary optional-child audit core"
+#property description "Mentor deterministic V1 EA - D125 Root pre-contact scenario/objective core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
@@ -23,11 +23,11 @@ input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
 input bool   InpEnableFvgOriginObExperiment = false;
-input string InpEventCsvFile       = "mentor_v1_d124_root_primary_optional_child_events.csv";
+input string InpEventCsvFile       = "mentor_v1_d125_root_precontact_scenario_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
-// but are intentionally not active in this D124 Root-primary optional-child-audit build.
+// but are intentionally not active in this D125 pre-contact scenario/objective build.
 
 enum V1InitState
   {
@@ -137,6 +137,7 @@ enum V1ScenarioScope
 enum V1StrategyState
   {
    V1_STRATEGY_PLANNED=0,
+   V1_STRATEGY_WAITING_SWEEP,
    V1_STRATEGY_WAITING_TRIGGER,
    V1_STRATEGY_PENDING,
    V1_STRATEGY_FILLED,
@@ -598,9 +599,7 @@ long             g_permission_opens=0;
 long             g_permission_closes=0;
 long             g_scenarios_planned=0;
 long             g_scenarios_canceled=0;
-long             g_scenarios_ambiguous=0;
 long             g_scenarios_no_objective=0;
-long             g_scenarios_precontact_rejected=0;
 long             g_objective_candidates_frozen=0;
 long             g_source_contacts=0;
 long             g_eligible_sweep_pools_frozen=0;
@@ -614,6 +613,9 @@ long             g_root_contacts_observed=0;
 long             g_root_contexts_ready=0;
 long             g_post_contact_child_events=0;
 long             g_optional_child_observations=0;
+long             g_precontact_root_plans=0;
+long             g_scenario_root_contacts=0;
+long             g_root_contacts_without_preplan=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -790,6 +792,7 @@ string StrategyStateName(const int state)
    switch(state)
      {
       case V1_STRATEGY_PLANNED:         return "PLANNED";
+      case V1_STRATEGY_WAITING_SWEEP:   return "WAITING_SWEEP";
       case V1_STRATEGY_WAITING_TRIGGER: return "WAITING_TRIGGER";
       case V1_STRATEGY_PENDING:         return "PENDING";
       case V1_STRATEGY_FILLED:          return "FILLED";
@@ -1048,9 +1051,7 @@ void InitializeAllStructureStates()
    g_permission_closes=0;
    g_scenarios_planned=0;
    g_scenarios_canceled=0;
-   g_scenarios_ambiguous=0;
    g_scenarios_no_objective=0;
-   g_scenarios_precontact_rejected=0;
    g_objective_candidates_frozen=0;
    g_root_watches_created=0;
    g_root_watches_prior_touch_rejected=0;
@@ -1058,6 +1059,9 @@ void InitializeAllStructureStates()
    g_root_contexts_ready=0;
    g_post_contact_child_events=0;
    g_optional_child_observations=0;
+   g_precontact_root_plans=0;
+   g_scenario_root_contacts=0;
+   g_root_contacts_without_preplan=0;
    ResetMapControl();
 
    for(int i=0;i<V1_TF_COUNT;i++)
@@ -1668,7 +1672,7 @@ void LogLiquiditySnapshot(const int tf_index,const datetime available_at)
       external_count,
       range_count,
       reaction_count,
-      "STRUCTURAL_REACTION_AUTHORIZATION_DISABLED_D122_TIMING_REAUDIT");
+      "STRUCTURAL_REACTION_AUTHORIZATION_DISABLED_PENDING_CORRECTED_PHASE4C_ROOT_OWNERSHIP");
 
    LogLine("LIQUIDITY_STATE",
            TfName(tf),
@@ -1678,6 +1682,9 @@ void LogLiquiditySnapshot(const int tf_index,const datetime available_at)
   }
 
 void EnsurePostContactRootWatches(const datetime snapshot_at,const bool bootstrap_scan);
+void BindPreplannedScenarioToRootContact(const V1SourceZone &root,
+                                             const MqlRates &bar,
+                                             const datetime available_at);
 void ProcessPostContactRootContacts(const MqlRates &bar,const datetime available_at);
 void ProcessPostContactChildBar(const int tf_index,const MqlRates &bar,const datetime available_at);
 void InvalidatePostContactRootTracker(const string root_id,const datetime available_at,const string reason);
@@ -1693,6 +1700,17 @@ int FindActiveSourceById(const string id)
      {
       if(g_sources[i].valid &&
          g_sources[i].strategy_state==V1_SOURCE_ACTIVE &&
+         g_sources[i].id==id)
+         return i;
+     }
+   return -1;
+  }
+
+int FindSourceIndexById(const string id)
+  {
+   for(int i=0;i<ArraySize(g_sources);i++)
+     {
+      if(g_sources[i].valid &&
          g_sources[i].id==id)
          return i;
      }
@@ -3290,30 +3308,6 @@ bool IsRefinementReadyStatus(const int status)
            status==V1_REFINE_STOPPED_AMBIGUOUS);
   }
 
-int FindActiveScenarioByContextKey(const string context_key)
-  {
-   for(int i=0;i<ArraySize(g_scenarios);i++)
-     {
-      if(!g_scenarios[i].valid ||
-         g_scenarios[i].strategy_state==V1_STRATEGY_CANCELED ||
-         g_scenarios[i].strategy_state==V1_STRATEGY_NO_TRADE)
-         continue;
-
-      string key=StringFormat("%s|%s|%s|%s|%s",
-                              ScenarioScopeName(g_scenarios[i].scope),
-                              DirectionName(g_scenarios[i].direction),
-                              TfName(g_scenarios[i].active_map_tf),
-                              g_scenarios[i].owner_id,
-                              g_scenarios[i].parent_context_id);
-      if(g_scenarios[i].scope==V1_SCOPE_EXTERNAL_REVERSAL)
-         key+="|"+g_scenarios[i].permission_reference_id;
-
-      if(key==context_key)
-         return i;
-     }
-   return -1;
-  }
-
 int FindScenarioById(const string scenario_id)
   {
    for(int i=0;i<ArraySize(g_scenarios);i++)
@@ -3322,7 +3316,7 @@ int FindScenarioById(const string scenario_id)
    return -1;
   }
 
-bool HasActiveScenarioForRoot(const string root_id)
+int FindActiveScenarioForRoot(const string root_id)
   {
    for(int i=0;i<ArraySize(g_scenarios);i++)
      {
@@ -3331,9 +3325,14 @@ bool HasActiveScenarioForRoot(const string root_id)
          g_scenarios[i].strategy_state==V1_STRATEGY_NO_TRADE)
          continue;
       if(g_scenarios[i].root_zone_id==root_id)
-         return true;
+         return i;
      }
-   return false;
+   return -1;
+  }
+
+bool HasActiveScenarioForRoot(const string root_id)
+  {
+   return (FindActiveScenarioForRoot(root_id)>=0);
   }
 
 bool GetActiveMapRange(const ENUM_TIMEFRAMES tf,
@@ -3376,48 +3375,55 @@ bool GetActiveMapRange(const ENUM_TIMEFRAMES tf,
    return (range_high>range_low);
   }
 
-bool FindReadyLineageSource(const int refinement_index,
-                            int &root_index,
-                            int &source_index)
+bool RootWatchEligibleForPreContactPlan(const string root_id)
   {
-   root_index=-1;
-   source_index=-1;
-
-   if(refinement_index<0 ||
-      refinement_index>=ArraySize(g_refinements) ||
-      !g_refinements[refinement_index].valid ||
-      !IsRefinementReadyStatus(g_refinements[refinement_index].status))
+   int tracker_index=FindRootReactionTrackerByRootId(root_id);
+   if(tracker_index<0 ||
+      !g_root_reactions[tracker_index].valid)
       return false;
 
-   root_index=FindActiveSourceById(g_refinements[refinement_index].root_zone_id);
-   if(root_index<0 || g_sources[root_index].kind!=V1_SOURCE_ROOT)
-      return false;
-
-   // D-124: the HTF Root remains the strategy source owner for the baseline.
-   // Optional post-contact child observations never replace it.
-   source_index=root_index;
-   return true;
+   return (g_root_reactions[tracker_index].status==
+              V1_ROOT_WATCH_WAITING_CONTACT &&
+           g_root_reactions[tracker_index].root_contact_at==0);
   }
 
-bool BuildScenarioDraft(const int refinement_index,
-                        V1ScenarioDraft &draft)
+bool BuildRootScenarioDraft(const int root_index,
+                            V1ScenarioDraft &draft,
+                            string &reject_reason)
   {
    draft.valid=false;
+   reject_reason="";
 
-   int root_index=-1;
-   int source_index=-1;
-   if(!FindReadyLineageSource(refinement_index,root_index,source_index))
+   if(root_index<0 ||
+      root_index>=ArraySize(g_sources) ||
+      !g_sources[root_index].valid ||
+      g_sources[root_index].kind!=V1_SOURCE_ROOT ||
+      g_sources[root_index].strategy_state!=V1_SOURCE_ACTIVE)
+     {
+      reject_reason="ROOT_NOT_ACTIVE";
       return false;
+     }
 
-   if(HasActiveScenarioForRoot(g_sources[root_index].id))
+   const string root_id=g_sources[root_index].id;
+
+   if(HasActiveScenarioForRoot(root_id))
+     {
+      reject_reason="ACTIVE_SCENARIO_ALREADY_EXISTS_FOR_ROOT";
       return false;
+     }
 
-   if(g_refinements[refinement_index].preplan_contact_at>0)
+   if(!RootWatchEligibleForPreContactPlan(root_id))
+     {
+      reject_reason="ROOT_NOT_WAITING_PRECONTACT";
       return false;
+     }
 
-   int direction=g_sources[source_index].direction;
+   int direction=g_sources[root_index].direction;
    if(direction==0)
+     {
+      reject_reason="ROOT_DIRECTION_NONE";
       return false;
+     }
 
    bool h1_mature=
       IsMatureDirectionalTrend(g_structure[1].trend) &&
@@ -3440,7 +3446,10 @@ bool BuildScenarioDraft(const int refinement_index,
       if(g_map.reversal_permission==V1_REVERSAL_CLOSED)
         {
          if(direction!=h1_direction)
+           {
+            reject_reason="ROOT_DIRECTION_INCOMPATIBLE_WITH_H1_CONTINUATION";
             return false;
+           }
 
          scope=V1_SCOPE_EXTERNAL_CONTINUATION;
          active_map_tf=PERIOD_H1;
@@ -3452,11 +3461,19 @@ bool BuildScenarioDraft(const int refinement_index,
          int permission_direction=
             (g_map.reversal_permission==V1_REVERSAL_OPEN_FOR_LONG ? 1 : -1);
 
-         if(direction!=permission_direction ||
-            !m30_mature ||
+         if(direction!=permission_direction)
+           {
+            reject_reason="ROOT_DIRECTION_INCOMPATIBLE_WITH_REVERSAL_PERMISSION";
+            return false;
+           }
+
+         if(!m30_mature ||
             TrendDirection(g_structure[2].trend)!=direction ||
             direction==h1_direction)
+           {
+            reject_reason="OPPOSITE_M30_REVERSAL_MAP_NOT_MATURE";
             return false;
+           }
 
          scope=V1_SCOPE_EXTERNAL_REVERSAL;
          active_map_tf=PERIOD_M30;
@@ -3466,14 +3483,20 @@ bool BuildScenarioDraft(const int refinement_index,
          permission_opened_at=g_map.reversal_permission_opened_at;
 
          if(permission_reference_id=="" || permission_opened_at<=0)
+           {
+            reject_reason="REVERSAL_PERMISSION_IDENTITY_MISSING";
             return false;
+           }
         }
      }
    else
      {
       if(!m30_mature ||
          direction!=TrendDirection(g_structure[2].trend))
+        {
+         reject_reason="M30_PRIMARY_MAP_NOT_COMPATIBLE";
          return false;
+        }
 
       scope=V1_SCOPE_EXTERNAL_CONTINUATION;
       active_map_tf=PERIOD_M30;
@@ -3489,20 +3512,24 @@ bool BuildScenarioDraft(const int refinement_index,
                          range_low,
                          range_high,
                          boundary))
+     {
+      reject_reason="ACTIVE_MAP_RANGE_UNAVAILABLE";
       return false;
+     }
 
-   // The source must belong to the current active map, not merely overlap it.
-   if(g_sources[source_index].bottom<range_low ||
-      g_sources[source_index].top>range_high)
+   // Current V1 requires the Root to belong to the active map context.
+   // Premium/discount itself remains audit-only and is never a veto.
+   if(g_sources[root_index].bottom<range_low ||
+      g_sources[root_index].top>range_high)
+     {
+      reject_reason="ROOT_OUTSIDE_ACTIVE_MAP_RANGE";
       return false;
+     }
 
    double eq=(range_low+range_high)*0.5;
 
-   // Premium/discount is retained only as map context/audit information.
-   // It must never authorize or reject a scenario by itself.
-
    draft.valid=true;
-   draft.refinement_index=refinement_index;
+   draft.refinement_index=-1;
    draft.scope=scope;
    draft.direction=direction;
    draft.active_map_tf=active_map_tf;
@@ -3510,18 +3537,23 @@ bool BuildScenarioDraft(const int refinement_index,
    draft.parent_context_id=parent_context_id;
    draft.permission_reference_id=permission_reference_id;
    draft.permission_opened_at=permission_opened_at;
-   draft.root_zone_id=g_sources[root_index].id;
-   draft.final_source_id=g_sources[source_index].id;
+   draft.root_zone_id=root_id;
+   // D-124/D-125: compatibility field only. Strategy source is always Root.
+   draft.final_source_id=root_id;
    draft.range_low=range_low;
    draft.range_high=range_high;
    draft.eq=eq;
 
-   draft.context_key=StringFormat("%s|%s|%s|%s|%s",
+   // D-125: each physical Root is an independent scenario candidate.
+   // Do not collapse multiple Roots sharing the same map context into an
+   // shared-context ambiguity veto.
+   draft.context_key=StringFormat("%s|%s|%s|%s|%s|ROOT=%s",
                                   ScenarioScopeName(scope),
                                   DirectionName(direction),
                                   TfName(active_map_tf),
                                   owner_id,
-                                  parent_context_id);
+                                  parent_context_id,
+                                  root_id);
    if(scope==V1_SCOPE_EXTERNAL_REVERSAL)
       draft.context_key+="|"+permission_reference_id;
 
@@ -3742,33 +3774,28 @@ bool BuildFrozenObjectiveFamily(const V1ScenarioDraft &draft,
    return (ArraySize(candidates)>0);
   }
 
-void BindLineageScenarioOwner(const string root_id,
-                              const string scenario_id)
+void BindRootScenarioOwner(const string root_id,
+                           const string scenario_id)
   {
-   for(int i=0;i<ArraySize(g_sources);i++)
-     {
-      if(!g_sources[i].valid ||
-         g_sources[i].strategy_state!=V1_SOURCE_ACTIVE ||
-         g_sources[i].root_zone_id!=root_id)
-         continue;
+   int root_index=FindActiveSourceById(root_id);
+   if(root_index<0 ||
+      g_sources[root_index].kind!=V1_SOURCE_ROOT)
+      return;
 
-      if(g_sources[i].scenario_owner_id=="")
-         g_sources[i].scenario_owner_id=scenario_id;
-     }
+   if(g_sources[root_index].scenario_owner_id=="")
+      g_sources[root_index].scenario_owner_id=scenario_id;
   }
 
-void ReleaseLineageScenarioOwner(const string root_id,
-                                 const string scenario_id)
+void ReleaseRootScenarioOwner(const string root_id,
+                              const string scenario_id)
   {
-   for(int i=0;i<ArraySize(g_sources);i++)
-     {
-      if(!g_sources[i].valid ||
-         g_sources[i].root_zone_id!=root_id)
-         continue;
+   int root_index=FindSourceIndexById(root_id);
+   if(root_index<0 ||
+      g_sources[root_index].kind!=V1_SOURCE_ROOT)
+      return;
 
-      if(g_sources[i].scenario_owner_id==scenario_id)
-         g_sources[i].scenario_owner_id="";
-     }
+   if(g_sources[root_index].scenario_owner_id==scenario_id)
+      g_sources[root_index].scenario_owner_id="";
   }
 
 void LogScenarioCanceled(const V1ScenarioPlan &plan,
@@ -3838,10 +3865,10 @@ void CancelInvalidScenarioPlans(const datetime available_at)
       string reason="";
 
       int root_index=FindActiveSourceById(g_scenarios[i].root_zone_id);
-      int source_index=FindActiveSourceById(g_scenarios[i].final_source_id);
 
-      if(root_index<0 || source_index<0)
-         reason="SOURCE_LINEAGE_INVALIDATED";
+      if(root_index<0 ||
+         g_sources[root_index].kind!=V1_SOURCE_ROOT)
+         reason="ROOT_INVALIDATED";
       else if(g_scenarios[i].scope==V1_SCOPE_EXTERNAL_CONTINUATION)
         {
          if(g_scenarios[i].active_map_tf==PERIOD_H1)
@@ -3874,104 +3901,17 @@ void CancelInvalidScenarioPlans(const datetime available_at)
       g_scenarios[i].strategy_state=V1_STRATEGY_CANCELED;
       g_scenarios[i].canceled_at=available_at;
       g_scenarios[i].cancel_reason=reason;
-      ReleaseLineageScenarioOwner(g_scenarios[i].root_zone_id,
+      ReleaseRootScenarioOwner(g_scenarios[i].root_zone_id,
                                   g_scenarios[i].id);
       LogScenarioCanceled(g_scenarios[i],available_at,reason);
       g_scenarios_canceled++;
      }
   }
 
-void AuditPrePlanSourceContact(const MqlRates &bar,
-                               const datetime available_at)
-  {
-   for(int i=0;i<ArraySize(g_refinements);i++)
-     {
-      if(!g_refinements[i].valid ||
-         !IsRefinementReadyStatus(g_refinements[i].status) ||
-         g_refinements[i].final_child_id=="" ||
-         g_refinements[i].preplan_contact_at>0 ||
-         HasActiveScenarioForRoot(g_refinements[i].root_zone_id) ||
-         available_at<=g_refinements[i].frozen_at)
-         continue;
-
-      int source_index=FindActiveSourceById(g_refinements[i].final_child_id);
-      if(source_index<0)
-         continue;
-
-      if(bar.high>=g_sources[source_index].bottom &&
-         bar.low<=g_sources[source_index].top)
-        {
-         g_refinements[i].preplan_contact_at=available_at;
-         LogLine("PREPLAN_SOURCE_CONTACT",
-                 "M1",
-                 available_at,
-                 g_refinements[i].root_zone_id,
-                 StringFormat("final_source_id=%s source_bottom=%.10f source_top=%.10f refinement_frozen_at=%s action=BLOCK_RETROSPECTIVE_PLAN",
-                              g_refinements[i].final_child_id,
-                              g_sources[source_index].bottom,
-                              g_sources[source_index].top,
-                              TimeToString(g_refinements[i].frozen_at,TIME_DATE|TIME_SECONDS)));
-         g_scenarios_precontact_rejected++;
-        }
-     }
-  }
-
-void AuditBootstrapPrePlanContacts(const datetime snapshot_at)
-  {
-   for(int i=0;i<ArraySize(g_refinements);i++)
-     {
-      if(!g_refinements[i].valid ||
-         !IsRefinementReadyStatus(g_refinements[i].status) ||
-         g_refinements[i].final_child_id=="" ||
-         g_refinements[i].preplan_contact_at>0)
-         continue;
-
-      int source_index=FindActiveSourceById(g_refinements[i].final_child_id);
-      if(source_index<0)
-         continue;
-
-      MqlRates bars[];
-      ArraySetAsSeries(bars,false);
-      int copied=CopyRates(_Symbol,
-                           PERIOD_M1,
-                           g_refinements[i].frozen_at,
-                           snapshot_at,
-                           bars);
-      if(copied<=0)
-         continue;
-
-      for(int k=0;k<copied;k++)
-        {
-         datetime bar_available=bars[k].time+PeriodSeconds(PERIOD_M1);
-         if(bar_available<=g_refinements[i].frozen_at ||
-            bar_available>snapshot_at)
-            continue;
-
-         if(bars[k].high>=g_sources[source_index].bottom &&
-            bars[k].low<=g_sources[source_index].top)
-           {
-            g_refinements[i].preplan_contact_at=bar_available;
-            LogLine("PREPLAN_SOURCE_CONTACT",
-                    "M1",
-                    snapshot_at,
-                    g_refinements[i].root_zone_id,
-                    StringFormat("historical_contact_at=%s final_source_id=%s source_bottom=%.10f source_top=%.10f refinement_frozen_at=%s action=BLOCK_RETROSPECTIVE_PLAN",
-                                 TimeToString(bar_available,TIME_DATE|TIME_SECONDS),
-                                 g_refinements[i].final_child_id,
-                                 g_sources[source_index].bottom,
-                                 g_sources[source_index].top,
-                                 TimeToString(g_refinements[i].frozen_at,TIME_DATE|TIME_SECONDS)));
-            g_scenarios_precontact_rejected++;
-            break;
-           }
-        }
-     }
-  }
-
 string BuildScenarioLayerSignature()
   {
    string signature=StringFormat(
-      "h1=%s|%s|m30=%s|%s|perm=%s|permref=%s|h1ext=%s|m30ext=%s|liq=%I64d/%I64d/%I64d",
+      "h1=%s|%s|m30=%s|%s|perm=%s|permref=%s|h1ext=%s|m30ext=%s|liq=%I64d/%I64d/%I64d|m1cons=%d",
       TrendName(g_structure[1].trend),
       g_structure[1].owner_id,
       TrendName(g_structure[2].trend),
@@ -3984,18 +3924,22 @@ string BuildScenarioLayerSignature()
          g_structure[2].external_high.id : g_structure[2].external_low.id,
       g_liquidity_created,
       g_liquidity_sweeps,
-      g_liquidity_body_deliveries);
+      g_liquidity_body_deliveries,
+      ArraySize(g_strategy_liquidity_consumed));
 
-   for(int i=0;i<ArraySize(g_refinements);i++)
+   for(int i=0;i<ArraySize(g_root_reactions);i++)
      {
-      if(!g_refinements[i].valid)
+      if(!g_root_reactions[i].valid)
          continue;
 
-      signature+=StringFormat("|R:%s:%s:%d:%I64d",
-                              g_refinements[i].root_zone_id,
-                              g_refinements[i].final_child_id,
-                              g_refinements[i].status,
-                              (long)g_refinements[i].preplan_contact_at);
+      int root_index=FindSourceIndexById(g_root_reactions[i].root_zone_id);
+      int root_state=(root_index>=0 ? g_sources[root_index].strategy_state : -1);
+
+      signature+=StringFormat("|ROOT:%s:%d:%d:%I64d",
+                              g_root_reactions[i].root_zone_id,
+                              g_root_reactions[i].status,
+                              root_state,
+                              (long)g_root_reactions[i].root_contact_at);
      }
 
    return signature;
@@ -4062,9 +4006,9 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
    g_scenarios[n].canceled_at=0;
    g_scenarios[n].cancel_reason="";
 
-   BindLineageScenarioOwner(draft.root_zone_id,scenario_id);
+   BindRootScenarioOwner(draft.root_zone_id,scenario_id);
 
-   LogLine("SCENARIO_LINEAGE_BOUND",
+   LogLine("SCENARIO_ROOT_BOUND",
            TfName(g_sources[source_index].tf),
            frozen_at,
            scenario_id,
@@ -4108,7 +4052,7 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
            TfName(draft.active_map_tf),
            frozen_at,
            scenario_id,
-           StringFormat("state=PLANNED scope=%s direction=%s active_map_tf=%s owner_id=%s parent_context_id=%s h1_trend_at_freeze=%s h1_owner_id_at_freeze=%s m30_trend_at_freeze=%s m30_owner_id_at_freeze=%s reversal_permission_at_freeze=%s permission_reference_id=%s permission_opened_at=%s root_zone_id=%s final_source_id=%s source_tf=%s source_bottom=%.10f source_top=%.10f map_range_low=%.10f map_range_high=%.10f map_eq=%.10f plan_reference_bar_open=%s plan_reference_price=%.10f primary_directional_horizon=%.10f objective_count=%d trigger_search_enabled=false",
+           StringFormat("state=PLANNED scope=%s direction=%s active_map_tf=%s owner_id=%s parent_context_id=%s h1_trend_at_freeze=%s h1_owner_id_at_freeze=%s m30_trend_at_freeze=%s m30_owner_id_at_freeze=%s reversal_permission_at_freeze=%s permission_reference_id=%s permission_opened_at=%s root_zone_id=%s final_source_id=%s source_tf=%s source_bottom=%.10f source_top=%.10f map_range_low=%.10f map_range_high=%.10f map_eq=%.10f plan_reference_bar_open=%s plan_reference_price=%.10f primary_directional_horizon=%.10f objective_count=%d root_contact_required=true root_contact_at=NA strategy_source_kind=ROOT child_required=false phase4c_sweep_authorization=false trigger_search_enabled=false",
                         ScenarioScopeName(draft.scope),
                         DirectionName(draft.direction),
                         TfName(draft.active_map_tf),
@@ -4136,6 +4080,7 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
                         ArraySize(family)));
 
    g_scenarios_planned++;
+   g_precontact_root_plans++;
   }
 
 void RefreshScenarioLayer(const datetime available_at,const bool force=false)
@@ -4148,97 +4093,51 @@ void RefreshScenarioLayer(const datetime available_at,const bool force=false)
       return;
    g_scenario_layer_signature=signature;
 
-   V1ScenarioDraft drafts[];
-   ArrayResize(drafts,0);
-
-   for(int i=0;i<ArraySize(g_refinements);i++)
+   for(int root_index=0;root_index<ArraySize(g_sources);root_index++)
      {
+      if(!g_sources[root_index].valid ||
+         g_sources[root_index].kind!=V1_SOURCE_ROOT ||
+         g_sources[root_index].strategy_state!=V1_SOURCE_ACTIVE)
+         continue;
+
+      const string root_id=g_sources[root_index].id;
+
+      if(HasActiveScenarioForRoot(root_id) ||
+         !RootWatchEligibleForPreContactPlan(root_id))
+         continue;
+
       V1ScenarioDraft draft;
-      if(!BuildScenarioDraft(i,draft))
-         continue;
-
-      int n=ArraySize(drafts);
-      if(ArrayResize(drafts,n+1,16)<0)
-         continue;
-      drafts[n]=draft;
-     }
-
-   bool processed[];
-   ArrayResize(processed,ArraySize(drafts));
-   ArrayInitialize(processed,false);
-
-   for(int i=0;i<ArraySize(drafts);i++)
-     {
-      if(processed[i] || !drafts[i].valid)
-         continue;
-
-      int matches=0;
-      int selected=-1;
-      string roots="";
-
-      for(int j=i;j<ArraySize(drafts);j++)
-        {
-         if(processed[j] || !drafts[j].valid)
-            continue;
-
-         if(drafts[j].context_key!=drafts[i].context_key)
-            continue;
-
-         processed[j]=true;
-         matches++;
-         selected=j;
-         if(roots!="")
-            roots+="|";
-         roots+=drafts[j].root_zone_id;
-        }
-
-      if(FindActiveScenarioByContextKey(drafts[i].context_key)>=0)
-         continue;
-
-      if(matches>1)
-        {
-         LogLine("SCENARIO_REJECTED",
-                 TfName(drafts[i].active_map_tf),
-                 available_at,
-                 drafts[i].context_key,
-                 StringFormat("reason=AMBIGUOUS_ROOT_LINEAGE scope=%s direction=%s candidate_count=%d root_ids=%s",
-                              ScenarioScopeName(drafts[i].scope),
-                              DirectionName(drafts[i].direction),
-                              matches,
-                              roots));
-         g_scenarios_ambiguous++;
-         continue;
-        }
-
-      if(selected<0)
+      string reject_reason="";
+      if(!BuildRootScenarioDraft(root_index,draft,reject_reason))
          continue;
 
       V1ObjectiveCandidate family[];
+      ArrayResize(family,0);
       datetime plan_reference_bar_open=0;
       double plan_reference_price=0.0;
       double primary_horizon=0.0;
 
-      if(!BuildFrozenObjectiveFamily(drafts[selected],
+      if(!BuildFrozenObjectiveFamily(draft,
                                      available_at,
                                      plan_reference_bar_open,
                                      plan_reference_price,
                                      primary_horizon,
                                      family))
         {
-         LogLine("SCENARIO_REJECTED",
-                 TfName(drafts[selected].active_map_tf),
+         LogLine("ROOT_SCENARIO_NOT_READY",
+                 TfName(g_sources[root_index].tf),
                  available_at,
-                 drafts[selected].root_zone_id,
-                 StringFormat("reason=NO_OBJECTIVE_FAMILY scope=%s direction=%s root_zone_id=%s final_source_id=%s",
-                              ScenarioScopeName(drafts[selected].scope),
-                              DirectionName(drafts[selected].direction),
-                              drafts[selected].root_zone_id,
-                              drafts[selected].final_source_id));
+                 root_id,
+                 StringFormat("reason=NO_OBJECTIVE_FAMILY scope=%s direction=%s active_map_tf=%s owner_id=%s strategy_source_kind=ROOT child_required=false Root_remains_watchable=true retrospective_plan_forbidden_after_contact=true",
+                              ScenarioScopeName(draft.scope),
+                              DirectionName(draft.direction),
+                              TfName(draft.active_map_tf),
+                              draft.owner_id));
          g_scenarios_no_objective++;
          continue;
         }
 
-      StoreScenarioPlan(drafts[selected],
+      StoreScenarioPlan(draft,
                         available_at,
                         plan_reference_bar_open,
                         plan_reference_price,
@@ -4246,7 +4145,6 @@ void RefreshScenarioLayer(const datetime available_at,const bool force=false)
                         family);
      }
   }
-
 
 //+------------------------------------------------------------------+
 //| Phase 4C source contact + mature M1 sweep authorization          |
@@ -4978,20 +4876,16 @@ void LogScenarioSnapshot(const datetime available_at)
            "",
            available_at,
            "",
-           StringFormat("active_planned=%d continuation=%d early_reversal=%d canceled=%d objective_candidates_frozen=%I64d preplan_contact_rejected=%I64d ambiguous=%I64d no_objective=%I64d source_contacts=%I64d eligible_sweep_pools_frozen=%I64d authorized_sweep_events=%I64d authorized_sweep_pools=%I64d structural_reaction_created=%I64d source_contact_authorization=ACTIVE choch_authorization=DEFERRED",
+           StringFormat("active_planned=%d continuation=%d early_reversal=%d canceled=%d objective_candidates_frozen=%I64d no_objective=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d strategy_source_kind=ROOT child_required=false phase4c_sweep_authorization=false choch_authorization=false",
                         planned,
                         continuation,
                         reversal,
                         canceled,
                         g_objective_candidates_frozen,
-                        g_scenarios_precontact_rejected,
-                        g_scenarios_ambiguous,
                         g_scenarios_no_objective,
-                        g_source_contacts,
-                        g_eligible_sweep_pools_frozen,
-                        g_authorized_sweep_events,
-                        g_authorized_sweep_pools,
-                        g_structural_reaction_created));
+                        g_precontact_root_plans,
+                        g_scenario_root_contacts,
+                        g_root_contacts_without_preplan));
   }
 
 
@@ -5742,7 +5636,7 @@ void RegisterPostContactRootWatch(const V1SourceZone &root,
            TfName(root.tf),
            snapshot_at,
            root.id,
-           StringFormat("status=WAITING_CONTACT direction=%s source_reason=%s root_available_at=%s bottom=%.10f top=%.10f bootstrap_root=%s startup_inside_root=%s prior_closed_touch=false d122a_fresh_reaction_guard=PASS consumption_semantics=NOT_GENERALIZED strategy_authority=false map_objective_qualification=DEFERRED_PHASE4B",
+           StringFormat("status=WAITING_CONTACT direction=%s source_reason=%s root_available_at=%s bottom=%.10f top=%.10f bootstrap_root=%s startup_inside_root=%s prior_closed_touch=false d122a_fresh_reaction_guard=PASS consumption_semantics=NOT_GENERALIZED strategy_authority=false map_objective_qualification=PENDING_PRECONTACT_PHASE4B_PLAN",
                         DirectionName(root.direction),
                         root.source_reason,
                         TimeToString(root.available_at,TIME_DATE|TIME_SECONDS),
@@ -5765,6 +5659,71 @@ void EnsurePostContactRootWatches(const datetime snapshot_at,
       RegisterPostContactRootWatch(g_sources[i],snapshot_at,bootstrap_scan);
      }
   }
+
+void BindPreplannedScenarioToRootContact(const V1SourceZone &root,
+                                             const MqlRates &bar,
+                                             const datetime available_at)
+  {
+   int scenario_index=FindActiveScenarioForRoot(root.id);
+   if(scenario_index<0)
+     {
+      g_root_contacts_without_preplan++;
+      LogLine("ROOT_CONTACT_WITHOUT_PREPLAN",
+              "M1",
+              available_at,
+              root.id,
+              StringFormat("contact_bar_open=%s strategy_source_kind=ROOT reason=NO_ACTIVE_PRECONTACT_MAP_OBJECTIVE_PLAN retrospective_plan_forbidden=true phase4c_sweep_authorization=false",
+                           TimeToString(bar.time,TIME_DATE|TIME_SECONDS)));
+      return;
+     }
+
+   if(g_scenarios[scenario_index].frozen_at>=available_at)
+     {
+      g_root_contacts_without_preplan++;
+
+      // A plan created at the same timestamp as the physical Root contact
+      // cannot be used for that contact. Cancel it immediately so it cannot
+      // survive as an orphaned post-contact PLAN.
+      g_scenarios[scenario_index].strategy_state=V1_STRATEGY_CANCELED;
+      g_scenarios[scenario_index].canceled_at=available_at;
+      g_scenarios[scenario_index].cancel_reason="PLAN_NOT_STRICTLY_BEFORE_CONTACT";
+      ReleaseRootScenarioOwner(root.id,g_scenarios[scenario_index].id);
+      g_scenarios_canceled++;
+
+      LogLine("ROOT_CONTACT_WITHOUT_PREPLAN",
+              "M1",
+              available_at,
+              root.id,
+              StringFormat("scenario_id=%s plan_frozen_at=%s contact_at=%s reason=PLAN_NOT_STRICTLY_BEFORE_CONTACT fail_closed=true scenario_canceled=true retrospective_plan_forbidden=true phase4c_sweep_authorization=false",
+                           g_scenarios[scenario_index].id,
+                           TimeToString(g_scenarios[scenario_index].frozen_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(available_at,TIME_DATE|TIME_SECONDS)));
+      return;
+     }
+
+   g_scenarios[scenario_index].source_contact_at=available_at;
+   g_scenarios[scenario_index].source_contact_bar_open=bar.time;
+   // Root contact is bound, but corrected Phase 4C has not yet authorized
+   // a Root-reaction sweep. CHoCH search therefore remains disabled.
+   g_scenarios[scenario_index].strategy_state=V1_STRATEGY_WAITING_SWEEP;
+   g_scenario_root_contacts++;
+
+   LogLine("SCENARIO_ROOT_CONTACT_BOUND",
+           "M1",
+           available_at,
+           g_scenarios[scenario_index].id,
+           StringFormat("root_zone_id=%s strategy_source_id=%s strategy_source_kind=ROOT plan_frozen_at=%s root_contact_at=%s root_contact_bar_open=%s scope=%s direction=%s active_map_tf=%s objective_count=%d state=WAITING_SWEEP child_required=false phase4c_sweep_authorization=false choch_search_enabled=false",
+                        root.id,
+                        root.id,
+                        TimeToString(g_scenarios[scenario_index].frozen_at,TIME_DATE|TIME_SECONDS),
+                        TimeToString(available_at,TIME_DATE|TIME_SECONDS),
+                        TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                        ScenarioScopeName(g_scenarios[scenario_index].scope),
+                        DirectionName(g_scenarios[scenario_index].direction),
+                        TfName(g_scenarios[scenario_index].active_map_tf),
+                        g_scenarios[scenario_index].objective_count));
+  }
+
 
 void ProcessPostContactRootContacts(const MqlRates &bar,
                                     const datetime available_at)
@@ -5833,20 +5792,29 @@ void ProcessPostContactRootContacts(const MqlRates &bar,
 
       StoreWaitingPostContactLineage(g_root_reactions[i]);
 
+      BindPreplannedScenarioToRootContact(root,bar,available_at);
+      int bound_scenario=FindActiveScenarioForRoot(root.id);
+      bool has_preplan=(bound_scenario>=0 &&
+                        g_scenarios[bound_scenario].source_contact_at==available_at &&
+                        g_scenarios[bound_scenario].frozen_at<available_at);
+
       g_root_contacts_observed++;
       g_root_contexts_ready++;
       LogLine("ROOT_CONTEXT_READY",
               "M1",
               available_at,
               root.id,
-              StringFormat("strategy_source_id=%s strategy_source_kind=ROOT optional_child_observation=ENABLED child_strategy_authority=false entry_geometry=M1_FVG sl_geometry=M1_FVG_20PCT root_contact_at=%s strategy_authority=false map_objective_qualification=DEFERRED_PHASE4B",
+              StringFormat("strategy_source_id=%s strategy_source_kind=ROOT optional_child_observation=ENABLED child_strategy_authority=false entry_geometry=M1_FVG sl_geometry=M1_FVG_20PCT root_contact_at=%s strategy_authority=false phase4b_scenario_qualified=%s map_objective_qualification=%s scenario_id=%s phase4c_sweep_authorization=false",
                            root.id,
-                           TimeToString(available_at,TIME_DATE|TIME_SECONDS)));
+                           TimeToString(available_at,TIME_DATE|TIME_SECONDS),
+                           has_preplan ? "true" : "false",
+                           has_preplan ? "PRECONTACT_PLAN_FROZEN" : "NO_PRECONTACT_PLAN",
+                           has_preplan ? g_scenarios[bound_scenario].id : "NA"));
       LogLine("ROOT_CONTACT_OBSERVED",
               "M1",
               available_at,
               root.id,
-              StringFormat("direction=%s root_tf=%s root_available_at=%s contact_bar_open=%s bottom=%.10f top=%.10f optional_child_observation_enabled=true child_strategy_authority=false root_remains_strategy_source=true historical_child_authorization=false strategy_authority=false map_objective_qualification=DEFERRED_PHASE4B",
+              StringFormat("direction=%s root_tf=%s root_available_at=%s contact_bar_open=%s bottom=%.10f top=%.10f optional_child_observation_enabled=true child_strategy_authority=false root_remains_strategy_source=true historical_child_authorization=false phase4b_precontact_plan_checked=true phase4c_sweep_authorization=false",
                            DirectionName(root.direction),
                            TfName(root.tf),
                            TimeToString(root.available_at,TIME_DATE|TIME_SECONDS),
@@ -6431,9 +6399,9 @@ void ProcessClosedBar(const int tf_index,
    if(new_wave)
      {
       TryCreateDefendedRangeLiquidity(tf_index,bar,available_at);
-      // D-122 timing correction: Structural-Reaction strategy ownership is
-      // explicitly disabled until the post-contact child / sweep anchor is
-      // re-audited. The Phase-2 liquidity detector remains untouched.
+      // D-125 Phase 4B boundary: Structural-Reaction strategy ownership is
+      // explicitly disabled until corrected Phase 4C freezes Root-reaction
+      // sweep ownership. The Phase-2 liquidity detector remains untouched.
       // TryCreateStructuralReactionLiquidity(tf_index,available_at);
      }
 
@@ -6444,9 +6412,13 @@ void ProcessClosedBar(const int tf_index,
 
    if(tf_index==5)
      {
-      // D122A stops at physical Root contact + post-contact child lineage.
-      // Sweep/CHoCH authorization is intentionally disabled until Section 6.6
-      // timing is explicitly frozen.
+      // D-119 overlay is required before new objective PLANs are frozen so
+      // already physically consumed cross-timeframe liquidity is not reused.
+      // This records consumption only; it does not authorize a strategic sweep.
+      UpdateM1StrategyLiquidityOverlay(bar,available_at);
+
+      // D-125 binds only a scenario that was frozen strictly before contact.
+      // Corrected Phase 4C sweep/CHoCH authorization remains disabled.
       ProcessPostContactRootContacts(bar,available_at);
      }
 
@@ -6535,11 +6507,16 @@ bool BootstrapStructureCore()
    // watchlist. Actual child discovery begins after a new runtime Root contact.
    EnsurePostContactRootWatches(now,true);
 
+   // D-125: bootstrap may freeze a PLAN only for a fresh Root watch that has
+   // not had a historical post-availability M1 touch. The Root remains the
+   // strategy source and the objective family is frozen before any new contact.
+   RefreshScenarioLayer(now,true);
+
    g_init_state=V1_INIT_ACTIVE_MAP;
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
    g_init_state=V1_INIT_SOURCE_CONTEXT;
-   LogLine("INIT_STATE","",now,"","D122A_ROOT_WATCH_POST_CONTACT_CHILD_READY_SCENARIO_SWEEP_DISABLED");
+   LogLine("INIT_STATE","",now,"","D125_ROOT_PRECONTACT_SCENARIO_OBJECTIVE_READY_SWEEP_DISABLED");
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -6578,14 +6555,15 @@ bool BootstrapStructureCore()
       CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
 
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_D124_ROOT_PRIMARY_OPTIONAL_CHILD_AUDIT ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d root_watches_created=%I64d prior_touch_ineligible=%I64d root_contexts_ready=%I64d scenario_authorization=false sweep_authorization=false",
+           StringFormat("READY_D125_ROOT_PRECONTACT_SCENARIO_OBJECTIVE ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d root_watches_created=%I64d prior_touch_ineligible=%I64d root_contexts_ready=%I64d scenarios_planned=%I64d phase4b_planning_enabled=true phase4c_sweep_authorization=false",
                         TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
                         h4_long_horizon_count,
                         ArraySize(g_liquidity),
                         ArraySize(g_sources),
                         g_root_watches_created,
                         g_root_watches_prior_touch_rejected,
-                        g_root_contexts_ready));
+                        g_root_contexts_ready,
+                        g_scenarios_planned));
 
    for(int i=0;i<4;i++)
      {
@@ -6736,19 +6714,32 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
 
    datetime group_time=0;
 
+   bool group_pre_m1_authorization_done=false;
+
    for(int i=0;i<ArraySize(events);i++)
      {
       if(group_time==0 || events[i].available_at!=group_time)
         {
          if(group_time!=0)
            {
-            // Register Roots only after the entire previous same-timestamp MTF
-            // group has completed. A Root created in that group therefore cannot
-            // self-contact using price movement that occurred before availability.
+            // Complete the previous same-timestamp group, then register any
+            // newly available Roots and freeze eligible pre-contact PLANs.
             EnsurePostContactRootWatches(group_time,false);
+            RefreshScenarioLayer(group_time,false);
            }
 
          group_time=events[i].available_at;
+         group_pre_m1_authorization_done=false;
+        }
+
+      // H4->H1->M30->M15->M5 have higher priority than M1. Before the first
+      // M1 close of this timestamp, apply all map/Root/objective consequences
+      // causally known from those higher-timeframe closes.
+      if(events[i].tf_index==5 && !group_pre_m1_authorization_done)
+        {
+         EnsurePostContactRootWatches(group_time,false);
+         RefreshScenarioLayer(group_time,false);
+         group_pre_m1_authorization_done=true;
         }
 
       ProcessClosedBar(events[i].tf_index,
@@ -6757,10 +6748,13 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
      }
 
    if(group_time!=0)
+     {
       EnsurePostContactRootWatches(group_time,false);
+      RefreshScenarioLayer(group_time,false);
+     }
 
-   // Scenario / sweep / M1 CHoCH / execution / order authorization remains
-   // intentionally disabled in D122A.
+   // D-125 enables only Root-based pre-contact scenario/objective planning.
+   // Strategic sweep / CHoCH / execution / order authorization remains off.
   }
 
 //+------------------------------------------------------------------+
@@ -6798,7 +6792,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.81 property_version=1.00 magic=%I64d phase=D124_ROOT_PRIMARY_OPTIONAL_CHILD_AUDIT_CORE fvg_origin_ob_experiment=%s",
+           StringFormat("build=0.90 property_version=1.00 magic=%I64d phase=D125_ROOT_PRECONTACT_SCENARIO_OBJECTIVE_CORE fvg_origin_ob_experiment=%s",
                         InpMagicNumber,
                         InpEnableFvgOriginObExperiment ? "true" : "false"));
 
@@ -6812,7 +6806,7 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d root_contexts_ready=%I64d children_created_strategy_sources=%I64d optional_child_observations=%I64d post_contact_child_events=%I64d children_invalidated_strategy_sources=%I64d legacy_refinements_ready=%I64d legacy_refinements_no_child=%I64d legacy_refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d source_contacts_old_phase4c=%I64d authorized_sweep_events_old_phase4c=%I64d structural_reaction_created_old_phase4c=%I64d",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d root_contexts_ready=%I64d children_created_strategy_sources=%I64d optional_child_observations=%I64d post_contact_child_events=%I64d children_invalidated_strategy_sources=%I64d legacy_refinements_ready=%I64d legacy_refinements_no_child=%I64d legacy_refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_no_objective=%I64d objective_candidates_frozen=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d source_contacts_old_phase4c=%I64d authorized_sweep_events_old_phase4c=%I64d structural_reaction_created_old_phase4c=%I64d",
                         reason,
                         InitStateName(g_init_state),
                         ArraySize(g_liquidity),
@@ -6841,6 +6835,12 @@ void OnDeinit(const int reason)
                         g_permission_closes,
                         ReversalPermissionName(g_map.reversal_permission),
                         g_scenarios_planned,
+                        g_scenarios_canceled,
+                        g_scenarios_no_objective,
+                        g_objective_candidates_frozen,
+                        g_precontact_root_plans,
+                        g_scenario_root_contacts,
+                        g_root_contacts_without_preplan,
                         g_source_contacts,
                         g_authorized_sweep_events,
                         g_structural_reaction_created));
@@ -6876,11 +6876,11 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              "D122A trading disabled; Root-contact observation and post-contact child discovery active; scenario/sweep/CHoCH authorization disabled");
+              "D125 orders disabled; Root-based pre-contact scenario/objective planning active; Phase4C sweep/CHoCH authorization disabled");
      }
 
    ProcessRuntimeClosedBars((datetime)tick.time);
 
-   // No trade submission in Phase 4C.
+   // No trade submission in D-125 / Phase 4B.
   }
 //+------------------------------------------------------------------+
