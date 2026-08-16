@@ -1,8 +1,8 @@
 # EA Development Handoff
 
 Last updated: 2026-08-16
-Status: V1 SPECIFICATION FROZEN
-Current phase: Phase 4C source-contact / mature-sweep implementation
+Status: V1 AUTHORITY CORRECTION IN PROGRESS
+Current phase: Post-contact LTF child sequencing correction before Phase 4C continuation
 
 ## Goal
 
@@ -30,10 +30,11 @@ AI/Gemini/Codex runtime dependency 없이 MT5 Strategy Tester와 향후 실거�
 
 Objective
 -> H1/M30 market structure
--> pre-existing HTF root OB
--> causal LTF OB refinement
--> refined OB touch
--> pre-existing liquidity sweep
+-> pre-existing eligible / unconsumed HTF root OB
+-> actual HTF root OB contact
+-> post-contact lower-TF reaction
+-> newly formed causal LTF child OB / refinement
+-> valid liquidity sweep under the re-audited post-contact timing contract
 -> meaningful M1 body-close CHoCH
 -> causal fresh FVG in the same sweep-to-CHoCH displacement
 -> widest valid FVG
@@ -54,15 +55,36 @@ Objective
 - `mt5/legacy/MentorScenarioTraderEA.mq5`
 - `mt5/legacy/MentorSep2025ParityEA.mq5`
 
+## Critical Authority Correction — Post-Contact LTF Child
+
+The intended causal order is now explicitly frozen as:
+
+```text
+pre-existing / unconsumed HTF Root
+→ actual HTF Root contact
+→ post-contact lower-TF reaction
+→ newly formed / confirmed causal child OB
+→ post-contact refinement lineage
+→ execution-trigger chain
+```
+
+The previous implementation searched the Root-forming historical displacement for lower-TF children before price returned to the Root. That temporal ownership is incorrect.
+
+Consequences:
+
+- `PREPLAN_SOURCE_CONTACT` is not a valid strategy rejection merely because HTF Root contact preceded child discovery; Root contact is supposed to start child discovery.
+- Phase 3B child/refinement PASS, Phase 4B scenario-planning PASS, and Phase 4C final-source-contact ownership are superseded as strategy-parity evidence and require reimplementation/retest.
+- Phase 1.1 structure, Phase 2 liquidity detector, Phase 3A HTF Root detection/lifecycle, and Phase 4A H1/M30 map/reversal logic are not invalidated by this sequencing correction in their independent scopes.
+- Do not proceed to Phase 5A until corrected post-contact child ownership and downstream sweep timing are frozen and tested.
+
 ## Current Status
 
 Phase 4B Scenario / Objective Family
-→ REAL-TICK TEST PASS
-→ SCENARIO_PLANNED 2
-→ objective candidates frozen 9
-→ PREPLAN_SOURCE_CONTACT retrospective-plan violations 0
-→ ambiguous Root fail-closed PASS
-→ source-lineage cancellation PASS
+→ HISTORICAL TEST PASS FOR OLD PRE-CONTACT-CHILD IMPLEMENTATION ONLY
+→ STRATEGY-PARITY STATUS SUPERSEDED BY D-122
+→ SCENARIO_PLANNED 2 and related counts remain audit history
+→ `PREPLAN_SOURCE_CONTACT` rejection semantics are obsolete under corrected ordering
+→ objective-family logic itself remains subject to normal regression after scenario-layer rework
 → profitability NOT evaluated
 
 Phase 4A H1/M30 map / reversal permission
@@ -74,12 +96,10 @@ Phase 4A H1/M30 map / reversal permission
 → Phase 1~3B regression PASS
 
 Phase 3B causal LTF refinement
-→ EXTENDED REAL-TICK COVERAGE PASS
-→ CHILD_CREATED 7
-→ CHILD_INVALIDATED 6
-→ READY refinement 7
-→ causal child violations 0
-→ ambiguity / multi-level / SHORT child remain future regression coverage
+→ SUPERSEDED AS STRATEGY-PARITY TEST BY D-122
+→ old CHILD_CREATED 7 / READY 7 were historical children from the Root-forming displacement
+→ corrected child must form only after actual HTF Root contact
+→ reimplementation and new real-tick validation REQUIRED
 → profitability NOT evaluated
 
 Phase 3A HTF Root OB core
@@ -190,9 +210,14 @@ Wick through source distal
 
 Minimum one causal lower-TF child
 → REQUIRED
+→ must form / become available AFTER qualifying HTF Root contact
 
-Source contact
-→ REQUIRED before trigger search
+HTF Root contact
+→ REQUIRED
+→ starts lower-TF child discovery
+
+Post-contact child lineage
+→ REQUIRED before current setup can authorize M1 execution trigger search
 
 Mature sweep
 → pre-existing eligible liquidity
@@ -329,10 +354,10 @@ Startup inside source
 → require exit + later re-entry
 
 Final authority consistency audit
-→ COMPLETE
+→ PREVIOUS AUDIT SUPERSEDED IN REFINEMENT/CONTACT ORDER BY D-122
 
 EA_SPEC status
-→ FROZEN FOR V1 IMPLEMENTATION
+→ AUTHORITY-CORRECTED; POST-CONTACT CHILD / SWEEP TIMING REIMPLEMENTATION REQUIRED
 
 Source lifecycle
 → ACTIVE / INVALIDATED only
@@ -345,7 +370,9 @@ H4 extension
 
 Bootstrap Root discovery
 → H1/M30/M15 chronological stream
-→ targeted child refinement afterward
+→ retain current eligible HTF Roots
+→ do NOT decompose the Root-forming historical displacement into current children
+→ runtime child discovery begins only after qualifying Root contact
 
 Active-memory policy
 → compressed working set
@@ -370,87 +397,51 @@ Broker transaction reconciliation
 → callback arrival order not trusted
 
 
-## Implementation Checkpoint — Phase 4C Source Contact / Mature Sweep
+## Implementation Checkpoint — D-122 Post-Contact Child Correction
 
-Phase 4B validation is complete.
-
-Verified:
+The Phase 4C code currently in `MentorDeterministicV1EA.mq5` was built on the old temporal assumption:
 
 ```text
-SCENARIO_PLANNED = 2
-SCENARIO_LINEAGE_BOUND = 2
-SCENARIO_CANCELED = 2
-SCENARIO_REJECTED / AMBIGUOUS_ROOT_LINEAGE = 38
-PREPLAN_SOURCE_CONTACT = 3
-OBJECTIVE_CANDIDATE_FROZEN = 9
-
-scenario/objective causal violations = 0
-preplan-contact later planned = 0
+Root
+→ historical child refinement
+→ final refined source frozen
+→ source contact
 ```
 
-Phase 4C code status:
-
-- Phase: `SOURCE_SWEEP_CORE`
-- Internal build: `0.70`
-- MQL property version: `1.00`
-- Orders: intentionally disabled
-- M1 CHoCH: intentionally disabled
-- Entry/SL/final TP: disabled
-- Phase 4C compile: PENDING LOCAL METAEDITOR
-- Phase 4C smoke: NOT STARTED
-
-Implemented:
+Current authority is:
 
 ```text
-SOURCE_CONTACT
-startup-inside-source exit/re-entry guard
-contact-time mature liquidity snapshot
-strategy M1 physical-consumption overlay
-same-bar contact+sweep
-source-intersecting authorized M1 sweep
-multiple-pool sweep authorization
-active sweep replacement
-STRUCTURAL_REACTION creation
-post-contact M1 proof of reaction extreme
+pre-existing eligible HTF Root
+→ actual HTF Root contact
+→ post-contact LTF reaction
+→ newly formed causal child
+→ post-contact refinement lineage
 ```
 
-Phase 2 own-timeframe liquidity detector remains intact as the audit detector.
-
-Phase 4C adds a strategy M1 physical-consumption overlay because
-first-position sweep authorization must know immediately if an eligible
-cross-timeframe pool was already physically swept/body-delivered on M1.
-
-The overlay is strategy eligibility state, not a rewrite of historical
-Phase 2 liquidity audit events.
-
-Structural Reaction is now active only when:
+Therefore:
 
 ```text
-scenario-owned final source
-→ actual source contact
-→ later compatible confirmed reaction wave
-→ M1 proof that reaction extreme occurred after contact while intersecting source
+Phase 3B corrected refinement = NOT IMPLEMENTED
+Phase 4B corrected scenario planning = NOT IMPLEMENTED
+Phase 4C corrected contact/sweep ownership = NOT IMPLEMENTED
+Phase 5A = BLOCKED until the corrected sequence passes
 ```
 
-A newly created Structural Reaction pool cannot trigger the same first position,
-because eligible sweep liquidity is already frozen at source contact.
+The previously implemented physical liquidity/sweep detector and one-tick penetration/recovery geometry are not discarded, but their strategy-authorization timing relative to the new child must be re-audited before reuse.
 
-Known Phase 4B logging-only defect fixed:
+The uploaded True/False OB experiment tests remain useful only for diagnosing the old implementation behavior. They do not establish current strategy opportunity frequency because both runs used pre-contact child discovery.
+
+Immediate next work:
 
 ```text
-canceled PLAN
-→ no later objective-consumption chatter
+1. rewrite refinement state machine so HTF Root contact opens child discovery
+2. ensure child.available_at > qualifying_root_contact_at
+3. remove historical Root-forming-displacement child authorization
+4. replace PREPLAN_SOURCE_CONTACT rejection semantics
+5. re-audit when eligible sweep-liquidity is frozen relative to the new child
+6. rerun Phase 3B / 4B / 4C real-tick validation
+7. only then resume Phase 5A
 ```
-
-Next after Phase 4C PASS:
-
-```text
-Phase 5A
-→ authorized sweep
-→ M1 protected correction reference
-→ meaningful CHoCH
-```
-
 
 ## Do Not Do Yet
 

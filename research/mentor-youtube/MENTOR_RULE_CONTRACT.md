@@ -49,27 +49,35 @@ authority.
    high or low. The two supported OB definitions remain distinct. An HTF FVG
    may describe delivery inefficiency, but it cannot independently declare a
    source POI or authorize the first position.
-7. Refine the source by descending from the HTF OB through H1/M30/M15/M5. At
-   least one lower-timeframe child is required. A child OB is valid only when
-   it is contained by, overlaps, or is the immediately adjacent substructure
-   of its parent swing and belongs to the same displacement. This causal child
-   defines the source/context lineage; it does not replace the CHoCH
-   displacement FVG as the base first-position entry zone.
+7. Predeclare an eligible, unconsumed HTF Root OB first and wait for price to
+   actually contact that Root. Lower-timeframe child discovery begins only
+   after this contact. A valid child OB must form from the post-contact LTF
+   reaction and become usable only after its own causal lower-timeframe
+   structure delivery confirms it. An LTF OB that existed before Root contact,
+   including an OB inside the original displacement that created the Root,
+   does not satisfy the current child requirement. At least one post-contact
+   child is required before the current first-position trigger can be authorized.
 8. The map timeframe is adaptive within H1 and M30, with H1 as the highest
-   active frame. H1/M30 establish scope; H1/M30/M15/M5 reveal the nested OB family;
-   M5 describes the correction context and M1 alone confirms the executable
-   reaction. Stop refinement must follow the OB lineage, not an unrelated
-   lower-timeframe zone at a similar price.
+   active frame. H1/M30 establish scope; H1/M30/M15 identify and retain the
+   pre-existing HTF Root. After actual Root contact, M30/M15/M5 reveal the
+   newly formed reaction child lineage. M5 describes correction context and M1
+   confirms the executable reaction only after that post-contact lineage is
+   causally available. Stop/source refinement must follow the post-contact
+   reaction, not an unrelated or historical lower-timeframe zone at a similar price.
 9. A continuation setup must occur in the correct half of its active dealing
    range: long in discount and short in premium. This is the mentor's execution
    discipline, not a universal market law.
-10. The base first-entry chain is the predeclared nested OB family, source
-    liquidity context, OB contact, M1 sweep, M1 body-close CHoCH, then a fresh
+10. The base first-entry chain is the predeclared eligible HTF Root, actual HTF
+    Root contact, post-contact newly formed causal LTF child, then the valid
+    source-liquidity/sweep context, M1 body-close CHoCH, and a fresh
     same-direction 3-candle FVG belonging to the same sweep-to-CHoCH causal leg.
     M5 may validate that the M1 event belongs to the expected correction but
     cannot authorize an order. A separate continuation BOS is not mandatory.
     If the meaningful CHoCH has no such causal FVG, the structure event remains
-    valid but the base first-position order is not authorized.
+    valid but the base first-position order is not authorized. The exact timing
+    anchor for sweep eligibility relative to newly formed child availability
+    must follow the corrected deterministic specification; the old
+    pre-contact-child contact anchor is not retained by implication.
 11. If more than one valid FVG exists in that causal displacement, select the
     widest by price range. An exact maximum-width tie after tick normalization
     is no-trade. Use the selected FVG's first subsequent touch, after both the
@@ -126,5 +134,6 @@ implemented as combinable optimization toggles in the base engine.
 ## Completion rule
 
 Implementation parity requires every `explicit` Casebook relation to pass and
-every trade to expose its map structure, source liquidity, context zone, sweep,
-CHoCH, entry zone, SL, and objective. Profitability is a separate gate.
+every trade to expose its map structure, source liquidity, pre-existing HTF Root,
+qualifying Root contact, post-contact causal child, sweep, CHoCH, entry zone, SL,
+and objective. Profitability is a separate gate.

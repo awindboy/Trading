@@ -2,6 +2,60 @@
 
 구현 정확성 검증 결과를 아래에 기록한다. 아직 수익성 승인 결과는 없다.
 
+## 2026-08-16 — Authority correction note: HTF Root contact must precede LTF child formation
+
+Status:
+
+```text
+AUTHORITY CORRECTION
+HISTORICAL TEST COUNTS PRESERVED
+AFFECTED PHASES REQUIRE RE-TEST
+```
+
+Corrected causal order:
+
+```text
+pre-existing eligible / unconsumed HTF Root
+→ actual HTF Root contact
+→ post-contact lower-TF reaction
+→ newly formed / confirmed causal child OB
+→ post-contact refinement lineage
+→ execution-trigger chain
+```
+
+The Phase 3B / Phase 4B / Phase 4C implementation used in the historical tests below instead discovered lower-TF children inside the historical displacement that originally created the Root, froze that lineage before contact, and treated prior contact as `PREPLAN_SOURCE_CONTACT` rejection evidence.
+
+Therefore:
+
+```text
+Phase 1.1 structure results
+→ remain valid within structure scope
+
+Phase 2 physical liquidity/sweep detector results
+→ remain valid within detector scope
+→ strategy-authorization timing must still be re-audited
+
+Phase 3A HTF Root detection/lifecycle results
+→ remain valid within Root-detection scope
+
+Phase 4A H1/M30 map/reversal results
+→ remain valid within map scope
+
+Phase 3B child/refinement PASS
+→ SUPERSEDED as current strategy-parity evidence
+
+Phase 4B SCENARIO_PLANNED / PREPLAN_SOURCE_CONTACT results
+→ historical behavior of the old sequence only
+→ not current opportunity-frequency evidence
+
+Phase 4C final-source-contact / sweep ownership
+→ requires reimplementation/retest under the corrected sequence
+```
+
+`PREPLAN_SOURCE_CONTACT` is no longer a valid strategy violation merely because the parent HTF Root was contacted before child discovery. Under current authority, that Root contact is the event that starts child discovery.
+
+All historical records below are intentionally preserved unchanged as test history.
+
 
 ## 2026-08-16 — Phase 1.1 Structure / Bootstrap Smoke Test
 

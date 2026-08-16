@@ -1605,8 +1605,9 @@ Sweep은 liquidity event이지
 ```text
 valid map
 valid objective
-valid source/context
-source contact
+pre-existing HTF Root
+qualifying HTF Root contact
+post-contact causal child/context
 M1 CHoCH
 valid execution zone
 ```
@@ -2373,76 +2374,57 @@ search causal LTF child
 
 ---
 
-## 5. Causal LTF OB Refinement
+## 5. Post-Contact Causal LTF OB Refinement
 
-Status: FROZEN FOR V1
+Status: FROZEN FOR V1 — AUTHORITY CORRECTED 2026-08-16
 
 Primary authority:
 - `AGENTS.md`
 
 Primary implementation reference:
-- `mentor_engine/planner.py`
-- `mentor_engine/zones.py`
+- current `mentor_engine/planner.py` / `mentor_engine/zones.py` are **reference-only until post-contact timing is reimplemented**
 
 Secondary reference:
 - `research/mentor-youtube/MENTOR_RULE_CONTRACT.md`
 
 ### 5.1 Purpose
 
-HTF Root OB가 확정됐다고 해서
-그 넓은 Root candle 전체를 바로 precision execution source로 사용하지 않는다.
+HTF Root OB의 역할은 가격이 나중에 반응할 **사전 형성된 원인 위치**를 미리 보존하는 것이다.
 
-Refinement의 목적은:
+Lower-timeframe refinement의 목적은 그 Root를 처음 만들었던 과거 displacement를
+더 작은 시간봉으로 분해하는 것이 아니다.
 
-```text
-상위 timeframe에서 본 동일한 원인 사건을
-더 낮은 timeframe에서 causal하게 다시 확인
-```
-
-하는 것이다.
-
-예:
+Current V1 refinement는:
 
 ```text
-H1 Root
-→ M30 causal child
-→ M15 causal child
-→ M5 causal child
+pre-existing / unconsumed HTF Root
+→ actual HTF Root contact
+→ post-contact lower-TF reaction
+→ newly formed causal child OB
 ```
 
-각 child는 단순히 parent 내부에 있는 작은 OB가 아니라
-같은 price event와 같은 displacement를 설명해야 한다.
+순서로만 시작한다.
 
-### 5.2 Minimum One Child Requirement
+### 5.2 Minimum One Post-Contact Child Requirement
 
 Classification: D
 
-최초 position baseline은
-최소 하나의 valid lower-timeframe causal child를 요구한다.
+최초-position baseline은 HTF Root 실제 contact 이후
+최소 하나의 valid lower-timeframe causal child가 새로 형성·확정되어야 한다.
 
 ```text
 HTF Root only
 → no first-position authorization
 ```
 
-예:
-
 ```text
-H1 Root
-→ no valid M30/M15/M5 child
+HTF Root contact
+→ no valid post-contact child
 → NO TRADE
 ```
 
-또는:
-
-```text
-M30 Root
-→ valid M15 child
-→ refinement requirement satisfied
-```
-
-Root 전체를 바로 M1 trigger source로 사용하는 것은
-V1 baseline protocol이 아니다.
+Root를 처음 만들었던 과거 displacement 안의 lower-TF OB는
+이 requirement를 충족하지 않는다.
 
 ### 5.3 Allowed Refinement Timeframes
 
@@ -2456,7 +2438,7 @@ M30
 M15
 ```
 
-Refinement timeframes:
+Post-contact refinement timeframes:
 
 ```text
 M30
@@ -2464,158 +2446,83 @@ M15
 M5
 ```
 
-Child는 반드시 parent보다 더 낮은 timeframe이어야 한다.
-
-Examples:
-
-```text
-H1
-→ M30
-→ M15
-→ M5
-```
-
-```text
-H1
-→ M15
-```
-
-```text
-M30
-→ M15
-→ M5
-```
-
+Child는 direct parent보다 낮은 timeframe이어야 한다.
 모든 중간 timeframe에 child가 반드시 존재할 필요는 없다.
 
-M1은 HTF-to-LTF source refinement에 포함하지 않는다.
+M1은 HTF-to-LTF child discovery timeframe이 아니라 이후 execution trigger timeframe이다.
 
-M1은 이후:
+### 5.4 Root Contact Precedes Child Discovery
 
-```text
-sweep
-CHoCH
-CHoCH displacement FVG
-entry execution
-```
+Classification: D / authority correction
 
-를 담당한다.
-
-### 5.4 Same Direction
-
-Classification: D
-
-Child OB는 parent와 동일 방향이어야 한다.
+필수 시간 순서:
 
 ```text
-bullish parent
-→ bullish child only
-
-bearish parent
-→ bearish child only
+Root.available_at
+< qualifying_root_contact_at
+< child.occurred_at or child causal reaction start
+<= child.available_at
 ```
 
-반대 방향 lower-TF OB는 correction structure일 수 있으나
-parent source refinement로 사용하지 않는다.
-
-### 5.5 Recursive Causal OB Logic
-
-Classification: D for V1
-
-Child OB도 Root OB와 같은 causal logic을 축소 적용한다.
-
-Valid child는:
-
-```text
-lower-TF meaningful swing-origin context
-+
-last opposite candle inside that origin window
-+
-same causal lower-TF directional leg
-+
-meaningful lower-TF structure body-break
-```
-
-을 모두 만족해야 한다.
-
-즉:
-
-```text
-parent 안에 있는 작은 반대색 candle
-```
-
-이라는 이유만으로 child가 되지 않는다.
-
-Bullish child example:
-
-```text
-meaningful lower-TF low
-        ↓
-last bearish candle in origin window
-        ↓
-bullish displacement
-        ↓
-meaningful lower-TF high body-break
-```
-
-Bearish child는 반대다.
-
-### 5.6 Same Price Event
-
-Classification: D
-
-Parent와 child는 같은 가격 사건을 설명해야 한다.
-
-Child origin은 parent의 causal swing-origin window 안에 있어야 한다.
-
-Required time relation:
-
-```text
-parent origin
-<= child origin
-<= child structure confirmation
-<= parent linked structure confirmation
-```
-
-Parent의 structure delivery가 완전히 끝난 뒤
-나중에 생긴 lower-TF OB는
-기존 parent의 refinement로 연결하지 않는다.
-
-그것은 별도의 continuation source 후보일 수 있다.
-
-### 5.7 Same Displacement Ownership
-
-Classification: D
-
-Price overlap만으로 parent-child 관계를 만들지 않는다.
-
-Child의 structure delivery는
-parent displacement가 진행 중인 동일 directional delivery chain에 속해야 한다.
-
-즉:
-
-```text
-same direction
-+
-same causal origin window
-+
-same directional delivery chain
-```
-
-을 만족해야 한다.
+Child의 정확한 `occurred_at` 정의는 해당 lower-TF OB detector의 candle-origin semantics를 따른다.
+어떤 경우에도 child는 qualifying HTF Root contact 전에 current setup의 child로 존재할 수 없다.
 
 금지:
 
 ```text
-parent 안에 가격이 겹치는 unrelated M5 OB
-→ child 승격
+Root original displacement replay
+→ historical M30/M15/M5 OB 발견
+→ current child로 사전 동결
+→ 나중에 Root/child touch 대기
 ```
 
-### 5.8 Price Containment
+### 5.5 Post-Contact Causal Child Logic
+
+Classification: D
+
+Valid child는 다음을 모두 만족한다.
+
+```text
+parent HTF Root was pre-existing and eligible before contact
++
+price actually contacted that Root
++
+child forms from the lower-TF reaction after that contact
++
+child has its own causal lower-TF structure delivery
++
+child is causally attributable to that post-contact reaction episode
+```
+
+Bullish child는 post-contact bullish reaction에서
+lower-TF bullish delivery를 설명해야 한다.
+
+Bearish child는 post-contact bearish reaction에서
+lower-TF bearish delivery를 설명해야 한다.
+
+단순 opposite-colour candle 하나는 child가 아니다.
+
+### 5.6 Pre-Contact Historical OB Is Not a Child
+
+Classification: D
+
+다음 lower-TF OB는 current setup의 child로 연결하지 않는다.
+
+```text
+parent Root contact 전에 이미 형성된 OB
+parent Root를 처음 만들었던 original displacement 속 OB
+parent와 가격만 겹치는 unrelated OB
+```
+
+이 규칙은 historical replay에서 미래를 본 뒤
+"Root 안에 있었으니 child였을 것"이라고 사후 연결하는 것을 막는다.
+
+### 5.7 Price Relation: Containment or Post-Contact Event Adjacency
 
 Classification: D-compatible
 
-가장 명확한 refinement는:
+Post-contact temporal causality가 먼저 충족된 뒤,
+가장 명확한 geometry는 full containment다.
 
 ```text
 parent.bottom <= child.bottom
@@ -2623,45 +2530,24 @@ AND
 child.top <= parent.top
 ```
 
-이다.
+다만 multi-timeframe aggregation 차이 때문에
+같은 post-contact reaction의 child가 parent boundary를 일부 벗어날 수 있다.
 
-Full containment를 우선적으로 인정한다.
+그 경우 fixed point / ATR tolerance를 만들지 않는다.
 
-그러나 multi-timeframe aggregation 차이 때문에
-같은 causal event의 lower-TF child가 parent 경계를 일부 벗어날 수 있다.
-
-이 경우 고정 point / ATR tolerance를 사용하지 않는다.
-
-### 5.9 Event-Defined Immediate Adjacency
-
-Classification: D for V1 protocol
-
-Parent boundary를 일부 벗어난 child는
-다음 causal 조건이 모두 성립할 때만 허용한다.
+허용 여부는:
 
 ```text
-same parent swing-origin lower-TF bar sequence
-+
-same directional displacement
-+
-same structure-delivery ownership
-+
-child structure confirmation inside parent event window
+same qualifying parent Root contact
+same post-contact reaction episode
+same lower-TF directional delivery ownership
 ```
 
-즉:
+으로 설명되어야 한다.
 
-```text
-가격이 3포인트 이내라서
-ATR의 0.2배 이내라서
-```
+즉 adjacency는 price distance가 아니라 post-contact event causality로 정의한다.
 
-같은 거리 기반 adjacency는 사용하지 않는다.
-
-V1에서 adjacency는 가격 거리가 아니라
-event lineage로 정의한다.
-
-### 5.10 Child Structure Delivery Requirement
+### 5.8 Child Structure Delivery Requirement
 
 Classification: D
 
@@ -2670,87 +2556,76 @@ Child도 자체 lower-timeframe structure delivery를 만들어야 한다.
 Valid bullish child:
 
 ```text
-lower-TF origin
+HTF Root contact
+→ lower-TF bullish reaction origin
 → bullish directional leg
 → meaningful lower-TF high body-close break
 ```
 
-Valid bearish child:
-
-```text
-lower-TF origin
-→ bearish directional leg
-→ meaningful lower-TF low body-close break
-```
+Valid bearish child는 대칭이다.
 
 Wick-only break는 child confirmation이 아니다.
+Structure delivery가 없는 lower-TF candle은 refinement source가 아니다.
 
-Structure delivery가 없는 lower-TF opposite candle은
-refinement source가 아니다.
-
-### 5.11 Child Availability
+### 5.9 Child Availability
 
 Classification: D
 
-Child candle의 발생 시점과
-causal child로 사용할 수 있게 된 시점을 분리한다.
+Child candle의 발생과 사용할 수 있는 시점을 분리한다.
 
 ```text
 occurred_at
 = child origin candle time
 
 available_at
-= child linked structure delivery confirmation
+= child causal lower-TF structure-delivery confirmation
 ```
 
-Child는 `available_at` 이전에
-refined source로 사용할 수 없다.
+Required:
 
-### 5.12 Refinement Is Not Forced to M5
+```text
+child.available_at > qualifying_root_contact_at
+```
+
+Child는 `available_at` 이전에 refined context로 사용할 수 없다.
+
+### 5.10 Recursive Post-Contact Refinement
 
 Classification: D
 
-Refinement는 가능한 가장 낮은 timeframe까지
-무조건 내려가는 과정이 아니다.
-
-목적은:
+한 post-contact child가 확정된 뒤 더 낮은 timeframe에서
+동일 **post-contact reaction episode**를 더 명확하게 설명하는 새 child가 causal하게 형성될 수 있다.
 
 ```text
-lowest timeframe
+H1 Root contact
+→ M30 post-contact child
+→ M15 post-contact child
+→ M5 post-contact child
 ```
 
-이 아니라:
+모든 단계는 이전 parent가 causal하게 available된 뒤의 정보만 사용한다.
+Original HTF Root-forming displacement로 시간을 되돌아가 child를 추가하지 않는다.
+
+### 5.11 Refinement Is Not Forced to M5
+
+Classification: D
+
+목적은 lowest timeframe이 아니라:
 
 ```text
-deepest unambiguous causal child
+deepest unambiguous post-contact causal child
 ```
 
 이다.
 
-Example:
+더 낮은 단계가 ambiguous하면 마지막으로 명확했던 post-contact child를 유지한다.
+가장 좁은 zone, 최신 zone, best-RR zone을 임의 선택하지 않는다.
 
-```text
-H1 Root
-→ M30 valid
-→ M15 valid
-→ M5 ambiguous
-```
-
-이면 final refined source:
-
-```text
-M15
-```
-
-이다.
-
-M5의 가장 좁은 candidate를 임의 선택하지 않는다.
-
-### 5.13 Ambiguity Handling
+### 5.12 Ambiguity Handling
 
 Classification: D
 
-동일 parent 안에 비교 불가능한 child candidates가 여러 개 존재하고
+같은 post-contact reaction에서 비교 불가능한 child candidates가 여러 개 존재하고
 causal ownership을 deterministic하게 구분할 수 없으면:
 
 ```text
@@ -2758,127 +2633,63 @@ nearest child
 narrowest child
 newest child
 best RR child
+weighted score
 ```
 
-기준으로 선택하지 않는다.
+로 선택하지 않는다.
 
-#### Case A — 이미 상위 child가 확정된 경우
+이미 상위 post-contact child가 명확하면 그 상위 child를 유지할 수 있다.
+첫 child 단계부터 하나도 확정할 수 없으면 `NO TRADE`다.
 
-```text
-H1
-→ M30 valid
-→ M15 ambiguous
-```
-
-이면:
-
-```text
-M30을 final refined source로 유지
-```
-
-한다.
-
-#### Case B — 첫 child 단계부터 ambiguous
-
-```text
-H1 Root
-→ M30/M15 child를 하나도 확정할 수 없음
-```
-
-이면:
-
-```text
-NO TRADE
-```
-
-이다.
-
-이유:
-
-V1은 최소 하나의 causal lower-TF child를 요구한다.
-
-### 5.14 Final Refined Source
+### 5.13 Final Refined Context
 
 Classification: D
 
-Ambiguity 없이 causal lineage가 유지되는
-가장 깊은 child가 final refined source다.
+Ambiguity 없이 유지되는 가장 깊은 post-contact child가 final refined context다.
 
-Final child는:
+이 child는:
 
-price contact zone
-trigger-location authority
-source/context invalidation reference
+```text
+source/context precision
+source invalidation reference
+post-contact causal lineage
+```
 
 를 담당한다.
 
-최초 포지션의 실제 entry와 기본 SL geometry는
-후속 M1 CHoCH displacement FVG 규칙이 담당한다.
+실제 first-position Entry / base SL geometry는 후속 CHoCH displacement FVG 규칙이 담당한다.
 
-단:
+**이 authority correction은 final child가 형성된 직후 반드시 별도 retest되어야 하는지 여부를 새로 정의하지 않는다.**
+그 세부 execution ordering은 근거 없이 추가하지 않으며, 기존 pre-contact-child 구현을 그대로 유지하는 근거로도 사용할 수 없다.
 
-더 좁아서 선택
-
-하는 것이 아니라:
-
-같은 원인이 더 낮은 TF에서도 명확해서 선택
-
-하는 것이다.
-
-### 5.15 Lineage Freeze Before M1
+### 5.14 Lineage Freeze Before M1 Trigger, Not Before Root Contact
 
 Classification: D
 
-Final causal child와 parent-child lineage는
-M1 trigger 관찰 전에 확정되어야 한다.
+Parent HTF Root는 contact 전에 미리 선택되어야 하지만,
+child lineage는 Root contact 전에 미리 완성되어서는 안 된다.
 
 Required order:
 
 ```text
-objective frozen
-→ map frozen
-→ HTF Root frozen
-→ causal refinement lineage frozen
-→ final refined source frozen
-→ source contact
-→ liquidity sweep
-→ M1 CHoCH
+objective / map frozen
+→ pre-existing eligible HTF Root frozen
+→ qualifying HTF Root contact
+→ post-contact LTF child forms and becomes available
+→ post-contact refinement lineage frozen
+→ M1 execution-trigger evaluation may begin
 ```
 
 금지:
 
 ```text
-M1 CHoCH 발견
-→ 그 반응에 잘 맞는 M5 OB 선택
-→ 그 M5 OB와 겹치는 M15/H1 OB를 사후 연결
+pre-contact historical child freeze
+→ wait for that child touch
 ```
 
-이는 retrospective fitting으로 취급한다.
+또한 M1 CHoCH를 먼저 보고 그 반응에 맞는 HTF Root를 사후 선택하는 것도 금지한다.
 
-### 5.16 Source Contact
-
-Classification: D concept
-
-Final refined source는 M1 trigger를 보기 전에 존재한다.
-
-Price가 final child bounds와 실제로 교차하면
-source contact event를 기록할 수 있다.
-
-```text
-bar.high >= child.bottom
-AND
-bar.low <= child.top
-```
-
-단, source contact 자체는 trade trigger가 아니다.
-
-Source contact 이후에만
-해당 scenario의 M1 sweep / CHoCH search를 활성화한다.
-
-Source Contact의 세부 event contract는
-다음 `Source Contact + Mature Sweep` 단계에서 확정한다.
-
-### 5.17 Child Strategy Validity
+### 5.15 Child Strategy Validity
 
 Classification: D
 
@@ -2889,7 +2700,7 @@ ACTIVE
 INVALIDATED
 ```
 
-as strategy state.
+as strategy state after it becomes causally available.
 
 Bullish child:
 
@@ -2906,10 +2717,9 @@ child-own-timeframe close > child.top
 ```
 
 Wick-only distal penetration does not invalidate the child.
+Touch / partial mitigation remain audit facts unless another explicit authority rule applies.
 
-Touch / partial mitigation remain optional audit facts.
-
-### 5.18 Parent Invalidation Propagation
+### 5.16 Parent Invalidation Propagation
 
 Classification: D
 
@@ -2918,914 +2728,442 @@ Parent Root invalidated
 → all descendants invalidated
 ```
 
-A descendant cannot retain source authority
-after its required parent lineage is invalidated.
+A descendant cannot retain source authority after its required parent is invalidated.
 
-### 5.19 Final Child Reuse
-
-Classification: D
-
-An INVALIDATED final child is not reused
-for a new trigger chain.
-
-If the Root remains ACTIVE,
-a new causal child may later form as a new lineage object.
-
-The old invalidated child is not revived.
-
-### 5.20 Parent-Child Identity
+### 5.17 New Child After Old Child Invalidation
 
 Classification: D
 
-각 child는 자신의 direct parent를 명시적으로 기록한다.
+If the Root remains valid and the strategy still permits the parent episode,
+a later **newly formed post-contact** causal child may be a new lineage object.
+The old invalidated child is never revived.
 
-Required lineage example:
+No pre-contact historical child may be resurrected as a replacement.
 
-```text
-H1 Root ID
-→ M30 Child ID
-→ M15 Child ID
-→ M5 Child ID
-```
+### 5.18 Parent-Child Identity
 
-중간 timeframe을 건너뛰는 경우:
+Classification: D
 
-```text
-H1 Root ID
-→ M15 Child ID
-```
-
-도 허용한다.
-
-각 child는 최소:
+Each child records at minimum:
 
 ```text
 parent_zone_id
 root_zone_id
-linked_structure_event_id
-origin_wave_id
+qualifying_root_contact_at
+child_origin_at
+child_available_at
+linked_post_contact_structure_event_id
 ```
 
-를 보존한다.
+The ledger must be able to prove:
 
-### 5.21 Distance Is Not Authority
+```text
+Root existed first
+→ Root contact occurred
+→ child formed/confirmed afterward
+```
+
+### 5.19 Distance Is Not Authority
 
 Classification: D
 
-Distance는 후보 탐색 최적화에 사용할 수 있으나
-causal child authorization에는 사용할 수 없다.
+Distance may reduce candidate-enumeration cost but cannot authorize child linkage.
+
+Do not authorize by:
 
 ```text
-distance
--> enumeration optimization only
-
-causal lineage
--> authorization
+nearest zone
+narrowest zone
+fixed point tolerance
+ATR tolerance
+best RR
 ```
 
-현재 `planner.py`의 nearest-family 탐색 성격은
-후보 enumeration으로만 참고한다.
+Final authorization is post-contact causality.
 
-다음은 child 권한을 부여하지 않는다.
+### 5.20 Required Refinement Audit Fields
 
-```text
-closest lower-TF OB
-smallest lower-TF OB
-best RR lower-TF OB
-```
-
-### 5.22 Required Refinement Object
-
-Minimum lineage state:
+Minimum audit fields:
 
 ```text
 root_zone_id
+root_timeframe
+root_bounds
+root_available_at
+root_watch_eligibility
+qualifying_root_contact_at
 
-path:
-    [root, child1, child2, ...]
+child_zone_id
+child_timeframe
+child_bounds
+child_origin_at
+child_available_at
+child_structure_event_id
+parent_zone_id
+post_contact_reaction_id or equivalent causal identity
 
-final_child_id
-
-for each child:
-    id
-    timeframe
-    direction
-    parent_zone_id
-    root_zone_id
-
-    origin_wave_id
-    linked_structure_event_id
-
-    occurred_at
-    available_at
-
-    bottom
-    top
-
-    containment_type:
-        CONTAINED
-        EVENT_ADJACENT
-
-    strategy_state:
-        ACTIVE
-        INVALIDATED
-
-    invalidated_at
-    invalidation_reason
+refinement_result:
+VALID
+NO_POST_CONTACT_CHILD
+AMBIGUOUS
+INVALIDATED
 ```
 
-Optional audit fields may record touch and mitigation,
-but they do not create additional strategy states.
+### 5.21 Explicit Exclusions
 
-### 5.23 Explicit V1 Exclusions
-
-Causal refinement에서 사용하지 않는다.
+Current V1 does not authorize:
 
 ```text
-price overlap alone
-nearest-zone selection
-narrowest-zone selection
-RR-based refinement
-fixed point adjacency tolerance
-ATR adjacency tolerance
-force refinement to M5
-M1 retrospective refinement
+pre-contact historical child refinement
+original-displacement decomposition as current child
+price-overlap-only child
+RR-based child selection
+forced M5 refinement
+M1 retrospective Root fitting
 AI-selected child
 weighted child quality score
 ```
 
-### 5.24 V1 Refinement Protocol Summary
-
-LONG:
-
-```text
-valid bullish HTF Root
-        ↓
-project Root causal origin event to lower TF
-        ↓
-find meaningful lower-TF origin
-        ↓
-last bearish candle inside child origin window
-        ↓
-bullish child displacement
-        ↓
-meaningful lower-TF body-break
-        ↓
-verify same event / same displacement / time causality
-        ↓
-link as child
-        ↓
-repeat on lower TF while unambiguous
-        ↓
-freeze deepest unambiguous child
-        ↓
-wait for source contact
-```
-
-SHORT는 반대다.
-
----
-
----
-
-## 6. Source Contact + Mature Sweep
-
-Status: FROZEN FOR V1
-
-Primary authority:
-- `AGENTS.md`
-
-Primary implementation reference:
-- `mentor_engine/liquidity.py`
-
-Secondary references:
-- `research/mentor-youtube/MENTOR_MINIMAL_METHOD.md`
-- `research/mentor-youtube/MENTOR_RULE_CONTRACT.md`
-
-### 6.1 Purpose
-
-이 단계의 목적은 전역적으로 탐지된 모든 liquidity sweep 중
-현재 frozen scenario와 final refined source에 실제로 연결되는 sweep만
-M1 trigger chain에 사용할 수 있도록 제한하는 것이다.
-
-Liquidity detector와 trade authorization은 분리한다.
-
-```text
-GLOBAL LIQUIDITY DETECTION
-        ↓
-scenario-specific authorization
-        ↓
-AUTHORIZED SWEEP
-```
-
-`liquidity.py`가 sweep event를 만들었다는 사실만으로
-현재 거래 setup의 sweep condition이 충족되는 것은 아니다.
-
-### 6.2 Required Precondition
-
-Classification: D
-
-Source Contact / Sweep 단계에 들어오기 전에
-다음이 모두 frozen 상태여야 한다.
-
-```text
-objective
-scenario scope
-map owner
-HTF Root OB
-causal refinement lineage
-final refined source
-source invalidation geometry
-```
-
-이 중 하나라도 없으면
-M1 sweep authorization을 시작하지 않는다.
-
-### 6.3 Source Contact
-
-Classification: D for V1
-
-Final refined source와 closed bar range가
-실제로 최초 교차하면 source contact로 기록한다.
-
-Condition:
-
-```text
-bar.high >= source.bottom
-AND
-bar.low <= source.top
-```
-
-단:
-
-```text
-bar.available_at > source.available_at
-```
-
-인 causal bar만 contact 후보가 된다.
-
-Source가 final refined source로 확정되기 전에
-과거에 이미 지나간 가격 움직임을
-사후적으로 source contact라고 소급하지 않는다.
-
-### 6.4 Source Contact Is a Gate, Not a Signal
-
-Classification: D
-
-Source contact는:
-
-```text
-entry
-sweep
-CHoCH
-```
-
-가 아니다.
-
-Source contact의 의미는:
-
-```text
-이제부터 현재 scenario의 M1 trigger chain을 관찰할 수 있다.
-```
-
-뿐이다.
-
-따라서 V1은 refined OB touch만으로
-첫 position limit/market entry를 실행하지 않는다.
-
-Required chain remains:
-
-```text
-source contact
-→ mature liquidity sweep
-→ meaningful M1 CHoCH
-→ same sweep-to-CHoCH causal leg의 fresh same-direction FVG
-→ widest valid FVG selection
-→ first retest
-→ entry
-```
-
-### 6.5 Trigger Search Activation
-
-Classification: D
-
-Source contact 이전:
-
-```text
-trigger_search_enabled = false
-```
-
-Source contact 이후:
-
-```text
-sweep_search_enabled = true
-```
-
-단, CHoCH authorization은
-valid sweep이 확정된 이후에만 활성화한다.
-
-```text
-source contact
-→ sweep confirmed
-→ CHoCH search enabled
-```
-
-Source contact 이전에 발생한 M1 sweep/CHoCH를
-현재 scenario에 끌어와 사용하지 않는다.
-
-### 6.6 Direction-Compatible Sweep
-
-Classification: D
-
-LONG scenario:
-
-```text
-required sweep side = LOW
-```
-
-즉 sell-side liquidity sweep이 필요하다.
-
-SHORT scenario:
-
-```text
-required sweep side = HIGH
-```
-
-즉 buy-side liquidity sweep이 필요하다.
-
-반대 side liquidity sweep은
-현재 first-position trigger chain authorization이 아니다.
-
-### 6.7 Eligible Sweep Liquidity Families
-
-Classification: D
-
-V1 trigger-authorizing sweep에는
-현재 Liquidity V1에서 허용한 family만 사용한다.
-
-```text
-EXTERNAL_SWING
-DEFENDED_RANGE_EDGE
-STRUCTURAL_REACTION
-```
-
-V1에서 제외:
-
-```text
-TRENDLINE_CLUSTER
-simple recent pivot
-arbitrary local high/low
-session high/low by itself
-round number
-```
-
-Detector 또는 legacy code가 해당 event를 생성해도
-V1 trade authorization에는 사용하지 않는다.
-
-### 6.8 Mature Liquidity Definition
-
-Classification: D for V1
-
-V1에서 maturity는 arbitrary age가 아니라
-causal pre-existence와 structural eligibility로 정의한다.
-
-Required:
-
-```text
-eligible liquidity family
-+
-liquidity already available before source-contact bar begins
-+
-not already consumed
-```
-
-현재 first-position trigger에 사용할 liquidity는:
-
-```text
-liquidity.available_at
-<
-source_contact_bar_open
-```
-
-이어야 한다.
-
-즉 source contact candle이 진행되는 동안 처음 확정된 liquidity는
-같은 first-position trigger의 required pool이 될 수 없다.
-
-### 6.9 No Arbitrary Liquidity Age Threshold
-
-Classification: D
-
-V1은 다음을 사용하지 않는다.
-
-```text
-minimum 2 bars old
-minimum 3 bars old
-minimum N minutes old
-ATR-distance maturity
-age score
-maturity score
-```
-
-이유:
-
-Liquidity family 자체가 이미 구조적으로 의미 있는 stop pool만
-보수적으로 허용하기 때문이다.
-
-V1 maturity의 핵심은:
-
-```text
-pre-existing
-+
-eligible
-+
-unconsumed
-```
-
-이다.
-
-### 6.10 Pre-Contact Sweep Is Not Reused
-
-Classification: D
-
-Final refined source가 실제 접촉되기 전에
-완료된 sweep은 현재 first-position trigger chain에 사용하지 않는다.
-
-금지:
-
-```text
-old sweep
-→ later source contact
-→ old sweep reused
-→ CHoCH
-```
-
-Required order:
-
-```text
-source contact
-→ authorized sweep
-→ CHoCH
-```
-
-이 규칙은 unrelated earlier liquidity event를
-사후적으로 current source에 연결하는 것을 방지한다.
-
-### 6.11 Same-Bar Contact + Sweep
-
-Classification: D
-
-Source contact와 liquidity sweep이
-같은 closed M1 bar에서 발생하는 것은 허용한다.
-
-Example LONG:
-
-```text
-M1 bar enters bullish refined source
-+
-same bar wicks below pre-existing sell-side liquidity
-+
-same bar closes back above liquidity boundary
-```
-
-이면:
-
-```text
-source contact
-+
-authorized sell-side sweep
-```
-
-을 동시에 기록할 수 있다.
-
-단:
-
-```text
-liquidity itself must pre-exist the source-contact bar
-```
-
-여야 한다.
-
-즉:
-
-```text
-same-bar contact + sweep
-→ allowed
-
-same-bar liquidity creation + sweep
-→ forbidden
-```
-
-이다.
-
-### 6.12 Sweep Must Occur at the Final Refined Source
-
-Classification: D for V1
-
-V1 trigger-authorizing sweep bar는
-final refined source와 실제로 교차해야 한다.
-
-```text
-sweep_bar.high >= source.bottom
-AND
-sweep_bar.low <= source.top
-```
-
-즉 source를 과거에 한 번 touch한 뒤
-가격이 source와 멀어진 곳에서 나중에 발생한 sweep을
-원래 setup의 trigger로 연결하지 않는다.
-
-V1에서는:
-
-```text
-sweep bar intersects final refined source
-```
-
-를 required causal condition으로 사용한다.
-
-### 6.13 Sweep Extreme May Extend Beyond Source
-
-Classification: D
-
-Sweep bar must intersect the final source,
-but the sweep extreme itself may extend beyond source distal.
+### 5.22 Refinement Summary
 
 LONG example:
 
 ```text
-price enters bullish final source
-→ wick extends below source.bottom
-→ pre-existing sell-side liquidity is swept
-→ bar recovers
+bullish HTF Root exists and remains eligible
+        ↓
+price later contacts HTF Root
+        ↓
+observe only post-contact lower-TF reaction
+        ↓
+new bullish child OB forms
+        ↓
+child lower-TF bullish structure delivery confirms it
+        ↓
+child becomes causally available
+        ↓
+repeat lower only while post-contact lineage remains unambiguous
+        ↓
+freeze deepest unambiguous post-contact child
+        ↓
+allow subsequent M1 execution-trigger evaluation
 ```
 
-This can remain a valid source reaction.
+SHORT is symmetric.
 
-Source invalidation is not decided by wick penetration alone.
 
-Bullish source invalidation requires:
+## 6. HTF Root Contact, Post-Contact Child, and Mature Sweep
+
+Status: PARTIALLY FROZEN — TIMING AUTHORITY CORRECTED 2026-08-16
+
+Primary authority:
+- `AGENTS.md`
+
+This section supersedes the old V1 ordering that required a pre-contact final refined source.
+
+### 6.1 Purpose
+
+The first causal location event is now the **actual contact of a pre-existing eligible HTF Root**.
+That contact does not authorize an order. It opens lower-timeframe child discovery.
+
+Required high-level order:
 
 ```text
-source-own-timeframe close < source.bottom
+pre-existing eligible HTF Root
+→ qualifying HTF Root contact
+→ post-contact LTF reaction
+→ new causal child OB formed and confirmed
+→ post-contact refinement lineage frozen
+→ eligible sweep / M1 trigger evaluation
 ```
 
-Bearish source invalidation requires:
+The old sequence:
 
 ```text
-source-own-timeframe close > source.top
+historical child frozen
+→ wait for refined-child contact
 ```
 
-Therefore a wick that both sweeps liquidity
-and extends outside the source does not simultaneously
-invalidate the source unless the source-own-timeframe body close
-also confirms distal failure.
+is not current V1 authority.
 
-### 6.14 Physical Sweep Condition
+### 6.2 Required Precondition Before Root Contact
 
 Classification: D
 
-Sweep은 pre-existing eligible liquidity의 outer boundary를
-실제로 최소 one valid tick 이상 관통하고
-같은 closed bar에서 recovery해야 한다.
-
-#### HIGH-side liquidity
+Before a qualifying HTF Root contact can start a setup, the engine must already know:
 
 ```text
-bar.high >= pool.top + one_tick
+valid map / direction authority
+valid scenario scope
+ordered objective family as required by the current planning contract
+pre-existing HTF Root ID / bounds / availability
+Root watch eligibility / unconsumed status
+Root invalidation rule
+```
+
+A Root selected only after observing the later LTF reaction is retrospective and invalid.
+
+### 6.3 Qualifying HTF Root Contact
+
+Classification: D concept
+
+Price must actually intersect the predeclared HTF Root after that Root is causally available.
+
+Conceptual geometry:
+
+```text
+bar.high >= Root.bottom
 AND
-bar.close <= pool.top
+bar.low <= Root.top
 ```
 
-#### LOW-side liquidity
+The exact first-contact event is recorded as:
 
 ```text
-bar.low <= pool.bottom - one_tick
-AND
-bar.close >= pool.bottom
+qualifying_root_contact_at
 ```
 
-여기서 `one_tick`은
-해당 symbol의 실제 valid tick size를 사용한다.
+Contact itself is not an entry signal and does not create a child retroactively.
 
-별도 ATR 또는 percentage penetration threshold는 사용하지 않는다.
+If runtime starts with price already inside a Root, pre-start movement is not used to fabricate a new qualifying contact.
 
-### 6.15 Same-Bar Recovery Only
-
-Classification: D for V1
-
-V1 physical sweep은:
-
-```text
-penetration
-+
-recovery
-```
-
-가 같은 closed bar 안에서 완료되어야 한다.
-
-Example excluded from V1:
-
-```text
-bar 1:
-liquidity 아래 body close
-
-bar 2:
-다시 위로 reclaim
-```
-
-이것은 V1 sweep으로 취급하지 않는다.
-
-Multi-bar reclaim은 향후 별도 immutable research variant로 검토할 수 있다.
-
-### 6.16 Body Delivery Is Not Sweep
+### 6.4 Root Contact Activates Child Discovery
 
 Classification: D
 
-Liquidity outer edge를 body close로 directional하게 통과하면
-sweep이 아니라 BODY_DELIVERY다.
-
-HIGH-side:
+Only after `qualifying_root_contact_at` may M30/M15/M5 bars be evaluated for the current setup's child lineage.
 
 ```text
-close > pool.top
-→ BODY_DELIVERY
+Root contact
+→ lower-TF reaction observation enabled
+→ new child candidate may form
 ```
 
-LOW-side:
+A lower-TF OB that existed before Root contact is not a current child even if its price overlaps the Root.
 
-```text
-close < pool.bottom
-→ BODY_DELIVERY
-```
-
-해당 pool은 consumed되며
-현재 trigger chain의 required sweep으로 사용할 수 없다.
-
-### 6.17 One-Tick Minimum Penetration
+### 6.5 Post-Contact Child Must Be Causally Available Before M1 Trigger
 
 Classification: D
 
-Sweep penetration은 실제 symbol tick size 기준으로
-최소 한 tick 이상 outer boundary를 넘어야 한다.
-
-단순 equality:
+M1 execution-trigger evaluation is disabled until at least one post-contact child has formed and become causally available under Section 5.
 
 ```text
-high == pool.top
-low == pool.bottom
+child.available_at > qualifying_root_contact_at
 ```
 
-은 sweep이 아니다.
+The engine may not use M1 sweep/CHoCH that occurred before this post-contact child lineage was knowable to authorize the current setup.
 
-V1은 다음을 사용하지 않는다.
+### 6.6 Sweep Timing Re-Audit Boundary
+
+Classification: U / MUST BE FROZEN BEFORE REIMPLEMENTATION
+
+The prior implementation anchored several sweep rules to `final_refined_source contact`, because that child existed before contact in the old model.
+That anchor is invalid under the corrected sequence.
+
+The following **existing physical sweep definitions remain unchanged**:
 
 ```text
-ATR penetration multiplier
-fixed arbitrary point penetration
-percentage penetration
-sweep strength score
+wick penetration of eligible liquidity
+same-bar close recovery
+one valid symbol tick minimum penetration
+body close beyond liquidity = BODY_DELIVERY, not SWEEP
+consumed liquidity is not reused
 ```
 
-### 6.18 Source-Generated Liquidity Cannot Trigger the Same First Position
+However, these timing questions must be re-audited against mentor evidence before code is treated as strategy-parity:
+
+```text
+which exact post-contact event freezes the eligible liquidity snapshot?
+whether a separate child retest/contact is mandatory before sweep authorization?
+whether Root-contact-bar sweep can belong to a setup whose child is only confirmed afterward?
+how source-intersection is defined once child formation follows Root contact?
+```
+
+No answer is invented here merely to preserve the old Phase 4C state machine.
+Until frozen, ambiguity in these timing questions is `NO TRADE` for parity validation.
+
+### 6.7 Direction-Compatible Sweep
 
 Classification: D
 
-현재 final refined source 접촉 이후
-그 reaction 자체가 새 swing/liquidity를 만들 수 있다.
-
-하지만 그 새 liquidity를
-동일 first-position trigger의 required pre-existing liquidity로 사용할 수 없다.
-
-금지:
-
-```text
-source contact
-→ reaction low/high generated
-→ that new liquidity declared mature
-→ same setup sweep
-```
-
-현재 setup의 required pool은
-source-contact bar 이전부터 이미 available해야 한다.
-
-새 reaction liquidity는
-향후 별도 scenario / continuation context에서 사용할 수 있다.
-
-### 6.19 Multiple Pools Swept by One Bar
-
-Classification: D
-
-하나의 sweep bar가 여러 eligible pre-existing pools를
-동시에 관통하고 recovery할 수 있다.
-
-예:
-
-```text
-structural reaction liquidity
-+
-defended range edge
-+
-external swing
-```
-
-이 동일 wick에 의해 sweep될 수 있다.
-
-이 경우:
-
-```text
-모든 consumed eligible pool을 event ledger에 기록
-```
-
-한다.
-
-Scenario authorization은:
-
-```text
-direction-compatible
-eligible
-pre-existing
-unconsumed
-pool
-at least one swept
-```
-
-이면 충족한다.
-
-Best-pool score를 만들지 않는다.
-
-### 6.20 Sweep Availability
-
-Classification: D
-
-Sweep은 해당 candle이 close된 뒤에만 확정된다.
-
-```text
-sweep.occurred_at
-= sweep bar time
-
-sweep.available_at
-= sweep bar close
-```
-
-진행 중 candle의 wick만 보고
-미리 sweep을 확정하지 않는다.
-
-### 6.21 CHoCH Search Activation
-
-Classification: D
-
-Valid authorized sweep이 closed-bar 기준으로 확정된 이후:
-
-```text
-trigger_search_enabled = true
-```
-
-가 된다.
-
-이 시점부터 current scenario와 연결된
-meaningful M1 CHoCH를 찾는다.
-
-Sweep이 확정되기 전에
-향후 CHoCH event를 사후적으로 연결하지 않는다.
-
-같은 bar가 sweep과 CHoCH를 동시에 수행할 수 있는지는
-다음 `M1 Meaningful CHoCH` specification에서 별도로 결정한다.
-
-### 6.22 Scenario-Specific Sweep State
-
-Minimum scenario-linked state:
-
-```text
-scenario_id
-final_source_id
-
-source_contact_at
-source_contact_bar
-
-eligible_pool_ids_at_contact
-
-active_sweep_event_id
-active_choch_reference_swing_id
-```
-
-Older sweep events remain in the global audit ledger.
-
-The following are derived conditions,
-not separate persistent strategy states:
-
-```text
-sweep search enabled
-CHoCH search enabled
-```
-
-Current authorization must still explain:
-
-```text
-which source was contacted
-which liquidity pre-existed
-which pool was swept
-why it was eligible
-which protected swing became the active CHoCH reference
-```
-
-### 6.23 Global Detection vs Scenario Authorization
-
-Classification: D
-
-기존 liquidity detector는
-전역 liquidity/sweep event discovery 용도로 사용할 수 있다.
-
-그러나 V1 trade authority는 별도 filter를 통과해야 한다.
-
-```text
-GLOBAL SWEEP EVENT
-        ↓
-V1 family eligible?
-        ↓
-correct side?
-        ↓
-available before source contact?
-        ↓
-unconsumed before sweep?
-        ↓
-sweep bar intersects final source?
-        ↓
-same-bar penetration + recovery?
-        ↓
-attached to frozen scenario?
-        ↓
-AUTHORIZED SWEEP
-```
-
-Distance, quality score, nearest-pool rule은
-authorization에 사용하지 않는다.
-
-### 6.24 Explicit V1 Exclusions
-
-다음을 first-position sweep authorization에 사용하지 않는다.
-
-```text
-pre-contact sweep reuse
-same-bar liquidity creation + sweep
-micro-pivot sweep
-trendline liquidity sweep
-multi-bar reclaim sweep
-body-delivery-as-sweep
-ATR penetration filter
-liquidity age threshold
-sweep quality score
-nearest-pool fallback
-AI-selected sweep
-source-distant later sweep
-```
-
-### 6.25 V1 Source Contact + Sweep Summary
+Once the corrected post-contact trigger context is valid, sweep direction remains:
 
 LONG:
-
 ```text
-bullish final refined source frozen
-        ↓
-eligible pre-existing sell-side liquidity snapshot
-        ↓
-price intersects final source
-        ↓
-same bar or later source-intersecting bar
-penetrates eligible LOW pool by >= 1 tick
-        ↓
-same bar closes back at/above pool boundary
-        ↓
-pool consumed as SWEEP
-        ↓
-scenario authorized_sweep recorded
-        ↓
-M1 CHoCH search enabled
+LOW-side / sell-side liquidity sweep
 ```
 
 SHORT:
-
 ```text
-bearish final refined source frozen
-        ↓
-eligible pre-existing buy-side liquidity snapshot
-        ↓
-price intersects final source
-        ↓
-same bar or later source-intersecting bar
-penetrates eligible HIGH pool by >= 1 tick
-        ↓
-same bar closes back at/below pool boundary
-        ↓
-pool consumed as SWEEP
-        ↓
-scenario authorized_sweep recorded
-        ↓
-M1 CHoCH search enabled
+HIGH-side / buy-side liquidity sweep
 ```
 
----
+Opposite-side consumption does not authorize the first-position trigger.
 
----
+### 6.8 Eligible Sweep Liquidity Families
+
+Classification: D / unchanged
+
+Current V1 eligible structural families remain those frozen by the liquidity section and active authority documents.
+This authority correction does not add a new liquidity family, score, age threshold, or session filter.
+
+### 6.9 Mature Liquidity Principle
+
+Classification: D concept; exact timing anchor under 6.6 re-audit
+
+A sweep may not consume a level that becomes known only because of the same physical excursion that is trying to claim it.
+
+Therefore:
+
+```text
+same-event self-created liquidity
+→ cannot authorize its own sweep
+```
+
+The exact maturity timestamp must be re-anchored to the corrected post-contact child sequence before implementation is revalidated.
+
+### 6.10 Physical Sweep Condition
+
+Classification: D / unchanged
+
+HIGH-side liquidity:
+
+```text
+high >= outer_high + one_tick
+AND
+close <= outer_high
+```
+
+LOW-side liquidity:
+
+```text
+low <= outer_low - one_tick
+AND
+close >= outer_low
+```
+
+Equality without one-tick penetration is not sufficient.
+
+### 6.11 Same-Bar Recovery Only
+
+Classification: D / unchanged
+
+Current V1 physical sweep uses penetration and recovery in the same closed bar.
+Multi-bar reclaim is not silently added by this correction.
+
+### 6.12 Body Delivery Is Not Sweep
+
+Classification: D / unchanged
+
+A body close beyond the liquidity boundary is `BODY_DELIVERY`, not a sweep/recovery event.
+
+### 6.13 One-Tick Minimum Penetration
+
+Classification: D / unchanged
+
+Use symbol tick size, not ATR, percentage, arbitrary points, or a sweep-strength score.
+
+### 6.14 Multiple Pools Swept by One Bar
+
+Classification: D / unchanged
+
+One physical bar may consume multiple already-eligible pools.
+Record all of them. Do not score-select a "best" pool merely for performance.
+
+### 6.15 Pre-Contact Sweep Reuse Remains Forbidden in Principle
+
+Classification: D concept
+
+An unrelated liquidity sweep that completed before the qualifying HTF Root contact cannot be attached retrospectively to the later Root reaction.
+
+```text
+old unrelated sweep
+→ later HTF Root contact
+→ reuse old sweep
+```
+
+is forbidden.
+
+Additional timing relative to child formation is governed by the re-audit boundary in 6.6.
+
+### 6.16 CHoCH Search Activation
+
+Classification: D
+
+Meaningful M1 CHoCH cannot authorize the current setup before:
+
+```text
+qualifying HTF Root contact
++
+valid post-contact child lineage available
++
+valid authorized sweep under the re-audited timing contract
+```
+
+M1 CHoCH alone still cannot create HTF direction authority.
+
+### 6.17 Scenario-Specific Sweep State
+
+Classification: D concept
+
+The ledger may retain physical sweep events globally, but strategy authorization must bind the selected sweep to the specific post-contact Root/child setup.
+No global historical sweep may become strategy authority merely because its price is nearby.
+
+### 6.18 Structural Reaction Liquidity
+
+Classification: REQUIRES TIMING RE-AUDIT
+
+The previous Phase 4C `STRUCTURAL_REACTION` implementation assumed a pre-existing final refined source before contact.
+Because current authority now requires:
+
+```text
+HTF Root contact
+→ post-contact child formation
+```
+
+any Structural-Reaction rule that depends on `final source contact` must be re-audited and re-implemented before it can regain V1 parity status.
+
+This correction does not delete Structural Reaction as a liquidity concept; it invalidates only the old timing ownership assumption.
+
+### 6.19 Explicit V1 Exclusions
+
+The correction does not introduce:
+
+```text
+pre-contact child authorization
+retrospective child fitting
+ATR sweep thresholds
+weighted sweep quality
+arbitrary timeout
+session/killzone filter
+RR-based child selection
+```
+
+### 6.20 Corrected Contact / Child / Trigger Summary
+
+LONG example:
+
+```text
+pre-existing eligible bullish HTF Root
+        ↓
+price later contacts HTF Root
+        ↓
+post-contact lower-TF bullish reaction begins
+        ↓
+new bullish child OB forms and is causally confirmed
+        ↓
+post-contact refinement lineage becomes knowable
+        ↓
+valid sell-side sweep under the re-audited timing contract
+        ↓
+meaningful M1 bullish CHoCH
+        ↓
+causal execution FVG
+```
+
+SHORT is symmetric.
+
+No child from the Root's original historical displacement may be inserted before the Root-contact step.
+
 
 ## 7. M1 Meaningful CHoCH
 
@@ -3845,17 +3183,17 @@ Secondary references:
 
 M1 CHoCH의 역할은 새로운 HTF scenario를 만드는 것이 아니다.
 
-이미 사전에 frozen된:
+시간순으로 causal하게 준비된:
 
 ```text
 objective
 map owner
-HTF Root
-causal LTF lineage
-final refined source
+pre-existing HTF Root
+qualifying HTF Root contact
+post-contact causal LTF child lineage
 ```
 
-가 실제 source reaction에서 실행 가능한 방향으로 반응하고 있는지를
+가 실제 post-contact reaction에서 실행 가능한 방향으로 반응하고 있는지를
 M1 structure로 확인하는 것이다.
 
 따라서:
@@ -3880,9 +3218,11 @@ Classification: D
 
 V1 first-position trigger는 다음 순서를 요구한다.
 
-final source frozen
-→ source contact
-→ authorized mature liquidity sweep
+pre-existing HTF Root frozen
+→ qualifying HTF Root contact
+→ post-contact child formed / causally available
+→ post-contact refinement lineage frozen
+→ authorized mature liquidity sweep under Section 6's re-audited timing contract
 → meaningful M1 CHoCH
 → same sweep-to-CHoCH causal leg의 fresh same-direction FVG
 → widest valid FVG selection
@@ -4006,8 +3346,8 @@ NO CHOCH AUTHORIZATION
 예 LONG:
 
 ```text
-source contact
-→ sell-side sweep
+post-contact child lineage available
+→ authorized sell-side sweep
 → M1 bearish correction protected HIGH 없음
 ```
 
@@ -4115,20 +3455,23 @@ Same-bar sweep + CHoCH는
 
 Classification: D
 
-Authorized sweep bar는 V1에서
-final refined source와 교차해야 한다.
+Old Phase 4C required the authorized sweep bar to intersect a
+pre-existing final refined source. That exact intersection anchor is not frozen
+under the corrected Root-contact → post-contact-child sequence and is subject to
+Section 6.6 re-audit.
 
-하지만 이후 CHoCH bar까지
-source와 교차할 필요는 없다.
+Once a sweep is validly authorized under the corrected timing contract,
+후속 CHoCH bar까지 HTF Root 또는 child zone과 다시 교차할 필요는 없다.
 
-유효 causal relation:
+유효 causal relation은 최소한:
 
 ```text
-authorized sweep at source
+valid post-contact Root/child context
+→ authorized sweep under corrected timing
 → later body-close break of frozen protected swing
 ```
 
-이다.
+을 유지해야 한다.
 
 강한 reaction displacement가 source를 빠르게 벗어난 뒤
 CHoCH를 만드는 것을 허용한다.
@@ -4156,7 +3499,7 @@ Classification: D
 Before CHoCH, the active trigger chain terminates when:
 
 ```text
-final refined source becomes INVALIDATED
+required post-contact child becomes INVALIDATED
 required parent Root/owner becomes INVALIDATED
 frozen final objective is delivered
 scenario direction authority is revoked
@@ -4493,13 +3836,15 @@ AI-selected CHoCH reference
 ### 7.26 V1 LONG Protocol
 
 ```text
-LONG scenario frozen
+LONG context frozen
         ↓
-bullish final refined source
+pre-existing bullish HTF Root
         ↓
-source contact
+qualifying HTF Root contact
         ↓
-authorized sell-side sweep
+post-contact bullish child forms / is confirmed
+        ↓
+authorized sell-side sweep under corrected timing contract
         ↓
 at sweep:
     M1 correction trend = bearish
@@ -4529,13 +3874,15 @@ wait for first authorized retest
 ### 7.27 V1 SHORT Protocol
 
 ```text
-SHORT scenario frozen
+SHORT context frozen
         ↓
-bearish final refined source
+pre-existing bearish HTF Root
         ↓
-source contact
+qualifying HTF Root contact
         ↓
-authorized buy-side sweep
+post-contact bearish child forms / is confirmed
+        ↓
+authorized buy-side sweep under corrected timing contract
         ↓
 at sweep:
     M1 correction trend = bullish
@@ -6228,18 +5575,30 @@ relevant to the current active scenario/map context
 
 Historical invalidated/unreferenced Roots may be evicted from RAM.
 
-#### 11.14.4 Targeted causal refinement
+#### 11.14.4 Post-contact child reconstruction boundary
 
-After current relevant ACTIVE Roots are known:
+Bootstrap must not reconstruct a current child by decomposing the historical displacement that originally created an HTF Root.
+
+Allowed bootstrap responsibilities are limited to causally known state such as:
 
 ```text
-Root causal window
-→ targeted M30/M15/M5 replay
-→ deepest unambiguous causal child
-→ final source
+pre-existing ACTIVE / eligible Roots
+whether a qualifying Root contact occurred within the replayable runtime boundary
+post-contact child objects only when their entire Root-contact → child-confirmation chain is causally observable
 ```
 
-Do not build a global historical lower-TF zone database.
+A pre-contact historical M30/M15/M5 OB is not promoted into the current Root's child merely because it is contained or adjacent.
+
+For a fresh runtime setup:
+
+```text
+Root retained
+→ wait for qualifying runtime Root contact
+→ begin lower-TF child discovery after that contact
+```
+
+No look-ahead shortcut is allowed during bootstrap.
+
 
 #### 11.14.5 M1/local-liquidity bootstrap
 
@@ -6303,23 +5662,15 @@ execution_fvg.available_at >= execution_epoch_start
 
 Pre-start and post-start execution chains are never spliced.
 
-#### 11.14.8 Started inside source
+#### 11.14.8 Started inside a watched HTF Root
 
-If runtime starts with price already overlapping the final source:
+If startup begins with the first observable price already inside a watched HTF Root,
+pre-start price history must not be used to manufacture a new qualifying Root contact or a post-contact child.
 
-```text
-startup_source_context = STARTED_INSIDE_SOURCE
-```
+For a fresh runtime setup, require a causally observable new contact episode, e.g. price first exits and later re-enters the watched Root, before starting post-contact child discovery.
 
-This is not a new source contact.
+No pre-start child / sweep / CHoCH chain may be restored as current first-position authority.
 
-Require:
-
-```text
-exit source
-→ later re-entry
-→ new source contact
-```
 
 #### 11.14.9 Same-timestamp closed-bar order
 

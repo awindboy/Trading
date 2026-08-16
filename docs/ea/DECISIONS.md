@@ -463,7 +463,7 @@ baseline의 설명 가능성과 causal parity를 유지하기 위함이다.
 ---
 ## D-023 — Causal child repeats Root logic on lower timeframe
 
-Status: ACTIVE
+Status: SUPERSEDED IN TEMPORAL OWNERSHIP BY D-122
 
 V1 lower-timeframe child OB는
 parent 내부의 단순 small opposite candle이 아니다.
@@ -490,7 +490,7 @@ HTF Root와 lower-TF refinement가
 
 ## D-024 — Refinement authority follows event lineage, not distance
 
-Status: ACTIVE
+Status: ACTIVE FOR NON-DISTANCE PRINCIPLE / TEMPORAL LINEAGE SUPERSEDED BY D-122
 
 Parent-child refinement는
 가격 근접도보다 event lineage를 우선한다.
@@ -520,7 +520,7 @@ multi-timeframe aggregation 차이는 허용하되,
 
 ## D-025 — Refinement stops at deepest unambiguous child
 
-Status: ACTIVE
+Status: ACTIVE ONLY FOR POST-CONTACT CHILDREN UNDER D-122
 
 V1은 무조건 M5까지 refinement하지 않는다.
 
@@ -550,7 +550,7 @@ causal certainty를 유지한 precision source identification이기 때문이다
 
 ## D-026 — At least one lower-timeframe child is mandatory
 
-Status: ACTIVE
+Status: ACTIVE / CHILD MUST BE POST-CONTACT UNDER D-122
 
 최초-position V1 baseline은
 HTF Root 아래 최소 하나의 valid causal child를 요구한다.
@@ -573,7 +573,7 @@ M1 trigger를 확인하는 protocol이기 때문이다.
 
 ## D-027 — Refinement lineage is frozen before M1 trigger
 
-Status: ACTIVE
+Status: SUPERSEDED IN PART BY D-122
 
 Final refined source와 전체 parent-child lineage는
 source contact 및 M1 sweep/CHoCH를 보기 전에 확정한다.
@@ -647,7 +647,7 @@ Reason:
 ---
 ## D-030 — Source contact gates M1 trigger observation
 
-Status: ACTIVE
+Status: SUPERSEDED IN TIMING BY D-122
 
 Final refined source와 price가 실제로 교차하기 전에는
 현재 scenario의 M1 trigger chain을 활성화하지 않는다.
@@ -668,7 +668,7 @@ M1의 unrelated noise/sweeps/CHoCH를 거래 근거로 사용하는 것을 방�
 
 ## D-031 — First-position sweep liquidity must pre-exist source contact
 
-Status: ACTIVE
+Status: REQUIRES TIMING RE-AUDIT UNDER D-122
 
 현재 first-position trigger에 사용할 liquidity pool은
 source-contact bar가 시작되기 전에 이미 available해야 한다.
@@ -703,7 +703,7 @@ Reason:
 
 ## D-032 — Same-bar source contact and sweep are allowed
 
-Status: ACTIVE
+Status: REQUIRES TIMING RE-AUDIT UNDER D-122
 
 Final refined source contact와
 pre-existing eligible liquidity sweep이
@@ -732,7 +732,7 @@ Reason:
 
 ## D-033 — Trigger-authorizing sweep must occur at the refined source
 
-Status: ACTIVE
+Status: REQUIRES TIMING RE-AUDIT UNDER D-122
 
 V1 first-position의 authorized sweep bar는
 final refined source와 실제로 교차해야 한다.
@@ -2611,7 +2611,7 @@ Execution handlers must be idempotent.
 
 ## D-115 — Bootstrap discovers Roots before targeted refinement
 
-Status: ACTIVE / FROZEN
+Status: SUPERSEDED IN REFINEMENT TIMING BY D-122
 
 Bootstrap order:
 
@@ -2798,7 +2798,7 @@ final external objective candidates from internal delivery liquidity.
 
 ## D-119 — First-position liquidity eligibility uses a runtime M1 physical-consumption overlay
 
-Status: ACTIVE / IMPLEMENTATION-FROZEN
+Status: IMPLEMENTATION CONCEPT RETAINED / CONTACT-TIME ANCHOR REQUIRES D-122 RE-AUDIT
 
 Phase 2 keeps its own-timeframe liquidity detector and audit events.
 
@@ -2847,7 +2847,7 @@ temporarily eligible and allow an old M1 sweep to be reused.
 
 ## D-120 — Structural Reaction requires post-contact M1 proof of the reaction extreme
 
-Status: ACTIVE / IMPLEMENTATION-FROZEN
+Status: REQUIRES OWNERSHIP/TIMING RE-AUDIT UNDER D-122
 
 A Phase 4C `STRUCTURAL_REACTION` pool requires:
 
@@ -2935,3 +2935,86 @@ Reason:
 The Mentor method uses PD Array as location/context reference. The previous V1
 wording and implementation promoted it into a hard continuation veto, which
 gave PD more authority than intended.
+
+---
+
+## D-122 — HTF Root contact precedes causal LTF child formation
+
+Status: ACTIVE / AUTHORITY-CORRECTION
+
+Current V1 separates the **formation of the HTF Root** from the **later formation of its LTF child**.
+
+Required causal order:
+
+```text
+pre-existing eligible / unconsumed HTF Root
+→ price later actually contacts that Root
+→ lower-timeframe reaction begins after contact
+→ a new LTF child OB forms from that reaction
+→ the child becomes usable only after its own causal structure delivery confirms it
+→ post-contact refinement lineage is frozen
+→ M1 execution-trigger evaluation may proceed
+```
+
+A current child must therefore satisfy:
+
+```text
+child.available_at > qualifying_root_contact_at
+```
+
+and must be attributable to the post-contact reaction.
+
+The following are **not** valid current child refinement:
+
+```text
+an LTF OB that already existed before the HTF Root contact
+an LTF OB found by decomposing the original displacement that created the Root
+price-overlap-only historical nesting
+retrospective selection of a Root after seeing the later M1 reaction
+```
+
+The HTF Root must be identified before the later reaction and must still be eligible for the intended first reaction. The term `unconsumed` is a Root-watch eligibility requirement; this decision does not invent an N-touch, age, percentage-mitigation, ATR, or score rule, and does not redefine ordinary wick/touch facts as body-close invalidation.
+
+This decision supersedes the **temporal-order / ownership portions** of:
+
+```text
+D-023
+D-024
+D-025
+D-026
+D-027
+D-030
+D-032
+D-033
+D-115
+```
+
+and requires a timing re-audit before relying on the existing implementation details of:
+
+```text
+D-031
+D-119
+D-120
+```
+
+Those older decisions remain in this log as historical design records. Their non-conflicting principles — no distance/score selection, causal availability, parent invalidation propagation, physical sweep geometry, and no look-ahead — remain valid.
+
+The old implementation concept:
+
+```text
+Root creation
+→ historical child discovery inside the Root-forming displacement
+→ child frozen
+→ later refined-child contact
+```
+
+is no longer current strategy authority.
+
+Reason:
+
+The intended Mentor workflow is to keep valid, unconsumed HTF OBs on watch, wait for price to reach the HTF OB, and only then observe the lower-timeframe reaction that creates the causal child OB. Treating an older lower-timeframe candle from the Root's original displacement as that future reaction child reverses the causal order and materially suppresses/misclassifies scenarios.
+
+Implementation consequence:
+
+Phase 3B refinement, Phase 4B scenario planning, and Phase 4C contact/sweep logic that depended on pre-contact child freeze must be reworked and revalidated before those phases can be considered strategy-parity PASS. Earlier test counts remain historical facts for the old implementation, not evidence of corrected V1 opportunity frequency.
+

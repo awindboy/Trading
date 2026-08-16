@@ -2,7 +2,7 @@
 
 - 상태: `FROZEN / CURRENT V1 STRATEGY AUTHORITY`
 - 제정일: `2026-08-01`
-- 최근 개정: `2026-08-16` (`PD Array authority correction: context/reference only`)
+- 최근 개정: `2026-08-16` (`HTF Root contact precedes post-contact LTF child formation`)
 - 적용 범위: deterministic EA, MT5 Strategy Tester, current V1 수동/블라인드 리플레이 검증
 
 ## 1. 문서의 지위
@@ -21,10 +21,11 @@
 ```text
 목적 유동성
 -> H1/M30 시장 지도
--> 스윙 근처의 사전 형성 HTF root OB
--> 같은 가격 사건을 설명하는 causal LTF OB refinement
--> refined OB 접촉
--> 사전에 존재하던 유동성 sweep
+-> 스윙 근처의 사전 형성·미소진 HTF root OB
+-> 가격의 HTF root OB 실제 접촉
+-> 접촉 이후 LTF 반응에서 새로 형성·확정되는 causal child OB
+-> post-contact refinement lineage 확정
+-> 해당 post-contact 맥락의 유효한 유동성 sweep
 -> M1의 의미 있는 몸통 CHoCH
 -> 같은 sweep-to-CHoCH causal leg의 fresh FVG
 -> valid FVG 중 가장 넓은 FVG 선택
@@ -47,7 +48,7 @@ Current V1 주문 권한에는 사용하지 않는다.
 | Long-horizon liquidity index | H4 | 오래된 ACTIVE external-swing liquidity만 압축 보존한다. |
 | Active map | H1, M30 | 방향, external/internal structure, dealing range, reversal permission의 authority다. |
 | Root/source candidate | H1, M30, M15 | current map과 causal displacement를 설명하는 Root 후보를 만들 수 있다. |
-| Refinement / context | M30, M15, M5 | Root의 lower-TF causal child와 correction context를 확인한다. |
+| Refinement / context | M30, M15, M5 | HTF Root 실제 접촉 이후의 반응에서 새로 형성되는 lower-TF causal child와 correction context를 확인한다. |
 | Trigger | M1 | source reaction의 sweep, meaningful CHoCH, execution FVG를 확인한다. |
 
 H4는 `LONG_HORIZON_LIQUIDITY_INDEX` 전용 frame이다.
@@ -681,9 +682,10 @@ Actual reversal order에는 여전히:
 ```text
 reversal permission OPEN
 → valid opposite map/context
-→ valid opposite Root/source lineage
-→ source contact
-→ mature pre-existing sweep
+→ pre-existing eligible opposite HTF Root
+→ qualifying HTF Root contact
+→ post-contact opposite causal child lineage
+→ valid mature sweep under corrected timing
 → meaningful M1 CHoCH
 → causal displacement FVG
 → first retest
@@ -812,7 +814,7 @@ M1은 HTF reversal permission 또는 map owner를
 - H1 mature trend와 반대인 M30/LTF structure는 reversal permission이 CLOSED인 동안 correction context로만 사용한다.
 - `INTERNAL_ROTATION`은 current V1 first-position order scope가 아니다.
 - HTF reversal-reference interaction으로 permission이 OPEN된 뒤에만 opposite LTF structure를 `EXTERNAL_REVERSAL` hypothesis로 평가한다.
-- 실제 주문에는 Root, causal refinement, source contact, mature sweep, M1 CHoCH, causal FVG 등 나머지 필수 chain이 모두 필요하다.
+- 실제 주문에는 사전 형성 HTF Root, qualifying Root contact, post-contact causal child refinement, valid sweep, M1 CHoCH, causal FVG 등 나머지 필수 chain이 모두 필요하다.
 
 ## 4. HTF root OB
 
@@ -824,7 +826,13 @@ Root는 다음을 모두 설명해야 한다.
 2. 해당 origin window 안의 마지막 opposite candle이다.
 3. 그 candle에서 시작한 same causal directional leg가 의미 있는 structure level을 body close로 전달했다.
 4. 현재 scenario direction/objective와 causal하게 연결된다.
-5. `strategy_state = ACTIVE`다.
+5. 가격이 첫 반응을 관찰할 HTF Root로 채택되기 전까지 미소진 상태다.
+6. `strategy_state = ACTIVE`다.
+
+여기서 `미소진`은 **HTF Root를 사전에 watchlist에 둘 수 있는 자격**을 뜻한다.
+단순 touch 횟수, age, 임의 mitigation percentage를 새 소진 규칙으로 만들지 않는다.
+Touch/partial mitigation과 body-close invalidation의 기존 구분은 유지하되,
+이미 과거 반응이 끝난 zone을 새로운 first-reaction Root처럼 재선언하지 않는다.
 
 Root strategy state는:
 
@@ -877,24 +885,53 @@ standalone Root/source authority를 갖지 않는다.
 
 ## 5. causal LTF OB refinement
 
-HTF root OB를 찾았다고 바로 M1으로 내려가지 않는다. 최소 하나의 causal child OB가 필요하다.
+HTF Root OB를 찾았다는 이유만으로 과거 lower-TF chart를 내려가
+그 Root를 처음 만들었던 displacement 안의 작은 OB를 child로 미리 확정하지 않는다.
 
-refinement는 H1/M30/M15/M5를 내려가며 찾되 다음을 모두 만족해야 한다.
+Current V1의 causal child discovery는 **HTF Root의 실제 가격 접촉 이후에 시작**한다.
 
-1. 부모 OB와 같은 방향이다.
-2. 부모 OB 안에 있거나, 부모 스윙의 바로 인접한 하위 구조다.
-3. 부모와 같은 가격 사건 및 같은 displacement를 설명한다.
-4. 형성 시각이 부모 파동의 원인 구간과 일치한다.
-5. 하위 OB의 displacement가 실제 하위 구조 전달을 만들었다.
-6. 부모와 자식의 연결을 차트에 함께 표시할 수 있다.
+Required temporal order:
 
-가격만 겹치거나 나중에 우연히 생긴 하위 OB는 refinement가 아니다.
+```text
+pre-existing / unconsumed HTF Root frozen
+→ price actually contacts that HTF Root
+→ lower-timeframe reaction is observed from that contact
+→ a new LTF OB forms in that post-contact reaction
+→ the child becomes usable only after its own causal structure delivery is confirmed
+→ post-contact parent-child lineage is frozen
+```
 
-유효한 refinement가 확인되면 마지막 causal child OB는 최초 포지션의 source/context와 무효화 맥락을 정밀화한다. 최초 포지션의 실제 entry와 기본 SL geometry는 제7~8장의 CHoCH displacement FVG 규칙이 담당한다.
+따라서 Root 형성 당시의 과거 displacement 속에 이미 존재했던 M30/M15/M5 OB는
+가격적으로 Root 안에 있더라도 current setup의 child requirement를 충족하지 않는다.
 
-하위 OB가 여러 개로 갈라지고 어느 것이 원인인지 비교할 수 없으면 가장 좁은 것을 임의로 선택하지 않는다. 더 높은 child OB를 유지하거나 비매매한다.
+Valid child는 다음을 모두 만족해야 한다.
 
-### 5.1 Root / final refined source invalidation
+1. 부모 HTF Root의 실제 contact 이후에 형성된다.
+2. 부모 Root에 대한 post-contact reaction에서 발생한다.
+3. child가 주장하는 방향과 lower-TF structure delivery를 인과적으로 설명할 수 있다.
+4. child의 `available_at`은 부모 Root contact 이후이며, child confirmation 이전에는 사용할 수 없다.
+5. 부모 Root와의 가격 관계가 containment 또는 같은 post-contact reaction의 event-defined adjacency로 설명된다.
+6. 부모와 자식의 연결을 차트에 시간순으로 함께 표시할 수 있다.
+
+다음은 child refinement가 아니다.
+
+```text
+Root가 contact되기 전에 이미 존재한 lower-TF OB
+Root를 처음 만든 과거 displacement를 단순 분해한 lower-TF OB
+가격만 겹치는 unrelated lower-TF OB
+M1 반응을 본 뒤 과거 HTF Root를 사후 선택하는 경우
+```
+
+유효한 post-contact child가 확인되면 그 child는 최초 포지션의
+source/context와 무효화 맥락을 정밀화한다.
+최초 포지션의 실제 entry와 기본 SL geometry는 제7~8장의
+CHoCH displacement FVG 규칙이 담당한다.
+
+하위 OB가 여러 개로 갈라지고 어느 것이 같은 post-contact reaction의 원인인지
+비교할 수 없으면 가장 좁은 것을 임의로 선택하지 않는다.
+더 높은 단계의 확정된 post-contact child를 유지하거나 비매매한다.
+
+### 5.1 Root / post-contact child invalidation
 
 Root와 child는 strategy layer에서:
 
@@ -961,20 +998,24 @@ parent invalidated
 
 ## 6. M1 trigger 허용 조건
 
-다음 항목이 모두 사전에 완료되기 전에는 M1 trigger를 찾지 않는다.
+다음 항목이 시간순으로 완료되기 전에는 M1 trigger를 찾지 않는다.
 
 - 목적 유동성 동결
 - map 방향과 scenario scope 동결
-- HTF root OB 동결
-- causal LTF refinement 경로 동결
-- source/refined OB 무효화 가격 동결
-- 가격이 refined OB에 실제 접촉
+- 사전 형성·미소진 HTF root OB 동결
+- 가격의 HTF root OB 실제 접촉
+- 그 접촉 이후 lower-TF reaction에서 새 causal child OB 형성 및 causal confirmation
+- post-contact refinement lineage와 source/refined OB 무효화 가격 동결
 
-접촉 뒤의 기본 trigger chain은 다음과 같다.
+HTF Root 접촉 전의 M1 sweep/CHoCH와,
+HTF Root 접촉 전에 이미 존재하던 lower-TF OB를
+현재 setup의 child/trigger 근거로 소급 사용하지 않는다.
+
+Post-contact child가 causal하게 확정된 뒤의 기본 trigger chain은 다음과 같다.
 
 ```text
-refined OB 접촉
--> 그 맥락 안에 사전 형성된 유동성 관통
+post-contact refined context established
+-> 그 맥락 안의 유효한 유동성 관통
 -> 가격 회복
 -> 진행 중 M1 추세의 의미 있는 live swing을 몸통 종가로 돌파
 -> 같은 sweep-to-CHoCH causal leg의 fresh same-direction FVG 확인
@@ -1101,8 +1142,8 @@ NO_TRADE
 
 를 사용한다.
 
-Source contact, sweep, CHoCH, FVG selection은
-별도 persistent strategy state를 늘리는 대신
+HTF Root contact, post-contact child formation/confirmation, sweep, CHoCH, FVG selection은
+별도 persistent strategy state를 무분별하게 늘리는 대신
 event ID와 timestamp로 기록한다.
 
 Meaningful CHoCH close에서 같은 EA decision cycle로:
@@ -1164,7 +1205,7 @@ Fill 전 strategy cancellation authority는 세 종류뿐이다.
 final objective delivered before fill
 → CANCELED
 
-final refined source / required parent Root invalidated
+required post-contact child / parent Root invalidated
 → CANCELED
 
 continuation owner invalidated
@@ -1332,10 +1373,12 @@ Bootstrap order:
 ```text
 1. H4 long-horizon liquidity index
 2. H1 / M30 / M15 chronological root-discovery stream
-3. current scenario-relevant ACTIVE Roots freeze
-4. targeted M30 / M15 / M5 child refinement
-5. current-source local M5 / M1 liquidity reconstruction
-6. READY
+3. current scenario-relevant pre-existing ACTIVE / unconsumed Roots retain
+4. reconstruct only causally known Root-contact state needed at startup
+5. do not fabricate a child by decomposing the Root's original historical displacement
+6. runtime post-contact M30 / M15 / M5 child discovery starts only after a qualifying Root contact
+7. post-contact local M5 / M1 context is reconstructed only without creating retrospective trigger authority
+8. READY
 ```
 
 H4:
@@ -1393,11 +1436,12 @@ execution_epoch_start
 
 를 freeze한다.
 
-다음 first-position execution event는 모두
+다음 first-position runtime causal event는 모두
 `execution_epoch_start` 이후 새 event여야 한다.
 
 ```text
-source contact
+qualifying HTF Root contact
+post-contact child formation / confirmation
 authorized sweep
 meaningful M1 CHoCH
 execution FVG
@@ -1405,23 +1449,25 @@ execution FVG
 
 Pre-start CHoCH/FVG/pending hypothesis는 runtime order authority가 아니다.
 
-Startup 첫 observable price가 이미 final source 내부라면:
+Startup 첫 observable price가 이미 감시 중인 HTF Root 내부라면:
 
 ```text
-STARTED_INSIDE_SOURCE
+STARTED_INSIDE_ROOT
 ```
 
-만 기록한다.
+에 해당하는 시작 상태만 기록하고,
+pre-start 가격 경로를 사용해 qualifying Root contact나 post-contact child를 소급 생성하지 않는다.
 
-새 contact를 소급 생성하지 않는다.
+새 runtime contact가 필요하면:
 
 ```text
-exit source
+exit Root
 → later re-entry
-→ new source contact
+→ new qualifying Root contact
+→ post-contact child discovery
 ```
 
-가 필요하다.
+순서를 지킨다.
 
 ### Closed-bar multi-timeframe processing order
 
@@ -1605,11 +1651,11 @@ implementation parity 완료 뒤 별도 execution/risk policy로 검토한다.
 2. Active dealing range를 deterministic하게 결정할 수 없다.
 3. Scenario scope와 ordered objective family를 결정할 수 없다.
 4. Frozen objective family 전체에 planned R `>=1`인 valid candidate가 없다.
-5. 의미 있는 HTF Root OB가 없다.
-6. Valid causal lower-timeframe child를 최소 하나 찾지 못했다.
-7. Parent-child가 같은 causal event / displacement를 설명하지 못한다.
-8. Final refined source가 아직 contact되지 않았다.
-9. Required sweep liquidity가 source-contact bar 이전부터 available하지 않았다.
+5. 사전에 형성되어 있고 현재 setup의 첫 반응을 볼 수 있는 미소진 HTF Root OB가 없다.
+6. 가격이 그 HTF Root에 실제로 contact하지 않았다.
+7. HTF Root contact 이후의 lower-TF reaction에서 valid causal child를 최소 하나 형성·확정하지 못했다.
+8. Child가 post-contact reaction에서 태어난 것이 아니라 Root 형성 당시의 과거 displacement를 사후 분해한 것이다.
+9. Required sweep liquidity의 causal maturity를 현재 post-contact trigger contract로 설명할 수 없다.
 10. Direction-compatible mature liquidity sweep이 없다.
 11. Authorized sweep 시점에 valid opposite M1 correction protected swing이 없다.
 12. Meaningful M1 CHoCH가 없다.
@@ -1623,10 +1669,10 @@ current V1 no-trade branch에 포함하지 않는다.
 
 ## 10. 블라인드 재생 규율
 
-1. H1/M30에서 current map, scenario scope, ordered objective family와 Root context를 먼저 결정한다.
-2. M30/M15/M5에서 causal refinement를 확인한다.
-3. 가격이 final source에 도달하기 전에는 current scenario의 M1 trigger를 탐색하지 않는다.
-4. Source contact 뒤에만 eligible pre-existing liquidity sweep과 M1 CHoCH를 본다.
+1. H1/M30에서 current map, scenario scope, ordered objective family와 사전 형성·미소진 HTF Root context를 먼저 결정한다.
+2. 가격이 HTF Root에 실제로 도달하기 전에는 current setup의 child refinement나 M1 trigger를 사후 탐색하지 않는다.
+3. HTF Root contact 이후에만 M30/M15/M5 반응을 순차 관찰하고, 그 반응에서 새로 형성·확정되는 causal child를 refinement로 연결한다.
+4. Post-contact child lineage가 causal하게 확정된 뒤에만 해당 setup의 eligible sweep과 M1 CHoCH를 판단한다.
 5. PLAN에서 objective candidate family와 order를 먼저 freeze한다. Final TP 하나는 Entry/SL이 알려진 뒤 frozen family에서 선택한다.
 6. 지나간 entry/retest를 사후 주문으로 복원하지 않는다.
 7. 주문 전에 causal IDs, Entry, SL, TP, volume과 execution preflight를 기록한다.
@@ -1661,11 +1707,14 @@ selected final objective
 selected final objective planned_R
 
 Root ID / timeframe / bounds
+Root watch eligibility / unconsumed evidence
+root_contact_at
 final child ID / timeframe / bounds
-parent-child lineage
+child_origin_at / child_available_at
+post-contact parent-child lineage
 source invalidation boundary
 
-source_contact_at
+trigger_context_ready_at
 active_sweep_event_id
 active_choch_reference_swing_id
 meaningful CHoCH event ID
@@ -1705,8 +1754,8 @@ Entry / SL / TP geometry가 모두 freeze된 거래다.
 current V1 strategy performance에서 제외한다.
 
 - Root 누락
-- causal refinement 누락
-- source contact 이전 trigger-first 진입
+- HTF Root contact 이후 causal child refinement 누락
+- HTF Root contact 이전 child/trigger를 current setup에 소급 연결
 - immature liquidity sweep 사용
 - arbitrary micro pivot CHoCH
 - causal FVG 없는 CHoCH entry
@@ -1744,8 +1793,9 @@ execution infrastructure failure로 별도 집계한다.
 - internal swing을 external liquidity로 잘못 승격
 - HTF Root 없이 M1 trigger로 빈칸을 채움
 - HTF FVG를 standalone source로 사용
-- parent-child causal relation 없이 단순 overlap으로 refinement
-- source contact 이전 M1 trigger-first 판단
+- HTF Root contact 이전에 존재한 child를 current post-contact refinement로 사용
+- parent-child post-contact causal relation 없이 단순 overlap으로 refinement
+- HTF Root contact 이전 M1 trigger-first 판단
 - reaction 중 방금 생긴 high/low를 same setup의 mature liquidity로 사용
 - premium/discount를 standalone gate로 사용
 - M1 micro CHoCH를 HTF direction authority처럼 사용
@@ -1781,11 +1831,13 @@ Final TP planned R은 ________ R이다.
 이 candidate가 가장 가까운 R-eligible candidate인 이유는 ________ 이다.
 
 Root는 ________ TF의 ________ 영역이다.
-Final causal child는 ________ TF의 ________ 영역이다.
-두 zone이 같은 causal event인 이유는 ________ 이다.
+Root가 사전 형성·미소진 상태였던 근거는 ________ 이다.
+가격은 ________ 시각에 HTF Root를 실제 contact했다.
+Final causal child는 그 contact 이후 ________ 시각에 형성되고 ________ 시각에 causal하게 available해진 ________ TF의 ________ 영역이다.
+이 child가 Root 접촉 이후의 reaction에서 태어났다고 판단한 이유는 ________ 이다.
 Source invalidation boundary는 ________ 이다.
 
-가격은 ________ 시각에 final source를 contact했다.
+Post-contact trigger context가 준비된 시각은 ________ 이다.
 Required liquidity ________ 은 ________ 시각부터 available했다.
 Authorized sweep은 ________ 시각의 ________ event다.
 
@@ -1811,7 +1863,7 @@ Execution preflight 결과는 ________ 이다.
 
 ## 15. 한 문장 원칙
 
-> M1 trigger로 거래의 원인을 찾지 않는다. 먼저 HTF swing OB와 causal LTF OB refinement로 시나리오를 완성하고, M1은 그 시나리오가 실제로 반응했는지만 확인한다.
+> M1 trigger로 거래의 원인을 찾지 않는다. 먼저 사전 형성·미소진 HTF swing OB를 준비하고 실제 Root contact를 기다린 뒤, 그 접촉 이후 반응에서 새로 형성된 causal LTF child를 확인한다. M1은 이 post-contact 인과관계가 준비된 뒤의 실행 반응만 확인한다.
 
 ## 16. Legacy regression records
 
@@ -1837,7 +1889,8 @@ Historical evidence는 Git history와 research 문서에 보존한다.
 ```text
 wrong external/internal classification
 missing Root
-missing causal child
+missing post-contact causal child
+pre-contact historical child used as current refinement
 immature liquidity used as sweep
 premium/discount used as standalone authorization/veto
 missing meaningful CHoCH
