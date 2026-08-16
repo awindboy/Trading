@@ -404,9 +404,9 @@ No N-touch/N-bar/age/quality expiry is used.
 
 ---
 
-## D-021 — Root bounds remain full candle until causal refinement
+## D-021 — Root bounds remain full candle as source context
 
-Status: ACTIVE
+Status: ACTIVE / SOURCE-REFINEMENT WORDING SUPERSEDED BY D-124
 
 HTF Root OB의 initial bounds는 origin candle의 전체 wick range다.
 
@@ -417,8 +417,7 @@ top = high
 
 Root 단계에서 body-only 또는 50% geometry로 축소하지 않는다.
 
-Root 자체의 source precision은
-후속 causal LTF refinement가 담당한다.
+Root는 full-candle bounds를 가진 strategy source/context로 유지한다. Optional post-contact child가 보여도 Root source bounds를 strategy authority로 대체하지 않는다.
 
 최초 포지션의 실제 entry / SL geometry는
 후속 CHoCH displacement FVG 규칙이 담당한다.
@@ -520,7 +519,7 @@ multi-timeframe aggregation 차이는 허용하되,
 
 ## D-025 — Refinement stops at deepest unambiguous child
 
-Status: ACTIVE ONLY FOR POST-CONTACT CHILDREN UNDER D-122
+Status: SUPERSEDED BY D-124 FOR CURRENT V1 STRATEGY AUTHORITY
 
 V1은 무조건 M5까지 refinement하지 않는다.
 
@@ -550,7 +549,7 @@ causal certainty를 유지한 precision source identification이기 때문이다
 
 ## D-026 — At least one lower-timeframe child is mandatory
 
-Status: ACTIVE / CHILD MUST BE POST-CONTACT UNDER D-122
+Status: SUPERSEDED BY D-124
 
 최초-position V1 baseline은
 HTF Root 아래 최소 하나의 valid causal child를 요구한다.
@@ -573,7 +572,7 @@ M1 trigger를 확인하는 protocol이기 때문이다.
 
 ## D-027 — Refinement lineage is frozen before M1 trigger
 
-Status: SUPERSEDED IN PART BY D-122
+Status: SUPERSEDED BY D-122 / D-124 FOR STRATEGY AUTHORITY
 
 Final refined source와 전체 parent-child lineage는
 source contact 및 M1 sweep/CHoCH를 보기 전에 확정한다.
@@ -595,7 +594,7 @@ live execution과 동일한 information order를 유지하기 위함이다.
 
 ## D-028 — Parent invalidation propagates downward
 
-Status: ACTIVE / FROZEN
+Status: HISTORICAL CHILD-LINEAGE RULE / ROOT INVALIDATION PRINCIPLE RETAINED
 
 ```text
 parent invalidated
@@ -647,7 +646,7 @@ Reason:
 ---
 ## D-030 — Source contact gates M1 trigger observation
 
-Status: SUPERSEDED IN TIMING BY D-122
+Status: SUPERSEDED BY ROOT-CONTACT AUTHORITY UNDER D-122 / D-124
 
 Final refined source와 price가 실제로 교차하기 전에는
 현재 scenario의 M1 trigger chain을 활성화하지 않는다.
@@ -666,18 +665,13 @@ M1의 unrelated noise/sweeps/CHoCH를 거래 근거로 사용하는 것을 방�
 
 ---
 
-## D-031 — First-position sweep liquidity must pre-exist source contact
+## D-031 — First-position sweep liquidity must pre-exist the relevant Root-reaction sweep event
 
-Status: REQUIRES TIMING RE-AUDIT UNDER D-122
+Status: REQUIRES ROOT-BASED TIMING RE-AUDIT UNDER D-124
 
-현재 first-position trigger에 사용할 liquidity pool은
-source-contact bar가 시작되기 전에 이미 available해야 한다.
+현재 first-position trigger에 사용할 liquidity pool의 정확한 freeze anchor는 corrected Phase 4C에서 Root contact/reaction 기준으로 재감사한다.
 
-```text
-liquidity.available_at
-<
-source_contact_bar_open
-```
+Child availability는 이 timing anchor가 아니다.
 
 추가 N-bar/N-minute maturity threshold는 두지 않는다.
 
@@ -701,18 +695,13 @@ Reason:
 
 ---
 
-## D-032 — Same-bar source contact and sweep are allowed
+## D-032 — Same-bar Root contact and sweep require causal-order re-audit
 
-Status: REQUIRES TIMING RE-AUDIT UNDER D-122
+Status: REQUIRES ROOT-BASED TIMING RE-AUDIT UNDER D-124
 
-Final refined source contact와
-pre-existing eligible liquidity sweep이
-동일 M1 candle에서 발생하는 것은 허용한다.
+HTF Root contact와 pre-existing eligible liquidity sweep이 동일 M1 candle에서 함께 관찰될 수 있다. 다만 현재 OHLC/closed-bar 정보로 causal ordering을 증명할 수 있는 범위를 corrected Phase 4C에서 다시 freeze한다.
 
-```text
-same-bar contact + sweep
-→ allowed
-```
+Child의 존재 여부는 이 판단에 영향을 주지 않는다.
 
 단:
 
@@ -730,20 +719,15 @@ Reason:
 
 ---
 
-## D-033 — Trigger-authorizing sweep must occur at the refined source
+## D-033 — Trigger-authorizing sweep must belong to the Root reaction context
 
-Status: REQUIRES TIMING RE-AUDIT UNDER D-122
+Status: SUPERSEDED IN SOURCE OWNERSHIP BY D-124 / TIMING RE-AUDIT REQUIRED
 
-V1 first-position의 authorized sweep bar는
-final refined source와 실제로 교차해야 한다.
+V1 first-position의 authorized sweep은 specific HTF Root reaction context에 귀속되어야 한다.
 
-```text
-sweep bar intersects final source
-```
+Old `final refined source` intersection requirement is superseded because optional child never becomes strategy source.
 
-Source를 과거에 touch한 뒤
-가격이 source와 멀어진 곳에서 발생한 sweep을
-원래 setup에 연결하지 않는다.
+Root를 과거에 touch한 뒤 전혀 별개의 가격 사건에서 발생한 sweep을 원래 setup에 사후 연결하지 않는다.
 
 Reason:
 
@@ -843,17 +827,17 @@ Reason:
 
 ---
 
-## D-037 — Pre-contact sweep cannot be reused
+## D-037 — Pre-Root-contact sweep cannot be reused
 
-Status: ACTIVE
+Status: ACTIVE / ROOT-BASED UNDER D-124
 
-Final refined source 접촉 이전에 완료된 liquidity sweep을
+Qualifying HTF Root contact 이전에 완료된 liquidity sweep을
 현재 first-position trigger chain의 sweep으로 재사용하지 않는다.
 
 Required causal order:
 
 ```text
-source contact
+Root contact
 → authorized sweep
 → M1 CHoCH
 ```
@@ -1085,7 +1069,7 @@ meaningful M1 CHoCH를 전달한 directional displacement가 생성한
 fresh FVG다.
 
 ```text
-source contact
+Root contact
 → mature sweep
 → meaningful M1 CHoCH
 → causal CHoCH displacement FVG
@@ -2459,14 +2443,14 @@ A new execution chain begins after execution_epoch_start.
 
 ---
 
-## D-108 — Startup inside a source requires exit and later re-entry
+## D-108 — Startup inside an eligible Root requires exit and later re-entry
 
-Status: ACTIVE / FROZEN
+Status: ACTIVE / ROOT-BASED UNDER D-124
 
 If startup begins with current price already inside
-the final source:
+the eligible HTF Root:
 
-STARTED_INSIDE_SOURCE
+STARTED_INSIDE_ROOT
 
 is recorded.
 
@@ -2476,7 +2460,7 @@ A new first-position trigger chain requires:
 
 exit
 → later re-entry
-→ new source contact
+→ new Root contact
 
 ---
 
@@ -2492,7 +2476,7 @@ Keep an object in RAM only while referenced by:
 current structure
 open correction window
 ACTIVE liquidity
-ACTIVE Root/child/source
+ACTIVE Root/source
 active scenario/CHoCH reference
 H4 ACTIVE liquidity index
 
@@ -2798,13 +2782,13 @@ final external objective candidates from internal delivery liquidity.
 
 ## D-119 — First-position liquidity eligibility uses a runtime M1 physical-consumption overlay
 
-Status: IMPLEMENTATION CONCEPT RETAINED / CONTACT-TIME ANCHOR REQUIRES D-122 RE-AUDIT
+Status: IMPLEMENTATION CONCEPT RETAINED / ROOT-CONTACT ANCHOR REQUIRES D-124 RE-AUDIT
 
 Phase 2 keeps its own-timeframe liquidity detector and audit events.
 
 Phase 4C additionally requires first-position authorization to know whether a
 cross-timeframe liquidity pool has already been physically swept or body-delivered
-on a closed M1 bar before source contact.
+on a closed M1 bar before the relevant Root-reaction eligibility freeze.
 
 Therefore runtime strategy eligibility maintains a separate overlay:
 
@@ -2847,13 +2831,13 @@ temporarily eligible and allow an old M1 sweep to be reused.
 
 ## D-120 — Structural Reaction requires post-contact M1 proof of the reaction extreme
 
-Status: REQUIRES OWNERSHIP/TIMING RE-AUDIT UNDER D-122
+Status: REQUIRES ROOT-BASED OWNERSHIP/TIMING RE-AUDIT UNDER D-124
 
 A Phase 4C `STRUCTURAL_REACTION` pool requires:
 
 ```text
-scenario-owned final refined source
-actual source contact
+scenario-owned HTF Root
+actual Root contact
 compatible confirmed reaction wave on source timeframe
 reaction confirmation after contact
 ```
@@ -2866,7 +2850,7 @@ Phase 4C proves the reaction causally on M1:
 
 ```text
 M1 available_at >= source_contact_at
-M1 bar intersects final source
+M1 bar belongs to / intersects the relevant Root reaction geometry
 M1 high/low equals the confirmed source-TF reaction extreme
 ```
 
@@ -2921,10 +2905,9 @@ causal chain:
 ```text
 objective
 → map/direction authority
-→ Root
-→ causal refinement
-→ source contact
-→ mature sweep
+→ pre-existing eligible Root
+→ qualifying Root contact
+→ mature Root-reaction sweep
 → meaningful M1 CHoCH
 → causal FVG
 → execution geometry
@@ -2938,9 +2921,9 @@ gave PD more authority than intended.
 
 ---
 
-## D-122 — HTF Root contact precedes causal LTF child formation
+## D-122 — HTF Root contact precedes any causal LTF child observation
 
-Status: ACTIVE / AUTHORITY-CORRECTION
+Status: ACTIVE / TEMPORAL AUTHORITY-CORRECTION; CHILD REQUIREMENT SUPERSEDED BY D-124
 
 Current V1 separates the **formation of the HTF Root** from the **later formation of its LTF child**.
 
@@ -2950,13 +2933,12 @@ Required causal order:
 pre-existing eligible / unconsumed HTF Root
 → price later actually contacts that Root
 → lower-timeframe reaction begins after contact
-→ a new LTF child OB forms from that reaction
-→ the child becomes usable only after its own causal structure delivery confirms it
-→ post-contact refinement lineage is frozen
-→ M1 execution-trigger evaluation may proceed
+→ M1 Root-reaction evaluation may proceed without any child
+→ if a new LTF child OB later forms, it may be recorded only after its own causal structure delivery confirms it
+→ that child remains optional audit/context information
 ```
 
-A current child must therefore satisfy:
+Any optional current child observation must therefore satisfy:
 
 ```text
 child.available_at > qualifying_root_contact_at
@@ -3012,21 +2994,21 @@ is no longer current strategy authority.
 
 Reason:
 
-The intended Mentor workflow is to keep valid, unconsumed HTF OBs on watch, wait for price to reach the HTF OB, and only then observe the lower-timeframe reaction that creates the causal child OB. Treating an older lower-timeframe candle from the Root's original displacement as that future reaction child reverses the causal order and materially suppresses/misclassifies scenarios.
+The intended Mentor workflow is to keep valid, unconsumed HTF OBs on watch and wait for price to reach the HTF OB before evaluating its later reaction. If a lower-timeframe child is recorded, it must belong to that later reaction. Treating an older lower-timeframe candle from the Root's original displacement as a future post-contact child reverses causal order. D-124 further clarifies that child observation is optional and cannot gate the Root setup.
 
 Implementation consequence:
 
-Phase 3B refinement, Phase 4B scenario planning, and Phase 4C contact/sweep logic that depended on pre-contact child freeze must be reworked and revalidated before those phases can be considered strategy-parity PASS. Earlier test counts remain historical facts for the old implementation, not evidence of corrected V1 opportunity frequency.
+Phase 3B refinement, Phase 4B scenario planning, and Phase 4C contact/sweep logic that depended on pre-contact child freeze or mandatory child authority must be reworked and revalidated before those phases can be considered strategy-parity PASS. Earlier test counts remain historical facts for the old implementation, not evidence of corrected V1 opportunity frequency.
 
 ---
 
-## D-123 — D122A isolates physical Root-contact / post-contact-child parity from downstream strategy authorization
+## D-123 — D122A isolates physical Root-contact / post-contact-child causality from downstream strategy authorization
 
-Status: ACTIVE / IMPLEMENTATION-STAGING / COMPILE-TEST PENDING
+Status: ACTIVE / BASELINE CAUSAL PASS 2026-08-16 / REINTERPRETED BY D-124
 
-D-122 changes the causal order materially enough that the corrected lower-timeframe child path must be validated before Phase 4B/4C scenario and sweep authorization are reattached.
+D-122 changed temporal ordering enough that D122A isolated Root watch/contact and post-contact child observation before Phase 4B/4C were reattached. The 2026-08-16 baseline test passed that temporal-causality purpose. D-124 now clarifies that the child observation proven by this test is optional audit evidence rather than a required strategy gate.
 
-The D122A implementation therefore has a deliberately narrow authority boundary.
+The D122A implementation therefore remains useful as a causal validation fixture, not as proof that a child is required.
 
 ### Root watch eligibility
 
@@ -3154,3 +3136,123 @@ Reason:
 
 The corrected Root-contact → child order must first be proven independently. Reattaching objective, sweep, CHoCH, and order logic in the same change would mix a known authority correction with still-unresolved timing choices and make failures impossible to attribute cleanly.
 
+### 2026-08-16 D122A baseline result
+
+```text
+repository commit = 5693058733b63089ad7e612281ce58a7623c73e3
+internal build = 0.80
+fvg_origin_ob_experiment = false
+event rows = 7067
+ROOT_WATCH_CREATED = 21
+ROOT_CONTACT_OBSERVED = 11
+CHILD_CREATED = 1
+SCENARIO_PLANNED = 0
+old Phase4C SOURCE_CONTACT = 0
+AUTHORIZED_SWEEP = 0
+orders/deals = 0
+```
+
+Observed child causality:
+
+```text
+03:45 Root contact
+→ 03:55 child origin
+→ 04:00 meaningful M5 reaction low
+→ 04:15 wave available
+→ 04:45 M5 INITIAL_BOS bar
+→ 04:50 child available
+```
+
+All 11 Root contacts occurred after Root availability and the execution epoch. Historical pre-contact child authorization was zero. Structure, liquidity, map/reversal, and Root detector events were exactly row-identical to the prior `fvg_origin_ob_experiment=false` control run.
+
+Under D-124 this result is interpreted as:
+
+```text
+11 Root-contact contexts remained valid candidates for downstream Root-based evaluation
+1 optional post-contact child happened to be observed
+10 missing children are NOT trade rejections
+```
+
+---
+
+## D-124 — HTF Root is the sole OB strategy source; post-contact child is audit-only optional context
+
+Status: ACTIVE / CURRENT V1 AUTHORITY-CORRECTION
+
+Current V1 first-position baseline no longer requires a causal LTF child OB.
+
+Required OB/source path:
+
+```text
+pre-existing eligible HTF Root
+→ actual HTF Root contact
+→ Root-reaction sweep
+→ meaningful M1 CHoCH
+→ causal M1 FVG
+→ widest valid FVG first retest
+```
+
+A post-contact LTF child may still be observed, but only as audit/context information.
+
+```text
+no child
+→ Root setup continues
+
+one child
+→ log child; Root remains strategy source
+
+multiple children / ambiguous children
+→ log what is causally knowable; do not choose a best child; Root remains strategy source
+
+child invalidated while Root ACTIVE
+→ audit fact only; Root setup continues
+```
+
+The child has no authority over:
+
+```text
+scenario authorization
+trade veto
+strategy-source replacement
+Entry
+SL
+TP
+pending cancellation
+Root invalidation
+sweep eligibility
+CHoCH authorization
+```
+
+Actual first-position execution geometry remains the already-frozen M1-FVG contract:
+
+```text
+LONG Entry = selected bullish FVG.top
+LONG SL    = selected FVG.bottom - 0.20 * FVG.width
+
+SHORT Entry = selected bearish FVG.bottom
+SHORT SL    = selected FVG.top + 0.20 * FVG.width
+```
+
+Therefore a narrower child does not tighten the baseline stop and is not needed for entry precision.
+
+D-122 temporal causality remains active for any optional child observation:
+
+```text
+Root contact must precede child formation/availability
+pre-contact historical LTF OB may not be relabeled as a post-contact child
+```
+
+D-124 supersedes current-strategy authority portions of:
+
+```text
+D-025 deepest-child final-source rule
+D-026 mandatory-child rule
+D-027 mandatory child-lineage freeze before M1
+D-028 descendant strategy-authority consequence, except Root invalidation itself
+D-030 refined-source contact gate
+all later rules that require a child before sweep / CHoCH / Entry
+```
+
+Reason:
+
+The baseline already performs its decisive execution filtering later through Root reaction, valid sweep, meaningful M1 CHoCH, and causal FVG first-retest geometry. Requiring an additional child OB at the source layer removes Root reactions before those intended confirmation stages and grants the child more authority than the strategy needs.

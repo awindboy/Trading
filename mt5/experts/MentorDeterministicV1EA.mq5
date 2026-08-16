@@ -1,21 +1,21 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - D122A post-contact child core       |
+//| Deterministic Mentor EA V1 - D124 Root-primary child-audit core |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| D122A intentionally DOES NOT submit orders.                     |
+//| D124 intentionally DOES NOT submit orders.                       |
 //| Structure/liquidity/Root/map cores are retained.                 |
-//| This build corrects refinement ordering to: Root contact first,  |
-//| then newly formed post-contact LTF child discovery.              |
+//| HTF Root remains the only strategy source owner after contact.  |
+//| Post-contact child OBs are optional audit/context observations.  |
 //| Scenario/sweep/CHoCH/execution authorization is disabled pending |
 //| the separately frozen D-122 timing re-audit.                     |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - D122A post-contact child core"
+#property description "Mentor deterministic V1 EA - D124 Root-primary optional-child audit core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
@@ -23,11 +23,11 @@ input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
 input bool   InpEnableFvgOriginObExperiment = false;
-input string InpEventCsvFile       = "mentor_v1_d122a_post_contact_child_events.csv";
+input string InpEventCsvFile       = "mentor_v1_d124_root_primary_optional_child_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
-// but are intentionally not active in this D122A post-contact-child build.
+// but are intentionally not active in this D124 Root-primary optional-child-audit build.
 
 enum V1InitState
   {
@@ -92,6 +92,7 @@ enum V1SourceState
 enum V1RefinementStatus
   {
    V1_REFINE_WAITING=0,
+   V1_REFINE_ROOT_ONLY_READY,
    V1_REFINE_READY,
    V1_REFINE_NO_CHILD,
    V1_REFINE_AMBIGUOUS_FIRST,
@@ -532,8 +533,8 @@ struct V1RootReactionTracker
    datetime          lineage_updated_at;
 
    // Causal lower-TF structure snapshots are taken only when Root contact is
-   // observed. Future child bars advance these private states incrementally;
-   // no Root-forming historical displacement is replayed for authorization.
+   // observed. Future lower-TF bars may emit optional child audit observations;
+   // no child has strategy-source, entry, SL, TP, or cancellation authority.
    V1StructureState  m30_state;
    V1StructureState  m15_state;
    V1StructureState  m5_state;
@@ -557,6 +558,7 @@ V1LiquidityPool g_liquidity[];
 V1SourceZone     g_sources[];
 V1RefinementLineage g_refinements[];
 V1RootReactionTracker g_root_reactions[];
+string           g_optional_child_observation_ids[];
 string           g_pending_refinement_root_ids[];
 V1ObjectiveCandidate g_objective_candidates[];
 V1ScenarioPlan   g_scenarios[];
@@ -609,7 +611,9 @@ long             g_structural_reaction_created=0;
 long             g_root_watches_created=0;
 long             g_root_watches_prior_touch_rejected=0;
 long             g_root_contacts_observed=0;
+long             g_root_contexts_ready=0;
 long             g_post_contact_child_events=0;
+long             g_optional_child_observations=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -725,6 +729,7 @@ string RefinementStatusName(const int status)
    switch(status)
      {
       case V1_REFINE_WAITING:           return "WAITING";
+      case V1_REFINE_ROOT_ONLY_READY:   return "ROOT_ONLY_READY";
       case V1_REFINE_READY:             return "READY";
       case V1_REFINE_NO_CHILD:          return "NO_CHILD";
       case V1_REFINE_AMBIGUOUS_FIRST:   return "AMBIGUOUS_FIRST";
@@ -1020,6 +1025,7 @@ void InitializeAllStructureStates()
    ArrayResize(g_sources,0);
    ArrayResize(g_refinements,0);
    ArrayResize(g_root_reactions,0);
+   ArrayResize(g_optional_child_observation_ids,0);
    ArrayResize(g_pending_refinement_root_ids,0);
    ArrayResize(g_objective_candidates,0);
    ArrayResize(g_scenarios,0);
@@ -1049,7 +1055,9 @@ void InitializeAllStructureStates()
    g_root_watches_created=0;
    g_root_watches_prior_touch_rejected=0;
    g_root_contacts_observed=0;
+   g_root_contexts_ready=0;
    g_post_contact_child_events=0;
+   g_optional_child_observations=0;
    ResetMapControl();
 
    for(int i=0;i<V1_TF_COUNT;i++)
@@ -3277,7 +3285,8 @@ void RefreshMapControlAfterStructure(const datetime available_at)
 //+------------------------------------------------------------------+
 bool IsRefinementReadyStatus(const int status)
   {
-   return (status==V1_REFINE_READY ||
+   return (status==V1_REFINE_ROOT_ONLY_READY ||
+           status==V1_REFINE_READY ||
            status==V1_REFINE_STOPPED_AMBIGUOUS);
   }
 
@@ -3377,22 +3386,16 @@ bool FindReadyLineageSource(const int refinement_index,
    if(refinement_index<0 ||
       refinement_index>=ArraySize(g_refinements) ||
       !g_refinements[refinement_index].valid ||
-      !IsRefinementReadyStatus(g_refinements[refinement_index].status) ||
-      g_refinements[refinement_index].final_child_id=="")
+      !IsRefinementReadyStatus(g_refinements[refinement_index].status))
       return false;
 
    root_index=FindActiveSourceById(g_refinements[refinement_index].root_zone_id);
-   source_index=FindActiveSourceById(g_refinements[refinement_index].final_child_id);
-
-   if(root_index<0 || source_index<0)
+   if(root_index<0 || g_sources[root_index].kind!=V1_SOURCE_ROOT)
       return false;
 
-   if(g_sources[root_index].kind!=V1_SOURCE_ROOT ||
-      g_sources[source_index].kind!=V1_SOURCE_CHILD ||
-      g_sources[root_index].direction!=g_sources[source_index].direction ||
-      g_sources[source_index].root_zone_id!=g_sources[root_index].id)
-      return false;
-
+   // D-124: the HTF Root remains the strategy source owner for the baseline.
+   // Optional post-contact child observations never replace it.
+   source_index=root_index;
    return true;
   }
 
@@ -5462,8 +5465,7 @@ void RollbackPostContactRefinementAfterChildInvalidation(const string root_id,
    g_root_reactions[index].child_count=CountChildrenInLineagePath(g_root_reactions[index].path);
    g_root_reactions[index].final_child_id=
       (g_sources[parent_index].kind==V1_SOURCE_CHILD ? parent_zone_id : "");
-   g_root_reactions[index].status=
-      (g_root_reactions[index].child_count>0 ? V1_ROOT_WATCH_READY : V1_ROOT_WATCH_DISCOVERING_CHILD);
+   g_root_reactions[index].status=V1_ROOT_WATCH_READY;
    g_root_reactions[index].lineage_updated_at=available_at;
 
    int refinement_index=FindRefinementByRootId(root_id);
@@ -5473,11 +5475,10 @@ void RollbackPostContactRefinementAfterChildInvalidation(const string root_id,
       g_refinements[refinement_index].path=g_root_reactions[index].path;
       g_refinements[refinement_index].child_count=g_root_reactions[index].child_count;
       g_refinements[refinement_index].status=
-         (g_root_reactions[index].child_count>0 ? V1_REFINE_READY : V1_REFINE_WAITING);
-      g_refinements[refinement_index].frozen_at=
-         (g_root_reactions[index].child_count>0 ? available_at : 0);
+         V1_REFINE_ROOT_ONLY_READY;
+      g_refinements[refinement_index].frozen_at=available_at;
       g_refinements[refinement_index].snapshot_at=available_at;
-      g_refinements[refinement_index].stop_reason="CHILD_INVALIDATED_ROLLBACK";
+      g_refinements[refinement_index].stop_reason="ROOT_CONTEXT_READY_OPTIONAL_CHILD_AUDIT_ONLY";
      }
 
    LogLine("REFINEMENT_UPDATED",
@@ -5639,13 +5640,13 @@ void StoreWaitingPostContactLineage(const V1RootReactionTracker &tracker)
    V1RefinementLineage lineage;
    lineage.valid=true;
    lineage.root_zone_id=tracker.root_zone_id;
-   lineage.final_child_id=tracker.final_child_id;
-   lineage.path=tracker.path;
-   lineage.child_count=tracker.child_count;
-   lineage.status=(tracker.child_count>0 ? V1_REFINE_READY : V1_REFINE_WAITING);
-   lineage.frozen_at=tracker.lineage_updated_at;
-   lineage.snapshot_at=tracker.lineage_updated_at;
-   lineage.stop_reason=(tracker.child_count>0 ? "POST_CONTACT_CHILD_READY" : "WAITING_POST_CONTACT_CHILD");
+   lineage.final_child_id="";
+   lineage.path=tracker.root_zone_id;
+   lineage.child_count=0;
+   lineage.status=V1_REFINE_ROOT_ONLY_READY;
+   lineage.frozen_at=tracker.root_contact_at;
+   lineage.snapshot_at=tracker.root_contact_at;
+   lineage.stop_reason="ROOT_CONTEXT_READY_CHILD_AUDIT_ONLY";
    lineage.preplan_contact_at=0;
    lineage.root_contact_at=tracker.root_contact_at;
    lineage.root_contact_bar_open=tracker.root_contact_bar_open;
@@ -5810,7 +5811,7 @@ void ProcessPostContactRootContacts(const MqlRates &bar,
          (g_execution_epoch_start>0 && available_at<=g_execution_epoch_start))
          continue;
 
-      g_root_reactions[i].status=V1_ROOT_WATCH_DISCOVERING_CHILD;
+      g_root_reactions[i].status=V1_ROOT_WATCH_READY;
       g_root_reactions[i].root_contact_at=available_at;
       g_root_reactions[i].root_contact_bar_open=bar.time;
       g_root_reactions[i].current_parent_zone_id=root.id;
@@ -5833,11 +5834,19 @@ void ProcessPostContactRootContacts(const MqlRates &bar,
       StoreWaitingPostContactLineage(g_root_reactions[i]);
 
       g_root_contacts_observed++;
+      g_root_contexts_ready++;
+      LogLine("ROOT_CONTEXT_READY",
+              "M1",
+              available_at,
+              root.id,
+              StringFormat("strategy_source_id=%s strategy_source_kind=ROOT optional_child_observation=ENABLED child_strategy_authority=false entry_geometry=M1_FVG sl_geometry=M1_FVG_20PCT root_contact_at=%s strategy_authority=false map_objective_qualification=DEFERRED_PHASE4B",
+                           root.id,
+                           TimeToString(available_at,TIME_DATE|TIME_SECONDS)));
       LogLine("ROOT_CONTACT_OBSERVED",
               "M1",
               available_at,
               root.id,
-              StringFormat("direction=%s root_tf=%s root_available_at=%s contact_bar_open=%s bottom=%.10f top=%.10f child_discovery_enabled=true historical_child_authorization=false strategy_authority=false map_objective_qualification=DEFERRED_PHASE4B",
+              StringFormat("direction=%s root_tf=%s root_available_at=%s contact_bar_open=%s bottom=%.10f top=%.10f optional_child_observation_enabled=true child_strategy_authority=false root_remains_strategy_source=true historical_child_authorization=false strategy_authority=false map_objective_qualification=DEFERRED_PHASE4B",
                            DirectionName(root.direction),
                            TfName(root.tf),
                            TimeToString(root.available_at,TIME_DATE|TIME_SECONDS),
@@ -6077,18 +6086,12 @@ void PublishTrackerLineage(const int tracker_index,
    lineage.path=tracker.path;
    lineage.child_count=tracker.child_count;
 
-   if(tracker.status==V1_ROOT_WATCH_AMBIGUOUS_FIRST)
-      lineage.status=V1_REFINE_AMBIGUOUS_FIRST;
-   else if(tracker.status==V1_ROOT_WATCH_STOPPED_AMBIGUOUS)
-      lineage.status=V1_REFINE_STOPPED_AMBIGUOUS;
-   else if(tracker.status==V1_ROOT_WATCH_INVALIDATED)
+   if(tracker.status==V1_ROOT_WATCH_INVALIDATED)
       lineage.status=V1_REFINE_INVALIDATED;
-   else if(tracker.child_count>0)
-      lineage.status=V1_REFINE_READY;
    else
-      lineage.status=V1_REFINE_WAITING;
+      lineage.status=V1_REFINE_ROOT_ONLY_READY;
 
-   lineage.frozen_at=(tracker.child_count>0 ? tracker.lineage_updated_at : 0);
+   lineage.frozen_at=tracker.root_contact_at;
    lineage.snapshot_at=available_at;
    lineage.stop_reason=stop_reason;
    lineage.preplan_contact_at=0;
@@ -6096,6 +6099,54 @@ void PublishTrackerLineage(const int tracker_index,
    lineage.root_contact_bar_open=tracker.root_contact_bar_open;
    StoreRefinementLineage(lineage);
    LogPostContactRefinement(event_name,lineage,tracker.status);
+  }
+
+
+bool OptionalChildObservationSeen(const string observation_id)
+  {
+   for(int i=0;i<ArraySize(g_optional_child_observation_ids);i++)
+      if(g_optional_child_observation_ids[i]==observation_id)
+         return true;
+   return false;
+  }
+
+bool RecordOptionalChildObservation(const V1SourceZone &child,
+                                    const datetime observed_at)
+  {
+   if(OptionalChildObservationSeen(child.id))
+      return false;
+
+   int n=ArraySize(g_optional_child_observation_ids);
+   if(ArrayResize(g_optional_child_observation_ids,n+1,64)<0)
+     {
+      LogLine("SOURCE_DETECTOR_ERROR",
+              TfName(child.tf),
+              observed_at,
+              child.root_zone_id,
+              "reason=OPTIONAL_CHILD_AUDIT_ID_ARRAY_RESIZE_FAILED");
+      return false;
+     }
+
+   g_optional_child_observation_ids[n]=child.id;
+   g_optional_child_observations++;
+   g_post_contact_child_events++;
+
+   LogLine("OPTIONAL_CHILD_OBSERVED",
+           TfName(child.tf),
+           observed_at,
+           child.id,
+           StringFormat("audit_only=true strategy_authority=false strategy_source_id=%s strategy_source_kind=ROOT child_direction=%s source_reason=%s bottom=%.10f top=%.10f origin_time=%s child_available_at=%s root_contact_at=%s containment_type=%s linked_structure_event_id=%s entry_authority=false sl_authority=false tp_authority=false cancellation_authority=false",
+                        child.root_zone_id,
+                        DirectionName(child.direction),
+                        child.source_reason,
+                        child.bottom,
+                        child.top,
+                        TimeToString(child.origin_time,TIME_DATE|TIME_SECONDS),
+                        TimeToString(child.available_at,TIME_DATE|TIME_SECONDS),
+                        TimeToString(child.root_contact_at,TIME_DATE|TIME_SECONDS),
+                        child.containment_type,
+                        child.linked_structure_event_id));
+   return true;
   }
 
 void ProcessReactionStateForTracker(const int tracker_index,
@@ -6107,8 +6158,9 @@ void ProcessReactionStateForTracker(const int tracker_index,
    if(tracker_index<0 || tracker_index>=ArraySize(g_root_reactions))
       return;
 
-   if(g_root_reactions[tracker_index].status!=V1_ROOT_WATCH_DISCOVERING_CHILD &&
-      g_root_reactions[tracker_index].status!=V1_ROOT_WATCH_READY)
+   // D-124: Root context is already READY at physical Root contact.
+   // Child OB detection runs only as an optional post-contact audit side-channel.
+   if(g_root_reactions[tracker_index].status!=V1_ROOT_WATCH_READY)
       return;
 
    if(available_at<=g_root_reactions[tracker_index].root_contact_at)
@@ -6128,23 +6180,19 @@ void ProcessReactionStateForTracker(const int tracker_index,
       return;
 
    int root_index=FindActiveSourceById(g_root_reactions[tracker_index].root_zone_id);
-   int parent_index=FindActiveSourceById(g_root_reactions[tracker_index].current_parent_zone_id);
-   if(root_index<0 || parent_index<0)
+   if(root_index<0 || g_sources[root_index].kind!=V1_SOURCE_ROOT)
      {
       InvalidatePostContactRootTracker(g_root_reactions[tracker_index].root_zone_id,
                                        available_at,
-                                       "REQUIRED_PARENT_NOT_ACTIVE");
+                                       "ROOT_NOT_ACTIVE");
       return;
      }
 
    V1SourceZone root=g_sources[root_index];
-   V1SourceZone parent=g_sources[parent_index];
-   if(TimeframeHierarchyRank(child_tf)<=TimeframeHierarchyRank(parent.tf))
+   if(TimeframeHierarchyRank(child_tf)<=TimeframeHierarchyRank(root.tf))
       return;
 
-   datetime causal_after=(parent.kind==V1_SOURCE_ROOT ?
-                          g_root_reactions[tracker_index].root_contact_at :
-                          parent.available_at);
+   datetime causal_after=g_root_reactions[tracker_index].root_contact_at;
 
    V1ChildCandidate candidates[];
    ArrayResize(candidates,0);
@@ -6156,7 +6204,7 @@ void ProcessReactionStateForTracker(const int tracker_index,
                                           event.meaningful_wave,
                                           opposite_origin))
       TryAddPostContactChildCandidate(g_root_reactions[tracker_index],
-                                      parent,
+                                      root,
                                       child_tf,
                                       causal_after,
                                       event,
@@ -6174,7 +6222,7 @@ void ProcessReactionStateForTracker(const int tracker_index,
                                            fvg_origins);
       for(int k=0;k<fvg_count;k++)
          TryAddPostContactChildCandidate(g_root_reactions[tracker_index],
-                                         parent,
+                                         root,
                                          child_tf,
                                          causal_after,
                                          event,
@@ -6183,81 +6231,41 @@ void ProcessReactionStateForTracker(const int tracker_index,
                                          candidates);
      }
 
-   int contained_count=0;
-   for(int i=0;i<ArraySize(candidates);i++)
-      if(candidates[i].containment_type=="CONTAINED")
-         contained_count++;
-
-   V1ChildCandidate preferred[];
-   ArrayResize(preferred,0);
+   // No child selection is required for the baseline. Every distinct causal
+   // observation may be logged; none can replace Root authority or gate trade flow.
+   int newly_recorded=0;
    for(int i=0;i<ArraySize(candidates);i++)
      {
-      if(contained_count>0 && candidates[i].containment_type!="CONTAINED")
+      V1SourceZone child;
+      CandidateToSourcePreview(root,
+                               root,
+                               candidates[i],
+                               g_root_reactions[tracker_index].root_contact_at,
+                               g_root_reactions[tracker_index].root_contact_bar_open,
+                               child);
+
+      if(child.available_at<=g_root_reactions[tracker_index].root_contact_at ||
+         child.origin_time<causal_after)
          continue;
-      int n=ArraySize(preferred);
-      if(ArrayResize(preferred,n+1,16)<0)
-         continue;
-      preferred[n]=candidates[i];
+
+      if(RecordOptionalChildObservation(child,available_at))
+        {
+         newly_recorded++;
+         g_root_reactions[tracker_index].child_count++;
+         g_root_reactions[tracker_index].final_child_id=child.id; // audit-only last observation
+         g_root_reactions[tracker_index].path+=">"+child.id;      // audit-only trace
+         g_root_reactions[tracker_index].lineage_updated_at=available_at;
+        }
      }
 
-   if(ArraySize(preferred)==0)
-      return;
-
-   if(ArraySize(preferred)>1)
-     {
-      if(g_root_reactions[tracker_index].child_count==0)
-         g_root_reactions[tracker_index].status=V1_ROOT_WATCH_AMBIGUOUS_FIRST;
-      else
-         g_root_reactions[tracker_index].status=V1_ROOT_WATCH_STOPPED_AMBIGUOUS;
-
-      g_root_reactions[tracker_index].lineage_updated_at=available_at;
-      g_refinements_ambiguous++;
-      PublishTrackerLineage(tracker_index,
-                            available_at,
-                            StringFormat("AMBIGUOUS_%s_POST_CONTACT_CHILD_COUNT_%d",
-                                         TfName(child_tf),
-                                         ArraySize(preferred)),
-                            "REFINEMENT_FROZEN");
-      return;
-     }
-
-   V1SourceZone child;
-   CandidateToSourcePreview(parent,
-                            root,
-                            preferred[0],
-                            g_root_reactions[tracker_index].root_contact_at,
-                            g_root_reactions[tracker_index].root_contact_bar_open,
-                            child);
-
-   if(child.available_at<=g_root_reactions[tracker_index].root_contact_at ||
-      child.origin_time<causal_after)
-      return;
-
-   if(!AddActiveChildSource(child,available_at))
-     {
-      g_root_reactions[tracker_index].status=V1_ROOT_WATCH_ERROR;
-      PublishTrackerLineage(tracker_index,
-                            available_at,
-                            "CHILD_PUBLICATION_FAILED",
-                            "REFINEMENT_FROZEN");
-      return;
-     }
-
-   bool first_child=(g_root_reactions[tracker_index].child_count==0);
-   g_root_reactions[tracker_index].child_count++;
-   g_root_reactions[tracker_index].final_child_id=child.id;
-   g_root_reactions[tracker_index].current_parent_zone_id=child.id;
-   g_root_reactions[tracker_index].path+=">"+child.id;
-   g_root_reactions[tracker_index].lineage_updated_at=available_at;
-   g_root_reactions[tracker_index].status=V1_ROOT_WATCH_READY;
-
-   if(first_child)
-      g_refinements_ready++;
-
-   PublishTrackerLineage(tracker_index,
-                         available_at,
-                         first_child ? "FIRST_POST_CONTACT_CHILD_READY" : "DEEPER_POST_CONTACT_CHILD_READY",
-                         first_child ? "REFINEMENT_FROZEN" : "REFINEMENT_UPDATED");
+   if(newly_recorded>0)
+      LogLine("OPTIONAL_CHILD_AUDIT_STATE",
+              TfName(child_tf),
+              available_at,
+              g_root_reactions[tracker_index].root_zone_id,
+              StringFormat("new_observations=%d total_observations=%d root_remains_strategy_source=true no_child_gate=true no_child_selection=true entry_geometry=M1_FVG sl_geometry=M1_FVG_20PCT",
+                           newly_recorded,
+                           g_root_reactions[tracker_index].child_count));
   }
 
 void ProcessPostContactChildBar(const int tf_index,
@@ -6272,24 +6280,23 @@ void ProcessPostContactChildBar(const int tf_index,
    for(int i=0;i<ArraySize(g_root_reactions);i++)
      {
       if(!g_root_reactions[i].valid ||
-         (g_root_reactions[i].status!=V1_ROOT_WATCH_DISCOVERING_CHILD &&
-          g_root_reactions[i].status!=V1_ROOT_WATCH_READY))
+         g_root_reactions[i].status!=V1_ROOT_WATCH_READY)
          continue;
 
       if(g_root_reactions[i].root_contact_at<=0 ||
          available_at<=g_root_reactions[i].root_contact_at)
          continue;
 
-      int parent_index=FindActiveSourceById(g_root_reactions[i].current_parent_zone_id);
-      if(parent_index<0)
+      int root_index=FindActiveSourceById(g_root_reactions[i].root_zone_id);
+      if(root_index<0 || g_sources[root_index].kind!=V1_SOURCE_ROOT)
         {
          InvalidatePostContactRootTracker(g_root_reactions[i].root_zone_id,
                                           available_at,
-                                          "CURRENT_PARENT_NOT_ACTIVE");
+                                          "ROOT_NOT_ACTIVE");
          continue;
         }
 
-      if(TimeframeHierarchyRank(child_tf)<=TimeframeHierarchyRank(g_sources[parent_index].tf))
+      if(TimeframeHierarchyRank(child_tf)<=TimeframeHierarchyRank(g_sources[root_index].tf))
          continue;
 
       if(tf_index==2)
@@ -6339,7 +6346,8 @@ void LogRefinementSnapshot(const int tf_index,
          g_sources[root_index].tf!=root_tf)
          continue;
 
-      if(g_refinements[i].status==V1_REFINE_READY ||
+      if(g_refinements[i].status==V1_REFINE_ROOT_ONLY_READY ||
+         g_refinements[i].status==V1_REFINE_READY ||
          g_refinements[i].status==V1_REFINE_STOPPED_AMBIGUOUS)
          ready++;
       else if(g_refinements[i].status==V1_REFINE_NO_CHILD)
@@ -6363,7 +6371,7 @@ void LogRefinementSnapshot(const int tf_index,
      }
 
    string detail=StringFormat(
-      "ready=%d no_child_terminal=%d ambiguous_first=%d invalidated=%d waiting_root_contact=%d discovering_post_contact_child=%d prior_touch_ineligible=%d active_m30_children=%d active_m15_children=%d active_m5_children=%d historical_child_authorization=false sweep_authorization=DISABLED_PENDING_TIMING_REAUDIT",
+      "ready=%d no_child_terminal=%d ambiguous_first=%d invalidated=%d waiting_root_contact=%d discovering_post_contact_child=%d prior_touch_ineligible=%d active_m30_children=%d active_m15_children=%d active_m5_children=%d historical_child_authorization=false child_strategy_authority=false optional_child_audit_only=true sweep_authorization=DISABLED_PENDING_TIMING_REAUDIT",
       ready,
       no_child,
       ambiguous,
@@ -6570,13 +6578,14 @@ bool BootstrapStructureCore()
       CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
 
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_D122A_POST_CONTACT_CHILD ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d root_watches_created=%I64d prior_touch_ineligible=%I64d scenario_authorization=false sweep_authorization=false",
+           StringFormat("READY_D124_ROOT_PRIMARY_OPTIONAL_CHILD_AUDIT ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d root_watches_created=%I64d prior_touch_ineligible=%I64d root_contexts_ready=%I64d scenario_authorization=false sweep_authorization=false",
                         TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
                         h4_long_horizon_count,
                         ArraySize(g_liquidity),
                         ArraySize(g_sources),
                         g_root_watches_created,
-                        g_root_watches_prior_touch_rejected));
+                        g_root_watches_prior_touch_rejected,
+                        g_root_contexts_ready));
 
    for(int i=0;i<4;i++)
      {
@@ -6789,7 +6798,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.80 property_version=1.00 magic=%I64d phase=D122A_POST_CONTACT_REFINEMENT_CORE fvg_origin_ob_experiment=%s",
+           StringFormat("build=0.81 property_version=1.00 magic=%I64d phase=D124_ROOT_PRIMARY_OPTIONAL_CHILD_AUDIT_CORE fvg_origin_ob_experiment=%s",
                         InpMagicNumber,
                         InpEnableFvgOriginObExperiment ? "true" : "false"));
 
@@ -6803,7 +6812,7 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d children_created=%I64d post_contact_child_events=%I64d children_invalidated=%I64d refinements_ready=%I64d refinements_no_child=%I64d refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d source_contacts_old_phase4c=%I64d authorized_sweep_events_old_phase4c=%I64d structural_reaction_created_old_phase4c=%I64d",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d root_contexts_ready=%I64d children_created_strategy_sources=%I64d optional_child_observations=%I64d post_contact_child_events=%I64d children_invalidated_strategy_sources=%I64d legacy_refinements_ready=%I64d legacy_refinements_no_child=%I64d legacy_refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d source_contacts_old_phase4c=%I64d authorized_sweep_events_old_phase4c=%I64d structural_reaction_created_old_phase4c=%I64d",
                         reason,
                         InitStateName(g_init_state),
                         ArraySize(g_liquidity),
@@ -6817,7 +6826,9 @@ void OnDeinit(const int reason)
                         g_root_watches_created,
                         g_root_watches_prior_touch_rejected,
                         g_root_contacts_observed,
+                        g_root_contexts_ready,
                         g_children_created,
+                        g_optional_child_observations,
                         g_post_contact_child_events,
                         g_children_invalidated,
                         g_refinements_ready,

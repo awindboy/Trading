@@ -2,7 +2,7 @@
 
 구현 정확성 검증 결과를 아래에 기록한다. 아직 수익성 승인 결과는 없다.
 
-## 2026-08-16 — Authority correction note: HTF Root contact must precede LTF child formation
+## 2026-08-16 — Authority correction note: Root-primary / optional-child semantics
 
 Status:
 
@@ -12,18 +12,27 @@ HISTORICAL TEST COUNTS PRESERVED
 AFFECTED PHASES REQUIRE RE-TEST
 ```
 
-Corrected causal order:
+Current required causal order:
 
 ```text
 pre-existing eligible / unconsumed HTF Root
 → actual HTF Root contact
-→ post-contact lower-TF reaction
-→ newly formed / confirmed causal child OB
-→ post-contact refinement lineage
-→ execution-trigger chain
+→ valid Root-reaction liquidity sweep
+→ meaningful M1 CHoCH
+→ causal M1 FVG
+→ widest valid FVG first retest
+→ FVG Entry / FVG 20% SL / frozen objective TP
 ```
 
-The Phase 3B / Phase 4B / Phase 4C implementation used in the historical tests below instead discovered lower-TF children inside the historical displacement that originally created the Root, froze that lineage before contact, and treated prior contact as `PREPLAN_SOURCE_CONTACT` rejection evidence.
+Optional side observation:
+
+```text
+Root contact
+→ post-contact causal child, if any
+→ audit/context only
+```
+
+D-122 still forbids using a historical pre-contact LTF OB as a post-contact child. D-124 removes child presence, uniqueness, validity, and geometry from trade authorization.
 
 Therefore:
 
@@ -33,7 +42,7 @@ Phase 1.1 structure results
 
 Phase 2 physical liquidity/sweep detector results
 → remain valid within detector scope
-→ strategy-authorization timing must still be re-audited
+→ strategy-authorization ownership/timing still requires Root-based re-audit
 
 Phase 3A HTF Root detection/lifecycle results
 → remain valid within Root-detection scope
@@ -41,21 +50,15 @@ Phase 3A HTF Root detection/lifecycle results
 Phase 4A H1/M30 map/reversal results
 → remain valid within map scope
 
-Phase 3B child/refinement PASS
+Historical Phase 3B child/refinement PASS
 → SUPERSEDED as current strategy-parity evidence
 
-Phase 4B SCENARIO_PLANNED / PREPLAN_SOURCE_CONTACT results
-→ historical behavior of the old sequence only
+Historical Phase 4B / Phase 4C final-refined-source results
+→ old behavior only
 → not current opportunity-frequency evidence
-
-Phase 4C final-source-contact / sweep ownership
-→ requires reimplementation/retest under the corrected sequence
 ```
 
-`PREPLAN_SOURCE_CONTACT` is no longer a valid strategy violation merely because the parent HTF Root was contacted before child discovery. Under current authority, that Root contact is the event that starts child discovery.
-
 All historical records below are intentionally preserved unchanged as test history.
-
 
 ## 2026-08-16 — Phase 1.1 Structure / Bootstrap Smoke Test
 
@@ -915,6 +918,146 @@ Reason:
 No entry/order layer exists.
 ```
 
+## 2026-08-16 — D122A Root-Contact / Optional-Child Temporal Validation
+
+Status:
+
+```text
+PASS — D122A temporal-causality core within observed child path
+REINTERPRETED BY D-124 — child is optional audit/context, not a trade gate
+NOT A PROFITABILITY TEST
+```
+
+EA:
+
+```text
+repository commit = 5693058733b63089ad7e612281ce58a7623c73e3
+commit message = EA: D112A version
+internal build = 0.80
+property version = 1.00
+phase = D122A_POST_CONTACT_REFINEMENT_CORE
+InpEnableFvgOriginObExperiment = false
+```
+
+Uploaded event CSV:
+
+```text
+mentor_v1_structure_events(20260816-110812).csv
+rows = 7067
+observed interval = 2025-01-06 00:00:00 ~ 2025-01-31 23:57:57
+execution_epoch_start = 2025-01-06 01:00:05
+```
+
+Core counts:
+
+```text
+ROOT_WATCH_CREATED = 21
+ROOT_CONTACT_OBSERVED = 11
+CHILD_CREATED = 1
+REFINEMENT READY = 1
+CHILD_INVALIDATED = 1
+
+SCENARIO_PLANNED = 0
+old Phase4C SOURCE_CONTACT = 0
+AUTHORIZED_SWEEP = 0
+STRUCTURAL_REACTION strategy authorization = 0
+orders/deals = 0
+```
+
+Observed child causal sequence:
+
+```text
+Root available_at    = 2025-01-14 22:00
+Root contact         = 2025-01-15 03:45
+child origin         = 2025-01-15 03:55
+meaningful M5 low    = 2025-01-15 04:00
+wave available       = 2025-01-15 04:15
+M5 INITIAL_BOS bar   = 2025-01-15 04:45
+child available      = 2025-01-15 04:50
+```
+
+Causal checks:
+
+```text
+Root contact without prior Root watch = 0
+Root contact <= Root.available_at = 0
+Root contact before execution epoch = 0
+child without Root contact = 0
+child origin before Root contact = 0
+child available_at <= Root contact = 0
+historical pre-contact child authorization = 0
+runtime detector/fatal error event in CSV = 0
+```
+
+Upstream exact-regression comparison against the preceding
+`fvg_origin_ob_experiment=false` control:
+
+```text
+WAVE_CONFIRMED               = exact row equality
+STRUCTURE_BOS                = exact row equality
+STRUCTURE_INITIAL_BOS        = exact row equality
+STRUCTURE_PROTECTED_BREAK    = exact row equality
+LIQUIDITY_CREATED            = exact row equality
+LIQUIDITY_SWEEP              = exact row equality
+LIQUIDITY_BODY_DELIVERY      = exact row equality
+MAP / REVERSAL events        = exact row equality
+ROOT_CREATED/REJECTED/STATE  = exact row equality
+```
+
+D-124 interpretation:
+
+```text
+11 ROOT_CONTACT_OBSERVED
+→ 11 Root-level reaction contexts before later strategy filters
+
+1 CHILD_CREATED
+→ one optional post-contact causal observation
+→ NOT evidence that only one Root setup survived
+
+10 contacts without a child
+→ NOT rejected for missing child
+```
+
+The current first-position Entry and SL remain the frozen M1-FVG contract;
+child geometry does not alter them.
+
+Profitability:
+
+```text
+N/A
+```
+
+Reason:
+
+```text
+Scenario, strategic sweep, CHoCH, and order authorization were intentionally disabled.
+```
+
+## 2026-08-16 — D-124 Root-Primary Consolidation Prepared
+
+Status:
+
+```text
+CODE/DOC UPDATE PREPARED
+LOCAL COMPILE / STRATEGY TESTER RUN PENDING
+```
+
+Target build:
+
+```text
+internal build = 0.81
+phase = D124_ROOT_PRIMARY_OPTIONAL_CHILD_AUDIT_CORE
+```
+
+Acceptance focus:
+
+```text
+qualifying Root contact → ROOT_CONTEXT_READY regardless of child
+optional child observation may be 0..N
+strategy-source child creation = 0
+child absence / multiplicity / invalidation cannot veto Root context
+scenario/sweep/CHoCH/order remain disabled during isolated smoke
+```
 
 ## Required reporting format
 

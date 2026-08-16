@@ -1,8 +1,8 @@
 # EA Development Handoff
 
 Last updated: 2026-08-16
-Status: D122A POST-CONTACT REFINEMENT IMPLEMENTED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
-Current phase: D122A Root-contact → post-contact LTF child core
+Status: D122A CAUSAL TEST PASSED / D-124 ROOT-PRIMARY CONSOLIDATION PREPARED
+Current phase: D-124 Root-primary source semantics → corrected Phase 4B/4C reattachment
 
 ## Goal
 
@@ -32,9 +32,7 @@ Objective
 -> H1/M30 market structure
 -> pre-existing eligible / unconsumed HTF root OB
 -> actual HTF root OB contact
--> post-contact lower-TF reaction
--> newly formed causal LTF child OB / refinement
--> valid liquidity sweep under the re-audited post-contact timing contract
+-> valid Root-reaction liquidity sweep under the re-audited timing contract
 -> meaningful M1 body-close CHoCH
 -> causal fresh FVG in the same sweep-to-CHoCH displacement
 -> widest valid FVG
@@ -55,27 +53,29 @@ Objective
 - `mt5/legacy/MentorScenarioTraderEA.mq5`
 - `mt5/legacy/MentorSep2025ParityEA.mq5`
 
-## Critical Authority Correction — Post-Contact LTF Child
+## Critical Authority Correction — Root Is Primary; Child Is Optional Audit
 
-The intended causal order is now explicitly frozen as:
+Current required causal order is:
 
 ```text
 pre-existing / unconsumed HTF Root
 → actual HTF Root contact
-→ post-contact lower-TF reaction
-→ newly formed / confirmed causal child OB
-→ post-contact refinement lineage
-→ execution-trigger chain
+→ valid Root-reaction sweep
+→ meaningful M1 CHoCH
+→ causal M1 FVG
+→ FVG first-retest execution
 ```
 
-The previous implementation searched the Root-forming historical displacement for lower-TF children before price returned to the Root. That temporal ownership is incorrect.
+Post-contact LTF child OB is not in the required chain. If one is observed, D-122 still requires it to form/become available after Root contact, but D-124 gives it audit/context authority only.
 
 Consequences:
 
-- `PREPLAN_SOURCE_CONTACT` is not a valid strategy rejection merely because HTF Root contact preceded child discovery; Root contact is supposed to start child discovery.
-- Phase 3B child/refinement PASS, Phase 4B scenario-planning PASS, and Phase 4C final-source-contact ownership are superseded as strategy-parity evidence and require reimplementation/retest.
-- Phase 1.1 structure, Phase 2 liquidity detector, Phase 3A HTF Root detection/lifecycle, and Phase 4A H1/M30 map/reversal logic are not invalidated by this sequencing correction in their independent scopes.
-- Do not proceed to Phase 5A until corrected post-contact child ownership and downstream sweep timing are frozen and tested.
+- No child, multiple children, child ambiguity, or optional-child invalidation does not reject an otherwise valid Root setup.
+- The HTF Root remains the strategy source; child never replaces it.
+- Entry and SL remain the selected M1 FVG geometry.
+- `PREPLAN_SOURCE_CONTACT` and old final-refined-source ownership are obsolete strategy concepts.
+- Historical Phase 3B/4B/4C results that depended on mandatory child authority remain audit history only.
+- Phase 1.1 structure, Phase 2 physical liquidity detector, Phase 3A Root detector/lifecycle, and Phase 4A map/reversal logic remain valid within their independent scopes.
 
 ## Current Status
 
@@ -97,11 +97,10 @@ Phase 4A H1/M30 map / reversal permission
 
 Phase 3B causal LTF refinement
 → OLD PRE-CONTACT IMPLEMENTATION SUPERSEDED BY D-122
-→ D122A corrected implementation prepared in internal build 0.80
-→ Root watch → actual Root contact → post-contact child discovery implemented
-→ historical Root-forming-displacement child authorization removed from runtime path
-→ local MetaEditor compile PENDING
-→ real-tick causal validation PENDING
+→ D122A build 0.80 compiled and ran in Strategy Tester
+→ baseline causal validation PASS: Root watch 21 / Root contact 11 / post-contact child 1
+→ historical pre-contact child authorization = 0
+→ D-124 reinterprets child as optional audit/context only; 11 contacts are not reduced to one candidate merely because only one child formed
 → profitability NOT evaluated
 
 Phase 3A HTF Root OB core
@@ -199,27 +198,28 @@ Final TP
 Post-selection TP rollover
 → FORBIDDEN
 
-Root / child strategy state
+HTF Root strategy state
 → ACTIVE / INVALIDATED
 
-Source price invalidation
-→ adverse body close through distal
-→ evaluated on source's own timeframe
+Root price invalidation
+→ adverse body close through Root distal
+→ evaluated on Root own timeframe
 
-Wick through source distal
-→ may remain valid sweep context
-→ not automatic source invalidation
+Wick through Root distal
+→ may remain valid sweep/reaction context
+→ not automatic Root invalidation
 
-Minimum one causal lower-TF child
-→ REQUIRED
-→ must form / become available AFTER qualifying HTF Root contact
+Minimum lower-TF child requirement
+→ NONE
+→ optional child may be observed only AFTER qualifying HTF Root contact
 
 HTF Root contact
 → REQUIRED
-→ starts lower-TF child discovery
+→ activates Root reaction evaluation and optional child audit
 
-Post-contact child lineage
-→ REQUIRED before current setup can authorize M1 execution trigger search
+Post-contact child observation
+→ OPTIONAL audit/context only
+→ never required before M1 execution trigger search
 
 Physical sweep geometry
 → same-bar penetration + recovery
@@ -229,7 +229,7 @@ Physical sweep geometry
 Strategic sweep authorization timing
 → REQUIRES D-122 RE-AUDIT
 → DISABLED in D122A
-→ exact liquidity-freeze anchor and child-retest requirement remain unresolved
+→ exact Root-reaction liquidity-freeze anchor remains unresolved; child is not part of that decision
 
 Active pre-CHoCH sweep/reference
 → old Phase 4C ownership semantics SUPERSEDED pending timing re-audit
@@ -344,7 +344,7 @@ H1/M30 bootstrap
 M30/M15/M5 bootstrap
 → no historical child reconstruction for current setup
 → lower-TF structure may supply causally known state at Root contact
-→ current child authorization begins only from future post-contact bars
+→ optional child audit begins only from future post-contact bars; no strategy authority
 
 M1 bootstrap
 → no historical trigger-tree carry-in
@@ -367,8 +367,8 @@ Final authority consistency audit
 
 EA_SPEC status
 → AUTHORITY-CORRECTED
-→ D122A post-contact child implementation prepared
-→ sweep timing / Phase 4B-4C authorization reimplementation still required
+→ D122A temporal child-observation implementation validated; D-124 Root-primary semantics prepared
+→ Root-based sweep timing / Phase 4B-4C authorization reimplementation still required
 
 Source lifecycle
 → ACTIVE / INVALIDATED only
@@ -383,7 +383,7 @@ Bootstrap Root discovery
 → H1/M30/M15 chronological stream
 → retain current eligible HTF Roots
 → do NOT decompose the Root-forming historical displacement into current children
-→ runtime child discovery begins only after qualifying Root contact
+→ optional runtime child audit begins only after qualifying Root contact
 
 Active-memory policy
 → compressed working set
@@ -408,106 +408,86 @@ Broker transaction reconciliation
 → callback arrival order not trusted
 
 
-## Implementation Checkpoint — D122A Post-Contact Refinement Core
+## Implementation Checkpoint — D-124 Root-Primary / Optional-Child Consolidation
 
-D-122 authority correction has now been mapped into an isolated MQL implementation candidate.
+D122A build `0.80` proved the corrected temporal fact that a logged child can be formed only after actual HTF Root contact.
 
-Code target:
+The 2026-08-16 real-tick test produced:
+
+```text
+ROOT_WATCH_CREATED = 21
+ROOT_CONTACT_OBSERVED = 11
+post-contact child observed = 1
+historical pre-contact child authorization = 0
+```
+
+D-124 changes the interpretation of those events:
+
+```text
+11 Root contacts = 11 Root-level reaction contexts before later strategy filters
+1 child = one optional audit observation
+missing child = not a rejection
+```
+
+Current consolidation target:
 
 ```text
 mt5/experts/MentorDeterministicV1EA.mq5
-internal build = 0.80
-phase = D122A_POST_CONTACT_REFINEMENT_CORE
+internal build = 0.81
+phase = D124_ROOT_PRIMARY_OPTIONAL_CHILD_AUDIT_CORE
 property version = 1.00
 ```
 
-Current implementation boundary:
+Build `0.81` validation boundary:
 
 ```text
-orders = DISABLED
-scenario authorization = DISABLED
-sweep authorization = DISABLED pending timing re-audit
-M1 CHoCH = DISABLED
-Entry / SL / final TP execution = DISABLED
+HTF Root remains strategy source after contact
+ROOT_CONTEXT_READY at qualifying Root contact
+optional child observations may be logged
+optional children are not added as strategy-source objects
+child absence / multiplicity / invalidation cannot veto Root context
+Entry / SL / TP remain M1-FVG authority
+scenario / strategic sweep / CHoCH / order authorization remain disabled for this isolated smoke
 ```
 
-Implemented in D122A:
+Expected baseline smoke characteristics for the same January sample:
 
 ```text
-ACTIVE HTF Root first-reaction watch eligibility
-bootstrap prior-closed-M1-touch fail-closed guard for D122A fresh-reaction testing only
-(no general partial/full OB-consumption strategy rule frozen yet)
-startup-inside-Root exit/re-entry guard
-same-timestamp Root self-contact prevention
-ROOT_CONTACT_OBSERVED on later closed M1 data
-Root-contact-time M30/M15 causal state snapshot
-M5 structure-only context reconstruction through Root contact, with no historical child publication
-future-only post-contact child discovery
-LAST_OPPOSITE_OB baseline recognizer retained
-FVG_ORIGIN_OB experiment toggle retained
-same-candle dual-recognizer reason merge
-CONTAINED preference
-post-contact EVENT_ADJACENT without distance tolerance
-recursive deeper-child causal anchor = direct parent available_at
-child invalidation rollback to nearest active parent
-later new child allowed while Root remains ACTIVE
-```
-
-Explicitly removed from the active runtime path:
-
-```text
-Root creation → historical child discovery
-PREPLAN_SOURCE_CONTACT rejection authority
-old Phase 4B RefreshScenarioLayer authorization
-old Phase 4C final-source SOURCE_CONTACT / sweep authorization
-old Structural-Reaction strategy ownership
-```
-
-Old Phase 4B/4C functions may remain in the source temporarily as compile-compatible dead code, but D122A has no runtime call path into them.
-
-Required local validation sequence:
-
-```text
-1. MetaEditor compile
-2. Every tick based on real ticks
-3. first run with InpEnableFvgOriginObExperiment=false
-4. inspect event CSV causal invariants
-5. only after baseline causal PASS, repeat with experiment=true if comparison is desired
-```
-
-D122A PASS requires at minimum:
-
-```text
-ROOT_CONTACT_OBSERVED > 0 on a sufficiently long sample
-all Root contacts occur after Root.available_at and execution_epoch_start
-all CHILD_CREATED events have root_contact_at
-all first-child origin_time >= root_contact_at
-all first-child available_at > root_contact_at
-all deeper child origins/availability follow direct-parent causal anchor
-historical pre-contact child authorization = 0
+ROOT_CONTACT_OBSERVED ≈ prior D122A physical-contact count
+ROOT_CONTEXT_READY = ROOT_CONTACT_OBSERVED for qualifying runtime contacts
+OPTIONAL_CHILD_OBSERVED may be 0..N and does not change Root readiness
+children_created_strategy_sources = 0
 SCENARIO_PLANNED = 0
 old Phase4C SOURCE_CONTACT = 0
 AUTHORIZED_SWEEP = 0
-new STRUCTURAL_REACTION authorization = 0
 orders/deals = 0
 ```
 
-The exact sweep-liquidity freeze point and whether a separate child retest/contact is required remain unresolved by design. They must be decided only after D122A temporal parity passes.
-
-Next after D122A compile + causal PASS:
+After build `0.81` compiles and this isolated smoke passes, the next implementation is:
 
 ```text
-Phase 4B correction
-→ qualify watched Root with current map / direction / objective authority
-→ define strategic scenario creation around the already-correct Root-contact episode
+Corrected Phase 4B
+→ qualify pre-contact HTF Root against current map / direction / objective
+→ keep each distinct valid physical Root as an independent candidate; do not restore arbitrary multi-Root rejection
 
-then Phase 4C timing re-audit
-→ freeze the exact child/sweep ownership contract
-→ reattach authorized sweep
+Corrected Phase 4C
+→ attach strategic liquidity/sweep ownership directly to the Root reaction context
+→ child identity must not be a required key or gate
+
+then Phase 5A
+→ M1 meaningful CHoCH
 ```
 
-Phase 5A remains blocked until those corrected phases pass.
+Actual first-position execution remains:
 
+```text
+M1 CHoCH causal FVG
+→ widest valid FVG
+→ first retest
+→ FVG Entry
+→ FVG distal ± 20% width SL
+→ frozen objective TP
+```
 
 ## Do Not Do Yet
 
