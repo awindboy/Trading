@@ -2892,3 +2892,46 @@ Do not label a source-TF reaction as post-contact merely because its wave was
 confirmed after contact when its actual price extreme may have occurred before
 contact.
 
+---
+
+## D-121 — Premium / discount is context-only and never a standalone veto
+
+Status: ACTIVE / AUTHORITY-CORRECTION
+
+The active H1/M30 dealing range and EQ remain deterministic map information.
+
+For every candidate/scenario, the engine may record whether the source/context
+is currently in premium or discount.
+
+However:
+
+```text
+premium / discount
+!= scenario authority
+!= entry authority
+!= standalone rejection authority
+```
+
+In particular, an `EXTERNAL_CONTINUATION` source on the opposite half of EQ
+must not be rejected for that reason alone.
+
+The source must still belong to the active map and satisfy the complete frozen
+causal chain:
+
+```text
+objective
+→ map/direction authority
+→ Root
+→ causal refinement
+→ source contact
+→ mature sweep
+→ meaningful M1 CHoCH
+→ causal FVG
+→ execution geometry
+```
+
+Reason:
+
+The Mentor method uses PD Array as location/context reference. The previous V1
+wording and implementation promoted it into a hard continuation veto, which
+gave PD more authority than intended.

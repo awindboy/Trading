@@ -685,16 +685,25 @@ EQ:
 EQ = (range_high + range_low) / 2
 ```
 
-Continuation setup에서는:
+Premium / discount는 active dealing range 안에서의
+현재 source/context 위치를 설명하는 reference/context 정보다.
 
 ```text
-long  -> discount
-short -> premium
+long source in discount
+short source in premium
 ```
 
-조건을 적용한다.
+은 기록 가능한 directional context지만
+V1 scenario authorization의 mandatory gate가 아니다.
 
-Premium / discount 자체는 entry signal이 아니다.
+반대 half에 있다는 사실 하나만으로
+Root, source, scenario 또는 first-position order를 거부하지 않는다.
+
+Premium / discount는 단독 entry signal도 아니고
+standalone NO_TRADE veto도 아니다.
+
+Active dealing range 자체와 나머지 causal authority 조건은
+기존 규칙대로 모두 유효해야 한다.
 
 `TRANSITION` 상태에서는
 이전 trend의 dealing range를
@@ -5501,7 +5510,6 @@ execution-infrastructure failure로 별도 집계한다.
 Classification: D / Frozen for V1
 
 V1은 time-based strategy cancellation을 사용하지 않는다.
-
 time_based_strategy_cancellation = NONE
 
 Pending order는 단순히 시간이 오래 지났다는 이유로

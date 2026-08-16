@@ -2,7 +2,7 @@
 
 - 상태: `FROZEN / CURRENT V1 STRATEGY AUTHORITY`
 - 제정일: `2026-08-01`
-- 최근 개정: `2026-08-15` (`최종 authority consistency audit 및 pre-implementation freeze`)
+- 최근 개정: `2026-08-16` (`PD Array authority correction: context/reference only`)
 - 적용 범위: deterministic EA, MT5 Strategy Tester, current V1 수동/블라인드 리플레이 검증
 
 ## 1. 문서의 지위
@@ -802,15 +802,17 @@ old H1 objective family를
 M1은 HTF reversal permission 또는 map owner를
 생성하거나 덮어쓰지 않는다.
 
-### 3.3 dealing range 위치를 진입 권한에 포함한다
+### 3.3 dealing range와 premium/discount는 context로 기록한다
 
 - H1/M30의 현재 external protected extreme과 directional extreme으로 active dealing range를 정하고 EQ 50%를 표시한다.
-- `EXTERNAL_CONTINUATION` long은 discount에서만, short은 premium에서만 준비한다.
-- continuation 방향의 source/context가 반대 절반에 있으면 주문 권한을 부여하지 않는다.
+- Source/context의 현재 위치가 premium / discount 중 어디인지 기록한다.
+- Premium/discount는 시장 위치를 설명하는 reference/context 정보이며, 그 자체로 scenario 또는 주문 권한을 만들지 않는다.
+- `EXTERNAL_CONTINUATION` source/context가 통상적인 directional half와 반대쪽에 있더라도 그 사실 하나만으로 Root, source, scenario 또는 거래를 거부하지 않는다.
+- Premium/discount는 standalone veto가 아니다. 다른 필수 causal chain이 유효하면 PD 위치만으로 `NO_TRADE`를 만들지 않는다.
 - H1 mature trend와 반대인 M30/LTF structure는 reversal permission이 CLOSED인 동안 correction context로만 사용한다.
 - `INTERNAL_ROTATION`은 current V1 first-position order scope가 아니다.
 - HTF reversal-reference interaction으로 permission이 OPEN된 뒤에만 opposite LTF structure를 `EXTERNAL_REVERSAL` hypothesis로 평가한다.
-- Premium/discount 위치는 단독 entry signal이 아니다. Root, causal refinement, source contact, mature sweep, M1 CHoCH, causal FVG가 모두 필요하다.
+- 실제 주문에는 Root, causal refinement, source contact, mature sweep, M1 CHoCH, causal FVG 등 나머지 필수 chain이 모두 필요하다.
 
 ## 4. HTF root OB
 
@@ -1600,7 +1602,7 @@ implementation parity 완료 뒤 별도 execution/risk policy로 검토한다.
 다음 중 하나라도 해당하면 current V1 first-position order를 만들지 않는다.
 
 1. 현재 directional map 또는 trade-direction authority를 결정할 수 없다.
-2. Active dealing range와 continuation premium/discount condition을 결정할 수 없다.
+2. Active dealing range를 deterministic하게 결정할 수 없다.
 3. Scenario scope와 ordered objective family를 결정할 수 없다.
 4. Frozen objective family 전체에 planned R `>=1`인 valid candidate가 없다.
 5. 의미 있는 HTF Root OB가 없다.
@@ -1711,7 +1713,7 @@ current V1 strategy performance에서 제외한다.
 - widest-FVG rule 위반
 - wrong FVG boundary entry
 - 20% FVG SL rule 위반
-- wrong continuation premium/discount
+- premium/discount를 standalone authorization 또는 veto로 사용
 - wrong scenario direction authority
 - objective-family hindsight modification
 - farther-R target optimization
@@ -1745,7 +1747,7 @@ execution infrastructure failure로 별도 집계한다.
 - parent-child causal relation 없이 단순 overlap으로 refinement
 - source contact 이전 M1 trigger-first 판단
 - reaction 중 방금 생긴 high/low를 same setup의 mature liquidity로 사용
-- continuation premium/discount rule 위반
+- premium/discount를 standalone gate로 사용
 - M1 micro CHoCH를 HTF direction authority처럼 사용
 - widest-FVG rule 위반
 - selected FVG 20% SL geometry 변경
@@ -1837,7 +1839,7 @@ wrong external/internal classification
 missing Root
 missing causal child
 immature liquidity used as sweep
-wrong continuation premium/discount
+premium/discount used as standalone authorization/veto
 missing meaningful CHoCH
 missing causal FVG
 wrong widest FVG

@@ -151,6 +151,10 @@ Active V1 first-position scenario scopes
 → EXTERNAL_CONTINUATION
 → EXTERNAL_REVERSAL
 
+Premium / discount (PD Array)
+→ CONTEXT / REFERENCE ONLY
+→ no standalone scenario authorization or rejection
+
 INTERNAL_ROTATION
 → research-only
 → no current V1 first-position authority

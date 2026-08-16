@@ -21,6 +21,7 @@ input long   InpMagicNumber        = 26081601;
 input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
+input bool   InpEnableFvgOriginObExperiment = false;
 input string InpEventCsvFile       = "mentor_v1_phase4c_events.csv";
 
 // IMPORTANT:
@@ -163,6 +164,7 @@ struct V1SourceZone
    int               kind;
    ENUM_TIMEFRAMES   tf;
    int               direction;
+   string            source_reason;
 
    double            bottom;
    double            top;
@@ -228,6 +230,7 @@ struct V1ChildCandidate
    bool              valid;
    ENUM_TIMEFRAMES   tf;
    int               direction;
+   string            source_reason;
 
    double            bottom;
    double            top;
@@ -1710,6 +1713,81 @@ bool FindLastOppositeCandleInSwingOrigin(const ENUM_TIMEFRAMES tf,
    return false;
   }
 
+string MergeObSourceReason(const string current_reason,
+                           const string new_reason)
+  {
+   if(current_reason=="")
+      return new_reason;
+   if(new_reason=="" || current_reason==new_reason)
+      return current_reason;
+   if(StringFind(current_reason,new_reason)>=0)
+      return current_reason;
+   return current_reason+"|"+new_reason;
+  }
+
+int CollectFvgOriginObBars(const ENUM_TIMEFRAMES tf,
+                           const int direction,
+                           const V1WaveRef &meaningful_wave,
+                           const MqlRates &break_bar,
+                           MqlRates &origins[])
+  {
+   ArrayResize(origins,0);
+
+   if(!InpEnableFvgOriginObExperiment ||
+      !meaningful_wave.valid ||
+      !meaningful_wave.is_wave ||
+      direction==0)
+      return 0;
+
+   // Experimental second OB recognizer. The existing LAST_OPPOSITE_OB
+   // recognizer remains active independently. Here Candle1 of every
+   // direction-compatible three-candle FVG in the causal directional leg is
+   // admitted as an additional OB candidate.
+   datetime start_time=meaningful_wave.occurred_at;
+   if(start_time<=0)
+      start_time=meaningful_wave.origin_window_end;
+
+   datetime end_time=break_bar.time;
+   if(start_time<=0 || end_time<start_time)
+      return 0;
+
+   MqlRates bars[];
+   ArraySetAsSeries(bars,false);
+
+   ResetLastError();
+   int copied=CopyRates(_Symbol,tf,start_time,end_time,bars);
+   if(copied<3)
+      return 0;
+
+   int seconds=PeriodSeconds(tf);
+   if(seconds<=0)
+      return 0;
+
+   for(int i=0;i<=copied-3;i++)
+     {
+      // Do not let a session/data gap fabricate a three-candle FVG.
+      if((bars[i+1].time-bars[i].time)!=seconds ||
+         (bars[i+2].time-bars[i+1].time)!=seconds)
+         continue;
+
+      bool directional_fvg=false;
+      if(direction>0)
+         directional_fvg=(bars[i+2].low>bars[i].high);
+      else
+         directional_fvg=(bars[i+2].high<bars[i].low);
+
+      if(!directional_fvg)
+         continue;
+
+      int n=ArraySize(origins);
+      if(ArrayResize(origins,n+1,16)<0)
+         break;
+      origins[n]=bars[i];
+     }
+
+   return ArraySize(origins);
+  }
+
 string BuildStructureEventId(const V1StructureState &s,
                              const int event_type,
                              const MqlRates &bar)
@@ -1725,8 +1803,9 @@ void LogRootCreated(const V1SourceZone &root,
                     const MqlRates &break_bar)
   {
    string detail=StringFormat(
-      "kind=ROOT state=ACTIVE direction=%s source_reason=LAST_OPPOSITE_OB bottom=%.10f top=%.10f origin_open=%.10f origin_close=%.10f origin_index=%d origin_time=%s origin_window_start=%s origin_window_end=%s origin_wave_id=%s linked_event_type=%s linked_structure_event_id=%s break_bar_open=%s break_close=%.10f root_zone_id=%s scenario_owner_id=%s scenario_authority=false same_session_causal_path=true",
+      "kind=ROOT state=ACTIVE direction=%s source_reason=%s bottom=%.10f top=%.10f origin_open=%.10f origin_close=%.10f origin_index=%d origin_time=%s origin_window_start=%s origin_window_end=%s origin_wave_id=%s linked_event_type=%s linked_structure_event_id=%s break_bar_open=%s break_close=%.10f root_zone_id=%s scenario_owner_id=%s scenario_authority=false same_session_causal_path=true",
       DirectionName(root.direction),
+      root.source_reason,
       root.bottom,
       root.top,
       root.origin_open,
@@ -1774,6 +1853,137 @@ void LogRootRejected(const int tf_index,
            detail);
   }
 
+bool AddRootCandidateFromOrigin(const int tf_index,
+                                const int event_type,
+                                const int direction,
+                                const V1WaveRef &meaningful_wave,
+                                const MqlRates &break_bar,
+                                const datetime available_at,
+                                const MqlRates &origin_bar,
+                                const string source_reason)
+  {
+   // Every recognizer feeds the same causal/session/strategy lifecycle. The
+   // experiment broadens recognition only; it does not bypass existing Root
+   // validity rules.
+   if(SourcePathHasSessionGap(g_timeframes[tf_index],
+                              origin_bar.time,
+                              break_bar.time))
+     {
+      LogRootRejected(tf_index,
+                      available_at,
+                      event_type,
+                      direction,
+                      "SESSION_GAP_CROSSED",
+                      meaningful_wave.id);
+      return false;
+     }
+
+   string event_id=
+      BuildStructureEventId(g_structure[tf_index],event_type,break_bar);
+
+   string root_id=StringFormat("%s:root:%s:%I64d:%s",
+                               TfName(g_timeframes[tf_index]),
+                               DirectionName(direction),
+                               (long)origin_bar.time,
+                               event_id);
+
+   int existing=FindActiveSourceById(root_id);
+   if(existing>=0)
+     {
+      string merged=MergeObSourceReason(g_sources[existing].source_reason,
+                                        source_reason);
+      if(merged!=g_sources[existing].source_reason)
+        {
+         string prior=g_sources[existing].source_reason;
+         g_sources[existing].source_reason=merged;
+         LogLine("OB_RECOGNITION_MERGED",
+                 TfName(g_timeframes[tf_index]),
+                 available_at,
+                 root_id,
+                 StringFormat("kind=ROOT direction=%s origin_time=%s previous_reason=%s added_reason=%s merged_reason=%s",
+                              DirectionName(direction),
+                              TimeToString(origin_bar.time,TIME_DATE|TIME_SECONDS),
+                              prior,
+                              source_reason,
+                              merged));
+         return true;
+        }
+
+      LogRootRejected(tf_index,
+                      available_at,
+                      event_type,
+                      direction,
+                      "DUPLICATE_ACTIVE_ROOT",
+                      meaningful_wave.id);
+      return false;
+     }
+
+   int n=ArraySize(g_sources);
+   if(ArrayResize(g_sources,n+1,128)<0)
+     {
+      LogLine("SOURCE_DETECTOR_ERROR",
+              TfName(g_timeframes[tf_index]),
+              available_at,
+              "",
+              "reason=SOURCE_ARRAY_RESIZE_FAILED");
+      return false;
+     }
+
+   g_sources[n].valid=true;
+   g_sources[n].id=root_id;
+   g_sources[n].kind=V1_SOURCE_ROOT;
+   g_sources[n].tf=g_timeframes[tf_index];
+   g_sources[n].direction=direction;
+   g_sources[n].source_reason=source_reason;
+   g_sources[n].bottom=origin_bar.low;
+   g_sources[n].top=origin_bar.high;
+   g_sources[n].origin_open=origin_bar.open;
+   g_sources[n].origin_close=origin_bar.close;
+   g_sources[n].origin_index=iBarShift(_Symbol,
+                                       g_timeframes[tf_index],
+                                       origin_bar.time,
+                                       true);
+   g_sources[n].origin_time=origin_bar.time;
+   g_sources[n].occurred_at=origin_bar.time;
+   g_sources[n].available_at=available_at;
+
+   // LAST_OPPOSITE_OB preserves the frozen swing-origin window. An
+   // experimental FVG-origin Root owns its Candle1 interval as the parent
+   // refinement window so lower-TF refinement is projected into that OB.
+   if(source_reason=="FVG_ORIGIN_OB")
+     {
+      g_sources[n].origin_window_start=origin_bar.time;
+      g_sources[n].origin_window_end=
+         origin_bar.time+PeriodSeconds(g_timeframes[tf_index])-1;
+     }
+   else
+     {
+      g_sources[n].origin_window_start=meaningful_wave.origin_window_start;
+      g_sources[n].origin_window_end=meaningful_wave.origin_window_end;
+     }
+
+   g_sources[n].origin_wave_id=meaningful_wave.id;
+   g_sources[n].meaningful_swing_id=meaningful_wave.id;
+   g_sources[n].linked_structure_event_id=event_id;
+   g_sources[n].parent_zone_id="";
+   g_sources[n].root_zone_id=root_id;
+   g_sources[n].scenario_owner_id="";
+   g_sources[n].containment_type="ROOT";
+   g_sources[n].linked_event_type=event_type;
+   g_sources[n].linked_event_bar_open=break_bar.time;
+   g_sources[n].strategy_state=V1_SOURCE_ACTIVE;
+   g_sources[n].invalidated_at=0;
+   g_sources[n].invalidation_reason="";
+
+   g_roots_created++;
+   LogRootCreated(g_sources[n],event_type,break_bar);
+
+   if(!g_in_bootstrap_replay)
+      QueueRefinementRoot(root_id);
+
+   return true;
+  }
+
 bool AddRootFromStructureEvent(const int tf_index,
                                const int event_type,
                                const int direction,
@@ -1803,107 +2013,70 @@ bool AddRootFromStructureEvent(const int tf_index,
       return false;
      }
 
-   MqlRates origin_bar;
-   ZeroMemory(origin_bar);
+   bool recognized=false;
+   bool found_any_recognizer=false;
 
-   if(!FindLastOppositeCandleInSwingOrigin(g_timeframes[tf_index],
+   // Recognizer A: frozen baseline LAST_OPPOSITE_OB.
+   MqlRates opposite_origin;
+   ZeroMemory(opposite_origin);
+   if(FindLastOppositeCandleInSwingOrigin(g_timeframes[tf_index],
+                                          direction,
+                                          meaningful_wave,
+                                          opposite_origin))
+     {
+      found_any_recognizer=true;
+      if(AddRootCandidateFromOrigin(tf_index,
+                                    event_type,
+                                    direction,
+                                    meaningful_wave,
+                                    break_bar,
+                                    available_at,
+                                    opposite_origin,
+                                    "LAST_OPPOSITE_OB"))
+         recognized=true;
+     }
+
+   // Recognizer B: experimental Candle1-of-FVG OB. Every distinct physical
+   // Candle1 remains an independent candidate. It never replaces or suppresses
+   // the LAST_OPPOSITE_OB candidate.
+   if(InpEnableFvgOriginObExperiment)
+     {
+      MqlRates fvg_origins[];
+      int fvg_count=CollectFvgOriginObBars(g_timeframes[tf_index],
                                            direction,
                                            meaningful_wave,
-                                           origin_bar))
+                                           break_bar,
+                                           fvg_origins);
+      if(fvg_count>0)
+         found_any_recognizer=true;
+
+      for(int i=0;i<fvg_count;i++)
+        {
+         if(AddRootCandidateFromOrigin(tf_index,
+                                       event_type,
+                                       direction,
+                                       meaningful_wave,
+                                       break_bar,
+                                       available_at,
+                                       fvg_origins[i],
+                                       "FVG_ORIGIN_OB"))
+            recognized=true;
+        }
+     }
+
+   if(!found_any_recognizer)
      {
       LogRootRejected(tf_index,
                       available_at,
                       event_type,
                       direction,
-                      "NO_OPPOSITE_CANDLE_IN_ORIGIN_WINDOW",
+                      InpEnableFvgOriginObExperiment ?
+                         "NO_ELIGIBLE_OB_RECOGNIZER_MATCH" :
+                         "NO_OPPOSITE_CANDLE_IN_ORIGIN_WINDOW",
                       meaningful_wave.id);
-      return false;
      }
 
-   // A previous-session opposite candle cannot be attached to a displacement
-   // whose causal path crosses a market closure.
-   if(SourcePathHasSessionGap(g_timeframes[tf_index],
-                              origin_bar.time,
-                              break_bar.time))
-     {
-      LogRootRejected(tf_index,
-                      available_at,
-                      event_type,
-                      direction,
-                      "SESSION_GAP_CROSSED",
-                      meaningful_wave.id);
-      return false;
-     }
-
-   string event_id=
-      BuildStructureEventId(g_structure[tf_index],event_type,break_bar);
-
-   string root_id=StringFormat("%s:root:%s:%I64d:%s",
-                               TfName(g_timeframes[tf_index]),
-                               DirectionName(direction),
-                               (long)origin_bar.time,
-                               event_id);
-
-   if(FindActiveSourceById(root_id)>=0)
-     {
-      LogRootRejected(tf_index,
-                      available_at,
-                      event_type,
-                      direction,
-                      "DUPLICATE_ACTIVE_ROOT",
-                      meaningful_wave.id);
-      return false;
-     }
-
-   int n=ArraySize(g_sources);
-   if(ArrayResize(g_sources,n+1,128)<0)
-     {
-      LogLine("SOURCE_DETECTOR_ERROR",
-              TfName(g_timeframes[tf_index]),
-              available_at,
-              "",
-              "reason=SOURCE_ARRAY_RESIZE_FAILED");
-      return false;
-     }
-
-   g_sources[n].valid=true;
-   g_sources[n].id=root_id;
-   g_sources[n].kind=V1_SOURCE_ROOT;
-   g_sources[n].tf=g_timeframes[tf_index];
-   g_sources[n].direction=direction;
-   g_sources[n].bottom=origin_bar.low;
-   g_sources[n].top=origin_bar.high;
-   g_sources[n].origin_open=origin_bar.open;
-   g_sources[n].origin_close=origin_bar.close;
-   g_sources[n].origin_index=iBarShift(_Symbol,
-                                       g_timeframes[tf_index],
-                                       origin_bar.time,
-                                       true);
-   g_sources[n].origin_time=origin_bar.time;
-   g_sources[n].occurred_at=origin_bar.time;
-   g_sources[n].available_at=available_at;
-   g_sources[n].origin_window_start=meaningful_wave.origin_window_start;
-   g_sources[n].origin_window_end=meaningful_wave.origin_window_end;
-   g_sources[n].origin_wave_id=meaningful_wave.id;
-   g_sources[n].meaningful_swing_id=meaningful_wave.id;
-   g_sources[n].linked_structure_event_id=event_id;
-   g_sources[n].parent_zone_id="";
-   g_sources[n].root_zone_id=root_id;
-   g_sources[n].scenario_owner_id="";
-   g_sources[n].containment_type="ROOT";
-   g_sources[n].linked_event_type=event_type;
-   g_sources[n].linked_event_bar_open=break_bar.time;
-   g_sources[n].strategy_state=V1_SOURCE_ACTIVE;
-   g_sources[n].invalidated_at=0;
-   g_sources[n].invalidation_reason="";
-
-   g_roots_created++;
-   LogRootCreated(g_sources[n],event_type,break_bar);
-
-   if(!g_in_bootstrap_replay)
-      QueueRefinementRoot(root_id);
-
-   return true;
+   return recognized;
   }
 
 void LogRootInvalidated(const V1SourceZone &root,
@@ -3220,9 +3393,6 @@ bool BuildScenarioDraft(const int refinement_index,
                          boundary))
       return false;
 
-   double source_mid=(g_sources[source_index].bottom+
-                      g_sources[source_index].top)*0.5;
-
    // The source must belong to the current active map, not merely overlap it.
    if(g_sources[source_index].bottom<range_low ||
       g_sources[source_index].top>range_high)
@@ -3230,14 +3400,8 @@ bool BuildScenarioDraft(const int refinement_index,
 
    double eq=(range_low+range_high)*0.5;
 
-   // Premium/discount is a frozen continuation gate.
-   if(scope==V1_SCOPE_EXTERNAL_CONTINUATION)
-     {
-      if(direction>0 && source_mid>eq)
-         return false;
-      if(direction<0 && source_mid<eq)
-         return false;
-     }
+   // Premium/discount is retained only as map context/audit information.
+   // It must never authorize or reject a scenario by itself.
 
    draft.valid=true;
    draft.refinement_index=refinement_index;
@@ -4864,6 +5028,7 @@ void ClearChildCandidate(V1ChildCandidate &candidate)
    candidate.valid=false;
    candidate.tf=PERIOD_CURRENT;
    candidate.direction=0;
+   candidate.source_reason="";
    candidate.bottom=0.0;
    candidate.top=0.0;
    candidate.origin_open=0.0;
@@ -5161,10 +5326,21 @@ void AddChildCandidateUnique(V1ChildCandidate &candidates[],
       if(!SameChildCandidate(candidates[i],candidate))
          continue;
 
-      // The same source candle can create more than one later structure
-      // delivery event. Its first causal confirmation owns availability.
+      string merged=MergeObSourceReason(candidates[i].source_reason,
+                                        candidate.source_reason);
+
+      // The same physical source candle may be recognized by both OB rules or
+      // may create more than one later structure-delivery event. Keep one
+      // geometry, preserve the earliest causal availability, and merge only
+      // the recognition labels.
       if(candidate.available_at<candidates[i].available_at)
-         candidates[i]=candidate;
+        {
+         V1ChildCandidate replacement=candidate;
+         replacement.source_reason=merged;
+         candidates[i]=replacement;
+        }
+      else
+         candidates[i].source_reason=merged;
       return;
      }
 
@@ -5193,6 +5369,86 @@ bool CandidateEventAdjacent(const V1SourceZone &parent,
       return false;
 
    return true;
+  }
+
+void TryAddChildCandidateFromOrigin(const V1SourceZone &parent,
+                                    const ENUM_TIMEFRAMES child_tf,
+                                    const datetime lineage_freeze_at,
+                                    const V1RefinementEvent &event,
+                                    const MqlRates &origin_bar,
+                                    const string source_reason,
+                                    V1ChildCandidate &candidates[])
+  {
+   // Frozen same-price-event time relation.
+   if(origin_bar.time<parent.origin_time ||
+      (parent.origin_window_end>0 &&
+       origin_bar.time>parent.origin_window_end) ||
+      origin_bar.time>event.available_at ||
+      event.available_at>parent.available_at)
+      return;
+
+   if(SourcePathHasSessionGap(child_tf,
+                              origin_bar.time,
+                              event.break_bar.time))
+      return;
+
+   V1ChildCandidate candidate;
+   ClearChildCandidate(candidate);
+
+   candidate.valid=true;
+   candidate.tf=child_tf;
+   candidate.direction=event.direction;
+   candidate.source_reason=source_reason;
+   candidate.bottom=origin_bar.low;
+   candidate.top=origin_bar.high;
+   candidate.origin_open=origin_bar.open;
+   candidate.origin_close=origin_bar.close;
+   candidate.origin_time=origin_bar.time;
+   candidate.available_at=event.available_at;
+
+   if(source_reason=="FVG_ORIGIN_OB")
+     {
+      candidate.origin_window_start=origin_bar.time;
+      candidate.origin_window_end=
+         origin_bar.time+PeriodSeconds(child_tf)-1;
+     }
+   else
+     {
+      candidate.origin_window_start=
+         event.meaningful_wave.origin_window_start;
+      candidate.origin_window_end=
+         event.meaningful_wave.origin_window_end;
+     }
+
+   CopyWave(event.meaningful_wave,candidate.meaningful_wave);
+   candidate.linked_event_type=event.event_type;
+   candidate.linked_event_bar_open=event.break_bar.time;
+   candidate.linked_event_close=event.break_bar.close;
+   candidate.linked_structure_event_id=event.event_id;
+
+   bool contained=
+      (parent.bottom<=candidate.bottom &&
+       candidate.top<=parent.top);
+
+   if(contained)
+      candidate.containment_type="CONTAINED";
+   else if(CandidateEventAdjacent(parent,candidate))
+      candidate.containment_type="EVENT_ADJACENT";
+   else
+      return;
+
+   // Candidate must still be structurally ACTIVE when the Root lineage
+   // is first frozen. Later invalidation must not resolve an ambiguity
+   // retrospectively.
+   if(!GeometryActiveThrough(child_tf,
+                             candidate.direction,
+                             candidate.bottom,
+                             candidate.top,
+                             candidate.available_at,
+                             lineage_freeze_at))
+      return;
+
+   AddChildCandidateUnique(candidates,candidate);
   }
 
 bool DiscoverChildCandidates(const V1SourceZone &parent,
@@ -5267,73 +5523,41 @@ bool DiscoverChildCandidates(const V1SourceZone &parent,
          event.direction!=parent.direction)
          continue;
 
-      MqlRates origin_bar;
-      ZeroMemory(origin_bar);
+      // Recognizer A: existing LAST_OPPOSITE_OB.
+      MqlRates opposite_origin;
+      ZeroMemory(opposite_origin);
+      if(FindLastOppositeCandleInSwingOrigin(child_tf,
+                                             event.direction,
+                                             event.meaningful_wave,
+                                             opposite_origin))
+         TryAddChildCandidateFromOrigin(parent,
+                                        child_tf,
+                                        lineage_freeze_at,
+                                        event,
+                                        opposite_origin,
+                                        "LAST_OPPOSITE_OB",
+                                        candidates);
 
-      if(!FindLastOppositeCandleInSwingOrigin(child_tf,
+      // Recognizer B: all experimental FVG Candle1 OBs in the same lower-TF
+      // causal directional leg. They are additional candidates, not a
+      // replacement or priority rule over LAST_OPPOSITE_OB.
+      if(InpEnableFvgOriginObExperiment)
+        {
+         MqlRates fvg_origins[];
+         int fvg_count=CollectFvgOriginObBars(child_tf,
                                               event.direction,
                                               event.meaningful_wave,
-                                              origin_bar))
-         continue;
-
-      // Frozen same-price-event time relation.
-      if(origin_bar.time<parent.origin_time ||
-         (parent.origin_window_end>0 &&
-          origin_bar.time>parent.origin_window_end) ||
-         origin_bar.time>event.available_at ||
-         event.available_at>parent.available_at)
-         continue;
-
-      if(SourcePathHasSessionGap(child_tf,
-                                 origin_bar.time,
-                                 event.break_bar.time))
-         continue;
-
-      V1ChildCandidate candidate;
-      ClearChildCandidate(candidate);
-
-      candidate.valid=true;
-      candidate.tf=child_tf;
-      candidate.direction=event.direction;
-      candidate.bottom=origin_bar.low;
-      candidate.top=origin_bar.high;
-      candidate.origin_open=origin_bar.open;
-      candidate.origin_close=origin_bar.close;
-      candidate.origin_time=origin_bar.time;
-      candidate.available_at=event.available_at;
-      candidate.origin_window_start=
-         event.meaningful_wave.origin_window_start;
-      candidate.origin_window_end=
-         event.meaningful_wave.origin_window_end;
-      CopyWave(event.meaningful_wave,candidate.meaningful_wave);
-      candidate.linked_event_type=event.event_type;
-      candidate.linked_event_bar_open=event.break_bar.time;
-      candidate.linked_event_close=event.break_bar.close;
-      candidate.linked_structure_event_id=event.event_id;
-
-      bool contained=
-         (parent.bottom<=candidate.bottom &&
-          candidate.top<=parent.top);
-
-      if(contained)
-         candidate.containment_type="CONTAINED";
-      else if(CandidateEventAdjacent(parent,candidate))
-         candidate.containment_type="EVENT_ADJACENT";
-      else
-         continue;
-
-      // Candidate must still be structurally ACTIVE when the Root lineage
-      // is first frozen. Later invalidation must not resolve an ambiguity
-      // retrospectively.
-      if(!GeometryActiveThrough(child_tf,
-                                candidate.direction,
-                                candidate.bottom,
-                                candidate.top,
-                                candidate.available_at,
-                                lineage_freeze_at))
-         continue;
-
-      AddChildCandidateUnique(candidates,candidate);
+                                              event.break_bar,
+                                              fvg_origins);
+         for(int k=0;k<fvg_count;k++)
+            TryAddChildCandidateFromOrigin(parent,
+                                           child_tf,
+                                           lineage_freeze_at,
+                                           event,
+                                           fvg_origins[k],
+                                           "FVG_ORIGIN_OB",
+                                           candidates);
+        }
      }
 
    return true;
@@ -5360,6 +5584,7 @@ void CandidateToSourcePreview(const V1SourceZone &parent,
    child.kind=V1_SOURCE_CHILD;
    child.tf=candidate.tf;
    child.direction=candidate.direction;
+   child.source_reason=candidate.source_reason;
 
    child.bottom=candidate.bottom;
    child.top=candidate.top;
@@ -5399,8 +5624,9 @@ void LogChildCreated(const V1SourceZone &child,
                      const datetime lineage_frozen_at)
   {
    string detail=StringFormat(
-      "kind=CHILD state=ACTIVE direction=%s parent_zone_id=%s root_zone_id=%s bottom=%.10f top=%.10f origin_open=%.10f origin_close=%.10f origin_time=%s origin_window_start=%s origin_window_end=%s origin_wave_id=%s linked_event_type=%s linked_structure_event_id=%s linked_event_bar_open=%s containment_type=%s child_available_at=%s lineage_frozen_at=%s scenario_owner_id=UNBOUND scenario_authority=false",
+      "kind=CHILD state=ACTIVE direction=%s source_reason=%s parent_zone_id=%s root_zone_id=%s bottom=%.10f top=%.10f origin_open=%.10f origin_close=%.10f origin_time=%s origin_window_start=%s origin_window_end=%s origin_wave_id=%s linked_event_type=%s linked_structure_event_id=%s linked_event_bar_open=%s containment_type=%s child_available_at=%s lineage_frozen_at=%s scenario_owner_id=UNBOUND scenario_authority=false",
       DirectionName(child.direction),
+      child.source_reason,
       child.parent_zone_id,
       child.root_zone_id,
       child.bottom,
@@ -6218,8 +6444,9 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.70 property_version=1.00 magic=%I64d phase=SOURCE_SWEEP_CORE",
-                        InpMagicNumber));
+           StringFormat("build=0.70 property_version=1.00 magic=%I64d phase=SOURCE_SWEEP_CORE fvg_origin_ob_experiment=%s",
+                        InpMagicNumber,
+                        InpEnableFvgOriginObExperiment ? "true" : "false"));
 
    // Do not fail initialization just because MT5 is still synchronizing history.
    TryInitialize();
