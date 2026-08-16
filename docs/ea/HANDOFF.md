@@ -2,7 +2,7 @@
 
 Last updated: 2026-08-16
 Status: V1 SPECIFICATION FROZEN
-Current phase: Phase 4B scenario / objective-family implementation
+Current phase: Phase 4C source-contact / mature-sweep implementation
 
 ## Goal
 
@@ -55,6 +55,15 @@ Objective
 - `mt5/legacy/MentorSep2025ParityEA.mq5`
 
 ## Current Status
+
+Phase 4B Scenario / Objective Family
+→ REAL-TICK TEST PASS
+→ SCENARIO_PLANNED 2
+→ objective candidates frozen 9
+→ PREPLAN_SOURCE_CONTACT retrospective-plan violations 0
+→ ambiguous Root fail-closed PASS
+→ source-lineage cancellation PASS
+→ profitability NOT evaluated
 
 Phase 4A H1/M30 map / reversal permission
 → REAL-TICK EXTENDED TEST PASS
@@ -357,83 +366,85 @@ Broker transaction reconciliation
 → callback arrival order not trusted
 
 
-## Implementation Checkpoint — Phase 4B Scenario / Objective Family
+## Implementation Checkpoint — Phase 4C Source Contact / Mature Sweep
 
-Phase 4A verification is complete.
+Phase 4B validation is complete.
 
-Verified runtime:
+Verified:
 
 ```text
-MAP_STATE = 103
-REVERSAL_REFERENCE_SET = 62
-REVERSAL_REFERENCE_EVENT = 108
-REVERSAL_PERMISSION_STATE = 53
+SCENARIO_PLANNED = 2
+SCENARIO_LINEAGE_BOUND = 2
+SCENARIO_CANCELED = 2
+SCENARIO_REJECTED / AMBIGUOUS_ROOT_LINEAGE = 38
+PREPLAN_SOURCE_CONTACT = 3
+OBJECTIVE_CANDIDATE_FROZEN = 9
 
-map hierarchy violations = 0
-owner transition violations = 0
-reference precedence violations = 0
-same-bar reference interaction = 0
-reference monotonicity violations = 0
-permission-origin rewrite = 0
+scenario/objective causal violations = 0
+preplan-contact later planned = 0
 ```
 
-Phase 4B code status:
+Phase 4C code status:
 
-- Phase: `SCENARIO_OBJECTIVE_CORE`
-- Internal build: `0.60`
+- Phase: `SOURCE_SWEEP_CORE`
+- Internal build: `0.70`
 - MQL property version: `1.00`
 - Orders: intentionally disabled
-- Source-contact authorization: disabled
-- M1 trigger: disabled
+- M1 CHoCH: intentionally disabled
 - Entry/SL/final TP: disabled
-- Phase 4B compile: PENDING LOCAL METAEDITOR
-- Phase 4B smoke: NOT STARTED
+- Phase 4C compile: PENDING LOCAL METAEDITOR
+- Phase 4C smoke: NOT STARTED
 
 Implemented:
 
 ```text
-EXTERNAL_CONTINUATION scenario PLAN
-early EXTERNAL_REVERSAL scenario PLAN
-M30-primary continuation
-Root/refinement final-source binding
-continuation premium/discount gate
-PREPLAN_SOURCE_CONTACT retrospective-plan block
-AMBIGUOUS_ROOT_LINEAGE fail-closed
-objective family freeze
-H4 continuation extension
-objective candidate consumption audit
-scenario cancellation lifecycle
+SOURCE_CONTACT
+startup-inside-source exit/re-entry guard
+contact-time mature liquidity snapshot
+strategy M1 physical-consumption overlay
+same-bar contact+sweep
+source-intersecting authorized M1 sweep
+multiple-pool sweep authorization
+active sweep replacement
+STRUCTURAL_REACTION creation
+post-contact M1 proof of reaction extreme
 ```
 
-Objective family is frozen before Entry/SL.
+Phase 2 own-timeframe liquidity detector remains intact as the audit detector.
 
-Phase 4B does not compute:
+Phase 4C adds a strategy M1 physical-consumption overlay because
+first-position sweep authorization must know immediately if an eligible
+cross-timeframe pool was already physically swept/body-delivered on M1.
+
+The overlay is strategy eligibility state, not a rewrite of historical
+Phase 2 liquidity audit events.
+
+Structural Reaction is now active only when:
 
 ```text
-planned_R
-final_objective
-TP
+scenario-owned final source
+→ actual source contact
+→ later compatible confirmed reaction wave
+→ M1 proof that reaction extreme occurred after contact while intersecting source
 ```
 
-because execution FVG Entry and normalized SL do not exist yet.
+A newly created Structural Reaction pool cannot trigger the same first position,
+because eligible sweep liquidity is already frozen at source contact.
 
-Known implementation decision recorded in DECISIONS:
+Known Phase 4B logging-only defect fixed:
 
 ```text
-owner-compatible primary final-objective external liquidity
-→ ACTIVE EXTERNAL_SWING at/beyond current directional external boundary
+canceled PLAN
+→ no later objective-consumption chatter
 ```
 
-This prevents internal M30 liquidity inside the current map horizon
-from being promoted to final external TP.
-
-Next after Phase 4B PASS:
+Next after Phase 4C PASS:
 
 ```text
-Phase 4C
-→ source contact
-→ scenario-specific mature sweep authorization
-→ STRUCTURAL_REACTION
+Phase 5A
+→ authorized sweep
+→ M1 protected correction reference
+→ meaningful CHoCH
 ```
 
 

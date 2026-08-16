@@ -744,6 +744,124 @@ No order layer exists.
 ```
 
 
+## 2026-08-16 — Phase 4B Scenario / Objective Family Validation
+
+Status:
+
+```text
+PASS — Phase 4B scenario/objective core
+NOT A PROFITABILITY TEST
+```
+
+EA:
+
+```text
+repository commit = 8e5f0889c0b4e642801fb8718095b37b088c5985
+internal build = 0.60
+phase = SCENARIO_OBJECTIVE_CORE
+```
+
+CSV:
+
+```text
+event rows = 7123
+```
+
+Scenario:
+
+```text
+SCENARIO_PLANNED = 2
+SCENARIO_LINEAGE_BOUND = 2
+SCENARIO_CANCELED = 2
+SCENARIO_REJECTED = 38
+PREPLAN_SOURCE_CONTACT = 3
+```
+
+Objective family:
+
+```text
+OBJECTIVE_CANDIDATE_FROZEN = 9
+OBJECTIVE_CANDIDATE_CONSUMED = 9
+```
+
+PLAN coverage:
+
+```text
+M30-primary EXTERNAL_CONTINUATION LONG = 1
+H1-owned EXTERNAL_CONTINUATION LONG = 1
+
+EXTERNAL_REVERSAL = 0
+H4_EXTENSION candidate = 0
+```
+
+Automated checks:
+
+```text
+source outside map = 0
+continuation premium/discount violation = 0
+owner/direction mismatch = 0
+continuation permission violation = 0
+
+future plan-reference M1 close = 0
+
+objective family != EXTERNAL_SWING = 0
+wrong side = 0
+not direction-ahead = 0
+future candidate availability = 0
+primary timeframe violation = 0
+directional-horizon violation = 0
+objective order-index gap = 0
+nearest-first order violation = 0
+primary horizon mismatch = 0
+
+lineage binding mismatch = 0
+
+PREPLAN-contact lineage later planned = 0
+
+invalid scenario cancellation = 0
+```
+
+Ambiguous Root:
+
+```text
+SCENARIO_REJECTED reason=AMBIGUOUS_ROOT_LINEAGE = 38
+arbitrary candidate fallback = 0
+```
+
+Known future regression coverage:
+
+```text
+early EXTERNAL_REVERSAL PLAN
+H4 objective extension
+```
+
+These branches were not relaxed to manufacture coverage.
+
+Logging-only defect:
+
+```text
+OBJECTIVE_CANDIDATE_CONSUMED could continue after PLAN cancellation.
+```
+
+Resolution:
+
+```text
+Phase 4C skips objective-consumption refresh for CANCELED / NO_TRADE PLANs.
+```
+
+Profitability:
+
+```text
+N/A
+```
+
+Reason:
+
+```text
+No entry/order layer exists.
+```
+
+
 ## Required reporting format
 
 For every significant V1 test record:

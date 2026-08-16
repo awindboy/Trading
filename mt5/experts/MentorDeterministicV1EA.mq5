@@ -1,30 +1,31 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - Phase 4B scenario/objective core   |
+//| Deterministic Mentor EA V1 - Phase 4C source-contact/sweep core   |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| Phase 4B intentionally DOES NOT submit orders.                   |
-//| Structure/liquidity/Root/refinement/map core is verified. This  |
-//| build adds frozen scenario/source-lineage/objective-family PLANs.  |
-//| Source-contact/trigger/order layers remain disabled.                |
+//| Phase 4C intentionally DOES NOT submit orders.                   |
+//| Structure/liquidity/Root/refinement/map/PLAN core is verified.   |
+//| This build adds source contact, mature M1 sweep authorization,    |
+//| and structurally-owned OB reaction liquidity.                    |
+//| M1 CHoCH/execution/order layers remain disabled.                 |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - Phase 4B scenario/objective core"
+#property description "Mentor deterministic V1 EA - Phase 4C source-contact/sweep core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
 input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
-input string InpEventCsvFile       = "mentor_v1_phase4b_events.csv";
+input string InpEventCsvFile       = "mentor_v1_phase4c_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
-// but are intentionally not active in this Phase 4B scenario/objective build.
+// but are intentionally not active in this Phase 4C source-contact/sweep build.
 
 enum V1InitState
   {
@@ -316,8 +317,65 @@ struct V1ScenarioPlan
    double            primary_directional_horizon;
    int               objective_count;
 
+   // Phase 4C source-contact / mature-sweep audit.
+   datetime          source_contact_at;
+   datetime          source_contact_bar_open;
+   int               eligible_pool_count_at_contact;
+   string            active_sweep_event_id;
+   datetime          active_sweep_bar_open;
+   datetime          active_sweep_at;
+   int               authorized_sweep_count;
+
+   // Historical-bootstrap safety: if startup begins inside a frozen source,
+   // contact authorization is disarmed until a closed M1 bar exits and a
+   // later closed M1 bar re-enters the source.
+   bool              startup_inside_source;
+   bool              startup_exit_seen;
+
    datetime          canceled_at;
    string            cancel_reason;
+  };
+
+struct V1StrategyLiquidityConsumption
+  {
+   bool              valid;
+   string            liquidity_id;
+   datetime          consumed_at;
+   int               consumption_type;
+   string            reason;
+  };
+
+struct V1ScenarioEligiblePool
+  {
+   bool              valid;
+   string            scenario_id;
+   string            liquidity_id;
+   int               family;
+   ENUM_TIMEFRAMES   tf;
+   int               side;
+   double            bottom;
+   double            top;
+   datetime          available_at;
+   bool              consumed;
+   datetime          consumed_at;
+   int               consumption_type;
+   bool              authorized;
+  };
+
+struct V1GroupContactPool
+  {
+   bool              valid;
+   string            scenario_id;
+   string            liquidity_id;
+   int               family;
+   ENUM_TIMEFRAMES   tf;
+   int               side;
+   double            bottom;
+   double            top;
+   datetime          available_at;
+   bool              consumed;
+   datetime          consumed_at;
+   int               consumption_type;
   };
 
 struct V1ScenarioDraft
@@ -442,6 +500,9 @@ V1RefinementLineage g_refinements[];
 string           g_pending_refinement_root_ids[];
 V1ObjectiveCandidate g_objective_candidates[];
 V1ScenarioPlan   g_scenarios[];
+V1StrategyLiquidityConsumption g_strategy_liquidity_consumed[];
+V1ScenarioEligiblePool g_scenario_eligible_pools[];
+V1GroupContactPool g_group_contact_pools[];
 V1MapControl      g_map;
 string            g_scenario_layer_signature="";
 datetime         g_last_current_open[V1_TF_COUNT];
@@ -479,6 +540,12 @@ long             g_scenarios_ambiguous=0;
 long             g_scenarios_no_objective=0;
 long             g_scenarios_precontact_rejected=0;
 long             g_objective_candidates_frozen=0;
+long             g_source_contacts=0;
+long             g_eligible_sweep_pools_frozen=0;
+long             g_authorized_sweep_events=0;
+long             g_authorized_sweep_pools=0;
+long             g_strategy_m1_pool_consumptions=0;
+long             g_structural_reaction_created=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -1359,6 +1426,18 @@ void TryCreateDefendedRangeLiquidity(const int tf_index,
                     available_at);
   }
 
+// Phase 4C forward declarations used by the existing global detector
+// and Phase 4B objective-family builder.
+bool IsStrategyLiquidityConsumed(const string liquidity_id);
+void PruneStrategyLiquidityConsumption(const string liquidity_id);
+void MarkStrategyLiquidityConsumed(const string liquidity_id,
+                                   const datetime consumed_at,
+                                   const int consumption_type,
+                                   const string reason);
+void MarkScenarioPoolConsumed(const string liquidity_id,
+                              const datetime consumed_at,
+                              const int consumption_type);
+
 void LogLiquidityConsumption(const V1LiquidityPool &pool,
                              const MqlRates &bar,
                              const datetime available_at,
@@ -1443,6 +1522,16 @@ void EvaluateLiquidityConsumption(const int tf_index,
       g_liquidity[i].consumed_at=available_at;
       g_liquidity[i].consumption_type=consumption;
 
+      // Phase 4C strategy overlay learns about every own-TF global
+      // consumption before the compact pool object leaves RAM.
+      MarkStrategyLiquidityConsumed(g_liquidity[i].id,
+                                    available_at,
+                                    consumption,
+                                    "GLOBAL_OWN_TF");
+      MarkScenarioPoolConsumed(g_liquidity[i].id,
+                               available_at,
+                               consumption);
+
       LogLiquidityConsumption(g_liquidity[i],bar,available_at,consumption);
 
       if(consumption==V1_LIQ_CONSUME_SWEEP)
@@ -1451,8 +1540,11 @@ void EvaluateLiquidityConsumption(const int tf_index,
          g_liquidity_body_deliveries++;
 
       // Active-memory compression: consumed liquidity leaves the working set.
-      // The event log remains the audit ledger.
+      // Scenario contact snapshots already carry their own immutable copy, so
+      // the cross-TF strategy-consumption overlay can also release this ID.
+      string consumed_id=g_liquidity[i].id;
       RemoveLiquidityAt(i);
+      PruneStrategyLiquidityConsumption(consumed_id);
      }
   }
 
@@ -1484,7 +1576,7 @@ void LogLiquiditySnapshot(const int tf_index,const datetime available_at)
       external_count,
       range_count,
       reaction_count,
-      "WAITING_ROOT_SOURCE_LAYER");
+      "STRUCTURAL_REACTION_ACTIVE_PHASE4C");
 
    LogLine("LIQUIDITY_STATE",
            TfName(tf),
@@ -3296,7 +3388,8 @@ bool BuildFrozenObjectiveFamily(const V1ScenarioDraft &draft,
          g_liquidity[i].consumed ||
          g_liquidity[i].family!=V1_LIQ_EXTERNAL_SWING ||
          g_liquidity[i].side!=target_side ||
-         g_liquidity[i].available_at>frozen_at)
+         g_liquidity[i].available_at>frozen_at ||
+         IsStrategyLiquidityConsumed(g_liquidity[i].id))
          continue;
 
       bool timeframe_ok=false;
@@ -3362,7 +3455,8 @@ bool BuildFrozenObjectiveFamily(const V1ScenarioDraft &draft,
             g_liquidity[i].family!=V1_LIQ_EXTERNAL_SWING ||
             g_liquidity[i].tf!=PERIOD_H4 ||
             g_liquidity[i].side!=target_side ||
-            g_liquidity[i].available_at>frozen_at)
+            g_liquidity[i].available_at>frozen_at ||
+            IsStrategyLiquidityConsumed(g_liquidity[i].id))
             continue;
 
          double price=ObjectivePrice(g_liquidity[i]);
@@ -3445,7 +3539,14 @@ void RefreshObjectiveCandidateConsumption(const datetime available_at)
       if(plan_index<0)
          continue;
 
-      if(FindActiveLiquidityById(g_objective_candidates[i].liquidity_id)>=0)
+      // A canceled PLAN keeps its frozen family only as immutable audit data;
+      // no further candidate-consumption chatter is needed.
+      if(g_scenarios[plan_index].strategy_state==V1_STRATEGY_CANCELED ||
+         g_scenarios[plan_index].strategy_state==V1_STRATEGY_NO_TRADE)
+         continue;
+
+      if(!IsStrategyLiquidityConsumed(g_objective_candidates[i].liquidity_id) &&
+         FindActiveLiquidityById(g_objective_candidates[i].liquidity_id)>=0)
          continue;
 
       g_objective_candidates[i].consumed=true;
@@ -3687,6 +3788,15 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
    g_scenarios[n].plan_reference_price=plan_reference_price;
    g_scenarios[n].primary_directional_horizon=primary_horizon;
    g_scenarios[n].objective_count=ArraySize(family);
+   g_scenarios[n].source_contact_at=0;
+   g_scenarios[n].source_contact_bar_open=0;
+   g_scenarios[n].eligible_pool_count_at_contact=0;
+   g_scenarios[n].active_sweep_event_id="";
+   g_scenarios[n].active_sweep_bar_open=0;
+   g_scenarios[n].active_sweep_at=0;
+   g_scenarios[n].authorized_sweep_count=0;
+   g_scenarios[n].startup_inside_source=false;
+   g_scenarios[n].startup_exit_seen=false;
    g_scenarios[n].canceled_at=0;
    g_scenarios[n].cancel_reason="";
 
@@ -3875,6 +3985,708 @@ void RefreshScenarioLayer(const datetime available_at,const bool force=false)
      }
   }
 
+
+//+------------------------------------------------------------------+
+//| Phase 4C source contact + mature M1 sweep authorization          |
+//+------------------------------------------------------------------+
+bool IsSweepEligibleLiquidityFamily(const int family)
+  {
+   return (family==V1_LIQ_EXTERNAL_SWING ||
+           family==V1_LIQ_DEFENDED_RANGE_EDGE ||
+           family==V1_LIQ_STRUCTURAL_REACTION);
+  }
+
+int FindStrategyLiquidityConsumption(const string liquidity_id)
+  {
+   for(int i=0;i<ArraySize(g_strategy_liquidity_consumed);i++)
+      if(g_strategy_liquidity_consumed[i].valid &&
+         g_strategy_liquidity_consumed[i].liquidity_id==liquidity_id)
+         return i;
+   return -1;
+  }
+
+bool IsStrategyLiquidityConsumed(const string liquidity_id)
+  {
+   return (FindStrategyLiquidityConsumption(liquidity_id)>=0);
+  }
+
+void PruneStrategyLiquidityConsumption(const string liquidity_id)
+  {
+   int index=FindStrategyLiquidityConsumption(liquidity_id);
+   if(index<0)
+      return;
+
+   int n=ArraySize(g_strategy_liquidity_consumed);
+   if(index<n-1)
+      g_strategy_liquidity_consumed[index]=g_strategy_liquidity_consumed[n-1];
+   ArrayResize(g_strategy_liquidity_consumed,n-1);
+  }
+
+void MarkStrategyLiquidityConsumed(const string liquidity_id,
+                                   const datetime consumed_at,
+                                   const int consumption_type,
+                                   const string reason)
+  {
+   if(liquidity_id=="")
+      return;
+
+   int existing=FindStrategyLiquidityConsumption(liquidity_id);
+   if(existing>=0)
+      return;
+
+   int n=ArraySize(g_strategy_liquidity_consumed);
+   if(ArrayResize(g_strategy_liquidity_consumed,n+1,256)<0)
+      return;
+
+   g_strategy_liquidity_consumed[n].valid=true;
+   g_strategy_liquidity_consumed[n].liquidity_id=liquidity_id;
+   g_strategy_liquidity_consumed[n].consumed_at=consumed_at;
+   g_strategy_liquidity_consumed[n].consumption_type=consumption_type;
+   g_strategy_liquidity_consumed[n].reason=reason;
+  }
+
+void MarkScenarioPoolConsumed(const string liquidity_id,
+                              const datetime consumed_at,
+                              const int consumption_type)
+  {
+   for(int i=0;i<ArraySize(g_group_contact_pools);i++)
+     {
+      if(!g_group_contact_pools[i].valid ||
+         g_group_contact_pools[i].liquidity_id!=liquidity_id)
+         continue;
+
+      g_group_contact_pools[i].consumed=true;
+      g_group_contact_pools[i].consumed_at=consumed_at;
+      g_group_contact_pools[i].consumption_type=consumption_type;
+     }
+
+   for(int i=0;i<ArraySize(g_scenario_eligible_pools);i++)
+     {
+      if(!g_scenario_eligible_pools[i].valid ||
+         g_scenario_eligible_pools[i].liquidity_id!=liquidity_id ||
+         g_scenario_eligible_pools[i].consumed)
+         continue;
+
+      g_scenario_eligible_pools[i].consumed=true;
+      g_scenario_eligible_pools[i].consumed_at=consumed_at;
+      g_scenario_eligible_pools[i].consumption_type=consumption_type;
+     }
+  }
+
+int PhysicalConsumptionForBar(const int side,
+                              const double bottom,
+                              const double top,
+                              const MqlRates &bar)
+  {
+   if(side==V1_SIDE_HIGH)
+     {
+      if(bar.close>top)
+         return V1_LIQ_CONSUME_BODY_DELIVERY;
+      if(HasOneTickAbove(bar.high,top) && bar.close<=top)
+         return V1_LIQ_CONSUME_SWEEP;
+     }
+   else if(side==V1_SIDE_LOW)
+     {
+      if(bar.close<bottom)
+         return V1_LIQ_CONSUME_BODY_DELIVERY;
+      if(HasOneTickBelow(bar.low,bottom) && bar.close>=bottom)
+         return V1_LIQ_CONSUME_SWEEP;
+     }
+   return V1_LIQ_CONSUME_NONE;
+  }
+
+void UpdateM1StrategyLiquidityOverlay(const MqlRates &bar,
+                                      const datetime available_at)
+  {
+   for(int i=0;i<ArraySize(g_liquidity);i++)
+     {
+      if(!g_liquidity[i].valid ||
+         IsStrategyLiquidityConsumed(g_liquidity[i].id) ||
+         g_liquidity[i].available_at>bar.time)
+         continue;
+
+      int consumption=
+         PhysicalConsumptionForBar(g_liquidity[i].side,
+                                   g_liquidity[i].bottom,
+                                   g_liquidity[i].top,
+                                   bar);
+      if(consumption==V1_LIQ_CONSUME_NONE)
+         continue;
+
+      MarkStrategyLiquidityConsumed(g_liquidity[i].id,
+                                    available_at,
+                                    consumption,
+                                    "M1_PHYSICAL_OVERLAY");
+      MarkScenarioPoolConsumed(g_liquidity[i].id,
+                               available_at,
+                               consumption);
+      g_strategy_m1_pool_consumptions++;
+
+      LogLine("STRATEGY_LIQUIDITY_M1_CONSUMED",
+              "M1",
+              available_at,
+              g_liquidity[i].id,
+              StringFormat("pool_tf=%s family=%s side=%s bottom=%.10f top=%.10f pool_available_at=%s bar_open=%s high=%.10f low=%.10f close=%.10f consumption=%s strategy_overlay=true",
+                           TfName(g_liquidity[i].tf),
+                           LiquidityFamilyName(g_liquidity[i].family),
+                           SideName(g_liquidity[i].side),
+                           g_liquidity[i].bottom,
+                           g_liquidity[i].top,
+                           TimeToString(g_liquidity[i].available_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                           bar.high,
+                           bar.low,
+                           bar.close,
+                           LiquidityConsumptionName(consumption)));
+     }
+  }
+
+void AddGroupContactPool(const string scenario_id,
+                         const V1LiquidityPool &pool)
+  {
+   int n=ArraySize(g_group_contact_pools);
+   if(ArrayResize(g_group_contact_pools,n+1,128)<0)
+      return;
+
+   g_group_contact_pools[n].valid=true;
+   g_group_contact_pools[n].scenario_id=scenario_id;
+   g_group_contact_pools[n].liquidity_id=pool.id;
+   g_group_contact_pools[n].family=pool.family;
+   g_group_contact_pools[n].tf=pool.tf;
+   g_group_contact_pools[n].side=pool.side;
+   g_group_contact_pools[n].bottom=pool.bottom;
+   g_group_contact_pools[n].top=pool.top;
+   g_group_contact_pools[n].available_at=pool.available_at;
+   g_group_contact_pools[n].consumed=false;
+   g_group_contact_pools[n].consumed_at=0;
+   g_group_contact_pools[n].consumption_type=V1_LIQ_CONSUME_NONE;
+  }
+
+void PrepareGroupContactPoolSnapshot(const datetime group_time)
+  {
+   ArrayResize(g_group_contact_pools,0);
+
+   if(group_time<=0)
+      return;
+
+   datetime contact_bar_open=group_time-PeriodSeconds(PERIOD_M1);
+
+   for(int s=0;s<ArraySize(g_scenarios);s++)
+     {
+      if(!g_scenarios[s].valid ||
+         g_scenarios[s].strategy_state==V1_STRATEGY_CANCELED ||
+         g_scenarios[s].strategy_state==V1_STRATEGY_NO_TRADE ||
+         g_scenarios[s].source_contact_at>0 ||
+         g_scenarios[s].frozen_at>=group_time)
+         continue;
+
+      if(FindActiveSourceById(g_scenarios[s].final_source_id)<0)
+         continue;
+
+      int required_side=
+         (g_scenarios[s].direction>0 ? V1_SIDE_LOW : V1_SIDE_HIGH);
+
+      for(int i=0;i<ArraySize(g_liquidity);i++)
+        {
+         if(!g_liquidity[i].valid ||
+            !IsSweepEligibleLiquidityFamily(g_liquidity[i].family) ||
+            g_liquidity[i].side!=required_side ||
+            g_liquidity[i].available_at>=contact_bar_open ||
+            IsStrategyLiquidityConsumed(g_liquidity[i].id))
+            continue;
+
+         AddGroupContactPool(g_scenarios[s].id,g_liquidity[i]);
+        }
+     }
+  }
+
+int PersistScenarioContactPools(const string scenario_id)
+  {
+   int count=0;
+
+   for(int i=0;i<ArraySize(g_group_contact_pools);i++)
+     {
+      if(!g_group_contact_pools[i].valid ||
+         g_group_contact_pools[i].scenario_id!=scenario_id)
+         continue;
+
+      int n=ArraySize(g_scenario_eligible_pools);
+      if(ArrayResize(g_scenario_eligible_pools,n+1,128)<0)
+         continue;
+
+      g_scenario_eligible_pools[n].valid=true;
+      g_scenario_eligible_pools[n].scenario_id=scenario_id;
+      g_scenario_eligible_pools[n].liquidity_id=
+         g_group_contact_pools[i].liquidity_id;
+      g_scenario_eligible_pools[n].family=
+         g_group_contact_pools[i].family;
+      g_scenario_eligible_pools[n].tf=
+         g_group_contact_pools[i].tf;
+      g_scenario_eligible_pools[n].side=
+         g_group_contact_pools[i].side;
+      g_scenario_eligible_pools[n].bottom=
+         g_group_contact_pools[i].bottom;
+      g_scenario_eligible_pools[n].top=
+         g_group_contact_pools[i].top;
+      g_scenario_eligible_pools[n].available_at=
+         g_group_contact_pools[i].available_at;
+      g_scenario_eligible_pools[n].consumed=
+         g_group_contact_pools[i].consumed;
+      g_scenario_eligible_pools[n].consumed_at=
+         g_group_contact_pools[i].consumed_at;
+      g_scenario_eligible_pools[n].consumption_type=
+         g_group_contact_pools[i].consumption_type;
+      g_scenario_eligible_pools[n].authorized=false;
+      count++;
+     }
+
+   return count;
+  }
+
+void LogScenarioEligiblePoolsAtContact(const int scenario_index,
+                                       const datetime available_at)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+      return;
+
+   for(int i=0;i<ArraySize(g_scenario_eligible_pools);i++)
+     {
+      if(!g_scenario_eligible_pools[i].valid ||
+         g_scenario_eligible_pools[i].scenario_id!=g_scenarios[scenario_index].id)
+         continue;
+
+      g_eligible_sweep_pools_frozen++;
+
+      LogLine("SWEEP_ELIGIBLE_POOL_FROZEN",
+              TfName(g_scenario_eligible_pools[i].tf),
+              available_at,
+              g_scenario_eligible_pools[i].liquidity_id,
+              StringFormat("scenario_id=%s family=%s pool_tf=%s side=%s bottom=%.10f top=%.10f pool_available_at=%s source_contact_bar_open=%s mature_preexisting=true consumed_on_contact_bar=%s contact_bar_consumption=%s",
+                           g_scenarios[scenario_index].id,
+                           LiquidityFamilyName(g_scenario_eligible_pools[i].family),
+                           TfName(g_scenario_eligible_pools[i].tf),
+                           SideName(g_scenario_eligible_pools[i].side),
+                           g_scenario_eligible_pools[i].bottom,
+                           g_scenario_eligible_pools[i].top,
+                           TimeToString(g_scenario_eligible_pools[i].available_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(g_scenarios[scenario_index].source_contact_bar_open,TIME_DATE|TIME_SECONDS),
+                           (g_scenario_eligible_pools[i].consumed &&
+                            g_scenario_eligible_pools[i].consumed_at==available_at) ?
+                              "true" : "false",
+                           (g_scenario_eligible_pools[i].consumed &&
+                            g_scenario_eligible_pools[i].consumed_at==available_at) ?
+                              LiquidityConsumptionName(g_scenario_eligible_pools[i].consumption_type) :
+                              "NONE"));
+     }
+  }
+
+
+bool BarIntersectsSource(const MqlRates &bar,const V1ScenarioPlan &plan)
+  {
+   return (bar.high>=plan.source_bottom &&
+           bar.low<=plan.source_top);
+  }
+
+double StartupReferencePrice()
+  {
+   MqlTick tick;
+   if(!SymbolInfoTick(_Symbol,tick))
+      return 0.0;
+
+   if(tick.last>0.0)
+      return tick.last;
+   if(tick.bid>0.0)
+      return tick.bid;
+   if(tick.ask>0.0)
+      return tick.ask;
+   return 0.0;
+  }
+
+void InitializeStartupSourceReentryGuards(const datetime now)
+  {
+   double price=StartupReferencePrice();
+   if(price<=0.0)
+      return;
+
+   for(int s=0;s<ArraySize(g_scenarios);s++)
+     {
+      if(!g_scenarios[s].valid ||
+         g_scenarios[s].strategy_state==V1_STRATEGY_CANCELED ||
+         g_scenarios[s].strategy_state==V1_STRATEGY_NO_TRADE ||
+         g_scenarios[s].source_contact_at>0)
+         continue;
+
+      if(price<g_scenarios[s].source_bottom ||
+         price>g_scenarios[s].source_top)
+         continue;
+
+      g_scenarios[s].startup_inside_source=true;
+      g_scenarios[s].startup_exit_seen=false;
+
+      LogLine("STARTUP_SOURCE_REENTRY_REQUIRED",
+              "M1",
+              now,
+              g_scenarios[s].id,
+              StringFormat("scenario_id=%s final_source_id=%s startup_price=%.10f source_bottom=%.10f source_top=%.10f contact_disarmed=true required=EXIT_THEN_REENTRY",
+                           g_scenarios[s].id,
+                           g_scenarios[s].final_source_id,
+                           price,
+                           g_scenarios[s].source_bottom,
+                           g_scenarios[s].source_top));
+     }
+  }
+
+void ProcessScenarioSourceContactAndSweep(const MqlRates &bar,
+                                          const datetime available_at)
+  {
+   // First record M1 physical consumption for every strategy-visible pool.
+   // This keeps pre-contact sweeps/body-delivery from later being reused.
+   UpdateM1StrategyLiquidityOverlay(bar,available_at);
+
+   for(int s=0;s<ArraySize(g_scenarios);s++)
+     {
+      if(!g_scenarios[s].valid ||
+         g_scenarios[s].strategy_state==V1_STRATEGY_CANCELED ||
+         g_scenarios[s].strategy_state==V1_STRATEGY_NO_TRADE)
+         continue;
+
+      int source_index=FindActiveSourceById(g_scenarios[s].final_source_id);
+      if(source_index<0)
+         continue;
+
+      bool intersects=BarIntersectsSource(bar,g_scenarios[s]);
+
+      if(g_scenarios[s].source_contact_at==0 &&
+         g_scenarios[s].startup_inside_source &&
+         !g_scenarios[s].startup_exit_seen)
+        {
+         if(!intersects)
+           {
+            g_scenarios[s].startup_exit_seen=true;
+            LogLine("STARTUP_SOURCE_EXIT",
+                    "M1",
+                    available_at,
+                    g_scenarios[s].id,
+                    StringFormat("scenario_id=%s final_source_id=%s bar_open=%s source_bottom=%.10f source_top=%.10f reentry_armed=true",
+                                 g_scenarios[s].id,
+                                 g_scenarios[s].final_source_id,
+                                 TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                                 g_scenarios[s].source_bottom,
+                                 g_scenarios[s].source_top));
+           }
+         // The exit bar itself is never the later re-entry contact.
+         continue;
+        }
+
+      if(g_scenarios[s].source_contact_at==0)
+        {
+         // PLAN and final-source meaning must both pre-exist this closed M1 bar.
+         if(available_at<=g_scenarios[s].frozen_at ||
+            available_at<=g_sources[source_index].available_at ||
+            !intersects)
+            continue;
+
+         g_scenarios[s].source_contact_at=available_at;
+         g_scenarios[s].source_contact_bar_open=bar.time;
+         g_scenarios[s].strategy_state=V1_STRATEGY_WAITING_TRIGGER;
+         g_scenarios[s].eligible_pool_count_at_contact=
+            PersistScenarioContactPools(g_scenarios[s].id);
+         g_source_contacts++;
+
+         LogScenarioEligiblePoolsAtContact(s,available_at);
+
+         LogLine("SOURCE_CONTACT",
+                 "M1",
+                 available_at,
+                 g_scenarios[s].id,
+                 StringFormat("state=WAITING_TRIGGER scope=%s direction=%s final_source_id=%s source_tf=%s source_bottom=%.10f source_top=%.10f bar_open=%s high=%.10f low=%.10f close=%.10f source_available_at=%s plan_frozen_at=%s eligible_pool_count=%d sweep_search_enabled=true choch_search_enabled=false",
+                              ScenarioScopeName(g_scenarios[s].scope),
+                              DirectionName(g_scenarios[s].direction),
+                              g_scenarios[s].final_source_id,
+                              TfName(g_scenarios[s].source_tf),
+                              g_scenarios[s].source_bottom,
+                              g_scenarios[s].source_top,
+                              TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                              bar.high,
+                              bar.low,
+                              bar.close,
+                              TimeToString(g_sources[source_index].available_at,TIME_DATE|TIME_SECONDS),
+                              TimeToString(g_scenarios[s].frozen_at,TIME_DATE|TIME_SECONDS),
+                              g_scenarios[s].eligible_pool_count_at_contact));
+        }
+
+      if(g_scenarios[s].source_contact_at==0 || !intersects)
+         continue;
+
+      string pool_ids="";
+      int authorized_count=0;
+
+      for(int p=0;p<ArraySize(g_scenario_eligible_pools);p++)
+        {
+         if(!g_scenario_eligible_pools[p].valid ||
+            g_scenario_eligible_pools[p].scenario_id!=g_scenarios[s].id ||
+            g_scenario_eligible_pools[p].authorized)
+            continue;
+
+         // A pool consumed on an older bar can never authorize a later sweep.
+         if(g_scenario_eligible_pools[p].consumed &&
+            g_scenario_eligible_pools[p].consumed_at<available_at)
+            continue;
+
+         int physical=
+            PhysicalConsumptionForBar(g_scenario_eligible_pools[p].side,
+                                      g_scenario_eligible_pools[p].bottom,
+                                      g_scenario_eligible_pools[p].top,
+                                      bar);
+
+         if(physical==V1_LIQ_CONSUME_BODY_DELIVERY)
+           {
+            if(!g_scenario_eligible_pools[p].consumed)
+              {
+               g_scenario_eligible_pools[p].consumed=true;
+               g_scenario_eligible_pools[p].consumed_at=available_at;
+               g_scenario_eligible_pools[p].consumption_type=physical;
+               MarkStrategyLiquidityConsumed(
+                  g_scenario_eligible_pools[p].liquidity_id,
+                  available_at,
+                  physical,
+                  "M1_SCENARIO_BODY_DELIVERY");
+              }
+            continue;
+           }
+
+         if(physical!=V1_LIQ_CONSUME_SWEEP)
+            continue;
+
+         // If another detector consumed this pool at this same close,
+         // only a same-bar SWEEP remains authorization-compatible.
+         if(g_scenario_eligible_pools[p].consumed &&
+            g_scenario_eligible_pools[p].consumed_at==available_at &&
+            g_scenario_eligible_pools[p].consumption_type!=V1_LIQ_CONSUME_SWEEP)
+            continue;
+
+         if(!g_scenario_eligible_pools[p].consumed)
+           {
+            g_scenario_eligible_pools[p].consumed=true;
+            g_scenario_eligible_pools[p].consumed_at=available_at;
+            g_scenario_eligible_pools[p].consumption_type=V1_LIQ_CONSUME_SWEEP;
+            MarkStrategyLiquidityConsumed(
+               g_scenario_eligible_pools[p].liquidity_id,
+               available_at,
+               V1_LIQ_CONSUME_SWEEP,
+               "M1_AUTHORIZED_SWEEP");
+           }
+
+         g_scenario_eligible_pools[p].authorized=true;
+         authorized_count++;
+         g_authorized_sweep_pools++;
+
+         if(pool_ids!="")
+            pool_ids+="|";
+         pool_ids+=g_scenario_eligible_pools[p].liquidity_id;
+
+         double tick=LiquidityTickSize();
+         double penetration_ticks=
+            (g_scenario_eligible_pools[p].side==V1_SIDE_HIGH ?
+             (bar.high-g_scenario_eligible_pools[p].top)/tick :
+             (g_scenario_eligible_pools[p].bottom-bar.low)/tick);
+
+         LogLine("AUTHORIZED_SWEEP_POOL",
+                 "M1",
+                 available_at,
+                 g_scenario_eligible_pools[p].liquidity_id,
+                 StringFormat("scenario_id=%s family=%s pool_tf=%s side=%s bottom=%.10f top=%.10f pool_available_at=%s source_contact_bar_open=%s sweep_bar_open=%s penetration_ticks=%.4f physical=SWEEP source_intersection=true",
+                              g_scenarios[s].id,
+                              LiquidityFamilyName(g_scenario_eligible_pools[p].family),
+                              TfName(g_scenario_eligible_pools[p].tf),
+                              SideName(g_scenario_eligible_pools[p].side),
+                              g_scenario_eligible_pools[p].bottom,
+                              g_scenario_eligible_pools[p].top,
+                              TimeToString(g_scenario_eligible_pools[p].available_at,TIME_DATE|TIME_SECONDS),
+                              TimeToString(g_scenarios[s].source_contact_bar_open,TIME_DATE|TIME_SECONDS),
+                              TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                              penetration_ticks));
+        }
+
+      if(authorized_count<=0)
+         continue;
+
+      string sweep_event_id=StringFormat("%s:authorized_sweep:%I64d",
+                                         g_scenarios[s].id,
+                                         (long)bar.time);
+
+      if(g_scenarios[s].active_sweep_event_id!="" &&
+         g_scenarios[s].active_sweep_event_id!=sweep_event_id)
+        {
+         LogLine("AUTHORIZED_SWEEP_REPLACED",
+                 "M1",
+                 available_at,
+                 g_scenarios[s].active_sweep_event_id,
+                 StringFormat("scenario_id=%s old_sweep_event_id=%s new_sweep_event_id=%s reason=NEW_VALID_PRE_CHOCH_SWEEP",
+                              g_scenarios[s].id,
+                              g_scenarios[s].active_sweep_event_id,
+                              sweep_event_id));
+        }
+
+      bool same_bar_contact=
+         (g_scenarios[s].source_contact_at==available_at);
+
+      g_scenarios[s].active_sweep_event_id=sweep_event_id;
+      g_scenarios[s].active_sweep_bar_open=bar.time;
+      g_scenarios[s].active_sweep_at=available_at;
+      g_scenarios[s].authorized_sweep_count+=authorized_count;
+      g_authorized_sweep_events++;
+
+      LogLine("AUTHORIZED_SWEEP",
+              "M1",
+              available_at,
+              sweep_event_id,
+              StringFormat("scenario_id=%s direction=%s required_side=%s final_source_id=%s source_contact_at=%s source_contact_bar_open=%s sweep_bar_open=%s pool_count=%d pool_ids=%s same_bar_contact=%s source_intersection=true choch_search_enabled=true",
+                           g_scenarios[s].id,
+                           DirectionName(g_scenarios[s].direction),
+                           SideName(g_scenarios[s].direction>0 ? V1_SIDE_LOW : V1_SIDE_HIGH),
+                           g_scenarios[s].final_source_id,
+                           TimeToString(g_scenarios[s].source_contact_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(g_scenarios[s].source_contact_bar_open,TIME_DATE|TIME_SECONDS),
+                           TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                           authorized_count,
+                           pool_ids,
+                           same_bar_contact ? "true" : "false"));
+     }
+  }
+
+bool ReactionExtremeOccurredAfterContact(const V1ScenarioPlan &plan,
+                                         const V1WaveRef &wave)
+  {
+   if(plan.source_contact_at<=0 ||
+      plan.source_contact_bar_open<=0 ||
+      wave.occurred_at<=0)
+      return false;
+
+   datetime source_bar_end=
+      wave.occurred_at+PeriodSeconds(plan.source_tf);
+   datetime search_start=
+      (wave.occurred_at>plan.source_contact_bar_open ?
+       wave.occurred_at :
+       plan.source_contact_bar_open);
+
+   if(search_start>=source_bar_end)
+      return false;
+
+   MqlRates m1[];
+   ArraySetAsSeries(m1,false);
+   int copied=CopyRates(_Symbol,
+                        PERIOD_M1,
+                        (datetime)search_start,
+                        source_bar_end-1,
+                        m1);
+   if(copied<=0)
+      return false;
+
+   double tick=LiquidityTickSize();
+
+   for(int i=0;i<copied;i++)
+     {
+      datetime m1_available=m1[i].time+PeriodSeconds(PERIOD_M1);
+      if(m1_available<plan.source_contact_at)
+         continue;
+
+      bool intersects=
+         (m1[i].high>=plan.source_bottom &&
+          m1[i].low<=plan.source_top);
+      if(!intersects)
+         continue;
+
+      if(wave.side==V1_SIDE_LOW &&
+         MathAbs(m1[i].low-wave.price)<=tick*0.5)
+         return true;
+
+      if(wave.side==V1_SIDE_HIGH &&
+         MathAbs(m1[i].high-wave.price)<=tick*0.5)
+         return true;
+     }
+
+   return false;
+  }
+
+void TryCreateStructuralReactionLiquidity(const int tf_index,
+                                          const datetime available_at)
+  {
+   if(!g_structure[tf_index].last_wave.valid ||
+      !g_structure[tf_index].last_wave.is_wave ||
+      g_structure[tf_index].last_wave.available_at!=available_at)
+      return;
+
+   V1WaveRef wave;
+   CopyWave(g_structure[tf_index].last_wave,wave);
+
+   for(int s=0;s<ArraySize(g_scenarios);s++)
+     {
+      if(!g_scenarios[s].valid ||
+         g_scenarios[s].strategy_state==V1_STRATEGY_CANCELED ||
+         g_scenarios[s].strategy_state==V1_STRATEGY_NO_TRADE ||
+         g_scenarios[s].source_contact_at<=0 ||
+         g_scenarios[s].source_tf!=g_timeframes[tf_index] ||
+         available_at<=g_scenarios[s].source_contact_at)
+         continue;
+
+      int expected_side=
+         (g_scenarios[s].direction>0 ? V1_SIDE_LOW : V1_SIDE_HIGH);
+      if(wave.side!=expected_side)
+         continue;
+
+      int source_index=FindActiveSourceById(g_scenarios[s].final_source_id);
+      if(source_index<0 ||
+         g_sources[source_index].scenario_owner_id!=g_scenarios[s].id)
+         continue;
+
+      if(!ReactionExtremeOccurredAfterContact(g_scenarios[s],wave))
+         continue;
+
+      string pool_id=StringFormat("%s:liquidity:STRUCTURAL_REACTION:%s:%s:%s",
+                                  TfName(g_timeframes[tf_index]),
+                                  SideName(wave.side),
+                                  g_scenarios[s].final_source_id,
+                                  wave.id);
+
+      if(FindActiveLiquidityById(pool_id)>=0 ||
+         IsStrategyLiquidityConsumed(pool_id))
+         continue;
+
+      string causal_source=StringFormat("%s|%s",
+                                        g_scenarios[s].final_source_id,
+                                        wave.id);
+
+      if(AddLiquidityPool(tf_index,
+                          V1_LIQ_STRUCTURAL_REACTION,
+                          wave.side,
+                          wave.wick_bottom,
+                          wave.wick_top,
+                          causal_source,
+                          "STRUCTURALLY_OWNED_OB_REACTION",
+                          wave.occurred_at,
+                          available_at,
+                          pool_id))
+        {
+         g_structural_reaction_created++;
+
+         LogLine("STRUCTURAL_REACTION_CREATED",
+                 TfName(g_timeframes[tf_index]),
+                 available_at,
+                 pool_id,
+                 StringFormat("scenario_id=%s final_source_id=%s direction=%s reaction_wave_id=%s reaction_side=%s reaction_occurred_at=%s source_contact_at=%s source_contact_bar_open=%s reaction_extreme_after_contact_proven_on_m1=true same_first_position_eligible=false",
+                              g_scenarios[s].id,
+                              g_scenarios[s].final_source_id,
+                              DirectionName(g_scenarios[s].direction),
+                              wave.id,
+                              SideName(wave.side),
+                              TimeToString(wave.occurred_at,TIME_DATE|TIME_SECONDS),
+                              TimeToString(g_scenarios[s].source_contact_at,TIME_DATE|TIME_SECONDS),
+                              TimeToString(g_scenarios[s].source_contact_bar_open,TIME_DATE|TIME_SECONDS)));
+        }
+     }
+  }
+
 void LogScenarioSnapshot(const datetime available_at)
   {
    int planned=0;
@@ -3904,7 +4716,7 @@ void LogScenarioSnapshot(const datetime available_at)
            "",
            available_at,
            "",
-           StringFormat("active_planned=%d continuation=%d early_reversal=%d canceled=%d objective_candidates_frozen=%I64d preplan_contact_rejected=%I64d ambiguous=%I64d no_objective=%I64d source_contact_authorization=DEFERRED",
+           StringFormat("active_planned=%d continuation=%d early_reversal=%d canceled=%d objective_candidates_frozen=%I64d preplan_contact_rejected=%I64d ambiguous=%I64d no_objective=%I64d source_contacts=%I64d eligible_sweep_pools_frozen=%I64d authorized_sweep_events=%I64d authorized_sweep_pools=%I64d structural_reaction_created=%I64d source_contact_authorization=ACTIVE choch_authorization=DEFERRED",
                         planned,
                         continuation,
                         reversal,
@@ -3912,7 +4724,12 @@ void LogScenarioSnapshot(const datetime available_at)
                         g_objective_candidates_frozen,
                         g_scenarios_precontact_rejected,
                         g_scenarios_ambiguous,
-                        g_scenarios_no_objective));
+                        g_scenarios_no_objective,
+                        g_source_contacts,
+                        g_eligible_sweep_pools_frozen,
+                        g_authorized_sweep_events,
+                        g_authorized_sweep_pools,
+                        g_structural_reaction_created));
   }
 
 
@@ -5021,14 +5838,23 @@ void ProcessClosedBar(const int tf_index,
    RegisterCurrentExternalLiquidity(tf_index,available_at);
 
    if(new_wave)
+     {
       TryCreateDefendedRangeLiquidity(tf_index,bar,available_at);
+      // A structural-reaction pool requires a pre-existing scenario-owned OB,
+      // an actual source touch, and a later confirmed compatible reaction wave.
+      TryCreateStructuralReactionLiquidity(tf_index,available_at);
+     }
 
    ShiftRecentBars(g_structure[tf_index],bar);
 
-   // This is audit-only. It does not activate trigger search in Phase 4B.
-   // It only blocks retrospective PLAN creation after an already-passed source.
    if(tf_index==5)
+     {
+      // Frozen order: existing PLAN/source first, then current closed M1 bar
+      // may establish contact and authorize a mature sweep. The same bar is
+      // still available to the PREPLAN audit for lineages that have no PLAN.
+      ProcessScenarioSourceContactAndSweep(bar,available_at);
       AuditPrePlanSourceContact(bar,available_at);
+     }
 
    if(tf_index==1 || tf_index==2)
       RefreshMapControlAfterStructure(available_at);
@@ -5118,11 +5944,17 @@ bool BootstrapStructureCore()
    AuditBootstrapPrePlanContacts(now);
    RefreshScenarioLayer(now,true);
 
+   // A historical PLAN that starts the runtime while the current quote is
+   // already inside its final source must first observe a closed M1 exit and
+   // only then a later re-entry. This prevents startup from treating an
+   // already-in-progress source interaction as a fresh first contact.
+   InitializeStartupSourceReentryGuards(now);
+
    g_init_state=V1_INIT_ACTIVE_MAP;
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
    g_init_state=V1_INIT_SOURCE_CONTEXT;
-   LogLine("INIT_STATE","",now,"","PHASE4B_SCENARIO_OBJECTIVE_READY_SOURCE_CONTACT_NOT_YET_ATTACHED");
+   LogLine("INIT_STATE","",now,"","PHASE4C_SOURCE_CONTACT_SWEEP_READY_CHOCH_NOT_YET_ATTACHED");
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -5161,7 +5993,7 @@ bool BootstrapStructureCore()
       CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
 
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_PHASE4B_SCENARIO_OBJECTIVE ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d",
+           StringFormat("READY_PHASE4C_SOURCE_SWEEP ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d",
                         TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
                         h4_long_horizon_count,
                         ArraySize(g_liquidity),
@@ -5319,16 +6151,23 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
 
    for(int i=0;i<ArraySize(events);i++)
      {
-      if(group_time!=0 &&
-         events[i].available_at!=group_time)
+      if(group_time==0 || events[i].available_at!=group_time)
         {
-         // Dependent source refinement is evaluated only after every
-         // H4/H1/M30/M15/M5/M1 close sharing the timestamp has been processed.
-         ProcessPendingRefinements(group_time);
-         RefreshScenarioLayer(group_time);
-        }
+         if(group_time!=0)
+           {
+            // Dependent source refinement and PLAN evaluation occur only after
+            // every H4/H1/M30/M15/M5/M1 close sharing the old timestamp.
+            ProcessPendingRefinements(group_time);
+            RefreshScenarioLayer(group_time);
+           }
 
-      group_time=events[i].available_at;
+         group_time=events[i].available_at;
+
+         // Snapshot mature candidate pools at the beginning of the MTF group,
+         // before a higher-TF close at this same timestamp can remove a pool
+         // that was still valid when the M1 contact bar opened.
+         PrepareGroupContactPoolSnapshot(group_time);
+        }
 
       ProcessClosedBar(events[i].tf_index,
                        events[i].bar,
@@ -5341,7 +6180,7 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
       RefreshScenarioLayer(group_time);
      }
 
-   // Source-contact / trigger / order authorization remains deferred.
+   // M1 CHoCH / execution / order authorization remains deferred.
   }
 
 //+------------------------------------------------------------------+
@@ -5379,7 +6218,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.60 property_version=1.00 magic=%I64d phase=SCENARIO_OBJECTIVE_CORE",
+           StringFormat("build=0.70 property_version=1.00 magic=%I64d phase=SOURCE_SWEEP_CORE",
                         InpMagicNumber));
 
    // Do not fail initialization just because MT5 is still synchronizing history.
@@ -5392,7 +6231,7 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d children_created=%I64d children_invalidated=%I64d refinements_ready=%I64d refinements_no_child=%I64d refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_ambiguous=%I64d scenarios_no_objective=%I64d preplan_contact_rejected=%I64d objective_candidates_frozen=%I64d",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d children_created=%I64d children_invalidated=%I64d refinements_ready=%I64d refinements_no_child=%I64d refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_ambiguous=%I64d scenarios_no_objective=%I64d preplan_contact_rejected=%I64d objective_candidates_frozen=%I64d source_contacts=%I64d eligible_sweep_pools_frozen=%I64d authorized_sweep_events=%I64d authorized_sweep_pools=%I64d strategy_m1_pool_consumptions=%I64d structural_reaction_created=%I64d",
                         reason,
                         InitStateName(g_init_state),
                         ArraySize(g_liquidity),
@@ -5419,7 +6258,13 @@ void OnDeinit(const int reason)
                         g_scenarios_ambiguous,
                         g_scenarios_no_objective,
                         g_scenarios_precontact_rejected,
-                        g_objective_candidates_frozen));
+                        g_objective_candidates_frozen,
+                        g_source_contacts,
+                        g_eligible_sweep_pools_frozen,
+                        g_authorized_sweep_events,
+                        g_authorized_sweep_pools,
+                        g_strategy_m1_pool_consumptions,
+                        g_structural_reaction_created));
 
    if(g_log_handle!=INVALID_HANDLE)
      {
@@ -5452,11 +6297,11 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              "Phase4B trading disabled; scenario/objective PLAN may freeze before source contact");
+              "Phase4C trading disabled; source-contact/sweep authorization active; M1 CHoCH deferred");
      }
 
    ProcessRuntimeClosedBars((datetime)tick.time);
 
-   // No trade submission in Phase 4B.
+   // No trade submission in Phase 4C.
   }
 //+------------------------------------------------------------------+

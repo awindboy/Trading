@@ -31,8 +31,10 @@
 - [ ] Objective selection — Phase 4B family freeze implemented; R/final TP pending execution geometry
 - [ ] Root OB — Phase 3A core verified; internal-swing completeness audit still open
 - [x] LTF refinement — Phase 3B extended child-path validation PASS
-- [ ] Source touch
+- [ ] Source touch — Phase 4C implemented; compile/smoke pending
 - [x] Sweep — physical detector verified
+- [ ] Scenario-authorized mature sweep — Phase 4C implemented; smoke pending
+- [ ] Structural Reaction liquidity — Phase 4C implemented; path smoke pending
 - [ ] M1 CHoCH
 - [ ] Entry
 - [ ] SL
@@ -47,7 +49,8 @@
 
 ## P2 — Validation
 
-- [ ] Phase 4B scenario/objective-family smoke
+- [ ] Phase 4C source-contact / mature-sweep / structural-reaction smoke
+- [x] Phase 4B scenario/objective-family smoke
 - [x] Phase 4A map/reversal-permission smoke
 - [x] Phase 3B extended refinement coverage — CHILD_CREATED=7 / CHILD_INVALIDATED=6
 - [x] Phase 3A Root core smoke / causal CSV audit

@@ -2794,3 +2794,101 @@ Reason:
 Use structural external ownership, not price proximity, to distinguish
 final external objective candidates from internal delivery liquidity.
 
+---
+
+## D-119 — First-position liquidity eligibility uses a runtime M1 physical-consumption overlay
+
+Status: ACTIVE / IMPLEMENTATION-FROZEN
+
+Phase 2 keeps its own-timeframe liquidity detector and audit events.
+
+Phase 4C additionally requires first-position authorization to know whether a
+cross-timeframe liquidity pool has already been physically swept or body-delivered
+on a closed M1 bar before source contact.
+
+Therefore runtime strategy eligibility maintains a separate overlay:
+
+```text
+liquidity_id
+consumed_at
+consumption_type:
+    SWEEP
+    BODY_DELIVERY
+reason
+```
+
+Physical M1 geometry uses the frozen one-tick rules.
+
+This overlay is used to:
+
+```text
+prevent pre-contact sweep reuse
+exclude already physically consumed pools from contact-time eligible snapshots
+exclude already consumed liquidity from future objective eligibility
+```
+
+It does **not** retrospectively rewrite the Phase 2 global audit event history.
+
+Contact-time pool maturity remains:
+
+```text
+pool.available_at < source_contact_bar_open
+```
+
+and no age/ATR/quality score is introduced.
+
+Reason:
+
+A first-position sweep authorization is an M1 causal event. Waiting for a
+higher-timeframe pool's own bar to close could leave a physically consumed pool
+temporarily eligible and allow an old M1 sweep to be reused.
+
+---
+
+## D-120 — Structural Reaction requires post-contact M1 proof of the reaction extreme
+
+Status: ACTIVE / IMPLEMENTATION-FROZEN
+
+A Phase 4C `STRUCTURAL_REACTION` pool requires:
+
+```text
+scenario-owned final refined source
+actual source contact
+compatible confirmed reaction wave on source timeframe
+reaction confirmation after contact
+```
+
+A source-timeframe wave's `occurred_at` is the source bar's open timestamp.
+The exact wick extreme may have formed later inside that bar.
+
+Therefore, when the source-timeframe occurrence bar overlaps the contact time,
+Phase 4C proves the reaction causally on M1:
+
+```text
+M1 available_at >= source_contact_at
+M1 bar intersects final source
+M1 high/low equals the confirmed source-TF reaction extreme
+```
+
+Price equality uses only half a broker tick as a floating representation guard:
+
+```text
+abs(M1 extreme - source-TF extreme) <= 0.5 tick
+```
+
+This is not a trading-distance tolerance, quality filter, ATR threshold, or
+adjacency rule.
+
+Only after this proof and later reaction-wave confirmation is the
+`STRUCTURAL_REACTION` pool made available.
+
+The current scenario cannot use that newly created reaction pool for its same
+first position because the scenario's eligible sweep-liquidity set was frozen
+at the earlier source-contact bar.
+
+Reason:
+
+Do not label a source-TF reaction as post-contact merely because its wave was
+confirmed after contact when its actual price extreme may have occurred before
+contact.
+
