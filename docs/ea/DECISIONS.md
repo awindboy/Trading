@@ -3658,7 +3658,7 @@ D-126 run as historical evidence.
 
 ## D-127 — Separate DETECT / SEQUENCE / EXECUTE; use a linear Root → Sweep → CHoCH pipeline
 
-Status: ACTIVE / IMPLEMENTATION-FREEZE / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
+Status: ACTIVE / VALIDATED — 2026-08-16
 
 The current baseline had accumulated nested filters inside stages that were
 already downstream of several higher-timeframe filters.
@@ -3841,3 +3841,76 @@ The baseline already filters context through objective/map/Root/contact. Sweep
 and CHoCH should contribute one additional structural fact each, not each carry
 another multi-condition strategy gate. This preserves explainability and lets
 later FVG/Entry logic perform its intended downstream filtering.
+
+### 2026-08-16 validation and OB-recognizer experiment comparison
+
+Build `1.10 / D127_LINEAR_TRIGGER_PIPELINE_CORE` passed the January causal smoke.
+
+Baseline recognizer:
+
+```text
+InpEnableFvgOriginObExperiment = false
+
+SCENARIO_PLANNED = 13
+SCENARIO_ROOT_CONTACT_BOUND = 6
+SCENARIO_SWEEP_ACCEPTED = 6
+SCENARIO_CHOCH_ACCEPTED = 2
+distinct accepted M1 CHoCH events = 2
+```
+
+Experiment enabled:
+
+```text
+InpEnableFvgOriginObExperiment = true
+
+ROOT_CREATED = 108
+  LAST_OPPOSITE_OB = 19
+  FVG_ORIGIN_OB = 89
+
+SCENARIO_PLANNED = 78
+SCENARIO_ROOT_CONTACT_BOUND = 36
+SCENARIO_SWEEP_ACCEPTED = 33
+SCENARIO_CHOCH_ACCEPTED = 18
+distinct accepted M1 CHoCH events = 9
+```
+
+The experiment is additive rather than substitutive:
+
+```text
+all baseline ROOT_CREATED identities remain present
+all baseline SCENARIO_PLANNED rows remain present
+all baseline ROOT_CONTACT_BOUND rows remain present
+all baseline SCENARIO_SWEEP_ACCEPTED rows remain present
+all baseline SCENARIO_CHOCH_ACCEPTED rows remain present
+```
+
+Generic structure, liquidity, Sweep detector, CHoCH detector, and map streams are
+row-identical between the two runs.
+
+Same physical origin candles recognized by both OB definitions are merged:
+
+```text
+OB_RECOGNITION_MERGED = 34
+```
+
+This confirms implementation causality but does not promote the experimental
+recognizer to default authority.
+
+Current freeze:
+
+```text
+LAST_OPPOSITE_OB = default baseline recognizer
+FVG_ORIGIN_OB = immutable research experiment
+```
+
+Reason:
+
+```text
+the experiment materially expands candidate coverage
+but 18 scenario CHoCH branches collapse to only 9 distinct M1 CHoCH events
+and downstream FVG / Entry / exposure arbitration / profitability are not yet tested
+```
+
+Do not select the recognizer variant by raw branch count. Carry both variants
+through the same FVG/execution pipeline and compare completed deterministic
+setups first.

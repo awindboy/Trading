@@ -1,8 +1,8 @@
 # EA Development Handoff
 
 Last updated: 2026-08-16
-Status: D-126 VALIDATED / D-127 LINEAR TRIGGER PIPELINE IMPLEMENTED, LOCAL VALIDATION PENDING
-Current phase: Detector/Sequence separation — Root contact -> detected M1 Sweep -> detected M1 CHoCH -> WAITING_FVG
+Status: D-127 LINEAR TRIGGER PIPELINE VALIDATED / FVG-ORIGIN OB EXPERIMENT CAUSAL SMOKE PASS
+Current phase: Causal FVG stage — compare LAST_OPPOSITE_OB baseline vs FVG_ORIGIN_OB experiment from WAITING_FVG onward
 
 ## Goal
 
@@ -104,14 +104,16 @@ Phase 4C / Trigger Architecture
 → STRUCTURAL_REACTION creation remains disabled
 
 Phase 5A M1 CHoCH
-→ D-127 uses existing independent M1 structure detector
-→ M1 STRUCTURE_PROTECTED_BREAK = M1_CHOCH_DETECTED
-→ scenario accepts later same-direction M1_CHOCH_DETECTED after Sweep
-→ no sweep-time opposite-trend recheck
-→ no sweep-time protected-reference freeze
-→ no mandatory M5/child confirmation
+→ D-127 build 1.10 REAL-TICK LINEAR-PIPELINE SMOKE PASS
+→ M1 STRUCTURE_PROTECTED_BREAK = M1_CHOCH_DETECTED exactly 154 / 154
+→ LAST_OPPOSITE_OB baseline: 6 preplanned contacts -> 6 Sweep -> 2 CHoCH
+→ FVG_ORIGIN_OB experiment enabled: 36 preplanned contacts -> 33 Sweep -> 18 scenario CHoCH branches
+→ those 18 branches map to 9 distinct M1 CHoCH detector events / 10 Sweep→CHoCH bar pairs
+→ original baseline scenario rows remain exact subset of experiment-on run
+→ no Root-reintersection / sweep-family / sweep-time-reference / child nested trigger gate
 → accepted scenario CHoCH -> WAITING_FVG
 → FVG / orders still disabled
+→ FVG_ORIGIN_OB remains EXPERIMENTAL; do not treat 18 branches as 18 trades
 
 Phase 4A H1/M30 map / reversal permission
 → REAL-TICK EXTENDED TEST PASS
@@ -536,6 +538,40 @@ D-127 local validation
 → inspect simplified funnel counts
 → then implement causal FVG stage
 ```
+
+## D-127 Recognizer Comparison Checkpoint — 2026-08-16
+
+Same build / same January fixture:
+
+```text
+                         LAST_OPPOSITE only   + FVG_ORIGIN experiment
+ROOT_CREATED                    19                    108
+SCENARIO_PLANNED                13                     78
+ROOT_CONTACT_BOUND               6                     36
+SCENARIO_SWEEP_ACCEPTED          6                     33
+SCENARIO_CHOCH_ACCEPTED          2                     18
+distinct accepted CHoCH          2                      9
+```
+
+The experiment is additive:
+
+```text
+baseline Root identities preserved
+baseline scenario rows preserved
+generic structure/liquidity/Sweep/CHoCH/map detector streams unchanged
+OB_RECOGNITION_MERGED = 34 for same-candle dual recognition
+```
+
+Current interpretation:
+
+```text
+FVG_ORIGIN_OB causal smoke = PASS
+default-strategy promotion = NOT DECIDED
+profitability = NOT TESTED
+```
+
+Carry both recognizer modes through causal FVG and execution validation before
+promoting either interpretation on performance grounds.
 
 ## Do Not Do Yet
 

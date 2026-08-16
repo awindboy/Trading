@@ -26,7 +26,7 @@
 - Old Phase 4B/4C child/refined-source authorization: SUPERSEDED.
 - D-125 corrected Phase 4B build 0.90: PASS; 13 PLANs / 6 preplanned contacts / 5 no-preplan contacts / retrospective planning 0.
 - D-126 build 1.00 Root-reaction sweep implementation: causal smoke PASS; 11 AUTHORIZED_SWEEP / 20 pools. Its extra Root-ownership filters are historical and superseded by D-127.
-- D-127 build 1.10 linear trigger pipeline implemented: detector/sequence separation; local compile/real-tick validation pending.
+- D-127 build 1.10 linear trigger pipeline: PASS in both LAST_OPPOSITE baseline and FVG-origin experiment runs; detector/sequence separation verified.
 
 ## P1 — Baseline implementation
 
@@ -36,9 +36,9 @@
 - [ ] Root OB — Phase 3A core verified; internal-swing completeness audit still open
 - [x] Optional LTF child audit — D-124 Root-primary/no-child-gate smoke PASS; audit-only observations do not alter strategy source
 - [x] HTF Root contact — D122A physical observation baseline causal PASS
-- [ ] Scenario Sweep stage — D-127 first direction-compatible M1_SWEEP_DETECTED after Root contact; validation pending
+- [x] Scenario Sweep stage — D-127 first direction-compatible M1_SWEEP_DETECTED after Root contact; baseline 6/6, experiment-on 33/36
 - [ ] Structural Reaction liquidity authorization — corrected Root-based ownership/timing re-audit pending
-- [ ] M1 CHoCH — D-127 independent detector event + scenario sequence attachment implemented; validation pending
+- [x] M1 CHoCH — D-127 M1_CHOCH_DETECTED mirrors STRUCTURE_PROTECTED_BREAK exactly; 2 baseline / 18 experiment scenario branches accepted
 - [ ] Entry
 - [ ] SL
 - [ ] TP
@@ -70,12 +70,16 @@
 - [x] Verify D-126 same-contact-bar strategic sweep = 0
 - [x] Verify all 20 D-126 authorized sweep pools intersected owning Root
 - [x] Verify D-126 multiple swept pools remained distinct and no sweep replacement occurred
-- [ ] Compile/run D-127 internal build 1.10
-- [ ] Verify M1_SWEEP_DETECTED is detector-only and has no Root/scenario filter
-- [ ] Verify SCENARIO_SWEEP_ACCEPTED uses only post-contact ordering + direction
-- [ ] Verify M1_CHOCH_DETECTED mirrors independent M1 STRUCTURE_PROTECTED_BREAK
-- [ ] Verify SCENARIO_CHOCH_ACCEPTED is strictly later than scenario Sweep and moves to WAITING_FVG
-- [ ] Verify Root reintersection / sweep-time protected reference / latest-sweep replacement are absent
+- [x] Compile/run D-127 internal build 1.10
+- [x] Verify M1_SWEEP_DETECTED is detector-only and has no Root/scenario filter
+- [x] Verify SCENARIO_SWEEP_ACCEPTED uses only post-contact ordering + direction
+- [x] Verify M1_CHOCH_DETECTED mirrors independent M1 STRUCTURE_PROTECTED_BREAK
+- [x] Verify SCENARIO_CHOCH_ACCEPTED is strictly later than scenario Sweep and moves to WAITING_FVG
+- [x] Verify Root reintersection / sweep-time protected reference / latest-sweep replacement are absent
+- [x] FVG_ORIGIN_OB=true causal/additive smoke — baseline scenario rows preserved; 18 branches / 9 distinct accepted CHoCH events
+- [ ] Implement causal M1 FVG stage after SCENARIO_CHOCH_ACCEPTED
+- [ ] Run identical FVG/execution smoke with FVG_ORIGIN_OB=false and true
+- [ ] Resolve concurrent Root branches that converge on one CHoCH/FVG under one-exposure-per-symbol+magic policy without arbitrary score/nearest selection
 - [x] Phase 4A map/reversal-permission smoke — independent scope remains valid
 - [x] Historical Phase 3B run preserved as old-implementation evidence only — CHILD_CREATED=7 / CHILD_INVALIDATED=6
 - [x] Phase 3A Root core smoke / causal CSV audit

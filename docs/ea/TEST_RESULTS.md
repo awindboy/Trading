@@ -129,12 +129,15 @@ D-126 code malfunctioned.
 
 Profitability: N/A.
 
-## 2026-08-16 — D-127 Authority Correction: Linear Trigger Pipeline
+## 2026-08-16 — D-127 Linear Trigger Pipeline Validation + FVG-Origin OB Experiment Comparison
 
 Status:
 
 ```text
-IMPLEMENTED / LOCAL VALIDATION PENDING
+PASS — D-127 detector/sequence separation
+PASS — FVG-origin recognizer causal/additive smoke
+FVG_ORIGIN_OB REMAINS EXPERIMENTAL / NOT PROMOTED TO DEFAULT
+NOT A PROFITABILITY TEST
 ```
 
 Current funnel under test:
@@ -170,6 +173,223 @@ mirrors the existing M1 `STRUCTURE_PROTECTED_BREAK`; `INITIAL_BOS` remains a
 separate detector event.
 
 No FVG/order authorization is enabled in D-127.
+
+### Uploaded D-127 comparison ledger
+
+The uploaded file:
+
+```text
+mentor_v1_structure_events(20260816-143318).csv
+total rows = 17,593
+SHA-256 = fce83a7aeff3c8f5b66b95e66a0f798bd907fbfda230baf294c4012ea1dfa606
+```
+
+contains two consecutively appended runs of the same build:
+
+```text
+run A:
+build = 1.10
+phase = D127_LINEAR_TRIGGER_PIPELINE_CORE
+InpEnableFvgOriginObExperiment = false
+rows = 8,029
+
+run B:
+build = 1.10
+phase = D127_LINEAR_TRIGGER_PIPELINE_CORE
+InpEnableFvgOriginObExperiment = true
+rows = 9,564
+```
+
+The false segment is byte/content-equivalent to the previously uploaded
+`mentor_v1_structure_events(20260816-142823).csv` run.
+
+### Common detector regression
+
+The following detector / map streams are exactly row-equal between false and true:
+
+```text
+WAVE_CONFIRMED                 2406
+STRUCTURE_BOS                  1554
+STRUCTURE_INITIAL_BOS           209
+STRUCTURE_PROTECTED_BREAK       205
+
+LIQUIDITY_CREATED               939
+LIQUIDITY_SWEEP                 434
+LIQUIDITY_BODY_DELIVERY         428
+M1_SWEEP_DETECTED               433
+M1_CHOCH_DETECTED               154
+
+MAP_STATE                       104
+REVERSAL_REFERENCE_SET           62
+REVERSAL_REFERENCE_EVENT        108
+REVERSAL_PERMISSION_STATE        53
+```
+
+Therefore the FVG-origin experiment changes OB recognition only. It does not
+rewrite the already-validated structure, liquidity, Sweep detector, CHoCH
+detector, or H1/M30 map outputs.
+
+### Run A — LAST_OPPOSITE_OB baseline (`false`)
+
+```text
+ROOT_CREATED                    19
+ROOT_WATCH_CREATED              21
+ROOT_CONTACT_OBSERVED           11
+
+SCENARIO_PLANNED                13
+SCENARIO_ROOT_CONTACT_BOUND      6
+SCENARIO_SWEEP_ACCEPTED          6
+SCENARIO_CHOCH_ACCEPTED          2
+
+distinct accepted M1 CHoCH events = 2
+```
+
+Funnel:
+
+```text
+6 preplanned Root contacts
+→ 6 scenario Sweeps
+→ 2 scenario CHoCH
+→ WAITING_FVG
+```
+
+D-127 invariants:
+
+```text
+M1_CHOCH_DETECTED == M1 STRUCTURE_PROTECTED_BREAK = 154 / 154 exact identity
+Root reintersection gate = absent
+sweep family whitelist at scenario stage = absent
+sweep-time CHoCH-reference freeze = absent
+child trigger gate = absent
+FVG/order authorization = disabled
+```
+
+### Run B — FVG-origin experiment (`true`)
+
+Root recognition becomes additive:
+
+```text
+ROOT_CREATED = 108
+  LAST_OPPOSITE_OB = 19
+  FVG_ORIGIN_OB    = 89
+
+ROOT_WATCH_CREATED = 113
+ROOT_CONTACT_OBSERVED = 61
+
+SCENARIO_PLANNED = 78
+  LAST_OPPOSITE_OB branches = 13
+  FVG_ORIGIN_OB branches    = 65
+
+SCENARIO_ROOT_CONTACT_BOUND = 36
+  LAST_OPPOSITE_OB = 6
+  FVG_ORIGIN_OB    = 30
+
+SCENARIO_SWEEP_ACCEPTED = 33
+  LAST_OPPOSITE_OB = 6
+  FVG_ORIGIN_OB    = 27
+
+SCENARIO_CHOCH_ACCEPTED = 18
+  LAST_OPPOSITE_OB = 2
+  FVG_ORIGIN_OB    = 16
+```
+
+The original false-mode scenario rows remain an exact subset of the true-mode
+scenario rows for:
+
+```text
+SCENARIO_PLANNED
+SCENARIO_ROOT_BOUND
+SCENARIO_ROOT_CONTACT_BOUND
+SCENARIO_SWEEP_ACCEPTED
+SCENARIO_CHOCH_ACCEPTED
+```
+
+Thus enabling the experiment does not replace or mutate the baseline path.
+
+Recognition overlap is handled as intended:
+
+```text
+OB_RECOGNITION_MERGED = 34
+```
+
+These are same physical origin candles recognized by both definitions; the
+reason tags are merged rather than creating a duplicate physical Root for the
+same event/candle identity.
+
+One bootstrap Root watch was skipped:
+
+```text
+ROOT_WATCH_SKIPPED = 1
+reason = PRIOR_CLOSED_M1_TOUCH
+```
+
+which is the expected fresh-reaction guard, not an experiment bypass.
+
+### Scenario branches are not trade counts
+
+The 18 accepted scenario branches correspond to only:
+
+```text
+distinct M1 CHoCH detector events = 9
+distinct accepted Sweep→CHoCH bar pairs = 10
+```
+
+because several distinct physical Roots coexist under the same market reaction
+and reach the same M1 CHoCH.
+
+Multiplicity by CHoCH event:
+
+```text
+2025-01-09 19:48  → 1 scenario
+2025-01-10 14:47  → 1 scenario
+2025-01-13 03:52  → 4 scenarios
+2025-01-15 18:22  → 5 scenarios
+2025-01-16 02:16  → 1 scenario
+2025-01-16 15:17  → 2 scenarios
+2025-01-17 13:16  → 1 scenario
+2025-01-17 16:41  → 2 scenarios
+2025-01-21 16:24  → 1 scenario
+```
+
+All 18 accepted scenario branches are LONG in this January fixture.
+
+Interpretation:
+
+```text
+false: 2 distinct accepted CHoCH events
+true : 9 distinct accepted CHoCH events
+```
+
+The experiment therefore materially broadens opportunity coverage in this
+sample while preserving the baseline path exactly.
+
+However:
+
+```text
+18 scenario branches != 18 executable trades
+```
+
+FVG selection, concurrency/exposure identity, objective eligibility, Entry/SL/TP,
+and order submission have not yet run. Several Root branches may converge on the
+same execution FVG/decision cycle.
+
+### Current decision
+
+`FVG_ORIGIN_OB` remains an immutable research experiment rather than the default
+baseline recognizer.
+
+Reason:
+
+```text
+causal implementation = PASS
+opportunity expansion = observed
+profitability = unknown
+downstream FVG/execution branch convergence = not yet measured
+```
+
+Next comparison should carry both recognizer modes through the same causal FVG /
+Entry pipeline before deciding whether `FVG_ORIGIN_OB` should be promoted,
+rejected, or retained as a separate immutable variant.
 
 ## 2026-08-16 — D-125 Corrected Phase 4B Root-Specific PLAN / Objective Validation
 
