@@ -1,8 +1,8 @@
 # EA Development Handoff
 
 Last updated: 2026-08-16
-Status: D122A CAUSAL TEST PASSED / D-124 ROOT-PRIMARY CONSOLIDATION PREPARED
-Current phase: D-124 Root-primary source semantics → corrected Phase 4B/4C reattachment
+Status: D-124 ROOT-PRIMARY / OPTIONAL-CHILD AUDIT PASS
+Current phase: Corrected Phase 4B/4C Root-based scenario and sweep reattachment
 
 ## Goal
 
@@ -100,7 +100,8 @@ Phase 3B causal LTF refinement
 → D122A build 0.80 compiled and ran in Strategy Tester
 → baseline causal validation PASS: Root watch 21 / Root contact 11 / post-contact child 1
 → historical pre-contact child authorization = 0
-→ D-124 reinterprets child as optional audit/context only; 11 contacts are not reduced to one candidate merely because only one child formed
+→ D-124 build 0.81 validation PASS: Root contact 11 / ROOT_CONTEXT_READY 11 / optional child observations 2
+→ children_created_strategy_sources = 0; every ready context retained strategy_source_kind=ROOT
 → profitability NOT evaluated
 
 Phase 3A HTF Root OB core

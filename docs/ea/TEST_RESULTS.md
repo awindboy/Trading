@@ -60,6 +60,168 @@ Historical Phase 4B / Phase 4C final-refined-source results
 
 All historical records below are intentionally preserved unchanged as test history.
 
+## 2026-08-16 — D-124 Root-Primary / Optional-Child Audit Validation
+
+Status:
+
+```text
+PASS — Root-primary / optional-child authority core
+NOT A PROFITABILITY TEST
+```
+
+EA:
+
+```text
+repository commit = 10a0a83d3b66c72c3ba8411c9e3edfd281848860
+internal build = 0.81
+property version = 1.00
+phase = D124_ROOT_PRIMARY_OPTIONAL_CHILD_AUDIT_CORE
+InpEnableFvgOriginObExperiment = false
+```
+
+Uploaded event CSV:
+
+```text
+mentor_v1_structure_events(20260816-121802).csv
+rows = 7079
+observed interval = 2025-01-06 00:00:00 ~ 2025-01-31 23:57:57
+execution_epoch_start = 2025-01-06 01:00:05
+```
+
+The CSV confirms the D-124 build ran. The tester model itself is not encoded in
+the CSV, so this record does not infer the model from the file alone.
+
+D-124 runtime summary:
+
+```text
+ROOT_WATCH_CREATED = 21
+ROOT_CONTACT_OBSERVED = 11
+ROOT_CONTEXT_READY = 11
+
+children_created_strategy_sources = 0
+OPTIONAL_CHILD_OBSERVED = 2
+children_invalidated_strategy_sources = 0
+
+SCENARIO_PLANNED = 0
+old Phase4C SOURCE_CONTACT = 0
+old Phase4C AUTHORIZED_SWEEP = 0
+old Phase4C STRUCTURAL_REACTION = 0
+```
+
+Root-primary invariants:
+
+```text
+every ROOT_CONTACT_OBSERVED has exactly one ROOT_CONTEXT_READY = PASS
+ROOT_CONTEXT_READY timestamp == Root-contact timestamp = PASS
+ROOT_CONTEXT_READY strategy_source_id == Root object_id = PASS
+strategy_source_kind = ROOT for every ready context = PASS
+child_strategy_authority = false for every ready context = PASS
+entry_geometry = M1_FVG for every ready context = PASS
+sl_geometry = M1_FVG_20PCT for every ready context = PASS
+
+strategy_source_kind=CHILD occurrences = 0
+child_strategy_authority=true occurrences = 0
+strategy_authority=true on optional child = 0
+child_required=true occurrences = 0
+```
+
+Optional child observations:
+
+```text
+#1 M5 LONG
+Root contact = 2025-01-15 03:45
+child origin = 2025-01-15 03:55
+child available = 2025-01-15 04:50
+audit_only = true
+strategy_authority = false
+
+#2 M15 LONG
+Root contact = 2025-01-15 03:45
+child origin bar = 2025-01-15 03:45
+child available = 2025-01-15 08:15
+audit_only = true
+strategy_authority = false
+```
+
+The second child begins on the new M15 bar that opens at the already-observed
+Root-contact timestamp and does not become causally available until 08:15.
+Therefore:
+
+```text
+child origin >= Root contact = PASS
+child available_at > Root contact = PASS
+historical pre-contact child authorization = 0
+```
+
+Both optional children explicitly logged:
+
+```text
+strategy_source_kind = ROOT
+entry_authority = false
+sl_authority = false
+tp_authority = false
+cancellation_authority = false
+```
+
+Upstream exact-regression comparison against D122A build 0.80:
+
+```text
+WAVE_CONFIRMED               2406 → 2406 exact rows equal
+STRUCTURE_BOS                1554 → 1554 exact rows equal
+STRUCTURE_INITIAL_BOS         209 → 209 exact rows equal
+STRUCTURE_PROTECTED_BREAK     205 → 205 exact rows equal
+
+LIQUIDITY_CREATED             939 → 939 exact rows equal
+LIQUIDITY_SWEEP               434 → 434 exact rows equal
+LIQUIDITY_BODY_DELIVERY       428 → 428 exact rows equal
+
+MAP_STATE                     104 → 104 exact rows equal
+REVERSAL_REFERENCE_SET         62 → 62 exact rows equal
+REVERSAL_REFERENCE_CLEARED      3 → 3 exact rows equal
+REVERSAL_REFERENCE_EVENT      108 → 108 exact rows equal
+REVERSAL_PERMISSION_STATE      53 → 53 exact rows equal
+
+ROOT_CREATED                   19 → 19 exact rows equal
+ROOT_REJECTED                 229 → 229 exact rows equal
+ROOT_INVALIDATED               19 → 19 exact rows equal
+ROOT_STATE                       3 → 3 exact rows equal
+ROOT_WATCH_CREATED              21 → 21 exact rows equal
+```
+
+Interpretation:
+
+```text
+D-124 successfully removes child OB from strategy-source authority.
+All 11 observed Root contacts survive into ROOT_CONTEXT_READY regardless of
+whether an optional child exists.
+Only 2 optional children were observed, but this does not reduce the 11 Root
+contexts to 2 strategy candidates.
+Entry / SL geometry remains assigned to M1 FVG.
+```
+
+Profitability:
+
+```text
+N/A
+```
+
+Reason:
+
+```text
+Corrected scenario, strategic sweep, CHoCH, and order authorization are still
+intentionally disabled in build 0.81.
+```
+
+Next:
+
+```text
+corrected Phase 4B / 4C
+→ attach map / direction / objective qualification to Root-primary context
+→ attach valid Root-reaction sweep ownership
+→ do not reintroduce child as a gate, source replacement, or ambiguity veto
+```
+
+
 ## 2026-08-16 — Phase 1.1 Structure / Bootstrap Smoke Test
 
 Status:

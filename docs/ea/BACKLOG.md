@@ -21,9 +21,10 @@
 - Root lifecycle balance from the historical Phase 3A run: `272 = 161 PRICE_INVALIDATED + 110 STRUCTURE_INVALIDATED + 1 ACTIVE`.
 - Full Root completeness for independent structurally-meaningful internal-swing contexts remains open.
 - Old Phase 3B pre-contact child refinement: SUPERSEDED by D-122.
-- D122A Root-contact → post-contact child implementation: prepared in internal build 0.80; local compile and real-tick causal validation pending.
+- D122A build 0.80 temporal causal test: PASS.
+- D-124 build 0.81 Root-primary / optional-child audit: PASS; 11 Root contacts → 11 ROOT_CONTEXT_READY, optional child observations=2, strategy-source children=0.
 - Old Phase 4B scenario planning and Phase 4C final-source contact/sweep authorization: SUPERSEDED pending corrected reimplementation.
-- Phase 5A CHoCH work remains BLOCKED until D122A and corrected Phase 4B/4C pass.
+- Phase 5A CHoCH work remains BLOCKED until corrected Phase 4B/4C Root-based ownership passes.
 
 ## P1 — Baseline implementation
 
@@ -31,10 +32,10 @@
 - [x] Liquidity — Phase 2 physical detector verified
 - [ ] Objective selection — old Phase 4B family logic retained for later regression; corrected scenario attachment pending
 - [ ] Root OB — Phase 3A core verified; internal-swing completeness audit still open
-- [ ] LTF refinement — D122A post-contact implementation prepared; compile/real-tick validation pending
-- [ ] HTF Root contact — D122A physical observation implemented; compile/real-tick validation pending
-- [ ] Scenario-authorized mature sweep — intentionally disabled until post-contact child/sweep timing is frozen
-- [ ] Structural Reaction liquidity authorization — intentionally disabled pending D-122 ownership/timing re-audit
+- [x] Optional LTF child audit — D-124 Root-primary/no-child-gate smoke PASS; audit-only observations do not alter strategy source
+- [x] HTF Root contact — D122A physical observation baseline causal PASS
+- [ ] Scenario-authorized mature sweep — corrected Root-based ownership/timing pending; child has no gate/ownership authority
+- [ ] Structural Reaction liquidity authorization — corrected Root-based ownership/timing re-audit pending
 - [ ] M1 CHoCH
 - [ ] Entry
 - [ ] SL
@@ -49,12 +50,15 @@
 
 ## P2 — Validation
 
-- [ ] Compile D122A internal build 0.80 in MetaEditor
-- [ ] D122A real-tick Root-watch / Root-contact / post-contact-child causal smoke
-- [ ] Verify zero historical pre-contact child authorization
-- [ ] Verify scenario/sweep/order authorization remains disabled during D122A
+- [x] Compile/run D122A internal build 0.80
+- [x] D122A real-tick Root-watch / Root-contact / optional-child temporal causal smoke
+- [x] Verify zero historical pre-contact child authorization
+- [x] Verify scenario/sweep/order authorization remained disabled during D122A
+- [x] Compile/run D-124 internal build 0.81
+- [x] Verify every qualifying Root contact becomes Root context READY regardless of child
+- [x] Verify optional child observations never create strategy-source children or veto Root context
 - [ ] Corrected Phase 4B scenario/objective-family smoke
-- [ ] Corrected Phase 4C child/sweep ownership smoke
+- [ ] Corrected Phase 4C Root/sweep ownership smoke
 - [x] Phase 4A map/reversal-permission smoke — independent scope remains valid
 - [x] Historical Phase 3B run preserved as old-implementation evidence only — CHILD_CREATED=7 / CHILD_INVALIDATED=6
 - [x] Phase 3A Root core smoke / causal CSV audit
