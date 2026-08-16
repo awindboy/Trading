@@ -50,34 +50,44 @@ authority.
    may describe delivery inefficiency, but it cannot independently declare a
    source POI or authorize the first position.
 7. Predeclare an eligible, unconsumed HTF Root OB first and wait for price to
-   actually contact that Root. Lower-timeframe child discovery begins only
-   after this contact. A valid child OB must form from the post-contact LTF
-   reaction and become usable only after its own causal lower-timeframe
-   structure delivery confirms it. An LTF OB that existed before Root contact,
-   including an OB inside the original displacement that created the Root,
-   does not satisfy the current child requirement. At least one post-contact
-   child is required before the current first-position trigger can be authorized.
+   actually contact that Root. The HTF Root remains the sole OB strategy source.
+   Lower-timeframe child discovery, if used for audit/context, begins only after
+   this contact. A child that existed before Root contact, including one inside
+   the original displacement that created the Root, cannot be relabeled as a
+   current post-contact child. No child is required for first-position trigger
+   authorization.
 8. The map timeframe is adaptive within H1 and M30, with H1 as the highest
    active frame. H1/M30 establish scope; H1/M30/M15 identify and retain the
-   pre-existing HTF Root. After actual Root contact, M30/M15/M5 reveal the
-   newly formed reaction child lineage. M5 describes correction context and M1
-   confirms the executable reaction only after that post-contact lineage is
-   causally available. Stop/source refinement must follow the post-contact
-   reaction, not an unrelated or historical lower-timeframe zone at a similar price.
+   pre-existing HTF Root. After actual Root contact, M30/M15/M5 may record
+   optional newly formed child observations. M5 describes correction context and
+   M1 confirms the executable reaction after a valid Root-reaction sweep. Child
+   observations never replace the Root or change Entry/SL/TP/cancellation.
 9. A continuation setup must occur in the correct half of its active dealing
    range: long in discount and short in premium. This is the mentor's execution
    discipline, not a universal market law.
 10. The base first-entry chain is the predeclared eligible HTF Root, actual HTF
-    Root contact, post-contact newly formed causal LTF child, then the valid
-    source-liquidity/sweep context, M1 body-close CHoCH, and a fresh
-    same-direction 3-candle FVG belonging to the same sweep-to-CHoCH causal leg.
+    Root contact, valid Root-reaction liquidity/sweep context, M1 body-close
+    CHoCH, and a fresh same-direction 3-candle FVG belonging to the same
+    sweep-to-CHoCH causal leg.
     M5 may validate that the M1 event belongs to the expected correction but
     cannot authorize an order. A separate continuation BOS is not mandatory.
     If the meaningful CHoCH has no such causal FVG, the structure event remains
-    valid but the base first-position order is not authorized. The exact timing
-    anchor for sweep eligibility relative to newly formed child availability
-    must follow the corrected deterministic specification; the old
-    pre-contact-child contact anchor is not retained by implication.
+    valid but the base first-position order is not authorized.
+
+    Current deterministic operational contract (D-127) separates detector and
+    scenario sequence. The M1 sweep detector applies physical penetration +
+    same-bar recovery to active liquidity already known at M1 bar open, without
+    Root intersection, scenario ownership, child, distance, age, or quality
+    filters. Scenario direction is applied only when checking the ordered chain:
+    `Root contact -> later direction-compatible detected Sweep -> later
+    same-direction detected M1 CHoCH`. The Root-contact bar itself is excluded
+    from satisfying the scenario Sweep stage because closed OHLC cannot prove
+    intrabar contact-before-sweep ordering. The existing M1 structure detector
+    remains CHoCH authority; the scenario does not add a sweep-time protected
+    reference gate.
+
+    This paragraph is an **operational** deterministic replay decision, not a
+    mentor quotation. Child availability is not a sweep/CHoCH anchor.
 11. If more than one valid FVG exists in that causal displacement, select the
     widest by price range. An exact maximum-width tie after tick normalization
     is no-trade. Use the selected FVG's first subsequent touch, after both the
@@ -103,7 +113,7 @@ authority.
     Once the pending order is normally registered at the FVG near-side boundary,
     later FVG mitigation or distal traversal is not a separate strategy
     cancellation rule. Before fill, cancel only when the selected objective is
-    delivered, required source lineage is invalidated, or the scenario's
+    delivered, required HTF Root/source authority is invalidated, or the scenario's
     direction authority is revoked. Broker submission/fill/cancellation failures
     are execution-infrastructure outcomes, not new strategy states.
 15. A re-entry after a completed or invalidated scenario requires a new OB,
@@ -135,5 +145,5 @@ implemented as combinable optimization toggles in the base engine.
 
 Implementation parity requires every `explicit` Casebook relation to pass and
 every trade to expose its map structure, source liquidity, pre-existing HTF Root,
-qualifying Root contact, post-contact causal child, sweep, CHoCH, entry zone, SL,
+qualifying Root contact, optional child audit if any, sweep, CHoCH, entry zone, SL,
 and objective. Profitability is a separate gate.

@@ -1,20 +1,20 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - D126 Root-reaction sweep core      |
+//| Deterministic Mentor EA V1 - D127 linear trigger pipeline core      |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| D126 intentionally DOES NOT submit orders.                       |
+//| D127 intentionally DOES NOT submit orders.                       |
 //| D125 Root-specific pre-contact PLANs remain active.              |
-//| Strategic sweeps are authorized only from a causal per-M1-bar    |
-//| pool snapshot when the sweep bar intersects the owning Root.     |
-//| Child OBs remain audit-only; CHoCH/execution stays disabled.      |
+//| M1 sweep / CHoCH are detected independently of scenario filters. |
+//| Scenario logic only checks Root-contact -> Sweep -> CHoCH order.  |
+//| Child OBs remain audit-only; FVG/execution stays disabled.        |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - D126 Root-reaction strategic sweep core"
+#property description "Mentor deterministic V1 EA - D127 linear trigger pipeline core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
@@ -22,12 +22,12 @@ input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
 input bool   InpEnableFvgOriginObExperiment = false;
-input string InpEventCsvFile       = "mentor_v1_d126_root_reaction_sweep_events.csv";
+input string InpEventCsvFile       = "mentor_v1_d127_linear_trigger_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
-// but are intentionally not active in this D126 Root-reaction sweep build.
-// Meaningful M1 CHoCH and order authorization remain a later phase.
+// but are intentionally not active in this D127 linear-trigger build.
+// FVG selection and order authorization remain later phases.
 
 enum V1InitState
   {
@@ -138,7 +138,8 @@ enum V1StrategyState
   {
    V1_STRATEGY_PLANNED=0,
    V1_STRATEGY_WAITING_SWEEP,
-   V1_STRATEGY_WAITING_TRIGGER,
+   V1_STRATEGY_WAITING_TRIGGER, // active name shown as WAITING_CHOCH
+   V1_STRATEGY_WAITING_FVG,
    V1_STRATEGY_PENDING,
    V1_STRATEGY_FILLED,
    V1_STRATEGY_CANCELED,
@@ -356,6 +357,13 @@ struct V1ScenarioPlan
    datetime          active_sweep_at;
    int               authorized_sweep_count;
 
+   // D-127 linear sequence state. No protected-reference snapshot is added
+   // here: CHoCH authority comes directly from the independent M1 structure
+   // detector after the scenario sweep stage has been satisfied.
+   string            scenario_choch_event_id;
+   datetime          scenario_choch_bar_open;
+   datetime          scenario_choch_at;
+
    // Historical-bootstrap safety: if startup begins inside a frozen source,
    // contact authorization is disarmed until a closed M1 bar exits and a
    // later closed M1 bar re-enters the source.
@@ -437,6 +445,46 @@ struct V1AuthorizedSweepEpisode
    datetime          available_at;
    int               pool_count;
    string            pool_ids;
+  };
+
+// D-127 detector-only M1 liquidity snapshot. It has no scenario/Root owner.
+struct V1M1SweepDetectorPool
+  {
+   bool              valid;
+   string            liquidity_id;
+   int               family;
+   ENUM_TIMEFRAMES   tf;
+   int               side;
+   double            bottom;
+   double            top;
+   datetime          available_at;
+   datetime          snapshot_bar_open;
+  };
+
+struct V1M1SweepDetection
+  {
+   bool              valid;
+   string            id;
+   string            liquidity_id;
+   int               family;
+   ENUM_TIMEFRAMES   tf;
+   int               side;
+   double            bottom;
+   double            top;
+   datetime          pool_available_at;
+   datetime          bar_open;
+   datetime          available_at;
+  };
+
+struct V1M1ChochDetection
+  {
+   bool              valid;
+   string            id;
+   int               direction;
+   string            broken_swing_id;
+   double            broken_price;
+   datetime          bar_open;
+   datetime          available_at;
   };
 
 struct V1ScenarioDraft
@@ -597,9 +645,13 @@ V1ScenarioPlan   g_scenarios[];
 V1StrategyLiquidityConsumption g_strategy_liquidity_consumed[];
 V1ScenarioEligiblePool g_scenario_eligible_pools[]; // superseded Phase-4C storage, runtime-dead
 V1GroupContactPool g_group_contact_pools[];           // superseded Phase-4C storage, runtime-dead
-V1SweepBarSnapshotPool g_sweep_bar_snapshot[];
-V1AuthorizedSweepEpisode g_authorized_sweep_episodes[];
+V1SweepBarSnapshotPool g_sweep_bar_snapshot[];       // D-126 historical runtime-dead
+V1AuthorizedSweepEpisode g_authorized_sweep_episodes[]; // D-126 historical runtime-dead
 datetime          g_sweep_snapshot_bar_open=0;
+V1M1SweepDetectorPool g_m1_sweep_detector_snapshot[];
+V1M1SweepDetection g_m1_sweep_detections[];
+V1M1ChochDetection g_m1_choch_detection;
+datetime          g_m1_sweep_detector_bar_open=0;
 V1MapControl      g_map;
 string            g_scenario_layer_signature="";
 datetime         g_last_current_open[V1_TF_COUNT];
@@ -653,6 +705,10 @@ long             g_root_contacts_without_preplan=0;
 long             g_sweep_bar_snapshots=0;
 long             g_sweep_snapshot_pools=0;
 long             g_root_intersection_sweep_bars=0;
+long             g_m1_sweep_detector_events=0;
+long             g_scenario_sweep_accepts=0;
+long             g_m1_choch_detector_events=0;
+long             g_scenario_choch_accepts=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -830,7 +886,8 @@ string StrategyStateName(const int state)
      {
       case V1_STRATEGY_PLANNED:         return "PLANNED";
       case V1_STRATEGY_WAITING_SWEEP:   return "WAITING_SWEEP";
-      case V1_STRATEGY_WAITING_TRIGGER: return "WAITING_TRIGGER";
+      case V1_STRATEGY_WAITING_TRIGGER: return "WAITING_CHOCH";
+      case V1_STRATEGY_WAITING_FVG:     return "WAITING_FVG";
       case V1_STRATEGY_PENDING:         return "PENDING";
       case V1_STRATEGY_FILLED:          return "FILLED";
       case V1_STRATEGY_CANCELED:        return "CANCELED";
@@ -1069,6 +1126,11 @@ void InitializeAllStructureStates()
    ArrayResize(g_pending_refinement_root_ids,0);
    ArrayResize(g_objective_candidates,0);
    ArrayResize(g_scenarios,0);
+   ArrayResize(g_m1_sweep_detector_snapshot,0);
+   ArrayResize(g_m1_sweep_detections,0);
+   g_m1_sweep_detector_bar_open=0;
+   g_m1_choch_detection.valid=false;
+   g_m1_choch_detection.id="";
    g_scenario_layer_signature="";
    g_liquidity_created=0;
    g_liquidity_sweeps=0;
@@ -1099,6 +1161,10 @@ void InitializeAllStructureStates()
    g_precontact_root_plans=0;
    g_scenario_root_contacts=0;
    g_root_contacts_without_preplan=0;
+   g_m1_sweep_detector_events=0;
+   g_scenario_sweep_accepts=0;
+   g_m1_choch_detector_events=0;
+   g_scenario_choch_accepts=0;
    ResetMapControl();
 
    for(int i=0;i<V1_TF_COUNT;i++)
@@ -1575,6 +1641,10 @@ int PhysicalConsumptionForBar(const int side,
                               const double top,
                               const MqlRates &bar);
 bool BarIntersectsSource(const MqlRates &bar,const V1ScenarioPlan &plan);
+void PrepareD127M1SweepDetectorSnapshot(const datetime bar_open);
+void EvaluateD127M1SweepDetector(const MqlRates &bar,const datetime available_at);
+void ProcessD127ScenarioSweepStage(const MqlRates &bar,const datetime available_at);
+void ProcessD127ScenarioChochStage(const MqlRates &bar,const datetime available_at);
 
 void LogLiquidityConsumption(const V1LiquidityPool &pool,
                              const MqlRates &bar,
@@ -1714,7 +1784,7 @@ void LogLiquiditySnapshot(const int tf_index,const datetime available_at)
       external_count,
       range_count,
       reaction_count,
-      "STRUCTURAL_REACTION_AUTHORIZATION_DISABLED_D126_SEPARATE_REAUDIT");
+      "STRUCTURAL_REACTION_AUTHORIZATION_DISABLED_D127_LINEAR_BASELINE");
 
    LogLine("LIQUIDITY_STATE",
            TfName(tf),
@@ -2805,6 +2875,47 @@ void PromoteInitialTrend(V1StructureState &s,
    ClearWave(s.neutral_low);
   }
 
+void ClearD127M1ChochDetection()
+  {
+   g_m1_choch_detection.valid=false;
+   g_m1_choch_detection.id="";
+   g_m1_choch_detection.direction=0;
+   g_m1_choch_detection.broken_swing_id="";
+   g_m1_choch_detection.broken_price=0.0;
+   g_m1_choch_detection.bar_open=0;
+   g_m1_choch_detection.available_at=0;
+  }
+
+void RecordD127M1ChochDetection(const V1StructureState &s,
+                                const int direction,
+                                const V1WaveRef &broken,
+                                const MqlRates &bar,
+                                const datetime available_at)
+  {
+   if(s.tf!=PERIOD_M1 || !broken.valid)
+      return;
+
+   g_m1_choch_detection.valid=true;
+   g_m1_choch_detection.id=BuildStructureEventId(s,V1_EVENT_PROTECTED_BREAK,bar);
+   g_m1_choch_detection.direction=direction;
+   g_m1_choch_detection.broken_swing_id=broken.id;
+   g_m1_choch_detection.broken_price=broken.price;
+   g_m1_choch_detection.bar_open=bar.time;
+   g_m1_choch_detection.available_at=available_at;
+   g_m1_choch_detector_events++;
+
+   LogLine("M1_CHOCH_DETECTED",
+           "M1",
+           available_at,
+           g_m1_choch_detection.id,
+           StringFormat("direction=%s bar_open=%s close=%.10f broken_swing_id=%s broken_price=%.10f detector_source=STRUCTURE_PROTECTED_BREAK strategy_authority=false scenario_filter=false sweep_filter=false root_filter=false child_filter=false",
+                        DirectionName(direction),
+                        TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                        bar.close,
+                        broken.id,
+                        broken.price));
+  }
+
 void LogStructureEvent(V1StructureState &s,
                        const int event_type,
                        const int direction,
@@ -2845,6 +2956,8 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          ClearWave(empty);
          LogStructureEvent(s,V1_EVENT_PROTECTED_BREAK,-1,
                            broken,empty,bar,available_at);
+         if(tf_index==5)
+            RecordD127M1ChochDetection(s,-1,broken,bar,available_at);
          InvalidateRootsForStructureOwner(tf_index,available_at,bar);
          EnterTransition(s,-1,available_at);
          LogStateSnapshot(tf_index,available_at,"PROTECTED_BREAK");
@@ -2895,6 +3008,8 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          ClearWave(empty);
          LogStructureEvent(s,V1_EVENT_PROTECTED_BREAK,1,
                            broken,empty,bar,available_at);
+         if(tf_index==5)
+            RecordD127M1ChochDetection(s,1,broken,bar,available_at);
          InvalidateRootsForStructureOwner(tf_index,available_at,bar);
          EnterTransition(s,1,available_at);
          LogStateSnapshot(tf_index,available_at,"PROTECTED_BREAK");
@@ -4043,6 +4158,9 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
    g_scenarios[n].active_sweep_bar_open=0;
    g_scenarios[n].active_sweep_at=0;
    g_scenarios[n].authorized_sweep_count=0;
+   g_scenarios[n].scenario_choch_event_id="";
+   g_scenarios[n].scenario_choch_bar_open=0;
+   g_scenarios[n].scenario_choch_at=0;
    g_scenarios[n].startup_inside_source=false;
    g_scenarios[n].startup_exit_seen=false;
    g_scenarios[n].canceled_at=0;
@@ -4094,7 +4212,7 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
            TfName(draft.active_map_tf),
            frozen_at,
            scenario_id,
-           StringFormat("state=PLANNED scope=%s direction=%s active_map_tf=%s owner_id=%s parent_context_id=%s h1_trend_at_freeze=%s h1_owner_id_at_freeze=%s m30_trend_at_freeze=%s m30_owner_id_at_freeze=%s reversal_permission_at_freeze=%s permission_reference_id=%s permission_opened_at=%s root_zone_id=%s final_source_id=%s source_tf=%s source_bottom=%.10f source_top=%.10f map_range_low=%.10f map_range_high=%.10f map_eq=%.10f plan_reference_bar_open=%s plan_reference_price=%.10f primary_directional_horizon=%.10f objective_count=%d root_contact_required=true root_contact_at=NA strategy_source_kind=ROOT child_required=false phase4c_sweep_authorization=false trigger_search_enabled=false",
+           StringFormat("state=PLANNED scope=%s direction=%s active_map_tf=%s owner_id=%s parent_context_id=%s h1_trend_at_freeze=%s h1_owner_id_at_freeze=%s m30_trend_at_freeze=%s m30_owner_id_at_freeze=%s reversal_permission_at_freeze=%s permission_reference_id=%s permission_opened_at=%s root_zone_id=%s final_source_id=%s source_tf=%s source_bottom=%.10f source_top=%.10f map_range_low=%.10f map_range_high=%.10f map_eq=%.10f plan_reference_bar_open=%s plan_reference_price=%.10f primary_directional_horizon=%.10f objective_count=%d root_contact_required=true root_contact_at=NA strategy_source_kind=ROOT child_required=false linear_trigger_pipeline=true detector_sequence=ROOT_CONTACT_THEN_M1_SWEEP_THEN_M1_CHOCH fvg_search_enabled=false",
                         ScenarioScopeName(draft.scope),
                         DirectionName(draft.direction),
                         TfName(draft.active_map_tf),
@@ -4185,6 +4303,226 @@ void RefreshScenarioLayer(const datetime available_at,const bool force=false)
                         plan_reference_price,
                         primary_horizon,
                         family);
+     }
+  }
+
+//+------------------------------------------------------------------+
+//| D-127 detector / sequence separation                             |
+//+------------------------------------------------------------------+
+void AddD127M1SweepDetectorPool(const V1LiquidityPool &pool,
+                                const datetime bar_open)
+  {
+   int n=ArraySize(g_m1_sweep_detector_snapshot);
+   if(ArrayResize(g_m1_sweep_detector_snapshot,n+1,256)<0)
+      return;
+
+   g_m1_sweep_detector_snapshot[n].valid=true;
+   g_m1_sweep_detector_snapshot[n].liquidity_id=pool.id;
+   g_m1_sweep_detector_snapshot[n].family=pool.family;
+   g_m1_sweep_detector_snapshot[n].tf=pool.tf;
+   g_m1_sweep_detector_snapshot[n].side=pool.side;
+   g_m1_sweep_detector_snapshot[n].bottom=pool.bottom;
+   g_m1_sweep_detector_snapshot[n].top=pool.top;
+   g_m1_sweep_detector_snapshot[n].available_at=pool.available_at;
+   g_m1_sweep_detector_snapshot[n].snapshot_bar_open=bar_open;
+  }
+
+void PrepareD127M1SweepDetectorSnapshot(const datetime bar_open)
+  {
+   ArrayResize(g_m1_sweep_detector_snapshot,0);
+   ArrayResize(g_m1_sweep_detections,0);
+   g_m1_sweep_detector_bar_open=bar_open;
+
+   // Detector causality only: use liquidity that is already known when the
+   // M1 bar begins. No Root, scenario, direction, distance, family-ranking,
+   // child, or quality gate is applied here.
+   for(int i=0;i<ArraySize(g_liquidity);i++)
+     {
+      if(!g_liquidity[i].valid ||
+         g_liquidity[i].available_at>bar_open ||
+         IsStrategyLiquidityConsumed(g_liquidity[i].id))
+         continue;
+
+      AddD127M1SweepDetectorPool(g_liquidity[i],bar_open);
+     }
+  }
+
+void AddD127M1SweepDetection(const V1M1SweepDetectorPool &pool,
+                             const MqlRates &bar,
+                             const datetime available_at)
+  {
+   int n=ArraySize(g_m1_sweep_detections);
+   if(ArrayResize(g_m1_sweep_detections,n+1,64)<0)
+      return;
+
+   string id=StringFormat("M1:sweep:%s:%I64d",
+                          pool.liquidity_id,
+                          (long)bar.time);
+
+   g_m1_sweep_detections[n].valid=true;
+   g_m1_sweep_detections[n].id=id;
+   g_m1_sweep_detections[n].liquidity_id=pool.liquidity_id;
+   g_m1_sweep_detections[n].family=pool.family;
+   g_m1_sweep_detections[n].tf=pool.tf;
+   g_m1_sweep_detections[n].side=pool.side;
+   g_m1_sweep_detections[n].bottom=pool.bottom;
+   g_m1_sweep_detections[n].top=pool.top;
+   g_m1_sweep_detections[n].pool_available_at=pool.available_at;
+   g_m1_sweep_detections[n].bar_open=bar.time;
+   g_m1_sweep_detections[n].available_at=available_at;
+   g_m1_sweep_detector_events++;
+
+   LogLine("M1_SWEEP_DETECTED",
+           "M1",
+           available_at,
+           id,
+           StringFormat("liquidity_id=%s family=%s pool_tf=%s side=%s bottom=%.10f top=%.10f pool_available_at=%s bar_open=%s high=%.10f low=%.10f close=%.10f detector_only=true strategy_authority=false root_filter=false scenario_filter=false direction_filter=false root_intersection_required=false child_filter=false",
+                        pool.liquidity_id,
+                        LiquidityFamilyName(pool.family),
+                        TfName(pool.tf),
+                        SideName(pool.side),
+                        pool.bottom,
+                        pool.top,
+                        TimeToString(pool.available_at,TIME_DATE|TIME_SECONDS),
+                        TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                        bar.high,
+                        bar.low,
+                        bar.close));
+  }
+
+void EvaluateD127M1SweepDetector(const MqlRates &bar,
+                                 const datetime available_at)
+  {
+   ArrayResize(g_m1_sweep_detections,0);
+   if(g_m1_sweep_detector_bar_open!=bar.time)
+      return;
+
+   for(int i=0;i<ArraySize(g_m1_sweep_detector_snapshot);i++)
+     {
+      if(!g_m1_sweep_detector_snapshot[i].valid)
+         continue;
+
+      int consumption=PhysicalConsumptionForBar(
+         g_m1_sweep_detector_snapshot[i].side,
+         g_m1_sweep_detector_snapshot[i].bottom,
+         g_m1_sweep_detector_snapshot[i].top,
+         bar);
+
+      if(consumption!=V1_LIQ_CONSUME_SWEEP)
+         continue;
+
+      AddD127M1SweepDetection(g_m1_sweep_detector_snapshot[i],
+                              bar,
+                              available_at);
+     }
+  }
+
+void ProcessD127ScenarioSweepStage(const MqlRates &bar,
+                                   const datetime available_at)
+  {
+   for(int sidx=0;sidx<ArraySize(g_scenarios);sidx++)
+     {
+      if(!g_scenarios[sidx].valid ||
+         g_scenarios[sidx].strategy_state!=V1_STRATEGY_WAITING_SWEEP ||
+         g_scenarios[sidx].source_contact_at<=0)
+         continue;
+
+      // Strict stage order. A Root contact is known at the contact-bar close,
+      // so only the next/later M1 bar can satisfy the sweep stage.
+      if(bar.time<g_scenarios[sidx].source_contact_at)
+         continue;
+
+      int required_side=(g_scenarios[sidx].direction>0 ?
+                         V1_SIDE_LOW : V1_SIDE_HIGH);
+      int matched=0;
+      string detector_ids="";
+      string liquidity_ids="";
+
+      for(int i=0;i<ArraySize(g_m1_sweep_detections);i++)
+        {
+         if(!g_m1_sweep_detections[i].valid ||
+            g_m1_sweep_detections[i].side!=required_side)
+            continue;
+
+         if(detector_ids!="") detector_ids+="|";
+         detector_ids+=g_m1_sweep_detections[i].id;
+         if(liquidity_ids!="") liquidity_ids+="|";
+         liquidity_ids+=g_m1_sweep_detections[i].liquidity_id;
+         matched++;
+        }
+
+      if(matched<=0)
+         continue;
+
+      string stage_id=StringFormat("%s:scenario_sweep:%I64d",
+                                   g_scenarios[sidx].id,
+                                   (long)bar.time);
+      g_scenarios[sidx].active_sweep_event_id=stage_id;
+      g_scenarios[sidx].active_sweep_bar_open=bar.time;
+      g_scenarios[sidx].active_sweep_at=available_at;
+      g_scenarios[sidx].authorized_sweep_count=matched;
+      g_scenarios[sidx].strategy_state=V1_STRATEGY_WAITING_TRIGGER;
+      g_scenario_sweep_accepts++;
+
+      LogLine("SCENARIO_SWEEP_ACCEPTED",
+              "M1",
+              available_at,
+              stage_id,
+              StringFormat("scenario_id=%s root_zone_id=%s direction=%s required_side=%s root_contact_at=%s sweep_bar_open=%s detector_count=%d detector_ids=%s liquidity_ids=%s state=WAITING_CHOCH rule=SEQUENCE_ONLY root_reintersection=false family_whitelist=false child_required=false choch_reference_freeze=false",
+                           g_scenarios[sidx].id,
+                           g_scenarios[sidx].root_zone_id,
+                           DirectionName(g_scenarios[sidx].direction),
+                           SideName(required_side),
+                           TimeToString(g_scenarios[sidx].source_contact_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                           matched,
+                           detector_ids,
+                           liquidity_ids));
+     }
+  }
+
+void ProcessD127ScenarioChochStage(const MqlRates &bar,
+                                   const datetime available_at)
+  {
+   if(!g_m1_choch_detection.valid ||
+      g_m1_choch_detection.bar_open!=bar.time)
+      return;
+
+   for(int sidx=0;sidx<ArraySize(g_scenarios);sidx++)
+     {
+      if(!g_scenarios[sidx].valid ||
+         g_scenarios[sidx].strategy_state!=V1_STRATEGY_WAITING_TRIGGER ||
+         g_scenarios[sidx].active_sweep_at<=0)
+         continue;
+
+      if(g_m1_choch_detection.direction!=g_scenarios[sidx].direction)
+         continue;
+
+      // Sequence only: CHoCH must be a later M1 structure event than the M1
+      // bar that satisfied the sweep stage. The CHoCH detector itself already
+      // owns the protected-swing/body-close definition.
+      if(g_m1_choch_detection.bar_open<=g_scenarios[sidx].active_sweep_bar_open)
+         continue;
+
+      g_scenarios[sidx].scenario_choch_event_id=g_m1_choch_detection.id;
+      g_scenarios[sidx].scenario_choch_bar_open=g_m1_choch_detection.bar_open;
+      g_scenarios[sidx].scenario_choch_at=available_at;
+      g_scenarios[sidx].strategy_state=V1_STRATEGY_WAITING_FVG;
+      g_scenario_choch_accepts++;
+
+      LogLine("SCENARIO_CHOCH_ACCEPTED",
+              "M1",
+              available_at,
+              g_m1_choch_detection.id,
+              StringFormat("scenario_id=%s root_zone_id=%s direction=%s scenario_sweep_event_id=%s sweep_bar_open=%s choch_bar_open=%s broken_swing_id=%s broken_price=%.10f state=WAITING_FVG rule=SEQUENCE_ONLY detector_source=M1_CHOCH_DETECTED extra_reference_filter=false opposite_trend_at_sweep_filter=false initial_bos_fallback=false child_required=false fvg_search_enabled=false order_authorization=false",
+                           g_scenarios[sidx].id,
+                           g_scenarios[sidx].root_zone_id,
+                           DirectionName(g_scenarios[sidx].direction),
+                           g_scenarios[sidx].active_sweep_event_id,
+                           TimeToString(g_scenarios[sidx].active_sweep_bar_open,TIME_DATE|TIME_SECONDS),
+                           TimeToString(g_m1_choch_detection.bar_open,TIME_DATE|TIME_SECONDS),
+                           g_m1_choch_detection.broken_swing_id,
+                           g_m1_choch_detection.broken_price));
      }
   }
 
@@ -5141,7 +5479,7 @@ void LogScenarioSnapshot(const datetime available_at)
            "",
            available_at,
            "",
-           StringFormat("active_planned=%d continuation=%d early_reversal=%d canceled=%d objective_candidates_frozen=%I64d no_objective=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d strategy_source_kind=ROOT child_required=false phase4c_sweep_authorization=false choch_authorization=false",
+           StringFormat("active_planned=%d continuation=%d early_reversal=%d canceled=%d objective_candidates_frozen=%I64d no_objective=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d strategy_source_kind=ROOT child_required=false linear_trigger_pipeline=true fvg_authorization=false",
                         planned,
                         continuation,
                         reversal,
@@ -5937,7 +6275,7 @@ void BindPreplannedScenarioToRootContact(const V1SourceZone &root,
               "M1",
               available_at,
               root.id,
-              StringFormat("contact_bar_open=%s strategy_source_kind=ROOT reason=NO_ACTIVE_PRECONTACT_MAP_OBJECTIVE_PLAN retrospective_plan_forbidden=true phase4c_sweep_authorization=false",
+              StringFormat("contact_bar_open=%s strategy_source_kind=ROOT reason=NO_ACTIVE_PRECONTACT_MAP_OBJECTIVE_PLAN retrospective_plan_forbidden=true linear_trigger_pipeline=true",
                            TimeToString(bar.time,TIME_DATE|TIME_SECONDS)));
       return;
      }
@@ -5959,7 +6297,7 @@ void BindPreplannedScenarioToRootContact(const V1SourceZone &root,
               "M1",
               available_at,
               root.id,
-              StringFormat("scenario_id=%s plan_frozen_at=%s contact_at=%s reason=PLAN_NOT_STRICTLY_BEFORE_CONTACT fail_closed=true scenario_canceled=true retrospective_plan_forbidden=true phase4c_sweep_authorization=false",
+              StringFormat("scenario_id=%s plan_frozen_at=%s contact_at=%s reason=PLAN_NOT_STRICTLY_BEFORE_CONTACT fail_closed=true scenario_canceled=true retrospective_plan_forbidden=true linear_trigger_pipeline=true",
                            g_scenarios[scenario_index].id,
                            TimeToString(g_scenarios[scenario_index].frozen_at,TIME_DATE|TIME_SECONDS),
                            TimeToString(available_at,TIME_DATE|TIME_SECONDS)));
@@ -5968,8 +6306,8 @@ void BindPreplannedScenarioToRootContact(const V1SourceZone &root,
 
    g_scenarios[scenario_index].source_contact_at=available_at;
    g_scenarios[scenario_index].source_contact_bar_open=bar.time;
-   // Root contact is bound, but corrected Phase 4C has not yet authorized
-   // a Root-reaction sweep. CHoCH search therefore remains disabled.
+   // Root contact satisfies only its own stage. The linear sequence now waits
+   // for an independently detected direction-compatible M1 sweep.
    g_scenarios[scenario_index].strategy_state=V1_STRATEGY_WAITING_SWEEP;
    g_scenario_root_contacts++;
 
@@ -5977,7 +6315,7 @@ void BindPreplannedScenarioToRootContact(const V1SourceZone &root,
            "M1",
            available_at,
            g_scenarios[scenario_index].id,
-           StringFormat("root_zone_id=%s strategy_source_id=%s strategy_source_kind=ROOT plan_frozen_at=%s root_contact_at=%s root_contact_bar_open=%s scope=%s direction=%s active_map_tf=%s objective_count=%d state=WAITING_SWEEP child_required=false phase4c_sweep_authorization=false choch_search_enabled=false",
+           StringFormat("root_zone_id=%s strategy_source_id=%s strategy_source_kind=ROOT plan_frozen_at=%s root_contact_at=%s root_contact_bar_open=%s scope=%s direction=%s active_map_tf=%s objective_count=%d state=WAITING_SWEEP child_required=false linear_trigger_pipeline=true next_stage=WAITING_SWEEP",
                         root.id,
                         root.id,
                         TimeToString(g_scenarios[scenario_index].frozen_at,TIME_DATE|TIME_SECONDS),
@@ -6069,7 +6407,7 @@ void ProcessPostContactRootContacts(const MqlRates &bar,
               "M1",
               available_at,
               root.id,
-              StringFormat("strategy_source_id=%s strategy_source_kind=ROOT optional_child_observation=ENABLED child_strategy_authority=false entry_geometry=M1_FVG sl_geometry=M1_FVG_20PCT root_contact_at=%s strategy_authority=false phase4b_scenario_qualified=%s map_objective_qualification=%s scenario_id=%s phase4c_sweep_authorization=false",
+              StringFormat("strategy_source_id=%s strategy_source_kind=ROOT optional_child_observation=ENABLED child_strategy_authority=false entry_geometry=M1_FVG sl_geometry=M1_FVG_20PCT root_contact_at=%s strategy_authority=false phase4b_scenario_qualified=%s map_objective_qualification=%s scenario_id=%s linear_trigger_pipeline=true",
                            root.id,
                            TimeToString(available_at,TIME_DATE|TIME_SECONDS),
                            has_preplan ? "true" : "false",
@@ -6079,7 +6417,7 @@ void ProcessPostContactRootContacts(const MqlRates &bar,
               "M1",
               available_at,
               root.id,
-              StringFormat("direction=%s root_tf=%s root_available_at=%s contact_bar_open=%s bottom=%.10f top=%.10f optional_child_observation_enabled=true child_strategy_authority=false root_remains_strategy_source=true historical_child_authorization=false phase4b_precontact_plan_checked=true phase4c_sweep_authorization=false",
+              StringFormat("direction=%s root_tf=%s root_available_at=%s contact_bar_open=%s bottom=%.10f top=%.10f optional_child_observation_enabled=true child_strategy_authority=false root_remains_strategy_source=true historical_child_authorization=false phase4b_precontact_plan_checked=true linear_trigger_pipeline=true",
                            DirectionName(root.direction),
                            TfName(root.tf),
                            TimeToString(root.available_at,TIME_DATE|TIME_SECONDS),
@@ -6291,7 +6629,7 @@ void LogPostContactRefinement(const string event_name,
            "",
            lineage.snapshot_at,
            lineage.root_zone_id,
-           StringFormat("status=%s refinement_status=%s child_count=%d final_child_id=%s path=%s root_contact_at=%s root_contact_bar_open=%s frozen_at=%s stop_reason=%s post_contact=true scenario_authority=false sweep_authorization=DISABLED_PENDING_TIMING_REAUDIT",
+           StringFormat("status=%s refinement_status=%s child_count=%d final_child_id=%s path=%s root_contact_at=%s root_contact_bar_open=%s frozen_at=%s stop_reason=%s post_contact=true scenario_authority=false linear_trigger_pipeline=ACTIVE_CHILD_INDEPENDENT",
                         RootReactionStatusName(tracker_status),
                         RefinementStatusName(lineage.status),
                         lineage.child_count,
@@ -6604,7 +6942,7 @@ void LogRefinementSnapshot(const int tf_index,
      }
 
    string detail=StringFormat(
-      "ready=%d no_child_terminal=%d ambiguous_first=%d invalidated=%d waiting_root_contact=%d discovering_post_contact_child=%d prior_touch_ineligible=%d active_m30_children=%d active_m15_children=%d active_m5_children=%d historical_child_authorization=false child_strategy_authority=false optional_child_audit_only=true sweep_authorization=DISABLED_PENDING_TIMING_REAUDIT",
+      "ready=%d no_child_terminal=%d ambiguous_first=%d invalidated=%d waiting_root_contact=%d discovering_post_contact_child=%d prior_touch_ineligible=%d active_m30_children=%d active_m15_children=%d active_m5_children=%d historical_child_authorization=false child_strategy_authority=false optional_child_audit_only=true linear_trigger_pipeline=ACTIVE_CHILD_INDEPENDENT",
       ready,
       no_child,
       ambiguous,
@@ -6628,6 +6966,9 @@ void ProcessClosedBar(const int tf_index,
                       const datetime available_at)
   {
    g_structure[tf_index].processed_bars++;
+
+   if(tf_index==5)
+      ClearD127M1ChochDetection();
 
    EnsureLegStart(g_structure[tf_index],bar);
 
@@ -6664,9 +7005,9 @@ void ProcessClosedBar(const int tf_index,
    if(new_wave)
      {
       TryCreateDefendedRangeLiquidity(tf_index,bar,available_at);
-      // D-126 boundary: Structural-Reaction strategy ownership remains
-      // explicitly disabled. External swing / defended-range strategic sweep
-      // ownership is reattached without creating Structural-Reaction pools.
+      // D-127 keeps Structural-Reaction creation disabled. The linear baseline
+      // consumes whatever liquidity objects the existing detector actually
+      // publishes; it does not create a scenario-specific reaction pool.
       // TryCreateStructuralReactionLiquidity(tf_index,available_at);
      }
 
@@ -6684,10 +7025,16 @@ void ProcessClosedBar(const int tf_index,
       // can own the Root reaction.
       ProcessPostContactRootContacts(bar,available_at);
 
-      // D-126 evaluates only the per-bar snapshot captured from state that
-      // existed before this close-timestamp group. Newly contacted scenarios
-      // therefore cannot authorize the contact bar as their sweep.
-      EvaluateD126RootReactionSweeps(bar,available_at);
+      // D-127 separates detector from strategy sequence. The sweep detector
+      // evaluates the generic pre-open liquidity snapshot with no Root/scenario
+      // gate, then the scenario layer checks only Contact -> Sweep ordering.
+      EvaluateD127M1SweepDetector(bar,available_at);
+      ProcessD127ScenarioSweepStage(bar,available_at);
+
+      // The independent M1 structure detector may have emitted CHoCH on this
+      // bar. Scenario authority checks only that it is direction-compatible
+      // and strictly later than the accepted scenario sweep.
+      ProcessD127ScenarioChochStage(bar,available_at);
      }
 
    if(tf_index==1 || tf_index==2)
@@ -6784,7 +7131,7 @@ bool BootstrapStructureCore()
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
    g_init_state=V1_INIT_SOURCE_CONTEXT;
-   LogLine("INIT_STATE","",now,"","D126_ROOT_PRECONTACT_PLAN_AND_ROOT_REACTION_SWEEP_READY_CHOCH_DISABLED");
+   LogLine("INIT_STATE","",now,"","D127_LINEAR_TRIGGER_PIPELINE_READY_FVG_DISABLED");
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -6823,7 +7170,7 @@ bool BootstrapStructureCore()
       CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
 
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_D126_ROOT_REACTION_SWEEP ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d root_watches_created=%I64d prior_touch_ineligible=%I64d root_contexts_ready=%I64d scenarios_planned=%I64d phase4b_planning_enabled=true phase4c_sweep_authorization=true phase5a_choch_authorization=false",
+           StringFormat("READY_D127_LINEAR_TRIGGER_PIPELINE ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d root_watches_created=%I64d prior_touch_ineligible=%I64d root_contexts_ready=%I64d scenarios_planned=%I64d phase4b_planning_enabled=true m1_sweep_detector=true scenario_sweep_sequence=true m1_choch_detector=true scenario_choch_sequence=true fvg_authorization=false",
                         TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
                         h4_long_horizon_count,
                         ArraySize(g_liquidity),
@@ -6999,33 +7346,34 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
          group_time=events[i].available_at;
          group_pre_m1_authorization_done=false;
 
-         // D-126 snapshot is anchored to the M1 bar OPEN and uses state carried
-         // into this close-timestamp group. Same-close HTF events below cannot
-         // retroactively make a pool eligible for the already-completed M1 bar.
-         datetime d126_m1_bar_open=0;
+         // D-127 detector snapshot is anchored to the M1 bar OPEN and uses
+         // only liquidity state carried into this close-timestamp group. This
+         // is detector causality, not a scenario/Root qualification layer.
+         datetime d127_m1_bar_open=0;
          for(int j=i;j<ArraySize(events) &&
                        events[j].available_at==group_time;j++)
            {
             if(events[j].tf_index==5)
               {
-               d126_m1_bar_open=events[j].bar.time;
+               d127_m1_bar_open=events[j].bar.time;
                break;
               }
            }
 
-         if(d126_m1_bar_open>0)
-            PrepareD126SweepBarSnapshot(d126_m1_bar_open);
+         if(d127_m1_bar_open>0)
+            PrepareD127M1SweepDetectorSnapshot(d127_m1_bar_open);
          else
            {
-            ArrayResize(g_sweep_bar_snapshot,0);
-            g_sweep_snapshot_bar_open=0;
+            ArrayResize(g_m1_sweep_detector_snapshot,0);
+            ArrayResize(g_m1_sweep_detections,0);
+            g_m1_sweep_detector_bar_open=0;
            }
         }
 
       // H4->H1->M30->M15->M5 have higher priority than M1 for map/Root/
-      // objective/contact processing. D-126's sweep snapshot was already
-      // captured from pre-group state, so same-close HTF information cannot
-      // authorize the M1 bar's completed wick.
+      // objective/contact processing. D-127's generic M1 sweep-detector
+      // snapshot was already captured from pre-group state, so same-close HTF
+      // information cannot rewrite the completed M1 bar.
       if(events[i].tf_index==5 && !group_pre_m1_authorization_done)
         {
          EnsurePostContactRootWatches(group_time,false);
@@ -7044,11 +7392,12 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
       RefreshScenarioLayer(group_time,false);
      }
 
-   ArrayResize(g_sweep_bar_snapshot,0);
-   g_sweep_snapshot_bar_open=0;
+   ArrayResize(g_m1_sweep_detector_snapshot,0);
+   ArrayResize(g_m1_sweep_detections,0);
+   g_m1_sweep_detector_bar_open=0;
 
-   // D-126 enables scenario-specific Root-reaction strategic sweeps.
-   // Meaningful CHoCH / FVG execution / order authorization remains off.
+   // D-127 enables the linear Contact -> Sweep -> CHoCH sequence.
+   // FVG execution / order authorization remains off.
   }
 
 //+------------------------------------------------------------------+
@@ -7086,7 +7435,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=1.00 property_version=1.00 magic=%I64d phase=D126_ROOT_REACTION_SWEEP_CORE fvg_origin_ob_experiment=%s",
+           StringFormat("build=1.10 property_version=1.00 magic=%I64d phase=D127_LINEAR_TRIGGER_PIPELINE_CORE fvg_origin_ob_experiment=%s",
                         InpMagicNumber,
                         InpEnableFvgOriginObExperiment ? "true" : "false"));
 
@@ -7100,7 +7449,7 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d root_contexts_ready=%I64d children_created_strategy_sources=%I64d optional_child_observations=%I64d post_contact_child_events=%I64d children_invalidated_strategy_sources=%I64d legacy_refinements_ready=%I64d legacy_refinements_no_child=%I64d legacy_refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_no_objective=%I64d objective_candidates_frozen=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d d126_sweep_bar_snapshots=%I64d d126_sweep_snapshot_pools=%I64d authorized_sweep_events=%I64d authorized_sweep_pools=%I64d root_intersection_sweep_bars=%I64d structural_reaction_created=%I64d source_contacts_superseded_phase4c=%I64d",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d root_contexts_ready=%I64d children_created_strategy_sources=%I64d optional_child_observations=%I64d post_contact_child_events=%I64d children_invalidated_strategy_sources=%I64d legacy_refinements_ready=%I64d legacy_refinements_no_child=%I64d legacy_refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_no_objective=%I64d objective_candidates_frozen=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d m1_sweep_detected=%I64d scenario_sweeps_accepted=%I64d m1_choch_detected=%I64d scenario_choch_accepted=%I64d d126_authorized_sweep_events_historical_runtime_dead=%I64d d126_authorized_sweep_pools_historical_runtime_dead=%I64d structural_reaction_created=%I64d source_contacts_superseded_phase4c=%I64d",
                         reason,
                         InitStateName(g_init_state),
                         ArraySize(g_liquidity),
@@ -7135,11 +7484,12 @@ void OnDeinit(const int reason)
                         g_precontact_root_plans,
                         g_scenario_root_contacts,
                         g_root_contacts_without_preplan,
-                        g_sweep_bar_snapshots,
-                        g_sweep_snapshot_pools,
+                        g_m1_sweep_detector_events,
+                        g_scenario_sweep_accepts,
+                        g_m1_choch_detector_events,
+                        g_scenario_choch_accepts,
                         g_authorized_sweep_events,
                         g_authorized_sweep_pools,
-                        g_root_intersection_sweep_bars,
                         g_structural_reaction_created,
                         g_source_contacts));
 
@@ -7174,11 +7524,11 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              "D126 orders disabled; Root-based pre-contact planning + Root-reaction strategic sweep authorization active; Phase5A CHoCH authorization disabled");
+              "D127 orders disabled; Root preplanning active; M1 sweep and CHoCH detected independently; scenario sequence Contact->Sweep->CHoCH active; FVG authorization disabled");
      }
 
    ProcessRuntimeClosedBars((datetime)tick.time);
 
-   // No trade submission in D-126 / corrected Phase 4C.
+   // No trade submission in D-127 / linear trigger pipeline.
   }
 //+------------------------------------------------------------------+

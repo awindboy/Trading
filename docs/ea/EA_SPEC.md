@@ -3,7 +3,7 @@
 Status: FROZEN FOR V1 IMPLEMENTATION
 Authority: `AGENTS.md`
 Latest authority correction: `2026-08-16 — HTF Root is the sole OB source; post-contact child is optional audit/context only`
-Latest implementation freeze: `2026-08-16 — D-126 Root-reaction strategic sweep ownership`
+Latest implementation freeze: `2026-08-16 — D-127 detector/sequence separation and linear M1 trigger pipeline`
 
 ## Rule Classification
 
@@ -2826,141 +2826,103 @@ reuse an old sweep only because a child later appeared
 move Entry/SL/TP because a child later appeared
 ```
 
-### 6.6 Corrected Root-Reaction Sweep Timing / Ownership
+### 6.6 M1 Sweep Detector / Scenario Sequence Separation
+
+Classification: D — D-127 current baseline
+
+D-127 supersedes D-126 **strategic** Root-zone sweep ownership. D-126 remains historical validated evidence, but its `Root-zone intersection`, family whitelist, and multi-episode ownership rules are not current trade gates.
+
+The M1 sweep detector and the scenario sequence are separate layers.
+
+#### Detector layer
+
+For every M1 bar, snapshot the active liquidity objects already causally known when that bar opens.
+
+```text
+pool.available_at <= M1 bar open
+pool not already physically/strategy consumed
+```
+
+Then apply only the physical sweep geometry:
+
+```text
+HIGH-side: high > pool.top AND close <= pool.top
+LOW-side:  low  < pool.bottom AND close >= pool.bottom
+```
+
+A detected object is logged as:
+
+```text
+M1_SWEEP_DETECTED
+```
+
+The detector does **not** require:
+
+```text
+Root-zone intersection
+scenario ownership
+scenario direction
+optional child
+ATR / point distance
+N-bar age
+quality score
+strategy-specific family whitelist
+```
+
+The causally-known-at-open requirement is a no-lookahead detector rule, not a strategy-quality filter.
+
+Current code still does not create `STRUCTURAL_REACTION` pools. If that physical family is reintroduced later, its creation contract must be audited independently; the M1 detector itself does not gain a new strategy gate.
+
+#### Sequence layer
+
+A preplanned scenario enters `WAITING_SWEEP` only after qualifying Root contact.
+
+LONG:
+
+```text
+Root contact
+→ later LOW-side M1_SWEEP_DETECTED
+→ WAITING_CHOCH
+```
+
+SHORT:
+
+```text
+Root contact
+→ later HIGH-side M1_SWEEP_DETECTED
+→ WAITING_CHOCH
+```
+
+The Root-contact bar itself cannot satisfy the scenario sweep stage in current closed-bar V1 because OHLC cannot prove intrabar `Root contact → sweep` order. A detector event on that bar remains a valid physical detector fact but is not attached to the scenario.
+
+Once the first direction-compatible detected sweep satisfies the scenario stage, later sweep detections remain audit facts and do not create nested replacement/reference logic before CHoCH.
+
+No optional-child condition exists.
+
+### 6.7 Direction-Compatible Scenario Sweep
 
 Classification: D
 
-D-126 freezes the baseline strategic-sweep ownership contract for the already
-verified physical liquidity families.
-
-A persistent Root-contact-time pool snapshot is **not** used.
-
-Reason:
-
-Root reaction can create a new liquidity object after contact; if that object
-becomes causally mature and price later approaches it again, it may be a valid
-sweep candidate. Freezing only the pools that existed at Root contact would
-incorrectly exclude that causal path.
-
-Instead, every candidate M1 sweep bar uses a causal snapshot anchored to that
-bar's **open time**.
-
 ```text
-preplanned scenario
-→ qualifying Root contact already known
-→ candidate M1 bar open
-→ snapshot currently eligible mature pools
-→ M1 bar closes
-→ evaluate physical sweep
-→ evaluate Root-zone ownership
+LONG  → LOW-side M1_SWEEP_DETECTED
+SHORT → HIGH-side M1_SWEEP_DETECTED
 ```
 
-#### Snapshot ordering
+Direction compatibility belongs to the scenario sequence, not to sweep detection itself.
 
-The snapshot must be created from state carried into the close-timestamp group,
-before any H4/H1/M30/M15/M5 close that becomes available at the candidate M1
-bar's close can affect its eligibility.
-
-Required:
-
-```text
-pool.available_at < sweep_bar.open_time
-```
-
-and the pool must not already be strategy-consumed before that bar.
-
-The strict inequality is the current closed-bar fail-closed ordering contract.
-
-#### Root-contact bar exclusion
-
-The M1 bar on which the Root contact is first observed is not authorized as the
-strategic sweep in the current closed-bar baseline.
-
-```text
-same Root-contact M1 bar
-→ physical sweep may be logged globally
-→ strategic AUTHORIZED_SWEEP = forbidden
-```
-
-Root contact is only knowable at that bar close, and OHLC alone cannot prove
-that contact happened before the candidate sweep inside the bar.
-
-A future tick-ordered implementation may revisit this branch without changing
-the rest of D-126.
-
-#### Root-zone ownership
-
-A physical sweep belongs to a Root scenario only when the sweep M1 bar itself
-intersects the owning HTF Root zone:
-
-```text
-bar.high >= Root.bottom
-AND
-bar.low <= Root.top
-```
-
-No ATR, point-distance, time-distance, nearest-pool, or score heuristic is used.
-
-This prevents an arbitrary distant post-contact sweep from being attached to a
-Root merely because it occurred later in time.
-
-#### Multiple pools / episodes
-
-If one M1 bar sweeps multiple eligible pools, all pool identities remain
-distinct and one scenario-specific sweep episode references all of them.
-
-No best pool is selected.
-
-If later Root-intersecting sweep episodes occur before scenario invalidation,
-they are also retained. D-126 does not replace an old episode with a newer one.
-
-Selection of the sweep episode that causally precedes a meaningful CHoCH is
-deferred to Phase 5A.
-
-Optional child availability, geometry, ambiguity, or invalidation has no role in
-this contract.
-
-### 6.7 Direction-Compatible Sweep
+### 6.8 Detector Liquidity Input
 
 Classification: D
 
-For LONG:
+The M1 sweep detector reads the active liquidity objects already published by the liquidity detector. It does not independently score or re-rank those objects.
 
-```text
-sweep eligible LOW-side liquidity
-→ recover above the liquidity range
-```
-
-For SHORT:
-
-```text
-sweep eligible HIGH-side liquidity
-→ recover below the liquidity range
-```
-
-The physical sweep geometry remains Section 3.10.
-
-### 6.8 Eligible Sweep Liquidity Families
-
-Classification: D
-
-D-126 strategic authorization uses:
-
-```text
-EXTERNAL_SWING
-DEFENDED_RANGE_EDGE
-```
-
-`STRUCTURAL_REACTION` remains excluded from strategic authorization until
-Section 6.18 is independently re-frozen.
+Current active liquidity creation includes the already-validated baseline families. `STRUCTURAL_REACTION` creation remains disabled; this is a liquidity-creation boundary, not an M1-sweep quality filter.
 
 ### 6.9 Mature Liquidity Principle
 
 Classification: D
 
-The pool swept by the final excursion must already be a causally available, meaningful liquidity object before that excursion is allowed to consume it.
-
-Do not create a high/low inside the same unfinished reaction and immediately relabel the same excursion as its completed sweep.
+A liquidity object must be causally available before the M1 excursion that sweeps it. No same-excursion self-created liquidity may immediately qualify as its own sweep.
 
 No extra ATR, point, N-bar, or time-age threshold is added.
 
@@ -2990,7 +2952,7 @@ Strict penetration is required.
 
 Classification: D
 
-Current V1 physical sweep event requires penetration and recovery on the same closed M1 bar. A later-bar reclaim is not silently converted into the same sweep event.
+Current V1 detector requires penetration and recovery on the same closed M1 bar. A later-bar reclaim is not silently relabeled as the same sweep.
 
 ### 6.12 Body Delivery Is Not Sweep
 
@@ -3002,80 +2964,43 @@ A body close through the outer level is directional delivery/consumption, not sw
 
 Classification: D
 
-Strict inequality is normalized to symbol tick size. A touch with zero outward penetration is not a sweep.
+Strict inequality is normalized to symbol tick size. A zero-penetration touch is not a sweep.
 
 ### 6.14 Multiple Pools Swept by One Bar
 
 Classification: D
 
-One M1 bar may physically sweep multiple distinct eligible pools. Their identities stay distinct; do not merge unrelated liquidity merely because one bar touched them.
+One M1 bar may detect sweeps of multiple distinct liquidity objects. Their detector identities remain distinct. For the scenario state machine, the bar satisfies the single `Sweep` stage once; it does not add multiple nested trade filters.
 
-### 6.15 Pre-Contact / Same-Contact-Bar Sweep Reuse
+### 6.15 Pre-Contact / Same-Contact-Bar Reuse
 
 Classification: D
 
-A sweep that completed before the qualifying HTF Root contact is not the current
-Root reaction's trigger sweep.
-
-```text
-sweep.available_at <= Root contact
-→ cannot be retrospectively attached
-```
-
-In the current closed-bar D-126 implementation, the Root-contact M1 bar itself is
-also excluded from strategic authorization because intrabar
-`Root contact → sweep` ordering cannot be proven from OHLC.
-
-The first possible strategic sweep is therefore on a later M1 bar using the
-Section 6.6 pre-open causal snapshot.
+A physical sweep before Root contact is not retrospectively attached to the later scenario. Current closed-bar V1 also excludes the Root-contact bar itself from satisfying the scenario stage because ordering is unknowable from OHLC.
 
 ### 6.16 CHoCH Search Activation
 
 Classification: D
 
-M1 CHoCH authorization for the current setup requires:
-
 ```text
-qualifying HTF Root contact
-+
-valid authorized Root-reaction sweep
+qualifying Root contact
+→ direction-compatible scenario sweep accepted
+→ WAITING_CHOCH
 ```
 
-No optional-child condition is added.
+No child, Root-reintersection, sweep-reference, or additional M5 condition is added.
 
 ### 6.17 Scenario-Specific Sweep State
 
 Classification: D
 
-Every D-126 `AUTHORIZED_SWEEP` is bound to one Root-based scenario.
-
-Required strategy key:
-
-```text
-scenario_id
-root_zone_id
-sweep_bar_open
-```
-
-Each episode retains all swept pool IDs from that M1 bar.
-
-Child identity is not part of the key.
-
-The first authorized episode moves the scenario from `WAITING_SWEEP` to
-`WAITING_TRIGGER`; later valid episodes remain retained for Phase 5A causal
-CHoCH linkage rather than replacing the earlier episode.
+The scenario stores the first direction-compatible detected M1 sweep that occurs after Root contact. This storage proves sequence only. It does not claim the sweep structure is a special subtype different from `M1_SWEEP_DETECTED`.
 
 ### 6.18 Structural Reaction Liquidity
 
-Classification: RE-AUDIT REQUIRED / EXCLUDED FROM D-126
+Classification: EXCLUDED FROM CURRENT CREATION PATH
 
-The physical concept remains useful, but the old implementation attached
-`STRUCTURAL_REACTION` ownership through superseded Phase-4C assumptions.
-
-D-126 does not create or authorize `STRUCTURAL_REACTION`.
-
-Before reactivation, its creation and Root-based ownership must be independently
-redefined without requiring any child.
+D-127 does not create `STRUCTURAL_REACTION` liquidity. Reintroducing its physical creation is a separate liquidity-module decision and must not change the linear trigger semantics.
 
 ### 6.19 Explicit V1 Exclusions
 
@@ -3084,10 +3009,11 @@ Do not add:
 ```text
 mandatory child before sweep
 child-based sweep permission
-pre-contact sweep hindsight reuse
+Root-zone reintersection as a second Root gate
 fixed N-bar sweep maturity
 ATR/point-distance sweep score
-child ambiguity veto
+sweep quality score
+latest-sweep reference replacement
 ```
 
 ### 6.20 Corrected Contact / Trigger Summary
@@ -3098,15 +3024,13 @@ LONG:
 valid LONG map/objective
 → pre-existing eligible bullish HTF Root
 → actual Root contact
-→ valid sell-side liquidity sweep in Root reaction context
-→ meaningful bullish M1 CHoCH
+→ later detected sell-side M1 sweep
+→ later detected bullish M1 CHoCH
 → fresh bullish causal M1 FVG
 → widest valid FVG first retest
 ```
 
 SHORT is symmetric.
-
-Optional post-contact child observations may appear anywhere after Root contact, but they do not change this required path.
 
 ## 7. M1 Meaningful CHoCH
 
@@ -3124,359 +3048,148 @@ Secondary references:
 
 ### 7.1 Purpose
 
-M1 CHoCH의 역할은 새로운 HTF scenario를 만드는 것이 아니다.
-
-시간순으로 causal하게 준비된:
+M1 CHoCH is an **independent structure-detector event**. The scenario layer does not invent a second, stricter CHoCH type.
 
 ```text
-objective
-map owner
-pre-existing HTF Root
-qualifying HTF Root contact
+M1 CHoCH detector
+= structure fact
+
+scenario CHoCH accepted
+= that same fact occurring after Root contact -> Sweep in the correct direction
 ```
 
-가 실제 post-contact reaction에서 실행 가능한 방향으로 반응하고 있는지를
-M1 structure로 확인하는 것이다.
-
-따라서:
-
-```text
-M1 CHoCH
-= execution confirmation
-```
-
-이며:
-
-```text
-M1 CHoCH
-≠ HTF directional authority
-```
-
-이다.
+M1 CHoCH remains execution confirmation and never becomes H1/M30 directional authority.
 
 ### 7.2 Required Causal Order
 
 Classification: D
 
-V1 first-position trigger는 다음 순서를 요구한다.
-
-pre-existing HTF Root frozen
-→ qualifying HTF Root contact
-→ authorized mature Root-reaction liquidity sweep under Section 6's re-audited timing contract
-→ meaningful M1 CHoCH
-→ same sweep-to-CHoCH causal leg의 fresh same-direction FVG
-→ widest valid FVG selection
+```text
+pre-existing HTF Root
+→ qualifying Root contact
+→ direction-compatible M1_SWEEP_DETECTED
+→ later direction-compatible M1_CHOCH_DETECTED
+→ same sweep-to-CHoCH causal leg fresh FVG
+→ widest valid FVG
 → first retest
 → entry
+```
 
-앞 단계가 없으면
-뒤 단계의 M1 structure event 또는 execution event가 아무리 선명해도
-현재 scenario의 trade authority가 아니다.
+Scenario logic checks this order. It does not re-run the detector's internal market-structure qualification at each stage.
 
-### 7.3 Meaningful CHoCH Reference
+### 7.3 Independent M1 CHoCH Detector
 
 Classification: D
 
-Meaningful CHoCH는 최근 아무 pivot을 깨는 사건이 아니다.
-
-CHoCH reference는:
+The existing M1 structure engine is the CHoCH detector authority. In the current engine:
 
 ```text
-final source로 들어오던 M1 correction을
-실제로 지배하던 protected swing
+STRUCTURE_PROTECTED_BREAK on M1
+→ M1_CHOCH_DETECTED
 ```
 
-이어야 한다.
+The detector event requires the existing protected structure to be broken by body close. That is the definition of the structure event itself, not a scenario-side additional filter.
 
-LONG scenario:
+### 7.4 No Scenario-Side Reference Freeze
+
+Classification: D — D-127 correction
+
+The scenario does **not** snapshot a new protected-swing reference at the sweep. It does not require the sweep-time M1 trend to be opposite the trade direction. It simply waits for the independent M1 structure detector to emit the next direction-compatible CHoCH after the Sweep stage.
+
+The superseded D-127 draft rule:
 
 ```text
-bearish M1 correction
-→ current protected HIGH
-→ bullish body-close break
+sweep-time opposite M1 trend
++ protected swing snapshot
++ later break of that frozen snapshot
 ```
 
-SHORT scenario:
+is not current baseline authority.
 
-```text
-bullish M1 correction
-→ current protected LOW
-→ bearish body-close break
-```
-
-을 요구한다.
-
-### 7.4 Arbitrary Pivot Is Not CHoCH Authority
+### 7.5 Direction Compatibility
 
 Classification: D
 
-다음 기준으로 CHoCH reference를 선택하지 않는다.
-
 ```text
-nearest pivot
-latest tiny pivot
-smallest swing
-best RR swing
-visually convenient swing
+LONG scenario  → bullish M1_CHOCH_DETECTED
+SHORT scenario → bearish M1_CHOCH_DETECTED
 ```
 
-CHoCH reference는 global M1 structure detector가
-현재 correction trend에서 실제 protected structure로 관리하던 swing이어야 한다.
-
-### 7.5 Reference Freeze at Authorized Sweep
+### 7.6 Body-Close Structure Definition
 
 Classification: D
 
-Authorized sweep이 확정될 때
-현재 M1 correction structure의 protected swing을 snapshot한다.
+The M1 structure detector itself requires a body close through its protected structure. Wick-only breach or close exactly at the level is not a detector CHoCH.
 
-LONG:
+No ATR displacement, N-point buffer, body-size score, or CHoCH-strength score is added by the scenario layer.
 
-```text
-M1 trend before sweep = bearish
-reference = current protected HIGH
-```
-
-SHORT:
-
-```text
-M1 trend before sweep = bullish
-reference = current protected LOW
-```
-
-이 reference를:
-
-```text
-choch_reference_swing
-```
-
-으로 freeze한다.
-
-### 7.6 Reference Must Pre-Exist Sweep
+### 7.7 Same-Bar Sweep + CHoCH
 
 Classification: D
 
-CHoCH reference swing은 sweep event보다 먼저
-이미 확정되어 있어야 한다.
-
-Required:
+The same M1 bar cannot satisfy both scenario stages in current closed-bar V1. Required:
 
 ```text
-reference.available_at
-<= sweep_bar_open
+choch_bar_open > scenario_sweep_bar_open
 ```
 
-Sweep candle 또는 이후 price action을 보고
-새로운 쉬운 pivot을 reference로 사후 선택하지 않는다.
+This is sequence causality, not CHoCH-quality scoring.
 
-### 7.7 No Protected Reference Means No Trigger
-
-Classification: D for V1
-
-Authorized sweep 시점에
-scenario 방향과 반대되는 M1 correction trend 및
-그 trend의 protected swing이 존재하지 않으면:
-
-```text
-NO CHOCH AUTHORIZATION
-```
-
-이다.
-
-예 LONG:
-
-```text
-qualifying HTF Root contact
-→ authorized sell-side sweep
-→ M1 bearish correction protected HIGH 없음
-```
-
-이면 해당 sweep chain으로 거래하지 않는다.
-
-최근 임의 pivot 또는 `INITIAL_BOS`를
-CHoCH reference의 fallback으로 사용하지 않는다.
-
-### 7.8 Direction Compatibility
+### 7.8 No Additional M5 / Child Trigger Gate
 
 Classification: D
 
-LONG scenario:
+M5 and optional child observations may provide audit/context but do not re-authorize an already detected M1 CHoCH. No M5 CHoCH/BOS/candle confirmation or child condition is mandatory.
 
-```text
-authorized sell-side sweep
-→ bullish M1 CHoCH only
-```
-
-SHORT scenario:
-
-```text
-authorized buy-side sweep
-→ bearish M1 CHoCH only
-```
-
-반대 방향 CHoCH는
-현재 frozen scenario의 execution confirmation이 아니다.
-
-### 7.9 Body-Close Break
-
-Classification: Authority / Frozen
-
-Meaningful CHoCH는 body close로
-frozen reference level을 실제 돌파해야 한다.
-
-LONG:
-
-```text
-M1 close > reference_high
-```
-
-SHORT:
-
-```text
-M1 close < reference_low
-```
-
-다음은 CHoCH가 아니다.
-
-```text
-wick-only breach
-close == reference level
-```
-
-### 7.10 No Arbitrary Break-Strength Threshold
+### 7.9 No Fixed CHoCH Timeout
 
 Classification: D
 
-Body close break가 성립하면
-별도의 임의 break-strength threshold를 추가하지 않는다.
+No N-bar or N-minute timeout is added between accepted scenario sweep and later detected CHoCH. Existing scenario invalidation events remain the lifecycle boundary.
 
-사용하지 않는다.
-
-```text
-ATR displacement threshold
-N-point close buffer
-percentage break filter
-CHoCH strength score
-```
-
-Symbol price/tick normalization은 적용하지만
-추가 trading threshold로 사용하지 않는다.
-
-### 7.11 Same-Bar Sweep + CHoCH Is Excluded in V1
-
-Classification: D for causal replay
-
-V1에서는 authorized sweep과 CHoCH가
-동일 M1 candle에서 확정되는 것을 first-position trigger로 사용하지 않는다.
-
-Required:
-
-```text
-choch_bar.index > sweep_bar.index
-```
-
-이유:
-
-OHLC bar만으로 동일 candle 내부에서:
-
-```text
-liquidity sweep
-→ recovery
-→ protected swing break
-```
-
-순서가 실제로 발생했는지 확인할 수 없기 때문이다.
-
-Same-bar sweep + CHoCH는
-향후 MT5 real-tick ordering을 사용하는
-별도 immutable research variant에서 검토한다.
-
-### 7.12 CHoCH Bar Need Not Intersect Source
+### 7.10 Trigger-Chain Invalidation Before CHoCH
 
 Classification: D
 
-Old Phase 4C required the authorized sweep bar to intersect a
-pre-existing HTF Root source. That exact intersection anchor is not frozen
-under the corrected Root-primary sequence and is subject to
-Section 6.6 re-audit.
-
-Once a sweep is validly authorized under the corrected timing contract,
-후속 CHoCH bar까지 HTF Root zone과 다시 교차할 필요는 없다. Optional child zone은 이 조건에 권한이 없다.
-
-유효 causal relation은 최소한:
+Before CHoCH, terminate the scenario only through existing strategy authorities such as:
 
 ```text
-valid post-contact Root context
-→ authorized sweep under corrected timing
-→ later body-close break of frozen protected swing
+required HTF Root invalidated
+scenario direction authority revoked
+objective/lifecycle invalidation under the frozen scenario contract
 ```
 
-을 유지해야 한다.
+Optional child invalidation is irrelevant.
 
-강한 reaction displacement가 source를 빠르게 벗어난 뒤
-CHoCH를 만드는 것을 허용한다.
-
-### 7.13 No Fixed CHoCH Timeout
+### 7.11 First Sweep Satisfies the Stage
 
 Classification: D
 
-Sweep 이후 CHoCH까지:
+The first direction-compatible M1 sweep detected after Root contact satisfies the scenario `Sweep` stage. Later sweep detections remain in the detector ledger and do not replace the stage or force a new CHoCH reference.
 
-```text
-N bars
-N minutes
-```
-
-같은 고정 timeout을 두지 않는다.
-
-대신 실제 causal invalidation event로
-trigger chain을 종료한다.
-
-### 7.14 Trigger-Chain Invalidation Before CHoCH
+### 7.12 CHoCH Bar Need Not Re-Intersect Root
 
 Classification: D
 
-Before CHoCH, the active trigger chain terminates when:
+After Root contact has already satisfied the Root stage, neither the scenario sweep bar nor the later CHoCH bar is required to touch the Root again. Requiring Root reintersection would duplicate an earlier filter.
 
-```text
-required HTF Root/owner becomes INVALIDATED
-frozen final objective is delivered
-scenario direction authority is revoked
-```
-
-Optional child invalidation does not terminate the trigger chain while the HTF Root remains valid.
-
-Time alone does not terminate the chain.
-
-A newer authorized sweep may replace the active sweep/reference
-under Section 7.15 without creating a second concurrent trigger chain.
-
-### 7.15 Latest Authorized Sweep Owns the Active Pre-CHoCH Trigger
+### 7.13 Detector vs Strategy Meaning
 
 Classification: D
 
-A scenario maintains only one active pre-CHoCH sweep/reference pair.
+A valid M1 CHoCH may exist anywhere on the chart as a detector fact. It gains first-position trade relevance only when the current scenario has already passed Map → Root → Contact → Sweep.
 
-Required strategy fields:
+### 7.14 No Retrospective Sequence
 
-```text
-active_sweep_event_id
-active_choch_reference_swing_id
-```
+Classification: D
 
-If a newer direction-compatible authorized sweep
-occurs at the same still-valid source before CHoCH:
+A CHoCH that occurred before the accepted scenario sweep cannot be reused after a later sweep. A sweep that occurred before Root contact cannot be reused after contact.
 
-```text
-active_sweep_event_id = new sweep
-active_choch_reference_swing_id
-= protected swing snapshot at new sweep
-```
+### 7.15 INITIAL_BOS Is a Separate Detector Event
 
-Older sweep events remain in the global audit ledger
-but do not remain as concurrent live strategy branches.
+Classification: D
 
-CHoCH authorization uses only the current active sweep/reference.
+Current structure detector classifies `INITIAL_BOS` separately from `CHOCH`. D-127 does not silently rename it as CHoCH merely to increase trade frequency. If that detector taxonomy is later judged too strict, change it in a dedicated structure-detector audit, not in the scenario layer.
 
 ### 7.16 M5 Correction Context
 
@@ -3557,7 +3270,7 @@ meaningful M1 CHoCH structure event 자체는 존재할 수 있다.
 그러나 V1 first-position execution authorization에는
 추가로 다음이 필요하다.
 
-authorized sweep
+scenario-accepted sweep
 +
 meaningful M1 CHoCH
 +
@@ -3601,7 +3314,7 @@ valid causal FVG가 최소 하나 필요하다.
 
 Initial execution FVG는 반드시:
 
-1. authorized sweep 이후의 causal reaction leg에 속한다.
+1. scenario-accepted sweep 이후의 causal reaction leg에 속한다.
 2. meaningful CHoCH와 같은 방향이다.
 3. sweep → CHoCH를 만든 동일 M1 directional leg에 속한다.
 4. 주문 authorization 시점에 이미 확정되어 있다.
@@ -3620,7 +3333,7 @@ Classification: Authority / Frozen
 
 V1 baseline은:
 
-authorized sweep
+scenario-accepted sweep
 → meaningful M1 CHoCH
 → causal displacement FVG
 → FVG retest
@@ -3630,7 +3343,7 @@ authorized sweep
 
 다음은 별도 research variant로 유지한다.
 
-authorized sweep
+scenario-accepted sweep
 → CHoCH
 → additional BOS
 → BOS displacement FVG
@@ -3683,160 +3396,129 @@ Market Structure 최종 통합 감사에서 다시 확인한다.
 
 ### 7.23 Global Detection vs Scenario Authorization
 
-Classification: D
+Classification: D — D-127 current baseline
 
-기존 `mentor_engine/structure.py`는
-global M1 structure event detector로 재사용할 수 있다.
+`mentor_engine/structure.py` / the MQL M1 structure engine remains the global
+structure detector. Scenario authorization does not redefine CHoCH.
 
-Trade authorization은 별도 scenario layer에서 수행한다.
-
-Required filter:
+Detector fact:
 
 ```text
-event.timeframe == M1
-event.event_type == CHOCH
+M1 STRUCTURE_PROTECTED_BREAK
+→ M1_CHOCH_DETECTED
+```
+
+Scenario sequence check:
+
+```text
+scenario state = WAITING_CHOCH
 event.direction == scenario.direction
-event.index > authorized_sweep.index
-event.broken_swing_id == frozen_choch_reference_swing_id
+event.bar_open > scenario_sweep_bar_open
 scenario still valid
+→ SCENARIO_CHOCH_ACCEPTED
+→ WAITING_FVG
 ```
 
-즉 global CHoCH event가 존재한다는 사실만으로
-trade authority가 생기지 않는다.
-
-### 7.24 Required CHoCH Object
-
-Minimum strategy state:
+Not required:
 
 ```text
-choch_event_id
+event.broken_swing_id == a sweep-time re-frozen reference
+sweep-time opposite M1 trend re-check
+Root re-intersection
+M5 confirmation
+child confirmation
+quality / strength score
+```
+
+The protected-structure requirement already belongs to the CHoCH detector itself.
+The scenario must not apply the same concept as a second nested filter.
+
+### 7.24 Required Scenario CHoCH Object
+
+Minimum strategy audit state:
+
+```text
 scenario_id
+root_zone_id
+strategy_source_kind = ROOT
 
-direction
+scenario_sweep_bar_open
+scenario_sweep_detector_ids
 
-source_id
-active_sweep_event_id
+choch_event_id
+choch_bar_open
+choch_available_at
+choch_direction
 
-reference_swing_id
-reference_swing_level
-reference_swing_available_at
-
-choch_bar_index
-occurred_at
-available_at
-close_price
-
-break_type = BODY_CLOSE
+sequence = ROOT_CONTACT_THEN_SWEEP_THEN_CHOCH
 ```
 
-Optional audit fields:
-
-```text
-m1_trend_before
-root_contact_at
-sweep_confirmed_at
-```
-
-No persistent `trigger_chain_id` is required in V1 strategy state.
-Past sweep history remains available through the event ledger.
+Optional detector audit fields may include the structure event's broken swing ID
+and broken level, but those fields are detector evidence, not a new scenario-side
+authorization test.
 
 ### 7.25 Explicit V1 Exclusions
 
-다음을 meaningful M1 CHoCH authorization에 사용하지 않는다.
+Do not add the following as extra scenario CHoCH gates:
 
 ```text
-arbitrary recent pivot
-nearest pivot
-wick-only break
-equality break
-INITIAL_BOS fallback
-same-bar sweep + CHoCH
-ATR break threshold
+sweep-time opposite global M1 trend requirement
+sweep-time protected-swing reference freeze
+arbitrary recent / nearest pivot selection
+INITIAL_BOS relabeling as CHoCH
+same-bar scenario Sweep + CHoCH
+ATR / point close buffer
 CHoCH quality score
-CHoCH structure-event definition
-→ FVG 불필요
-
-V1 first-position execution authorization
-→ causal displacement FVG 필요
 mandatory second BOS
 M5-only trigger
+child-based trigger permission
 M1 CHoCH as HTF reversal authority
 AI-selected CHoCH reference
 ```
 
+`INITIAL_BOS` remains a distinct detector event because the current structure
+detector does not classify it as CHoCH. If that detector taxonomy later proves
+too strict, audit the detector itself; do not patch the scenario layer with a
+fallback.
+
 ### 7.26 V1 LONG Protocol
 
 ```text
-LONG context frozen
-        ↓
-pre-existing bullish HTF Root
-        ↓
-qualifying HTF Root contact
-        ↓
-authorized sell-side sweep under corrected timing contract
-        ↓
-at sweep:
-    M1 correction trend = bearish
-    current protected HIGH exists
-    protected HIGH already available
-        ↓
-freeze protected HIGH as CHoCH reference
-        ↓
-wait for later closed M1 bar
-        ↓
-M1 close > frozen protected HIGH
-        ↓
-bullish meaningful CHoCH
-        ↓
-collect fresh bullish FVGs
-belonging to the same sweep-to-CHoCH causal leg
-        ↓
-if none:
-    NO BASE ENTRY
-        ↓
-if one or more:
-    select widest valid FVG
-        ↓
-wait for first authorized retest
+LONG map / objective frozen
+→ pre-existing bullish HTF Root
+→ qualifying Root contact
+→ later LOW-side M1_SWEEP_DETECTED
+→ SCENARIO_SWEEP_ACCEPTED
+→ later bullish M1_CHOCH_DETECTED
+→ SCENARIO_CHOCH_ACCEPTED
+→ WAITING_FVG
+→ collect fresh bullish FVGs from the same sweep-to-CHoCH causal leg
+→ if none: NO BASE ENTRY
+→ if one or more: select widest valid FVG
+→ first authorized retest
 ```
+
+No Root re-touch, sweep-time trend re-check, or sweep-time CHoCH-reference freeze
+is inserted between these stages.
 
 ### 7.27 V1 SHORT Protocol
 
 ```text
-SHORT context frozen
-        ↓
-pre-existing bearish HTF Root
-        ↓
-qualifying HTF Root contact
-        ↓
-authorized buy-side sweep under corrected timing contract
-        ↓
-at sweep:
-    M1 correction trend = bullish
-    current protected LOW exists
-    protected LOW already available
-        ↓
-freeze protected LOW as CHoCH reference
-        ↓
-wait for later closed M1 bar
-        ↓
-M1 close < frozen protected LOW
-        ↓
-bearish meaningful CHoCH
-        ↓
-collect fresh bearish FVGs
-belonging to the same sweep-to-CHoCH causal leg
-        ↓
-if none:
-    NO BASE ENTRY
-        ↓
-if one or more:
-    select widest valid FVG
-        ↓
-wait for first authorized retest
+SHORT map / objective frozen
+→ pre-existing bearish HTF Root
+→ qualifying Root contact
+→ later HIGH-side M1_SWEEP_DETECTED
+→ SCENARIO_SWEEP_ACCEPTED
+→ later bearish M1_CHOCH_DETECTED
+→ SCENARIO_CHOCH_ACCEPTED
+→ WAITING_FVG
+→ collect fresh bearish FVGs from the same sweep-to-CHoCH causal leg
+→ if none: NO BASE ENTRY
+→ if one or more: select widest valid FVG
+→ first authorized retest
 ```
 
----
+Short is exactly symmetric to long.
 
 ---
 
@@ -5031,7 +4713,7 @@ Strategy pending survival requires only:
 
 ```text
 final objective valid
-required source lineage valid
+required HTF Root valid
 scenario direction authority valid
 ```
 
@@ -5051,14 +4733,18 @@ First-position strategy state:
 
 ```text
 PLANNED
-WAITING_TRIGGER
+WAITING_SWEEP
+WAITING_CHOCH
+WAITING_FVG
 PENDING
 FILLED
 CANCELED
 NO_TRADE
 ```
 
-At meaningful CHoCH decision:
+These states record the linear sequence position; they are not extra quality filters.
+
+At `SCENARIO_CHOCH_ACCEPTED` / `WAITING_FVG`:
 
 ```text
 eligible FVG snapshot
@@ -5146,9 +4832,10 @@ scenario_direction
 scenario_scope
 
 root_contact_at
-active_sweep_event_id
-active_choch_reference_swing_id
-choch_event_id
+scenario_sweep_bar_open
+scenario_sweep_detector_ids
+scenario_choch_event_id
+scenario_choch_bar_open
 selected_fvg_id
 
 final_objective_id

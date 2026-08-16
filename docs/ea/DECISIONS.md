@@ -3452,7 +3452,7 @@ Therefore corrected Phase 4B is strategy-parity PASS within its isolated scope.
 
 ## D-126 — Corrected Phase 4C uses per-M1-open causal pool snapshots and Root-zone intersection
 
-Status: ACTIVE / PHASE 4C IMPLEMENTATION-FREEZE / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
+Status: VALIDATED HISTORICAL IMPLEMENTATION — 2026-08-16 / STRATEGIC OWNERSHIP SUPERSEDED BY D-127
 
 D-125 proves that a Root-specific map/objective PLAN can exist strictly before
 physical Root contact. D-126 freezes the remaining baseline strategic-sweep
@@ -3617,3 +3617,227 @@ Reason:
 This is the narrowest deterministic rule consistent with the current authority
 and casebook evidence (`SOURCE_LIQUIDITY_SWEEP`, `LIQUIDITY_NEAR_ZONE`,
 `M1_SWEEP`, `SWEEP_BEFORE_TRIGGER`) while preserving no-lookahead.
+
+### 2026-08-16 D-126 validation result
+
+Build `1.00 / D126_ROOT_REACTION_SWEEP_CORE` passed its isolated causal smoke:
+
+```text
+SCENARIO_PLANNED = 13
+SCENARIO_ROOT_CONTACT_BOUND = 6
+ROOT_CONTACT_WITHOUT_PREPLAN = 5
+AUTHORIZED_SWEEP = 11
+AUTHORIZED_SWEEP_POOL = 20
+```
+
+All 20 authorized pool rows satisfied the D-126 implementation contract:
+
+```text
+pool.available_at < sweep_bar_open
+root_intersection = true
+same_contact_bar = false
+strategy_source_kind = ROOT
+child_required = false
+```
+
+and:
+
+```text
+AUTHORIZED_SWEEP_REPLACED = 0
+STRUCTURAL_REACTION_CREATED = 0
+old SOURCE_CONTACT = 0
+orders/deals = 0
+```
+
+This proves D-126 was implemented as designed. It does **not** prove that
+Root-zone reintersection and the extra sweep-ownership layer belong in the
+minimal baseline. D-127 supersedes those strategic filters while preserving the
+D-126 run as historical evidence.
+
+---
+
+## D-127 — Separate DETECT / SEQUENCE / EXECUTE; use a linear Root → Sweep → CHoCH pipeline
+
+Status: ACTIVE / IMPLEMENTATION-FREEZE / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
+
+The current baseline had accumulated nested filters inside stages that were
+already downstream of several higher-timeframe filters.
+
+Observed shape:
+
+```text
+Map
+→ Root
+→ Contact
+→ Sweep(extra Root ownership / family / intersection filters)
+→ CHoCH(extra sweep-time trend / protected-reference filters)
+→ FVG
+```
+
+This is rejected for the minimal baseline.
+
+The current architecture is instead:
+
+```text
+DETECT
+→ liquidity / M1 sweep / M1 CHoCH / FVG facts
+
+SEQUENCE
+→ Map
+→ Root
+→ Contact
+→ Sweep
+→ CHoCH
+→ FVG
+
+EXECUTE
+→ FVG selection
+→ Entry / SL / TP
+→ order lifecycle
+```
+
+### Detector authority
+
+A detector answers only:
+
+```text
+"did this structure exist?"
+```
+
+It does not know whether the current Root scenario is tradable.
+
+#### M1 sweep
+
+At each M1 bar open, snapshot currently active liquidity already causally known
+at that open. Then apply the existing physical penetration + same-bar recovery
+geometry.
+
+Detector event:
+
+```text
+M1_SWEEP_DETECTED
+```
+
+No detector-side:
+
+```text
+Root intersection
+scenario ownership
+direction gate
+child gate
+ATR / point / N-bar / quality score
+strategy family whitelist
+```
+
+is added.
+
+The pre-open causality rule remains because it prevents look-ahead; it is not a
+quality filter.
+
+#### M1 CHoCH
+
+The existing M1 structure detector remains the CHoCH authority.
+
+```text
+M1 STRUCTURE_PROTECTED_BREAK
+→ M1_CHOCH_DETECTED
+```
+
+The scenario must not rebuild a second CHoCH definition at sweep time.
+
+Therefore D-127 rejects the unpushed strict-D127 draft rule that required:
+
+```text
+opposite M1 trend at sweep
++
+protected swing frozen at sweep
++
+later break of that frozen snapshot
+```
+
+That draft was never repository authority.
+
+`INITIAL_BOS` remains a different detector event. If that taxonomy is later
+revised, it must be done in the structure detector itself rather than by adding
+scenario exceptions.
+
+### Sequence authority
+
+A Root-specific preplanned scenario uses simple stage order.
+
+LONG:
+
+```text
+Root contact
+→ later LOW-side M1_SWEEP_DETECTED
+→ later bullish M1_CHOCH_DETECTED
+→ WAITING_FVG
+```
+
+SHORT is symmetric.
+
+The scenario layer checks only:
+
+```text
+time ordering
+direction compatibility
+existing scenario lifecycle validity
+```
+
+It does not re-score the structures.
+
+The Root-contact bar cannot simultaneously satisfy the Sweep stage, and the
+same M1 bar cannot simultaneously satisfy Sweep and CHoCH, because closed OHLC
+cannot prove the required intrabar order. These are sequence-causality rules,
+not additional structure-quality filters.
+
+The first direction-compatible detected sweep after Root contact satisfies the
+Sweep stage. Later sweep detections remain detector/audit facts and do not
+replace the stage or create a new CHoCH reference.
+
+### Explicitly removed from current baseline
+
+```text
+sweep bar must re-intersect Root
+D-126 Root-owned sweep episode selection
+D-126 strategy family whitelist at Sweep stage
+latest sweep replacement
+sweep-time opposite M1 trend requirement
+sweep-time protected swing freeze
+separate MEANINGFUL_CHOCH structure subtype
+mandatory M5 confirmation
+child-based trigger authority
+```
+
+### Meaning of "meaningful CHoCH"
+
+The phrase remains descriptive only:
+
+```text
+generic detected M1 CHoCH
++
+correct Root → Contact → Sweep scenario sequence
+=
+CHoCH meaningful to this scenario
+```
+
+There is no second detector hidden inside that label.
+
+### Boundary
+
+D-127 stops at:
+
+```text
+SCENARIO_CHOCH_ACCEPTED
+→ WAITING_FVG
+```
+
+FVG selection, Entry, SL, final TP selection, and order submission remain
+disabled until this simplified funnel is locally validated.
+
+Reason:
+
+The baseline already filters context through objective/map/Root/contact. Sweep
+and CHoCH should contribute one additional structural fact each, not each carry
+another multi-condition strategy gate. This preserves explainability and lets
+later FVG/Entry logic perform its intended downstream filtering.

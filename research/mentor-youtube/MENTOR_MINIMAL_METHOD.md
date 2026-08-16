@@ -90,8 +90,8 @@ zone은 재사용하지 않는다.
 | --- | --- | --- |
 | 지도 프레임 | 가격이 큰 구조에서 어디를 향하는가? | H1, M30 |
 | HTF source 프레임 | 나중에 가격이 돌아왔을 때 반응을 관찰할 사전 형성·미소진 OB는 어디인가? | H1, M30, M15 |
-| post-contact refinement 프레임 | HTF OB 접촉 이후 반응에서 새로 생긴 causal child OB는 무엇인가? | M30, M15, M5 |
-| trigger 프레임 | post-contact child 맥락이 준비된 뒤 sweep과 추세 전환이 어디서 확인되는가? | M5, M1 |
+| optional child audit 프레임 | HTF OB 접촉 이후 반응에서 새 causal child OB가 보이는가? | M30, M15, M5 |
+| trigger 프레임 | Root 반응의 sweep과 추세 전환이 어디서 확인되는가? | M5, M1 |
 
 주로 H1의 스윙 고점·저점 부근에서 **사전에 형성되어 있고 아직 미소진된 HTF OB**를 먼저 찾는다.
 그 다음 lower timeframe에서 과거 OB를 미리 세분화하지 않고, 가격이 나중에 그 HTF OB에 실제로 도달할 때까지 기다린다.
@@ -103,9 +103,9 @@ HTF OB 접촉 이후에만 M30/M15/M5 반응을 관찰하며, 그 반응에서 �
 - HTF Root를 처음 만들었던 과거 displacement를 단순히 작은 시간봉으로 분해해 찾은 OB
 - 단순히 가격이 가까이 있거나 겹친 unrelated lower-TF OB
 
-Post-contact child가 parent OB 안에 있거나 일부 경계가 벗어나더라도, **동일한 post-contact reaction을 설명하는 causal relation**이 먼저 성립해야 한다.
-최소 한 단계 이상의 post-contact child가 확인되지 않으면 정밀 진입 시나리오를 만들지 않는다.
-이때 child는 최초 포지션의 source/context lineage를 정밀화하고, 실제 entry/SL geometry는 CHoCH displacement FVG 규칙이 담당한다.
+Post-contact child가 parent OB 안에 있거나 일부 경계가 벗어나더라도, **동일한 post-contact reaction을 설명하는 causal relation**이 먼저 성립해야 audit observation으로 기록할 수 있다.
+Child는 선택적 context/audit 정보다. 확인되지 않아도 Root setup은 계속되며, 여러 child가 보여도 하나를 강제로 고르지 않는다.
+실제 entry/SL geometry는 child와 무관하게 CHoCH displacement M1 FVG 규칙이 담당한다.
 
 근거: 9편 `03:01-03:38`, 13편 `16:46-18:33`, 16편 `02:20-03:32`,
 20편 `06:01-07:32`.
@@ -155,11 +155,11 @@ H1/M30 map + objective + HTF Root를 먼저 동결
 
 HTF Root 접촉 전에 이미 존재했던 lower-TF OB를 접촉 이후 child였던 것처럼 소급 연결하지 않는다.
 
-### 단계 4. HTF Root 접촉 이후 causal LTF child를 찾는다
+### 단계 4. HTF Root 접촉 이후 반응을 관찰한다
 
 가격이 HTF Root에 실제로 도달한 뒤 M30/M15/M5에서 **그 접촉에 대한 반응으로 새로 형성되는 OB**를 찾는다.
 
-Valid child는:
+Optional child를 기록하려면:
 
 - Root contact 이후 형성된다.
 - 그 post-contact reaction에서 발생한다.
@@ -170,19 +170,30 @@ Valid child는:
 
 ### 단계 5. 작은 시간봉 전환을 확인한다
 
-Post-contact child lineage가 causal하게 준비된 뒤 M5/M1에서 기존 추세의 live swing을 반대 방향 몸통 종가로 깨고, 후속 가격이 그 방향으로 전달되는지 확인한다. 이 변화가 CHoCH다.
+HTF Root 접촉 이후 Root 반응 맥락에서 유효한 sweep을 확인한 뒤, M5/M1에서 기존 추세의 live swing을 반대 방향 몸통 종가로 깨고 후속 가격이 그 방향으로 전달되는지 확인한다. 이 변화가 CHoCH다. Optional child 관찰 여부는 이 trigger의 선행조건이 아니다.
+
+현재 deterministic V1의 **운영 계약(D-127)** 은 detector와 scenario sequence를 분리한다.
+
+- M1 sweep detector는 M1 bar open에 이미 causally known인 active liquidity에 기존 penetration + same-bar recovery geometry만 적용한다.
+- 이 detector에는 Root 재교차, scenario, child, ATR/point/N-bar/score 같은 strategy filter를 넣지 않는다.
+- LONG/SHORT 방향 호환성은 sweep 구조 자체의 정의가 아니라 scenario sequence에서 적용한다.
+- Root contact 이후의 첫 direction-compatible detected sweep이 `Sweep` 단계를 만족한다. Root-contact bar 자체는 closed OHLC로 `contact → sweep` 순서를 증명할 수 없으므로 scenario 단계에는 사용하지 않는다.
+- M1 CHoCH는 기존 structure detector가 독립적으로 판정하며, scenario는 sweep 시점의 M1 trend/protected swing을 다시 freeze하거나 재심사하지 않는다.
+- Scenario는 단순히 `Root contact → Sweep → later same-direction CHoCH` 순서만 확인한다.
+
+이 세부 사항은 스승님의 직접 문구가 아니라 causal replay를 위한 deterministic architecture decision이다. 구조 하나마다 또 다른 다중 strategy gate를 중첩하지 않는다.
 
 별도 BOS는 전환 신뢰도를 높이는 확인이지만 영상 전체의 필수 조건은 아니다.
-기본 실행 구역은 CHoCH displacement가 새로 만든 M1 FVG다. 여기서 HTF Root와 post-contact child refinement는 진입 주문 자체가 아니라 가격이 반응할 원인 위치와 causal lineage를 설명한다.
+기본 실행 구역은 CHoCH displacement가 새로 만든 M1 FVG다. HTF Root가 가격이 반응할 원인 위치를 제공하며, optional post-contact child는 그 반응을 추가 설명하는 audit 정보일 뿐이다.
 의미 있는 CHoCH가 있어도 같은 sweep-to-CHoCH leg에 fresh FVG가 없으면 구조 전환만 기록하고 최초 포지션은 진입하지 않는다.
 
-- 기본형: pre-existing HTF OB -> HTF OB contact -> post-contact causal LTF child -> sweep -> M1 CHoCH
+- 기본형: pre-existing HTF OB -> HTF OB contact -> sweep -> M1 CHoCH
   -> CHoCH displacement FVG -> FVG retest
-- 확인형: pre-existing HTF OB -> HTF OB contact -> post-contact causal LTF child -> sweep -> M1 CHoCH
+- 확인형: pre-existing HTF OB -> HTF OB contact -> sweep -> M1 CHoCH
   -> 별도 BOS -> BOS displacement FVG -> FVG retest
 - OB 정밀형: 전환 FVG 없이 OB만 재접촉하는 사례는 기본형과 섞지 않고 별도 연구 원장으로만 남긴다.
 
-이 correction은 post-contact child 형성 뒤 **별도 child retest가 반드시 필요한지**를 새로 확정하지 않는다. 영상 근거가 없는 세부 순서를 임의 추가하지 않는다.
+Post-contact child는 execution authority가 아니므로 별도 child retest를 current baseline의 필수 단계로 요구하지 않는다.
 
 ### 단계 6. 되돌림에 진입한다
 
@@ -245,9 +256,9 @@ SL로 시나리오가 끝난 뒤 반대 구조가 새로 완성되면 기존 obj
 1. 현재 외부 구조와 활성 추세는 무엇인가?
 2. 이 시나리오의 목적 유동성은 어디이며 왜 손절이 모였는가?
 3. 반대편 출발 유동성은 어디이며 왜 의미 있는가?
-4. 사전에 정한 HTF swing OB는 무엇이고, 실제 contact 이후 어떤 causal LTF child가 새로 형성됐는가?
+4. 사전에 정한 HTF swing OB는 무엇이고 가격은 그 Root에 실제로 도달했는가? Optional child가 관찰됐다면 무엇인가?
 5. 유동성 sweep과 작은 시간봉 CHoCH가 실제로 발생했는가?
-6. entry FVG는 post-contact child 맥락에서 CHoCH를 만든 M1 displacement에 속하며, valid FVG 중 가장 넓고 meaningful CHoCH 확정 이후의 first retest를 사용하고 있는가?
+6. entry FVG는 Root 반응의 valid sweep 이후 CHoCH를 만든 M1 displacement에 속하며, valid FVG 중 가장 넓고 meaningful CHoCH 확정 이후의 first retest를 사용하고 있는가?
 7. SL, TP, 그리고 틀렸다고 판정할 이유를 진입 전에 설명할 수 있는가?
 
 한 질문이라도 `그냥 최근 고점`, `그냥 FVG`, `그냥 추세 같음`이라면 거래하지 않는다.
@@ -259,7 +270,8 @@ SL로 시나리오가 끝난 뒤 반대 구조가 새로 완성되면 기존 obj
 - 외부/내부 시장 구조 구분
 - 참가자 손절 위치로 설명되는 유동성
 - 사전 형성·미소진 HTF swing OB
-- HTF Root 실제 contact 이후 새로 형성되는 causal LTF child refinement
+- HTF Root actual contact
+- optional post-contact causal LTF child audit/context
 - adaptive MTF 역할 분담
 - sweep 뒤 LTF 추세 전환
 - CHoCH displacement의 widest valid FVG first-retest entry
@@ -294,9 +306,11 @@ SL로 시나리오가 끝난 뒤 반대 구조가 새로 완성되면 기존 obj
 2. 내부 시나리오와 외부 시나리오의 최소 구분 기준
 3. delivery 정체 시 본절 이동을 규칙화할 수 있는지
 4. 부분 청산이 전체 기대값을 개선하는지
-5. post-contact child가 형성·확정된 뒤 별도의 child retest가 execution trigger 전에 반드시 필요한지
+5. `STRUCTURAL_REACTION` liquidity를 Root reaction에서 언제 새로 생성·귀속할지
 
-이 항목들은 필터 튜닝 문제가 아니라 매매 모델의 서로 다른 변형 또는 아직 미확정된 세부 계약이다.
+일반 `EXTERNAL_SWING / DEFENDED_RANGE_EDGE`의 strategic sweep ownership은
+D-126 operational contract로 고정되었다. 남은 항목들은 필터 튜닝 문제가 아니라
+매매 모델의 서로 다른 변형 또는 아직 미확정된 세부 계약이다.
 
 ## 7. 수익성에 대한 정직한 경계
 

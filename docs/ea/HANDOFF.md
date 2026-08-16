@@ -1,8 +1,8 @@
 # EA Development Handoff
 
 Last updated: 2026-08-16
-Status: D-125 CORRECTED PHASE 4B PASS / D-126 PHASE 4C IMPLEMENTED, LOCAL VALIDATION PENDING
-Current phase: Root-specific strategic sweep ownership; Phase 5A CHoCH remains disabled
+Status: D-126 VALIDATED / D-127 LINEAR TRIGGER PIPELINE IMPLEMENTED, LOCAL VALIDATION PENDING
+Current phase: Detector/Sequence separation — Root contact -> detected M1 Sweep -> detected M1 CHoCH -> WAITING_FVG
 
 ## Goal
 
@@ -90,18 +90,28 @@ Phase 4B Scenario / Objective Family
 → Root remains strategy source; child has no role
 → profitability NOT evaluated
 
-Phase 4C Root-Reaction Strategic Sweep
-→ D-126 build 1.00 IMPLEMENTED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
-→ per-M1-open causal eligible-pool snapshot
-→ only EXTERNAL_SWING / DEFENDED_RANGE_EDGE
-→ LONG LOW-side / SHORT HIGH-side
-→ pool.available_at < sweep_bar.open required
-→ Root-contact bar excluded in closed-bar baseline
-→ sweep M1 bar must intersect owning Root zone
-→ multiple pools retained; no best/latest pool selection
-→ multiple sweep episodes retained for later Phase 5A linkage
-→ STRUCTURAL_REACTION creation disabled
-→ meaningful CHoCH / FVG / orders disabled
+Phase 4C / Trigger Architecture
+→ D-126 build 1.00 REAL-TICK CAUSAL SMOKE PASS
+→ AUTHORIZED_SWEEP 11 / AUTHORIZED_SWEEP_POOL 20
+→ all D-126 causal invariants PASS; implementation itself behaved as designed
+→ D-126 Root-zone reintersection / strategic ownership layer is now HISTORICAL and SUPERSEDED BY D-127
+→ D-127 separates M1 sweep detector from scenario sequence
+→ M1_SWEEP_DETECTED has no Root/scenario/direction/child/quality gate
+→ scenario uses first direction-compatible detected sweep after Root contact
+→ Root-contact bar cannot satisfy sweep stage because intrabar order is unknown
+→ no Root reintersection requirement
+→ no latest-sweep replacement/reference layer
+→ STRUCTURAL_REACTION creation remains disabled
+
+Phase 5A M1 CHoCH
+→ D-127 uses existing independent M1 structure detector
+→ M1 STRUCTURE_PROTECTED_BREAK = M1_CHOCH_DETECTED
+→ scenario accepts later same-direction M1_CHOCH_DETECTED after Sweep
+→ no sweep-time opposite-trend recheck
+→ no sweep-time protected-reference freeze
+→ no mandatory M5/child confirmation
+→ accepted scenario CHoCH -> WAITING_FVG
+→ FVG / orders still disabled
 
 Phase 4A H1/M30 map / reversal permission
 → REAL-TICK EXTENDED TEST PASS
@@ -243,18 +253,16 @@ Physical sweep geometry
 → one-tick minimum
 → Phase 2 audit detector remains valid
 
-Strategic sweep authorization timing
-→ D-126 operational contract FROZEN
-→ snapshot at each candidate M1 bar open from pre-group causal state
-→ Root-contact bar excluded; same-bar ordering not provable from OHLC
-→ sweep bar must intersect owning Root zone
-→ child is not part of ownership
+M1 Sweep detector / scenario sequence
+→ D-127 DETECT / SEQUENCE separation is current
+→ detector uses causally-known liquidity + physical penetration/recovery only
+→ scenario checks only Root-contact-before-Sweep and direction
+→ Root-zone reintersection / family whitelist / child gate are not current strategy filters
 
-Active pre-CHoCH sweep/reference
-→ old Phase 4C ownership semantics SUPERSEDED pending timing re-audit
-
-Meaningful M1 CHoCH
-→ body-close break of frozen correction protected swing
+M1 CHoCH detector / scenario sequence
+→ existing M1 STRUCTURE_PROTECTED_BREAK is mirrored as M1_CHOCH_DETECTED
+→ scenario checks only later-than-Sweep ordering and direction
+→ no sweep-time protected-reference freeze or opposite-trend recheck
 
 Same-bar sweep + CHoCH
 → EXCLUDED in V1
@@ -389,7 +397,8 @@ EA_SPEC status
 → D122A temporal causality validated
 → D-124 Root-primary / optional-child semantics validated
 → D-125 corrected Phase 4B validated
-→ D-126 corrected Phase 4C external/defended Root-reaction sweep ownership frozen
+→ D-126 implementation validated but its strategic Root-reintersection ownership is superseded by D-127
+→ D-127 linear detector/sequence trigger pipeline is current implementation target
 → STRUCTURAL_REACTION remains separate re-audit
 
 Source lifecycle
@@ -521,9 +530,11 @@ orders/deals = 0
 After D-125 passes:
 
 ```text
-Corrected Phase 4C
-→ freeze Root-reaction sweep ownership under EA_SPEC 6.6
-→ then Phase 5A M1 meaningful CHoCH
+D-127 local validation
+→ verify detector events are scenario-independent
+→ verify sequence is strictly Root contact -> Sweep -> later CHoCH
+→ inspect simplified funnel counts
+→ then implement causal FVG stage
 ```
 
 ## Do Not Do Yet
@@ -535,78 +546,101 @@ Corrected Phase 4C
 - Do not enable live trading.
 - Do not treat legacy EA performance as current strategy performance.
 
-## Implementation Checkpoint — D-126 Corrected Phase 4C
+## Implementation Checkpoint — D-127 Linear Trigger Pipeline
 
-D-125 validation on build `0.90` produced:
+D-126 build `1.00` validation result:
 
 ```text
 SCENARIO_PLANNED = 13
 SCENARIO_ROOT_CONTACT_BOUND = 6
 ROOT_CONTACT_WITHOUT_PREPLAN = 5
-OBJECTIVE_CANDIDATE_FROZEN = 91
-AMBIGUOUS_ROOT_LINEAGE = 0
-PREPLAN_SOURCE_CONTACT = 0
+AUTHORIZED_SWEEP = 11
+AUTHORIZED_SWEEP_POOL = 20
 ```
 
-Corrected Phase 4B is PASS within scope.
+All 20 D-126 pool rows satisfied:
 
-D-126 code target:
+```text
+pool.available_at < sweep_bar_open
+root_intersection=true
+same_contact_bar=false
+strategy_source_kind=ROOT
+child_required=false
+```
+
+D-126 is therefore a causal implementation PASS, but D-127 supersedes its
+extra strategic Root-ownership filtering.
+
+D-127 target:
 
 ```text
 mt5/experts/MentorDeterministicV1EA.mq5
-internal build = 1.00
-phase = D126_ROOT_REACTION_SWEEP_CORE
+internal build = 1.10
+phase = D127_LINEAR_TRIGGER_PIPELINE_CORE
 ```
 
-D-126 active authority:
+Active pipeline:
 
 ```text
-preplanned Root contact
-→ WAITING_SWEEP
+DETECT:
+active causally-known liquidity
+→ physical M1 penetration + same-bar recovery
+→ M1_SWEEP_DETECTED
 
-for each later candidate M1 bar:
-state carried into close-timestamp group
-→ snapshot mature direction-compatible EXTERNAL_SWING / DEFENDED_RANGE_EDGE
-→ require pool.available_at < M1 bar open
-→ complete M1 bar
-→ require physical same-bar sweep
-→ require M1 bar intersects Root zone
-→ AUTHORIZED_SWEEP_POOL(s)
-→ scenario-specific AUTHORIZED_SWEEP episode
-→ WAITING_TRIGGER
+existing M1 structure detector
+→ STRUCTURE_PROTECTED_BREAK
+→ M1_CHOCH_DETECTED
+
+SEQUENCE:
+preplanned Root
+→ Root contact
+→ later direction-compatible M1_SWEEP_DETECTED
+→ SCENARIO_SWEEP_ACCEPTED / WAITING_CHOCH
+→ later same-direction M1_CHOCH_DETECTED
+→ SCENARIO_CHOCH_ACCEPTED / WAITING_FVG
 ```
 
-Fail-closed boundaries:
+Explicitly removed:
 
 ```text
-same Root-contact M1 bar = not strategically authorized
-STRUCTURAL_REACTION = disabled
-child = no role
-ATR / point / age / score = none
-best/latest sweep selection = none
+Root reintersection at Sweep
+D-126 strategic family whitelist
+latest sweep replacement
+sweep-time opposite M1 trend requirement
+sweep-time protected reference freeze
+separate MEANINGFUL_CHOCH subtype
+M5/child trigger gate
 ```
 
 Still disabled:
 
 ```text
-meaningful M1 CHoCH authorization
-sweep→CHoCH episode selection
-execution FVG
+causal FVG selection
+widest-FVG tie handling
+Entry / SL / final TP
 orders
 ```
 
-D-126 causal smoke must verify:
+D-127 smoke should verify:
 
 ```text
-AUTHORIZED_SWEEP > 0 on a sufficiently long fixture
-every authorized pool available_at < sweep_bar_open
-every sweep_bar_open >= root_contact_at
-same_contact_bar=false
-root_intersection=true
-strategy_source_kind=ROOT
-child_required=false
-family in {EXTERNAL_SWING, DEFENDED_RANGE_EDGE}
-direction side compatible
-STRUCTURAL_REACTION_CREATED=0
-orders/deals=0
+EA_START build=1.10 / D127_LINEAR_TRIGGER_PIPELINE_CORE
+M1_SWEEP_DETECTED > 0
+M1_CHOCH_DETECTED > 0
+SCENARIO_SWEEP_ACCEPTED > 0
+SCENARIO_CHOCH_ACCEPTED > 0 on the January fixture is expected but not hard-coded
+
+for every SCENARIO_SWEEP_ACCEPTED:
+root_contact_at <= sweep_bar_open
+correct scenario direction side
+root_reintersection=false
+choch_reference_freeze=false
+
+for every SCENARIO_CHOCH_ACCEPTED:
+choch_bar_open > sweep_bar_open
+direction matches scenario
+state=WAITING_FVG
+extra_reference_filter=false
+fvg_search_enabled=false
+order_authorization=false
 ```

@@ -25,8 +25,8 @@
 - D-124 build 0.81 Root-primary / optional-child audit: PASS; 11 Root contacts → 11 ROOT_CONTEXT_READY, optional child observations=2, strategy-source children=0.
 - Old Phase 4B/4C child/refined-source authorization: SUPERSEDED.
 - D-125 corrected Phase 4B build 0.90: PASS; 13 PLANs / 6 preplanned contacts / 5 no-preplan contacts / retrospective planning 0.
-- D-126 corrected Phase 4C Root-reaction strategic sweep implementation: prepared in build 1.00; local compile/real-tick validation pending.
-- Phase 5A CHoCH work remains BLOCKED until corrected Phase 4B/4C Root-based ownership passes.
+- D-126 build 1.00 Root-reaction sweep implementation: causal smoke PASS; 11 AUTHORIZED_SWEEP / 20 pools. Its extra Root-ownership filters are historical and superseded by D-127.
+- D-127 build 1.10 linear trigger pipeline implemented: detector/sequence separation; local compile/real-tick validation pending.
 
 ## P1 — Baseline implementation
 
@@ -36,9 +36,9 @@
 - [ ] Root OB — Phase 3A core verified; internal-swing completeness audit still open
 - [x] Optional LTF child audit — D-124 Root-primary/no-child-gate smoke PASS; audit-only observations do not alter strategy source
 - [x] HTF Root contact — D122A physical observation baseline causal PASS
-- [ ] Scenario-authorized mature sweep — D-126 external/defended Root-reaction ownership implemented; validation pending
+- [ ] Scenario Sweep stage — D-127 first direction-compatible M1_SWEEP_DETECTED after Root contact; validation pending
 - [ ] Structural Reaction liquidity authorization — corrected Root-based ownership/timing re-audit pending
-- [ ] M1 CHoCH
+- [ ] M1 CHoCH — D-127 independent detector event + scenario sequence attachment implemented; validation pending
 - [ ] Entry
 - [ ] SL
 - [ ] TP
@@ -64,12 +64,18 @@
 - [x] Verify every bound Root contact has plan_frozen_at < root_contact_at
 - [x] Verify same-map multiple Roots are never rejected as AMBIGUOUS_ROOT_LINEAGE
 - [x] Verify Root contact without preplan is not retrospectively planned
-- [ ] Compile/run D-126 internal build 1.00
-- [ ] Corrected Phase 4C Root/sweep ownership smoke
-- [ ] Verify authorized pool available_at < sweep_bar_open
-- [ ] Verify same-contact-bar strategic sweep = 0
-- [ ] Verify every authorized sweep bar intersects its owning Root
-- [ ] Verify multiple swept pools remain distinct and no sweep replacement occurs
+- [x] Compile/run D-126 internal build 1.00
+- [x] D-126 Root/sweep ownership causal smoke
+- [x] Verify all D-126 authorized pool available_at < sweep_bar_open
+- [x] Verify D-126 same-contact-bar strategic sweep = 0
+- [x] Verify all 20 D-126 authorized sweep pools intersected owning Root
+- [x] Verify D-126 multiple swept pools remained distinct and no sweep replacement occurred
+- [ ] Compile/run D-127 internal build 1.10
+- [ ] Verify M1_SWEEP_DETECTED is detector-only and has no Root/scenario filter
+- [ ] Verify SCENARIO_SWEEP_ACCEPTED uses only post-contact ordering + direction
+- [ ] Verify M1_CHOCH_DETECTED mirrors independent M1 STRUCTURE_PROTECTED_BREAK
+- [ ] Verify SCENARIO_CHOCH_ACCEPTED is strictly later than scenario Sweep and moves to WAITING_FVG
+- [ ] Verify Root reintersection / sweep-time protected reference / latest-sweep replacement are absent
 - [x] Phase 4A map/reversal-permission smoke — independent scope remains valid
 - [x] Historical Phase 3B run preserved as old-implementation evidence only — CHILD_CREATED=7 / CHILD_INVALIDATED=6
 - [x] Phase 3A Root core smoke / causal CSV audit

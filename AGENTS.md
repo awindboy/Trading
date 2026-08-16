@@ -2,7 +2,7 @@
 
 - 상태: `FROZEN / CURRENT V1 STRATEGY AUTHORITY`
 - 제정일: `2026-08-01`
-- 최근 개정: `2026-08-16` (`HTF Root remains strategy source; post-contact child is audit-only optional context`)
+- 최근 개정: `2026-08-16` (`Detector / Sequence / Execute separation; linear Root -> Sweep -> CHoCH trigger pipeline`)
 - 적용 범위: deterministic EA, MT5 Strategy Tester, current V1 수동/블라인드 리플레이 검증
 
 ## 1. 문서의 지위
@@ -1033,72 +1033,122 @@ Optional child 관찰 여부는 이 trigger chain의 시작 조건이 아니다.
 - reaction 중 생긴 고저점은 가격이 충분히 이탈해 구조가 확정된 뒤, 별도의 후속 접근이 그것을 관통하고 회복할 때만 sweep 근거가 될 수 있다.
 - 하나의 진행 중 wick이 고점을 만들고 다시 밀렸다는 이유만으로 `final sweep`이라 부르지 않는다.
 
-### Root-reaction strategic sweep ownership — D-126
+### M1 detector / scenario sequence separation — D-127
 
-Current closed-bar V1은 Root contact 시점에 sweep pool을 한 번 고정하지 않는다.
+Current V1은 M1의 `sweep`과 `CHoCH`를 **scenario 내부의 복합 자격시험으로 재정의하지 않는다.**
 
-각 **후속 M1 bar의 open**마다 그 excursion이 시작되기 전에 causally known 상태만으로
-해당 scenario의 eligible pool set을 다시 snapshot한다.
-
-```text
-preplanned Root scenario
-→ qualifying Root contact already known
-→ next/later M1 bar open
-→ eligible pool snapshot
-→ same M1 bar closes with penetration + recovery
-→ Root-zone intersection 확인
-→ scenario-specific AUTHORIZED_SWEEP
-```
-
-Eligible pool은 현재 baseline에서:
+세 층을 분리한다.
 
 ```text
-EXTERNAL_SWING
-DEFENDED_RANGE_EDGE
+DETECT
+→ M1_SWEEP_DETECTED
+→ M1_CHOCH_DETECTED
+
+SEQUENCE
+→ preplanned Root
+→ Root contact
+→ direction-compatible detected M1 sweep
+→ later same-direction detected M1 CHoCH
+
+EXECUTE
+→ causal FVG
+→ widest valid FVG
+→ first retest
+→ Entry / SL / TP
 ```
 
-만 사용한다.
+#### M1 sweep detector
 
-`STRUCTURAL_REACTION`은 Root-based ownership 재정의 전까지 strategic sweep authority가 없다.
-
-Snapshot에 들어가려면:
-
-- LONG은 LOW-side, SHORT은 HIGH-side liquidity여야 한다.
-- pool은 해당 M1 bar open보다 **엄격히 이전에** available해야 한다.
-- 해당 bar open 전에 이미 strategy-consumed된 pool은 제외한다.
-- Root contact 전에 완료된 sweep을 소급 연결하지 않는다.
-
-Current closed-bar implementation은 Root-contact bar 자체의 sweep을 허가하지 않는다.
-Root contact는 그 M1 bar close에서 확인되므로 같은 bar 안에서 `contact → sweep` 순서를
-OHLC만으로 증명할 수 없기 때문이다. 이는 look-ahead 방지를 위한 fail-closed
-operational rule이며, tick-order evidence를 별도로 구현하기 전까지 유지한다.
-
-Root reaction ownership에는 임의의 ATR/point/time-distance를 사용하지 않는다.
-대신 strategic sweep을 만든 **M1 bar 자체가 해당 scenario의 HTF Root zone과 실제로
-교차**해야 한다.
+M1 sweep 자체의 판정은 liquidity detector가 이미 만든 causally-known liquidity에 대해
+기존 물리 sweep geometry만 사용한다.
 
 ```text
-bar.high >= Root.bottom
-AND
-bar.low <= Root.top
+HIGH-side: high > pool.top AND close <= pool.top
+LOW-side:  low  < pool.bottom AND close >= pool.bottom
 ```
 
-한 M1 bar가 여러 mature pool을 동시에 sweep하면 pool identity를 모두 보존한다.
-가장 가까운/최근/큰 pool 하나를 임의 선택하지 않는다.
-동일 bar의 pool들은 하나의 scenario-specific sweep episode로 묶되,
-어느 episode가 이후 CHoCH의 causal sweep인지 선택하는 권한은 Phase 5A에 남긴다.
+M1 bar가 시작될 때 이미 알고 있는 active liquidity만 사용할 수 있다는 causal rule은
+look-ahead 방지를 위한 detector 원칙이지 strategy quality filter가 아니다.
 
-Optional child는 이 snapshot, Root intersection, sweep authorization 어디에도 관여하지 않는다.
+Sweep detector에는 다음을 추가하지 않는다.
+
+```text
+Root-zone 재교차 필수
+scenario ownership 필터
+child 존재 여부
+ATR / point distance
+N-bar age
+quality score
+특정 liquidity family를 strategy 때문에 재선별
+```
+
+Root contact 이전에 발생한 sweep은 detector event로는 유효할 수 있지만, 현재 scenario의
+순서상 sweep 단계로 소급 사용할 수 없다. Closed-bar V1에서 Root-contact bar 자체도
+`contact -> sweep` intrabar 순서를 증명할 수 없으므로 현재 scenario 단계에는 사용하지 않는다.
+
+#### M1 CHoCH detector
+
+CHoCH는 기존 M1 structure detector가 독립적으로 판정한다.
+Current structure engine에서 CHoCH detector event는 directional state의 protected swing을
+반대 방향 **몸통 종가**로 돌파한 `STRUCTURE_PROTECTED_BREAK`이다.
+
+```text
+M1 structure detector
+→ STRUCTURE_PROTECTED_BREAK
+→ M1_CHOCH_DETECTED
+```
+
+Scenario는 이 event를 다시 다음 조건으로 재심사하지 않는다.
+
+```text
+sweep 시점의 opposite M1 trend 재확인
+sweep 시점 protected swing 별도 freeze
+latest/nearest pivot 재선택
+M5 추가 confirmation
+child confirmation
+CHoCH strength / ATR / body-size score
+```
+
+`INITIAL_BOS`는 현재 structure detector가 CHoCH로 분류하지 않으므로 CHoCH detector event가 아니다.
+이 구분 자체를 바꾸려면 strategy filter를 완화하는 것이 아니라 **structure detector 정의를 별도 재감사**한다.
+
+#### Scenario sequence
+
+Scenario layer가 검사하는 것은 구조의 품질을 다시 평가하는 것이 아니라 **시간순서와 방향**뿐이다.
+
+```text
+LONG scenario
+Root contact
+→ 이후 LOW-side M1_SWEEP_DETECTED
+→ 그보다 뒤의 bullish M1_CHOCH_DETECTED
+→ WAITING_FVG
+
+SHORT scenario
+Root contact
+→ 이후 HIGH-side M1_SWEEP_DETECTED
+→ 그보다 뒤의 bearish M1_CHOCH_DETECTED
+→ WAITING_FVG
+```
+
+첫 direction-compatible sweep이 sweep 단계를 만족하면 이후 sweep이 기존 단계를
+`replace`하거나 새로운 protected reference를 만들지 않는다. CHoCH가 나오기 전 추가 sweep은
+detector ledger에는 남지만 동일 scenario에서 별도의 중첩 trigger filter를 만들지 않는다.
+
+Optional child는 detector와 sequence 어느 쪽에도 거래 권한이 없다.
 
 ### 의미 있는 CHoCH
 
-- wick 돌파가 아니라 몸통 종가 돌파여야 한다.
-- 하락 중 long이라면 실제 correction을 지배하던 반응 고점을 깨야 한다.
-- 상승 중 short이라면 실제 correction을 지배하던 반응 저점을 깨야 한다.
-- 한두 캔들의 미세 pivot이나 같은 방향의 내부 흔들림은 CHoCH가 아니다.
-- M1 CHoCH가 선명해도 qualifying HTF Root가 없으면 진입하지 않는다. Post-contact child observation은 필수가 아니며 거래 권한이 없다.
-- M1 CHoCH가 M5 correction을 지배하던 swing을 깨지 못했다면 HTF delivery 전환으로 승격하지 않는다.
-- M5가 명확히 반대 방향으로 전달 중인데 M1에서만 짧은 반등 CHoCH가 발생하면 우선 내부 correction으로 분류한다.
+Current V1에서 `의미 있는 CHoCH`라는 말은 별도의 초강력 CHoCH 유형을 뜻하지 않는다.
+
+```text
+일반 M1 CHoCH detector event
++
+이미 Root contact -> Sweep 순서를 통과한 scenario
+= scenario에서 의미 있는 M1 CHoCH
+```
+
+즉 의미는 **구조 자체에 추가 필터가 붙어서 생기는 것이 아니라, 올바른 scenario 순서 안에서 발생했다는 것**에서 나온다.
+M1 CHoCH만으로 H1/M30 direction을 뒤집거나 새 HTF scenario를 만들 수 없다는 기존 authority는 유지한다.
 
 ## 7. FVG의 제한된 역할
 
@@ -1108,7 +1158,7 @@ FVG를 보았다는 이유로 최초 시나리오를 만들지 않는다.
 
 - HTF Root는 필수 source/context authority다. Post-contact LTF child는 선택적 audit/context observation이다.
 - 의미 있는 M1 CHoCH 자체는 protected/live swing의 몸통 종가 돌파로 성립한다.
-- 다만 최초 포지션을 실제로 허가하려면 authorized sweep에서 CHoCH까지 이어지는 동일 causal leg 안에 fresh same-direction 3-candle FVG가 최소 하나 있어야 한다.
+- 다만 최초 포지션을 실제로 허가하려면 scenario sweep에서 CHoCH까지 이어지는 동일 causal leg 안에 fresh same-direction 3-candle FVG가 최소 하나 있어야 한다.
 - CHoCH가 있어도 causal FVG가 없으면 structure event만 기록하고 `NO ENTRY`다.
 - valid FVG가 여러 개면 `width = top - bottom`이 가장 큰 FVG를 선택한다.
 - symbol tick 기준으로 최대 폭이 정확히 같은 FVG가 둘 이상이면 임의 선택하지 않고 `NO TRADE`다.
@@ -1188,24 +1238,23 @@ current baseline execution path에 포함하지 않는다.
 
 ### 체결 전 pending order 생명주기
 
-V1 first-position strategy state는:
+V1 first-position strategy state는 현재 trigger pipeline을 명시적으로 구분한다.
 
 ```text
 PLANNED
-WAITING_TRIGGER
+WAITING_SWEEP
+WAITING_CHOCH
+WAITING_FVG
 PENDING
 FILLED
 CANCELED
 NO_TRADE
 ```
 
-를 사용한다.
+각 state는 새로운 품질 필터가 아니라 **직렬 sequence의 진행 위치**만 나타낸다.
+Optional child observation은 state를 만들거나 바꾸지 않는다.
 
-HTF Root contact, optional child observation, sweep, CHoCH, FVG selection은
-별도 persistent strategy state를 무분별하게 늘리는 대신
-event ID와 timestamp로 기록한다.
-
-Meaningful CHoCH close에서 같은 EA decision cycle로:
+Scenario CHoCH가 accepted되어 `WAITING_FVG`에 들어가면 다음 execution 단계에서:
 
 ```text
 eligible fresh FVG snapshot
@@ -1716,14 +1765,12 @@ implementation parity 완료 뒤 별도 execution/risk policy로 검토한다.
 4. Frozen objective family 전체에 planned R `>=1`인 valid candidate가 없다.
 5. 사전에 형성되어 있고 현재 setup의 첫 반응을 볼 수 있는 미소진 HTF Root OB가 없다.
 6. 가격이 그 HTF Root에 실제로 contact하지 않았다.
-7. Required sweep liquidity의 causal maturity를 현재 post-contact trigger contract로 설명할 수 없다.
-8. Direction-compatible mature liquidity sweep이 없다.
-9. Authorized sweep 시점에 valid opposite M1 correction protected swing이 없다.
-10. Meaningful M1 CHoCH가 없다.
-11. Meaningful CHoCH는 있지만 같은 sweep-to-CHoCH causal leg에 fresh valid FVG가 없다.
-12. Widest valid FVG를 deterministic하게 하나 선택할 수 없다.
-13. Selected FVG의 Entry / SL / TP geometry가 계산되지 않는다.
-14. Frozen strategy geometry가 broker execution preflight를 통과하지 못한다.
+7. Root contact 이후 direction-compatible M1 sweep detector event가 없다.
+8. 그 sweep 이후 scenario 방향의 M1 CHoCH detector event가 없다.
+9. Scenario CHoCH는 있지만 같은 sweep-to-CHoCH causal leg에 fresh valid FVG가 없다.
+10. Widest valid FVG를 deterministic하게 하나 선택할 수 없다.
+11. Selected FVG의 Entry / SL / TP geometry가 계산되지 않는다.
+12. Frozen strategy geometry가 broker execution preflight를 통과하지 못한다.
 
 다음은 **단독 비매매 사유가 아니다.**
 
@@ -1750,7 +1797,7 @@ current V1 no-trade branch에 포함하지 않는다.
 7. 주문 전에 causal IDs, Entry, SL, TP, volume과 execution preflight를 기록한다.
 8. 결과를 본 뒤 Root/liquidity/CHoCH/FVG/SL/TP를 다시 그리지 않는다.
 9. 미래 데이터가 노출된 replay session은 protocol result에서 제외한다.
-10. `PLANNED / WAITING_TRIGGER` 상태에서 가격이 source와 멀리 있고 causal invalidation도 없다면 동일 분석을 불필요하게 반복하지 않는다.
+10. `PLANNED / WAITING_SWEEP / WAITING_CHOCH` 상태에서 가격이 source와 멀리 있고 causal invalidation도 없다면 동일 분석을 불필요하게 반복하지 않는다.
 11. 사전에 선언된 structural/objective/source event에서만 replay를 정지한다.
 12. 비활성 Delivery-FVG/OB-only/add-on variant는 current V1 blind-replay 판단에 사용하지 않는다.
 
@@ -1789,9 +1836,8 @@ optional child observations, if any:
     audit-only causal relation
 
 trigger_context_ready_at
-active_sweep_event_id
-active_choch_reference_swing_id
-meaningful CHoCH event ID
+scenario_sweep_bar_open / detector event IDs
+scenario_choch_event_id / choch_bar_open
 
 eligible FVG IDs / widths
 selected FVG ID / bounds / width
@@ -1911,11 +1957,8 @@ Optional child observation은 ________ 이다. (없으면 N/A)
 Child가 있다면 Root contact 이후 causal audit 조건을 만족한 근거는 ________ 이다.
 
 Post-contact trigger context가 준비된 시각은 ________ 이다.
-Required liquidity ________ 은 ________ 시각부터 available했다.
-Authorized sweep은 ________ 시각의 ________ event다.
-
-M1 CHoCH reference는 ________ 이다.
-Meaningful CHoCH event는 ________ 이다.
+Scenario Sweep 단계를 만족시킨 M1_SWEEP_DETECTED는 ________ 시각의 ________ event다.
+Scenario CHoCH 단계를 만족시킨 M1_CHOCH_DETECTED는 ________ 시각의 ________ event다.
 
 Eligible causal FVG는 ________ 이다.
 Selected widest FVG는 ________ 이다.
@@ -1965,7 +2008,7 @@ missing Root
 pre-contact historical child recorded as if it were a post-contact observation
 immature liquidity used as sweep
 premium/discount used as standalone authorization/veto
-missing meaningful CHoCH
+missing scenario CHoCH after Sweep
 missing causal FVG
 wrong widest FVG
 wrong FVG entry boundary

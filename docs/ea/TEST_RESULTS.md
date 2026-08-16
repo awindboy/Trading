@@ -42,7 +42,7 @@ Phase 1.1 structure results
 
 Phase 2 physical liquidity/sweep detector results
 → remain valid within detector scope
-→ strategy-authorization ownership/timing still requires Root-based re-audit
+→ D-126 historical ownership test PASS; D-127 now uses detector/sequence separation
 
 Phase 3A HTF Root detection/lifecycle results
 → remain valid within Root-detection scope
@@ -59,6 +59,117 @@ Historical Phase 4B / Phase 4C final-refined-source results
 ```
 
 All historical records below are intentionally preserved unchanged as test history.
+
+## 2026-08-16 — D-126 Root-Reaction Sweep Validation
+
+Status:
+
+```text
+PASS — D-126 implementation matched its frozen contract
+HISTORICAL STRATEGIC OWNERSHIP SEMANTICS SUPERSEDED BY D-127
+NOT A PROFITABILITY TEST
+```
+
+EA:
+
+```text
+repository commit = b71cb556df4251937b3bf4812644bfdc5efa1440
+internal build = 1.00
+phase = D126_ROOT_REACTION_SWEEP_CORE
+InpEnableFvgOriginObExperiment = false
+```
+
+Uploaded event CSV:
+
+```text
+mentor_v1_structure_events(20260816-132141).csv
+rows = 7465
+```
+
+Summary:
+
+```text
+SCENARIO_PLANNED = 13
+SCENARIO_ROOT_CONTACT_BOUND = 6
+ROOT_CONTACT_WITHOUT_PREPLAN = 5
+AUTHORIZED_SWEEP = 11
+AUTHORIZED_SWEEP_POOL = 20
+```
+
+All 20 D-126 authorized pool rows satisfied:
+
+```text
+pool_available_at < sweep_bar_open = PASS
+root_intersection=true = 20 / 20
+same_contact_bar=false = 20 / 20
+strategy_source_kind=ROOT = 20 / 20
+child_required=false = 20 / 20
+```
+
+Forbidden/disabled paths:
+
+```text
+AUTHORIZED_SWEEP_REPLACED = 0
+STRUCTURAL_REACTION_CREATED = 0
+old Phase4C SOURCE_CONTACT = 0
+orders/deals = 0
+```
+
+Interpretation:
+
+D-126 is a causal implementation PASS: its per-M1-open snapshot and Root-zone
+intersection ownership rules ran exactly as specified. The run also showed that
+these rules were acting as an additional strategy filter after Map / Root /
+Contact had already filtered the setup.
+
+D-127 therefore preserves this result as historical evidence but supersedes the
+**strategic** Root-reintersection / sweep-ownership layer with detector/sequence
+separation. This is a strategy-architecture correction, not a claim that the
+D-126 code malfunctioned.
+
+Profitability: N/A.
+
+## 2026-08-16 — D-127 Authority Correction: Linear Trigger Pipeline
+
+Status:
+
+```text
+IMPLEMENTED / LOCAL VALIDATION PENDING
+```
+
+Current funnel under test:
+
+```text
+DETECT:
+M1_SWEEP_DETECTED
+M1_CHOCH_DETECTED
+
+SEQUENCE:
+Map / Objective
+→ HTF Root
+→ Root contact
+→ later direction-compatible detected M1 Sweep
+→ later direction-compatible detected M1 CHoCH
+→ WAITING_FVG
+```
+
+D-127 intentionally removes these strategy-side nested filters:
+
+```text
+Root reintersection at Sweep
+D-126 family whitelist at scenario Sweep stage
+latest-sweep replacement
+sweep-time opposite M1 trend gate
+sweep-time protected-reference freeze
+separate MEANINGFUL_CHOCH subtype
+mandatory M5 / child trigger confirmation
+```
+
+The M1 structure detector itself is unchanged. Current `M1_CHOCH_DETECTED`
+mirrors the existing M1 `STRUCTURE_PROTECTED_BREAK`; `INITIAL_BOS` remains a
+separate detector event.
+
+No FVG/order authorization is enabled in D-127.
 
 ## 2026-08-16 — D-125 Corrected Phase 4B Root-Specific PLAN / Objective Validation
 
