@@ -1,8 +1,8 @@
 # EA Development Handoff
 
 Last updated: 2026-08-16
-Status: D-125 CORRECTED PHASE 4B IMPLEMENTED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
-Current phase: Root-specific pre-contact map/objective PLAN freeze; corrected Phase 4C remains blocked
+Status: D-125 CORRECTED PHASE 4B PASS / D-126 PHASE 4C IMPLEMENTED, LOCAL VALIDATION PENDING
+Current phase: Root-specific strategic sweep ownership; Phase 5A CHoCH remains disabled
 
 ## Goal
 
@@ -80,16 +80,28 @@ Consequences:
 ## Current Status
 
 Phase 4B Scenario / Objective Family
-→ OLD PRE-CONTACT-CHILD IMPLEMENTATION SUPERSEDED
-→ corrected Root-primary implementation prepared in internal build 0.90 / D-125
-→ each physical Root is an independent candidate
-→ map / direction / objective family freeze strictly before Root contact
-→ same-map multiple Roots are not an ambiguity veto
-→ contact without a strictly earlier PLAN cannot be retrospectively attached
+→ D-125 build 0.90 REAL-TICK CAUSAL SMOKE PASS
+→ SCENARIO_PLANNED 13 / OBJECTIVE_CANDIDATE_FROZEN 91
+→ physical Root contact 11
+→ strictly preplanned Root contact bound 6
+→ contact without prior PLAN 5; retrospective planning 0
+→ plan_frozen_at >= root_contact_at violations 0
+→ AMBIGUOUS_ROOT_LINEAGE 0 / PREPLAN_SOURCE_CONTACT 0
 → Root remains strategy source; child has no role
-→ local MetaEditor compile PENDING
-→ real-tick causal validation PENDING
 → profitability NOT evaluated
+
+Phase 4C Root-Reaction Strategic Sweep
+→ D-126 build 1.00 IMPLEMENTED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
+→ per-M1-open causal eligible-pool snapshot
+→ only EXTERNAL_SWING / DEFENDED_RANGE_EDGE
+→ LONG LOW-side / SHORT HIGH-side
+→ pool.available_at < sweep_bar.open required
+→ Root-contact bar excluded in closed-bar baseline
+→ sweep M1 bar must intersect owning Root zone
+→ multiple pools retained; no best/latest pool selection
+→ multiple sweep episodes retained for later Phase 5A linkage
+→ STRUCTURAL_REACTION creation disabled
+→ meaningful CHoCH / FVG / orders disabled
 
 Phase 4A H1/M30 map / reversal permission
 → REAL-TICK EXTENDED TEST PASS
@@ -232,9 +244,11 @@ Physical sweep geometry
 → Phase 2 audit detector remains valid
 
 Strategic sweep authorization timing
-→ EA_SPEC 6.6 RE-AUDIT STILL OPEN
-→ DISABLED in D-125
-→ exact Root-reaction liquidity-freeze anchor remains unresolved; child is not part of that decision
+→ D-126 operational contract FROZEN
+→ snapshot at each candidate M1 bar open from pre-group causal state
+→ Root-contact bar excluded; same-bar ordering not provable from OHLC
+→ sweep bar must intersect owning Root zone
+→ child is not part of ownership
 
 Active pre-CHoCH sweep/reference
 → old Phase 4C ownership semantics SUPERSEDED pending timing re-audit
@@ -374,8 +388,9 @@ EA_SPEC status
 → AUTHORITY-CORRECTED
 → D122A temporal causality validated
 → D-124 Root-primary / optional-child semantics validated
-→ D-125 corrected Phase 4B implementation prepared
-→ corrected Phase 4C Root-reaction sweep timing still requires separate freeze
+→ D-125 corrected Phase 4B validated
+→ D-126 corrected Phase 4C external/defended Root-reaction sweep ownership frozen
+→ STRUCTURAL_REACTION remains separate re-audit
 
 Source lifecycle
 → ACTIVE / INVALIDATED only
@@ -415,7 +430,7 @@ Broker transaction reconciliation
 → callback arrival order not trusted
 
 
-## Implementation Checkpoint — D-125 Corrected Phase 4B
+## Historical Checkpoint — D-125 Corrected Phase 4B (VALIDATED)
 
 D-124 build `0.81` passed the Root-primary / optional-child audit:
 
@@ -456,7 +471,7 @@ Root contact without strictly earlier preplan
 → no retrospective scenario
 ```
 
-Explicitly still disabled:
+Explicitly disabled in D-125 at that time:
 
 ```text
 corrected Phase 4C eligible sweep-pool freeze
@@ -519,3 +534,79 @@ Corrected Phase 4C
 - Do not implement CHoCH+BOS confirmation variant.
 - Do not enable live trading.
 - Do not treat legacy EA performance as current strategy performance.
+
+## Implementation Checkpoint — D-126 Corrected Phase 4C
+
+D-125 validation on build `0.90` produced:
+
+```text
+SCENARIO_PLANNED = 13
+SCENARIO_ROOT_CONTACT_BOUND = 6
+ROOT_CONTACT_WITHOUT_PREPLAN = 5
+OBJECTIVE_CANDIDATE_FROZEN = 91
+AMBIGUOUS_ROOT_LINEAGE = 0
+PREPLAN_SOURCE_CONTACT = 0
+```
+
+Corrected Phase 4B is PASS within scope.
+
+D-126 code target:
+
+```text
+mt5/experts/MentorDeterministicV1EA.mq5
+internal build = 1.00
+phase = D126_ROOT_REACTION_SWEEP_CORE
+```
+
+D-126 active authority:
+
+```text
+preplanned Root contact
+→ WAITING_SWEEP
+
+for each later candidate M1 bar:
+state carried into close-timestamp group
+→ snapshot mature direction-compatible EXTERNAL_SWING / DEFENDED_RANGE_EDGE
+→ require pool.available_at < M1 bar open
+→ complete M1 bar
+→ require physical same-bar sweep
+→ require M1 bar intersects Root zone
+→ AUTHORIZED_SWEEP_POOL(s)
+→ scenario-specific AUTHORIZED_SWEEP episode
+→ WAITING_TRIGGER
+```
+
+Fail-closed boundaries:
+
+```text
+same Root-contact M1 bar = not strategically authorized
+STRUCTURAL_REACTION = disabled
+child = no role
+ATR / point / age / score = none
+best/latest sweep selection = none
+```
+
+Still disabled:
+
+```text
+meaningful M1 CHoCH authorization
+sweep→CHoCH episode selection
+execution FVG
+orders
+```
+
+D-126 causal smoke must verify:
+
+```text
+AUTHORIZED_SWEEP > 0 on a sufficiently long fixture
+every authorized pool available_at < sweep_bar_open
+every sweep_bar_open >= root_contact_at
+same_contact_bar=false
+root_intersection=true
+strategy_source_kind=ROOT
+child_required=false
+family in {EXTERNAL_SWING, DEFENDED_RANGE_EDGE}
+direction side compatible
+STRUCTURAL_REACTION_CREATED=0
+orders/deals=0
+```

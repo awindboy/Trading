@@ -3,6 +3,7 @@
 Status: FROZEN FOR V1 IMPLEMENTATION
 Authority: `AGENTS.md`
 Latest authority correction: `2026-08-16 — HTF Root is the sole OB source; post-contact child is optional audit/context only`
+Latest implementation freeze: `2026-08-16 — D-126 Root-reaction strategic sweep ownership`
 
 ## Rule Classification
 
@@ -2825,24 +2826,99 @@ reuse an old sweep only because a child later appeared
 move Entry/SL/TP because a child later appeared
 ```
 
-### 6.6 Sweep Timing Re-Audit Boundary
+### 6.6 Corrected Root-Reaction Sweep Timing / Ownership
 
-Classification: U/D boundary
+Classification: D
 
-D-122/D-124 resolve the Root-vs-child ownership question but do **not** by themselves invent every strategic sweep-freeze detail.
+D-126 freezes the baseline strategic-sweep ownership contract for the already
+verified physical liquidity families.
 
-The remaining implementation re-audit must determine from existing authority/evidence, without arbitrary age parameters:
+A persistent Root-contact-time pool snapshot is **not** used.
+
+Reason:
+
+Root reaction can create a new liquidity object after contact; if that object
+becomes causally mature and price later approaches it again, it may be a valid
+sweep candidate. Freezing only the pools that existed at Root contact would
+incorrectly exclude that causal path.
+
+Instead, every candidate M1 sweep bar uses a causal snapshot anchored to that
+bar's **open time**.
 
 ```text
-which causally known liquidity pools belong to a Root reaction setup
-what exact event freezes the eligible-pool snapshot
-whether a Root-contact bar can also satisfy the physical sweep when ordering is provable
-how Root-zone intersection constrains sweep ownership
+preplanned scenario
+→ qualifying Root contact already known
+→ candidate M1 bar open
+→ snapshot currently eligible mature pools
+→ M1 bar closes
+→ evaluate physical sweep
+→ evaluate Root-zone ownership
 ```
 
-Child availability, child geometry, or child ambiguity has **no role** in those decisions.
+#### Snapshot ordering
 
-Until corrected Phase 4C freezes that contract, the Phase-2 physical sweep detector remains valid but strategic sweep authorization stays disabled. D-125 may re-enable pre-contact Phase 4B planning only; it does not cross this boundary.
+The snapshot must be created from state carried into the close-timestamp group,
+before any H4/H1/M30/M15/M5 close that becomes available at the candidate M1
+bar's close can affect its eligibility.
+
+Required:
+
+```text
+pool.available_at < sweep_bar.open_time
+```
+
+and the pool must not already be strategy-consumed before that bar.
+
+The strict inequality is the current closed-bar fail-closed ordering contract.
+
+#### Root-contact bar exclusion
+
+The M1 bar on which the Root contact is first observed is not authorized as the
+strategic sweep in the current closed-bar baseline.
+
+```text
+same Root-contact M1 bar
+→ physical sweep may be logged globally
+→ strategic AUTHORIZED_SWEEP = forbidden
+```
+
+Root contact is only knowable at that bar close, and OHLC alone cannot prove
+that contact happened before the candidate sweep inside the bar.
+
+A future tick-ordered implementation may revisit this branch without changing
+the rest of D-126.
+
+#### Root-zone ownership
+
+A physical sweep belongs to a Root scenario only when the sweep M1 bar itself
+intersects the owning HTF Root zone:
+
+```text
+bar.high >= Root.bottom
+AND
+bar.low <= Root.top
+```
+
+No ATR, point-distance, time-distance, nearest-pool, or score heuristic is used.
+
+This prevents an arbitrary distant post-contact sweep from being attached to a
+Root merely because it occurred later in time.
+
+#### Multiple pools / episodes
+
+If one M1 bar sweeps multiple eligible pools, all pool identities remain
+distinct and one scenario-specific sweep episode references all of them.
+
+No best pool is selected.
+
+If later Root-intersecting sweep episodes occur before scenario invalidation,
+they are also retained. D-126 does not replace an old episode with a newer one.
+
+Selection of the sweep episode that causally precedes a meaningful CHoCH is
+deferred to Phase 5A.
+
+Optional child availability, geometry, ambiguity, or invalidation has no role in
+this contract.
 
 ### 6.7 Direction-Compatible Sweep
 
@@ -2866,15 +2942,17 @@ The physical sweep geometry remains Section 3.10.
 
 ### 6.8 Eligible Sweep Liquidity Families
 
-Classification: D / pending strategy-ownership reattachment
+Classification: D
 
-Physical candidates remain from the frozen liquidity families:
+D-126 strategic authorization uses:
 
 ```text
 EXTERNAL_SWING
 DEFENDED_RANGE_EDGE
-STRUCTURAL_REACTION, only after its corrected Root-based ownership rule is re-frozen
 ```
+
+`STRUCTURAL_REACTION` remains excluded from strategic authorization until
+Section 6.18 is independently re-frozen.
 
 ### 6.9 Mature Liquidity Principle
 
@@ -2932,18 +3010,24 @@ Classification: D
 
 One M1 bar may physically sweep multiple distinct eligible pools. Their identities stay distinct; do not merge unrelated liquidity merely because one bar touched them.
 
-### 6.15 Pre-Contact Sweep Reuse Remains Forbidden in Principle
+### 6.15 Pre-Contact / Same-Contact-Bar Sweep Reuse
 
 Classification: D
 
-A sweep that completed before the qualifying HTF Root contact is not the current Root reaction's trigger sweep.
+A sweep that completed before the qualifying HTF Root contact is not the current
+Root reaction's trigger sweep.
 
 ```text
 sweep.available_at <= Root contact
-→ cannot be retrospectively attached to that later Root reaction
+→ cannot be retrospectively attached
 ```
 
-The corrected strategic eligible-pool snapshot still requires the separate Phase 4C re-audit in 6.6.
+In the current closed-bar D-126 implementation, the Root-contact M1 bar itself is
+also excluded from strategic authorization because intrabar
+`Root contact → sweep` ordering cannot be proven from OHLC.
+
+The first possible strategic sweep is therefore on a later M1 bar using the
+Section 6.6 pre-open causal snapshot.
 
 ### 6.16 CHoCH Search Activation
 
@@ -2961,19 +3045,37 @@ No optional-child condition is added.
 
 ### 6.17 Scenario-Specific Sweep State
 
-Classification: D / implementation reattachment pending
+Classification: D
 
-When corrected Phase 4C is re-enabled, an authorized sweep must be bound to a specific Root-based scenario/context rather than to a globally interchangeable sweep event.
+Every D-126 `AUTHORIZED_SWEEP` is bound to one Root-based scenario.
 
-Child identity must not be part of the required strategy key.
+Required strategy key:
+
+```text
+scenario_id
+root_zone_id
+sweep_bar_open
+```
+
+Each episode retains all swept pool IDs from that M1 bar.
+
+Child identity is not part of the key.
+
+The first authorized episode moves the scenario from `WAITING_SWEEP` to
+`WAITING_TRIGGER`; later valid episodes remain retained for Phase 5A causal
+CHoCH linkage rather than replacing the earlier episode.
 
 ### 6.18 Structural Reaction Liquidity
 
-Classification: RE-AUDIT REQUIRED
+Classification: RE-AUDIT REQUIRED / EXCLUDED FROM D-126
 
-The physical concept remains useful, but the old implementation attached `STRUCTURAL_REACTION` ownership to a HTF Root source. That ownership is superseded.
+The physical concept remains useful, but the old implementation attached
+`STRUCTURAL_REACTION` ownership through superseded Phase-4C assumptions.
 
-Before reactivation, `STRUCTURAL_REACTION` must be redefined around the Root-based reaction context without requiring any child.
+D-126 does not create or authorize `STRUCTURAL_REACTION`.
+
+Before reactivation, its creation and Root-based ownership must be independently
+redefined without requiring any child.
 
 ### 6.19 Explicit V1 Exclusions
 

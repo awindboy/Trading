@@ -60,6 +60,139 @@ Historical Phase 4B / Phase 4C final-refined-source results
 
 All historical records below are intentionally preserved unchanged as test history.
 
+## 2026-08-16 — D-125 Corrected Phase 4B Root-Specific PLAN / Objective Validation
+
+Status:
+
+```text
+PASS — corrected Phase 4B within isolated scope
+NOT A PROFITABILITY TEST
+```
+
+EA:
+
+```text
+repository commit = 47dbce14dc130ca0c805a53e29f36f900c16a8da
+internal build = 0.90
+property version = 1.00
+phase = D125_ROOT_PRECONTACT_SCENARIO_OBJECTIVE_CORE
+InpEnableFvgOriginObExperiment = false
+```
+
+Uploaded event CSV:
+
+```text
+mentor_v1_structure_events(20260816-125125).csv
+rows = 7434
+SHA-256 = 093919cfaac28c85ec9ee7648cfa0bae25cd24e6881eccad009e0878a1608c44
+observed interval = 2025-01-06 00:00:00 ~ 2025-01-31 23:57:57
+```
+
+The CSV proves build 0.90 executed. The tester model is not encoded in the CSV,
+so this record does not infer that field from the file alone.
+
+Phase 4B summary:
+
+```text
+SCENARIO_PLANNED = 13
+SCENARIO_ROOT_BOUND = 13
+OBJECTIVE_CANDIDATE_FROZEN = 91
+
+ROOT_CONTACT_OBSERVED = 11
+SCENARIO_ROOT_CONTACT_BOUND = 6
+ROOT_CONTACT_WITHOUT_PREPLAN = 5
+
+SCENARIO_CANCELED = 13
+all cancellation reasons = ROOT_INVALIDATED
+```
+
+Six valid preplanned contact bindings:
+
+```text
+2025-01-10 17:00 PLAN → 2025-01-13 12:26 LONG H1 continuation contact
+2025-01-14 22:00 PLAN → 2025-01-15 03:45 LONG M30 continuation contact
+2025-01-16 16:00 PLAN → 2025-01-17 12:42 LONG H1 continuation contact
+2025-01-24 14:30 PLAN → 2025-01-24 18:50 LONG H1 continuation M30 Root contact
+2025-01-24 14:30 PLAN → 2025-01-24 18:50 LONG H1 continuation M15 Root contact
+2025-01-27 17:30 PLAN → 2025-01-30 09:19 SHORT M30 external-reversal contact
+```
+
+Automated invariants:
+
+```text
+SCENARIO_PLANNED strategy_source_kind != ROOT = 0
+SCENARIO_PLANNED child_required != false = 0
+SCENARIO_PLANNED already has root_contact_at = 0
+
+objective_count mismatch = 0
+objective future-availability violation = 0
+objective wrong-direction side = 0
+objective nearest-first price-order violation = 0
+
+bound contact with plan_frozen_at >= root_contact_at = 0
+bound root_zone_id != strategy_source_id = 0
+bound post-contact state != WAITING_SWEEP = 0
+
+AMBIGUOUS_ROOT_LINEAGE = 0
+PREPLAN_SOURCE_CONTACT = 0
+old Phase4C SOURCE_CONTACT = 0
+old Phase4C AUTHORIZED_SWEEP = 0
+STRUCTURAL_REACTION strategy creation = 0
+```
+
+Physical Root contacts with no valid strictly-earlier PLAN:
+
+```text
+2025-01-06 01:03 SHORT M15
+2025-01-06 15:38 LONG M15
+2025-01-27 10:40 SHORT M15
+2025-01-31 20:32 LONG M30
+2025-01-31 22:05 LONG M15
+```
+
+All logged:
+
+```text
+reason = NO_ACTIVE_PRECONTACT_MAP_OBJECTIVE_PLAN
+retrospective_plan_forbidden = true
+```
+
+They were not backfilled after the contact.
+
+Seven of the thirteen PLANs never reached Root contact before their Root later
+invalidated. Their cancellation is therefore expected in this isolated build.
+
+Upstream regression:
+
+Structure, physical liquidity, H1/M30 map/reversal, Root creation/invalidation,
+Root-watch/contact identity, and optional-child audit outputs remained consistent
+with the D-124 baseline. Phase 4B added strategy planning state without changing
+the verified detector layers.
+
+Profitability:
+
+```text
+N/A
+```
+
+Reason:
+
+```text
+Strategic sweep, CHoCH, FVG execution, and orders were intentionally disabled.
+```
+
+Next:
+
+```text
+D-126 corrected Phase 4C
+→ per-M1-open causal mature-pool snapshot
+→ Root-zone-owned direction-compatible strategic sweep
+→ retain all swept-pool identities / sweep episodes
+→ CHoCH remains disabled until Phase 5A
+```
+
+
+
 ## 2026-08-16 — D-124 Root-Primary / Optional-Child Audit Validation
 
 Status:

@@ -1,21 +1,20 @@
 //+------------------------------------------------------------------+
 //| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - D125 pre-contact scenario core     |
+//| Deterministic Mentor EA V1 - D126 Root-reaction sweep core      |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| D125 intentionally DOES NOT submit orders.                       |
-//| Structure/liquidity/Root/map cores are retained.                 |
-//| Each physical HTF Root may freeze its own map/objective PLAN     |
-//| before Root contact. Child OBs remain audit-only.                |
-//| Strategic sweep/CHoCH/execution authorization remains disabled   |
-//| until the separate Phase-4C timing contract is frozen.           |
+//| D126 intentionally DOES NOT submit orders.                       |
+//| D125 Root-specific pre-contact PLANs remain active.              |
+//| Strategic sweeps are authorized only from a causal per-M1-bar    |
+//| pool snapshot when the sweep bar intersects the owning Root.     |
+//| Child OBs remain audit-only; CHoCH/execution stays disabled.      |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - D125 Root pre-contact scenario/objective core"
+#property description "Mentor deterministic V1 EA - D126 Root-reaction strategic sweep core"
 
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081601;
@@ -23,11 +22,12 @@ input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
 input bool   InpEnableFvgOriginObExperiment = false;
-input string InpEventCsvFile       = "mentor_v1_d125_root_precontact_scenario_events.csv";
+input string InpEventCsvFile       = "mentor_v1_d126_root_reaction_sweep_events.csv";
 
 // IMPORTANT:
 // V1 parity trading volume and broker-order execution are frozen in the spec,
-// but are intentionally not active in this D125 pre-contact scenario/objective build.
+// but are intentionally not active in this D126 Root-reaction sweep build.
+// Meaningful M1 CHoCH and order authorization remain a later phase.
 
 enum V1InitState
   {
@@ -408,6 +408,37 @@ struct V1GroupContactPool
    int               consumption_type;
   };
 
+// D-126 causal sweep-bar snapshot. Rebuilt for each M1 bar from state carried
+// into that bar's close-timestamp group. It is not a Root-contact snapshot.
+struct V1SweepBarSnapshotPool
+  {
+   bool              valid;
+   string            scenario_id;
+   string            liquidity_id;
+   int               family;
+   ENUM_TIMEFRAMES   tf;
+   int               side;
+   double            bottom;
+   double            top;
+   datetime          available_at;
+   datetime          snapshot_bar_open;
+  };
+
+// D-126 retains every scenario-specific authorized sweep episode. No best
+// pool/latest-sweep selection occurs before Phase 5A CHoCH linkage.
+struct V1AuthorizedSweepEpisode
+  {
+   bool              valid;
+   string            id;
+   string            scenario_id;
+   string            root_zone_id;
+   int               direction;
+   datetime          sweep_bar_open;
+   datetime          available_at;
+   int               pool_count;
+   string            pool_ids;
+  };
+
 struct V1ScenarioDraft
   {
    bool              valid;
@@ -564,8 +595,11 @@ string           g_pending_refinement_root_ids[];
 V1ObjectiveCandidate g_objective_candidates[];
 V1ScenarioPlan   g_scenarios[];
 V1StrategyLiquidityConsumption g_strategy_liquidity_consumed[];
-V1ScenarioEligiblePool g_scenario_eligible_pools[];
-V1GroupContactPool g_group_contact_pools[];
+V1ScenarioEligiblePool g_scenario_eligible_pools[]; // superseded Phase-4C storage, runtime-dead
+V1GroupContactPool g_group_contact_pools[];           // superseded Phase-4C storage, runtime-dead
+V1SweepBarSnapshotPool g_sweep_bar_snapshot[];
+V1AuthorizedSweepEpisode g_authorized_sweep_episodes[];
+datetime          g_sweep_snapshot_bar_open=0;
 V1MapControl      g_map;
 string            g_scenario_layer_signature="";
 datetime         g_last_current_open[V1_TF_COUNT];
@@ -616,6 +650,9 @@ long             g_optional_child_observations=0;
 long             g_precontact_root_plans=0;
 long             g_scenario_root_contacts=0;
 long             g_root_contacts_without_preplan=0;
+long             g_sweep_bar_snapshots=0;
+long             g_sweep_snapshot_pools=0;
+long             g_root_intersection_sweep_bars=0;
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -1533,6 +1570,11 @@ void MarkStrategyLiquidityConsumed(const string liquidity_id,
 void MarkScenarioPoolConsumed(const string liquidity_id,
                               const datetime consumed_at,
                               const int consumption_type);
+int PhysicalConsumptionForBar(const int side,
+                              const double bottom,
+                              const double top,
+                              const MqlRates &bar);
+bool BarIntersectsSource(const MqlRates &bar,const V1ScenarioPlan &plan);
 
 void LogLiquidityConsumption(const V1LiquidityPool &pool,
                              const MqlRates &bar,
@@ -1672,7 +1714,7 @@ void LogLiquiditySnapshot(const int tf_index,const datetime available_at)
       external_count,
       range_count,
       reaction_count,
-      "STRUCTURAL_REACTION_AUTHORIZATION_DISABLED_PENDING_CORRECTED_PHASE4C_ROOT_OWNERSHIP");
+      "STRUCTURAL_REACTION_AUTHORIZATION_DISABLED_D126_SEPARATE_REAUDIT");
 
    LogLine("LIQUIDITY_STATE",
            TfName(tf),
@@ -4147,7 +4189,230 @@ void RefreshScenarioLayer(const datetime available_at,const bool force=false)
   }
 
 //+------------------------------------------------------------------+
-//| Phase 4C source contact + mature M1 sweep authorization          |
+//| D-126 corrected Phase 4C Root-reaction sweep authorization       |
+//+------------------------------------------------------------------+
+bool IsD126StrategicSweepFamily(const int family)
+  {
+   // STRUCTURAL_REACTION ownership remains separately blocked.
+   return (family==V1_LIQ_EXTERNAL_SWING ||
+           family==V1_LIQ_DEFENDED_RANGE_EDGE);
+  }
+
+void AddD126SweepSnapshotPool(const string scenario_id,
+                              const V1LiquidityPool &pool,
+                              const datetime bar_open)
+  {
+   int n=ArraySize(g_sweep_bar_snapshot);
+   if(ArrayResize(g_sweep_bar_snapshot,n+1,256)<0)
+      return;
+
+   g_sweep_bar_snapshot[n].valid=true;
+   g_sweep_bar_snapshot[n].scenario_id=scenario_id;
+   g_sweep_bar_snapshot[n].liquidity_id=pool.id;
+   g_sweep_bar_snapshot[n].family=pool.family;
+   g_sweep_bar_snapshot[n].tf=pool.tf;
+   g_sweep_bar_snapshot[n].side=pool.side;
+   g_sweep_bar_snapshot[n].bottom=pool.bottom;
+   g_sweep_bar_snapshot[n].top=pool.top;
+   g_sweep_bar_snapshot[n].available_at=pool.available_at;
+   g_sweep_bar_snapshot[n].snapshot_bar_open=bar_open;
+   g_sweep_snapshot_pools++;
+  }
+
+void PrepareD126SweepBarSnapshot(const datetime bar_open)
+  {
+   ArrayResize(g_sweep_bar_snapshot,0);
+   g_sweep_snapshot_bar_open=bar_open;
+
+   if(bar_open<=0 ||
+      g_execution_epoch_start<=0 ||
+      bar_open<g_execution_epoch_start)
+      return;
+
+   int scenario_count=0;
+
+   for(int sidx=0;sidx<ArraySize(g_scenarios);sidx++)
+     {
+      if(!g_scenarios[sidx].valid ||
+         (g_scenarios[sidx].strategy_state!=V1_STRATEGY_WAITING_SWEEP &&
+          g_scenarios[sidx].strategy_state!=V1_STRATEGY_WAITING_TRIGGER) ||
+         g_scenarios[sidx].source_contact_at<=0 ||
+         g_scenarios[sidx].source_contact_at>bar_open)
+         continue;
+
+      int root_index=FindActiveSourceById(g_scenarios[sidx].root_zone_id);
+      if(root_index<0 || g_sources[root_index].kind!=V1_SOURCE_ROOT)
+         continue;
+
+      scenario_count++;
+      int required_side=
+         (g_scenarios[sidx].direction>0 ? V1_SIDE_LOW : V1_SIDE_HIGH);
+
+      for(int i=0;i<ArraySize(g_liquidity);i++)
+        {
+         if(!g_liquidity[i].valid ||
+            !IsD126StrategicSweepFamily(g_liquidity[i].family) ||
+            g_liquidity[i].side!=required_side ||
+            // Closed-bar fail-closed rule: pool must predate the M1 excursion.
+            g_liquidity[i].available_at>=bar_open ||
+            IsStrategyLiquidityConsumed(g_liquidity[i].id))
+            continue;
+
+         AddD126SweepSnapshotPool(g_scenarios[sidx].id,
+                                  g_liquidity[i],
+                                  bar_open);
+        }
+     }
+
+   if(scenario_count>0)
+      g_sweep_bar_snapshots++;
+  }
+
+bool D126SnapshotContainsScenario(const string scenario_id)
+  {
+   for(int i=0;i<ArraySize(g_sweep_bar_snapshot);i++)
+      if(g_sweep_bar_snapshot[i].valid &&
+         g_sweep_bar_snapshot[i].scenario_id==scenario_id)
+         return true;
+   return false;
+  }
+
+void StoreD126AuthorizedSweepEpisode(const string episode_id,
+                                     const V1ScenarioPlan &plan,
+                                     const datetime bar_open,
+                                     const datetime available_at,
+                                     const int pool_count,
+                                     const string pool_ids)
+  {
+   int n=ArraySize(g_authorized_sweep_episodes);
+   if(ArrayResize(g_authorized_sweep_episodes,n+1,128)<0)
+      return;
+
+   g_authorized_sweep_episodes[n].valid=true;
+   g_authorized_sweep_episodes[n].id=episode_id;
+   g_authorized_sweep_episodes[n].scenario_id=plan.id;
+   g_authorized_sweep_episodes[n].root_zone_id=plan.root_zone_id;
+   g_authorized_sweep_episodes[n].direction=plan.direction;
+   g_authorized_sweep_episodes[n].sweep_bar_open=bar_open;
+   g_authorized_sweep_episodes[n].available_at=available_at;
+   g_authorized_sweep_episodes[n].pool_count=pool_count;
+   g_authorized_sweep_episodes[n].pool_ids=pool_ids;
+  }
+
+void EvaluateD126RootReactionSweeps(const MqlRates &bar,
+                                    const datetime available_at)
+  {
+   // Snapshot must have been taken from state that existed before this close
+   // timestamp group. Otherwise fail closed.
+   if(g_sweep_snapshot_bar_open<=0 ||
+      g_sweep_snapshot_bar_open!=bar.time)
+      return;
+
+   for(int sidx=0;sidx<ArraySize(g_scenarios);sidx++)
+     {
+      if(!g_scenarios[sidx].valid ||
+         (g_scenarios[sidx].strategy_state!=V1_STRATEGY_WAITING_SWEEP &&
+          g_scenarios[sidx].strategy_state!=V1_STRATEGY_WAITING_TRIGGER) ||
+         g_scenarios[sidx].source_contact_at<=0 ||
+         g_scenarios[sidx].source_contact_at>bar.time ||
+         !D126SnapshotContainsScenario(g_scenarios[sidx].id))
+         continue;
+
+      // Root ownership is geometric and explainable: the sweep M1 bar itself
+      // must trade through the owning Root. No ATR/point-distance tolerance.
+      if(!BarIntersectsSource(bar,g_scenarios[sidx]))
+         continue;
+
+      int authorized_count=0;
+      string pool_ids="";
+
+      for(int pidx=0;pidx<ArraySize(g_sweep_bar_snapshot);pidx++)
+        {
+         if(!g_sweep_bar_snapshot[pidx].valid ||
+            g_sweep_bar_snapshot[pidx].scenario_id!=g_scenarios[sidx].id ||
+            g_sweep_bar_snapshot[pidx].snapshot_bar_open!=bar.time)
+            continue;
+
+         int physical=
+            PhysicalConsumptionForBar(g_sweep_bar_snapshot[pidx].side,
+                                      g_sweep_bar_snapshot[pidx].bottom,
+                                      g_sweep_bar_snapshot[pidx].top,
+                                      bar);
+         if(physical!=V1_LIQ_CONSUME_SWEEP)
+            continue;
+
+         authorized_count++;
+         g_authorized_sweep_pools++;
+
+         if(pool_ids!="")
+            pool_ids+="|";
+         pool_ids+=g_sweep_bar_snapshot[pidx].liquidity_id;
+
+         double tick=LiquidityTickSize();
+         double penetration_ticks=
+            (g_sweep_bar_snapshot[pidx].side==V1_SIDE_HIGH ?
+             (bar.high-g_sweep_bar_snapshot[pidx].top)/tick :
+             (g_sweep_bar_snapshot[pidx].bottom-bar.low)/tick);
+
+         LogLine("AUTHORIZED_SWEEP_POOL",
+                 "M1",
+                 available_at,
+                 g_sweep_bar_snapshot[pidx].liquidity_id,
+                 StringFormat("scenario_id=%s root_zone_id=%s strategy_source_kind=ROOT family=%s pool_tf=%s side=%s bottom=%.10f top=%.10f pool_available_at=%s pool_snapshot_anchor=%s sweep_bar_open=%s penetration_ticks=%.4f physical=SWEEP root_intersection=true same_contact_bar=false child_required=false snapshot_policy=PER_M1_BAR_PREOPEN_CAUSAL structural_reaction_family=false selection=RETAIN_ALL_FOR_PHASE5A",
+                              g_scenarios[sidx].id,
+                              g_scenarios[sidx].root_zone_id,
+                              LiquidityFamilyName(g_sweep_bar_snapshot[pidx].family),
+                              TfName(g_sweep_bar_snapshot[pidx].tf),
+                              SideName(g_sweep_bar_snapshot[pidx].side),
+                              g_sweep_bar_snapshot[pidx].bottom,
+                              g_sweep_bar_snapshot[pidx].top,
+                              TimeToString(g_sweep_bar_snapshot[pidx].available_at,TIME_DATE|TIME_SECONDS),
+                              TimeToString(g_sweep_bar_snapshot[pidx].snapshot_bar_open,TIME_DATE|TIME_SECONDS),
+                              TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                              penetration_ticks));
+        }
+
+      if(authorized_count<=0)
+         continue;
+
+      string episode_id=
+         StringFormat("%s:authorized_sweep:%I64d",
+                      g_scenarios[sidx].id,
+                      (long)bar.time);
+
+      StoreD126AuthorizedSweepEpisode(episode_id,
+                                      g_scenarios[sidx],
+                                      bar.time,
+                                      available_at,
+                                      authorized_count,
+                                      pool_ids);
+
+      if(g_scenarios[sidx].strategy_state==V1_STRATEGY_WAITING_SWEEP)
+         g_scenarios[sidx].strategy_state=V1_STRATEGY_WAITING_TRIGGER;
+
+      g_scenarios[sidx].authorized_sweep_count+=authorized_count;
+      g_authorized_sweep_events++;
+      g_root_intersection_sweep_bars++;
+
+      LogLine("AUTHORIZED_SWEEP",
+              "M1",
+              available_at,
+              episode_id,
+              StringFormat("scenario_id=%s root_zone_id=%s strategy_source_kind=ROOT direction=%s required_side=%s root_contact_at=%s root_contact_bar_open=%s sweep_bar_open=%s pool_count=%d pool_ids=%s root_intersection=true same_contact_bar=false child_required=false snapshot_policy=PER_M1_BAR_PREOPEN_CAUSAL active_sweep_selection=DEFERRED_PHASE5A state=WAITING_TRIGGER phase5a_choch_search_enabled=false structural_reaction_creation=false order_authorization=false",
+                           g_scenarios[sidx].id,
+                           g_scenarios[sidx].root_zone_id,
+                           DirectionName(g_scenarios[sidx].direction),
+                           SideName(g_scenarios[sidx].direction>0 ? V1_SIDE_LOW : V1_SIDE_HIGH),
+                           TimeToString(g_scenarios[sidx].source_contact_at,TIME_DATE|TIME_SECONDS),
+                           TimeToString(g_scenarios[sidx].source_contact_bar_open,TIME_DATE|TIME_SECONDS),
+                           TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
+                           authorized_count,
+                           pool_ids));
+     }
+  }
+
+//+------------------------------------------------------------------+
+//| Superseded Phase 4C contact-snapshot implementation (runtime-dead)|
 //+------------------------------------------------------------------+
 bool IsSweepEligibleLiquidityFamily(const int family)
   {
@@ -6399,9 +6664,9 @@ void ProcessClosedBar(const int tf_index,
    if(new_wave)
      {
       TryCreateDefendedRangeLiquidity(tf_index,bar,available_at);
-      // D-125 Phase 4B boundary: Structural-Reaction strategy ownership is
-      // explicitly disabled until corrected Phase 4C freezes Root-reaction
-      // sweep ownership. The Phase-2 liquidity detector remains untouched.
+      // D-126 boundary: Structural-Reaction strategy ownership remains
+      // explicitly disabled. External swing / defended-range strategic sweep
+      // ownership is reattached without creating Structural-Reaction pools.
       // TryCreateStructuralReactionLiquidity(tf_index,available_at);
      }
 
@@ -6412,14 +6677,17 @@ void ProcessClosedBar(const int tf_index,
 
    if(tf_index==5)
      {
-      // D-119 overlay is required before new objective PLANs are frozen so
-      // already physically consumed cross-timeframe liquidity is not reused.
-      // This records consumption only; it does not authorize a strategic sweep.
+      // D-119 overlay keeps cross-timeframe physical consumption causal.
       UpdateM1StrategyLiquidityOverlay(bar,available_at);
 
-      // D-125 binds only a scenario that was frozen strictly before contact.
-      // Corrected Phase 4C sweep/CHoCH authorization remains disabled.
+      // D-125 binding remains: only a scenario frozen strictly before contact
+      // can own the Root reaction.
       ProcessPostContactRootContacts(bar,available_at);
+
+      // D-126 evaluates only the per-bar snapshot captured from state that
+      // existed before this close-timestamp group. Newly contacted scenarios
+      // therefore cannot authorize the contact bar as their sweep.
+      EvaluateD126RootReactionSweeps(bar,available_at);
      }
 
    if(tf_index==1 || tf_index==2)
@@ -6516,7 +6784,7 @@ bool BootstrapStructureCore()
    LogLine("INIT_STATE","",now,"",InitStateName(g_init_state));
 
    g_init_state=V1_INIT_SOURCE_CONTEXT;
-   LogLine("INIT_STATE","",now,"","D125_ROOT_PRECONTACT_SCENARIO_OBJECTIVE_READY_SWEEP_DISABLED");
+   LogLine("INIT_STATE","",now,"","D126_ROOT_PRECONTACT_PLAN_AND_ROOT_REACTION_SWEEP_READY_CHOCH_DISABLED");
 
    for(int i=0;i<V1_TF_COUNT;i++)
      {
@@ -6555,7 +6823,7 @@ bool BootstrapStructureCore()
       CountActiveLiquidity(PERIOD_H4,V1_LIQ_EXTERNAL_SWING);
 
    LogLine("INIT_STATE","",g_bootstrap_ready_at,"",
-           StringFormat("READY_D125_ROOT_PRECONTACT_SCENARIO_OBJECTIVE ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d root_watches_created=%I64d prior_touch_ineligible=%I64d root_contexts_ready=%I64d scenarios_planned=%I64d phase4b_planning_enabled=true phase4c_sweep_authorization=false",
+           StringFormat("READY_D126_ROOT_REACTION_SWEEP ready_at=%s h4_long_horizon_external=%d active_liquidity_total=%d active_sources=%d root_watches_created=%I64d prior_touch_ineligible=%I64d root_contexts_ready=%I64d scenarios_planned=%I64d phase4b_planning_enabled=true phase4c_sweep_authorization=true phase5a_choch_authorization=false",
                         TimeToString(g_bootstrap_ready_at,TIME_DATE|TIME_SECONDS),
                         h4_long_horizon_count,
                         ArraySize(g_liquidity),
@@ -6730,11 +6998,34 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
 
          group_time=events[i].available_at;
          group_pre_m1_authorization_done=false;
+
+         // D-126 snapshot is anchored to the M1 bar OPEN and uses state carried
+         // into this close-timestamp group. Same-close HTF events below cannot
+         // retroactively make a pool eligible for the already-completed M1 bar.
+         datetime d126_m1_bar_open=0;
+         for(int j=i;j<ArraySize(events) &&
+                       events[j].available_at==group_time;j++)
+           {
+            if(events[j].tf_index==5)
+              {
+               d126_m1_bar_open=events[j].bar.time;
+               break;
+              }
+           }
+
+         if(d126_m1_bar_open>0)
+            PrepareD126SweepBarSnapshot(d126_m1_bar_open);
+         else
+           {
+            ArrayResize(g_sweep_bar_snapshot,0);
+            g_sweep_snapshot_bar_open=0;
+           }
         }
 
-      // H4->H1->M30->M15->M5 have higher priority than M1. Before the first
-      // M1 close of this timestamp, apply all map/Root/objective consequences
-      // causally known from those higher-timeframe closes.
+      // H4->H1->M30->M15->M5 have higher priority than M1 for map/Root/
+      // objective/contact processing. D-126's sweep snapshot was already
+      // captured from pre-group state, so same-close HTF information cannot
+      // authorize the M1 bar's completed wick.
       if(events[i].tf_index==5 && !group_pre_m1_authorization_done)
         {
          EnsurePostContactRootWatches(group_time,false);
@@ -6753,8 +7044,11 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
       RefreshScenarioLayer(group_time,false);
      }
 
-   // D-125 enables only Root-based pre-contact scenario/objective planning.
-   // Strategic sweep / CHoCH / execution / order authorization remains off.
+   ArrayResize(g_sweep_bar_snapshot,0);
+   g_sweep_snapshot_bar_open=0;
+
+   // D-126 enables scenario-specific Root-reaction strategic sweeps.
+   // Meaningful CHoCH / FVG execution / order authorization remains off.
   }
 
 //+------------------------------------------------------------------+
@@ -6792,7 +7086,7 @@ int OnInit()
    KickHistoryRequests();
 
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=0.90 property_version=1.00 magic=%I64d phase=D125_ROOT_PRECONTACT_SCENARIO_OBJECTIVE_CORE fvg_origin_ob_experiment=%s",
+           StringFormat("build=1.00 property_version=1.00 magic=%I64d phase=D126_ROOT_REACTION_SWEEP_CORE fvg_origin_ob_experiment=%s",
                         InpMagicNumber,
                         InpEnableFvgOriginObExperiment ? "true" : "false"));
 
@@ -6806,7 +7100,7 @@ void OnDeinit(const int reason)
    EventKillTimer();
 
    LogLine("EA_STOP","",TimeCurrent(),"",
-           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d root_contexts_ready=%I64d children_created_strategy_sources=%I64d optional_child_observations=%I64d post_contact_child_events=%I64d children_invalidated_strategy_sources=%I64d legacy_refinements_ready=%I64d legacy_refinements_no_child=%I64d legacy_refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_no_objective=%I64d objective_candidates_frozen=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d source_contacts_old_phase4c=%I64d authorized_sweep_events_old_phase4c=%I64d structural_reaction_created_old_phase4c=%I64d",
+           StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d root_contexts_ready=%I64d children_created_strategy_sources=%I64d optional_child_observations=%I64d post_contact_child_events=%I64d children_invalidated_strategy_sources=%I64d legacy_refinements_ready=%I64d legacy_refinements_no_child=%I64d legacy_refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_no_objective=%I64d objective_candidates_frozen=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d d126_sweep_bar_snapshots=%I64d d126_sweep_snapshot_pools=%I64d authorized_sweep_events=%I64d authorized_sweep_pools=%I64d root_intersection_sweep_bars=%I64d structural_reaction_created=%I64d source_contacts_superseded_phase4c=%I64d",
                         reason,
                         InitStateName(g_init_state),
                         ArraySize(g_liquidity),
@@ -6841,9 +7135,13 @@ void OnDeinit(const int reason)
                         g_precontact_root_plans,
                         g_scenario_root_contacts,
                         g_root_contacts_without_preplan,
-                        g_source_contacts,
+                        g_sweep_bar_snapshots,
+                        g_sweep_snapshot_pools,
                         g_authorized_sweep_events,
-                        g_structural_reaction_created));
+                        g_authorized_sweep_pools,
+                        g_root_intersection_sweep_bars,
+                        g_structural_reaction_created,
+                        g_source_contacts));
 
    if(g_log_handle!=INVALID_HANDLE)
      {
@@ -6876,11 +7174,11 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              "D125 orders disabled; Root-based pre-contact scenario/objective planning active; Phase4C sweep/CHoCH authorization disabled");
+              "D126 orders disabled; Root-based pre-contact planning + Root-reaction strategic sweep authorization active; Phase5A CHoCH authorization disabled");
      }
 
    ProcessRuntimeClosedBars((datetime)tick.time);
 
-   // No trade submission in D-125 / Phase 4B.
+   // No trade submission in D-126 / corrected Phase 4C.
   }
 //+------------------------------------------------------------------+

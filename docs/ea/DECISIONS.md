@@ -697,9 +697,9 @@ Reason:
 
 ## D-032 — Same-bar Root contact and sweep require causal-order re-audit
 
-Status: REQUIRES ROOT-BASED TIMING RE-AUDIT UNDER D-124
+Status: RESOLVED FOR CURRENT CLOSED-BAR BASELINE BY D-126 / TICK-ORDER VARIANT OPEN
 
-HTF Root contact와 pre-existing eligible liquidity sweep이 동일 M1 candle에서 함께 관찰될 수 있다. 다만 현재 OHLC/closed-bar 정보로 causal ordering을 증명할 수 있는 범위를 corrected Phase 4C에서 다시 freeze한다.
+HTF Root contact와 pre-existing eligible liquidity sweep이 동일 M1 candle에서 함께 관찰될 수 있다. D-126 current closed-bar baseline은 OHLC만으로 `contact → sweep` intrabar ordering을 증명할 수 없으므로 **동일 Root-contact bar의 strategic sweep authorization을 fail-closed로 금지**한다. Tick-order evidence를 별도로 구현하는 future variant에서만 재검토할 수 있다.
 
 Child의 존재 여부는 이 판단에 영향을 주지 않는다.
 
@@ -3263,7 +3263,7 @@ The baseline already performs its decisive execution filtering later through Roo
 
 ## D-125 — Corrected Phase 4B freezes each Root scenario and objective family before Root contact
 
-Status: ACTIVE / PHASE 4B IMPLEMENTATION-FREEZE / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
+Status: ACTIVE / PHASE 4B VALIDATED — 2026-08-16
 
 D-124 establishes the HTF Root as the sole OB strategy source. Corrected Phase 4B therefore prepares strategy state around the **physical Root itself**, not around any child/refinement lineage.
 
@@ -3411,3 +3411,209 @@ FVG / order execution
 Reason:
 
 Phase 4B can be corrected deterministically from the already-frozen Objective → Map → Root → Contact order without inventing the unresolved sweep-freeze contract. Keeping Phase 4C disabled isolates this correction and prevents another timing rule from being guessed.
+
+### 2026-08-16 validation result
+
+Build `0.90 / D125_ROOT_PRECONTACT_SCENARIO_OBJECTIVE_CORE` passed the corrected
+Phase 4B causal smoke on the January 2025 fixture.
+
+```text
+SCENARIO_PLANNED = 13
+OBJECTIVE_CANDIDATE_FROZEN = 91
+SCENARIO_ROOT_CONTACT_BOUND = 6
+ROOT_CONTACT_WITHOUT_PREPLAN = 5
+
+AMBIGUOUS_ROOT_LINEAGE = 0
+PREPLAN_SOURCE_CONTACT = 0
+old Phase4C SOURCE_CONTACT = 0
+old AUTHORIZED_SWEEP = 0
+STRUCTURAL_REACTION strategy authorization = 0
+```
+
+All six bound contacts satisfied:
+
+```text
+plan_frozen_at < root_contact_at
+strategy_source_kind = ROOT
+child_required = false
+state after contact = WAITING_SWEEP
+```
+
+The five physical contacts without a prior valid PLAN were not retrospectively
+backfilled. Seven planned Roots never contacted before later Root invalidation;
+all seven plans were canceled by the existing Root-invalidated survival rule.
+
+Upstream structure, liquidity, map/reversal, Root detector, Root-watch/contact,
+and optional-child audit outputs remained causally consistent with D-124.
+
+Therefore corrected Phase 4B is strategy-parity PASS within its isolated scope.
+
+---
+
+## D-126 — Corrected Phase 4C uses per-M1-open causal pool snapshots and Root-zone intersection
+
+Status: ACTIVE / PHASE 4C IMPLEMENTATION-FREEZE / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
+
+D-125 proves that a Root-specific map/objective PLAN can exist strictly before
+physical Root contact. D-126 freezes the remaining baseline strategic-sweep
+ownership rule without reintroducing child authority or arbitrary distance/age
+parameters.
+
+### Why the snapshot is not frozen at Root contact
+
+A Root-contact-time pool snapshot is too early.
+
+Current authority explicitly allows a liquidity object that forms **after**
+Root contact to become eligible later if it becomes causally mature and a
+separate subsequent approach sweeps it.
+
+Therefore the strategy does not persist one immutable contact-time pool set.
+
+Instead, for every M1 bar that could become a sweep excursion:
+
+```text
+M1 bar open
+→ snapshot pools already causally known before that open
+→ let the M1 bar complete
+→ evaluate penetration + same-bar recovery
+```
+
+This is a causal **per-bar** snapshot, not a future-looking dynamic search after
+the wick is known.
+
+### Same-timestamp processing safety
+
+The snapshot is taken from state carried **into** the close-timestamp processing
+group, before H4/H1/M30/M15/M5 events that become available at the M1 bar's
+close are applied.
+
+Required pool maturity in build D-126:
+
+```text
+pool.available_at < sweep_bar.open_time
+```
+
+Strict `<` is a conservative closed-bar ordering rule. A pool that only becomes
+available at the exact M1 open timestamp is not used in that bar's completed
+excursion.
+
+### Root-contact bar
+
+The current closed-bar implementation does not authorize the Root-contact M1
+bar itself as the strategic sweep.
+
+Reason:
+
+```text
+Root contact is known at that M1 bar close
+OHLC does not prove intrabar contact-before-sweep ordering
+```
+
+So a scenario first enters sweep eligibility on the next/later M1 bar. This is a
+fail-closed implementation decision, not a claim that tick-level same-bar
+ordering could never be valid.
+
+### Eligible families and direction
+
+D-126 strategic sweep families are:
+
+```text
+EXTERNAL_SWING
+DEFENDED_RANGE_EDGE
+```
+
+`STRUCTURAL_REACTION` remains disabled until its Root-based creation/ownership
+contract is independently re-frozen.
+
+Direction:
+
+```text
+LONG  → LOW-side pool
+SHORT → HIGH-side pool
+```
+
+Already strategy-consumed pools are excluded.
+
+No:
+
+```text
+N-bar age
+ATR distance
+point distance
+quality score
+latest/nearest pool selection
+```
+
+is added.
+
+### Root-reaction spatial ownership
+
+A direction-compatible physical sweep is strategy-owned by a Root scenario only
+when the **sweep M1 bar itself intersects that scenario's Root zone**:
+
+```text
+bar.high >= Root.bottom
+AND
+bar.low <= Root.top
+```
+
+This operationalizes the mentor evidence that valid liquidity/sweep belongs to
+the source/zone reaction context while avoiding an arbitrary distance
+threshold.
+
+A distant future sweep that does not trade through the Root zone cannot be
+attached merely because it happened after Root contact.
+
+### Multiple pools / multiple episodes
+
+One M1 bar may sweep several mature eligible pools.
+
+```text
+one scenario
++ one M1 sweep bar
++ N distinct swept pools
+→ one AUTHORIZED_SWEEP episode
+→ N AUTHORIZED_SWEEP_POOL identities retained
+```
+
+No best pool is selected.
+
+Later valid sweep episodes before scenario cancellation are also retained.
+D-126 does not replace an earlier episode with a later one.
+
+Which retained sweep episode becomes the causal predecessor of a meaningful M1
+CHoCH remains Phase 5A authority.
+
+### D-126 state transition
+
+```text
+PLANNED
+→ qualifying Root contact
+→ WAITING_SWEEP
+→ first/any authorized Root-reaction sweep
+→ WAITING_TRIGGER
+```
+
+`WAITING_TRIGGER` means only that at least one authorized sweep episode exists.
+Meaningful M1 CHoCH search is still disabled in D-126.
+
+### Explicit boundary
+
+D-126 does not:
+
+```text
+create STRUCTURAL_REACTION liquidity
+authorize M1 CHoCH
+select a causal sweep episode for CHoCH
+select/build execution FVG
+submit/cancel orders
+```
+
+Optional child observations remain audit/context only and are absent from every
+sweep key.
+
+Reason:
+
+This is the narrowest deterministic rule consistent with the current authority
+and casebook evidence (`SOURCE_LIQUIDITY_SWEEP`, `LIQUIDITY_NEAR_ZONE`,
+`M1_SWEEP`, `SWEEP_BEFORE_TRIGGER`) while preserving no-lookahead.

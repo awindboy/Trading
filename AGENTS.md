@@ -1033,6 +1033,63 @@ Optional child 관찰 여부는 이 trigger chain의 시작 조건이 아니다.
 - reaction 중 생긴 고저점은 가격이 충분히 이탈해 구조가 확정된 뒤, 별도의 후속 접근이 그것을 관통하고 회복할 때만 sweep 근거가 될 수 있다.
 - 하나의 진행 중 wick이 고점을 만들고 다시 밀렸다는 이유만으로 `final sweep`이라 부르지 않는다.
 
+### Root-reaction strategic sweep ownership — D-126
+
+Current closed-bar V1은 Root contact 시점에 sweep pool을 한 번 고정하지 않는다.
+
+각 **후속 M1 bar의 open**마다 그 excursion이 시작되기 전에 causally known 상태만으로
+해당 scenario의 eligible pool set을 다시 snapshot한다.
+
+```text
+preplanned Root scenario
+→ qualifying Root contact already known
+→ next/later M1 bar open
+→ eligible pool snapshot
+→ same M1 bar closes with penetration + recovery
+→ Root-zone intersection 확인
+→ scenario-specific AUTHORIZED_SWEEP
+```
+
+Eligible pool은 현재 baseline에서:
+
+```text
+EXTERNAL_SWING
+DEFENDED_RANGE_EDGE
+```
+
+만 사용한다.
+
+`STRUCTURAL_REACTION`은 Root-based ownership 재정의 전까지 strategic sweep authority가 없다.
+
+Snapshot에 들어가려면:
+
+- LONG은 LOW-side, SHORT은 HIGH-side liquidity여야 한다.
+- pool은 해당 M1 bar open보다 **엄격히 이전에** available해야 한다.
+- 해당 bar open 전에 이미 strategy-consumed된 pool은 제외한다.
+- Root contact 전에 완료된 sweep을 소급 연결하지 않는다.
+
+Current closed-bar implementation은 Root-contact bar 자체의 sweep을 허가하지 않는다.
+Root contact는 그 M1 bar close에서 확인되므로 같은 bar 안에서 `contact → sweep` 순서를
+OHLC만으로 증명할 수 없기 때문이다. 이는 look-ahead 방지를 위한 fail-closed
+operational rule이며, tick-order evidence를 별도로 구현하기 전까지 유지한다.
+
+Root reaction ownership에는 임의의 ATR/point/time-distance를 사용하지 않는다.
+대신 strategic sweep을 만든 **M1 bar 자체가 해당 scenario의 HTF Root zone과 실제로
+교차**해야 한다.
+
+```text
+bar.high >= Root.bottom
+AND
+bar.low <= Root.top
+```
+
+한 M1 bar가 여러 mature pool을 동시에 sweep하면 pool identity를 모두 보존한다.
+가장 가까운/최근/큰 pool 하나를 임의 선택하지 않는다.
+동일 bar의 pool들은 하나의 scenario-specific sweep episode로 묶되,
+어느 episode가 이후 CHoCH의 causal sweep인지 선택하는 권한은 Phase 5A에 남긴다.
+
+Optional child는 이 snapshot, Root intersection, sweep authorization 어디에도 관여하지 않는다.
+
 ### 의미 있는 CHoCH
 
 - wick 돌파가 아니라 몸통 종가 돌파여야 한다.
