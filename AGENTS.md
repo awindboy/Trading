@@ -2,7 +2,7 @@
 
 - 상태: `FROZEN / CURRENT V1 STRATEGY AUTHORITY`
 - 제정일: `2026-08-01`
-- 최근 개정: `2026-08-18` (`FVG-origin OB baseline authority; same FVG/Entry multi-Root branches are one contributor scenario`)
+- 최근 개정: `2026-08-18` (`FVG-origin OB baseline; same-entry Root merge; hedging-account same-direction add-on execution`)
 - 적용 범위: deterministic EA, MT5 Strategy Tester, current V1 수동/블라인드 리플레이 검증
 
 ## 1. 문서의 지위
@@ -1632,43 +1632,78 @@ H4
 
 ### First-position concurrency / exposure
 
-Current V1은 risk-slot arbitration을 사용하지 않는다.
+Current V1은 risk-slot arbitration이나 symbol당 단일 포지션 제한을 사용하지 않는다.
 
-한 symbol + EA magic 기준:
-
-```text
-max one live scenario per direction
-
-max one accepted first-position exposure:
-PENDING + FILLED <= 1
-```
-
-Reversal permission이 CLOSED이면
-active-map direction scenario만 first-position authority를 가진다.
-
-Reversal permission이 OPEN된 뒤에는
-opposite `EXTERNAL_REVERSAL` watch scenario가 존재할 수 있다.
-
-하지만 하나의 scenario가 broker에 accepted된 pending을 가지거나
-position이 fill되면
-다른 scenario는 새 first-position order를 제출할 수 없다.
-
-Blocked trigger chain을 exposure 종료 뒤 늦게 제출하지 않는다.
-새 order에는 새 execution chain이 필요하다.
-
-동일 processing epoch에서
-서로 반대 방향의 first-position order가 동시에 완성되면:
+Current execution baseline은 **hedging account**를 요구한다. 이유는 서로 다른 same-direction scenario가 각자의 Entry / SL / TP / lifecycle을 독립적으로 유지해야 하기 때문이다.
 
 ```text
-NO_TRADE
-reason = AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+ACCOUNT_MARGIN_MODE_RETAIL_HEDGING
+→ required for automated order submission
 ```
 
-로 처리한다.
+Netting account에서는 detector/scenario audit는 가능하지만 current multi-scenario execution geometry를 하나의 net position으로 합쳐 해석하지 않는다.
 
-점수나 임의 direction priority를 만들지 않는다.
+같은 방향의 새 causal scenario는 기존 pending 또는 filled position이 존재해도 새 주문을 제출할 수 있다.
 
-Current baseline은 동일 processing epoch의 여러 Root branch가 **같은 방향 + 같은 selected FVG + 같은 Entry tick**에 수렴하면 서로 다른 거래로 보지 않는다. 그것들은 하나의 first-position scenario를 지지하는 contributor Roots다.
+```text
+existing LONG pending/position
++
+new independent LONG scenario
+→ allowed
+
+existing SHORT pending/position
++
+new independent SHORT scenario
+→ allowed
+```
+
+이것은 기존 position에 물타기하거나 SL/TP를 합치는 것이 아니다. 서로 다른 Entry의 scenario는 각각 독립적으로 다음을 보존한다.
+
+```text
+scenario_id
+contributor Roots
+selected FVG
+Entry
+SL
+TP
+broker order ticket
+broker position identifier
+fill / cancel / close lifecycle
+```
+
+반대로 accepted exposure와 **반대 방향**의 새 주문은 허용하지 않는다.
+
+```text
+existing LONG pending/position
++
+new SHORT scenario
+→ NO_TRADE
+→ OPPOSITE_DIRECTION_EXPOSURE_CONFLICT
+
+existing SHORT pending/position
++
+new LONG scenario
+→ NO_TRADE
+→ OPPOSITE_DIRECTION_EXPOSURE_CONFLICT
+```
+
+반대 방향 signal이 나중에 기존 exposure 종료 후 살아나는 delayed submission은 금지한다. 새 주문에는 새 causal execution chain이 필요하다.
+
+동일 processing epoch에 LONG과 SHORT가 모두 새로 완성되고 그 전에 accepted exposure가 없다면 array/order 순서로 한쪽을 먼저 선택하지 않는다.
+
+```text
+new LONG opportunity
++
+new SHORT opportunity
++
+no pre-existing managed exposure
+→ NO_TRADE
+→ AMBIGUOUS_SIMULTANEOUS_OPPOSITE_DIRECTION_AUTHORIZATION
+```
+
+이미 한 방향 exposure가 존재한 상태에서 동일 epoch에 양방향 signal이 함께 나오면 기존 exposure와 같은 방향의 add-on만 허용하고 반대 방향은 `OPPOSITE_DIRECTION_EXPOSURE_CONFLICT`로 차단한다.
+
+Current baseline은 여러 Root branch가 **같은 방향 + 같은 selected FVG + 같은 Entry tick**에 수렴하면 서로 다른 거래로 보지 않는다. 그것들은 하나의 scenario를 지지하는 contributor Roots다.
 
 ```text
 same direction
@@ -1679,17 +1714,18 @@ same direction
 → one merged SL / one TP / one pending order
 ```
 
-이 경우 Root별 SL 또는 TP가 사전에 같을 필요는 없다. 먼저 scenario를 merge한 뒤 selected SL model에 따라 contributor 전체의 invalidation을 보존하는 바깥쪽 stop을 하나 정하고, 그 merged SL로 TP eligibility를 한 번만 다시 계산한다.
+Root별 SL 또는 TP가 사전에 같을 필요는 없다. 먼저 contributor scenario를 merge한 뒤 selected SL model에 따라 전체 invalidation을 보존하는 바깥쪽 stop을 하나 정하고, 그 merged SL로 TP eligibility를 다시 계산한다.
 
-서로 다른 FVG 또는 Entry에 도달한 완성 신호가 동일 epoch에 둘 이상 존재하면 one-exposure conflict이므로:
+반대로 같은 방향이라도 **selected FVG 또는 Entry tick이 다르면 독립적인 add-on scenario**다.
 
 ```text
-distinct fully-authorized entry opportunities > 1
-→ NO_TRADE
-→ AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+same direction
++ different FVG or Entry
+→ independent scenario
+→ independent pending/position allowed
 ```
 
-으로 fail closed한다. nearest/latest Root, quality score, RR 등으로 하나를 선택하지 않는다.
+한 scenario의 fill 뒤 원래 주문 ticket에 residual pending volume이 남는 경우에만 partial-fill residual로 취소한다. 다른 same-direction scenario의 pending order는 절대 residual로 간주하거나 취소하지 않는다.
 
 ### SL
 
@@ -2295,3 +2331,124 @@ same epoch
 ```
 
 Different Root IDs alone are no longer ambiguity.
+
+---
+
+## D-134 current execution authority — hedging same-direction add-on scenarios — 2026-08-18
+
+Status: `CURRENT V1 EXECUTION AUTHORITY / BUILD 1.80 PREPARED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING`
+
+D-133 real-tick validation showed that the remaining `EXPOSURE_ALREADY_ACCEPTED` events were not failed strategy chains. They were complete same-direction Root → Sweep → CHoCH → FVG opportunities blocked only because another pending or filled exposure already existed.
+
+The user confirmed that the trading account is a **hedging account** and approved same-direction re-entry/add-on execution.
+
+### Same-direction add-ons
+
+A new fully causal scenario with a different Entry remains an independent trade even when another same-direction order or position is already alive.
+
+```text
+existing LONG exposure + new LONG scenario
+→ submit new LONG order
+
+existing SHORT exposure + new SHORT scenario
+→ submit new SHORT order
+```
+
+Each scenario keeps independent:
+
+```text
+Entry
+SL
+TP
+pending cancellation
+fill
+position identifier
+exit result
+```
+
+No existing position is resized, averaged, repriced, or given a new SL/TP because a later scenario appears.
+
+### Same Entry remains contributor merge
+
+D-133 remains active:
+
+```text
+same direction
++ same selected_fvg_id
++ same Entry tick
+→ one scenario
+→ contributor Root merge
+```
+
+Different Entry/FVG in the same direction is not a contributor merge. It is an independent add-on scenario.
+
+### Opposite-direction coexistence is forbidden
+
+Any managed pending order or open position in the opposite direction blocks the new order:
+
+```text
+OPPOSITE_DIRECTION_EXPOSURE_CONFLICT
+```
+
+The blocked signal is terminal for that execution chain and is never submitted later after the existing exposure closes.
+
+If LONG and SHORT opportunities are first authorized in the same processing epoch with no pre-existing managed exposure:
+
+```text
+AMBIGUOUS_SIMULTANEOUS_OPPOSITE_DIRECTION_AUTHORIZATION
+→ all opposite-direction epoch opportunities NO_TRADE
+```
+
+No array-order, score, Root ranking, or RR priority selects one side.
+
+### Hedging-account execution contract
+
+Automated execution requires:
+
+```text
+ACCOUNT_MARGIN_MODE_RETAIL_HEDGING
+```
+
+because each same-direction scenario must preserve a distinct position with its own server SL/TP.
+
+A non-hedging account cannot silently net these scenarios. In that environment:
+
+```text
+strategy signal may be valid
+execution = EXECUTION_INFEASIBLE
+reason = HEDGING_ACCOUNT_REQUIRED_FOR_INDEPENDENT_SCENARIO_POSITIONS
+```
+
+### Scenario-scoped broker reconciliation
+
+Build 1.80 no longer tracks one global symbol+magic order/position.
+
+Every accepted scenario is reconciled by its own:
+
+```text
+broker_order_ticket
+DEAL_POSITION_ID / POSITION_IDENTIFIER
+```
+
+Partial-fill residual cancellation is restricted to the **same original order ticket**. Another same-direction scenario's pending order is never treated as residual volume.
+
+After fill, each hedging position remains independently governed by its own frozen server SL/TP until its own exit deal is observed.
+
+If any managed scenario has an unresolved broker-state divergence such as a live residual pending after partial fill or a cancel-rejected live order/position, **all new exposure is temporarily blocked**:
+
+```text
+EXECUTION_DIVERGENCE_LOCK
+```
+
+Same-direction add-on permission never overrides execution-integrity safety. New orders resume only after the divergent broker exposure is no longer live.
+
+### D-133 January evidence motivating D-134
+
+Build 1.70 with `ROOT_OB_DISTAL_20` reduced 18 Root branches to 9 unique Entry opportunities. Six valid opportunities were then rejected only by the old one-exposure policy:
+
+```text
+2 while an earlier pending existed
+4 while an earlier filled same-direction position existed
+```
+
+D-134 removes only that execution-policy rejection. It does not relax Root, Sweep, CHoCH, FVG, SL, TP, objective, or contributor-merge causality.

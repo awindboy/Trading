@@ -6,15 +6,15 @@
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| D133 FVG-origin OB baseline + same-entry Root scenario merge.              |
-//| Root -> Sweep -> CHoCH -> causal fresh widest FVG -> geometry.    |
-//| Same FVG/Entry -> contributor Roots -> merged SL -> common frozen TP -> one order.   |
-//| Pending: objective + frozen contributor survival authority; tester only.      |
+//| D134 hedging-account same-direction add-on execution.               |
+//| Root -> Sweep -> CHoCH -> causal fresh widest FVG -> geometry.       |
+//| Same FVG/Entry -> contributor merge; different same-direction Entry -> add-on. |
+//| Opposite-direction coexistence is blocked; each scenario owns its lifecycle.   |
 //| Live trading remains hard-blocked; tester execution only.        |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - D133 FVG OB baseline + same-entry Root merge"
+#property description "Mentor deterministic V1 EA - D134 hedging same-direction add-on execution"
 
 enum V1StopLossModel
   {
@@ -29,7 +29,7 @@ input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
 input V1StopLossModel InpStopLossModel = V1_SL_FVG_DISTAL_20;
-input string InpEventCsvFile       = "mentor_v1_d133_events.csv";
+input string InpEventCsvFile       = "mentor_v1_d134_events.csv";
 
 // IMPORTANT:
 // This build may submit orders ONLY inside MT5 Strategy Tester. Live trading
@@ -763,9 +763,6 @@ V1M1SweepDetection g_m1_sweep_detections[];
 V1M1ChochDetection g_m1_choch_detection;
 V1M1FvgDetection g_m1_fvg_detections[];
 V1ExecutionCandidate g_execution_candidates[];
-string            g_managed_scenario_id="";
-ulong             g_managed_order_ticket=0;
-ulong             g_managed_position_id=0;
 datetime          g_m1_sweep_detector_bar_open=0;
 V1MapControl      g_map;
 string            g_scenario_layer_signature="";
@@ -836,7 +833,9 @@ long             g_no_r_eligible_objective=0;
 long             g_simultaneous_authorization_ambiguous=0;
 long             g_execution_opportunities_merged=0;
 long             g_execution_contributors_merged=0;
-long             g_exposure_blocked=0;
+long             g_exposure_blocked=0; // D134: opposite-direction exposure conflicts only
+long             g_same_direction_addon_authorized=0;
+long             g_opposite_direction_exposure_blocked=0;
 long             g_execution_infeasible=0;
 long             g_order_rejected=0;
 long             g_orders_accepted=0;
@@ -5485,56 +5484,163 @@ void FinalizeExecutionGeometryReady(const int scenario_index,
                         g_scenarios[scenario_index].final_objective_planned_r));
   }
 
-bool FindManagedPendingTicket(ulong &ticket)
+bool IsHedgingAccount()
   {
-   ticket=0;
-   for(int i=OrdersTotal()-1;i>=0;i--)
-     {
-      ulong t=OrderGetTicket(i);
-      if(t==0)
-         continue;
-      if(OrderGetString(ORDER_SYMBOL)!=_Symbol ||
-         (long)OrderGetInteger(ORDER_MAGIC)!=InpMagicNumber)
-         continue;
-      ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)OrderGetInteger(ORDER_TYPE);
-      if(type==ORDER_TYPE_BUY_LIMIT || type==ORDER_TYPE_SELL_LIMIT)
-        {
-         ticket=t;
-         return true;
-        }
-     }
-   return false;
+   return ((ENUM_ACCOUNT_MARGIN_MODE)AccountInfoInteger(ACCOUNT_MARGIN_MODE)==ACCOUNT_MARGIN_MODE_RETAIL_HEDGING);
   }
 
-bool FindManagedPosition(ulong &ticket,ulong &identifier,double &open_price)
+int ManagedOrderDirection(const ENUM_ORDER_TYPE type)
   {
-   ticket=0;
-   identifier=0;
-   open_price=0.0;
+   if(type==ORDER_TYPE_BUY_LIMIT || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_STOP_LIMIT)
+      return 1;
+   if(type==ORDER_TYPE_SELL_LIMIT || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_STOP_LIMIT)
+      return -1;
+   return 0;
+  }
+
+int ManagedPositionDirection(const ENUM_POSITION_TYPE type)
+  {
+   if(type==POSITION_TYPE_BUY)
+      return 1;
+   if(type==POSITION_TYPE_SELL)
+      return -1;
+   return 0;
+  }
+
+int CountManagedBrokerExposureDirection(const int direction)
+  {
+   if(direction==0)
+      return 0;
+
+   int count=0;
+   for(int i=OrdersTotal()-1;i>=0;i--)
+     {
+      ulong ticket=OrderGetTicket(i);
+      if(ticket==0 ||
+         OrderGetString(ORDER_SYMBOL)!=_Symbol ||
+         (long)OrderGetInteger(ORDER_MAGIC)!=InpMagicNumber)
+         continue;
+
+      int order_direction=ManagedOrderDirection((ENUM_ORDER_TYPE)OrderGetInteger(ORDER_TYPE));
+      if(order_direction==direction)
+         count++;
+     }
+
    for(int i=PositionsTotal()-1;i>=0;i--)
      {
-      ulong t=PositionGetTicket(i);
-      if(t==0)
-         continue;
-      if(PositionGetString(POSITION_SYMBOL)!=_Symbol ||
+      ulong ticket=PositionGetTicket(i);
+      if(ticket==0 ||
+         PositionGetString(POSITION_SYMBOL)!=_Symbol ||
          (long)PositionGetInteger(POSITION_MAGIC)!=InpMagicNumber)
          continue;
-      ticket=t;
-      identifier=(ulong)PositionGetInteger(POSITION_IDENTIFIER);
+
+      int position_direction=ManagedPositionDirection((ENUM_POSITION_TYPE)PositionGetInteger(POSITION_TYPE));
+      if(position_direction==direction)
+         count++;
+     }
+
+   return count;
+  }
+
+int ManagedBrokerExposureDirectionState()
+  {
+   bool have_long=(CountManagedBrokerExposureDirection(1)>0);
+   bool have_short=(CountManagedBrokerExposureDirection(-1)>0);
+
+   if(have_long && have_short)
+      return 2;
+   if(have_long)
+      return 1;
+   if(have_short)
+      return -1;
+   return 0;
+  }
+
+bool HasOppositeManagedExposure(const int direction)
+  {
+   if(direction>0)
+      return (CountManagedBrokerExposureDirection(-1)>0);
+   if(direction<0)
+      return (CountManagedBrokerExposureDirection(1)>0);
+   return true;
+  }
+
+bool FindManagedPositionByIdentifier(const ulong identifier,
+                                     ulong &position_ticket,
+                                     double &open_price)
+  {
+   position_ticket=0;
+   open_price=0.0;
+   if(identifier==0)
+      return false;
+
+   for(int i=PositionsTotal()-1;i>=0;i--)
+     {
+      ulong ticket=PositionGetTicket(i);
+      if(ticket==0 ||
+         PositionGetString(POSITION_SYMBOL)!=_Symbol ||
+         (long)PositionGetInteger(POSITION_MAGIC)!=InpMagicNumber ||
+         (ulong)PositionGetInteger(POSITION_IDENTIFIER)!=identifier)
+         continue;
+
+      position_ticket=ticket;
       open_price=PositionGetDouble(POSITION_PRICE_OPEN);
       return true;
      }
+
+   return false;
+  }
+
+bool ScenarioOriginalPendingOrderLive(const int scenario_index)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+      return false;
+
+   ulong ticket=g_scenarios[scenario_index].broker_order_ticket;
+   if(ticket==0 || !OrderSelect(ticket))
+      return false;
+
+   if(OrderGetString(ORDER_SYMBOL)!=_Symbol ||
+      (long)OrderGetInteger(ORDER_MAGIC)!=InpMagicNumber)
+      return false;
+
+   ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)OrderGetInteger(ORDER_TYPE);
+   return (type==ORDER_TYPE_BUY_LIMIT || type==ORDER_TYPE_SELL_LIMIT);
+  }
+
+bool HasUnresolvedExecutionRisk()
+  {
+   for(int i=0;i<ArraySize(g_scenarios);i++)
+     {
+      if(!g_scenarios[i].valid ||
+         g_scenarios[i].strategy_state==V1_STRATEGY_MERGED_CONTRIBUTOR)
+         continue;
+
+      bool risky=(g_scenarios[i].execution_divergence ||
+                  g_scenarios[i].execution_status==V1_EXEC_CANCEL_REJECTED);
+      if(!risky)
+         continue;
+
+      if(ScenarioOriginalPendingOrderLive(i))
+         return true;
+
+      if(g_scenarios[i].broker_position_id>0)
+        {
+         ulong position_ticket=0;
+         double open_price=0.0;
+         if(FindManagedPositionByIdentifier(g_scenarios[i].broker_position_id,
+                                            position_ticket,
+                                            open_price))
+            return true;
+        }
+     }
+
    return false;
   }
 
 bool HasManagedAccountExposure()
   {
-   ulong order_ticket=0;
-   if(FindManagedPendingTicket(order_ticket))
-      return true;
-   ulong position_ticket=0,identifier=0;
-   double open_price=0.0;
-   return FindManagedPosition(position_ticket,identifier,open_price);
+   return (ManagedBrokerExposureDirectionState()!=0);
   }
 
 bool IsTesterExecutionEnvironment()
@@ -5622,6 +5728,9 @@ bool BuildAndCheckPendingRequest(const int scenario_index,
 
    if(!g_scenarios[scenario_index].strategy_signal_valid)
      { failure_reason="STRATEGY_SIGNAL_NOT_VALID"; return false; }
+
+   if(!IsHedgingAccount())
+     { failure_reason="HEDGING_ACCOUNT_REQUIRED_FOR_INDEPENDENT_SCENARIO_POSITIONS"; return false; }
 
    if(!IsTesterExecutionEnvironment())
      { failure_reason="LIVE_EXECUTION_HARD_BLOCKED"; return false; }
@@ -5794,9 +5903,6 @@ bool SubmitPendingForScenario(const int scenario_index,const datetime available_
    g_scenarios[scenario_index].pending_submitted_at=available_at;
    g_scenarios[scenario_index].request_id=result.request_id;
    g_scenarios[scenario_index].broker_order_ticket=result.order;
-   g_managed_scenario_id=g_scenarios[scenario_index].id;
-   g_managed_order_ticket=result.order;
-   g_managed_position_id=0;
    g_orders_accepted++;
 
    LogLine("PENDING_ORDER_ACCEPTED","M1",available_at,g_scenarios[scenario_index].id,
@@ -6271,13 +6377,141 @@ void D133TerminateMergedSecondariesNoTrade(const int master_index,
      }
   }
 
+int D134FinalizeCurrentExecutionCandidateGroup(const datetime available_at)
+  {
+   int count=ArraySize(g_execution_candidates);
+   if(count<=0)
+      return -1;
+
+   int master_index=g_execution_candidates[0].scenario_index;
+   bool merged=(count>1);
+
+   if(merged)
+     {
+      if(!D133ApplyMergedStopToMaster(master_index,available_at))
+        {
+         for(int i=0;i<count;i++)
+            MarkExecutionNoTrade(g_execution_candidates[i].scenario_index,
+                                 available_at,
+                                 "MERGED_STOP_SELECTION_FAILED",
+                                 V1_EXEC_NONE);
+         return -1;
+        }
+
+      D133FreezeSameEntryContributorMerge(available_at);
+
+      string objective_failure="";
+      if(!D133SelectCommonFinalObjectiveForGroup(master_index,available_at,objective_failure))
+        {
+         if(objective_failure=="NO_COMMON_R_ELIGIBLE_OBJECTIVE")
+            g_no_r_eligible_objective++;
+         MarkExecutionNoTrade(master_index,available_at,objective_failure,V1_EXEC_NONE);
+         D133TerminateMergedSecondariesNoTrade(master_index,available_at,objective_failure);
+         return -1;
+        }
+     }
+   else
+     {
+      string objective_failure="";
+      if(!SelectFinalObjectiveForScenario(master_index,available_at,objective_failure))
+        {
+         if(objective_failure=="NO_R_ELIGIBLE_OBJECTIVE")
+            g_no_r_eligible_objective++;
+         MarkExecutionNoTrade(master_index,available_at,objective_failure,V1_EXEC_NONE);
+         return -1;
+        }
+     }
+
+   FinalizeExecutionGeometryReady(master_index,available_at);
+   return master_index;
+  }
+
+void D134BlockReadyOpportunity(const int master_index,
+                               const datetime available_at,
+                               const string reason,
+                               const int execution_status)
+  {
+   if(master_index<0 || master_index>=ArraySize(g_scenarios))
+      return;
+
+   int contributor_count=MathMax(1,g_scenarios[master_index].execution_contributor_count);
+
+   MarkExecutionNoTrade(master_index,available_at,reason,execution_status);
+   if(g_scenarios[master_index].execution_opportunity_merged)
+      D133TerminateMergedSecondariesNoTrade(master_index,available_at,reason);
+
+   LogLine("EXECUTION_AUTHORIZATION_BLOCKED","M1",available_at,g_scenarios[master_index].id,
+           StringFormat("reason=%s direction=%s entry=%.10f contributor_count=%d same_direction_addons_allowed=true opposite_direction_coexistence=false delayed_submission=false",
+                        reason,
+                        DirectionName(g_scenarios[master_index].direction),
+                        g_scenarios[master_index].strategy_entry_price,
+                        contributor_count));
+  }
+
+void D134SubmitReadyOpportunity(const int master_index,
+                                const datetime available_at)
+  {
+   if(master_index<0 || master_index>=ArraySize(g_scenarios))
+      return;
+
+   if(HasUnresolvedExecutionRisk())
+     {
+      D134BlockReadyOpportunity(master_index,
+                                available_at,
+                                "EXECUTION_DIVERGENCE_LOCK",
+                                V1_EXEC_NONE);
+      return;
+     }
+
+   if(HasOppositeManagedExposure(g_scenarios[master_index].direction))
+     {
+      g_exposure_blocked++;
+      g_opposite_direction_exposure_blocked++;
+      D134BlockReadyOpportunity(master_index,
+                                available_at,
+                                "OPPOSITE_DIRECTION_EXPOSURE_CONFLICT",
+                                V1_EXEC_NONE);
+      return;
+     }
+
+   int same_direction_exposure=
+      CountManagedBrokerExposureDirection(g_scenarios[master_index].direction);
+
+   if(same_direction_exposure>0)
+     {
+      g_same_direction_addon_authorized++;
+      LogLine("SAME_DIRECTION_ADDON_AUTHORIZED","M1",available_at,g_scenarios[master_index].id,
+              StringFormat("scenario_id=%s direction=%s entry=%.10f existing_same_direction_exposure_count=%d contributor_count=%d same_entry_contributor_merge=%s account_mode=HEDGING",
+                           g_scenarios[master_index].id,
+                           DirectionName(g_scenarios[master_index].direction),
+                           g_scenarios[master_index].strategy_entry_price,
+                           same_direction_exposure,
+                           MathMax(1,g_scenarios[master_index].execution_contributor_count),
+                           g_scenarios[master_index].execution_opportunity_merged ? "true" : "false"));
+     }
+
+   bool submitted=SubmitPendingForScenario(master_index,available_at);
+   if(!submitted && g_scenarios[master_index].execution_opportunity_merged)
+     {
+      string terminal_reason=g_scenarios[master_index].terminal_reason;
+      if(terminal_reason=="")
+         terminal_reason=g_scenarios[master_index].cancel_reason;
+      if(terminal_reason=="")
+         terminal_reason="MERGED_OPPORTUNITY_NOT_SUBMITTED";
+
+      D133TerminateMergedSecondariesNoTrade(
+         master_index,
+         available_at,
+         terminal_reason);
+     }
+  }
+
 void ProcessIntegratedExecutionAuthorizationEpoch(const datetime available_at)
   {
    ArrayResize(g_execution_candidates,0);
 
-   // Stage 1: derive the common Entry and each Root branch's candidate stop.
-   // Final TP is intentionally deferred until same-entry Root contributors are
-   // collapsed into one scenario-level opportunity.
+   // Stage 1: derive Entry and each Root branch's candidate stop.
+   // Final TP is deferred until same-entry Root contributors are collapsed.
    for(int i=0;i<ArraySize(g_scenarios);i++)
      {
       if(!g_scenarios[i].valid ||
@@ -6297,94 +6531,125 @@ void ProcessIntegratedExecutionAuthorizationEpoch(const datetime available_at)
       g_execution_candidates[n].authorization_at=available_at;
      }
 
-   int count=ArraySize(g_execution_candidates);
-   if(count<=0)
+   int total=ArraySize(g_execution_candidates);
+   if(total<=0)
       return;
 
-   int master_index=g_execution_candidates[0].scenario_index;
-   bool merged=(count>1);
+   // Preserve the complete epoch before reusing g_execution_candidates as a
+   // temporary same-entry contributor group.
+   V1ExecutionCandidate epoch_candidates[];
+   if(ArrayResize(epoch_candidates,total)<0)
+      return;
 
-   // Different FVG/Entry opportunities that complete in the same epoch remain
-   // a true one-exposure conflict. Same FVG/Entry Roots are not competing
-   // trades; they are contributors to one scenario.
-   if(count>1 && !D133AllCandidatesSameEntryScenario())
+   for(int i=0;i<total;i++)
      {
-      g_simultaneous_authorization_ambiguous+=count;
-      for(int i=0;i<count;i++)
-         MarkExecutionNoTrade(g_execution_candidates[i].scenario_index,
-                              available_at,
-                              "AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION",
-                              V1_EXEC_NONE);
+      epoch_candidates[i].valid=g_execution_candidates[i].valid;
+      epoch_candidates[i].scenario_index=g_execution_candidates[i].scenario_index;
+      epoch_candidates[i].scenario_id=g_execution_candidates[i].scenario_id;
+      epoch_candidates[i].direction=g_execution_candidates[i].direction;
+      epoch_candidates[i].authorization_at=g_execution_candidates[i].authorization_at;
+     }
 
-      LogLine("AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION","M1",available_at,"",
-              StringFormat("candidate_count=%d reason=DIFFERENT_FVG_OR_ENTRY same_entry_root_merge=true arbitrary_root_selection=false all_candidates_no_trade=true",count));
+   bool processed[];
+   if(ArrayResize(processed,total)<0)
+      return;
+   for(int p=0;p<total;p++)
+      processed[p]=false;
+
+   // Stage 2: finalize each distinct Entry opportunity independently. Only
+   // fully finalized opportunities participate in direction arbitration.
+   int ready_master_indices[];
+   ArrayResize(ready_master_indices,0);
+
+   for(int i=0;i<total;i++)
+     {
+      if(processed[i] || !epoch_candidates[i].valid)
+         continue;
+
+      ArrayResize(g_execution_candidates,0);
+
+      for(int j=i;j<total;j++)
+        {
+         if(processed[j] || !epoch_candidates[j].valid)
+            continue;
+
+         if(!D133SameEntryScenarioIdentity(
+               epoch_candidates[i].scenario_index,
+               epoch_candidates[j].scenario_index))
+            continue;
+
+         int n=ArraySize(g_execution_candidates);
+         if(ArrayResize(g_execution_candidates,n+1,8)<0)
+            continue;
+
+         g_execution_candidates[n].valid=epoch_candidates[j].valid;
+         g_execution_candidates[n].scenario_index=epoch_candidates[j].scenario_index;
+         g_execution_candidates[n].scenario_id=epoch_candidates[j].scenario_id;
+         g_execution_candidates[n].direction=epoch_candidates[j].direction;
+         g_execution_candidates[n].authorization_at=epoch_candidates[j].authorization_at;
+         processed[j]=true;
+        }
+
+      int master_index=D134FinalizeCurrentExecutionCandidateGroup(available_at);
+      if(master_index<0)
+         continue;
+
+      int rn=ArraySize(ready_master_indices);
+      if(ArrayResize(ready_master_indices,rn+1,8)<0)
+         continue;
+      ready_master_indices[rn]=master_index;
+     }
+
+   ArrayResize(g_execution_candidates,0);
+
+   int ready_count=ArraySize(ready_master_indices);
+   if(ready_count<=0)
+      return;
+
+   bool ready_long=false;
+   bool ready_short=false;
+   for(int i=0;i<ready_count;i++)
+     {
+      int idx=ready_master_indices[i];
+      if(g_scenarios[idx].direction>0)
+         ready_long=true;
+      if(g_scenarios[idx].direction<0)
+         ready_short=true;
+     }
+
+   // Direction arbitration happens only after each opportunity has valid
+   // Entry/SL/TP. A non-executable opposite candidate cannot suppress a valid
+   // side merely by reaching WAITING_EXECUTION_GEOMETRY.
+   int pre_epoch_exposure_direction=ManagedBrokerExposureDirectionState();
+
+   if(pre_epoch_exposure_direction==2)
+     {
+      for(int i=0;i<ready_count;i++)
+         D134BlockReadyOpportunity(
+            ready_master_indices[i],
+            available_at,
+            "BIDIRECTIONAL_MANAGED_EXPOSURE_INVARIANT_BROKEN",
+            V1_EXEC_NONE);
       return;
      }
 
-   if(merged)
+   if(ready_long && ready_short && pre_epoch_exposure_direction==0)
      {
-      if(!D133ApplyMergedStopToMaster(master_index,available_at))
-        {
-         for(int i=0;i<count;i++)
-            MarkExecutionNoTrade(g_execution_candidates[i].scenario_index,
-                                 available_at,
-                                 "MERGED_STOP_SELECTION_FAILED",
-                                 V1_EXEC_NONE);
-         return;
-        }
-
-      D133FreezeSameEntryContributorMerge(available_at);
-
-      string objective_failure="";
-      if(!D133SelectCommonFinalObjectiveForGroup(master_index,available_at,objective_failure))
-        {
-         if(objective_failure=="NO_COMMON_R_ELIGIBLE_OBJECTIVE")
-            g_no_r_eligible_objective++;
-         MarkExecutionNoTrade(master_index,available_at,objective_failure,V1_EXEC_NONE);
-         D133TerminateMergedSecondariesNoTrade(master_index,available_at,objective_failure);
-         return;
-        }
-     }
-   else
-     {
-      string objective_failure="";
-      if(!SelectFinalObjectiveForScenario(master_index,available_at,objective_failure))
-        {
-         if(objective_failure=="NO_R_ELIGIBLE_OBJECTIVE")
-            g_no_r_eligible_objective++;
-         MarkExecutionNoTrade(master_index,available_at,objective_failure,V1_EXEC_NONE);
-         return;
-        }
-     }
-
-   FinalizeExecutionGeometryReady(master_index,available_at);
-
-   if(HasManagedAccountExposure() || g_managed_scenario_id!="")
-     {
-      g_exposure_blocked++;
-      MarkExecutionNoTrade(master_index,
-                           available_at,
-                           "EXPOSURE_ALREADY_ACCEPTED",
-                           V1_EXEC_NONE);
-      if(merged)
-         D133TerminateMergedSecondariesNoTrade(master_index,available_at,"EXPOSURE_ALREADY_ACCEPTED");
-
-      LogLine("EXECUTION_AUTHORIZATION_BLOCKED","M1",available_at,"",
-              StringFormat("reason=EXPOSURE_ALREADY_ACCEPTED execution_opportunity_count=1 contributor_count=%d delayed_submission=false",count));
+      g_simultaneous_authorization_ambiguous+=ready_count;
+      for(int i=0;i<ready_count;i++)
+         D134BlockReadyOpportunity(
+            ready_master_indices[i],
+            available_at,
+            "AMBIGUOUS_SIMULTANEOUS_OPPOSITE_DIRECTION_AUTHORIZATION",
+            V1_EXEC_NONE);
       return;
      }
 
-   bool submitted=SubmitPendingForScenario(master_index,available_at);
-   if(!submitted && merged)
-     {
-      string terminal_reason=g_scenarios[master_index].terminal_reason;
-      if(terminal_reason=="")
-         terminal_reason=g_scenarios[master_index].cancel_reason;
-      if(terminal_reason=="")
-         terminal_reason="MERGED_OPPORTUNITY_NOT_SUBMITTED";
-
-      D133TerminateMergedSecondariesNoTrade(master_index,available_at,terminal_reason);
-     }
+   // Same-direction distinct Entry opportunities are all allowed. If a
+   // pre-existing exposure resolves the active side, opposite groups are
+   // blocked individually while same-direction add-ons may submit.
+   for(int i=0;i<ready_count;i++)
+      D134SubmitReadyOpportunity(ready_master_indices[i],available_at);
   }
 
 bool FindEntryDealForOrder(const ulong order_ticket,
@@ -6483,7 +6748,6 @@ void MarkScenarioFilled(const int scenario_index,
    g_scenarios[scenario_index].fill_price=fill_price;
    g_scenarios[scenario_index].broker_deal_ticket=deal_ticket;
    g_scenarios[scenario_index].broker_position_id=position_id;
-   g_managed_position_id=position_id;
    g_positions_filled++;
 
    // D-133: once the shared order fills, the implementation master owns the
@@ -6594,209 +6858,244 @@ bool RequestResidualPendingCancellationAfterFill(const int scenario_index,
    return false;
   }
 
-void ReconcileManagedExecution(const datetime observed_at)
+void ReconcileScenarioExecution(const int scenario_index,const datetime observed_at)
   {
-   if(g_managed_scenario_id=="")
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
       return;
-   int scenario_index=FindScenarioById(g_managed_scenario_id);
-   if(scenario_index<0)
+   if(!g_scenarios[scenario_index].valid ||
+      g_scenarios[scenario_index].strategy_state==V1_STRATEGY_MERGED_CONTRIBUTOR ||
+      g_scenarios[scenario_index].broker_order_ticket==0)
       return;
 
-   ulong position_ticket=0,position_id=0;
-   double position_open=0.0;
-   bool have_position=FindManagedPosition(position_ticket,position_id,position_open);
-   if(have_position)
-     {
-      ulong deal=0,deal_position_id=0;
-      datetime deal_time=0;
-      double deal_price=position_open;
-      FindEntryDealForOrder(g_scenarios[scenario_index].broker_order_ticket,g_scenarios[scenario_index].pending_submitted_at,
-                            deal,deal_position_id,deal_time,deal_price);
-      if(deal_position_id==0)
-         deal_position_id=position_id;
-      MarkScenarioFilled(scenario_index,observed_at,deal,deal_position_id,deal_time,deal_price);
-
-      ulong residual_order_ticket=0;
-      if(FindManagedPendingTicket(residual_order_ticket))
-        {
-         g_managed_order_ticket=residual_order_ticket;
-         if(!g_scenarios[scenario_index].cancel_request_sent)
-            RequestResidualPendingCancellationAfterFill(scenario_index,observed_at,residual_order_ticket);
-        }
-      else
-         g_managed_order_ticket=0;
-      return;
-     }
-
+   // PENDING / cancel-transition: reconcile this scenario from its own order
+   // ticket. Never scan an arbitrary symbol+magic order because D-134 permits
+   // several same-direction pending orders at once.
    if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_PENDING ||
       g_scenarios[scenario_index].execution_status==V1_EXEC_CANCEL_REJECTED ||
       g_scenarios[scenario_index].execution_status==V1_EXEC_CANCEL_REQUESTED ||
       g_scenarios[scenario_index].execution_status==V1_EXEC_CANCELED)
      {
-      if(g_scenarios[scenario_index].broker_order_ticket>0 && OrderSelect(g_scenarios[scenario_index].broker_order_ticket))
-         return;
-
       ulong deal=0,deal_position_id=0;
       datetime deal_time=0;
       double deal_price=0.0;
-      if(FindEntryDealForOrder(g_scenarios[scenario_index].broker_order_ticket,g_scenarios[scenario_index].pending_submitted_at,
+
+      // Entry deal proof takes precedence. A partial fill may coexist with a
+      // residual pending of the SAME original order ticket.
+      if(FindEntryDealForOrder(g_scenarios[scenario_index].broker_order_ticket,
+                               g_scenarios[scenario_index].pending_submitted_at,
                                deal,deal_position_id,deal_time,deal_price))
         {
          MarkScenarioFilled(scenario_index,observed_at,deal,deal_position_id,deal_time,deal_price);
-         g_managed_order_ticket=0;
+
+         if(ScenarioOriginalPendingOrderLive(scenario_index) &&
+            !g_scenarios[scenario_index].cancel_request_sent)
+            RequestResidualPendingCancellationAfterFill(
+               scenario_index,
+               observed_at,
+               g_scenarios[scenario_index].broker_order_ticket);
          return;
         }
 
-      if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_CANCELED || g_scenarios[scenario_index].execution_status==V1_EXEC_CANCELED)
-        {
-         g_managed_scenario_id="";
-         g_managed_order_ticket=0;
-         g_managed_position_id=0;
+      if(ScenarioOriginalPendingOrderLive(scenario_index))
          return;
-        }
+
+      if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_CANCELED ||
+         g_scenarios[scenario_index].execution_status==V1_EXEC_CANCELED)
+         return;
 
       g_scenarios[scenario_index].execution_status=V1_EXEC_DIVERGENCE;
       g_scenarios[scenario_index].execution_divergence=true;
-      g_scenarios[scenario_index].execution_divergence_reason="PENDING_DISAPPEARED_WITHOUT_FILL_OR_STRATEGY_CANCEL";
+      g_scenarios[scenario_index].execution_divergence_reason=
+         "PENDING_DISAPPEARED_WITHOUT_FILL_OR_STRATEGY_CANCEL";
       g_execution_divergences++;
       LogLine("EXECUTION_DIVERGENCE","M1",observed_at,g_scenarios[scenario_index].id,
-              StringFormat("scenario_id=%s reason=%s order_ticket=%I64u",
-                           g_scenarios[scenario_index].id,g_scenarios[scenario_index].execution_divergence_reason,g_scenarios[scenario_index].broker_order_ticket));
-      g_managed_scenario_id="";
-      g_managed_order_ticket=0;
-      g_managed_position_id=0;
+              StringFormat("scenario_id=%s reason=%s order_ticket=%I64u scenario_scoped_reconciliation=true",
+                           g_scenarios[scenario_index].id,
+                           g_scenarios[scenario_index].execution_divergence_reason,
+                           g_scenarios[scenario_index].broker_order_ticket));
       return;
      }
 
-   if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_FILLED)
+   if(g_scenarios[scenario_index].strategy_state!=V1_STRATEGY_FILLED)
+      return;
+
+   // If the original order ticket still exists after an entry deal, only that
+   // order's residual volume belongs to this scenario. Other same-direction
+   // pending orders are independent add-on scenarios and must never be canceled.
+   if(ScenarioOriginalPendingOrderLive(scenario_index))
      {
-      ulong residual_order_ticket=0;
-      if(FindManagedPendingTicket(residual_order_ticket))
+      if(!g_scenarios[scenario_index].execution_divergence)
         {
-         g_managed_order_ticket=residual_order_ticket;
-         if(!g_scenarios[scenario_index].execution_divergence)
-           {
-            g_scenarios[scenario_index].execution_divergence=true;
-            g_scenarios[scenario_index].execution_divergence_reason="RESIDUAL_PENDING_AFTER_FILL";
-            g_scenarios[scenario_index].execution_status=V1_EXEC_DIVERGENCE;
-            g_execution_divergences++;
-            LogLine("EXECUTION_DIVERGENCE","M1",observed_at,g_scenarios[scenario_index].id,
-                    StringFormat("scenario_id=%s reason=%s residual_order_ticket=%I64u exposure_lock_remains=true",
-                                 g_scenarios[scenario_index].id,g_scenarios[scenario_index].execution_divergence_reason,residual_order_ticket));
-           }
-         if(!g_scenarios[scenario_index].cancel_request_sent)
-            RequestResidualPendingCancellationAfterFill(scenario_index,observed_at,residual_order_ticket);
-         return;
+         g_scenarios[scenario_index].execution_divergence=true;
+         g_scenarios[scenario_index].execution_divergence_reason=
+            "RESIDUAL_PENDING_AFTER_FILL";
+         g_scenarios[scenario_index].execution_status=V1_EXEC_DIVERGENCE;
+         g_execution_divergences++;
+         LogLine("EXECUTION_DIVERGENCE","M1",observed_at,g_scenarios[scenario_index].id,
+                 StringFormat("scenario_id=%s reason=%s residual_order_ticket=%I64u scenario_scoped_reconciliation=true other_same_direction_orders_untouched=true",
+                              g_scenarios[scenario_index].id,
+                              g_scenarios[scenario_index].execution_divergence_reason,
+                              g_scenarios[scenario_index].broker_order_ticket));
         }
 
-      g_managed_order_ticket=0;
-      ulong exit_deal=0;
-      datetime exit_time=0;
-      double exit_price=0.0;
-      long exit_reason=0;
-      if(FindExitDealForPosition(g_scenarios[scenario_index].broker_position_id,g_scenarios[scenario_index].fill_at,
-                                 exit_deal,exit_time,exit_price,exit_reason))
-        {
-         if(g_scenarios[scenario_index].position_closed_at==0)
-           {
-            g_scenarios[scenario_index].position_closed_at=exit_time;
-            g_scenarios[scenario_index].exit_price=exit_price;
-            g_scenarios[scenario_index].exit_reason=exit_reason;
-            g_scenarios[scenario_index].exit_deal_ticket=exit_deal;
-            if(!g_scenarios[scenario_index].execution_divergence)
-               g_scenarios[scenario_index].execution_status=V1_EXEC_CLOSED;
-            g_positions_closed++;
-            LogLine("POSITION_CLOSED","M1",observed_at,g_scenarios[scenario_index].id,
-                    StringFormat("scenario_id=%s exit_deal=%I64u position_id=%I64u exit_at=%s actual_exit=%.10f deal_reason=%I64d strategy_sl=%.10f strategy_tp=%.10f execution_status=%s",
-                                 g_scenarios[scenario_index].id,exit_deal,g_scenarios[scenario_index].broker_position_id,
-                                 TimeToString(exit_time,TIME_DATE|TIME_SECONDS),exit_price,exit_reason,
-                                 g_scenarios[scenario_index].normalized_sl,g_scenarios[scenario_index].final_objective_price,ExecutionStatusName(g_scenarios[scenario_index].execution_status)));
-           }
-         g_managed_scenario_id="";
-         g_managed_order_ticket=0;
-         g_managed_position_id=0;
-        }
+      if(!g_scenarios[scenario_index].cancel_request_sent)
+         RequestResidualPendingCancellationAfterFill(
+            scenario_index,
+            observed_at,
+            g_scenarios[scenario_index].broker_order_ticket);
+      return;
+     }
+
+   // In a hedging account DEAL_POSITION_ID maps to POSITION_IDENTIFIER. Look
+   // up this exact position rather than the first symbol+magic position.
+   ulong position_ticket=0;
+   double position_open=0.0;
+   if(FindManagedPositionByIdentifier(g_scenarios[scenario_index].broker_position_id,
+                                      position_ticket,
+                                      position_open))
+      return;
+
+   ulong exit_deal=0;
+   datetime exit_time=0;
+   double exit_price=0.0;
+   long exit_reason=0;
+   if(!FindExitDealForPosition(g_scenarios[scenario_index].broker_position_id,
+                               g_scenarios[scenario_index].fill_at,
+                               exit_deal,exit_time,exit_price,exit_reason))
+      return;
+
+   if(g_scenarios[scenario_index].position_closed_at!=0)
+      return;
+
+   g_scenarios[scenario_index].position_closed_at=exit_time;
+   g_scenarios[scenario_index].exit_price=exit_price;
+   g_scenarios[scenario_index].exit_reason=exit_reason;
+   g_scenarios[scenario_index].exit_deal_ticket=exit_deal;
+   if(!g_scenarios[scenario_index].execution_divergence)
+      g_scenarios[scenario_index].execution_status=V1_EXEC_CLOSED;
+   g_positions_closed++;
+
+   LogLine("POSITION_CLOSED","M1",observed_at,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s exit_deal=%I64u position_id=%I64u exit_at=%s actual_exit=%.10f deal_reason=%I64d strategy_sl=%.10f strategy_tp=%.10f execution_status=%s scenario_scoped_reconciliation=true",
+                        g_scenarios[scenario_index].id,
+                        exit_deal,
+                        g_scenarios[scenario_index].broker_position_id,
+                        TimeToString(exit_time,TIME_DATE|TIME_SECONDS),
+                        exit_price,
+                        exit_reason,
+                        g_scenarios[scenario_index].normalized_sl,
+                        g_scenarios[scenario_index].final_objective_price,
+                        ExecutionStatusName(g_scenarios[scenario_index].execution_status)));
+  }
+
+void ReconcileAllManagedExecutions(const datetime observed_at)
+  {
+   for(int i=0;i<ArraySize(g_scenarios);i++)
+     {
+      if(!g_scenarios[i].valid ||
+         g_scenarios[i].broker_order_ticket==0 ||
+         g_scenarios[i].strategy_state==V1_STRATEGY_MERGED_CONTRIBUTOR)
+         continue;
+
+      ReconcileScenarioExecution(i,observed_at);
      }
   }
 
 void ManageIntegratedExecution(const MqlTick &tick)
   {
-   ReconcileManagedExecution((datetime)tick.time);
-   if(g_managed_scenario_id=="")
-      return;
+   datetime observed_at=(datetime)tick.time;
+   ReconcileAllManagedExecutions(observed_at);
 
-   int scenario_index=FindScenarioById(g_managed_scenario_id);
-   if(scenario_index<0)
-      return;
-
-   if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_FILLED)
-      return; // after fill, frozen server SL/TP decide the position outcome.
-
-   if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_PENDING &&
-      (FinalObjectiveConsumed(g_scenarios[scenario_index]) || ObjectiveDeliveredAtTick(g_scenarios[scenario_index],tick)))
+   for(int scenario_index=0;scenario_index<ArraySize(g_scenarios);scenario_index++)
      {
-      g_scenarios[scenario_index].strategy_state=V1_STRATEGY_CANCELED;
-      g_scenarios[scenario_index].canceled_at=(datetime)tick.time;
-      g_scenarios[scenario_index].cancel_reason="CANCELED_OBJECTIVE_DELIVERED";
-      g_scenarios[scenario_index].strategy_cancel_at=(datetime)tick.time;
-      g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_OBJECTIVE_DELIVERED";
-      ReleaseRootScenarioOwner(g_scenarios[scenario_index].root_zone_id,g_scenarios[scenario_index].id);
-      D133TerminateMergedSecondaries(
-         scenario_index,
-         (datetime)tick.time,
-         "CANCELED_OBJECTIVE_DELIVERED");
-      LogScenarioCanceled(g_scenarios[scenario_index],(datetime)tick.time,"CANCELED_OBJECTIVE_DELIVERED");
-      g_scenarios_canceled++;
-     }
-   else if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_PENDING &&
-           g_scenarios[scenario_index].execution_contributor_count>1)
-     {
-      string alive_root_ids="";
-      int alive=D133CountAliveContributors(scenario_index,alive_root_ids);
+      if(!g_scenarios[scenario_index].valid ||
+         g_scenarios[scenario_index].strategy_state==V1_STRATEGY_MERGED_CONTRIBUTOR ||
+         g_scenarios[scenario_index].broker_order_ticket==0)
+         continue;
 
-      if(alive<=0)
+      // Filled positions are individually owned by their frozen server SL/TP.
+      // Same-direction later scenarios may coexist in separate hedging positions.
+      if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_FILLED)
+         continue;
+
+      if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_PENDING &&
+         (FinalObjectiveConsumed(g_scenarios[scenario_index]) ||
+          ObjectiveDeliveredAtTick(g_scenarios[scenario_index],tick)))
         {
          g_scenarios[scenario_index].strategy_state=V1_STRATEGY_CANCELED;
-         g_scenarios[scenario_index].canceled_at=(datetime)tick.time;
-         g_scenarios[scenario_index].cancel_reason="CANCELED_ALL_CONTRIBUTORS_INVALID";
-         g_scenarios[scenario_index].strategy_cancel_at=(datetime)tick.time;
-         g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_ALL_CONTRIBUTORS_INVALID";
-         ReleaseRootScenarioOwner(g_scenarios[scenario_index].root_zone_id,g_scenarios[scenario_index].id);
-
+         g_scenarios[scenario_index].canceled_at=observed_at;
+         g_scenarios[scenario_index].cancel_reason="CANCELED_OBJECTIVE_DELIVERED";
+         g_scenarios[scenario_index].strategy_cancel_at=observed_at;
+         g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_OBJECTIVE_DELIVERED";
+         ReleaseRootScenarioOwner(g_scenarios[scenario_index].root_zone_id,
+                                  g_scenarios[scenario_index].id);
          D133TerminateMergedSecondaries(
             scenario_index,
-            (datetime)tick.time,
-            "CANCELED_ALL_CONTRIBUTORS_INVALID");
-
-         LogLine("EXECUTION_CONTRIBUTORS_EXHAUSTED","M1",(datetime)tick.time,g_scenarios[scenario_index].id,
-                 StringFormat("master_scenario_id=%s contributor_count=%d alive_contributors=0 contributor_root_ids=%s action=CANCEL_PENDING",
-                              g_scenarios[scenario_index].id,
-                              g_scenarios[scenario_index].execution_contributor_count,
-                              g_scenarios[scenario_index].execution_contributor_root_ids));
-
+            observed_at,
+            "CANCELED_OBJECTIVE_DELIVERED");
          LogScenarioCanceled(
             g_scenarios[scenario_index],
-            (datetime)tick.time,
-            "CANCELED_ALL_CONTRIBUTORS_INVALID");
-
+            observed_at,
+            "CANCELED_OBJECTIVE_DELIVERED");
          g_scenarios_canceled++;
         }
-     }
-   else if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_CANCELED && g_scenarios[scenario_index].strategy_cancel_at==0)
-     {
-      g_scenarios[scenario_index].strategy_cancel_at=g_scenarios[scenario_index].canceled_at>0 ? g_scenarios[scenario_index].canceled_at : (datetime)tick.time;
-      if(g_scenarios[scenario_index].cancel_reason=="ROOT_INVALIDATED")
-         g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_SOURCE_INVALIDATED";
-      else
-         g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_DIRECTION_AUTHORITY";
+      else if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_PENDING &&
+              g_scenarios[scenario_index].execution_contributor_count>1)
+        {
+         string alive_root_ids="";
+         int alive=D133CountAliveContributors(scenario_index,alive_root_ids);
+
+         if(alive<=0)
+           {
+            g_scenarios[scenario_index].strategy_state=V1_STRATEGY_CANCELED;
+            g_scenarios[scenario_index].canceled_at=observed_at;
+            g_scenarios[scenario_index].cancel_reason="CANCELED_ALL_CONTRIBUTORS_INVALID";
+            g_scenarios[scenario_index].strategy_cancel_at=observed_at;
+            g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_ALL_CONTRIBUTORS_INVALID";
+            ReleaseRootScenarioOwner(g_scenarios[scenario_index].root_zone_id,
+                                     g_scenarios[scenario_index].id);
+
+            D133TerminateMergedSecondaries(
+               scenario_index,
+               observed_at,
+               "CANCELED_ALL_CONTRIBUTORS_INVALID");
+
+            LogLine("EXECUTION_CONTRIBUTORS_EXHAUSTED","M1",observed_at,g_scenarios[scenario_index].id,
+                    StringFormat("master_scenario_id=%s contributor_count=%d alive_contributors=0 contributor_root_ids=%s action=CANCEL_PENDING",
+                                 g_scenarios[scenario_index].id,
+                                 g_scenarios[scenario_index].execution_contributor_count,
+                                 g_scenarios[scenario_index].execution_contributor_root_ids));
+
+            LogScenarioCanceled(
+               g_scenarios[scenario_index],
+               observed_at,
+               "CANCELED_ALL_CONTRIBUTORS_INVALID");
+            g_scenarios_canceled++;
+           }
+        }
+      else if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_CANCELED &&
+              g_scenarios[scenario_index].strategy_cancel_at==0)
+        {
+         g_scenarios[scenario_index].strategy_cancel_at=
+            g_scenarios[scenario_index].canceled_at>0 ?
+            g_scenarios[scenario_index].canceled_at :
+            observed_at;
+
+         if(g_scenarios[scenario_index].cancel_reason=="ROOT_INVALIDATED")
+            g_scenarios[scenario_index].strategy_cancel_reason=
+               "CANCELED_SOURCE_INVALIDATED";
+         else
+            g_scenarios[scenario_index].strategy_cancel_reason=
+               "CANCELED_DIRECTION_AUTHORITY";
+        }
+
+      if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_CANCELED &&
+         ScenarioOriginalPendingOrderLive(scenario_index) &&
+         !g_scenarios[scenario_index].cancel_request_sent)
+         RequestPendingCancellation(scenario_index,observed_at);
      }
 
-   if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_CANCELED &&
-      g_scenarios[scenario_index].broker_order_ticket>0 &&
-      !g_scenarios[scenario_index].cancel_request_sent)
-      RequestPendingCancellation(scenario_index,(datetime)tick.time);
-
-   ReconcileManagedExecution((datetime)tick.time);
+   ReconcileAllManagedExecutions(observed_at);
   }
 
 //+------------------------------------------------------------------+
@@ -8502,7 +8801,7 @@ void ProcessPostContactRootContacts(const MqlRates &bar,const datetime available
       g_root_contacts_observed++;
       g_root_contexts_ready++;
       LogLine("ROOT_CONTEXT_READY","M1",available_at,root.id,
-              StringFormat("strategy_source_id=%s strategy_source_kind=ROOT optional_child_observation=ENABLED child_strategy_authority=false entry_geometry=M1_FVG sl_geometry=D133_INPUT_SELECTED root_contact_at=%s strategy_authority=false phase4b_scenario_qualified=%s map_objective_qualification=%s scenario_id=%s linear_trigger_pipeline=true",
+              StringFormat("strategy_source_id=%s strategy_source_kind=ROOT optional_child_observation=ENABLED child_strategy_authority=false entry_geometry=M1_FVG sl_geometry=D134_INPUT_SELECTED root_contact_at=%s strategy_authority=false phase4b_scenario_qualified=%s map_objective_qualification=%s scenario_id=%s linear_trigger_pipeline=true",
                            root.id,TimeToString(available_at,TIME_DATE|TIME_SECONDS),has_preplan ? "true" : "false",
                            has_preplan ? "PRECONTACT_PLAN_FROZEN" : "NO_PRECONTACT_PLAN",has_preplan ? g_scenarios[bound_scenario].id : "NA"));
       LogLine("ROOT_CONTACT_OBSERVED","M1",available_at,root.id,
@@ -8784,7 +9083,7 @@ void ProcessReactionStateForTracker(const int tracker_index,
 
    if(newly_recorded>0)
       LogLine("OPTIONAL_CHILD_AUDIT_STATE",TfName(child_tf),available_at,g_root_reactions[tracker_index].root_zone_id,
-              StringFormat("new_observations=%d total_observations=%d root_remains_strategy_source=true no_child_gate=true no_child_selection=true entry_geometry=M1_FVG sl_geometry=D133_INPUT_SELECTED",
+              StringFormat("new_observations=%d total_observations=%d root_remains_strategy_source=true no_child_gate=true no_child_selection=true entry_geometry=M1_FVG sl_geometry=D134_INPUT_SELECTED",
                            newly_recorded,g_root_reactions[tracker_index].child_count));
   }
 
@@ -9113,9 +9412,10 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=1.70 property_version=1.00 magic=%I64d phase=D133_FVG_OB_BASELINE_SAME_ENTRY_ROOT_MERGE fvg_origin_ob_baseline=true sl_model=%s same_entry_root_merge=true tester_execution_only=true live_execution=false",
+           StringFormat("build=1.80 property_version=1.00 magic=%I64d phase=D134_HEDGING_SAME_DIRECTION_ADDON_EXECUTION fvg_origin_ob_baseline=true sl_model=%s same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
-                        StopLossModelName((int)InpStopLossModel)));
+                        StopLossModelName((int)InpStopLossModel),
+                        AccountInfoInteger(ACCOUNT_MARGIN_MODE)));
    if(HasManagedAccountExposure())
      {
       g_init_state=V1_INIT_EXECUTION_RECOVERY_REQUIRED;
@@ -9142,12 +9442,14 @@ void OnDeinit(const int reason)
                         g_scenario_ambiguous_fvg,g_execution_geometry_ready,g_no_r_eligible_objective,g_simultaneous_authorization_ambiguous,g_exposure_blocked,
                         g_execution_infeasible,g_order_rejected,g_orders_accepted,g_positions_filled,g_pending_cancellations,g_cancel_rejected,g_execution_divergences,
                         g_positions_closed,g_authorized_sweep_events,g_authorized_sweep_pools,g_structural_reaction_created,g_source_contacts));
-   LogLine("D133_STOP_SUMMARY","",TimeCurrent(),"",
-           StringFormat("sl_model=%s fvg_origin_ob_baseline=true same_entry_root_merge=true merged_execution_opportunities=%I64d merged_contributor_branches=%I64d true_ambiguous_branches=%I64d",
+   LogLine("D134_STOP_SUMMARY","",TimeCurrent(),"",
+           StringFormat("sl_model=%s fvg_origin_ob_baseline=true same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true merged_execution_opportunities=%I64d merged_contributor_branches=%I64d simultaneous_opposite_ambiguous_opportunities=%I64d same_direction_addon_authorized=%I64d opposite_direction_exposure_blocked=%I64d",
                         StopLossModelName((int)InpStopLossModel),
                         g_execution_opportunities_merged,
                         g_execution_contributors_merged,
-                        g_simultaneous_authorization_ambiguous));
+                        g_simultaneous_authorization_ambiguous,
+                        g_same_direction_addon_authorized,
+                        g_opposite_direction_exposure_blocked));
 
    if(g_log_handle!=INVALID_HANDLE)
      {
@@ -9177,7 +9479,7 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              StringFormat("D133 active: Root->Sweep->CHoCH->causal widest FVG->same-entry Root merge->%s merged SL->common frozen objective TP->tester GTC pending; FVG_ORIGIN_OB baseline=true; live execution hard-blocked",
+              StringFormat("D134 active: Root->Sweep->CHoCH->causal widest FVG->same-entry Root merge->%s merged SL->common frozen objective TP; hedging same-direction independent add-ons allowed; opposite-direction coexistence blocked; live execution hard-blocked",
                            StopLossModelName((int)InpStopLossModel)));
      }
    ProcessRuntimeClosedBars((datetime)tick.time);
@@ -9187,6 +9489,6 @@ void OnTick()
 void OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
    if(g_init_state==V1_READY)
-      ReconcileManagedExecution(TimeCurrent());
+      ReconcileAllManagedExecutions(TimeCurrent());
   }
 //+------------------------------------------------------------------+

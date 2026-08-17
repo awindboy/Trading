@@ -1,9 +1,9 @@
 # EA Development Handoff
 
 Last updated: 2026-08-18
-Status: D-133 BUILD 1.70 PREPARED / LOCAL METAEDITOR COMPILE + JANUARY REAL-TICK VALIDATION PENDING
-Current phase: D-133 — FVG-origin OB baseline + same-FVG/Entry multi-Root scenario merge
-Execution safety: same-cycle submission + same-entry contributor freeze + outermost merged SL + common-objective TP + all-contributor survival/cancel + fill-time contributor release + partial-fill residual divergence lock
+Status: D-134 BUILD 1.80 PREPARED / LOCAL METAEDITOR COMPILE + JANUARY REAL-TICK VALIDATION PENDING
+Current phase: D-134 — hedging-account same-direction independent add-on execution
+Execution safety: same-entry contributor merge + independent same-direction scenario tickets/positions + opposite-direction conflict block + scenario-scoped reconciliation + exact-order partial-fill residual cancellation
 
 ## Goal
 
@@ -115,6 +115,32 @@ Phase 5A M1 CHoCH
 → accepted scenario CHoCH -> WAITING_FVG
 → D-127 validation build itself had FVG/order authorization disabled
 → FVG_ORIGIN_OB is now promoted by D-133 to baseline OB authority; 18 Root branches are still not automatically 18 trades
+
+D-133 integrated execution validation
+→ BUILD 1.70 / ROOT_OB_DISTAL_20 January real-tick run PASS
+→ 18 finalized Root branches collapsed to 9 unique Entry opportunities
+→ contributor merge clusters = 4
+→ merged secondary Root branches = 9
+→ same-entry ambiguity = 0
+→ PENDING accepted = 3 / FILLED = 2 / CLOSED = 2
+→ remaining execution NO_TRADE = 6, all old `EXPOSURE_ALREADY_ACCEPTED`
+→ those six were complete same-direction opportunities: 2 while earlier pending existed, 4 while earlier filled position existed
+→ D-133 same-entry merge / outermost Root SL / common-objective TP implementation PASS
+→ profitability inference still NOT valid from two closed trades
+
+D-134 same-direction add-on execution
+→ USER APPROVED 2026-08-18
+→ user account type = HEDGING
+→ same-direction independent Entry/FVG scenarios may coexist as separate pending orders / positions
+→ same Entry/FVG still uses D-133 contributor merge and one order
+→ opposite-direction pending/position conflict = `OPPOSITE_DIRECTION_EXPOSURE_CONFLICT`
+→ simultaneous new LONG+SHORT with no prior exposure = `AMBIGUOUS_SIMULTANEOUS_OPPOSITE_DIRECTION_AUTHORIZATION`
+→ old `EXPOSURE_ALREADY_ACCEPTED` same-direction block removed
+→ execution reconciliation refactored from one global managed scenario to per-scenario order ticket + POSITION_IDENTIFIER
+→ partial-fill residual cancellation may touch only the same original order ticket
+→ unresolved cancel-reject / partial-fill residual broker risk blocks all new orders via `EXECUTION_DIVERGENCE_LOCK`
+→ non-hedging automated execution fails preflight with `HEDGING_ACCOUNT_REQUIRED_FOR_INDEPENDENT_SCENARIO_POSITIONS`
+→ BUILD 1.80 prepared; compile + January real-tick validation pending
 
 Phase 5B / D-128A causal M1 FVG
 → IMPLEMENTED in internal build 1.20 / local validation pending
@@ -440,7 +466,11 @@ V1 parity volume
 → SYMBOL_VOLUME_MIN
 
 Managed exposure
-→ max one accepted PENDING/FILLED first-position exposure per symbol+magic
+→ HEDGING account required for automated execution
+→ multiple independent same-direction PENDING/FILLED scenarios allowed
+→ same FVG/Entry Roots remain one contributor-merged scenario
+→ opposite-direction coexistence blocked
+→ unresolved execution divergence blocks all new exposure
 
 Execution infeasible/rejected
 → NO_TRADE terminal for that chain
@@ -857,7 +887,7 @@ no new contributor attaches after freeze
 merged pending survives while >=1 contributor is alive
 merged pending cancels when all contributors are invalid
 secondary contributor ownership is released on fill/terminal resolution
-one symbol+magic first-position exposure remains enforced
+historical D-132 one-exposure invariant (SUPERSEDED BY D-134)
 ```
 
 Profitability/optimization is still out of scope until these invariants pass.
@@ -919,7 +949,7 @@ FVG selected per Root branch
 
 True ambiguity remains only when distinct FVG/Entry opportunities complete in the same epoch.
 
-Next local validation should use the same January real-tick fixture with:
+D-133 local validation used the same January real-tick fixture with:
 
 ```text
 InpStopLossModel = V1_SL_ROOT_OB_DISTAL_20
@@ -938,7 +968,7 @@ SCENARIO_FVG_SELECTED = 18
 
 Those upstream branch counts should remain unchanged. Downstream execution counts are expected to change because same-entry Root clusters now collapse into scenario-level opportunities.
 
-Required D-133 checks:
+D-133 validation checks (PASS on uploaded January run):
 
 ```text
 EA_START build=1.70 / D133_FVG_OB_BASELINE_SAME_ENTRY_ROOT_MERGE
@@ -950,10 +980,45 @@ ROOT_OB merged SHORT SL = maximum contributor Root SL
 FINAL_OBJECTIVE_SELECTED uses common frozen objective price
 no common R>=1 price -> NO_COMMON_R_ELIGIBLE_OBJECTIVE
 only different FVG/Entry opportunities use AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
-one symbol+magic exposure invariant remains intact
+D-133 one-exposure result was historical and is SUPERSEDED BY D-134
 pending survives while >=1 contributor authority remains
 all contributors invalid -> CANCELED_ALL_CONTRIBUTORS_INVALID
 execution divergence = 0 expected
 ```
 
-Profitability judgment remains deferred until D-133 implementation invariants pass.
+D-133 implementation invariants passed on the uploaded January run; profitability judgment remains deferred because the closed-trade sample is too small.
+
+## D-134 Immediate Validation Plan
+
+Run the same January real-tick fixture used for D-133 with:
+
+```text
+InpStopLossModel = V1_SL_ROOT_OB_DISTAL_20
+account mode = HEDGING
+```
+
+Validate before any profitability comparison:
+
+```text
+1. D-127/D-128 upstream detector and scenario counts remain unchanged.
+2. 18 Root execution branches still collapse to the same 9 unique Entry opportunities.
+3. D-133 same-entry contributor clusters and merged SL/TP geometry remain unchanged.
+4. old EXPOSURE_ALREADY_ACCEPTED = 0.
+5. the six previously blocked same-direction opportunities are now eligible for independent submission.
+6. same-direction pending orders coexist without one being canceled as another scenario's residual.
+7. same-direction filled positions have distinct POSITION_IDENTIFIER values and independent SL/TP lifecycle.
+8. objective / contributor invalidation cancels only the owning scenario's pending ticket.
+9. opposite-direction conflict remains fail-closed.
+10. no unrelated same-direction pending is ever canceled as residual volume.
+11. any unresolved cancel-reject / residual broker risk activates `EXECUTION_DIVERGENCE_LOCK`.
+12. execution divergence = 0 in the normal January fixture.
+```
+
+Expected January diagnostic signal, if no unrelated broker preflight constraint intervenes:
+
+```text
+same_direction_addon_authorized ≈ 6
+opposite_direction_exposure_blocked = 0
+```
+
+Do not treat an exact order/fill count as a frozen expectation until the run is inspected, because newly allowed pending/positions can change later execution state and objective-delivery timing.

@@ -2507,7 +2507,7 @@ a separate risk-sizing policy is approved.
 
 ## D-111 — V1 has one accepted first-position exposure per symbol and magic
 
-Status: ACTIVE / FROZEN
+Status: HISTORICAL / SUPERSEDED BY D-134
 
 Per symbol + magic:
 
@@ -4284,3 +4284,155 @@ Build target:
 internal build = 1.70
 phase = D133_FVG_OB_BASELINE_SAME_ENTRY_ROOT_MERGE
 ```
+
+---
+
+## D-134 — Same-direction independent add-on scenarios are allowed on hedging accounts
+
+Status: ACTIVE / USER APPROVED — 2026-08-18
+
+The user explicitly removed the one-position/one-exposure restriction for same-direction trades.
+
+Reasoning:
+
+A later signal that independently completes:
+
+```text
+new Root
+→ Root contact
+→ liquidity sweep
+→ M1 CHoCH
+→ causal FVG
+→ Entry / SL / TP
+```
+
+while an earlier same-direction position is alive is not merely duplicate exposure. It can represent a new pullback/re-entry into the same larger trend.
+
+### Directional exposure rule
+
+Allowed:
+
+```text
+existing LONG pending/position + new LONG scenario
+existing SHORT pending/position + new SHORT scenario
+```
+
+Blocked:
+
+```text
+existing LONG pending/position + new SHORT scenario
+existing SHORT pending/position + new LONG scenario
+```
+
+Blocked opposite-direction reason:
+
+```text
+OPPOSITE_DIRECTION_EXPOSURE_CONFLICT
+```
+
+The old signal is not delayed and submitted after the conflicting exposure terminates.
+
+### Same Entry versus add-on Entry
+
+D-133 remains authoritative for duplicate provenance:
+
+```text
+same direction
++ same selected_fvg_id
++ same Entry tick
+→ contributor merge
+→ one order
+```
+
+D-134 adds:
+
+```text
+same direction
++ different selected_fvg_id or Entry tick
+→ independent add-on scenario
+→ separate order/position allowed
+```
+
+No add-on modifies an earlier scenario's Entry, SL, TP, volume, or exit lifecycle.
+
+### Simultaneous opposite-direction authorization
+
+If both directions become fully authorized in the same processing epoch and no managed exposure existed before that epoch:
+
+```text
+AMBIGUOUS_SIMULTANEOUS_OPPOSITE_DIRECTION_AUTHORIZATION
+→ fail closed
+```
+
+This prevents submission order / array order from becoming an implicit direction selector.
+
+If one direction was already exposed before the epoch, only same-direction add-ons may proceed; opposite-direction opportunities are blocked.
+
+### Hedging account is required
+
+The user confirmed the intended account is a hedging account.
+
+Build 1.80 therefore requires:
+
+```text
+ACCOUNT_MARGIN_MODE_RETAIL_HEDGING
+```
+
+for automated execution.
+
+A netting account cannot preserve independent scenario SL/TP lifecycle and is:
+
+```text
+EXECUTION_INFEASIBLE
+reason = HEDGING_ACCOUNT_REQUIRED_FOR_INDEPENDENT_SCENARIO_POSITIONS
+```
+
+No synthetic per-scenario accounting is used to pretend one net position is several independent trades.
+
+### Scenario-scoped execution reconciliation
+
+D-131/D-133's single global managed-order assumption is superseded for active execution.
+
+Each accepted scenario is reconciled by its own:
+
+```text
+broker_order_ticket
+entry deal
+DEAL_POSITION_ID / POSITION_IDENTIFIER
+exit deal
+```
+
+A partial fill may leave residual volume only on that scenario's original order ticket. The EA may cancel that exact residual order once.
+
+D-134 does not weaken the existing execution-divergence safety lock. If a cancel-rejected order, partial-fill residual, or divergent position remains live, new orders in **either direction** are blocked with:
+
+```text
+EXECUTION_DIVERGENCE_LOCK
+```
+
+until the broker-side risk is no longer live.
+
+Forbidden:
+
+```text
+find any symbol+magic pending
+→ treat it as residual of whichever scenario just filled
+```
+
+because another same-direction pending may be a legitimate independent add-on.
+
+### Evidence motivating the change
+
+D-133 January real-tick validation with `ROOT_OB_DISTAL_20` produced:
+
+```text
+18 finalized Root branches
+→ 9 unique Entry opportunities
+→ 4 contributor-merge clusters
+→ 0 same-entry ambiguity
+→ 6 otherwise-valid opportunities blocked only by EXPOSURE_ALREADY_ACCEPTED
+```
+
+Those six consisted of two signals while an earlier pending existed and four signals while an earlier same-direction position was filled.
+
+D-134 removes only that execution-policy bottleneck. Upstream detector/scenario rules remain unchanged.
