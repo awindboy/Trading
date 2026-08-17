@@ -2,7 +2,7 @@
 
 - 상태: `FROZEN / CURRENT V1 STRATEGY AUTHORITY`
 - 제정일: `2026-08-01`
-- 최근 개정: `2026-08-16` (`Detector / Sequence / Execute separation; linear Root -> Sweep -> CHoCH trigger pipeline`)
+- 최근 개정: `2026-08-18` (`FVG-origin OB baseline authority; same FVG/Entry multi-Root branches are one contributor scenario`)
 - 적용 범위: deterministic EA, MT5 Strategy Tester, current V1 수동/블라인드 리플레이 검증
 
 ## 1. 문서의 지위
@@ -822,11 +822,15 @@ M1은 HTF reversal permission 또는 map owner를
 Root는 다음을 모두 설명해야 한다.
 
 1. 의미 있는 external/protected 또는 structurally meaningful internal swing의 origin context에 있다.
-2. 해당 origin window 안의 마지막 opposite candle이다.
-3. 그 candle에서 시작한 same causal directional leg가 의미 있는 structure level을 body close로 전달했다.
+2. 다음 baseline OB recognizer 중 최소 하나를 만족한다.
+   - `LAST_OPPOSITE_OB`: 해당 origin window 안에서 directional leg 시작 전 마지막 opposite candle
+   - `FVG_ORIGIN_OB`: 같은 causal directional leg 안의 direction-compatible 3-candle FVG를 구성하는 Candle1
+3. 그 candle이 속한 same causal directional leg가 의미 있는 structure level을 body close로 전달했다.
 4. 현재 scenario direction/objective와 causal하게 연결된다.
 5. 가격이 첫 반응을 관찰할 HTF Root로 채택되기 전까지 미소진 상태다.
 6. `strategy_state = ACTIVE`다.
+
+두 recognizer는 current baseline에서 항상 동시에 활성이다. 같은 physical candle을 둘 다 인식하면 Root를 두 개 만들지 않고 recognition reason만 merge한다.
 
 여기서 `미소진`은 **HTF Root를 사전에 watchlist에 둘 수 있는 자격**을 뜻한다.
 단순 touch 횟수, age, 임의 mitigation percentage를 새 소진 규칙으로 만들지 않는다.
@@ -875,7 +879,7 @@ age
 - 화면에서 가장 가까운 반대색 캔들
 - M1 반응을 보고 사후 선택한 HTF 캔들
 - structure delivery를 만들지 않은 임의 candle
-- FVG overlap만 있는 candle
+- causal FVG의 Candle1도 아니고 structure-delivery origin도 아닌 단순 FVG overlap candle
 - HTF FVG 자체
 - 이미 `INVALIDATED`된 Root
 
@@ -1664,15 +1668,28 @@ reason = AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
 
 점수나 임의 direction priority를 만들지 않는다.
 
-Current integrated baseline은 같은 방향의 여러 Root branch가 동일 processing epoch에서 모두 완전 authorization되더라도 임의 Root를 선택하지 않는다. Contributor merge 이후 어느 Root가 pending survival authority를 갖는지 아직 별도 정의되지 않았기 때문이다. 따라서 provenance-merge protocol이 별도로 freeze되기 전에는:
+Current baseline은 동일 processing epoch의 여러 Root branch가 **같은 방향 + 같은 selected FVG + 같은 Entry tick**에 수렴하면 서로 다른 거래로 보지 않는다. 그것들은 하나의 first-position scenario를 지지하는 contributor Roots다.
 
 ```text
-fully_authorized_first_position_branches > 1
+same direction
++ same selected_fvg_id
++ same Entry tick
+→ ONE SCENARIO
+→ freeze N contributor Roots
+→ one merged SL / one TP / one pending order
+```
+
+이 경우 Root별 SL 또는 TP가 사전에 같을 필요는 없다. 먼저 scenario를 merge한 뒤 selected SL model에 따라 contributor 전체의 invalidation을 보존하는 바깥쪽 stop을 하나 정하고, 그 merged SL로 TP eligibility를 한 번만 다시 계산한다.
+
+서로 다른 FVG 또는 Entry에 도달한 완성 신호가 동일 epoch에 둘 이상 존재하면 one-exposure conflict이므로:
+
+```text
+distinct fully-authorized entry opportunities > 1
 → NO_TRADE
 → AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
 ```
 
-을 방향과 무관하게 적용한다. 이는 Sweep/CHoCH/FVG detector 내부 필터가 아니라 **완성된 first-position 신호들의 one-exposure 실행 충돌 처리**다.
+으로 fail closed한다. nearest/latest Root, quality score, RR 등으로 하나를 선택하지 않는다.
 
 ### SL
 
@@ -2067,9 +2084,9 @@ Git history 및 관련 research documents에 보존한다.
 
 ---
 
-## D-132 approved experimental execution contract — 2026-08-17
+## D-132 historical experimental execution contract — 2026-08-17
 
-Status: `ACTIVE RESEARCH VARIANTS / CONTROL + TWO SL EXPERIMENTS / CONTRIBUTOR MERGE FROZEN FOR VALIDATION`
+Status: `SL VARIANTS RETAINED / FVG-OB EXPERIMENT + STRICT EXECUTION-IDENTITY MERGE SUPERSEDED BY D-133`
 
 The mentor's governing SL principle is **scenario invalidation**. The current FVG SL remains the control while two explicit deterministic alternatives are authorized for Strategy Tester comparison.
 
@@ -2156,3 +2173,125 @@ Once the shared order fills, secondary contributor scenario ownership is release
 `V1_SL_ROOT_OB_DISTAL_20` branches whose Root geometry creates different normalized SL prices are **not** duplicate provenance under this contract and therefore do not merge.
 
 Default input remains `V1_SL_FVG_DISTAL_20` until comparative real-tick validation supports a later authority change.
+
+---
+
+## D-133 current baseline authority — FVG-origin OB + same-entry multi-Root scenario — 2026-08-18
+
+Status: `CURRENT V1 AUTHORITY / IMPLEMENTATION BUILD 1.70 PREPARED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING`
+
+### FVG-origin OB is baseline
+
+`FVG_ORIGIN_OB` is no longer an experiment toggle.
+
+Current Root OB recognizers are always:
+
+```text
+LAST_OPPOSITE_OB
+FVG_ORIGIN_OB
+```
+
+For `FVG_ORIGIN_OB`, Candle1 of a direction-compatible, clock-contiguous three-candle FVG inside the same causal directional leg may be an OB Root candidate. It must still satisfy all ordinary Root causal/session/map/lifecycle rules. The recognizer does not turn an arbitrary HTF FVG itself into source authority.
+
+If the same physical candle is recognized by both definitions:
+
+```text
+one Root object
++ merged recognition reasons
+```
+
+No score or recognizer priority is introduced.
+
+### Same Entry means one scenario, not competing Roots
+
+At the execution epoch, Root branches are contributor histories of one scenario when all three are equal:
+
+```text
+direction
+selected_fvg_id
+Entry tick
+```
+
+Root ID, Root timeframe, Root geometry, candidate SL, or candidate TP are **not** scenario-separation keys after the same execution FVG/Entry has been reached.
+
+```text
+N Roots
+→ same FVG / Entry
+→ one scenario
+→ N frozen contributor Roots
+```
+
+The implementation-master row is ledger-only and has no strategic preference.
+
+### Merged SL
+
+Each contributor first computes the candidate stop implied by the currently selected SL protocol.
+
+For one merged scenario, use the **outermost contributor invalidation**:
+
+```text
+LONG  → lowest normalized contributor SL
+SHORT → highest normalized contributor SL
+```
+
+Therefore under `V1_SL_ROOT_OB_DISTAL_20`, the stop is outside the deepest contributing Root invalidation. One shallower Root can fail without declaring the entire merged scenario invalid while another contributor still supports it.
+
+For `V1_SL_FVG_DISTAL_20`, same FVG/Entry contributors normally produce the same SL. For `V1_SL_SWEEP_EXTREME`, the same outermost-contributor rule applies.
+
+No averaging, nearest Root, narrowest Root, RR optimization, or Root scoring is allowed.
+
+### Merged objective
+
+TP is selected **after** the merged SL is fixed.
+
+To avoid arbitrarily borrowing one Root's target or creating hindsight candidates, a merged scenario may use only an objective **price tick that was already frozen in every contributing Root plan**.
+
+```text
+intersection of contributor pre-frozen objective prices
+→ direction-ahead
+→ still live
+→ nearest price with reward_ticks >= risk_ticks
+→ Final TP
+```
+
+No union of post-hoc targets is allowed. If there is no common R-eligible objective:
+
+```text
+NO_TRADE
+reason = NO_COMMON_R_ELIGIBLE_OBJECTIVE
+```
+
+### Pending survival
+
+Contributor set is frozen at merge. No later Root may attach.
+
+Before fill:
+
+```text
+final objective remains undelivered
+AND
+at least one frozen contributor retains:
+    ACTIVE Root
+    + its frozen direction authority
+```
+
+If all contributors fail:
+
+```text
+CANCELED_ALL_CONTRIBUTORS_INVALID
+```
+
+After fill, frozen server SL/TP own the result and secondary contributor ownership is released.
+
+### True ambiguity remains fail-closed
+
+Only different execution opportunities remain ambiguous:
+
+```text
+same epoch
++ different selected FVG or Entry
+→ AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+→ NO_TRADE
+```
+
+Different Root IDs alone are no longer ambiguity.

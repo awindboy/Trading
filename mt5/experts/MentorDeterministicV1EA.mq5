@@ -6,15 +6,15 @@
 //|   AGENTS.md                                                      |
 //|   docs/ea/EA_SPEC.md                                             |
 //|                                                                  |
-//| D132 SL invalidation variants + contributor merge.              |
+//| D133 FVG-origin OB baseline + same-entry Root scenario merge.              |
 //| Root -> Sweep -> CHoCH -> causal fresh widest FVG -> geometry.    |
-//| Entry -> selected SL model -> frozen-objective TP -> one order.   |
-//| Pending: objective + frozen contributor survival authority.      |
+//| Same FVG/Entry -> contributor Roots -> merged SL -> common frozen TP -> one order.   |
+//| Pending: objective + frozen contributor survival authority; tester only.      |
 //| Live trading remains hard-blocked; tester execution only.        |
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - D132 SL variants + contributor merge"
+#property description "Mentor deterministic V1 EA - D133 FVG OB baseline + same-entry Root merge"
 
 enum V1StopLossModel
   {
@@ -28,10 +28,8 @@ input long   InpMagicNumber        = 26081601;
 input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
-input bool   InpEnableFvgOriginObExperiment = false;
 input V1StopLossModel InpStopLossModel = V1_SL_FVG_DISTAL_20;
-input bool   InpEnableContributorMerge = true;
-input string InpEventCsvFile       = "mentor_v1_d132_events.csv";
+input string InpEventCsvFile       = "mentor_v1_d133_events.csv";
 
 // IMPORTANT:
 // This build may submit orders ONLY inside MT5 Strategy Tester. Live trading
@@ -416,6 +414,9 @@ struct V1ScenarioPlan
    int               stop_loss_model;
    double            stop_loss_reference_price;
    double            stop_loss_reference_width;
+   bool              stop_loss_merged_from_contributors;
+   string            stop_loss_contributor_scenario_id;
+   string            stop_loss_contributor_root_id;
    string            final_objective_id;
    string            final_objective_liquidity_id;
    double            final_objective_price;
@@ -423,7 +424,7 @@ struct V1ScenarioPlan
    datetime          final_objective_selected_at;
 
    // D-129/D-130/D-131 execution and lifecycle ledger.
-   // D-132 duplicate-provenance contributor ledger.
+   // D-133 same-entry multi-Root contributor ledger.
    bool              execution_opportunity_merged;
    string            execution_master_scenario_id;
    string            execution_contributor_scenario_ids;
@@ -2134,14 +2135,13 @@ int CollectFvgOriginObBars(const ENUM_TIMEFRAMES tf,
   {
    ArrayResize(origins,0);
 
-   if(!InpEnableFvgOriginObExperiment ||
-      !meaningful_wave.valid ||
+   if(!meaningful_wave.valid ||
       !meaningful_wave.is_wave ||
       direction==0)
       return 0;
 
-   // Experimental second OB recognizer. The existing LAST_OPPOSITE_OB
-   // recognizer remains active independently. Here Candle1 of every
+   // Baseline second OB recognizer. LAST_OPPOSITE_OB and FVG_ORIGIN_OB
+   // are both active independently. Here Candle1 of every
    // direction-compatible three-candle FVG in the causal directional leg is
    // admitted as an additional OB candidate.
    datetime start_time=meaningful_wave.occurred_at;
@@ -2264,7 +2264,7 @@ bool AddRootCandidateFromOrigin(const int tf_index,
                                 const string source_reason)
   {
    // Every recognizer feeds the same causal/session/strategy lifecycle. The
-   // experiment broadens recognition only; it does not bypass existing Root
+   // second recognizer broadens baseline recognition only; it does not bypass existing Root
    // validity rules.
    if(SourcePathHasSessionGap(g_timeframes[tf_index],
                               origin_bar.time,
@@ -2349,7 +2349,7 @@ bool AddRootCandidateFromOrigin(const int tf_index,
    g_sources[n].available_at=available_at;
 
    // LAST_OPPOSITE_OB preserves the frozen swing-origin window. An
-   // experimental FVG-origin Root owns its Candle1 interval as the parent
+   // FVG-origin Root owns its Candle1 interval as the parent
    // refinement window so lower-TF refinement is projected into that OB.
    if(source_reason=="FVG_ORIGIN_OB")
      {
@@ -2440,32 +2440,30 @@ bool AddRootFromStructureEvent(const int tf_index,
          recognized=true;
      }
 
-   // Recognizer B: experimental Candle1-of-FVG OB. Every distinct physical
-   // Candle1 remains an independent candidate. It never replaces or suppresses
-   // the LAST_OPPOSITE_OB candidate.
-   if(InpEnableFvgOriginObExperiment)
-     {
-      MqlRates fvg_origins[];
-      int fvg_count=CollectFvgOriginObBars(g_timeframes[tf_index],
-                                           direction,
-                                           meaningful_wave,
-                                           break_bar,
-                                           fvg_origins);
-      if(fvg_count>0)
-         found_any_recognizer=true;
+   // Recognizer B: Candle1-of-FVG OB is now baseline authority. Every
+   // distinct physical Candle1 remains an independent Root contributor. It
+   // never replaces or suppresses LAST_OPPOSITE_OB; same physical candles
+   // are deduplicated by Root ID and recognition reasons are merged.
+   MqlRates fvg_origins[];
+   int fvg_count=CollectFvgOriginObBars(g_timeframes[tf_index],
+                                        direction,
+                                        meaningful_wave,
+                                        break_bar,
+                                        fvg_origins);
+   if(fvg_count>0)
+      found_any_recognizer=true;
 
-      for(int i=0;i<fvg_count;i++)
-        {
-         if(AddRootCandidateFromOrigin(tf_index,
-                                       event_type,
-                                       direction,
-                                       meaningful_wave,
-                                       break_bar,
-                                       available_at,
-                                       fvg_origins[i],
-                                       "FVG_ORIGIN_OB"))
-            recognized=true;
-        }
+   for(int i=0;i<fvg_count;i++)
+     {
+      if(AddRootCandidateFromOrigin(tf_index,
+                                    event_type,
+                                    direction,
+                                    meaningful_wave,
+                                    break_bar,
+                                    available_at,
+                                    fvg_origins[i],
+                                    "FVG_ORIGIN_OB"))
+         recognized=true;
      }
 
    if(!found_any_recognizer)
@@ -2474,9 +2472,7 @@ bool AddRootFromStructureEvent(const int tf_index,
                       available_at,
                       event_type,
                       direction,
-                      InpEnableFvgOriginObExperiment ?
-                         "NO_ELIGIBLE_OB_RECOGNIZER_MATCH" :
-                         "NO_OPPOSITE_CANDLE_IN_ORIGIN_WINDOW",
+                      "NO_ELIGIBLE_OB_RECOGNIZER_MATCH",
                       meaningful_wave.id);
      }
 
@@ -4369,6 +4365,9 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
    g_scenarios[n].stop_loss_model=(int)InpStopLossModel;
    g_scenarios[n].stop_loss_reference_price=0.0;
    g_scenarios[n].stop_loss_reference_width=0.0;
+   g_scenarios[n].stop_loss_merged_from_contributors=false;
+   g_scenarios[n].stop_loss_contributor_scenario_id=scenario_id;
+   g_scenarios[n].stop_loss_contributor_root_id=draft.root_zone_id;
    g_scenarios[n].final_objective_id="";
    g_scenarios[n].final_objective_liquidity_id="";
    g_scenarios[n].final_objective_price=0.0;
@@ -5173,7 +5172,7 @@ void PruneD128AM1FvgDetections()
 
 
 //+------------------------------------------------------------------+
-//| D-128B..D-131 integrated strategy geometry + MT5 execution       |
+//| D-128B..D-133 strategy geometry + contributor execution          |
 //+------------------------------------------------------------------+
 double NormalizePriceFloorToTick(const double price)
   {
@@ -5343,8 +5342,8 @@ bool SelectFinalObjectiveForScenario(const int scenario_index,
    return false;
   }
 
-bool BuildExecutionGeometryForScenario(const int scenario_index,
-                                       const datetime available_at)
+bool BuildEntryAndStopCandidateForScenario(const int scenario_index,
+                                            const datetime available_at)
   {
    if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
       return false;
@@ -5434,15 +5433,28 @@ bool BuildExecutionGeometryForScenario(const int scenario_index,
    g_scenarios[scenario_index].stop_loss_model=(int)InpStopLossModel;
    g_scenarios[scenario_index].stop_loss_reference_price=sl_reference_price;
    g_scenarios[scenario_index].stop_loss_reference_width=sl_reference_width;
+   g_scenarios[scenario_index].stop_loss_merged_from_contributors=false;
+   g_scenarios[scenario_index].stop_loss_contributor_scenario_id=g_scenarios[scenario_index].id;
+   g_scenarios[scenario_index].stop_loss_contributor_root_id=g_scenarios[scenario_index].root_zone_id;
 
-   string objective_failure="";
-   if(!SelectFinalObjectiveForScenario(scenario_index,available_at,objective_failure))
-     {
-      if(objective_failure=="NO_R_ELIGIBLE_OBJECTIVE")
-         g_no_r_eligible_objective++;
-      MarkExecutionNoTrade(scenario_index,available_at,objective_failure,V1_EXEC_NONE);
-      return false;
-     }
+   LogLine("EXECUTION_GEOMETRY_CANDIDATE_READY","M1",available_at,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s direction=%s selected_fvg_id=%s entry=%.10f sl_model=%s individual_raw_sl=%.10f individual_normalized_sl=%.10f root_zone_id=%s stage=PRE_MERGE_NO_TP",
+                        g_scenarios[scenario_index].id,
+                        DirectionName(g_scenarios[scenario_index].direction),
+                        g_scenarios[scenario_index].selected_fvg_id,
+                        g_scenarios[scenario_index].strategy_entry_price,
+                        StopLossModelName(g_scenarios[scenario_index].stop_loss_model),
+                        g_scenarios[scenario_index].raw_strategy_sl,
+                        g_scenarios[scenario_index].normalized_sl,
+                        g_scenarios[scenario_index].root_zone_id));
+   return true;
+  }
+
+void FinalizeExecutionGeometryReady(const int scenario_index,
+                                    const datetime available_at)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+      return;
 
    g_scenarios[scenario_index].strategy_signal_valid=true;
    g_scenarios[scenario_index].execution_status=V1_EXEC_STRATEGY_READY;
@@ -5450,7 +5462,7 @@ bool BuildExecutionGeometryForScenario(const int scenario_index,
    g_execution_geometry_ready++;
 
    LogLine("EXECUTION_GEOMETRY_READY","M1",available_at,g_scenarios[scenario_index].id,
-           StringFormat("scenario_id=%s direction=%s selected_fvg_id=%s fvg_bottom=%.10f fvg_top=%.10f fvg_width=%.10f entry=%.10f sl_model=%s sl_reference_price=%.10f sl_reference_width=%.10f raw_sl=%.10f normalized_sl=%.10f sl_normalization=%s final_objective_id=%s tp=%.10f planned_r=%.8f sizing=MINIMUM_VOLUME_PARITY strategy_signal_valid=true",
+           StringFormat("scenario_id=%s direction=%s selected_fvg_id=%s fvg_bottom=%.10f fvg_top=%.10f fvg_width=%.10f entry=%.10f sl_model=%s sl_reference_price=%.10f sl_reference_width=%.10f raw_sl=%.10f normalized_sl=%.10f sl_normalization=%s merged_from_contributors=%s sl_contributor_scenario_id=%s sl_contributor_root_id=%s contributor_count=%d final_objective_id=%s tp=%.10f planned_r=%.8f sizing=MINIMUM_VOLUME_PARITY strategy_signal_valid=true",
                         g_scenarios[scenario_index].id,
                         DirectionName(g_scenarios[scenario_index].direction),
                         g_scenarios[scenario_index].selected_fvg_id,
@@ -5464,10 +5476,13 @@ bool BuildExecutionGeometryForScenario(const int scenario_index,
                         g_scenarios[scenario_index].raw_strategy_sl,
                         g_scenarios[scenario_index].normalized_sl,
                         g_scenarios[scenario_index].direction>0 ? "FLOOR_OUTWARD" : "CEIL_OUTWARD",
+                        g_scenarios[scenario_index].stop_loss_merged_from_contributors ? "true" : "false",
+                        g_scenarios[scenario_index].stop_loss_contributor_scenario_id,
+                        g_scenarios[scenario_index].stop_loss_contributor_root_id,
+                        g_scenarios[scenario_index].execution_contributor_count,
                         g_scenarios[scenario_index].final_objective_id,
                         g_scenarios[scenario_index].final_objective_price,
                         g_scenarios[scenario_index].final_objective_planned_r));
-   return true;
   }
 
 bool FindManagedPendingTicket(ulong &ticket)
@@ -5801,7 +5816,7 @@ bool SubmitPendingForScenario(const int scenario_index,const datetime available_
    return true;
   }
 
-long D132PriceTickIndex(const double price)
+long D133PriceTickIndex(const double price)
   {
    double tick=LiquidityTickSize();
    if(tick<=0.0)
@@ -5809,7 +5824,7 @@ long D132PriceTickIndex(const double price)
    return (long)MathRound(price/tick);
   }
 
-bool D132SameExecutionIdentity(const int a_index,const int b_index)
+bool D133SameEntryScenarioIdentity(const int a_index,const int b_index)
   {
    if(a_index<0 || b_index<0 ||
       a_index>=ArraySize(g_scenarios) ||
@@ -5819,17 +5834,11 @@ bool D132SameExecutionIdentity(const int a_index,const int b_index)
    return (
       g_scenarios[a_index].direction==g_scenarios[b_index].direction &&
       g_scenarios[a_index].selected_fvg_id==g_scenarios[b_index].selected_fvg_id &&
-      D132PriceTickIndex(g_scenarios[a_index].strategy_entry_price)==
-         D132PriceTickIndex(g_scenarios[b_index].strategy_entry_price) &&
-      D132PriceTickIndex(g_scenarios[a_index].normalized_sl)==
-         D132PriceTickIndex(g_scenarios[b_index].normalized_sl) &&
-      g_scenarios[a_index].final_objective_liquidity_id==
-         g_scenarios[b_index].final_objective_liquidity_id &&
-      D132PriceTickIndex(g_scenarios[a_index].final_objective_price)==
-         D132PriceTickIndex(g_scenarios[b_index].final_objective_price));
+      D133PriceTickIndex(g_scenarios[a_index].strategy_entry_price)==
+         D133PriceTickIndex(g_scenarios[b_index].strategy_entry_price));
   }
 
-bool D132AllCandidatesSameExecutionIdentity()
+bool D133AllCandidatesSameEntryScenario()
   {
    int count=ArraySize(g_execution_candidates);
    if(count<=1)
@@ -5837,13 +5846,226 @@ bool D132AllCandidatesSameExecutionIdentity()
 
    int master=g_execution_candidates[0].scenario_index;
    for(int i=1;i<count;i++)
-      if(!D132SameExecutionIdentity(master,g_execution_candidates[i].scenario_index))
+      if(!D133SameEntryScenarioIdentity(master,g_execution_candidates[i].scenario_index))
          return false;
 
    return true;
   }
 
-bool D132DelimitedListContains(const string list,const string value)
+bool D133CurrentGroupContainsScenarioId(const string scenario_id)
+  {
+   for(int i=0;i<ArraySize(g_execution_candidates);i++)
+      if(g_execution_candidates[i].valid &&
+         g_execution_candidates[i].scenario_id==scenario_id)
+         return true;
+   return false;
+  }
+
+bool D133ScenarioHasLiveObjectiveAtPriceTick(const string scenario_id,
+                                             const long price_tick,
+                                             int &representative_index)
+  {
+   representative_index=-1;
+   string representative_liquidity_id="";
+
+   for(int i=0;i<ArraySize(g_objective_candidates);i++)
+     {
+      if(!g_objective_candidates[i].valid ||
+         g_objective_candidates[i].scenario_id!=scenario_id ||
+         D133PriceTickIndex(g_objective_candidates[i].price)!=price_tick ||
+         ObjectiveCandidateConsumedNow(g_objective_candidates[i]))
+         continue;
+
+      if(representative_index<0 ||
+         StringCompare(g_objective_candidates[i].liquidity_id,
+                       representative_liquidity_id,true)<0)
+        {
+         representative_index=i;
+         representative_liquidity_id=g_objective_candidates[i].liquidity_id;
+        }
+     }
+
+   return (representative_index>=0);
+  }
+
+bool D133PriceIsCommonToAllContributors(const long price_tick)
+  {
+   for(int i=0;i<ArraySize(g_execution_candidates);i++)
+     {
+      int idx=-1;
+      if(!D133ScenarioHasLiveObjectiveAtPriceTick(
+            g_execution_candidates[i].scenario_id,
+            price_tick,
+            idx))
+         return false;
+     }
+   return true;
+  }
+
+bool D133SelectCommonFinalObjectiveForGroup(const int master_index,
+                                            const datetime available_at,
+                                            string &failure_reason)
+  {
+   failure_reason="";
+   if(master_index<0 || master_index>=ArraySize(g_scenarios))
+     {
+      failure_reason="SCENARIO_INDEX_INVALID";
+      return false;
+     }
+
+   double entry=g_scenarios[master_index].strategy_entry_price;
+   double sl=g_scenarios[master_index].normalized_sl;
+   double tick_size=LiquidityTickSize();
+   if(tick_size<=0.0)
+     {
+      failure_reason="INVALID_SYMBOL_TICK_SIZE";
+      return false;
+     }
+
+   double risk=(g_scenarios[master_index].direction>0 ? entry-sl : sl-entry);
+   long risk_ticks=(long)MathRound(risk/tick_size);
+   if(risk<=0.0 || risk_ticks<=0)
+     {
+      failure_reason="INVALID_ENTRY_SL_RISK";
+      return false;
+     }
+
+   bool found=false;
+   long best_reward_ticks=0;
+   long best_price_tick=0;
+
+   // The merged scenario may use only an objective PRICE that was frozen in
+   // every contributing Root plan. This is the intersection of precommitted
+   // objective families, not a union discovered after Entry.
+   for(int i=0;i<ArraySize(g_objective_candidates);i++)
+     {
+      if(!g_objective_candidates[i].valid ||
+         g_objective_candidates[i].scenario_id!=g_scenarios[master_index].id)
+         continue;
+
+      long price_tick=D133PriceTickIndex(g_objective_candidates[i].price);
+      if(!D133PriceIsCommonToAllContributors(price_tick))
+         continue;
+
+      double price=g_objective_candidates[i].price;
+      double reward=(g_scenarios[master_index].direction>0 ? price-entry : entry-price);
+      long reward_ticks=(long)MathRound(reward/tick_size);
+      if(reward<=0.0 || reward_ticks<=0 || reward_ticks<risk_ticks)
+         continue;
+
+      if(!found || reward_ticks<best_reward_ticks ||
+         (reward_ticks==best_reward_ticks && price_tick<best_price_tick))
+        {
+         found=true;
+         best_reward_ticks=reward_ticks;
+         best_price_tick=price_tick;
+        }
+     }
+
+   if(!found)
+     {
+      failure_reason="NO_COMMON_R_ELIGIBLE_OBJECTIVE";
+      return false;
+     }
+
+   int representative=-1;
+   string representative_id="";
+   for(int i=0;i<ArraySize(g_objective_candidates);i++)
+     {
+      if(!g_objective_candidates[i].valid ||
+         !D133CurrentGroupContainsScenarioId(g_objective_candidates[i].scenario_id) ||
+         D133PriceTickIndex(g_objective_candidates[i].price)!=best_price_tick ||
+         ObjectiveCandidateConsumedNow(g_objective_candidates[i]))
+         continue;
+
+      if(representative<0 ||
+         StringCompare(g_objective_candidates[i].liquidity_id,representative_id,true)<0)
+        {
+         representative=i;
+         representative_id=g_objective_candidates[i].liquidity_id;
+        }
+     }
+
+   if(representative<0)
+     {
+      failure_reason="COMMON_OBJECTIVE_REPRESENTATIVE_MISSING";
+      return false;
+     }
+
+   V1ObjectiveCandidate candidate=g_objective_candidates[representative];
+   double reward=(g_scenarios[master_index].direction>0 ? candidate.price-entry : entry-candidate.price);
+   double planned_r=(double)best_reward_ticks/(double)risk_ticks;
+
+   g_scenarios[master_index].final_objective_id=candidate.id;
+   g_scenarios[master_index].final_objective_liquidity_id=candidate.liquidity_id;
+   g_scenarios[master_index].final_objective_price=candidate.price;
+   g_scenarios[master_index].final_objective_planned_r=planned_r;
+   g_scenarios[master_index].final_objective_selected_at=available_at;
+
+   LogLine("FINAL_OBJECTIVE_SELECTED",TfName(candidate.tf),available_at,candidate.id,
+           StringFormat("scenario_id=%s liquidity_id=%s selection=MERGED_COMMON_FROZEN_PRICE_NEAREST_R_GE_1 contributor_count=%d entry=%.10f sl=%.10f tp=%.10f risk=%.10f reward=%.10f risk_ticks=%I64d reward_ticks=%I64d planned_r=%.8f common_to_all_contributors=true objective_union=false no_root_preference=true",
+                        g_scenarios[master_index].id,
+                        candidate.liquidity_id,
+                        ArraySize(g_execution_candidates),
+                        entry,sl,candidate.price,risk,reward,risk_ticks,best_reward_ticks,planned_r));
+   return true;
+  }
+
+bool D133ApplyMergedStopToMaster(const int master_index,
+                                 const datetime available_at)
+  {
+   if(master_index<0 || master_index>=ArraySize(g_scenarios) ||
+      ArraySize(g_execution_candidates)<=1)
+      return false;
+
+   int chosen_index=master_index;
+   double chosen_sl=g_scenarios[master_index].normalized_sl;
+   string sl_list="";
+
+   for(int i=0;i<ArraySize(g_execution_candidates);i++)
+     {
+      int idx=g_execution_candidates[i].scenario_index;
+      if(idx<0 || idx>=ArraySize(g_scenarios))
+         return false;
+
+      if(sl_list!="")
+         sl_list+="|";
+      sl_list+=StringFormat("%s@%s@%.10f",
+                            g_scenarios[idx].id,
+                            g_scenarios[idx].root_zone_id,
+                            g_scenarios[idx].normalized_sl);
+
+      if((g_scenarios[master_index].direction>0 && g_scenarios[idx].normalized_sl<chosen_sl) ||
+         (g_scenarios[master_index].direction<0 && g_scenarios[idx].normalized_sl>chosen_sl))
+        {
+         chosen_index=idx;
+         chosen_sl=g_scenarios[idx].normalized_sl;
+        }
+     }
+
+   g_scenarios[master_index].raw_strategy_sl=g_scenarios[chosen_index].raw_strategy_sl;
+   g_scenarios[master_index].normalized_sl=g_scenarios[chosen_index].normalized_sl;
+   g_scenarios[master_index].stop_loss_model=g_scenarios[chosen_index].stop_loss_model;
+   g_scenarios[master_index].stop_loss_reference_price=g_scenarios[chosen_index].stop_loss_reference_price;
+   g_scenarios[master_index].stop_loss_reference_width=g_scenarios[chosen_index].stop_loss_reference_width;
+   g_scenarios[master_index].stop_loss_merged_from_contributors=true;
+   g_scenarios[master_index].stop_loss_contributor_scenario_id=g_scenarios[chosen_index].id;
+   g_scenarios[master_index].stop_loss_contributor_root_id=g_scenarios[chosen_index].root_zone_id;
+
+   LogLine("MERGED_STOP_SELECTED","M1",available_at,g_scenarios[master_index].id,
+           StringFormat("master_scenario_id=%s direction=%s sl_model=%s contributor_count=%d selection=OUTERMOST_CONTRIBUTOR_INVALIDATION merged_sl=%.10f sl_contributor_scenario_id=%s sl_contributor_root_id=%s contributor_sl_list=%s",
+                        g_scenarios[master_index].id,
+                        DirectionName(g_scenarios[master_index].direction),
+                        StopLossModelName(g_scenarios[master_index].stop_loss_model),
+                        ArraySize(g_execution_candidates),
+                        g_scenarios[master_index].normalized_sl,
+                        g_scenarios[master_index].stop_loss_contributor_scenario_id,
+                        g_scenarios[master_index].stop_loss_contributor_root_id,
+                        sl_list));
+   return true;
+  }
+
+bool D133DelimitedListContains(const string list,const string value)
   {
    if(list=="" || value=="")
       return false;
@@ -5851,7 +6073,7 @@ bool D132DelimitedListContains(const string list,const string value)
    return (StringFind("|"+list+"|","|"+value+"|")>=0);
   }
 
-bool D132ContributorAuthorityAlive(const int scenario_index)
+bool D133ContributorAuthorityAlive(const int scenario_index)
   {
    if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
       return false;
@@ -5889,7 +6111,7 @@ bool D132ContributorAuthorityAlive(const int scenario_index)
    return false;
   }
 
-int D132CountAliveContributors(const int master_index,string &alive_root_ids)
+int D133CountAliveContributors(const int master_index,string &alive_root_ids)
   {
    alive_root_ids="";
    if(master_index<0 || master_index>=ArraySize(g_scenarios))
@@ -5900,12 +6122,12 @@ int D132CountAliveContributors(const int master_index,string &alive_root_ids)
    for(int i=0;i<ArraySize(g_scenarios);i++)
      {
       if(!g_scenarios[i].valid ||
-         !D132DelimitedListContains(
+         !D133DelimitedListContains(
             g_scenarios[master_index].execution_contributor_scenario_ids,
             g_scenarios[i].id))
          continue;
 
-      if(!D132ContributorAuthorityAlive(i))
+      if(!D133ContributorAuthorityAlive(i))
          continue;
 
       if(alive_root_ids!="")
@@ -5917,7 +6139,7 @@ int D132CountAliveContributors(const int master_index,string &alive_root_ids)
    return alive;
   }
 
-void D132TerminateMergedSecondaries(const int master_index,
+void D133TerminateMergedSecondaries(const int master_index,
                                     const datetime available_at,
                                     const string reason)
   {
@@ -5949,7 +6171,7 @@ void D132TerminateMergedSecondaries(const int master_index,
      }
   }
 
-void D132FreezeContributorMerge(const datetime available_at)
+void D133FreezeSameEntryContributorMerge(const datetime available_at)
   {
    int count=ArraySize(g_execution_candidates);
    if(count<=1)
@@ -5991,15 +6213,14 @@ void D132FreezeContributorMerge(const datetime available_at)
       g_scenarios[idx].strategy_state=V1_STRATEGY_MERGED_CONTRIBUTOR;
 
       LogLine("EXECUTION_CONTRIBUTOR_MERGED","M1",available_at,g_scenarios[idx].id,
-              StringFormat("master_scenario_id=%s contributor_scenario_id=%s contributor_root_id=%s selected_fvg_id=%s entry=%.10f sl=%.10f final_objective_liquidity_id=%s tp=%.10f",
+              StringFormat("master_scenario_id=%s contributor_scenario_id=%s contributor_root_id=%s selected_fvg_id=%s entry=%.10f individual_sl=%.10f merged_sl=%.10f merge_basis=SAME_DIRECTION_SELECTED_FVG_ENTRY_TICK",
                            master_id,
                            g_scenarios[idx].id,
                            g_scenarios[idx].root_zone_id,
                            g_scenarios[idx].selected_fvg_id,
                            g_scenarios[idx].strategy_entry_price,
                            g_scenarios[idx].normalized_sl,
-                           g_scenarios[idx].final_objective_liquidity_id,
-                           g_scenarios[idx].final_objective_price));
+                           g_scenarios[master_index].normalized_sl));
 
       g_execution_contributors_merged++;
      }
@@ -6007,7 +6228,7 @@ void D132FreezeContributorMerge(const datetime available_at)
    g_execution_opportunities_merged++;
 
    LogLine("EXECUTION_OPPORTUNITY_MERGED","M1",available_at,master_id,
-           StringFormat("master_scenario_id=%s contributor_count=%d contributor_scenario_ids=%s contributor_root_ids=%s direction=%s selected_fvg_id=%s entry=%.10f sl_model=%s sl=%.10f final_objective_liquidity_id=%s tp=%.10f arbitrary_root_selection=false master_is_ledger_holder_only=true",
+           StringFormat("master_scenario_id=%s contributor_count=%d contributor_scenario_ids=%s contributor_root_ids=%s direction=%s selected_fvg_id=%s entry=%.10f sl_model=%s merged_sl=%.10f merge_basis=SAME_DIRECTION_SELECTED_FVG_ENTRY_TICK sl_equality_required=false tp_equality_required=false arbitrary_root_selection=false master_is_ledger_holder_only=true",
                         master_id,
                         count,
                         scenario_ids,
@@ -6016,22 +6237,54 @@ void D132FreezeContributorMerge(const datetime available_at)
                         g_scenarios[master_index].selected_fvg_id,
                         g_scenarios[master_index].strategy_entry_price,
                         StopLossModelName(g_scenarios[master_index].stop_loss_model),
-                        g_scenarios[master_index].normalized_sl,
-                        g_scenarios[master_index].final_objective_liquidity_id,
-                        g_scenarios[master_index].final_objective_price));
+                        g_scenarios[master_index].normalized_sl));
+  }
+
+void D133TerminateMergedSecondariesNoTrade(const int master_index,
+                                           const datetime available_at,
+                                           const string reason)
+  {
+   if(master_index<0 || master_index>=ArraySize(g_scenarios))
+      return;
+
+   string master_id=g_scenarios[master_index].id;
+   for(int i=0;i<ArraySize(g_scenarios);i++)
+     {
+      if(i==master_index ||
+         !g_scenarios[i].valid ||
+         g_scenarios[i].execution_master_scenario_id!=master_id ||
+         g_scenarios[i].strategy_state!=V1_STRATEGY_MERGED_CONTRIBUTOR)
+         continue;
+
+      g_scenarios[i].strategy_state=V1_STRATEGY_NO_TRADE;
+      g_scenarios[i].no_trade_at=available_at;
+      g_scenarios[i].no_trade_reason=reason;
+      g_scenarios[i].terminal_reason=reason;
+      ReleaseRootScenarioOwner(g_scenarios[i].root_zone_id,g_scenarios[i].id);
+
+      LogLine("EXECUTION_CONTRIBUTOR_TERMINATED","M1",available_at,g_scenarios[i].id,
+              StringFormat("master_scenario_id=%s contributor_scenario_id=%s contributor_root_id=%s reason=%s terminal_state=NO_TRADE scenario_level_no_trade_counted_on_master_only=true",
+                           master_id,
+                           g_scenarios[i].id,
+                           g_scenarios[i].root_zone_id,
+                           reason));
+     }
   }
 
 void ProcessIntegratedExecutionAuthorizationEpoch(const datetime available_at)
   {
    ArrayResize(g_execution_candidates,0);
 
+   // Stage 1: derive the common Entry and each Root branch's candidate stop.
+   // Final TP is intentionally deferred until same-entry Root contributors are
+   // collapsed into one scenario-level opportunity.
    for(int i=0;i<ArraySize(g_scenarios);i++)
      {
       if(!g_scenarios[i].valid ||
          g_scenarios[i].strategy_state!=V1_STRATEGY_WAITING_EXECUTION_GEOMETRY ||
          g_scenarios[i].fvg_frozen_at!=available_at)
          continue;
-      if(!BuildExecutionGeometryForScenario(i,available_at))
+      if(!BuildEntryAndStopCandidateForScenario(i,available_at))
          continue;
 
       int n=ArraySize(g_execution_candidates);
@@ -6048,53 +6301,15 @@ void ProcessIntegratedExecutionAuthorizationEpoch(const datetime available_at)
    if(count<=0)
       return;
 
-   if(HasManagedAccountExposure() || g_managed_scenario_id!="")
+   int master_index=g_execution_candidates[0].scenario_index;
+   bool merged=(count>1);
+
+   // Different FVG/Entry opportunities that complete in the same epoch remain
+   // a true one-exposure conflict. Same FVG/Entry Roots are not competing
+   // trades; they are contributors to one scenario.
+   if(count>1 && !D133AllCandidatesSameEntryScenario())
      {
-      for(int i=0;i<count;i++)
-        {
-         g_exposure_blocked++;
-         MarkExecutionNoTrade(g_execution_candidates[i].scenario_index,
-                              available_at,
-                              "EXPOSURE_ALREADY_ACCEPTED",
-                              V1_EXEC_NONE);
-        }
-      LogLine("EXECUTION_AUTHORIZATION_BLOCKED","M1",available_at,"",
-              StringFormat("reason=EXPOSURE_ALREADY_ACCEPTED candidate_count=%d delayed_submission=false",count));
-      return;
-     }
-
-   // D-132: duplicate provenance may merge only when the entire
-   // executable identity is exactly equal. Otherwise the D-129 fail-closed
-   // behavior remains.
-   if(count>1)
-     {
-      bool same_execution=D132AllCandidatesSameExecutionIdentity();
-
-      if(InpEnableContributorMerge && same_execution)
-        {
-         D132FreezeContributorMerge(available_at);
-         int master_index=g_execution_candidates[0].scenario_index;
-         bool submitted=SubmitPendingForScenario(master_index,available_at);
-
-         if(!submitted)
-           {
-            string terminal_reason=g_scenarios[master_index].terminal_reason;
-            if(terminal_reason=="")
-               terminal_reason=g_scenarios[master_index].cancel_reason;
-            if(terminal_reason=="")
-               terminal_reason="MERGED_OPPORTUNITY_NOT_SUBMITTED";
-
-            D132TerminateMergedSecondaries(
-               master_index,
-               available_at,
-               terminal_reason);
-           }
-
-         return;
-        }
-
       g_simultaneous_authorization_ambiguous+=count;
-
       for(int i=0;i<count;i++)
          MarkExecutionNoTrade(g_execution_candidates[i].scenario_index,
                               available_at,
@@ -6102,14 +6317,74 @@ void ProcessIntegratedExecutionAuthorizationEpoch(const datetime available_at)
                               V1_EXEC_NONE);
 
       LogLine("AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION","M1",available_at,"",
-              StringFormat("candidate_count=%d contributor_merge_enabled=%s same_execution_identity=%s arbitrary_root_selection=false all_candidates_no_trade=true",
-                           count,
-                           InpEnableContributorMerge ? "true" : "false",
-                           same_execution ? "true" : "false"));
+              StringFormat("candidate_count=%d reason=DIFFERENT_FVG_OR_ENTRY same_entry_root_merge=true arbitrary_root_selection=false all_candidates_no_trade=true",count));
       return;
      }
 
-   SubmitPendingForScenario(g_execution_candidates[0].scenario_index,available_at);
+   if(merged)
+     {
+      if(!D133ApplyMergedStopToMaster(master_index,available_at))
+        {
+         for(int i=0;i<count;i++)
+            MarkExecutionNoTrade(g_execution_candidates[i].scenario_index,
+                                 available_at,
+                                 "MERGED_STOP_SELECTION_FAILED",
+                                 V1_EXEC_NONE);
+         return;
+        }
+
+      D133FreezeSameEntryContributorMerge(available_at);
+
+      string objective_failure="";
+      if(!D133SelectCommonFinalObjectiveForGroup(master_index,available_at,objective_failure))
+        {
+         if(objective_failure=="NO_COMMON_R_ELIGIBLE_OBJECTIVE")
+            g_no_r_eligible_objective++;
+         MarkExecutionNoTrade(master_index,available_at,objective_failure,V1_EXEC_NONE);
+         D133TerminateMergedSecondariesNoTrade(master_index,available_at,objective_failure);
+         return;
+        }
+     }
+   else
+     {
+      string objective_failure="";
+      if(!SelectFinalObjectiveForScenario(master_index,available_at,objective_failure))
+        {
+         if(objective_failure=="NO_R_ELIGIBLE_OBJECTIVE")
+            g_no_r_eligible_objective++;
+         MarkExecutionNoTrade(master_index,available_at,objective_failure,V1_EXEC_NONE);
+         return;
+        }
+     }
+
+   FinalizeExecutionGeometryReady(master_index,available_at);
+
+   if(HasManagedAccountExposure() || g_managed_scenario_id!="")
+     {
+      g_exposure_blocked++;
+      MarkExecutionNoTrade(master_index,
+                           available_at,
+                           "EXPOSURE_ALREADY_ACCEPTED",
+                           V1_EXEC_NONE);
+      if(merged)
+         D133TerminateMergedSecondariesNoTrade(master_index,available_at,"EXPOSURE_ALREADY_ACCEPTED");
+
+      LogLine("EXECUTION_AUTHORIZATION_BLOCKED","M1",available_at,"",
+              StringFormat("reason=EXPOSURE_ALREADY_ACCEPTED execution_opportunity_count=1 contributor_count=%d delayed_submission=false",count));
+      return;
+     }
+
+   bool submitted=SubmitPendingForScenario(master_index,available_at);
+   if(!submitted && merged)
+     {
+      string terminal_reason=g_scenarios[master_index].terminal_reason;
+      if(terminal_reason=="")
+         terminal_reason=g_scenarios[master_index].cancel_reason;
+      if(terminal_reason=="")
+         terminal_reason="MERGED_OPPORTUNITY_NOT_SUBMITTED";
+
+      D133TerminateMergedSecondariesNoTrade(master_index,available_at,terminal_reason);
+     }
   }
 
 bool FindEntryDealForOrder(const ulong order_ticket,
@@ -6211,10 +6486,10 @@ void MarkScenarioFilled(const int scenario_index,
    g_managed_position_id=position_id;
    g_positions_filled++;
 
-   // D-132: once the shared order fills, the implementation master owns the
+   // D-133: once the shared order fills, the implementation master owns the
    // frozen server SL/TP lifecycle. Release every secondary contributor Root
    // so MERGED_CONTRIBUTOR state cannot block future independent scenarios.
-   D132TerminateMergedSecondaries(
+   D133TerminateMergedSecondaries(
       scenario_index,
       g_scenarios[scenario_index].fill_at,
       "MASTER_FILLED_FROZEN_SL_TP");
@@ -6455,7 +6730,7 @@ void ManageIntegratedExecution(const MqlTick &tick)
       return;
 
    if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_FILLED)
-      return; // after fill, frozen server SL/TP decide the experiment.
+      return; // after fill, frozen server SL/TP decide the position outcome.
 
    if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_PENDING &&
       (FinalObjectiveConsumed(g_scenarios[scenario_index]) || ObjectiveDeliveredAtTick(g_scenarios[scenario_index],tick)))
@@ -6466,7 +6741,7 @@ void ManageIntegratedExecution(const MqlTick &tick)
       g_scenarios[scenario_index].strategy_cancel_at=(datetime)tick.time;
       g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_OBJECTIVE_DELIVERED";
       ReleaseRootScenarioOwner(g_scenarios[scenario_index].root_zone_id,g_scenarios[scenario_index].id);
-      D132TerminateMergedSecondaries(
+      D133TerminateMergedSecondaries(
          scenario_index,
          (datetime)tick.time,
          "CANCELED_OBJECTIVE_DELIVERED");
@@ -6477,7 +6752,7 @@ void ManageIntegratedExecution(const MqlTick &tick)
            g_scenarios[scenario_index].execution_contributor_count>1)
      {
       string alive_root_ids="";
-      int alive=D132CountAliveContributors(scenario_index,alive_root_ids);
+      int alive=D133CountAliveContributors(scenario_index,alive_root_ids);
 
       if(alive<=0)
         {
@@ -6488,7 +6763,7 @@ void ManageIntegratedExecution(const MqlTick &tick)
          g_scenarios[scenario_index].strategy_cancel_reason="CANCELED_ALL_CONTRIBUTORS_INVALID";
          ReleaseRootScenarioOwner(g_scenarios[scenario_index].root_zone_id,g_scenarios[scenario_index].id);
 
-         D132TerminateMergedSecondaries(
+         D133TerminateMergedSecondaries(
             scenario_index,
             (datetime)tick.time,
             "CANCELED_ALL_CONTRIBUTORS_INVALID");
@@ -8227,7 +8502,7 @@ void ProcessPostContactRootContacts(const MqlRates &bar,const datetime available
       g_root_contacts_observed++;
       g_root_contexts_ready++;
       LogLine("ROOT_CONTEXT_READY","M1",available_at,root.id,
-              StringFormat("strategy_source_id=%s strategy_source_kind=ROOT optional_child_observation=ENABLED child_strategy_authority=false entry_geometry=M1_FVG sl_geometry=D132_INPUT_SELECTED root_contact_at=%s strategy_authority=false phase4b_scenario_qualified=%s map_objective_qualification=%s scenario_id=%s linear_trigger_pipeline=true",
+              StringFormat("strategy_source_id=%s strategy_source_kind=ROOT optional_child_observation=ENABLED child_strategy_authority=false entry_geometry=M1_FVG sl_geometry=D133_INPUT_SELECTED root_contact_at=%s strategy_authority=false phase4b_scenario_qualified=%s map_objective_qualification=%s scenario_id=%s linear_trigger_pipeline=true",
                            root.id,TimeToString(available_at,TIME_DATE|TIME_SECONDS),has_preplan ? "true" : "false",
                            has_preplan ? "PRECONTACT_PLAN_FROZEN" : "NO_PRECONTACT_PLAN",has_preplan ? g_scenarios[bound_scenario].id : "NA"));
       LogLine("ROOT_CONTACT_OBSERVED","M1",available_at,root.id,
@@ -8485,13 +8760,10 @@ void ProcessReactionStateForTracker(const int tracker_index,
    if(FindLastOppositeCandleInSwingOrigin(child_tf,event.direction,event.meaningful_wave,opposite_origin))
       TryAddPostContactChildCandidate(g_root_reactions[tracker_index],root,child_tf,causal_after,event,opposite_origin,"LAST_OPPOSITE_OB",candidates);
 
-   if(InpEnableFvgOriginObExperiment)
-     {
-      MqlRates fvg_origins[];
-      int fvg_count=CollectFvgOriginObBars(child_tf,event.direction,event.meaningful_wave,event.break_bar,fvg_origins);
-      for(int k=0;k<fvg_count;k++)
-         TryAddPostContactChildCandidate(g_root_reactions[tracker_index],root,child_tf,causal_after,event,fvg_origins[k],"FVG_ORIGIN_OB",candidates);
-     }
+   MqlRates fvg_origins[];
+   int fvg_count=CollectFvgOriginObBars(child_tf,event.direction,event.meaningful_wave,event.break_bar,fvg_origins);
+   for(int k=0;k<fvg_count;k++)
+      TryAddPostContactChildCandidate(g_root_reactions[tracker_index],root,child_tf,causal_after,event,fvg_origins[k],"FVG_ORIGIN_OB",candidates);
 
    int newly_recorded=0;
    for(int i=0;i<ArraySize(candidates);i++)
@@ -8512,7 +8784,7 @@ void ProcessReactionStateForTracker(const int tracker_index,
 
    if(newly_recorded>0)
       LogLine("OPTIONAL_CHILD_AUDIT_STATE",TfName(child_tf),available_at,g_root_reactions[tracker_index].root_zone_id,
-              StringFormat("new_observations=%d total_observations=%d root_remains_strategy_source=true no_child_gate=true no_child_selection=true entry_geometry=M1_FVG sl_geometry=D132_INPUT_SELECTED",
+              StringFormat("new_observations=%d total_observations=%d root_remains_strategy_source=true no_child_gate=true no_child_selection=true entry_geometry=M1_FVG sl_geometry=D133_INPUT_SELECTED",
                            newly_recorded,g_root_reactions[tracker_index].child_count));
   }
 
@@ -8841,11 +9113,9 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=1.60 property_version=1.00 magic=%I64d phase=D132_SL_VARIANTS_CONTRIBUTOR_MERGE fvg_origin_ob_experiment=%s sl_model=%s contributor_merge=%s tester_execution_only=true live_execution=false",
+           StringFormat("build=1.70 property_version=1.00 magic=%I64d phase=D133_FVG_OB_BASELINE_SAME_ENTRY_ROOT_MERGE fvg_origin_ob_baseline=true sl_model=%s same_entry_root_merge=true tester_execution_only=true live_execution=false",
                         InpMagicNumber,
-                        InpEnableFvgOriginObExperiment ? "true" : "false",
-                        StopLossModelName((int)InpStopLossModel),
-                        InpEnableContributorMerge ? "true" : "false"));
+                        StopLossModelName((int)InpStopLossModel)));
    if(HasManagedAccountExposure())
      {
       g_init_state=V1_INIT_EXECUTION_RECOVERY_REQUIRED;
@@ -8872,10 +9142,9 @@ void OnDeinit(const int reason)
                         g_scenario_ambiguous_fvg,g_execution_geometry_ready,g_no_r_eligible_objective,g_simultaneous_authorization_ambiguous,g_exposure_blocked,
                         g_execution_infeasible,g_order_rejected,g_orders_accepted,g_positions_filled,g_pending_cancellations,g_cancel_rejected,g_execution_divergences,
                         g_positions_closed,g_authorized_sweep_events,g_authorized_sweep_pools,g_structural_reaction_created,g_source_contacts));
-   LogLine("D132_STOP_SUMMARY","",TimeCurrent(),"",
-           StringFormat("sl_model=%s contributor_merge=%s merged_execution_opportunities=%I64d merged_contributor_branches=%I64d true_ambiguous_branches=%I64d",
+   LogLine("D133_STOP_SUMMARY","",TimeCurrent(),"",
+           StringFormat("sl_model=%s fvg_origin_ob_baseline=true same_entry_root_merge=true merged_execution_opportunities=%I64d merged_contributor_branches=%I64d true_ambiguous_branches=%I64d",
                         StopLossModelName((int)InpStopLossModel),
-                        InpEnableContributorMerge ? "true" : "false",
                         g_execution_opportunities_merged,
                         g_execution_contributors_merged,
                         g_simultaneous_authorization_ambiguous));
@@ -8908,9 +9177,8 @@ void OnTick()
      {
       g_execution_epoch_start=(datetime)tick.time;
       LogLine("EXECUTION_EPOCH_START","M1",g_execution_epoch_start,"",
-              StringFormat("D132 active: Root->Sweep->CHoCH->causal widest FVG->Entry->%s SL->frozen objective TP->contributor merge=%s->tester GTC pending; live execution hard-blocked",
-                           StopLossModelName((int)InpStopLossModel),
-                           InpEnableContributorMerge ? "true" : "false"));
+              StringFormat("D133 active: Root->Sweep->CHoCH->causal widest FVG->same-entry Root merge->%s merged SL->common frozen objective TP->tester GTC pending; FVG_ORIGIN_OB baseline=true; live execution hard-blocked",
+                           StopLossModelName((int)InpStopLossModel)));
      }
    ProcessRuntimeClosedBars((datetime)tick.time);
    ManageIntegratedExecution(tick);

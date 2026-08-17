@@ -4044,7 +4044,7 @@ Eligibility uses integer symbol-tick distances for the `1R` boundary (`reward_ti
 
 ## D-129 — Fully-authorized same-epoch multi-Root branches fail closed until provenance merge is specified
 
-Status: ACTIVE / OPERATIONAL FREEZE / IMPLEMENTED IN BUILD 1.50
+Status: HISTORICAL / SUPERSEDED BY D-132 AND D-133
 
 V1 already freezes one accepted first-position exposure per symbol+magic and forbids arbitrary risk-slot scoring. D-127/FVG-origin testing demonstrated that several Root branches can converge on the same CHoCH.
 
@@ -4127,7 +4127,7 @@ held and no invented retry/re-entry path is created.
 
 ## D-132 — SL invalidation variants + duplicate-provenance contributor merge
 
-Status: ACTIVE / USER APPROVED — 2026-08-17
+Status: SL VARIANTS RETAINED / STRICT EXECUTION-IDENTITY MERGE SUPERSEDED BY D-133 — 2026-08-18
 
 Build 1.50 January A/B validation showed that the deterministic execution chain itself was behaving causally in the observed branches, but exposed two strategy-design issues:
 
@@ -4167,3 +4167,120 @@ The first branch may be used as the implementation master ledger only. It is not
 Reason:
 
 The observed ambiguity was frequently not a conflict between different trades, but several causal histories arriving at one identical executable order. D-132 removes only that duplicate provenance without inventing Root ranking. At the same time, the SL variants test two explicit invalidation interpretations without silently mixing them into one optimized rule.
+
+---
+
+## D-133 — FVG-origin OB is baseline; same FVG/Entry Roots are one scenario
+
+Status: ACTIVE / USER APPROVED — 2026-08-18
+
+The user made two strategy-authority decisions after D-132 real-tick comparison:
+
+```text
+1. FVG-origin Candle1 OB is accepted as a normal OB definition.
+2. If multiple Roots arrive at the same trade Entry, they are one scenario.
+```
+
+Operationally, `same trade Entry` is frozen as:
+
+```text
+same direction
+same selected_fvg_id
+same Entry tick
+```
+
+This supersedes D-132's requirement that normalized SL and TP must also already be identical before contributor merge.
+
+### Recognizer authority
+
+`LAST_OPPOSITE_OB` and `FVG_ORIGIN_OB` are both always-enabled baseline Root recognizers. The old `InpEnableFvgOriginObExperiment` input is removed. Same physical candles are deduplicated and recognition reasons are merged.
+
+### Merge before TP
+
+Old D-132 order:
+
+```text
+Root branch
+→ branch SL
+→ branch TP
+→ compare full execution identity
+→ maybe merge
+```
+
+D-133 order:
+
+```text
+Root branches
+→ same selected FVG / Entry?
+→ merge contributor scenario
+→ choose one merged SL
+→ choose one merged TP
+→ one execution opportunity
+```
+
+This is necessary because Root-based SL makes different valid Roots produce different stop prices even when they describe the same entry opportunity.
+
+### Merged SL authority
+
+Each contributor calculates the stop implied by the selected SL model, then the merged scenario uses the stop that preserves all contributor invalidation space:
+
+```text
+LONG  = minimum contributor normalized SL
+SHORT = maximum contributor normalized SL
+```
+
+Under `ROOT_OB_DISTAL_20`, this corresponds to the outermost/deepest contributing Root stop. The rule is symmetric and does not rank Roots by quality.
+
+### Objective authority after merge
+
+A merged scenario cannot take one arbitrary Root's objective family and cannot union new targets after Entry. Final TP is selected from the **intersection of objective price ticks already frozen by every contributor plan**.
+
+After merged SL:
+
+```text
+common frozen objective prices
+→ nearest-first in trade direction
+→ first reward_ticks >= risk_ticks
+```
+
+No common R-eligible price:
+
+```text
+NO_COMMON_R_ELIGIBLE_OBJECTIVE
+→ NO_TRADE
+```
+
+A liquidity ID used for ledger reconciliation may be selected deterministically among same-price representatives; the objective price is the strategic authority.
+
+### Ambiguity
+
+Different Root IDs no longer create ambiguity by themselves.
+
+Fail closed only when the same execution epoch contains distinct completed entry opportunities:
+
+```text
+different direction
+or different selected_fvg_id
+or different Entry tick
+→ AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+```
+
+### D-132 evidence motivating the decision
+
+January build 1.60 with `FVG_ORIGIN_OB=true / ROOT_OB_DISTAL_20` showed same-entry Root clusters whose stop prices differed solely because each Root carried its own geometry. Example `2025-01-15 18:23`:
+
+```text
+same Entry = 2681.33
+same TP candidate = 2697.90
+5 Root branches
+Root-derived normalized SLs = 2667.64 / 2666.04 / 2668.58 / 2666.04 / 2668.74
+```
+
+D-132 treated the cluster as ambiguity. D-133 treats it as one scenario and would use `2666.04` as the merged LONG Root-OB stop before recalculating TP eligibility.
+
+Build target:
+
+```text
+internal build = 1.70
+phase = D133_FVG_OB_BASELINE_SAME_ENTRY_ROOT_MERGE
+```

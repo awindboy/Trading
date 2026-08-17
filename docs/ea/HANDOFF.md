@@ -1,9 +1,9 @@
 # EA Development Handoff
 
-Last updated: 2026-08-17
-Status: D-132 BUILD 1.60 PREPARED / LOCAL METAEDITOR COMPILE + SIX-RUN JANUARY REAL-TICK VALIDATION PENDING
-Current phase: D-132 — SL invalidation variants + duplicate-provenance contributor merge
-Execution safety: same-cycle submission + frozen contributor survival + objective cancellation + all-contributor invalidation cancellation + fill-time contributor release + partial-fill residual cancellation/divergence lock
+Last updated: 2026-08-18
+Status: D-133 BUILD 1.70 PREPARED / LOCAL METAEDITOR COMPILE + JANUARY REAL-TICK VALIDATION PENDING
+Current phase: D-133 — FVG-origin OB baseline + same-FVG/Entry multi-Root scenario merge
+Execution safety: same-cycle submission + same-entry contributor freeze + outermost merged SL + common-objective TP + all-contributor survival/cancel + fill-time contributor release + partial-fill residual divergence lock
 
 ## Goal
 
@@ -39,8 +39,8 @@ Objective
 -> widest valid FVG
 -> first FVG retest
 -> LONG: FVG top / SHORT: FVG bottom entry
--> FVG distal ± 20% FVG-width strategy SL
--> frozen objective TP
+-> selected SL protocol; if same-entry multi-Root, use outermost contributor invalidation
+-> common pre-frozen objective price / nearest R>=1 TP
 
 ## Primary References
 
@@ -114,7 +114,7 @@ Phase 5A M1 CHoCH
 → no Root-reintersection / sweep-family / sweep-time-reference / child nested trigger gate
 → accepted scenario CHoCH -> WAITING_FVG
 → D-127 validation build itself had FVG/order authorization disabled
-→ FVG_ORIGIN_OB remains EXPERIMENTAL; do not treat 18 branches as 18 trades
+→ FVG_ORIGIN_OB is now promoted by D-133 to baseline OB authority; 18 Root branches are still not automatically 18 trades
 
 Phase 5B / D-128A causal M1 FVG
 → IMPLEMENTED in internal build 1.20 / local validation pending
@@ -861,3 +861,99 @@ one symbol+magic first-position exposure remains enforced
 ```
 
 Profitability/optimization is still out of scope until these invariants pass.
+
+## D-133 checkpoint — FVG-origin OB baseline + same-entry Root contributor scenario
+
+User authority decision on 2026-08-18:
+
+```text
+FVG_ORIGIN_OB = accepted baseline OB definition
+same FVG / same Entry from multiple Roots = one scenario
+```
+
+D-132 January evidence immediately before this decision:
+
+```text
+FVG_ORIGIN_OB=true / ROOT_OB_DISTAL_20 / merge=true
+108 Root -> 78 Plan -> 36 Contact -> 33 Sweep -> 18 CHoCH -> 18 FVG-selected branches
+3 pending / 2 filled / 2 closed / 1 objective-before-fill cancel / divergence 0
+
+FVG_ORIGIN_OB=false / ROOT_OB_DISTAL_20 / merge=true
+19 Root -> 13 Plan -> 6 Contact -> 6 Sweep -> 2 CHoCH -> 2 FVG-selected branches
+2 pending / 1 filled / 1 closed / 1 objective-before-fill cancel / divergence 0
+```
+
+Implementation interpretation:
+
+- Generic M1 Sweep / CHoCH / FVG detector streams remained unchanged between recognizer modes in the tested fixture.
+- FVG-origin recognition therefore expands Root provenance rather than rewriting downstream detector facts.
+- Root-derived stops showed that same-entry Roots can have different SL values, so D-132's `same SL + same TP` merge identity conflicts with the user's scenario interpretation.
+
+D-133 code target:
+
+```text
+build = 1.70
+phase = D133_FVG_OB_BASELINE_SAME_ENTRY_ROOT_MERGE
+
+removed inputs:
+InpEnableFvgOriginObExperiment
+InpEnableContributorMerge
+
+always active:
+LAST_OPPOSITE_OB + FVG_ORIGIN_OB
+same-entry Root contributor merge
+```
+
+Execution-stage order:
+
+```text
+FVG selected per Root branch
+→ derive common Entry + each contributor's candidate SL
+→ same direction + selected_fvg_id + Entry tick identity
+→ merge contributors
+→ LONG: lowest contributor SL / SHORT: highest contributor SL
+→ TP from objective-price intersection frozen by all contributors
+→ nearest common reward_ticks >= risk_ticks
+→ one pending order
+```
+
+True ambiguity remains only when distinct FVG/Entry opportunities complete in the same epoch.
+
+Next local validation should use the same January real-tick fixture with:
+
+```text
+InpStopLossModel = V1_SL_ROOT_OB_DISTAL_20
+```
+
+Expected regression targets from the previous `FVG_ORIGIN_OB=true` Root-SL run:
+
+```text
+ROOT_CREATED = 108
+SCENARIO_PLANNED = 78
+SCENARIO_ROOT_CONTACT_BOUND = 36
+SCENARIO_SWEEP_ACCEPTED = 33
+SCENARIO_CHOCH_ACCEPTED = 18
+SCENARIO_FVG_SELECTED = 18
+```
+
+Those upstream branch counts should remain unchanged. Downstream execution counts are expected to change because same-entry Root clusters now collapse into scenario-level opportunities.
+
+Required D-133 checks:
+
+```text
+EA_START build=1.70 / D133_FVG_OB_BASELINE_SAME_ENTRY_ROOT_MERGE
+no FVG-origin experiment toggle in inputs
+same-entry clusters emit EXECUTION_OPPORTUNITY_MERGED
+SL/TP equality is NOT required for merge
+ROOT_OB merged LONG SL = minimum contributor Root SL
+ROOT_OB merged SHORT SL = maximum contributor Root SL
+FINAL_OBJECTIVE_SELECTED uses common frozen objective price
+no common R>=1 price -> NO_COMMON_R_ELIGIBLE_OBJECTIVE
+only different FVG/Entry opportunities use AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+one symbol+magic exposure invariant remains intact
+pending survives while >=1 contributor authority remains
+all contributors invalid -> CANCELED_ALL_CONTRIBUTORS_INVALID
+execution divergence = 0 expected
+```
+
+Profitability judgment remains deferred until D-133 implementation invariants pass.
