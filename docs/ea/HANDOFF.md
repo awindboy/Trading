@@ -1,9 +1,9 @@
 # EA Development Handoff
 
 Last updated: 2026-08-17
-Status: INTEGRATED BASELINE BUILD 1.50 IMPLEMENTED / LOCAL COMPILE + FINAL A/B REAL-TICK VALIDATION PENDING
-Current phase: D-128A..D-131 integrated — FVG -> Entry/SL -> frozen TP -> arbitration -> tester pending -> lifecycle/reconciliation
-Execution safety: same-cycle submission guard + objective/Root/direction pending cancellation + partial-fill residual cancellation/divergence lock
+Status: D-132 BUILD 1.60 PREPARED / LOCAL METAEDITOR COMPILE + SIX-RUN JANUARY REAL-TICK VALIDATION PENDING
+Current phase: D-132 — SL invalidation variants + duplicate-provenance contributor merge
+Execution safety: same-cycle submission + frozen contributor survival + objective cancellation + all-contributor invalidation cancellation + fill-time contributor release + partial-fill residual cancellation/divergence lock
 
 ## Goal
 
@@ -453,7 +453,6 @@ Broker transaction reconciliation
 → ticket/history based
 → callback arrival order not trusted
 
-
 ## Historical Checkpoint — D-125 Corrected Phase 4B (VALIDATED)
 
 D-124 build `0.81` passed the Root-primary / optional-child audit:
@@ -585,7 +584,6 @@ profitability = NOT TESTED
 
 Carry both recognizer modes through causal FVG and execution validation before
 promoting either interpretation on performance grounds.
-
 
 ## Integrated baseline checkpoint — build 1.50
 
@@ -726,3 +724,140 @@ extra_reference_filter=false
 fvg_search_enabled=false
 order_authorization=false
 ```
+
+
+## D-132 checkpoint — SL invalidation variants + contributor merge
+
+Build 1.50 integrated January A/B real-tick validation is complete enough to move from implementation debugging to two explicit strategy-design experiments.
+
+Observed funnel:
+
+```text
+FVG_ORIGIN_OB=false
+19 Root -> 13 Plan -> 6 Contact -> 6 Sweep -> 2 CHoCH
+-> 2 FVG selected -> 2 pending
+-> 1 objective-before-fill cancel + 1 fill/SL close
+
+FVG_ORIGIN_OB=true
+108 Root -> 78 Plan -> 36 Contact -> 33 Sweep -> 18 CHoCH
+-> 18 FVG selected -> 14 execution NO_TRADE + 4 pending
+-> 2 objective-before-fill cancel + 2 fill/close
+```
+
+Important interpretation:
+
+- Build 1.50's causal execution chain behaved consistently in the observed branches.
+- `FVG_ORIGIN_OB=true` creates many more Root explanations, but several Root branches converge on the exact same downstream FVG / Entry / SL / objective / TP.
+- Those duplicate-provenance branches were previously rejected only because D-129 treated any same-epoch branch count `>1` as ambiguity.
+- Existing FVG SL is structurally very tight in this sample; therefore planned-R values can become extremely large because the risk denominator is tiny.
+
+User-confirmed mentor principle:
+
+```text
+SL = scenario invalidation point
+```
+
+D-132 therefore introduces three isolated SL modes while leaving Entry and frozen objective-family mechanics unchanged:
+
+```text
+V1_SL_FVG_DISTAL_20   (control)
+LONG  = FVG.bottom - 0.20 * FVG.width
+SHORT = FVG.top    + 0.20 * FVG.width
+
+V1_SL_SWEEP_EXTREME
+LONG  = accepted D-127 Sweep bar low
+SHORT = accepted D-127 Sweep bar high
+
+V1_SL_ROOT_OB_DISTAL_20
+Root.width = Root.top - Root.bottom
+LONG  = Root.bottom - 0.20 * Root.width
+SHORT = Root.top    + 0.20 * Root.width
+```
+
+All SL prices are normalized outward to `SYMBOL_TRADE_TICK_SIZE`. No ATR/fixed-distance padding is added. Final objective eligibility is recalculated after each SL choice because planned R changes with the risk distance.
+
+Duplicate-provenance contributor merge is also added. Same-epoch fully authorized branches merge only when every executable identity field is identical:
+
+```text
+direction
+selected_fvg_id
+Entry tick
+normalized SL tick
+final_objective_liquidity_id
+TP tick
+```
+
+When identical:
+
+```text
+multiple Root branches
+-> one frozen execution opportunity
+-> one implementation master ledger
+-> N frozen contributor Root/scenario IDs
+-> exactly one broker pending order
+```
+
+The implementation master is not a strategically preferred Root. If any executable identity field differs, the existing fail-closed result remains:
+
+```text
+AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+```
+
+Pending survival for a merged opportunity:
+
+```text
+common objective remains valid
+AND
+at least one frozen contributor retains:
+    ACTIVE Root
+    + valid existing continuation/reversal direction authority
+```
+
+If every contributor becomes invalid before fill:
+
+```text
+CANCELED_ALL_CONTRIBUTORS_INVALID
+```
+
+No contributor may be attached after authorization freeze. On fill, secondary contributor scenario ownership is released and the master position is governed only by frozen server SL/TP; this prevents `MERGED_CONTRIBUTOR` state from blocking later independent scenarios on those Roots.
+
+Target code identity:
+
+```text
+mt5/experts/MentorDeterministicV1EA.mq5
+internal build = 1.60
+phase = D132_SL_VARIANTS_CONTRIBUTOR_MERGE
+live execution = hard-blocked
+```
+
+Required local validation matrix on the same January real-tick fixture:
+
+```text
+1. FVG_ORIGIN_OB=false / V1_SL_FVG_DISTAL_20
+2. FVG_ORIGIN_OB=true  / V1_SL_FVG_DISTAL_20
+3. FVG_ORIGIN_OB=false / V1_SL_SWEEP_EXTREME
+4. FVG_ORIGIN_OB=true  / V1_SL_SWEEP_EXTREME
+5. FVG_ORIGIN_OB=false / V1_SL_ROOT_OB_DISTAL_20
+6. FVG_ORIGIN_OB=true  / V1_SL_ROOT_OB_DISTAL_20
+
+InpEnableContributorMerge=true for all six runs
+```
+
+Validate implementation invariants before profitability:
+
+```text
+D-127 upstream detector/sequence counts unchanged within the same recognizer mode
+SWEEP_EXTREME uses exactly the accepted Sweep bar extreme
+ROOT_OB_DISTAL_20 uses the scenario-frozen Root bounds
+outward tick normalization is correct
+objective R-eligibility is recomputed from selected SL
+identical execution branches merge exactly once
+different execution identities remain fail-closed
+no new contributor attaches after freeze
+merged pending survives while >=1 contributor is alive
+merged pending cancels when all contributors are invalid
+secondary contributor ownership is released on fill/terminal resolution
+one symbol+magic first-position exposure remains enforced
+```
+
+Profitability/optimization is still out of scope until these invariants pass.

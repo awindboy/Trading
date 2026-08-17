@@ -4122,3 +4122,48 @@ a position is present while a residual pending from the same first-position orde
 the position keeps its frozen server SL/TP and the residual receives one cancel request.
 Residual survival/cancel rejection is `EXECUTION_DIVERGENCE`; the exposure lock remains
 held and no invented retry/re-entry path is created.
+
+---
+
+## D-132 — SL invalidation variants + duplicate-provenance contributor merge
+
+Status: ACTIVE / USER APPROVED — 2026-08-17
+
+Build 1.50 January A/B validation showed that the deterministic execution chain itself was behaving causally in the observed branches, but exposed two strategy-design issues:
+
+1. `FVG_DISTAL_20` often produces a very small GOLD risk distance because the stop scales only with M1 FVG width.
+2. With `FVG_ORIGIN_OB=true`, several independent Root branches can converge on the exact same downstream FVG / Entry / SL / objective / TP, yet D-129 rejected every branch solely because the same authorization epoch contained more than one branch.
+
+The user confirmed the mentor's governing rule:
+
+```text
+SL = point where the scenario is invalidated
+```
+
+D-132 therefore freezes three isolated SL protocols:
+
+```text
+A. V1_SL_FVG_DISTAL_20 (control)
+LONG  = FVG.bottom - 0.20 * FVG.width
+SHORT = FVG.top    + 0.20 * FVG.width
+
+B. V1_SL_SWEEP_EXTREME
+LONG  = accepted D-127 Sweep bar low
+SHORT = accepted D-127 Sweep bar high
+
+C. V1_SL_ROOT_OB_DISTAL_20
+LONG  = Root.bottom - 0.20 * Root.width
+SHORT = Root.top    + 0.20 * Root.width
+```
+
+All are outward-normalized to the symbol tick grid. No ATR/fixed-distance padding is introduced. The frozen objective family itself is not rebuilt, but final objective eligibility is recomputed after the selected SL because `planned R` changes with risk.
+
+D-132 also replaces D-129's blanket same-epoch branch-count rejection with a strict duplicate-provenance test. Branches merge only when direction, selected FVG identity, Entry tick, normalized SL tick, final objective liquidity identity, and TP tick are all identical. Otherwise `AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION` remains fail-closed.
+
+The merge freezes contributor scenario IDs and Root IDs at authorization. No later contributor may be attached. A merged pending survives while the common objective is valid and at least one frozen contributor retains its ACTIVE Root plus existing continuation/reversal direction authority. All contributors invalid before fill causes `CANCELED_ALL_CONTRIBUTORS_INVALID`.
+
+The first branch may be used as the implementation master ledger only. It is not a strategic winner. On master fill or terminal pre-fill resolution, secondary contributor scenario ownership is released so resolved contributor rows cannot permanently block future Root reuse.
+
+Reason:
+
+The observed ambiguity was frequently not a conflict between different trades, but several causal histories arriving at one identical executable order. D-132 removes only that duplicate provenance without inventing Root ranking. At the same time, the SL variants test two explicit invalidation interpretations without silently mixing them into one optimized rule.

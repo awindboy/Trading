@@ -2064,3 +2064,95 @@ MT5 Strategy Tester와 향후 live MT5 환경에서
 
 Historical Ground Truth / Gemini execution contracts는
 Git history 및 관련 research documents에 보존한다.
+
+---
+
+## D-132 approved experimental execution contract — 2026-08-17
+
+Status: `ACTIVE RESEARCH VARIANTS / CONTROL + TWO SL EXPERIMENTS / CONTRIBUTOR MERGE FROZEN FOR VALIDATION`
+
+The mentor's governing SL principle is **scenario invalidation**. The current FVG SL remains the control while two explicit deterministic alternatives are authorized for Strategy Tester comparison.
+
+```text
+V1_SL_FVG_DISTAL_20  (control)
+LONG  = selected FVG.bottom - 0.20 * selected FVG.width
+SHORT = selected FVG.top    + 0.20 * selected FVG.width
+
+V1_SL_SWEEP_EXTREME
+LONG  = accepted D-127 scenario Sweep bar low
+SHORT = accepted D-127 scenario Sweep bar high
+
+V1_SL_ROOT_OB_DISTAL_20
+Root.width = frozen Root.top - frozen Root.bottom
+LONG  = frozen Root.bottom - 0.20 * Root.width
+SHORT = frozen Root.top    + 0.20 * Root.width
+```
+
+All SL prices are normalized outward to `SYMBOL_TRADE_TICK_SIZE`. No ATR, fixed-dollar, minimum-point, or arbitrary volatility padding is authorized by D-132.
+
+Changing SL changes risk. Therefore final TP eligibility must be recalculated from the already-frozen ordered objective family after the selected SL is normalized. Do not reuse the FVG-SL run's final TP blindly.
+
+### Duplicate-provenance contributor merge
+
+Different HTF Roots do not need to overlap in price. They may still be different causal explanations that later converge on the same executable trade.
+
+Multiple fully-authorized same-epoch Root branches may become one execution opportunity **only** when all of the following are identical:
+
+```text
+direction
+selected_fvg_id
+Entry tick
+normalized SL tick
+final_objective_liquidity_id
+TP tick
+```
+
+If all six fields match:
+
+```text
+N Root/scenario branches
+→ one frozen execution opportunity
+→ one broker pending order
+→ N frozen contributors
+```
+
+One scenario may act as the MT5 implementation ledger holder, but this is **not** a Root ranking, score, nearest-Root choice, or strategic preference.
+
+If even one execution-identity field differs:
+
+```text
+NO_TRADE
+reason = AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+```
+
+The contributor set is frozen at authorization. No later Root may be attached by hindsight.
+
+### Merged pending survival
+
+Before fill, the common pending survives while:
+
+```text
+common final objective remains valid
+AND
+at least one frozen contributor has:
+    ACTIVE Root
+    AND valid existing scenario-direction authority
+```
+
+If every frozen contributor loses authority:
+
+```text
+CANCELED_ALL_CONTRIBUTORS_INVALID
+```
+
+Objective delivery before fill still has precedence as:
+
+```text
+CANCELED_OBJECTIVE_DELIVERED
+```
+
+Once the shared order fills, secondary contributor scenario ownership is released. The filled position is then governed only by the frozen server SL/TP. This prevents a resolved `MERGED_CONTRIBUTOR` row from blocking future independent scenarios on an otherwise still-active Root.
+
+`V1_SL_ROOT_OB_DISTAL_20` branches whose Root geometry creates different normalized SL prices are **not** duplicate provenance under this contract and therefore do not merge.
+
+Default input remains `V1_SL_FVG_DISTAL_20` until comparative real-tick validation supports a later authority change.
