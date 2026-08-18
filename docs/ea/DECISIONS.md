@@ -4536,3 +4536,74 @@ D-135 is not accepted because it is faster. It is accepted only if both are true
 ```
 
 Any difference in Root, Sweep, CHoCH, FVG, merge, Entry, SL, TP, pending, fill, cancel, close, or divergence outcome is a regression and must be corrected before another full-year run.
+
+
+---
+
+## D-135A — Preserve broker-owned pending lifecycle after strategy cancellation
+
+Status: PREPARED HOTFIX / STRATEGY SEMANTICS UNCHANGED — 2026-08-19
+
+### Trigger
+
+The D-135 full-year 2025 regression run reduced Strategy Tester wall-clock time from about 9 hours to about 6 minutes 10 seconds, but exposed a lifecycle parity regression that the January fixture did not exercise.
+
+A scenario could become strategy-terminal while its original pending order was still live at the broker:
+
+```text
+strategy_state = CANCELED
+execution_status = PENDING_ACCEPTED
+broker_order_ticket = live
+```
+
+Build 1.90's active-execution reconciliation did not classify that state as an active pending/cancel transition. It therefore removed the scenario from `g_active_execution_scenario_indices` before `ManageIntegratedExecution()` could call `RequestPendingCancellation()`.
+
+Observed regression fixtures:
+
+```text
+2025-06-13 LONG pending
+Entry = 3388.90
+Root invalidated = 2025-06-16 10:00
+D-134 -> PENDING_CANCEL_ACCEPTED
+D-135 -> broker pending survived
+
+2025-11-26 LONG pending
+Entry = 4138.03
+Root invalidated = 2025-11-26 16:30
+D-134 -> pending cancellation lifecycle
+D-135 -> strategy canceled without broker cancellation
+```
+
+The June orphan pending later caused a valid opposite-direction SHORT opportunity to be blocked by `OPPOSITE_DIRECTION_EXPOSURE_CONFLICT`, proving this was not merely a logging difference.
+
+### Decision
+
+D-135 performance optimizations remain active. Only the execution working-set terminal condition is corrected.
+
+```text
+strategy_state = CANCELED
++ original broker pending is still live
+-> KEEP scenario in active execution working set
+-> request cancellation of that exact broker_order_ticket
+-> reconcile fill/cancel outcome
+-> remove from active execution set only after broker-side terminal proof
+```
+
+If the canceled pending fills before cancellation is completed, the existing D-134 rule remains authoritative:
+
+```text
+FILLED_AFTER_STRATEGY_CANCELLATION
+-> execution divergence
+```
+
+No retry, Root, Sweep, CHoCH, FVG, Entry, SL, TP, contributor merge, add-on, opposite-direction, or sizing rule changes are introduced.
+
+Build target:
+
+```text
+internal build = 1.91
+phase = D135A_CANCELED_PENDING_LIFECYCLE_HOTFIX
+strategy_semantics = D134_UNCHANGED
+```
+
+Acceptance requires the D-134 broker lifecycle to be restored while retaining the D-135 speedup.

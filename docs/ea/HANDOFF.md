@@ -1,8 +1,8 @@
 # EA Development Handoff
 
 Last updated: 2026-08-19
-Status: D-135 BUILD 1.90 PREPARED / LOCAL METAEDITOR COMPILE + JANUARY D-134 PARITY / RUNTIME BENCHMARK PENDING
-Current phase: D-135 — performance-only working-set optimization; D-134 strategy semantics unchanged
+Status: D-135A BUILD 1.91 PREPARED / CANCELED-PENDING LIFECYCLE REGRESSION HOTFIX PENDING LOCAL VALIDATION
+Current phase: D-135A — preserve D-135 performance optimization and restore D-134 canceled-pending broker lifecycle
 Execution safety: D-134 hedging same-direction add-ons + opposite-direction conflict block + scenario-scoped tickets/positions; D-135 changes indexing/reconciliation/log buffering only
 
 ## Goal
@@ -1171,3 +1171,81 @@ pending/cancel/fill/close outcome
 ```
 
 Measure wall-clock runtime. If semantic parity passes and runtime is materially reduced, D-135 becomes the working baseline for longer/multi-year tests. If any strategy/execution result differs, treat D-135 as failed regardless of speed.
+
+
+## D-135 Full-Year Regression Result + D-135A Hotfix — 2026-08-19
+
+D-135 full-year runtime:
+
+```text
+D-134 build 1.80 ≈ 9 hours
+D-135 build 1.90 ≈ 6 minutes 10 seconds
+speedup ≈ 87.6x
+```
+
+The performance objective therefore passed strongly. Long-run strategy geometry also remained stable, but broker pending lifecycle parity did not fully pass.
+
+Observed full-year difference versus D-134:
+
+```text
+execution geometry ready: 74 -> 74
+filled:                  58 -> 58
+closed:                  58 -> 58
+pending accepted:        73 -> 72
+pending cancel:          15 -> 12
+opposite conflict:        1 -> 2
+```
+
+Root / Sweep / CHoCH / FVG / Entry / SL / TP remained equivalent for the completed geometry opportunities. The actionable defect was that `strategy_state=CANCELED` scenarios with a still-live broker pending could be removed from the active execution working set before the broker cancel request.
+
+Primary regression fixture:
+
+```text
+2025-06-13 02:56 LONG pending
+Entry 3388.90 / SL 3330.80 / TP 3499.90
+order_ticket = 48
+
+2025-06-16 10:00 Root invalidated
+D-134: PENDING_CANCEL_ACCEPTED
+D-135: no pending cancel
+
+2025-06-18 17:16 valid SHORT geometry
+Entry 3397.25 / SL 3404.81 / TP 3319.20
+D-134: independent SHORT order allowed
+D-135: blocked by surviving opposite LONG pending
+```
+
+Secondary fixture:
+
+```text
+2025-11-26 LONG pending
+Entry = 4138.03
+Root invalidated at 16:30
+D-135 omitted broker cancellation after strategy cancellation
+```
+
+D-135A build 1.91 changes only `ReconcileScenarioExecution()` working-set retention:
+
+```text
+CANCELED + live original pending
+-> remain active
+-> ManageIntegratedExecution requests exact-ticket cancellation
+-> reconcile until broker terminal
+-> then remove from active execution set
+```
+
+### Immediate validation
+
+Because January does not exercise the discovered bug, the next validation should include at least the June regression window containing `2025-06-13 ~ 2025-06-18`.
+
+Required evidence:
+
+```text
+1. build=1.91 / D135A_CANCELED_PENDING_LIFECYCLE_HOTFIX
+2. June order ticket corresponding to Entry 3388.90 receives PENDING_CANCEL_ACCEPTED after Root invalidation.
+3. June 18 SHORT is no longer falsely blocked by the orphan LONG pending.
+4. no new execution divergence.
+5. runtime remains close to D-135 performance characteristics.
+```
+
+After the focused June regression passes, rerun the full 2025 year and require D-134 execution lifecycle parity with D-135-class runtime.
