@@ -1,9 +1,9 @@
 # EA Development Handoff
 
-Last updated: 2026-08-18
-Status: D-134 BUILD 1.80 PREPARED / LOCAL METAEDITOR COMPILE + JANUARY REAL-TICK VALIDATION PENDING
-Current phase: D-134 — hedging-account same-direction independent add-on execution
-Execution safety: same-entry contributor merge + independent same-direction scenario tickets/positions + opposite-direction conflict block + scenario-scoped reconciliation + exact-order partial-fill residual cancellation
+Last updated: 2026-08-19
+Status: D-135 BUILD 1.90 PREPARED / LOCAL METAEDITOR COMPILE + JANUARY D-134 PARITY / RUNTIME BENCHMARK PENDING
+Current phase: D-135 — performance-only working-set optimization; D-134 strategy semantics unchanged
+Execution safety: D-134 hedging same-direction add-ons + opposite-direction conflict block + scenario-scoped tickets/positions; D-135 changes indexing/reconciliation/log buffering only
 
 ## Goal
 
@@ -1022,3 +1022,152 @@ opposite_direction_exposure_blocked = 0
 ```
 
 Do not treat an exact order/fill count as a frozen expectation until the run is inspected, because newly allowed pending/positions can change later execution state and objective-delivery timing.
+
+
+## D-134 Full-Year 2025 Validation Checkpoint — 2026-08-19
+
+Focused durable test record: `docs/ea/TEST_RESULTS_D134_2025_D135_PERF.md`
+
+
+Uploaded ledger:
+
+```text
+mentor_v1_structure_events(20260818-064307).csv
+SHA-256 = 28ab4a4e6c2477989fb2d4b2768006e89c7b396d4508de8d464d41ca3edbc0e4
+period = 2025-01-01 ~ 2025-12-31
+model = Every tick based on real ticks
+build = 1.80
+phase = D134_HEDGING_SAME_DIRECTION_ADDON_EXECUTION
+SL = ROOT_OB_DISTAL_20
+rows ≈ 234,275
+reported tester runtime ≈ 9 hours
+```
+
+Functional execution result:
+
+```text
+unique Entry opportunities = 79
+execution geometry ready = 74
+pending accepted = 73
+filled = 58
+closed = 58
+TP = 14
+SL = 44
+pending canceled before fill = 15
+order reject = 0
+cancel reject = 0
+execution divergence = 0
+opposite-direction exposure conflict = 1
+```
+
+Approximate research-performance summary from the event ledger, using the same provisional GOLD 0.01-lot gross-PnL convention used in analysis and excluding commission/swap:
+
+```text
+win rate ≈ 24.1%
+gross PnL ≈ +265.64 USD
+profit factor ≈ 1.315
+realized total ≈ +8.68R
+expectancy ≈ +0.15R / filled trade
+max closed-trade R drawdown ≈ -21.44R
+```
+
+Important research observations, not yet strategy changes:
+
+```text
+EXTERNAL_CONTINUATION: 51 fills / 14 TP / about +15.94R
+EXTERNAL_REVERSAL:      7 fills / 0 TP / about -7.26R
+
+same-direction add-ons: 20 fills / about +4.20R
+max simultaneous filled positions: 4
+max accepted exposure observed: 5
+```
+
+The full-year run therefore validates D-134 multi-position lifecycle much more broadly than January, but does **not** constitute profitability approval. Reversal weakness and correlated same-direction portfolio exposure remain research items after implementation performance is fixed.
+
+### Performance defect discovered
+
+The full-year run required about 9 hours while January-scale runs had generally completed in under roughly one minute. Progress repeatedly stalled and then jumped.
+
+Static review identified cumulative scans of historical objective/scenario/Root-reaction/execution ledgers plus per-row CSV flushes. The defect is classified:
+
+```text
+strategy correctness issue = NO EVIDENCE
+execution divergence = 0 in observed run
+implementation scalability defect = YES
+priority = fix before multi-year testing
+```
+
+## D-135 Prepared Build
+
+Target:
+
+```text
+build = 1.90
+phase = D135_PERFORMANCE_WORKING_SET_OPTIMIZATION
+strategy_semantics = D134_UNCHANGED
+default CSV = mentor_v1_d135_events.csv
+```
+
+Implemented performance changes:
+
+```text
+1. frozen objective consumption is propagated on the liquidity-consumption event;
+   no objective×scenario polling on every scenario refresh.
+2. scenario authority signature no longer concatenates every historical Root tracker;
+   Root-reaction state uses a monotonic change version.
+3. CancelInvalidScenarioPlans runs only when scenario authority signature changes.
+4. Root-contact M1 processing uses WAITING Root indices only.
+5. optional child audit uses READY Root indices only.
+6. Sweep processing uses WAITING_SWEEP indices only.
+7. CHoCH/FVG retention uses WAITING_CHOCH indices only.
+8. same-cycle execution authorization uses WAITING_EXECUTION_GEOMETRY indices only.
+9. broker reconciliation uses active pending/filled scenario indices only.
+10. ordinary ticks do not HistorySelect for an exact pending order / hedging position that is still live.
+11. final objective uses a direct frozen-candidate index rather than a whole objective-ledger scan on every tick.
+12. active liquidity caches strategy-consumed membership for O(1) M1-overlay checks.
+13. CSV flush is batched at 256 rows, with critical execution events and deinit still flushed.
+```
+
+### Immediate validation sequence
+
+Do **not** run another full year first.
+
+Run the January real-tick fixture with:
+
+```text
+InpStopLossModel = V1_SL_ROOT_OB_DISTAL_20
+hedging account
+```
+
+Compare D-135 against the already validated D-134 January baseline.
+
+Required parity:
+
+```text
+ROOT_CREATED = 108
+SCENARIO_PLANNED = 78
+SCENARIO_ROOT_CONTACT_BOUND = 36
+SCENARIO_SWEEP_ACCEPTED = 33
+SCENARIO_CHOCH_ACCEPTED = 18
+SCENARIO_FVG_SELECTED = 18
+unique Entry opportunities = 9
+same-entry merge clusters = 4
+pending accepted = 9
+filled = 7
+closed = 7
+objective-before-fill cancel = 2
+exposure-policy NO_TRADE = 0
+execution divergence = 0
+```
+
+Also compare every unique opportunity's:
+
+```text
+selected FVG
+Entry
+merged SL
+Final TP
+pending/cancel/fill/close outcome
+```
+
+Measure wall-clock runtime. If semantic parity passes and runtime is materially reduced, D-135 becomes the working baseline for longer/multi-year tests. If any strategy/execution result differs, treat D-135 as failed regardless of speed.

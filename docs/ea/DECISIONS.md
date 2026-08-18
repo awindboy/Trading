@@ -4436,3 +4436,103 @@ D-133 January real-tick validation with `ROOT_OB_DISTAL_20` produced:
 Those six consisted of two signals while an earlier pending existed and four signals while an earlier same-direction position was filled.
 
 D-134 removes only that execution-policy bottleneck. Upstream detector/scenario rules remain unchanged.
+
+
+---
+
+## D-135 — Performance-only active working sets and event-driven reconciliation
+
+Status: ACTIVE IMPLEMENTATION DECISION / STRATEGY SEMANTICS UNCHANGED — 2026-08-19
+
+### Trigger
+
+The first full-calendar-year D-134 Strategy Tester run (`2025-01-01 ~ 2025-12-31`, Every tick based on real ticks) completed functionally but required approximately **9 hours**, whereas the prior January-scale runs typically completed in under roughly one minute. Tester progress repeatedly appeared stationary for long periods and then jumped forward.
+
+The one-year event ledger contained about `234,275` rows. The output size grew by only about an order of magnitude versus January, so the runtime increase was not consistent with simple linear data-volume scaling.
+
+Static review found cumulative hot-path scans:
+
+```text
+historical objective candidates
+→ repeatedly polled
+→ candidate -> linear scenario lookup
+
+all historical scenarios
+→ Sweep / CHoCH / execution-geometry checks on M1 hot path
+
+all historical Root-reaction trackers
+→ Root-contact / optional-child checks
+
+all historical broker scenarios
+→ reconciliation on every tick
+→ repeated HistorySelect / deal scans even after terminal outcomes
+
+CSV row
+→ FileFlush on every event
+```
+
+By the end of the one-year run the historical ledgers were large enough for these nested scans to become superlinear.
+
+### Decision
+
+Build target:
+
+```text
+internal build = 1.90
+phase = D135_PERFORMANCE_WORKING_SET_OPTIMIZATION
+strategy_semantics = D134_UNCHANGED
+```
+
+Keep complete historical ledgers for audit, but separate them from runtime working sets:
+
+```text
+WAITING Root contacts
+READY Root child-audit contexts
+WAITING_SWEEP scenarios
+WAITING_CHOCH scenarios
+WAITING_EXECUTION_GEOMETRY scenarios
+active broker executions
+```
+
+Only the relevant bounded working set may be traversed in the corresponding M1/tick hot path.
+
+Frozen objective consumption becomes event-driven:
+
+```text
+liquidity consumed at T
+→ mark every matching already-frozen objective candidate consumed at T
+```
+
+The former whole-ledger objective polling remains semantically superseded. A candidate still frozen after the liquidity was already consumed is forbidden by the existing objective-family construction rules.
+
+Broker reconciliation becomes lifecycle-driven:
+
+```text
+original pending still live on ordinary tick
+→ do not search entry history
+
+pending disappears or trade transaction occurs
+→ inspect entry history
+
+exact hedging position still live
+→ do not search exit history
+
+position disappears
+→ inspect exit history once
+→ terminalize + remove from active execution set
+```
+
+`OnTradeTransaction` may force a history probe so fills/cancels are reconciled promptly. Ordinary ticks avoid historical scans while the exact broker object is visibly alive.
+
+CSV remains an audit ledger but flushes in batches (`256` rows) plus critical execution events and final deinit flush. Disk buffering has no strategy authority.
+
+### Acceptance gate
+
+D-135 is not accepted because it is faster. It is accepted only if both are true:
+
+```text
+1. D-134 January strategy/execution parity = PASS
+2. runtime materially improves
+```
+
+Any difference in Root, Sweep, CHoCH, FVG, merge, Entry, SL, TP, pending, fill, cancel, close, or divergence outcome is a regression and must be corrected before another full-year run.

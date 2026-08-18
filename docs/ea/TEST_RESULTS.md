@@ -1,1843 +1,307 @@
-# EA Test Results
+# D-134 Full-Year 2025 Test Result + D-135 Performance Regression Plan
 
-구현 정확성 검증 결과를 아래에 기록한다. 아직 수익성 승인 결과는 없다.
+Status: `D-134 FULL-YEAR IMPLEMENTATION CHECKPOINT / D-135 PERFORMANCE REGRESSION BASELINE`
+Date recorded: `2026-08-19`
 
+This file is a focused long-run supplement to `docs/ea/TEST_RESULTS.md`.
+`HANDOFF.md` points to this record because the full-year run exposed both strategy evidence and an implementation-scalability defect that must be preserved together.
 
-## 2026-08-17 — Integrated baseline build 1.50 implementation checkpoint
+## 1. Source run
 
-Status:
+Uploaded event ledger:
 
 ```text
-IMPLEMENTED
-METAEDITOR COMPILE + FINAL INTEGRATED A/B REAL-TICK VALIDATION PENDING
-NOT YET A PROFITABILITY RESULT
+file = mentor_v1_structure_events(20260818-064307).csv
+SHA-256 = 28ab4a4e6c2477989fb2d4b2768006e89c7b396d4508de8d464d41ca3edbc0e4
+rows = 234,275
+single EA_START = 1
+single EA_STOP = 1
 ```
 
-Build identity expected at next test:
+EA / execution identity:
 
 ```text
-build = 1.50
-phase = D131_INTEGRATED_BASELINE_EXECUTION_CORE
+repository base commit = a6ad44e1aef64472f76dc45c1c0c336dbf7073f1
+internal build = 1.80
+phase = D134_HEDGING_SAME_DIRECTION_ADDON_EXECUTION
+SL model = ROOT_OB_DISTAL_20
+FVG-origin OB = baseline authority
+same-entry multi-Root = contributor merge
+same-direction independent add-ons = enabled
+opposite-direction coexistence = blocked
+account model = hedging contract
 ```
 
-Implemented downstream of validated D-127 trigger sequence:
+Tester interval:
 
 ```text
-causal fresh widest FVG
-→ Entry
-→ 20% FVG-width SL with outward tick normalization
-→ frozen objective family nearest-first R>=1 Final TP
-→ simultaneous fully-authorized branch arbitration
-→ tester-only preflight / GTC pending submission
-→ fill / objective-Root-direction pending cancellation
-→ idempotent ticket/history reconciliation
-```
-
-Final validation must run both `InpEnableFvgOriginObExperiment=false` and `true` on the same January fixture. The test must preserve validated upstream D-127 counts before judging downstream execution. No result is recorded yet because the user intentionally chose to defer intermediate tests until the whole baseline was connected.
-
-## 2026-08-16 — Authority correction note: Root-primary / optional-child semantics
-
-Status:
-
-```text
-AUTHORITY CORRECTION
-HISTORICAL TEST COUNTS PRESERVED
-AFFECTED PHASES REQUIRE RE-TEST
-```
-
-Current required causal order:
-
-```text
-pre-existing eligible / unconsumed HTF Root
-→ actual HTF Root contact
-→ valid Root-reaction liquidity sweep
-→ meaningful M1 CHoCH
-→ causal M1 FVG
-→ widest valid FVG first retest
-→ FVG Entry / FVG 20% SL / frozen objective TP
-```
-
-Optional side observation:
-
-```text
-Root contact
-→ post-contact causal child, if any
-→ audit/context only
-```
-
-D-122 still forbids using a historical pre-contact LTF OB as a post-contact child. D-124 removes child presence, uniqueness, validity, and geometry from trade authorization.
-
-Therefore:
-
-```text
-Phase 1.1 structure results
-→ remain valid within structure scope
-
-Phase 2 physical liquidity/sweep detector results
-→ remain valid within detector scope
-→ D-126 historical ownership test PASS; D-127 now uses detector/sequence separation
-
-Phase 3A HTF Root detection/lifecycle results
-→ remain valid within Root-detection scope
-
-Phase 4A H1/M30 map/reversal results
-→ remain valid within map scope
-
-Historical Phase 3B child/refinement PASS
-→ SUPERSEDED as current strategy-parity evidence
-
-Historical Phase 4B / Phase 4C final-refined-source results
-→ old behavior only
-→ not current opportunity-frequency evidence
-```
-
-All historical records below are intentionally preserved unchanged as test history.
-
-
-## 2026-08-17 — D-128A Causal M1 FVG Selection Implementation
-
-Status:
-
-```text
-IMPLEMENTED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING
-NOT A PROFITABILITY TEST
-```
-
-Base repository checkpoint:
-
-```text
-commit = dc21ca385e5e1390c38fece08fd9b51a13012d27
-D-127 build 1.10 = PASS
-```
-
-Prepared build:
-
-```text
-internal build = 1.20
-phase = D128A_CAUSAL_FVG_SELECTION_CORE
-default CSV = mentor_v1_d128a_causal_fvg_events.csv
-orders = intentionally disabled
-```
-
-New isolated funnel:
-
-```text
-SCENARIO_CHOCH_ACCEPTED
--> independent M1_FVG_DETECTED facts
--> same-direction + post-Sweep availability + by-CHoCH availability
--> pre-selection freshness
--> eligible set freeze at CHoCH close
--> unique widest after tick normalization
--> WAITING_EXECUTION_GEOMETRY
-```
-
-Terminal D-128A results:
-
-```text
-NO_CAUSAL_FRESH_FVG -> NO_TRADE
-AMBIGUOUS_EXECUTION_FVG -> NO_TRADE
-```
-
-Validation must be run separately with:
-
-```text
-InpEnableFvgOriginObExperiment = false
-InpEnableFvgOriginObExperiment = true
-```
-
-Required invariants:
-
-```text
-M1_FVG_DETECTED has no Root/scenario/Sweep/CHoCH filter
-Candle1/2/3 clock continuity = 60s / 60s
-SCENARIO_FVG_CANDIDATE direction == scenario direction
-FVG.available_at > scenario_sweep_at
-FVG.available_at <= scenario_choch_at
-formation Candle3 != own retest
-any later touch before selection -> PRE_SELECTION_RETEST
-selected width = unique maximum tick-normalized width
-post-CHoCH FVG cannot enter candidate set
-Entry/SL/TP/order events = 0
-```
-
-Special regression case to inspect:
-
-```text
-Candle1 before Sweep
-Candle2 = Sweep/reversal
-Candle3 closes after Sweep and confirms FVG
-```
-
-This must remain eligible if all other D-128A conditions pass; Candle1 timing is
-not a separate gate.
-
-Profitability: N/A.
-
-## 2026-08-16 — D-126 Root-Reaction Sweep Validation
-
-Status:
-
-```text
-PASS — D-126 implementation matched its frozen contract
-HISTORICAL STRATEGIC OWNERSHIP SEMANTICS SUPERSEDED BY D-127
-NOT A PROFITABILITY TEST
-```
-
-EA:
-
-```text
-repository commit = b71cb556df4251937b3bf4812644bfdc5efa1440
-internal build = 1.00
-phase = D126_ROOT_REACTION_SWEEP_CORE
-InpEnableFvgOriginObExperiment = false
-```
-
-Uploaded event CSV:
-
-```text
-mentor_v1_structure_events(20260816-132141).csv
-rows = 7465
-```
-
-Summary:
-
-```text
-SCENARIO_PLANNED = 13
-SCENARIO_ROOT_CONTACT_BOUND = 6
-ROOT_CONTACT_WITHOUT_PREPLAN = 5
-AUTHORIZED_SWEEP = 11
-AUTHORIZED_SWEEP_POOL = 20
-```
-
-All 20 D-126 authorized pool rows satisfied:
-
-```text
-pool_available_at < sweep_bar_open = PASS
-root_intersection=true = 20 / 20
-same_contact_bar=false = 20 / 20
-strategy_source_kind=ROOT = 20 / 20
-child_required=false = 20 / 20
-```
-
-Forbidden/disabled paths:
-
-```text
-AUTHORIZED_SWEEP_REPLACED = 0
-STRUCTURAL_REACTION_CREATED = 0
-old Phase4C SOURCE_CONTACT = 0
-orders/deals = 0
-```
-
-Interpretation:
-
-D-126 is a causal implementation PASS: its per-M1-open snapshot and Root-zone
-intersection ownership rules ran exactly as specified. The run also showed that
-these rules were acting as an additional strategy filter after Map / Root /
-Contact had already filtered the setup.
-
-D-127 therefore preserves this result as historical evidence but supersedes the
-**strategic** Root-reintersection / sweep-ownership layer with detector/sequence
-separation. This is a strategy-architecture correction, not a claim that the
-D-126 code malfunctioned.
-
-Profitability: N/A.
-
-## 2026-08-16 — D-127 Linear Trigger Pipeline Validation + FVG-Origin OB Experiment Comparison
-
-Status:
-
-```text
-PASS — D-127 detector/sequence separation
-PASS — FVG-origin recognizer causal/additive smoke
-FVG_ORIGIN_OB REMAINS EXPERIMENTAL / NOT PROMOTED TO DEFAULT
-NOT A PROFITABILITY TEST
-```
-
-Current funnel under test:
-
-```text
-DETECT:
-M1_SWEEP_DETECTED
-M1_CHOCH_DETECTED
-
-SEQUENCE:
-Map / Objective
-→ HTF Root
-→ Root contact
-→ later direction-compatible detected M1 Sweep
-→ later direction-compatible detected M1 CHoCH
-→ WAITING_FVG
-```
-
-D-127 intentionally removes these strategy-side nested filters:
-
-```text
-Root reintersection at Sweep
-D-126 family whitelist at scenario Sweep stage
-latest-sweep replacement
-sweep-time opposite M1 trend gate
-sweep-time protected-reference freeze
-separate MEANINGFUL_CHOCH subtype
-mandatory M5 / child trigger confirmation
-```
-
-The M1 structure detector itself is unchanged. Current `M1_CHOCH_DETECTED`
-mirrors the existing M1 `STRUCTURE_PROTECTED_BREAK`; `INITIAL_BOS` remains a
-separate detector event.
-
-No FVG/order authorization is enabled in D-127.
-
-### Uploaded D-127 comparison ledger
-
-The uploaded file:
-
-```text
-mentor_v1_structure_events(20260816-143318).csv
-total rows = 17,593
-SHA-256 = fce83a7aeff3c8f5b66b95e66a0f798bd907fbfda230baf294c4012ea1dfa606
-```
-
-contains two consecutively appended runs of the same build:
-
-```text
-run A:
-build = 1.10
-phase = D127_LINEAR_TRIGGER_PIPELINE_CORE
-InpEnableFvgOriginObExperiment = false
-rows = 8,029
-
-run B:
-build = 1.10
-phase = D127_LINEAR_TRIGGER_PIPELINE_CORE
-InpEnableFvgOriginObExperiment = true
-rows = 9,564
-```
-
-The false segment is byte/content-equivalent to the previously uploaded
-`mentor_v1_structure_events(20260816-142823).csv` run.
-
-### Common detector regression
-
-The following detector / map streams are exactly row-equal between false and true:
-
-```text
-WAVE_CONFIRMED                 2406
-STRUCTURE_BOS                  1554
-STRUCTURE_INITIAL_BOS           209
-STRUCTURE_PROTECTED_BREAK       205
-
-LIQUIDITY_CREATED               939
-LIQUIDITY_SWEEP                 434
-LIQUIDITY_BODY_DELIVERY         428
-M1_SWEEP_DETECTED               433
-M1_CHOCH_DETECTED               154
-
-MAP_STATE                       104
-REVERSAL_REFERENCE_SET           62
-REVERSAL_REFERENCE_EVENT        108
-REVERSAL_PERMISSION_STATE        53
-```
-
-Therefore the FVG-origin experiment changes OB recognition only. It does not
-rewrite the already-validated structure, liquidity, Sweep detector, CHoCH
-detector, or H1/M30 map outputs.
-
-### Run A — LAST_OPPOSITE_OB baseline (`false`)
-
-```text
-ROOT_CREATED                    19
-ROOT_WATCH_CREATED              21
-ROOT_CONTACT_OBSERVED           11
-
-SCENARIO_PLANNED                13
-SCENARIO_ROOT_CONTACT_BOUND      6
-SCENARIO_SWEEP_ACCEPTED          6
-SCENARIO_CHOCH_ACCEPTED          2
-
-distinct accepted M1 CHoCH events = 2
-```
-
-Funnel:
-
-```text
-6 preplanned Root contacts
-→ 6 scenario Sweeps
-→ 2 scenario CHoCH
-→ WAITING_FVG
-```
-
-D-127 invariants:
-
-```text
-M1_CHOCH_DETECTED == M1 STRUCTURE_PROTECTED_BREAK = 154 / 154 exact identity
-Root reintersection gate = absent
-sweep family whitelist at scenario stage = absent
-sweep-time CHoCH-reference freeze = absent
-child trigger gate = absent
-FVG/order authorization = disabled
-```
-
-### Run B — FVG-origin experiment (`true`)
-
-Root recognition becomes additive:
-
-```text
-ROOT_CREATED = 108
-  LAST_OPPOSITE_OB = 19
-  FVG_ORIGIN_OB    = 89
-
-ROOT_WATCH_CREATED = 113
-ROOT_CONTACT_OBSERVED = 61
-
-SCENARIO_PLANNED = 78
-  LAST_OPPOSITE_OB branches = 13
-  FVG_ORIGIN_OB branches    = 65
-
-SCENARIO_ROOT_CONTACT_BOUND = 36
-  LAST_OPPOSITE_OB = 6
-  FVG_ORIGIN_OB    = 30
-
-SCENARIO_SWEEP_ACCEPTED = 33
-  LAST_OPPOSITE_OB = 6
-  FVG_ORIGIN_OB    = 27
-
-SCENARIO_CHOCH_ACCEPTED = 18
-  LAST_OPPOSITE_OB = 2
-  FVG_ORIGIN_OB    = 16
-```
-
-The original false-mode scenario rows remain an exact subset of the true-mode
-scenario rows for:
-
-```text
-SCENARIO_PLANNED
-SCENARIO_ROOT_BOUND
-SCENARIO_ROOT_CONTACT_BOUND
-SCENARIO_SWEEP_ACCEPTED
-SCENARIO_CHOCH_ACCEPTED
-```
-
-Thus enabling the experiment does not replace or mutate the baseline path.
-
-Recognition overlap is handled as intended:
-
-```text
-OB_RECOGNITION_MERGED = 34
-```
-
-These are same physical origin candles recognized by both definitions; the
-reason tags are merged rather than creating a duplicate physical Root for the
-same event/candle identity.
-
-One bootstrap Root watch was skipped:
-
-```text
-ROOT_WATCH_SKIPPED = 1
-reason = PRIOR_CLOSED_M1_TOUCH
-```
-
-which is the expected fresh-reaction guard, not an experiment bypass.
-
-### Scenario branches are not trade counts
-
-The 18 accepted scenario branches correspond to only:
-
-```text
-distinct M1 CHoCH detector events = 9
-distinct accepted Sweep→CHoCH bar pairs = 10
-```
-
-because several distinct physical Roots coexist under the same market reaction
-and reach the same M1 CHoCH.
-
-Multiplicity by CHoCH event:
-
-```text
-2025-01-09 19:48  → 1 scenario
-2025-01-10 14:47  → 1 scenario
-2025-01-13 03:52  → 4 scenarios
-2025-01-15 18:22  → 5 scenarios
-2025-01-16 02:16  → 1 scenario
-2025-01-16 15:17  → 2 scenarios
-2025-01-17 13:16  → 1 scenario
-2025-01-17 16:41  → 2 scenarios
-2025-01-21 16:24  → 1 scenario
-```
-
-All 18 accepted scenario branches are LONG in this January fixture.
-
-Interpretation:
-
-```text
-false: 2 distinct accepted CHoCH events
-true : 9 distinct accepted CHoCH events
-```
-
-The experiment therefore materially broadens opportunity coverage in this
-sample while preserving the baseline path exactly.
-
-However:
-
-```text
-18 scenario branches != 18 executable trades
-```
-
-FVG selection, concurrency/exposure identity, objective eligibility, Entry/SL/TP,
-and order submission have not yet run. Several Root branches may converge on the
-same execution FVG/decision cycle.
-
-### Current decision
-
-`FVG_ORIGIN_OB` remains an immutable research experiment rather than the default
-baseline recognizer.
-
-Reason:
-
-```text
-causal implementation = PASS
-opportunity expansion = observed
-profitability = unknown
-downstream FVG/execution branch convergence = not yet measured
-```
-
-Next comparison should carry both recognizer modes through the same causal FVG /
-Entry pipeline before deciding whether `FVG_ORIGIN_OB` should be promoted,
-rejected, or retained as a separate immutable variant.
-
-## 2026-08-16 — D-125 Corrected Phase 4B Root-Specific PLAN / Objective Validation
-
-Status:
-
-```text
-PASS — corrected Phase 4B within isolated scope
-NOT A PROFITABILITY TEST
-```
-
-EA:
-
-```text
-repository commit = 47dbce14dc130ca0c805a53e29f36f900c16a8da
-internal build = 0.90
-property version = 1.00
-phase = D125_ROOT_PRECONTACT_SCENARIO_OBJECTIVE_CORE
-InpEnableFvgOriginObExperiment = false
-```
-
-Uploaded event CSV:
-
-```text
-mentor_v1_structure_events(20260816-125125).csv
-rows = 7434
-SHA-256 = 093919cfaac28c85ec9ee7648cfa0bae25cd24e6881eccad009e0878a1608c44
-observed interval = 2025-01-06 00:00:00 ~ 2025-01-31 23:57:57
-```
-
-The CSV proves build 0.90 executed. The tester model is not encoded in the CSV,
-so this record does not infer that field from the file alone.
-
-Phase 4B summary:
-
-```text
-SCENARIO_PLANNED = 13
-SCENARIO_ROOT_BOUND = 13
-OBJECTIVE_CANDIDATE_FROZEN = 91
-
-ROOT_CONTACT_OBSERVED = 11
-SCENARIO_ROOT_CONTACT_BOUND = 6
-ROOT_CONTACT_WITHOUT_PREPLAN = 5
-
-SCENARIO_CANCELED = 13
-all cancellation reasons = ROOT_INVALIDATED
-```
-
-Six valid preplanned contact bindings:
-
-```text
-2025-01-10 17:00 PLAN → 2025-01-13 12:26 LONG H1 continuation contact
-2025-01-14 22:00 PLAN → 2025-01-15 03:45 LONG M30 continuation contact
-2025-01-16 16:00 PLAN → 2025-01-17 12:42 LONG H1 continuation contact
-2025-01-24 14:30 PLAN → 2025-01-24 18:50 LONG H1 continuation M30 Root contact
-2025-01-24 14:30 PLAN → 2025-01-24 18:50 LONG H1 continuation M15 Root contact
-2025-01-27 17:30 PLAN → 2025-01-30 09:19 SHORT M30 external-reversal contact
-```
-
-Automated invariants:
-
-```text
-SCENARIO_PLANNED strategy_source_kind != ROOT = 0
-SCENARIO_PLANNED child_required != false = 0
-SCENARIO_PLANNED already has root_contact_at = 0
-
-objective_count mismatch = 0
-objective future-availability violation = 0
-objective wrong-direction side = 0
-objective nearest-first price-order violation = 0
-
-bound contact with plan_frozen_at >= root_contact_at = 0
-bound root_zone_id != strategy_source_id = 0
-bound post-contact state != WAITING_SWEEP = 0
-
-AMBIGUOUS_ROOT_LINEAGE = 0
-PREPLAN_SOURCE_CONTACT = 0
-old Phase4C SOURCE_CONTACT = 0
-old Phase4C AUTHORIZED_SWEEP = 0
-STRUCTURAL_REACTION strategy creation = 0
-```
-
-Physical Root contacts with no valid strictly-earlier PLAN:
-
-```text
-2025-01-06 01:03 SHORT M15
-2025-01-06 15:38 LONG M15
-2025-01-27 10:40 SHORT M15
-2025-01-31 20:32 LONG M30
-2025-01-31 22:05 LONG M15
-```
-
-All logged:
-
-```text
-reason = NO_ACTIVE_PRECONTACT_MAP_OBJECTIVE_PLAN
-retrospective_plan_forbidden = true
-```
-
-They were not backfilled after the contact.
-
-Seven of the thirteen PLANs never reached Root contact before their Root later
-invalidated. Their cancellation is therefore expected in this isolated build.
-
-Upstream regression:
-
-Structure, physical liquidity, H1/M30 map/reversal, Root creation/invalidation,
-Root-watch/contact identity, and optional-child audit outputs remained consistent
-with the D-124 baseline. Phase 4B added strategy planning state without changing
-the verified detector layers.
-
-Profitability:
-
-```text
-N/A
-```
-
-Reason:
-
-```text
-Strategic sweep, CHoCH, FVG execution, and orders were intentionally disabled.
-```
-
-Next:
-
-```text
-D-126 corrected Phase 4C
-→ per-M1-open causal mature-pool snapshot
-→ Root-zone-owned direction-compatible strategic sweep
-→ retain all swept-pool identities / sweep episodes
-→ CHoCH remains disabled until Phase 5A
-```
-
-
-
-## 2026-08-16 — D-124 Root-Primary / Optional-Child Audit Validation
-
-Status:
-
-```text
-PASS — Root-primary / optional-child authority core
-NOT A PROFITABILITY TEST
-```
-
-EA:
-
-```text
-repository commit = 10a0a83d3b66c72c3ba8411c9e3edfd281848860
-internal build = 0.81
-property version = 1.00
-phase = D124_ROOT_PRIMARY_OPTIONAL_CHILD_AUDIT_CORE
-InpEnableFvgOriginObExperiment = false
-```
-
-Uploaded event CSV:
-
-```text
-mentor_v1_structure_events(20260816-121802).csv
-rows = 7079
-observed interval = 2025-01-06 00:00:00 ~ 2025-01-31 23:57:57
-execution_epoch_start = 2025-01-06 01:00:05
-```
-
-The CSV confirms the D-124 build ran. The tester model itself is not encoded in
-the CSV, so this record does not infer the model from the file alone.
-
-D-124 runtime summary:
-
-```text
-ROOT_WATCH_CREATED = 21
-ROOT_CONTACT_OBSERVED = 11
-ROOT_CONTEXT_READY = 11
-
-children_created_strategy_sources = 0
-OPTIONAL_CHILD_OBSERVED = 2
-children_invalidated_strategy_sources = 0
-
-SCENARIO_PLANNED = 0
-old Phase4C SOURCE_CONTACT = 0
-old Phase4C AUTHORIZED_SWEEP = 0
-old Phase4C STRUCTURAL_REACTION = 0
-```
-
-Root-primary invariants:
-
-```text
-every ROOT_CONTACT_OBSERVED has exactly one ROOT_CONTEXT_READY = PASS
-ROOT_CONTEXT_READY timestamp == Root-contact timestamp = PASS
-ROOT_CONTEXT_READY strategy_source_id == Root object_id = PASS
-strategy_source_kind = ROOT for every ready context = PASS
-child_strategy_authority = false for every ready context = PASS
-entry_geometry = M1_FVG for every ready context = PASS
-sl_geometry = M1_FVG_20PCT for every ready context = PASS
-
-strategy_source_kind=CHILD occurrences = 0
-child_strategy_authority=true occurrences = 0
-strategy_authority=true on optional child = 0
-child_required=true occurrences = 0
-```
-
-Optional child observations:
-
-```text
-#1 M5 LONG
-Root contact = 2025-01-15 03:45
-child origin = 2025-01-15 03:55
-child available = 2025-01-15 04:50
-audit_only = true
-strategy_authority = false
-
-#2 M15 LONG
-Root contact = 2025-01-15 03:45
-child origin bar = 2025-01-15 03:45
-child available = 2025-01-15 08:15
-audit_only = true
-strategy_authority = false
-```
-
-The second child begins on the new M15 bar that opens at the already-observed
-Root-contact timestamp and does not become causally available until 08:15.
-Therefore:
-
-```text
-child origin >= Root contact = PASS
-child available_at > Root contact = PASS
-historical pre-contact child authorization = 0
-```
-
-Both optional children explicitly logged:
-
-```text
-strategy_source_kind = ROOT
-entry_authority = false
-sl_authority = false
-tp_authority = false
-cancellation_authority = false
-```
-
-Upstream exact-regression comparison against D122A build 0.80:
-
-```text
-WAVE_CONFIRMED               2406 → 2406 exact rows equal
-STRUCTURE_BOS                1554 → 1554 exact rows equal
-STRUCTURE_INITIAL_BOS         209 → 209 exact rows equal
-STRUCTURE_PROTECTED_BREAK     205 → 205 exact rows equal
-
-LIQUIDITY_CREATED             939 → 939 exact rows equal
-LIQUIDITY_SWEEP               434 → 434 exact rows equal
-LIQUIDITY_BODY_DELIVERY       428 → 428 exact rows equal
-
-MAP_STATE                     104 → 104 exact rows equal
-REVERSAL_REFERENCE_SET         62 → 62 exact rows equal
-REVERSAL_REFERENCE_CLEARED      3 → 3 exact rows equal
-REVERSAL_REFERENCE_EVENT      108 → 108 exact rows equal
-REVERSAL_PERMISSION_STATE      53 → 53 exact rows equal
-
-ROOT_CREATED                   19 → 19 exact rows equal
-ROOT_REJECTED                 229 → 229 exact rows equal
-ROOT_INVALIDATED               19 → 19 exact rows equal
-ROOT_STATE                       3 → 3 exact rows equal
-ROOT_WATCH_CREATED              21 → 21 exact rows equal
-```
-
-Interpretation:
-
-```text
-D-124 successfully removes child OB from strategy-source authority.
-All 11 observed Root contacts survive into ROOT_CONTEXT_READY regardless of
-whether an optional child exists.
-Only 2 optional children were observed, but this does not reduce the 11 Root
-contexts to 2 strategy candidates.
-Entry / SL geometry remains assigned to M1 FVG.
-```
-
-Profitability:
-
-```text
-N/A
-```
-
-Reason:
-
-```text
-Corrected scenario, strategic sweep, CHoCH, and order authorization are still
-intentionally disabled in build 0.81.
-```
-
-Next:
-
-```text
-corrected Phase 4B / 4C
-→ attach map / direction / objective qualification to Root-primary context
-→ attach valid Root-reaction sweep ownership
-→ do not reintroduce child as a gate, source replacement, or ambiguity veto
-```
-
-
-## 2026-08-16 — Phase 1.1 Structure / Bootstrap Smoke Test
-
-Status:
-
-```text
-PASS — structure/bootstrap implementation scope
-NOT A PROFITABILITY TEST
-```
-
-EA:
-
-```text
-MentorDeterministicV1EA
-repository commit = 421a92c90b3a0d6c62a950690436125a60c72d3b
-internal build = 0.11
-property version = 1.00
-```
-
-Tester:
-
-```text
-symbol = GOLD
-broker = XMGlobal-MT5 12
-period = M1
+calendar year = 2025-01-01 ~ 2025-12-31
 model = Every tick based on real ticks
-tester period = 2025-01-06 00:00 ~ 2025-01-08 00:00
-magic = 26081601
-execution delay = 230 ms
+user-reported wall-clock runtime ≈ 9 hours
 ```
 
-History / tick coverage observed:
+The user observed long periods where Strategy Tester progress appeared stationary, followed by abrupt progress jumps. Prior January-scale tests normally completed in under roughly one minute.
+
+## 2. Full-year causal / execution funnel
+
+Observed counts:
 
 ```text
-H4  history begins = 2024-01-02 00:00
-H1  history begins = 2024-01-02 01:00
-M30 history begins = 2024-01-02 01:00
-M15 history begins = 2024-01-02 01:00
-M5  history begins = 2024-01-02 01:00
-M1  history begins = 2024-01-02 01:00
+SCENARIO_PLANNED = 837
+SCENARIO_ROOT_CONTACT_BOUND = 496
+SCENARIO_SWEEP_ACCEPTED = 386
+SCENARIO_CHOCH_ACCEPTED = 178
+SCENARIO_FVG_SELECTED = 163
 
-real ticks begin = 2024-02-06 00:00
+unique Entry opportunities = 79
+execution geometry ready = 74
+pending accepted = 73
+filled = 58
+closed = 58
+pending canceled before fill = 15
 ```
 
-Execution epoch:
+Closed-result counts:
 
 ```text
-2025-01-06 01:00:05
+TP = 14
+SL = 44
+win rate = 24.1%
 ```
 
-Tester result:
+Execution integrity:
 
 ```text
-476,672 ticks
-2,758 M1 bars generated
-initial deposit = 10,000 USD
-final balance = 10,000 USD
-orders = 0
-deals = 0
-runtime fatal error = 0
-tester = passed
+order reject = 0
+cancel reject = 0
+execution divergence = 0
+opposite-direction exposure conflict = 1
 ```
 
-Structure-event CSV:
+Pending cancellation observations:
 
 ```text
-rows = 695
-
-runtime:
-WAVE_CONFIRMED               = 252
-STRUCTURE_BOS                = 120
-STRUCTURE_INITIAL_BOS        = 28
-STRUCTURE_PROTECTED_BREAK    = 27
-STRUCTURE_STATE              = 27
-EXECUTION_EPOCH_START        = 1
+objective delivered before fill = 10
+all contributor Roots invalid = 3
+single source Root invalid = 2
 ```
 
-Automated causal checks:
+NO_TRADE / execution-opportunity failures observed after geometry formation:
 
 ```text
-duplicate event/object id                 = 0
-duplicate timeframe/bar structure event   = 0
-available_at > observed_at                = 0
-same-timestamp MTF order violation         = 0
-same-side consecutive confirmed wave       = 0
-INITIAL_BOS opposite reference missing     = 0
-body-close break violation                 = 0
-PROTECTED_BREAK without TRANSITION         = 0
-ordinary BOS immediately after break       = 0
+NO_COMMON_R_ELIGIBLE_OBJECTIVE = 4
+NO_R_ELIGIBLE_OBJECTIVE = 1
+OPPOSITE_DIRECTION_EXPOSURE_CONFLICT = 1
 ```
 
-Bootstrap final structure state:
+This full-year run therefore substantially extends D-133/D-134 lifecycle coverage beyond January, including merged contributors, same-direction hedging add-ons, all-contributor invalidation, and opposite-direction conflict handling.
+
+## 3. Provisional performance research summary
+
+The event CSV does not contain complete broker contract-value / commission / swap accounting. Dollar figures below use the same provisional research convention used during analysis for GOLD minimum-volume parity and are **gross estimates**, not broker-statement net PnL.
 
 ```text
-H4  = TRANSITION
-H1  = TRANSITION
-M30 = TRANSITION
-M15 = BEARISH
+filled trades = 58
+TP = 14
+SL = 44
+win rate ≈ 24.1%
+provisional gross profit ≈ +1,107.95 USD
+provisional gross loss ≈ -842.31 USD
+provisional gross net ≈ +265.64 USD
+provisional gross profit factor ≈ 1.315
 ```
 
-Known defect found:
+Risk-normalized result:
 
 ```text
-InpLogBootstrapEvents=false
-but bootstrap PROTECTED_BREAK STRUCTURE_STATE rows = 228
+realized total ≈ +8.68R
+expectancy ≈ +0.150R / filled trade
+R profit factor ≈ 1.187
+median trade ≈ -1.00R
 ```
+
+Observed closed-trade R drawdown:
+
+```text
+maximum ≈ -21.44R
+```
+
+The year was not uniformly profitable. December contained several large winners and contributed most of the positive annual gross result. This is consistent with a low-win-rate / large-payoff trend-following distribution, but it is not yet evidence of robust multi-year profitability.
+
+## 4. Continuation versus reversal
+
+Observed closed trades by scenario scope:
+
+```text
+EXTERNAL_CONTINUATION
+fills = 51
+TP = 14
+SL = 37
+realized ≈ +15.94R
+provisional gross PnL ≈ +433.81 USD
+
+EXTERNAL_REVERSAL
+fills = 7
+TP = 0
+SL = 7
+realized ≈ -7.26R
+provisional gross PnL ≈ -168.17 USD
+```
+
+This is a **research flag**, not an automatic rule change. The reversal sample is still small, but it is currently the clearest strategy branch requiring later causal review once implementation performance is fixed.
+
+## 5. D-134 same-direction add-ons
+
+Same-direction add-ons were not uniformly harmful over the full year:
+
+```text
+add-on fills = 20
+TP = 6
+SL = 14
+win rate ≈ 30.0%
+realized ≈ +4.20R
+provisional gross PnL ≈ +135.22 USD
+```
+
+Therefore the January-only negative impression was not sufficient evidence to revert D-134.
+
+However, add-ons create correlated portfolio exposure. Observed maxima:
+
+```text
+maximum simultaneous filled positions = 4
+maximum accepted exposure = 5
+```
+
+One April cluster carried three same-direction SHORT positions at once and all three stopped out. This is a future portfolio-risk-layer issue, not evidence that a valid later Root -> Sweep -> CHoCH -> FVG chain should be discarded at the signal layer.
+
+## 6. Execution / slippage note
+
+Execution divergence remained zero. Several SL exits nevertheless occurred beyond the strategy SL price under real-tick simulation. The largest previously inspected case was approximately `-2.47R` because the actual SL deal occurred materially beyond the frozen stop price.
+
+Therefore future risk research must distinguish:
+
+```text
+strategy risk = Entry-to-frozen-SL distance
+realized execution risk = actual fill-to-exit result
+```
+
+No rule change is authorized from this observation alone.
+
+## 7. Performance scalability defect
+
+The approximately nine-hour runtime is not consistent with simple linear growth from the January fixture. Static build-1.80 review found long-run hot paths repeatedly traversing historical append-only ledgers.
+
+Primary defects:
+
+```text
+1. objective consumption polling:
+   all historical objective candidates
+   x candidate -> linear scenario lookup
+
+2. historical scenario scans on M1 processing:
+   old canceled/filled/no-trade scenarios remain in append-only ledger
+
+3. historical Root-reaction scans:
+   waiting and terminal trackers share one array
+
+4. broker reconciliation on every tick:
+   historical scenarios repeatedly rechecked
+   HistorySelect / deal scans could repeat after terminal outcomes
+
+5. exact pending / exact hedging position existence was not used as the cheap first gate
+
+6. CSV FileFlush executed for every event row
+```
+
+The historical ledgers are required for audit. The defect is using them as runtime working sets.
 
 Classification:
 
 ```text
-logging-only
-strategy calculation impact = none
+strategy-rule defect = NO EVIDENCE
+execution-integrity defect in observed run = NO
+implementation scalability defect = YES
+priority = FIX BEFORE MULTI-YEAR TESTING
 ```
 
-Resolution:
+## 8. D-135 prepared performance-only build
 
-```text
-fixed in Phase 2 by suppressing bootstrap PROTECTED_BREAK STRUCTURE_STATE
-while keeping BOOTSTRAP_COMPLETE snapshots
-```
-
-Compile note:
-
-```text
-Phase 1 build 0.10:
-0 errors / 1 warning / 482 ms / AVX2 + FMA3
-
-Phase 1.1 executable successfully ran in Strategy Tester.
-The exact Phase 1.1 MetaEditor warning line was not archived,
-so warning status is not inferred.
-```
-
-Profitability metrics:
-
-```text
-N/A
-```
-
-Reason:
-
-```text
-Phase 1.1 intentionally contains no order layer.
-```
-
-
-## 2026-08-16 — Phase 2 Liquidity / Sweep Smoke Test
-
-Status:
-
-```text
-PASS — liquidity/sweep implementation scope
-NOT A PROFITABILITY TEST
-```
-
-EA:
-
-```text
-MentorDeterministicV1EA
-repository commit = 2a921a43b4e0ea91f611d0428065f618ff667b6d
-runtime internal build = 0.21
-property version = 1.00
-phase = LIQUIDITY_CORE
-```
-
-Event CSV:
-
-```text
-rows = 644
-```
-
-Runtime structure regression:
-
-```text
-WAVE_CONFIRMED            = 252
-STRUCTURE_BOS             = 120
-STRUCTURE_INITIAL_BOS     = 28
-STRUCTURE_PROTECTED_BREAK = 27
-```
-
-These counts match the verified Phase 1.1 smoke run.
-
-Liquidity:
-
-```text
-LIQUIDITY_CREATED       = 93
-LIQUIDITY_SWEEP         = 28
-LIQUIDITY_BODY_DELIVERY = 48
-```
-
-Runtime EXTERNAL_SWING source reasons:
-
-```text
-EXTERNAL_EXTREME_PROMOTION = 51
-PROTECTED_PROMOTION        = 42
-```
-
-Bootstrap active liquidity:
-
-```text
-H4  total=12 external=12 defended=0 reaction=0
-H1  total=20 external=19 defended=1 reaction=0
-M30 total=31 external=30 defended=1 reaction=0
-M15 total=49 external=47 defended=2 reaction=0
-```
-
-Automated checks:
-
-```text
-duplicate LIQUIDITY_CREATED id     = 0
-duplicate pool consumption         = 0
-same-bar self-consumption          = 0
-physical-sweep rule violation      = 0
-body-delivery rule violation       = 0
-future available_at                = 0
-runtime MTF order violation        = 0
-within-TF event order violation    = 0
-liquidity detector error event     = 0
-```
-
-Sweep penetration:
-
-```text
-minimum = 2 ticks
-```
-
-Body-delivery penetration:
-
-```text
-minimum = 4 ticks
-```
-
-Phase 1.1 logging regression:
-
-```text
-bootstrap PROTECTED_BREAK STRUCTURE_STATE over-logging
-→ resolved
-```
-
-DEFENDED_RANGE_EDGE coverage note:
-
-```text
-No new defended-range creation/consumption occurred in the short runtime window.
-Bootstrap restored:
-H1=1, M30=1, M15=2 active defended-range pools.
-Static source review confirms the four-wave / overlap / body-contained / H4-block guards.
-Continue per-object defended-range regression in later longer tests.
-```
-
-STRUCTURAL_REACTION:
-
-```text
-0
-```
-
-Expected because Root/source ownership is not yet attached in Phase 2.
-
-Compile note:
-
-```text
-The Phase 2.0 reference-alias compile errors were fixed in internal build 0.21.
-A Strategy Tester executable for build 0.21 produced this CSV.
-Exact warning count was not supplied, so warning status is not inferred.
-```
-
-Profitability:
-
-```text
-N/A
-```
-
-Reason:
-
-```text
-No order layer exists.
-```
-
-
-## 2026-08-16 — Phase 3A HTF Root OB Core Smoke Test
-
-Status:
-
-```text
-PASS — Root core within implemented scope
-NOT A PROFITABILITY TEST
-```
-
-EA:
-
-```text
-MentorDeterministicV1EA
-latest compile-fix commit = 2b22d828773f8fb59e09e834dd7ff9a125ad784d
-internal build = 0.31
-phase = ROOT_CORE
-```
-
-Event CSV:
-
-```text
-rows = 668
-```
-
-Runtime regression counts:
-
-```text
-WAVE_CONFIRMED               = 252
-STRUCTURE_BOS                = 120
-STRUCTURE_INITIAL_BOS        = 28
-STRUCTURE_PROTECTED_BREAK    = 27
-
-LIQUIDITY_CREATED            = 93
-LIQUIDITY_SWEEP              = 28
-LIQUIDITY_BODY_DELIVERY      = 48
-```
-
-Root runtime:
-
-```text
-ROOT_CREATED      = 2
-ROOT_INVALIDATED  = 3
-ROOT_REJECTED     = 16
-ROOT_STATE        = 3
-```
-
-Rejections:
-
-```text
-NO_CAUSAL_CORRECTION_OR_MEANINGFUL_WAVE = 13
-SESSION_GAP_CROSSED                     = 3
-```
-
-Bootstrap Root state:
-
-```text
-H1  active = 0
-M30 active = 0
-M15 active = 2 short
-```
-
-Full Root lifecycle summary:
-
-```text
-roots_created               = 272
-root_price_invalidated      = 161
-root_structure_invalidated  = 110
-active_roots                = 1
-
-161 + 110 + 1 = 272
-```
-
-Automated causal checks:
-
-```text
-future available_at                              = 0
-invalid Root timeframe                           = 0
-wrong opposite-candle colour                     = 0
-wrong meaningful-wave side                       = 0
-origin outside origin window                     = 0
-scenario_authority != false                      = 0
-scenario_owner_id != UNBOUND                     = 0
-same_session_causal_path != true                 = 0
-linked structure event mismatch                  = 0
-invalid PRICE_INVALIDATED geometry               = 0
-STRUCTURE_INVALIDATED without protected break    = 0
-same-bar Root self-invalidation                  = 0
-unexpected rejection reason                      = 0
-rejection without matching structure event       = 0
-Phase 1 structure regression                     = 0
-Phase 2 liquidity regression                     = 0
-STRUCTURAL_REACTION creation                     = 0
-```
-
-Known completeness limitation:
-
-```text
-Independent enumeration/completeness of every
-"structurally meaningful internal swing" Root context
-has not yet been implemented/audited as a separate Root path.
-```
-
-Therefore:
-
-```text
-Phase 3A core = PASS
-Full Root-spec completeness = still open
-```
-
-Profitability:
-
-```text
-N/A
-```
-
-Reason:
-
-```text
-Scenario and order layers remain disabled.
-```
-
-
-## 2026-08-16 — Phase 3B Short Refinement Smoke Test
-
-Status:
-
-```text
-PASS — NO_CHILD / fail-closed path
-COVERAGE INCOMPLETE — CHILD_CREATED path not exercised
-NOT A PROFITABILITY TEST
-```
-
-EA:
-
-```text
-MentorDeterministicV1EA
-repository commit = 72e7e99409a5b12354c1da653308d0e17a9cf471
-internal build = 0.40
-phase = REFINEMENT_CORE
-```
-
-CSV:
-
-```text
-event rows = 678
-```
-
-Refinement:
-
-```text
-REFINEMENT_FROZEN      = 4
-REFINEMENT_INVALIDATED = 3
-CHILD_CREATED          = 0
-CHILD_INVALIDATED      = 0
-```
-
-EA stop summary:
-
-```text
-roots_created=272
-root_price_invalidated=161
-root_structure_invalidated=110
-
-children_created=0
-children_invalidated=0
-
-refinements_ready=0
-refinements_no_child=4
-refinements_ambiguous=0
-```
-
-Regression:
-
-```text
-future available_at                    = 0
-same-timestamp MTF order violation     = 0
-refinement early-freeze violation      = 0
-structure event counts changed         = 0
-liquidity event counts changed         = 0
-Root runtime event counts changed      = 0
-STRUCTURAL_REACTION created            = 0
-```
-
-Runtime Root #1:
-
-```text
-M15 LONG
-root available = 2025-01-06 13:45
-root origin = 09:30
-parent origin window = 03:30 ~ 09:30
-refinement = NO_CHILD
-```
-
-Same timestamp contained an M5 bullish BOS,
-but its causal source did not satisfy the parent's frozen origin-time relation.
-
-Runtime Root #2:
-
-```text
-M15 LONG
-root available = 2025-01-07 14:00
-root origin = 09:30
-parent origin window = 08:15 ~ 09:45
-refinement = NO_CHILD
-```
-
-Relevant later M5 causal structure did not satisfy the frozen parent origin window.
-
-Conclusion:
-
-```text
-The short test supports conservative NO_CHILD behavior.
-It does not validate CHILD_CREATED, deepest-child selection,
-ambiguity handling, or child invalidation.
-```
-
-Required next validation:
-
-```text
-extended real-tick run
-2025-01-06 ~ 2025-02-01
-CHILD_CREATED >= 1 required for final Phase 3B PASS
-```
-
-If zero children still occur:
-
-```text
-add diagnostic rejection counters first
-do not loosen causal rules blindly
-```
-
-
-## 2026-08-16 — Phase 3B Extended Causal Refinement Validation
-
-Status:
-
-```text
-PASS — Phase 3B refinement core
-NOT A PROFITABILITY TEST
-```
-
-EA:
+Target:
 
 ```text
-internal build = 0.40
-phase = REFINEMENT_CORE
-code commit = 72e7e99409a5b12354c1da653308d0e17a9cf471
-validation-doc commit = 7c695233eceed2bb69af5e222715657aaa8938f7
+internal build = 1.90
+phase = D135_PERFORMANCE_WORKING_SET_OPTIMIZATION
+strategy semantics = D134_UNCHANGED
+default CSV = mentor_v1_d135_events.csv
 ```
 
-CSV:
+Implemented optimization classes:
 
 ```text
-event rows = 6727
+- bounded WAITING/READY Root-reaction working sets
+- bounded WAITING_SWEEP scenario working set
+- bounded WAITING_CHOCH scenario working set
+- bounded WAITING_EXECUTION_GEOMETRY working set
+- bounded active broker-execution working set
+- event-driven frozen-objective consumption propagation
+- direct final-objective candidate reference
+- active-liquidity strategy-consumed cache
+- cheap Root-reaction state version in scenario-layer signature
+- no ordinary-tick entry-history scan while exact pending order is live
+- no ordinary-tick exit-history scan while exact hedging position is live
+- terminal execution removed from active reconciliation working set
+- CSV flush batching = 256 rows, with critical execution events and deinit flush retained
 ```
 
-Refinement:
+These are implementation optimizations only. They may not change Root, Sweep, CHoCH, FVG, merge, Entry, SL, TP, add-on, conflict, cancellation, fill, or close semantics.
 
-```text
-REFINEMENT_FROZEN = 21
-READY = 7
-NO_CHILD = 14
-AMBIGUOUS = 0
-
-CHILD_CREATED = 7
-CHILD_INVALIDATED = 6
-```
-
-Child geometry:
-
-```text
-M15 = 5
-M5 = 2
-
-CONTAINED = 5
-EVENT_ADJACENT = 2
-```
-
-Automated checks:
-
-```text
-missing direct parent = 0
-child timeframe not lower than parent = 0
-direction mismatch = 0
-wrong opposite origin candle = 0
-parent/child time causality violation = 0
-child origin outside parent window = 0
-invalid containment type = 0
-CONTAINED geometry mismatch = 0
-scenario authority violation = 0
-duplicate child ID = 0
-
-invalid PRICE_INVALIDATED geometry = 0
-missing parent invalidation propagation = 0
-
-future available_at = 0
-same-timestamp MTF order violation = 0
-early refinement freeze = 0
-```
-
-Lifecycle:
-
-```text
-Root:
-289 created
-167 PRICE_INVALIDATED
-120 STRUCTURE_INVALIDATED
-2 ACTIVE
-
-Child:
-7 created
-6 invalidated
-1 ACTIVE
-
-active_sources = 3
-```
-
-Coverage still not observed:
-
-```text
-SHORT child
-AMBIGUOUS_FIRST
-STOPPED_AMBIGUOUS
-multi-level child chain
-```
-
-These remain future regression coverage and are not used as a reason
-to relax frozen causal rules.
-
-Profitability:
-
-```text
-N/A
-```
-
-Reason:
-
-```text
-No scenario/order layer exists.
-```
-
-
-## 2026-08-16 — Phase 4A H1/M30 Map / Reversal Permission Validation
-
-Status:
-
-```text
-PASS — Phase 4A map/reversal core
-NOT A PROFITABILITY TEST
-```
-
-EA:
-
-```text
-repository commit = 400665f8d76e6f4c615a54efa106b5289e59dbf4
-internal build = 0.50
-phase = MAP_REVERSAL_CORE
-```
-
-CSV:
-
-```text
-event rows = 8616
-execution epoch = 2025-01-06 01:00:05
-```
-
-Runtime Phase 4A events:
-
-```text
-MAP_STATE = 103
-REVERSAL_REFERENCE_SET = 62
-REVERSAL_REFERENCE_CLEARED = 3
-REVERSAL_REFERENCE_EVENT = 108
-REVERSAL_PERMISSION_STATE = 53
-```
-
-Runtime map snapshots:
-
-```text
-H1 LONG = 86
-H1 SHORT = 9
-M30 LONG = 3
-M30 SHORT = 2
-NONE = 3
-```
-
-Reference event geometry:
-
-```text
-all-history:
-CONTINUATION_BODY_BREAK = 289
-SWEEP_REJECTION = 240
-TOUCH = 1
-
-runtime:
-CONTINUATION_BODY_BREAK = 52
-SWEEP_REJECTION = 56
-```
-
-Permission:
-
-```text
-all-history OPEN = 144
-all-history CLOSE = 143
-tester-end state = OPEN_FOR_SHORT
-
-runtime:
-OPEN_FOR_SHORT = 26
-OPEN_FOR_LONG = 1
-CLOSE continuation = 23
-CLOSE owner-change = 3
-```
-
-Automated checks:
-
-```text
-highest-active-map hierarchy violation = 0
-owner set without matching INITIAL_BOS = 0
-owner clear without matching PROTECTED_BREAK = 0
-direct owner A→B rewrite = 0
-
-reference side / H1 direction mismatch = 0
-reference monotonicity violation = 0
-same-bar reference self-interaction = 0
-reference precedence mismatch = 0
-multiple reference events on one H1 bar = 0
-
-permission OPEN direction mismatch = 0
-permission OPEN without TOUCH/SWEEP = 0
-continuation CLOSE without body-break = 0
-permission-origin rewrite while OPEN = 0
-permission-origin rewrite on CLOSE = 0
-
-future available_at = 0
-
-Phase 1~3B core event regression = 0
-```
-
-Logging-only defect:
-
-```text
-Phase 4A bootstrap replay emitted new map/reference events
-despite InpLogBootstrapEvents=false.
-```
-
-Resolution:
-
-```text
-Phase 4B adds map/reference events to bootstrap high-volume suppression.
-Final BOOTSTRAP_COMPLETE MAP snapshot remains enabled.
-```
-
-Profitability:
-
-```text
-N/A
-```
-
-Reason:
-
-```text
-No order layer exists.
-```
-
-
-## 2026-08-16 — Phase 4B Scenario / Objective Family Validation
-
-Status:
-
-```text
-PASS — Phase 4B scenario/objective core
-NOT A PROFITABILITY TEST
-```
-
-EA:
-
-```text
-repository commit = 8e5f0889c0b4e642801fb8718095b37b088c5985
-internal build = 0.60
-phase = SCENARIO_OBJECTIVE_CORE
-```
-
-CSV:
-
-```text
-event rows = 7123
-```
-
-Scenario:
-
-```text
-SCENARIO_PLANNED = 2
-SCENARIO_LINEAGE_BOUND = 2
-SCENARIO_CANCELED = 2
-SCENARIO_REJECTED = 38
-PREPLAN_SOURCE_CONTACT = 3
-```
-
-Objective family:
-
-```text
-OBJECTIVE_CANDIDATE_FROZEN = 9
-OBJECTIVE_CANDIDATE_CONSUMED = 9
-```
-
-PLAN coverage:
-
-```text
-M30-primary EXTERNAL_CONTINUATION LONG = 1
-H1-owned EXTERNAL_CONTINUATION LONG = 1
-
-EXTERNAL_REVERSAL = 0
-H4_EXTENSION candidate = 0
-```
-
-Automated checks:
-
-```text
-source outside map = 0
-continuation premium/discount violation = 0
-owner/direction mismatch = 0
-continuation permission violation = 0
-
-future plan-reference M1 close = 0
-
-objective family != EXTERNAL_SWING = 0
-wrong side = 0
-not direction-ahead = 0
-future candidate availability = 0
-primary timeframe violation = 0
-directional-horizon violation = 0
-objective order-index gap = 0
-nearest-first order violation = 0
-primary horizon mismatch = 0
-
-lineage binding mismatch = 0
-
-PREPLAN-contact lineage later planned = 0
-
-invalid scenario cancellation = 0
-```
-
-Ambiguous Root:
-
-```text
-SCENARIO_REJECTED reason=AMBIGUOUS_ROOT_LINEAGE = 38
-arbitrary candidate fallback = 0
-```
-
-Known future regression coverage:
-
-```text
-early EXTERNAL_REVERSAL PLAN
-H4 objective extension
-```
-
-These branches were not relaxed to manufacture coverage.
-
-Logging-only defect:
-
-```text
-OBJECTIVE_CANDIDATE_CONSUMED could continue after PLAN cancellation.
-```
-
-Resolution:
-
-```text
-Phase 4C skips objective-consumption refresh for CANCELED / NO_TRADE PLANs.
-```
-
-Profitability:
-
-```text
-N/A
-```
-
-Reason:
+## 9. D-135 acceptance test
 
-```text
-No entry/order layer exists.
-```
-
-## 2026-08-16 — D122A Root-Contact / Optional-Child Temporal Validation
-
-Status:
-
-```text
-PASS — D122A temporal-causality core within observed child path
-REINTERPRETED BY D-124 — child is optional audit/context, not a trade gate
-NOT A PROFITABILITY TEST
-```
-
-EA:
-
-```text
-repository commit = 5693058733b63089ad7e612281ce58a7623c73e3
-commit message = EA: D112A version
-internal build = 0.80
-property version = 1.00
-phase = D122A_POST_CONTACT_REFINEMENT_CORE
-InpEnableFvgOriginObExperiment = false
-```
-
-Uploaded event CSV:
-
-```text
-mentor_v1_structure_events(20260816-110812).csv
-rows = 7067
-observed interval = 2025-01-06 00:00:00 ~ 2025-01-31 23:57:57
-execution_epoch_start = 2025-01-06 01:00:05
-```
-
-Core counts:
-
-```text
-ROOT_WATCH_CREATED = 21
-ROOT_CONTACT_OBSERVED = 11
-CHILD_CREATED = 1
-REFINEMENT READY = 1
-CHILD_INVALIDATED = 1
-
-SCENARIO_PLANNED = 0
-old Phase4C SOURCE_CONTACT = 0
-AUTHORIZED_SWEEP = 0
-STRUCTURAL_REACTION strategy authorization = 0
-orders/deals = 0
-```
-
-Observed child causal sequence:
-
-```text
-Root available_at    = 2025-01-14 22:00
-Root contact         = 2025-01-15 03:45
-child origin         = 2025-01-15 03:55
-meaningful M5 low    = 2025-01-15 04:00
-wave available       = 2025-01-15 04:15
-M5 INITIAL_BOS bar   = 2025-01-15 04:45
-child available      = 2025-01-15 04:50
-```
+Do **not** run the full year first.
 
-Causal checks:
+First run the same January real-tick fixture with:
 
 ```text
-Root contact without prior Root watch = 0
-Root contact <= Root.available_at = 0
-Root contact before execution epoch = 0
-child without Root contact = 0
-child origin before Root contact = 0
-child available_at <= Root contact = 0
-historical pre-contact child authorization = 0
-runtime detector/fatal error event in CSV = 0
+InpStopLossModel = V1_SL_ROOT_OB_DISTAL_20
+account = hedging
 ```
 
-Upstream exact-regression comparison against the preceding
-`fvg_origin_ob_experiment=false` control:
+Required D-134 parity targets:
 
 ```text
-WAVE_CONFIRMED               = exact row equality
-STRUCTURE_BOS                = exact row equality
-STRUCTURE_INITIAL_BOS        = exact row equality
-STRUCTURE_PROTECTED_BREAK    = exact row equality
-LIQUIDITY_CREATED            = exact row equality
-LIQUIDITY_SWEEP              = exact row equality
-LIQUIDITY_BODY_DELIVERY      = exact row equality
-MAP / REVERSAL events        = exact row equality
-ROOT_CREATED/REJECTED/STATE  = exact row equality
-```
-
-D-124 interpretation:
-
-```text
-11 ROOT_CONTACT_OBSERVED
-→ 11 Root-level reaction contexts before later strategy filters
-
-1 CHILD_CREATED
-→ one optional post-contact causal observation
-→ NOT evidence that only one Root setup survived
-
-10 contacts without a child
-→ NOT rejected for missing child
-```
-
-The current first-position Entry and SL remain the frozen M1-FVG contract;
-child geometry does not alter them.
-
-Profitability:
-
-```text
-N/A
-```
+ROOT_CREATED = 108
+SCENARIO_PLANNED = 78
+SCENARIO_ROOT_CONTACT_BOUND = 36
+SCENARIO_SWEEP_ACCEPTED = 33
+SCENARIO_CHOCH_ACCEPTED = 18
+SCENARIO_FVG_SELECTED = 18
 
-Reason:
-
-```text
-Scenario, strategic sweep, CHoCH, and order authorization were intentionally disabled.
-```
-
-## 2026-08-16 — D-124 Root-Primary Consolidation Prepared
-
-Status:
-
-```text
-CODE/DOC UPDATE PREPARED
-LOCAL COMPILE / STRATEGY TESTER RUN PENDING
+unique Entry opportunities = 9
+same-entry merge clusters = 4
+pending accepted = 9
+filled = 7
+closed = 7
+objective-before-fill cancel = 2
+exposure-policy NO_TRADE = 0
+execution divergence = 0
 ```
 
-Target build:
+Also compare each unique opportunity's:
 
 ```text
-internal build = 0.81
-phase = D124_ROOT_PRIMARY_OPTIONAL_CHILD_AUDIT_CORE
+selected FVG
+Entry
+merged SL
+Final TP
+pending / cancel / fill / close outcome
 ```
 
-Acceptance focus:
+Performance criterion:
 
 ```text
-qualifying Root contact → ROOT_CONTEXT_READY regardless of child
-optional child observation may be 0..N
-strategy-source child creation = 0
-child absence / multiplicity / invalidation cannot veto Root context
-scenario/sweep/CHoCH/order remain disabled during isolated smoke
+semantic parity = mandatory
+wall-clock runtime = record and compare with D-134 January baseline
+material runtime reduction = required before adopting D-135 for long tests
 ```
-
-## Required reporting format
-
-For every significant V1 test record:
-
-- EA version / commit
-- symbol
-- broker
-- account mode if relevant
-- tester period
-- tester model
-- trading period
-- H4 history first date
-- H1 history first date
-- M30 history first date
-- M15 history first date
-- M5 history first date
-- M1 history first date
-- H4 active long-horizon liquidity count at READY
-- bootstrap READY time / `execution_epoch_start`
-- startup source context
-- magic number
-- sizing mode
-- submitted volume
-- spread / commission assumptions
-- number of strategy-valid signals
-- number of submitted orders
-- number of execution-infeasible signals
-- number of rejected orders
-- number of filled trades
-- win / loss
-- profit factor
-- expectancy in R
-- max drawdown if available
-- protocol violations
-- execution divergences
-- known implementation defects
-
-Profitability results are invalid if known protocol violations remain.
-
-
-### Integrated execution safety addendum
 
-Final build 1.50 validation must audit partial-fill residual handling: any position + residual pending overlap is execution divergence, receives one residual cancel request, and never creates a second strategy entry.
+If any strategy/execution result differs, D-135 fails regardless of speed and must not replace build 1.80 for research conclusions.

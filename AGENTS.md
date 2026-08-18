@@ -3,6 +3,7 @@
 - 상태: `FROZEN / CURRENT V1 STRATEGY AUTHORITY`
 - 제정일: `2026-08-01`
 - 최근 개정: `2026-08-18` (`FVG-origin OB baseline; same-entry Root merge; hedging-account same-direction add-on execution`)
+- 구현 성능 기준: `2026-08-19` (`D-135 performance-only working-set optimization; D-134 strategy semantics unchanged`)
 - 적용 범위: deterministic EA, MT5 Strategy Tester, current V1 수동/블라인드 리플레이 검증
 
 ## 1. 문서의 지위
@@ -2452,3 +2453,71 @@ Build 1.70 with `ROOT_OB_DISTAL_20` reduced 18 Root branches to 9 unique Entry o
 ```
 
 D-134 removes only that execution-policy rejection. It does not relax Root, Sweep, CHoCH, FVG, SL, TP, objective, or contributor-merge causality.
+
+
+---
+
+## D-135 implementation-only performance contract — 2026-08-19
+
+Status: `NON-SEMANTIC IMPLEMENTATION AUTHORITY / D-134 STRATEGY RULES UNCHANGED`
+
+The 2025 full-year D-134 real-tick run exposed a scalability defect: a one-month fixture completed in under roughly one minute, while the full-year run required about nine hours and advanced in long stalls followed by progress jumps. This is classified as an implementation-performance defect, not a strategy-rule change.
+
+D-135 may optimize only how already-frozen state is indexed, reconciled, and logged. It may not change:
+
+```text
+Market Structure
+Root recognition or lifecycle
+FVG-origin OB authority
+Root contact
+Sweep / CHoCH / FVG causality
+same-entry contributor merge
+Entry / selected SL model / merged SL
+common frozen objective TP
+same-direction add-on permission
+opposite-direction conflict rule
+pending cancellation semantics
+hedging-account execution contract
+```
+
+Permitted implementation changes:
+
+```text
+append-only audit ledgers
++ bounded active working-set indices for runtime hot paths
+
+liquidity-consumption event
+→ update affected frozen objective candidates immediately
+→ no whole-objective-ledger polling every M1
+
+active pending/filled scenario only
+→ broker reconciliation
+→ terminal scenario removed from active execution working set
+
+live original pending order
+→ no repeated entry-history scan on ordinary ticks
+
+live exact hedging position
+→ no repeated exit-history scan on ordinary ticks
+
+CSV audit rows
+→ buffered flush permitted
+→ row content / causal timestamps remain authoritative
+```
+
+A direct active-liquidity `strategy_consumed` marker may cache the existing strategy-consumption overlay for O(1) membership checks. It is only a cache of existing D-127/D-128 consumption authority and cannot create or remove liquidity consumption by itself.
+
+D-135 validation is fail-closed on parity. Before any long-horizon profitability test, the same January real-tick `ROOT_OB_DISTAL_20` fixture must show D-134-equivalent strategy/execution results for:
+
+```text
+Root / PLAN / Contact
+Sweep / CHoCH / FVG
+same-entry merge
+Entry / SL / TP
+pending submission / cancellation
+fill / position close
+opposite-direction conflict
+execution divergence
+```
+
+Diagnostic log ordering for `OBJECTIVE_CANDIDATE_CONSUMED` may move to the exact causal consumption event because polling is removed; its `available_at` and downstream strategy result must remain equivalent. Any strategy/output parity mismatch invalidates the performance optimization until corrected.
