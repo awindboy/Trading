@@ -4576,9 +4576,7 @@ D-135 -> strategy canceled without broker cancellation
 
 The June orphan pending later caused a valid opposite-direction SHORT opportunity to be blocked by `OPPOSITE_DIRECTION_EXPOSURE_CONFLICT`, proving this was not merely a logging difference.
 
-### Decision
-
-D-135 performance optimizations remain active. Only the execution working-set terminal condition is corrected.
+##D-135 performance optimizations remain active. Only the execution working-set terminal condition is corrected.
 
 ```text
 strategy_state = CANCELED
@@ -4607,3 +4605,65 @@ strategy_semantics = D134_UNCHANGED
 ```
 
 Acceptance requires the D-134 broker lifecycle to be restored while retaining the D-135 speedup.
+
+## D-136 — Development-set regime research protocol and OOS sealing
+
+Status: ACTIVE RESEARCH GOVERNANCE / STRATEGY SEMANTICS UNCHANGED — 2026-08-19
+
+### Trigger
+
+The 2023–2025 build-1.91 ledger shows that the same structural direction label can have sharply different expectancy across periods. The first regime-feature discovery (`M30_CLEAN_PERSISTENT`) is materially positive on the Development Set, but it was discovered from those same years and cannot be promoted directly into the baseline.
+
+### Decision
+
+Dataset roles are frozen:
+
+```text
+2023–2025 = Development / Research
+2022      = SEALED first OOS validation
+2021      = preferred final untouched confirmation
+```
+
+2022 must not be inspected before the exact regime model is frozen. If the model is changed after viewing 2022, 2022 loses OOS status and a new untouched period is required.
+
+All new regime features use scenario `PLAN` freeze as the canonical snapshot epoch. Only information with `available_at <= plan_frozen_at` may define the state.
+
+`M30_CLEAN_PERSISTENT` is retained as a primary research candidate:
+
+```text
+EXTERNAL_CONTINUATION
+latest 12 confirmed M30 waves
+directional progression >= 2/3
+M30 PROTECTED_BREAK inside same 12-wave span <= 1
+```
+
+It has no current trade-veto authority. The complement remains `UNKNOWN`, not BAD.
+
+The regime search must record failed experiments as well as favorable ones. New axes are tested independently before combinations. Development-set total R alone cannot justify a rule; annual sign stability, drawdown, streaks, trade count, direction stability, and large-winner concentration are required diagnostics.
+
+No generic quality score or multi-filter stack is authorized. Prefer at most 2–4 non-redundant regime axes before OOS.
+
+### Current evidence
+
+The strongest current evidence supports:
+
+```text
+DIRECTION
++ PERSISTENCE
++ STRUCTURAL STABILITY
+```
+
+Magnitude-aware M30 progression (`directional_advance_norm`) is a promising alternative persistence representation, but is highly correlated with the existing progression score and therefore should replace/refine it rather than be stacked automatically.
+
+Expansion, cleanliness, maturity, H1/M30 agreement, and structural location do not currently have independent strategy authority.
+
+### Baseline impact
+
+```text
+EA strategy semantics = UNCHANGED
+AGENTS.md = UNCHANGED
+build 1.91 remains frozen control
+2022 remains unopened
+```
+
+Durable evidence: `docs/ea/REGIME_RESEARCH_2023_2025.md`.

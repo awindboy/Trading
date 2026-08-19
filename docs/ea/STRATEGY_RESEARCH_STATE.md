@@ -1,363 +1,187 @@
 # Strategy Robustness Research State
 
 Last updated: 2026-08-19
-Status: ACTIVE
+Status: ACTIVE — REGIME FEATURE DISCOVERY
 Baseline: Mentor deterministic V1 / build 1.91
-Purpose: discover where the current method actually has edge before adding strategy complexity
+Strategy authority: unchanged; `AGENTS.md` remains highest authority
 
-## 1. Why this research exists
+## Current phase
 
-The EA has reached a point where most of the causal execution pipeline is implemented and long-run execution performance is practical.
+The deterministic execution pipeline is substantially complete. TradingView visual-audit work has been completed for the current research purpose, and the project has moved from broad semantic inspection into **causal regime-feature discovery**.
 
-The remaining strategic problem is not simply "find better parameters."
+The current problem is not parameter optimization. The question is:
 
-Long-run tests show strong instability:
+> Under which causally observable market states does the existing continuation setup retain positive expectancy?
 
-```text
-2023 closed result ≈ +44.94R
-2024 closed result ≈ -36.56R
-2025 closed result ≈ +8.68R
-```
+Read the durable feature ledger next:
 
-The 2024 number is not a clean final profitability result because the two-year run ended with open exposure and contained one execution divergence. However, removing that one execution anomaly does not explain the broad 2024 weakness.
+`docs/ea/REGIME_RESEARCH_2023_2025.md`
 
-The same nominal strategy therefore behaves very differently across market periods.
-
-This creates two distinct possibilities:
-
-1. the strategy concept has regime-dependent edge;
-2. the upstream detectors are producing technically causal but semantically poor market objects.
-
-Both must be investigated before parameter optimization.
-
-## 2. Important long-run observations
-
-### 2025
+## Development / OOS protocol
 
 ```text
-58 closed trades
-14 TP / 44 SL
-win rate ≈ 24.1%
-realized ≈ +8.68R
-
-EXTERNAL_CONTINUATION ≈ +15.94R
-EXTERNAL_REVERSAL ≈ -7.26R
+2023–2025 = Development / Research
+2022      = SEALED first OOS
+2021      = preferred final untouched confirmation
 ```
 
-Reversal was weak, but this alone does not explain the multi-year instability.
+Do not inspect 2022 before the exact regime definition is frozen. If a model is changed after viewing 2022, 2022 loses OOS status.
 
-### 2023 versus 2024
+## Baseline long-run problem
 
-Preliminary two-year research summary:
+Clean attribution previously established:
 
 ```text
-2023:
-70 closed trades
-23 wins
-win rate ≈ 32.9%
-≈ +44.94R
-
-2024:
-56 closed trades
-5 wins
-win rate ≈ 8.9%
-≈ -36.56R
+2023: +44.94R
+2024: -35.56R
+2025:  +8.68R
 ```
 
-By scope:
+The baseline is low-win-rate and tail-dependent. 2024 weakness is broad and is not explained by the known execution divergence or by simply disabling reversal.
+
+Therefore implementation correctness and strategy quality remain separate research questions.
+
+## First strong regime discovery
+
+The first meaningful three-year candidate is:
+
+`M30_CLEAN_PERSISTENT`
 
 ```text
-2023 continuation ≈ +48.31R
-2023 reversal     ≈  -3.37R
-
-2024 continuation ≈ -29.46R
-2024 reversal     ≈  -7.10R
+scope = EXTERNAL_CONTINUATION
+latest 12 confirmed M30 waves
+progression >= 2/3
+M30 PROTECTED_BREAK inside same 12-wave span <= 1
 ```
 
-Therefore "turn reversal off" is not a sufficient explanation or solution.
-
-### Equity-curve character
-
-A cross-year analysis snapshot, excluding the known divergence trade where appropriate, showed approximately:
+Previously recorded Development-Set result:
 
 ```text
-183 clean closed trades across 2023-2025
-aggregate ≈ +18.1R
-positive months = 13 / 36
-monthly R median ≈ -1.65R
-longest losing streak = 22
-top 10 winners ≈ 54% of all positive R
+36 trades / 15 wins / 41.7%
++55.32R
+mean +1.54R/trade
+Max DD ≈ -6R
+longest losing streak = 6
+
+2023 +46.93R
+2024  +2.82R
+2025  +5.58R
 ```
 
-This indicates a low-win-rate, tail-dependent system rather than the desired steadily rising equity curve.
+This is **research evidence only**, not a baseline strategy rule.
 
-These figures are research evidence, not an approved strategy result.
+The complement is deliberately called `UNKNOWN`, not BAD.
 
-## 3. Core concern: implementation correctness is not semantic validity
+## Current strict snapshot contract
 
-A detector can be perfectly causal and still identify the wrong thing.
+All new feature research uses scenario `PLAN` freeze as the snapshot epoch.
 
-Examples of current concerns:
+Only objects already available by `plan_frozen_at` may enter the feature state. No contact, Sweep, CHoCH, Entry, fill, or later outcome may define the regime snapshot.
 
-### Structure / trend
-
-Questions:
-- Does the three-opposite-candle wave mechanism select swings a human would regard as important?
-- Does the BOS-producing correction really deserve protected-swing ownership?
-- Is a body close through the current structural level sufficient to characterize directional persistence?
-- Does the H1/M30 map remain bullish or bearish long after a human would say the market has entered distribution, compression, transition, or opposing displacement?
-- Are we confusing "the previous structure has not officially broken" with "continuation still has positive expectancy"?
-
-The current TradingView regime visualization already suggests that directional state can persist through visually different market conditions.
-
-This is a research observation, not yet a rule change.
-
-### Liquidity
-
-Questions:
-- Are EXTERNAL_SWING pools visually obvious highs/lows or merely mechanically retained structural points?
-- Are some pools too old to remain meaningful?
-- Can an apparently active pool already have been economically resolved even if the exact coded consumption rule has not fired?
-- Are defended-range edges genuinely defended ranges or incidental overlapping wicks?
-- Does a one-tick penetration/recovery of a weak pool deserve the same Sweep semantics as a clear liquidity raid?
-
-### Root OB
-
-Questions:
-- Does `LAST_OPPOSITE_OB` identify a causal source candle or sometimes an arbitrary opposite candle inside chop?
-- Does `FVG_ORIGIN_OB` identify a meaningful origin or merely increase Root count?
-- When multiple Roots explain the same downstream Entry, are those Roots genuinely independent causal structures or duplicate explanations of the same move?
-- Is full-candle OB geometry appropriate for every recognized Root?
-- How should consolidation-origin candles be distinguished from meaningful displacement origins without inventing an overfit score?
-
-### Regime / directional authority
-
-The current V1 "regime" should be understood accurately:
+A strict 2023–2024 reconstruction of `M30_CLEAN_PERSISTENT` remains positive:
 
 ```text
-it is primarily H1/M30 structure-based directional authorization,
-not a complete market-regime classifier.
+31 trades / +47.90R
+2023 +47.22R
+2024 +0.69R
 ```
 
-It does not directly classify:
-- trend versus range,
-- expansion versus compression,
-- high versus low directional persistence,
-- trend maturity/exhaustion,
-- clean versus overlapping/choppy structure,
-- volatility regime.
+It is not yet uniformly positive by direction and remains dependent on a small number of large winners, so it is not frozen for OOS yet.
 
-Therefore:
+## Feature pass completed
+
+The following axes have now been analyzed from the raw 2023–2024 ledger:
 
 ```text
-H1 bullish structure
-!=
-proof that LONG continuation currently has positive expectancy
+Persistence
+Structural churn
+Progression magnitude
+Expansion / compression
+Structure cleanliness / overlap
+Trend maturity
+H1/M30 agreement
+Structural location
 ```
 
-The research goal is not to perfectly predict the true market regime.
+### Retained
 
-The useful goal is:
+1. **Persistence** — strongest primary axis.
+2. **Structural stability** — repeated protected breaks are adverse, especially together with weak progression.
+3. **Progression magnitude** — `directional_advance_norm` is highly promising, but strongly correlated with progression and should be studied as an alternative representation rather than stacked.
+4. **Impulse vs retracement** — secondary expansion candidate only; needs raw-2025 recheck.
 
-> identify observable, causal market states in which the current setup's expectancy changes consistently.
-
-A future regime representation may be multidimensional rather than one Bull/Bear label, for example direction, persistence, expansion/compression, maturity, structure cleanliness, and location. These are hypotheses only; no such filter is currently authorized.
-
-### Sweep
-
-Questions:
-- Is the swept pool itself meaningful?
-- Is one tick of penetration enough in practice?
-- Does the recovery close show rejection or merely noise?
-- Does Sweep quality depend more on the pre-existing liquidity structure than on penetration size?
-- Are clear raids and trivial wick excursions currently treated as equivalent?
-
-### CHoCH
-
-Questions:
-- Does every M1 protected break deserve the same confirmation authority?
-- Is a slow overlapping break equivalent to a displacement break?
-- Does the current protected swing itself make visual sense?
-- Is the CHoCH late because the upstream protected level is stale?
-- Is CHoCH confirming local order-flow change or simply reacting after most of the move is already complete?
-
-Do not immediately convert these questions into body-size or time thresholds.
-
-First determine whether systematic visual differences exist.
-
-### FVG
-
-Questions:
-- Are the causal FVGs inside accepted Sweep→CHoCH legs visually meaningful?
-- Is "widest eligible FVG" economically justified or only deterministic?
-- Would first, last, CHoCH-adjacent, or overlapping FVGs better represent the displacement?
-- Are large/small FVG properties stable across years?
-
-Again, no selection rule should change until upstream semantic validity is established.
-
-## 4. Why regime is the first major research priority
-
-The direction map sits above nearly the entire trade chain.
-
-If the map says LONG in a market where continuation expectancy is poor, every downstream component can behave exactly as coded and still produce bad trades.
-
-The current system effectively asks:
+### Not supported as standalone rules
 
 ```text
-Is H1 a mature bullish/bearish structure?
-If not, can M30 provide direction?
-Has H1 reversal permission opened?
+explicit overlap threshold
+trend maturity cutoff
+H1/M30 agreement veto
+structural/PD location veto
+generic expansion threshold
+multi-factor quality score
 ```
 
-This is useful structural state, but it may be too coarse and too persistent to represent the trading environment.
+## Strong BAD-regime candidate
 
-The research problem should therefore be framed as:
-
-Bad question:
-"Can we perfectly label the market Bull/Bear/Range?"
-
-Better question:
-"Under which causal market states does our existing LONG or SHORT setup retain positive expectancy?"
-
-This allows an explicit `NO CLEAR EDGE` state rather than forcing a direction at all times.
-
-## 5. Research method
-
-### Stage A — visual semantic audit
-
-Use a TradingView display-only indicator to overlay the current pipeline:
+Under the strict PLAN-freeze reconstruction:
 
 ```text
-causal waves
-structure events
-protected/external levels
-liquidity
-Root OB
-H1/M30 directional regime
-Root contact
-M1 Sweep
-M1 CHoCH
-M1 FVG
+M30 progression <= 0.50
+44 trades / 6 wins
+-27.80R
+2023 -4.29R
+2024 -23.51R
+positive quarters = 0 / 8
 ```
 
-Purpose:
-- verify that the objects are meaningful to a human observer;
-- find repeated classes of obvious mismatch;
-- understand whether poor trades start with a bad market object or fail later.
+This is stronger BAD-state evidence than a generic Bull/Bear/Range label. It is still research evidence, not an authorized veto.
 
-The indicator is not strategy authority and is not exact MT5 feed parity proof.
+## Strong new alternate persistence representation
 
-### Stage B — cross-period sampling
+`directional_advance_norm` measures the median signed same-side M30 advance relative to typical M30 swing-leg size.
 
-Inspect multiple independent periods from:
-- strong 2023 segments,
-- weak 2024 segments,
-- mixed 2025 segments.
-
-Avoid selecting only spectacular winners and losers.
-
-Where possible:
-- sample dates before looking at trade outcome;
-- record whether the structure/liquidity/Root/regime appears meaningful;
-- compare the same criteria across all years.
-
-### Stage C — mismatch taxonomy
-
-Create a small set of recurring failure categories, for example:
+A broad threshold sensitivity band remains positive in 2023 and 2024 rather than depending on a single knife-edge cutoff. For example `> 1/3` gives:
 
 ```text
-STRUCTURE_TOO_LATE
-STRUCTURE_CHOP_FALSE_DIRECTION
-LIQUIDITY_STALE
-LIQUIDITY_NOT_VISUALLY_SIGNIFICANT
-ROOT_CONSOLIDATION_NOISE
-ROOT_NOT_CAUSAL_DISPLACEMENT
-SWEEP_TRIVIAL
-CHOCH_WEAK_OR_LATE
-REGIME_DIRECTION_WITHOUT_PERSISTENCE
+27 trades / +35.78R
+Max DD = -4.74R
+longest losing streak = 4
+2023 +31.66R
+2024  +4.12R
 ```
 
-These names are examples, not current rules.
+Both LONG and SHORT are positive in each available year at this illustrative split.
 
-The goal is to discover recurring mechanisms, not to invent labels for every losing trade.
+However correlation with the original progression score is about `0.84`; it is not an independent new axis.
 
-### Stage D — causal measurement
+## Multiple-testing discipline
 
-Only after a repeated visual mechanism is identified:
-- add causal audit fields to the EA/event log;
-- measure the phenomenon over several years;
-- study continuous relationships before choosing thresholds;
-- check whether the relationship has the same sign across independent years.
+All tried representations, including failures, are recorded in `REGIME_RESEARCH_2023_2025.md`.
 
-### Stage E — minimal research variant
+Do not optimize the 2023–2025 equity curve by stacking every favorable subset. Several attractive combinations collapse trade count too far and are explicitly classified as overfit warnings.
 
-One meaningful change at a time.
+## 2025 limitation and next step
 
-Compare against the frozen baseline on the same periods and data model.
+The exact raw 2025 ledger used by the prior audit was not available in the current runtime. Therefore the new feature formulas beyond the already-recorded `M30_CLEAN_PERSISTENT` discovery must be re-derived on 2025 before any Regime Research V1 freeze.
 
-Evaluate:
-- expectancy R,
-- annual consistency,
-- rolling 3/6-month R,
-- maximum R drawdown,
-- losing streak,
-- trade count,
-- direction/scope stability,
-- dependence on a few large winners.
+Immediate research sequence:
 
-Do not accept a rule merely because total R increases.
+1. re-run the frozen PLAN-time feature formulas on raw 2025;
+2. reject features that materially reverse sign;
+3. compare `progression` versus `directional_advance_norm` as alternative persistence representations;
+4. decide whether `impulse_retrace_ratio` adds genuinely independent information;
+5. freeze the smallest defensible regime model;
+6. only then open 2022 OOS.
 
-## 6. What not to do
+## Parallel execution-safety item
 
-Do not:
-- repair 2024 with a hand-picked threshold;
-- automatically remove SHORT, M30, FVG-origin OB, or add-ons;
-- add many generic indicators and call the combination "regime";
-- introduce a quality score before its components show stable information;
-- use future price action to label a real-time regime transition;
-- let winner/loser outcomes define what a "good-looking" structure must be;
-- deploy ML before verifying that the base labels are meaningful.
+Build 1.91 still has one separate recoverable pending-cancel rejection retry edge case. It must be closed before a multi-year run is called a final profitability baseline, but it does not explain the regime instability and does not block observational regime research.
 
-Machine learning, clustering, HMMs, or change-point models may become useful later, but only after the observable market objects themselves are trustworthy.
+## Working principle
 
-## 7. Current visual-audit tool
+```text
+Direction describes where structure points.
+Regime research asks whether that structure is actually progressing and stable enough to trade.
+```
 
-A separate TradingView `Mentor V1 Pipeline Visual Audit` Pine indicator is under local compile/visual validation.
-
-Current intended scope:
-- M1 host chart,
-- H4/H1/M30/M15/M5/M1 reconstructed context,
-- structure / liquidity / Root / regime / Sweep / CHoCH / FVG visualization,
-- no orders,
-- no SL/TP recommendation,
-- no strategy change.
-
-Do not treat this local indicator as repository authority until its Pine compile and visual behavior are validated and it is intentionally committed.
-
-## 8. Parallel execution-safety item
-
-The build-1.91 multi-year run exposed one remaining broker-lifecycle edge case:
-recoverable pending cancellation rejection is not retried.
-
-This should be fixed separately from strategy research.
-
-A clean multi-year profitability baseline requires:
-- no execution divergence,
-- no orphan pending,
-- tester-end exposure handled consistently.
-
-Visual semantic research can continue in parallel because the one broker edge case does not explain the broad cross-year strategy instability.
-
-## 9. Next session start point
-
-After reading `AGENTS.md` and `HANDOFF.md`, continue here.
-
-Immediate research task:
-
-> Use the visual audit to determine whether structure, liquidity, Root OB, and directional regime are human-meaningful before changing any entry/exit parameter.
-
-The first major hypothesis to challenge is:
-
-> H1/M30 structural direction alone is too coarse to serve as a trading regime.
-
-Do not assume the hypothesis is true. Attempt to falsify it using cross-year chart evidence.
+Preserve the deterministic baseline as control until OOS evidence justifies a strategy change.
