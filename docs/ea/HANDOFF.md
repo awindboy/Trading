@@ -3,7 +3,7 @@
 Last updated: 2026-08-20
 Repository base checked before this update: `0d9ca2cc72dceb6e982df4700ee83f42a11135af`
 Status: D-135A BUILD 1.91 CONTROL PRESERVED / REGIME RESEARCH V1 FROZEN / DIRECT DEVELOPMENT VALIDATED / 2022 FIRST OOS PASS
-Current phase: preserve frozen V1, run final untouched confirmation (preferred 2021), then decide whether to promote the regime gate
+Current phase: frozen Regime V1 cross-symbol robustness expansion; multi-symbol risk-sizing harness prepared; 2021 remains the preferred final untouched time-series confirmation
 Remaining execution issue: recoverable broker pending-cancel rejection retry remains separate from regime research
 
 ## Authority
@@ -294,3 +294,51 @@ Therefore 2022 is evidence that the frozen gate transferred, not proof that the 
 - Do not reinterpret `UNKNOWN` as automatically BAD.
 - Do not promote the research gate into baseline authority merely because 2022 passed.
 - Do not use an execution-divergent run as final profitability evidence.
+
+## Prepared multi-symbol position sizing — 1.92R1L3
+
+The research harness now has a prepared execution-only position-sizing extension for cross-symbol testing. It does **not** change Regime V1, Entry, SL, TP, contributor merge, add-on, or exposure semantics.
+
+Tester-selectable sizing modes:
+
+```text
+V1_SIZE_MINIMUM_VOLUME_PARITY
+V1_SIZE_FIXED_RISK_MONEY
+V1_SIZE_EQUITY_PERCENT_RISK
+```
+
+Risk-sized modes use MT5 `OrderCalcProfit` on the frozen Entry -> SL geometry to estimate account-currency loss, then normalize volume downward to the symbol's `SYMBOL_VOLUME_MIN / MAX / STEP`. A normalized risk-sized order may under-use the target because of volume granularity but may not exceed the target risk. If the requested risk cannot be represented because it is below minimum or above maximum volume, execution fails closed.
+
+`OrderCalcMargin` is diagnostic only; `OrderCheck` remains the final broker/account execution-feasibility authority. Minimum-volume mode preserves the historical control volume behavior.
+
+Compact logging now retains:
+
+```text
+symbol / account currency
+sizing mode
+equity snapshot
+target risk money
+raw and normalized volume
+planned Entry->SL risk
+estimated margin
+actual fill->SL risk
+entry/exit commission and fee
+exit profit / swap
+realized net money
+```
+
+Prepared build identity:
+
+```text
+1.92R1L3
+phase = REGIME_RESEARCH_V1_MULTI_SYMBOL_RISK_SIZING
+```
+
+Status: **PREPARED / METAEDITOR COMPILE AND SHORT PARITY SMOKE PENDING**. Do not treat D-141 as validated until compile and a minimum-volume parity fixture pass.
+
+Cross-symbol research intent:
+
+- run the frozen Expansion V1 unchanged across roughly ten symbols under one common risk-sizing protocol;
+- report symbol-level and pooled R statistics separately from actual portfolio drawdown;
+- do not tune Regime thresholds per symbol;
+- keep 2021 untouched as the preferred final time-series confirmation for the frozen Gold development lineage.

@@ -41,6 +41,15 @@ enum V1EventLogMode
    V1_LOG_FULL_AUDIT
   };
 
+// Position sizing is an execution/risk layer. It never changes Entry/SL/TP
+// or Regime authorization. Numeric identities are frozen for tester set reuse.
+enum V1PositionSizingMode
+  {
+   V1_SIZE_MINIMUM_VOLUME_PARITY=0,
+   V1_SIZE_FIXED_RISK_MONEY=1,
+   V1_SIZE_EQUITY_PERCENT_RISK=2
+  };
+
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081901;
 input bool   InpWriteEventCsv      = true;
@@ -49,6 +58,9 @@ input bool   InpLogBootstrapEvents = false;
 input V1StopLossModel InpStopLossModel = V1_SL_ROOT_OB_DISTAL_20;
 input V1RegimeResearchMode InpRegimeResearchMode = V1_REGIME_V1_CLEAN_PERSISTENT_EXPANDING;
 input V1EventLogMode InpEventLogMode = V1_LOG_RESEARCH_COMPACT;
+input V1PositionSizingMode InpPositionSizingMode = V1_SIZE_MINIMUM_VOLUME_PARITY;
+input double InpFixedRiskMoneyPerTrade = 100.0;
+input double InpEquityRiskPercentPerTrade = 1.0;
 input string InpEventCsvFile       = "mentor_v1_regime_research_v1_compact_events.csv";
 
 // D-137/D-138 frozen research contract. These are intentionally NOT inputs:
@@ -63,7 +75,7 @@ input string InpEventCsvFile       = "mentor_v1_regime_research_v1_compact_event
 // IMPORTANT:
 // This build may submit orders ONLY inside MT5 Strategy Tester. Live trading
 // remains hard-blocked even if terminal/account Algo Trading permissions exist.
-// V1 uses MINIMUM_VOLUME_PARITY and the frozen FVG/SL/TP geometry.
+// V1 preserves frozen FVG/SL/TP geometry; position sizing is selected independently.
 
 enum V1InitState
   {
@@ -498,7 +510,29 @@ struct V1ScenarioPlan
    int               execution_contributor_count;
    int               execution_status;
    string            terminal_reason;
+
+   // D-141 cross-symbol position sizing audit. Sizing is frozen at preflight.
+   int               position_sizing_mode;
+   double            sizing_equity_snapshot;
+   double            target_risk_money;
+   double            reference_volume_for_risk;
+   double            reference_volume_loss_money;
+   double            one_lot_sl_loss_money;
+   double            raw_order_volume;
    double            order_volume;
+   double            planned_risk_money;
+   double            planned_margin_money;
+   double            volume_min;
+   double            volume_max;
+   double            volume_step;
+   double            actual_fill_risk_money;
+   double            entry_deal_commission;
+   double            entry_deal_fee;
+   double            exit_deal_profit;
+   double            exit_deal_commission;
+   double            exit_deal_swap;
+   double            exit_deal_fee;
+
    datetime          pending_submitted_at;
    uint              request_id;
    ulong             broker_order_ticket;
@@ -1131,6 +1165,17 @@ string StopLossModelName(const int model)
    return "UNKNOWN";
   }
 
+string PositionSizingModeName(const int mode)
+  {
+   switch(mode)
+     {
+      case V1_SIZE_MINIMUM_VOLUME_PARITY: return "MINIMUM_VOLUME_PARITY";
+      case V1_SIZE_FIXED_RISK_MONEY:      return "FIXED_RISK_MONEY";
+      case V1_SIZE_EQUITY_PERCENT_RISK:   return "EQUITY_PERCENT_RISK";
+     }
+   return "UNKNOWN";
+  }
+
 string ExecutionStatusName(const int status)
   {
    switch(status)
@@ -1346,6 +1391,7 @@ bool ResearchCompactLogEvent(const string event_name,const string tf)
 
    // Contributor merge, Entry/SL/TP and broker lifecycle.
    if(event_name=="EXECUTION_GEOMETRY_CANDIDATE_READY" ||
+      event_name=="POSITION_SIZING_CALCULATED" ||
       event_name=="MERGED_STOP_SELECTED" ||
       event_name=="EXECUTION_CONTRIBUTOR_MERGED" ||
       event_name=="EXECUTION_CONTRIBUTOR_TERMINATED" ||
@@ -4888,7 +4934,26 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
    g_scenarios[n].execution_contributor_count=1;
    g_scenarios[n].execution_status=V1_EXEC_NONE;
    g_scenarios[n].terminal_reason="";
+   g_scenarios[n].position_sizing_mode=(int)InpPositionSizingMode;
+   g_scenarios[n].sizing_equity_snapshot=0.0;
+   g_scenarios[n].target_risk_money=0.0;
+   g_scenarios[n].reference_volume_for_risk=0.0;
+   g_scenarios[n].reference_volume_loss_money=0.0;
+   g_scenarios[n].one_lot_sl_loss_money=0.0;
+   g_scenarios[n].raw_order_volume=0.0;
    g_scenarios[n].order_volume=0.0;
+   g_scenarios[n].planned_risk_money=0.0;
+   g_scenarios[n].planned_margin_money=0.0;
+   g_scenarios[n].volume_min=0.0;
+   g_scenarios[n].volume_max=0.0;
+   g_scenarios[n].volume_step=0.0;
+   g_scenarios[n].actual_fill_risk_money=0.0;
+   g_scenarios[n].entry_deal_commission=0.0;
+   g_scenarios[n].entry_deal_fee=0.0;
+   g_scenarios[n].exit_deal_profit=0.0;
+   g_scenarios[n].exit_deal_commission=0.0;
+   g_scenarios[n].exit_deal_swap=0.0;
+   g_scenarios[n].exit_deal_fee=0.0;
    g_scenarios[n].pending_submitted_at=0;
    g_scenarios[n].request_id=0;
    g_scenarios[n].broker_order_ticket=0;
@@ -5958,7 +6023,7 @@ void FinalizeExecutionGeometryReady(const int scenario_index,
    g_execution_geometry_ready++;
 
    LogLine("EXECUTION_GEOMETRY_READY","M1",available_at,g_scenarios[scenario_index].id,
-           StringFormat("scenario_id=%s direction=%s selected_fvg_id=%s fvg_bottom=%.10f fvg_top=%.10f fvg_width=%.10f entry=%.10f sl_model=%s sl_reference_price=%.10f sl_reference_width=%.10f raw_sl=%.10f normalized_sl=%.10f sl_normalization=%s merged_from_contributors=%s sl_contributor_scenario_id=%s sl_contributor_root_id=%s contributor_count=%d final_objective_id=%s tp=%.10f planned_r=%.8f sizing=MINIMUM_VOLUME_PARITY strategy_signal_valid=true",
+           StringFormat("scenario_id=%s direction=%s selected_fvg_id=%s fvg_bottom=%.10f fvg_top=%.10f fvg_width=%.10f entry=%.10f sl_model=%s sl_reference_price=%.10f sl_reference_width=%.10f raw_sl=%.10f normalized_sl=%.10f sl_normalization=%s merged_from_contributors=%s sl_contributor_scenario_id=%s sl_contributor_root_id=%s contributor_count=%d final_objective_id=%s tp=%.10f planned_r=%.8f sizing_mode=%s strategy_signal_valid=true",
                         g_scenarios[scenario_index].id,
                         DirectionName(g_scenarios[scenario_index].direction),
                         g_scenarios[scenario_index].selected_fvg_id,
@@ -5978,7 +6043,8 @@ void FinalizeExecutionGeometryReady(const int scenario_index,
                         g_scenarios[scenario_index].execution_contributor_count,
                         g_scenarios[scenario_index].final_objective_id,
                         g_scenarios[scenario_index].final_objective_price,
-                        g_scenarios[scenario_index].final_objective_planned_r));
+                        g_scenarios[scenario_index].final_objective_planned_r,
+                        PositionSizingModeName((int)InpPositionSizingMode)));
   }
 
 bool IsHedgingAccount()
@@ -6180,6 +6246,175 @@ bool VolumeOnStep(const double volume,const double minimum,const double step)
    return (MathAbs(units-MathRound(units))<=1.0e-8);
   }
 
+bool NormalizeRiskVolumeDown(const double raw_volume,
+                             const double minimum,
+                             const double maximum,
+                             const double step,
+                             double &normalized_volume)
+  {
+   normalized_volume=0.0;
+   if(minimum<=0.0 || maximum<minimum || step<=0.0)
+      return false;
+
+   double eps=MathMax(1.0e-12,step*1.0e-8);
+   if(raw_volume<minimum-eps || raw_volume>maximum+eps)
+      return false;
+
+   double capped=MathMin(raw_volume,maximum);
+   double units=MathFloor(((capped-minimum)/step)+1.0e-10);
+   if(units<0.0)
+      units=0.0;
+   normalized_volume=minimum+units*step;
+   if(normalized_volume>capped+eps)
+      normalized_volume-=step;
+
+   normalized_volume=NormalizeDouble(normalized_volume,8);
+   if(normalized_volume<minimum-eps || normalized_volume>maximum+eps)
+      return false;
+   return VolumeOnStep(normalized_volume,minimum,step);
+  }
+
+bool CalculateStopLossMoney(const int direction,
+                            const double volume,
+                            const double open_price,
+                            const double stop_price,
+                            double &loss_money)
+  {
+   loss_money=0.0;
+   if(direction==0 || volume<=0.0 || open_price<=0.0 || stop_price<=0.0)
+      return false;
+
+   ENUM_ORDER_TYPE calc_type=(direction>0 ? ORDER_TYPE_BUY : ORDER_TYPE_SELL);
+   double profit=0.0;
+   ResetLastError();
+   if(!OrderCalcProfit(calc_type,_Symbol,volume,open_price,stop_price,profit))
+      return false;
+   if(profit>=0.0)
+      return false;
+   loss_money=-profit;
+   return (loss_money>0.0);
+  }
+
+bool CalculateAndFreezePositionSizing(const int scenario_index,
+                                      string &failure_reason)
+  {
+   failure_reason="";
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
+     { failure_reason="SCENARIO_INDEX_INVALID_FOR_SIZING"; return false; }
+
+   g_scenarios[scenario_index].position_sizing_mode=(int)InpPositionSizingMode;
+   g_scenarios[scenario_index].sizing_equity_snapshot=AccountInfoDouble(ACCOUNT_EQUITY);
+   g_scenarios[scenario_index].target_risk_money=0.0;
+   g_scenarios[scenario_index].reference_volume_for_risk=0.0;
+   g_scenarios[scenario_index].reference_volume_loss_money=0.0;
+   g_scenarios[scenario_index].one_lot_sl_loss_money=0.0;
+   g_scenarios[scenario_index].raw_order_volume=0.0;
+   g_scenarios[scenario_index].order_volume=0.0;
+   g_scenarios[scenario_index].planned_risk_money=0.0;
+   g_scenarios[scenario_index].planned_margin_money=0.0;
+
+   g_scenarios[scenario_index].volume_min=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MIN);
+   g_scenarios[scenario_index].volume_max=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MAX);
+   g_scenarios[scenario_index].volume_step=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_STEP);
+   if(g_scenarios[scenario_index].volume_min<=0.0 ||
+      g_scenarios[scenario_index].volume_max<g_scenarios[scenario_index].volume_min ||
+      g_scenarios[scenario_index].volume_step<=0.0 ||
+      !VolumeOnStep(g_scenarios[scenario_index].volume_min,
+                    g_scenarios[scenario_index].volume_min,
+                    g_scenarios[scenario_index].volume_step))
+     { failure_reason="SYMBOL_VOLUME_CONSTRAINTS_INVALID"; return false; }
+
+   // Historical control mode: preserve exact minimum-volume behavior. Risk
+   // money is calculated for audit when possible, but a diagnostic calculation
+   // failure does not change the old order-authorization semantics.
+   if(InpPositionSizingMode==V1_SIZE_MINIMUM_VOLUME_PARITY)
+     {
+      g_scenarios[scenario_index].raw_order_volume=g_scenarios[scenario_index].volume_min;
+      g_scenarios[scenario_index].order_volume=g_scenarios[scenario_index].volume_min;
+
+      double minimum_loss=0.0;
+      if(CalculateStopLossMoney(g_scenarios[scenario_index].direction,
+                                g_scenarios[scenario_index].volume_min,
+                                g_scenarios[scenario_index].strategy_entry_price,
+                                g_scenarios[scenario_index].normalized_sl,
+                                minimum_loss))
+        {
+         g_scenarios[scenario_index].reference_volume_for_risk=g_scenarios[scenario_index].volume_min;
+         g_scenarios[scenario_index].reference_volume_loss_money=minimum_loss;
+         g_scenarios[scenario_index].one_lot_sl_loss_money=minimum_loss/g_scenarios[scenario_index].volume_min;
+         g_scenarios[scenario_index].planned_risk_money=minimum_loss;
+        }
+      return true;
+     }
+
+   // Risk-sized modes require a valid account-currency loss estimate. Use the
+   // broker-valid minimum volume as the OrderCalcProfit reference rather than
+   // assuming that exactly 1.0 lot is itself valid on every symbol.
+   double reference_loss=0.0;
+   if(!CalculateStopLossMoney(g_scenarios[scenario_index].direction,
+                              g_scenarios[scenario_index].volume_min,
+                              g_scenarios[scenario_index].strategy_entry_price,
+                              g_scenarios[scenario_index].normalized_sl,
+                              reference_loss))
+     { failure_reason=StringFormat("ORDERCALCPROFIT_REFERENCE_FAILED_%d",GetLastError()); return false; }
+   g_scenarios[scenario_index].reference_volume_for_risk=g_scenarios[scenario_index].volume_min;
+   g_scenarios[scenario_index].reference_volume_loss_money=reference_loss;
+   g_scenarios[scenario_index].one_lot_sl_loss_money=reference_loss/g_scenarios[scenario_index].volume_min;
+   if(g_scenarios[scenario_index].one_lot_sl_loss_money<=0.0)
+     { failure_reason="ONE_LOT_SL_LOSS_INVALID"; return false; }
+
+   if(InpPositionSizingMode==V1_SIZE_FIXED_RISK_MONEY)
+     {
+      if(InpFixedRiskMoneyPerTrade<=0.0)
+        { failure_reason="FIXED_RISK_MONEY_NOT_POSITIVE"; return false; }
+      g_scenarios[scenario_index].target_risk_money=InpFixedRiskMoneyPerTrade;
+     }
+   else if(InpPositionSizingMode==V1_SIZE_EQUITY_PERCENT_RISK)
+     {
+      if(InpEquityRiskPercentPerTrade<=0.0 || InpEquityRiskPercentPerTrade>100.0)
+        { failure_reason="EQUITY_RISK_PERCENT_OUT_OF_RANGE"; return false; }
+      if(g_scenarios[scenario_index].sizing_equity_snapshot<=0.0)
+        { failure_reason="ACCOUNT_EQUITY_NOT_POSITIVE"; return false; }
+      g_scenarios[scenario_index].target_risk_money=
+         g_scenarios[scenario_index].sizing_equity_snapshot*InpEquityRiskPercentPerTrade/100.0;
+     }
+   else
+     {
+      failure_reason="POSITION_SIZING_MODE_UNKNOWN";
+      return false;
+     }
+
+   g_scenarios[scenario_index].raw_order_volume=
+      g_scenarios[scenario_index].target_risk_money/g_scenarios[scenario_index].one_lot_sl_loss_money;
+   double eps=MathMax(1.0e-12,g_scenarios[scenario_index].volume_step*1.0e-8);
+   if(g_scenarios[scenario_index].raw_order_volume<g_scenarios[scenario_index].volume_min-eps)
+     { failure_reason="RISK_TARGET_BELOW_MINIMUM_VOLUME"; return false; }
+   if(g_scenarios[scenario_index].raw_order_volume>g_scenarios[scenario_index].volume_max+eps)
+     { failure_reason="RISK_TARGET_ABOVE_MAXIMUM_VOLUME"; return false; }
+   if(!NormalizeRiskVolumeDown(g_scenarios[scenario_index].raw_order_volume,
+                               g_scenarios[scenario_index].volume_min,
+                               g_scenarios[scenario_index].volume_max,
+                               g_scenarios[scenario_index].volume_step,
+                               g_scenarios[scenario_index].order_volume))
+     { failure_reason="RISK_VOLUME_STEP_NORMALIZATION_FAILED"; return false; }
+
+   if(!CalculateStopLossMoney(g_scenarios[scenario_index].direction,
+                              g_scenarios[scenario_index].order_volume,
+                              g_scenarios[scenario_index].strategy_entry_price,
+                              g_scenarios[scenario_index].normalized_sl,
+                              g_scenarios[scenario_index].planned_risk_money))
+     { failure_reason=StringFormat("ORDERCALCPROFIT_PLANNED_RISK_FAILED_%d",GetLastError()); return false; }
+
+   // Strict cap: step normalization may under-use the target but must never
+   // increase the intended loss budget.
+   double risk_eps=MathMax(0.01,g_scenarios[scenario_index].target_risk_money*1.0e-8);
+   if(g_scenarios[scenario_index].planned_risk_money>
+      g_scenarios[scenario_index].target_risk_money+risk_eps)
+     { failure_reason="NORMALIZED_VOLUME_EXCEEDS_TARGET_RISK"; return false; }
+
+   return true;
+  }
+
 bool IsAcceptableTradeRetcode(const uint retcode)
   {
    return (retcode==0 ||           retcode==TRADE_RETCODE_DONE ||
@@ -6302,13 +6537,8 @@ bool BuildAndCheckPendingRequest(const int scenario_index,
         { failure_reason="SHORT_TP_STOPSLEVEL"; return false; }
      }
 
-   double volume_min=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MIN);
-   double volume_max=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MAX);
-   double volume_step=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_STEP);
-   if(volume_min<=0.0 || volume_max<volume_min ||
-      !VolumeOnStep(volume_min,volume_min,volume_step))
-     { failure_reason="MINIMUM_VOLUME_PARITY_INVALID"; return false; }
-   g_scenarios[scenario_index].order_volume=volume_min;
+   if(!CalculateAndFreezePositionSizing(scenario_index,failure_reason))
+      return false;
 
    request.action=TRADE_ACTION_PENDING;
    request.magic=(ulong)InpMagicNumber;
@@ -6322,6 +6552,13 @@ bool BuildAndCheckPendingRequest(const int scenario_index,
    request.type_time=ORDER_TIME_GTC;
    request.expiration=0;
    request.comment=StringFormat("MV1-%d-%s",scenario_index,g_scenarios[scenario_index].direction>0 ? "L" : "S");
+
+   ResetLastError();
+   double estimated_margin=0.0;
+   if(OrderCalcMargin(request.type,_Symbol,request.volume,request.price,estimated_margin))
+      g_scenarios[scenario_index].planned_margin_money=estimated_margin;
+   else
+      g_scenarios[scenario_index].planned_margin_money=-1.0; // audit unavailable; OrderCheck remains authoritative
 
    ResetLastError();
    if(!OrderCheck(request,check))
@@ -6371,17 +6608,34 @@ bool SubmitPendingForScenario(const int scenario_index,const datetime available_
       g_execution_infeasible++;
       MarkExecutionNoTrade(scenario_index,available_at,failure_reason,V1_EXEC_EXECUTION_INFEASIBLE);
       LogLine("EXECUTION_PREFLIGHT_FAILED","M1",available_at,g_scenarios[scenario_index].id,
-              StringFormat("scenario_id=%s reason=%s bid=%.10f ask=%.10f entry=%.10f sl=%.10f tp=%.10f stops_level=%I64d freeze_level=%I64d strategy_geometry_unchanged=true",
-                           g_scenarios[scenario_index].id,failure_reason,tick.bid,tick.ask,g_scenarios[scenario_index].strategy_entry_price,g_scenarios[scenario_index].normalized_sl,g_scenarios[scenario_index].final_objective_price,
+              StringFormat("scenario_id=%s symbol=%s account_currency=%s reason=%s bid=%.10f ask=%.10f entry=%.10f sl=%.10f tp=%.10f sizing_mode=%s equity_snapshot=%.2f target_risk_money=%.8f one_lot_sl_loss_money=%.8f raw_volume=%.8f normalized_volume=%.8f planned_risk_money=%.8f estimated_margin=%.8f volume_min=%.8f volume_max=%.8f volume_step=%.8f stops_level=%I64d freeze_level=%I64d strategy_geometry_unchanged=true",
+                           g_scenarios[scenario_index].id,_Symbol,AccountInfoString(ACCOUNT_CURRENCY),failure_reason,tick.bid,tick.ask,g_scenarios[scenario_index].strategy_entry_price,g_scenarios[scenario_index].normalized_sl,g_scenarios[scenario_index].final_objective_price,
+                           PositionSizingModeName(g_scenarios[scenario_index].position_sizing_mode),g_scenarios[scenario_index].sizing_equity_snapshot,g_scenarios[scenario_index].target_risk_money,g_scenarios[scenario_index].one_lot_sl_loss_money,g_scenarios[scenario_index].raw_order_volume,g_scenarios[scenario_index].order_volume,g_scenarios[scenario_index].planned_risk_money,g_scenarios[scenario_index].planned_margin_money,g_scenarios[scenario_index].volume_min,g_scenarios[scenario_index].volume_max,g_scenarios[scenario_index].volume_step,
                            SymbolInfoInteger(_Symbol,SYMBOL_TRADE_STOPS_LEVEL),
                            SymbolInfoInteger(_Symbol,SYMBOL_TRADE_FREEZE_LEVEL)));
       return false;
      }
 
+   double risk_utilization=(g_scenarios[scenario_index].target_risk_money>0.0 ?
+                            g_scenarios[scenario_index].planned_risk_money/g_scenarios[scenario_index].target_risk_money : 0.0);
+   LogLine("POSITION_SIZING_CALCULATED","M1",available_at,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s symbol=%s account_currency=%s sizing_mode=%s equity_snapshot=%.2f configured_fixed_risk=%.8f configured_equity_risk_pct=%.8f target_risk_money=%.8f reference_volume=%.8f reference_sl_loss_money=%.8f one_lot_sl_loss_money=%.8f raw_volume=%.8f normalized_volume=%.8f planned_risk_money=%.8f risk_utilization=%.8f estimated_margin=%.8f volume_min=%.8f volume_max=%.8f volume_step=%.8f entry=%.10f sl=%.10f",
+                        g_scenarios[scenario_index].id,_Symbol,AccountInfoString(ACCOUNT_CURRENCY),
+                        PositionSizingModeName(g_scenarios[scenario_index].position_sizing_mode),
+                        g_scenarios[scenario_index].sizing_equity_snapshot,InpFixedRiskMoneyPerTrade,InpEquityRiskPercentPerTrade,
+                        g_scenarios[scenario_index].target_risk_money,g_scenarios[scenario_index].reference_volume_for_risk,
+                        g_scenarios[scenario_index].reference_volume_loss_money,g_scenarios[scenario_index].one_lot_sl_loss_money,
+                        g_scenarios[scenario_index].raw_order_volume,g_scenarios[scenario_index].order_volume,
+                        g_scenarios[scenario_index].planned_risk_money,risk_utilization,g_scenarios[scenario_index].planned_margin_money,
+                        g_scenarios[scenario_index].volume_min,g_scenarios[scenario_index].volume_max,g_scenarios[scenario_index].volume_step,
+                        g_scenarios[scenario_index].strategy_entry_price,g_scenarios[scenario_index].normalized_sl));
+
    g_scenarios[scenario_index].execution_status=V1_EXEC_PREFLIGHT_OK;
    LogLine("EXECUTION_PREFLIGHT_OK","M1",available_at,g_scenarios[scenario_index].id,
-           StringFormat("scenario_id=%s bid=%.10f ask=%.10f entry=%.10f sl=%.10f tp=%.10f volume=%.8f tick_size=%.10f point=%.10f stops_level=%I64d freeze_level=%I64d order_time=GTC filling=RETURN",
-                        g_scenarios[scenario_index].id,tick.bid,tick.ask,g_scenarios[scenario_index].strategy_entry_price,g_scenarios[scenario_index].normalized_sl,g_scenarios[scenario_index].final_objective_price,g_scenarios[scenario_index].order_volume,
+           StringFormat("scenario_id=%s symbol=%s sizing_mode=%s target_risk_money=%.8f planned_risk_money=%.8f estimated_margin=%.8f bid=%.10f ask=%.10f entry=%.10f sl=%.10f tp=%.10f volume=%.8f tick_size=%.10f point=%.10f stops_level=%I64d freeze_level=%I64d order_time=GTC filling=RETURN",
+                        g_scenarios[scenario_index].id,_Symbol,PositionSizingModeName(g_scenarios[scenario_index].position_sizing_mode),
+                        g_scenarios[scenario_index].target_risk_money,g_scenarios[scenario_index].planned_risk_money,g_scenarios[scenario_index].planned_margin_money,
+                        tick.bid,tick.ask,g_scenarios[scenario_index].strategy_entry_price,g_scenarios[scenario_index].normalized_sl,g_scenarios[scenario_index].final_objective_price,g_scenarios[scenario_index].order_volume,
                         LiquidityTickSize(),SymbolInfoDouble(_Symbol,SYMBOL_POINT),
                         SymbolInfoInteger(_Symbol,SYMBOL_TRADE_STOPS_LEVEL),
                         SymbolInfoInteger(_Symbol,SYMBOL_TRADE_FREEZE_LEVEL)));
@@ -6412,8 +6666,9 @@ bool SubmitPendingForScenario(const int scenario_index,const datetime available_
    g_orders_accepted++;
 
    LogLine("PENDING_ORDER_ACCEPTED","M1",available_at,g_scenarios[scenario_index].id,
-           StringFormat("scenario_id=%s order_ticket=%I64u request_id=%u direction=%s entry=%.10f sl_model=%s sl=%.10f tp=%.10f volume=%.8f contributor_count=%d merged=%s contributor_root_ids=%s order_time=GTC filling=RETURN strategy_state=PENDING",
+           StringFormat("scenario_id=%s symbol=%s order_ticket=%I64u request_id=%u direction=%s entry=%.10f sl_model=%s sl=%.10f tp=%.10f sizing_mode=%s target_risk_money=%.8f planned_risk_money=%.8f estimated_margin=%.8f volume=%.8f contributor_count=%d merged=%s contributor_root_ids=%s order_time=GTC filling=RETURN strategy_state=PENDING",
                         g_scenarios[scenario_index].id,
+                        _Symbol,
                         result.order,
                         result.request_id,
                         DirectionName(g_scenarios[scenario_index].direction),
@@ -6421,6 +6676,10 @@ bool SubmitPendingForScenario(const int scenario_index,const datetime available_
                         StopLossModelName(g_scenarios[scenario_index].stop_loss_model),
                         g_scenarios[scenario_index].normalized_sl,
                         g_scenarios[scenario_index].final_objective_price,
+                        PositionSizingModeName(g_scenarios[scenario_index].position_sizing_mode),
+                        g_scenarios[scenario_index].target_risk_money,
+                        g_scenarios[scenario_index].planned_risk_money,
+                        g_scenarios[scenario_index].planned_margin_money,
                         g_scenarios[scenario_index].order_volume,
                         g_scenarios[scenario_index].execution_contributor_count,
                         g_scenarios[scenario_index].execution_opportunity_merged ? "true" : "false",
@@ -7255,6 +7514,17 @@ void MarkScenarioFilled(const int scenario_index,
    g_scenarios[scenario_index].fill_price=fill_price;
    g_scenarios[scenario_index].broker_deal_ticket=deal_ticket;
    g_scenarios[scenario_index].broker_position_id=position_id;
+   g_scenarios[scenario_index].actual_fill_risk_money=0.0;
+   CalculateStopLossMoney(g_scenarios[scenario_index].direction,
+                          g_scenarios[scenario_index].order_volume,
+                          g_scenarios[scenario_index].fill_price,
+                          g_scenarios[scenario_index].normalized_sl,
+                          g_scenarios[scenario_index].actual_fill_risk_money);
+   if(deal_ticket>0)
+     {
+      g_scenarios[scenario_index].entry_deal_commission=HistoryDealGetDouble(deal_ticket,DEAL_COMMISSION);
+      g_scenarios[scenario_index].entry_deal_fee=HistoryDealGetDouble(deal_ticket,DEAL_FEE);
+     }
    g_positions_filled++;
 
    // D-133: once the shared order fills, the implementation master owns the
@@ -7273,8 +7543,12 @@ void MarkScenarioFilled(const int scenario_index,
      }
 
    LogLine("POSITION_FILLED","M1",observed_at,g_scenarios[scenario_index].id,
-           StringFormat("scenario_id=%s order_ticket=%I64u deal_ticket=%I64u position_id=%I64u strategy_entry=%.10f actual_fill=%.10f fill_at=%s execution_status=%s divergence=%s",
-                        g_scenarios[scenario_index].id,g_scenarios[scenario_index].broker_order_ticket,deal_ticket,position_id,g_scenarios[scenario_index].strategy_entry_price,g_scenarios[scenario_index].fill_price,
+           StringFormat("scenario_id=%s symbol=%s order_ticket=%I64u deal_ticket=%I64u position_id=%I64u sizing_mode=%s volume=%.8f target_risk_money=%.8f planned_risk_money=%.8f actual_fill_risk_money=%.8f entry_commission=%.8f entry_fee=%.8f strategy_entry=%.10f actual_fill=%.10f strategy_sl=%.10f fill_at=%s execution_status=%s divergence=%s",
+                        g_scenarios[scenario_index].id,_Symbol,g_scenarios[scenario_index].broker_order_ticket,deal_ticket,position_id,
+                        PositionSizingModeName(g_scenarios[scenario_index].position_sizing_mode),g_scenarios[scenario_index].order_volume,
+                        g_scenarios[scenario_index].target_risk_money,g_scenarios[scenario_index].planned_risk_money,g_scenarios[scenario_index].actual_fill_risk_money,
+                        g_scenarios[scenario_index].entry_deal_commission,g_scenarios[scenario_index].entry_deal_fee,
+                        g_scenarios[scenario_index].strategy_entry_price,g_scenarios[scenario_index].fill_price,g_scenarios[scenario_index].normalized_sl,
                         TimeToString(g_scenarios[scenario_index].fill_at,TIME_DATE|TIME_SECONDS),ExecutionStatusName(g_scenarios[scenario_index].execution_status),
                         g_scenarios[scenario_index].execution_divergence ? "true" : "false"));
   }
@@ -7470,13 +7744,23 @@ void ReconcileScenarioExecution(const int scenario_index,const datetime observed
    g_scenarios[scenario_index].exit_price=exit_price;
    g_scenarios[scenario_index].exit_reason=exit_reason;
    g_scenarios[scenario_index].exit_deal_ticket=exit_deal;
+   g_scenarios[scenario_index].exit_deal_profit=HistoryDealGetDouble(exit_deal,DEAL_PROFIT);
+   g_scenarios[scenario_index].exit_deal_commission=HistoryDealGetDouble(exit_deal,DEAL_COMMISSION);
+   g_scenarios[scenario_index].exit_deal_swap=HistoryDealGetDouble(exit_deal,DEAL_SWAP);
+   g_scenarios[scenario_index].exit_deal_fee=HistoryDealGetDouble(exit_deal,DEAL_FEE);
    if(!g_scenarios[scenario_index].execution_divergence)
       g_scenarios[scenario_index].execution_status=V1_EXEC_CLOSED;
    g_positions_closed++;
 
+   double realized_net_money=g_scenarios[scenario_index].entry_deal_commission+g_scenarios[scenario_index].entry_deal_fee+
+                             g_scenarios[scenario_index].exit_deal_profit+g_scenarios[scenario_index].exit_deal_commission+
+                             g_scenarios[scenario_index].exit_deal_swap+g_scenarios[scenario_index].exit_deal_fee;
    LogLine("POSITION_CLOSED","M1",observed_at,g_scenarios[scenario_index].id,
-           StringFormat("scenario_id=%s exit_deal=%I64u position_id=%I64u exit_at=%s actual_exit=%.10f deal_reason=%I64d strategy_sl=%.10f strategy_tp=%.10f execution_status=%s scenario_scoped_reconciliation=true",
-                        g_scenarios[scenario_index].id,exit_deal,g_scenarios[scenario_index].broker_position_id,
+           StringFormat("scenario_id=%s symbol=%s exit_deal=%I64u position_id=%I64u sizing_mode=%s volume=%.8f target_risk_money=%.8f planned_risk_money=%.8f actual_fill_risk_money=%.8f exit_profit=%.8f exit_commission=%.8f exit_swap=%.8f exit_fee=%.8f realized_net_money=%.8f exit_at=%s actual_exit=%.10f deal_reason=%I64d strategy_sl=%.10f strategy_tp=%.10f execution_status=%s scenario_scoped_reconciliation=true",
+                        g_scenarios[scenario_index].id,_Symbol,exit_deal,g_scenarios[scenario_index].broker_position_id,
+                        PositionSizingModeName(g_scenarios[scenario_index].position_sizing_mode),g_scenarios[scenario_index].order_volume,
+                        g_scenarios[scenario_index].target_risk_money,g_scenarios[scenario_index].planned_risk_money,g_scenarios[scenario_index].actual_fill_risk_money,
+                        g_scenarios[scenario_index].exit_deal_profit,g_scenarios[scenario_index].exit_deal_commission,g_scenarios[scenario_index].exit_deal_swap,g_scenarios[scenario_index].exit_deal_fee,realized_net_money,
                         TimeToString(exit_time,TIME_DATE|TIME_SECONDS),exit_price,exit_reason,
                         g_scenarios[scenario_index].normalized_sl,g_scenarios[scenario_index].final_objective_price,
                         ExecutionStatusName(g_scenarios[scenario_index].execution_status)));
@@ -9963,6 +10247,18 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
 
 int OnInit()
   {
+   if(InpPositionSizingMode==V1_SIZE_FIXED_RISK_MONEY && InpFixedRiskMoneyPerTrade<=0.0)
+     {
+      Print("MentorV1 invalid position sizing input: InpFixedRiskMoneyPerTrade must be > 0");
+      return INIT_PARAMETERS_INCORRECT;
+     }
+   if(InpPositionSizingMode==V1_SIZE_EQUITY_PERCENT_RISK &&
+      (InpEquityRiskPercentPerTrade<=0.0 || InpEquityRiskPercentPerTrade>100.0))
+     {
+      Print("MentorV1 invalid position sizing input: InpEquityRiskPercentPerTrade must be in (0,100]");
+      return INIT_PARAMETERS_INCORRECT;
+     }
+
    InitializeAllStructureStates();
    if(InpWriteEventCsv)
      {
@@ -9978,16 +10274,24 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=1.92R1L2 property_version=1.00 magic=%I64d phase=REGIME_RESEARCH_V1_LOG_OPTIMIZED_BASELINE_TOGGLE strategy_semantics=D134_EXECUTION_CORE_UNCHANGED fvg_origin_ob_baseline=true sl_model=%s regime_mode=%s event_log_mode=%s same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=1.92R1L3 property_version=1.00 magic=%I64d phase=REGIME_RESEARCH_V1_MULTI_SYMBOL_RISK_SIZING strategy_semantics=D134_EXECUTION_CORE_UNCHANGED fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
+                        _Symbol,
+                        AccountInfoString(ACCOUNT_CURRENCY),
                         StopLossModelName((int)InpStopLossModel),
                         RegimeResearchModeName(InpRegimeResearchMode),
                         EventLogModeName(InpEventLogMode),
+                        PositionSizingModeName((int)InpPositionSizingMode),
+                        InpFixedRiskMoneyPerTrade,
+                        InpEquityRiskPercentPerTrade,
                         AccountInfoInteger(ACCOUNT_MARGIN_MODE)));
    LogLine("REGIME_RESEARCH_VARIANT_START","M30",TimeCurrent(),"",
-           StringFormat("mode=%s event_log_mode=%s regime_gate_enabled=%s gate_scope=%s plan_snapshot=true wave_count=12 progression_required=2/3 protected_break_max=1 expansion_required_gt=1.0 expansion_required_only_in_v1_mode=true thresholds_are_not_inputs=true baseline_no_gate_available=true pending_cancel_retry_change=false strategy_core_change=false",
+           StringFormat("mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f regime_gate_enabled=%s gate_scope=%s plan_snapshot=true wave_count=12 progression_required=2/3 protected_break_max=1 expansion_required_gt=1.0 expansion_required_only_in_v1_mode=true thresholds_are_not_inputs=true baseline_no_gate_available=true pending_cancel_retry_change=false strategy_core_change=false sizing_layer_only=true",
                         RegimeResearchModeName(InpRegimeResearchMode),
                         EventLogModeName(InpEventLogMode),
+                        PositionSizingModeName((int)InpPositionSizingMode),
+                        InpFixedRiskMoneyPerTrade,
+                        InpEquityRiskPercentPerTrade,
                         (InpRegimeResearchMode==V1_REGIME_BASELINE_NO_GATE ? "false" : "true"),
                         (InpRegimeResearchMode==V1_REGIME_BASELINE_NO_GATE ? "NONE" : "EXTERNAL_CONTINUATION")));
    if(HasManagedAccountExposure())
@@ -10027,10 +10331,13 @@ void OnDeinit(const int reason)
                         g_log_rows_written,
                         g_log_rows_suppressed));
    LogLine("D135_STOP_SUMMARY","",TimeCurrent(),"",
-           StringFormat("strategy_semantics=D134_UNCHANGED sl_model=%s event_log_mode=%s fvg_origin_ob_baseline=true same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true merged_execution_opportunities=%I64d merged_contributor_branches=%I64d simultaneous_opposite_ambiguous_opportunities=%I64d same_direction_addon_authorized=%I64d opposite_direction_exposure_blocked=%I64d perf_waiting_root=%d perf_ready_root=%d perf_waiting_sweep=%d perf_waiting_trigger=%d perf_waiting_geometry=%d perf_active_execution=%d csv_flush_batch=%d csv_rows_written=%I64d log_calls_suppressed=%I64d strategy_core_change=false research_toggle_extension=true",
+           StringFormat("strategy_semantics=D134_UNCHANGED sl_model=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f fvg_origin_ob_baseline=true same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true merged_execution_opportunities=%I64d merged_contributor_branches=%I64d simultaneous_opposite_ambiguous_opportunities=%I64d same_direction_addon_authorized=%I64d opposite_direction_exposure_blocked=%I64d perf_waiting_root=%d perf_ready_root=%d perf_waiting_sweep=%d perf_waiting_trigger=%d perf_waiting_geometry=%d perf_active_execution=%d csv_flush_batch=%d csv_rows_written=%I64d log_calls_suppressed=%I64d strategy_core_change=false research_toggle_extension=true",
 
                         StopLossModelName((int)InpStopLossModel),
                         EventLogModeName(InpEventLogMode),
+                        PositionSizingModeName((int)InpPositionSizingMode),
+                        InpFixedRiskMoneyPerTrade,
+                        InpEquityRiskPercentPerTrade,
                         g_execution_opportunities_merged,
                         g_execution_contributors_merged,
                         g_simultaneous_authorization_ambiguous,

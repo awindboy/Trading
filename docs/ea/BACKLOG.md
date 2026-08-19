@@ -1,5 +1,21 @@
 # EA Backlog
 
+## Multi-symbol robustness / risk sizing — 2026-08-20
+
+- [x] Design tester-selectable sizing modes: minimum-volume control / fixed account-currency risk / equity-percent risk.
+- [x] Implement account-currency Entry->SL risk sizing with `OrderCalcProfit`.
+- [x] Normalize risk-sized volume downward to symbol MIN/MAX/STEP without exceeding target risk.
+- [x] Preserve minimum-volume parity behavior as the historical sizing control.
+- [x] Add diagnostic `OrderCalcMargin` estimate while retaining `OrderCheck` as execution-feasibility authority.
+- [x] Extend compact logs with sizing, actual-fill risk, and realized money fields for pooled cross-symbol analysis.
+- [ ] MetaEditor compile build 1.92R1L3.
+- [ ] Short GOLD minimum-volume parity smoke against 1.92R1L2: trade identities/Entry/SL/TP/order volume must remain unchanged.
+- [ ] Fixed-risk smoke on at least two symbols with different volume steps; planned risk must never exceed target.
+- [ ] Equity-percent smoke; target risk must equal preflight equity snapshot × configured percent.
+- [ ] Run ~10 symbols over one common 1-year window with frozen Expansion V1 and identical risk protocol.
+- [ ] Produce per-symbol and pooled robustness report; pooled result is not yet a synchronized portfolio-DD test.
+- [ ] Only after cross-symbol evidence, decide whether to build a synchronized multi-symbol portfolio harness.
+
 ## Current research checkpoint — 2026-08-20
 
 Completed since the previous repository checkpoint:
