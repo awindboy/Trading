@@ -4667,3 +4667,982 @@ build 1.91 remains frozen control
 ```
 
 Durable evidence: `docs/ea/REGIME_RESEARCH_2023_2025.md`.
+
+---
+
+## D-137 — Freeze Regime Research V1 before 2022 OOS
+
+Status: ACTIVE RESEARCH FREEZE / STRATEGY SEMANTICS UNCHANGED — 2026-08-19
+
+### Trigger
+
+D-136 sealed 2022 as the first OOS period and required all new regime features to be re-run on raw 2025 before any model freeze.
+
+The exact 2025 build-1.91 ledger is now available and verified:
+
+```text
+mentor_v1_structure_events(20260819-103841).csv
+rows = 234,277
+SHA-256 = 1bd119c4d3aea9ab759a24541de71be01d0379fa948927bede2a1dae5b9d7b65
+```
+
+The hash matches the previously recorded 2025 source. The same PLAN-freeze formulas used for the 2023–2024 discovery pass were applied without threshold changes.
+
+### Validation outcome
+
+Parent state `M30_CLEAN_PERSISTENT` survives:
+
+```text
+2023 +47.22R
+2024  +0.69R
+2025  +4.58R
+```
+
+Two earlier candidates do not survive the 2025 transfer:
+
+```text
+progression <= 0.50
+2025 = +11.32R
+-> reject as standalone BAD veto
+
+directional_advance_norm > 1/3
+2025 = -7.89R
+-> reject as V1 persistence replacement
+```
+
+Protected-break churn remains adverse across all three development years.
+
+A conditional structural-expansion feature identified during the 2023–2024 pass also survives 2025:
+
+```text
+M30_CLEAN_PERSISTENT
++ leg_expansion_ratio > 1.0
+
+2023 +43.88R
+2024  +2.36R
+2025  +7.61R
+```
+
+Combined development attribution:
+
+```text
+20 trades / 13 wins / 65.0%
++53.85R
+mean +2.69R/trade
+Max DD -3.01R
+longest losing streak 3
+```
+
+`leg_expansion_ratio` is nearly independent of progression and PB count in the development data (`Spearman rho ≈ 0.02` for each), so it is treated as an expansion axis rather than another persistence proxy.
+
+### Decision
+
+Freeze **Regime Research V1** as:
+
+`M30_CLEAN_PERSISTENT_EXPANDING`
+
+```text
+scope = EXTERNAL_CONTINUATION
+snapshot = scenario PLAN freeze
+required context = latest 12 confirmed M30 waves available by PLAN freeze
+
+progression >= 2/3
+M30 PROTECTED_BREAK inside same 12-wave span <= 1
+leg_expansion_ratio > 1.0
+```
+
+where:
+
+```text
+leg_expansion_ratio =
+mean(abs(size) of the 4 most recent M30 wave-to-wave legs)
+/
+mean(abs(size) of the preceding 4 M30 wave-to-wave legs)
+```
+
+The threshold is frozen at `>1.0` because it has the direct structural interpretation that recent M30 legs are expanding relative to the immediately preceding legs. It is not chosen as an arbitrary decimal optimum.
+
+State vocabulary remains:
+
+```text
+M30_CLEAN_PERSISTENT_EXPANDING
+UNKNOWN
+```
+
+The complement is not labeled BAD.
+
+### Explicit exclusions
+
+Regime Research V1 does **not** include:
+
+```text
+directional_advance_norm threshold
+progression <= 0.50 veto
+impulse_retrace threshold
+retracement-depth threshold
+trend maturity / owner BOS band
+H1/M30 agreement veto
+PD/range-location veto
+quality score
+EMA / ADX / ATR / RSI
+```
+
+### 2022 OOS contract
+
+Do not modify the frozen definition after viewing 2022.
+
+Evaluate:
+
+```text
+A. clean EXTERNAL_CONTINUATION baseline
+B. parent M30_CLEAN_PERSISTENT
+C. frozen M30_CLEAN_PERSISTENT_EXPANDING V1
+```
+
+V1 classification:
+
+```text
+INCONCLUSIVE
+if clean closed V1 trades < 5
+
+PASS candidate
+if trades >= 5
+and Total R > 0
+and mean R/trade > 0
+and Max DD is less severe than 2022 continuation baseline
+and longest losing streak is no worse than 2022 continuation baseline
+
+FAIL
+otherwise
+```
+
+The expansion component is separately supported only if V1 does not underperform the parent state on both expectancy and drawdown.
+
+If any formula or threshold changes after the 2022 result is inspected, the changed model is V2 and 2022 is no longer its OOS set. Use 2021 or later forward/paper data for the next untouched confirmation.
+
+### Strategy authority
+
+This is a research-model freeze only.
+
+```text
+baseline EA strategy semantics = UNCHANGED
+AGENTS.md authority = UNCHANGED
+build 1.91 = CONTROL
+```
+
+No EA order authorization should use Regime Research V1 until OOS evidence is reviewed and a later explicit promotion decision is recorded.
+
+---
+
+## D-138 — Implement frozen Regime Research V1 as a separate MT5 research variant
+
+Status: PREPARED RESEARCH IMPLEMENTATION / LOCAL COMPILE + DEVELOPMENT PARITY PENDING — 2026-08-19
+
+### Trigger
+
+D-137 froze `M30_CLEAN_PERSISTENT_EXPANDING` before the sealed 2022 OOS. The frozen rule cannot be tested only by post-filtering the build-1.91 event ledger because suppressing one scenario can change later hedging exposure, same-entry contributor merge, opposite-direction conflict, pending lifecycle, and subsequent opportunity availability.
+
+A direct Strategy Tester research variant is therefore required before opening 2022.
+
+### Baseline preservation
+
+The authoritative control remains:
+
+```text
+mt5/experts/MentorDeterministicV1EA.mq5
+internal build = 1.91
+strategy semantics = D134 execution core + D135/D135A implementation
+```
+
+It is not modified by this research implementation.
+
+The separate variant path is:
+
+```text
+mt5/experts/MentorDeterministicV1EA_RegimeResearchV1.mq5
+research build identity = 1.92R1
+```
+
+The variant is generated from the exact build-1.91 baseline blob:
+
+```text
+b5957a2ac6043267f498251bee22491c6e939512
+```
+
+The generator refuses to run if that baseline blob does not match, so a later EA revision cannot silently inherit this patch.
+
+### Frozen model modes
+
+The research EA exposes only the two already-frozen model states needed by the OOS contract:
+
+```text
+V1_REGIME_PARENT_CLEAN_PERSISTENT
+V1_REGIME_V1_CLEAN_PERSISTENT_EXPANDING
+```
+
+There is no OFF/baseline mode in the research file. The original build-1.91 EA remains the baseline control.
+
+Thresholds are compile-time constants, not Strategy Tester inputs:
+
+```text
+latest confirmed M30 waves = 12
+progression requirement = >= 2/3
+M30 PROTECTED_BREAK inside same 12-wave span = <= 1
+recent expansion legs = 4
+preceding comparison legs = 4
+leg_expansion_ratio requirement = > 1.0
+```
+
+This prevents 2022 from being tuned through input parameters.
+
+### Canonical snapshot timing
+
+The regime is evaluated only after the Root already has:
+
+```text
+valid baseline map/scope qualification
++
+valid frozen objective family
+```
+
+and immediately before `StoreScenarioPlan()` would create the baseline scenario.
+
+Therefore the research classification uses the same causal epoch as the development study:
+
+```text
+baseline-equivalent scenario PLAN freeze
+```
+
+Only M30 waves and protected-break events with `available_at <= frozen_at` may contribute.
+
+### Root terminal research rejection
+
+If the Root fails the selected frozen research state at its first baseline-equivalent PLAN opportunity:
+
+```text
+REGIME_RESEARCH_PLAN_REJECTED
+→ Root.research_rejected = true
+→ no scenario is stored
+→ that Root identity may not wait for the regime to improve and become a later hindsight plan
+```
+
+This is deliberate. The Development Set classified each baseline trade at its original PLAN snapshot. Letting a rejected Root survive until the filter becomes favorable would define a different timing rule that was never researched.
+
+A later *new physical Root identity* is evaluated normally.
+
+### Accepted snapshot
+
+For an accepted Root the research EA freezes into `V1ScenarioPlan`:
+
+```text
+parent_pass
+expansion_pass
+v1_pass
+wave_count
+progression_success
+progression_total
+progression_ratio
+protected_break_count
+recent_leg_mean
+prior_leg_mean
+leg_expansion_ratio
+```
+
+and emits:
+
+```text
+REGIME_RESEARCH_PLAN_ACCEPTED
+```
+
+The complement remains:
+
+```text
+UNKNOWN
+```
+
+No BAD label is created.
+
+### Downstream execution
+
+The regime gate is upstream of:
+
+```text
+Root contact
+Sweep
+CHoCH
+FVG selection
+same-entry contributor merge
+Entry / SL / TP finalization
+pending submission
+```
+
+A research-rejected Root can remain visible to physical Root/contact audit, but without a stored scenario it cannot enter contributor merge or alter another accepted Root's merged SL/objective geometry.
+
+After the PLAN gate, the existing build-1.91 downstream execution core is intentionally unchanged.
+
+### Explicit non-changes
+
+This implementation does not change:
+
+```text
+AGENTS.md strategy authority
+EA_SPEC baseline contract
+Root recognition
+liquidity detector
+Sweep definition
+M1 CHoCH
+FVG selection
+Entry geometry
+SL geometry
+objective-family logic
+same-entry Root merge
+same-direction hedging add-ons
+opposite-direction conflict rule
+pending/fill/close reconciliation
+```
+
+The known recoverable pending-cancel rejection retry remains a separate execution issue. D-138 does not fix or hide it. Any research run with execution divergence is not final profitability evidence.
+
+### Validation gate before 2022
+
+2022 remains sealed until all of the following are complete locally:
+
+```text
+1. MetaEditor compile = 0 errors
+2. research startup log confirms build 1.92R1 and frozen threshold contract
+3. Development Set classification parity spot-checks against 2023/2024/2025 PLAN snapshots
+4. no rejected Root is later replanned under the same Root identity
+5. no research-rejected Root participates in contributor merge or pending execution
+6. parent mode and full V1 mode both complete without implementation divergence on the chosen smoke fixtures
+```
+
+Exact total trade parity with the old post-filtered ledger is not required after execution begins, because removing scenarios can causally alter later portfolio/exposure state. PLAN-time classification parity is required; direct Strategy Tester outcomes are the authority for the implemented variant.
+
+Only after this gate passes may the sealed 2022 OOS be opened.
+
+
+---
+
+## D-137 — Freeze Regime Research V1 before 2022 OOS
+
+Status: ACTIVE RESEARCH FREEZE / STRATEGY SEMANTICS UNCHANGED — 2026-08-19
+
+### Trigger
+
+D-136 sealed 2022 as the first OOS period and required all new regime features to be re-run on raw 2025 before any model freeze.
+
+The exact 2025 build-1.91 ledger is now available and verified:
+
+```text
+mentor_v1_structure_events(20260819-103841).csv
+rows = 234,277
+SHA-256 = 1bd119c4d3aea9ab759a24541de71be01d0379fa948927bede2a1dae5b9d7b65
+```
+
+The hash matches the previously recorded 2025 source. The same PLAN-freeze formulas used for the 2023–2024 discovery pass were applied without threshold changes.
+
+### Validation outcome
+
+Parent state `M30_CLEAN_PERSISTENT` survives:
+
+```text
+2023 +47.22R
+2024  +0.69R
+2025  +4.58R
+```
+
+Two earlier candidates do not survive the 2025 transfer:
+
+```text
+progression <= 0.50
+2025 = +11.32R
+-> reject as standalone BAD veto
+
+directional_advance_norm > 1/3
+2025 = -7.89R
+-> reject as V1 persistence replacement
+```
+
+Protected-break churn remains adverse across all three development years.
+
+A conditional structural-expansion feature identified during the 2023–2024 pass also survives 2025:
+
+```text
+M30_CLEAN_PERSISTENT
++ leg_expansion_ratio > 1.0
+
+2023 +43.88R
+2024  +2.36R
+2025  +7.61R
+```
+
+Combined development attribution:
+
+```text
+20 trades / 13 wins / 65.0%
++53.85R
+mean +2.69R/trade
+Max DD -3.01R
+longest losing streak 3
+```
+
+`leg_expansion_ratio` is nearly independent of progression and PB count in the development data (`Spearman rho ≈ 0.02` for each), so it is treated as an expansion axis rather than another persistence proxy.
+
+### Decision
+
+Freeze **Regime Research V1** as:
+
+`M30_CLEAN_PERSISTENT_EXPANDING`
+
+```text
+scope = EXTERNAL_CONTINUATION
+snapshot = scenario PLAN freeze
+required context = latest 12 confirmed M30 waves available by PLAN freeze
+
+progression >= 2/3
+M30 PROTECTED_BREAK inside same 12-wave span <= 1
+leg_expansion_ratio > 1.0
+```
+
+where:
+
+```text
+leg_expansion_ratio =
+mean(abs(size) of the 4 most recent M30 wave-to-wave legs)
+/
+mean(abs(size) of the preceding 4 M30 wave-to-wave legs)
+```
+
+The threshold is frozen at `>1.0` because it has the direct structural interpretation that recent M30 legs are expanding relative to the immediately preceding legs. It is not chosen as an arbitrary decimal optimum.
+
+State vocabulary remains:
+
+```text
+M30_CLEAN_PERSISTENT_EXPANDING
+UNKNOWN
+```
+
+The complement is not labeled BAD.
+
+### Explicit exclusions
+
+Regime Research V1 does **not** include:
+
+```text
+directional_advance_norm threshold
+progression <= 0.50 veto
+impulse_retrace threshold
+retracement-depth threshold
+trend maturity / owner BOS band
+H1/M30 agreement veto
+PD/range-location veto
+quality score
+EMA / ADX / ATR / RSI
+```
+
+### 2022 OOS contract
+
+Do not modify the frozen definition after viewing 2022.
+
+Evaluate:
+
+```text
+A. clean EXTERNAL_CONTINUATION baseline
+B. parent M30_CLEAN_PERSISTENT
+C. frozen M30_CLEAN_PERSISTENT_EXPANDING V1
+```
+
+V1 classification:
+
+```text
+INCONCLUSIVE
+if clean closed V1 trades < 5
+
+PASS candidate
+if trades >= 5
+and Total R > 0
+and mean R/trade > 0
+and Max DD is less severe than 2022 continuation baseline
+and longest losing streak is no worse than 2022 continuation baseline
+
+FAIL
+otherwise
+```
+
+The expansion component is separately supported only if V1 does not underperform the parent state on both expectancy and drawdown.
+
+If any formula or threshold changes after the 2022 result is inspected, the changed model is V2 and 2022 is no longer its OOS set. Use 2021 or later forward/paper data for the next untouched confirmation.
+
+### Strategy authority
+
+This is a research-model freeze only.
+
+```text
+baseline EA strategy semantics = UNCHANGED
+AGENTS.md authority = UNCHANGED
+build 1.91 = CONTROL
+```
+
+No EA order authorization should use Regime Research V1 until OOS evidence is reviewed and a later explicit promotion decision is recorded.
+
+---
+
+## D-138 — Implement frozen Regime Research V1 as a separate MT5 research variant
+
+Status: PREPARED RESEARCH IMPLEMENTATION / LOCAL COMPILE + DEVELOPMENT PARITY PENDING — 2026-08-19
+
+### Trigger
+
+D-137 froze `M30_CLEAN_PERSISTENT_EXPANDING` before the sealed 2022 OOS. The frozen rule cannot be tested only by post-filtering the build-1.91 event ledger because suppressing one scenario can change later hedging exposure, same-entry contributor merge, opposite-direction conflict, pending lifecycle, and subsequent opportunity availability.
+
+A direct Strategy Tester research variant is therefore required before opening 2022.
+
+### Baseline preservation
+
+The authoritative control remains:
+
+```text
+mt5/experts/MentorDeterministicV1EA.mq5
+internal build = 1.91
+strategy semantics = D134 execution core + D135/D135A implementation
+```
+
+It is not modified by this research implementation.
+
+The separate variant path is:
+
+```text
+mt5/experts/MentorDeterministicV1EA_RegimeResearchV1.mq5
+research build identity = 1.92R1
+```
+
+The variant is generated from the exact build-1.91 baseline blob:
+
+```text
+b5957a2ac6043267f498251bee22491c6e939512
+```
+
+The generator refuses to run if that baseline blob does not match, so a later EA revision cannot silently inherit this patch.
+
+### Frozen model modes
+
+The research EA exposes only the two already-frozen model states needed by the OOS contract:
+
+```text
+V1_REGIME_PARENT_CLEAN_PERSISTENT
+V1_REGIME_V1_CLEAN_PERSISTENT_EXPANDING
+```
+
+There is no OFF/baseline mode in the research file. The original build-1.91 EA remains the baseline control.
+
+Thresholds are compile-time constants, not Strategy Tester inputs:
+
+```text
+latest confirmed M30 waves = 12
+progression requirement = >= 2/3
+M30 PROTECTED_BREAK inside same 12-wave span = <= 1
+recent expansion legs = 4
+preceding comparison legs = 4
+leg_expansion_ratio requirement = > 1.0
+```
+
+This prevents 2022 from being tuned through input parameters.
+
+### Canonical snapshot timing
+
+The regime is evaluated only after the Root already has:
+
+```text
+valid baseline map/scope qualification
++
+valid frozen objective family
+```
+
+and immediately before `StoreScenarioPlan()` would create the baseline scenario.
+
+Therefore the research classification uses the same causal epoch as the development study:
+
+```text
+baseline-equivalent scenario PLAN freeze
+```
+
+Only M30 waves and protected-break events with `available_at <= frozen_at` may contribute.
+
+### Root terminal research rejection
+
+If the Root fails the selected frozen research state at its first baseline-equivalent PLAN opportunity:
+
+```text
+REGIME_RESEARCH_PLAN_REJECTED
+→ Root.research_rejected = true
+→ no scenario is stored
+→ that Root identity may not wait for the regime to improve and become a later hindsight plan
+```
+
+This is deliberate. The Development Set classified each baseline trade at its original PLAN snapshot. Letting a rejected Root survive until the filter becomes favorable would define a different timing rule that was never researched.
+
+A later *new physical Root identity* is evaluated normally.
+
+### Accepted snapshot
+
+For an accepted Root the research EA freezes into `V1ScenarioPlan`:
+
+```text
+parent_pass
+expansion_pass
+v1_pass
+wave_count
+progression_success
+progression_total
+progression_ratio
+protected_break_count
+recent_leg_mean
+prior_leg_mean
+leg_expansion_ratio
+```
+
+and emits:
+
+```text
+REGIME_RESEARCH_PLAN_ACCEPTED
+```
+
+The complement remains:
+
+```text
+UNKNOWN
+```
+
+No BAD label is created.
+
+### Downstream execution
+
+The regime gate is upstream of:
+
+```text
+Root contact
+Sweep
+CHoCH
+FVG selection
+same-entry contributor merge
+Entry / SL / TP finalization
+pending submission
+```
+
+A research-rejected Root can remain visible to physical Root/contact audit, but without a stored scenario it cannot enter contributor merge or alter another accepted Root's merged SL/objective geometry.
+
+After the PLAN gate, the existing build-1.91 downstream execution core is intentionally unchanged.
+
+### Explicit non-changes
+
+This implementation does not change:
+
+```text
+AGENTS.md strategy authority
+EA_SPEC baseline contract
+Root recognition
+liquidity detector
+Sweep definition
+M1 CHoCH
+FVG selection
+Entry geometry
+SL geometry
+objective-family logic
+same-entry Root merge
+same-direction hedging add-ons
+opposite-direction conflict rule
+pending/fill/close reconciliation
+```
+
+The known recoverable pending-cancel rejection retry remains a separate execution issue. D-138 does not fix or hide it. Any research run with execution divergence is not final profitability evidence.
+
+### Validation gate before 2022
+
+2022 remains sealed until all of the following are complete locally:
+
+```text
+1. MetaEditor compile = 0 errors
+2. research startup log confirms build 1.92R1 and frozen threshold contract
+3. Development Set classification parity spot-checks against 2023/2024/2025 PLAN snapshots
+4. no rejected Root is later replanned under the same Root identity
+5. no research-rejected Root participates in contributor merge or pending execution
+6. parent mode and full V1 mode both complete without implementation divergence on the chosen smoke fixtures
+```
+
+Exact total trade parity with the old post-filtered ledger is not required after execution begins, because removing scenarios can causally alter later portfolio/exposure state. PLAN-time classification parity is required; direct Strategy Tester outcomes are the authority for the implemented variant.
+
+Only after this gate passes may the sealed 2022 OOS be opened.
+
+---
+
+## D-139 — Validate the direct Regime Research V1 harness and separate research logging from strategy semantics
+
+Status: ACTIVE RESEARCH IMPLEMENTATION / DEVELOPMENT DIRECT VALIDATION PASS / STRATEGY AUTHORITY UNCHANGED — 2026-08-20
+
+### Trigger
+
+D-138 prepared a direct MT5 research variant because offline post-filtering cannot reproduce the causal portfolio state that results when rejected scenarios no longer participate in contributor merge, pending exposure, or opposite-direction conflict.
+
+The research variant has now been compiled and run across the complete 2023–2025 Development Set. Long-run event output was also found to be unnecessarily large for repeated research runs, so a logging-only compact mode and a baseline no-gate comparator were added to the same harness.
+
+### Direct formula parity
+
+The original three-year Expansion run contained all required full-audit regime inputs.
+
+Across all `2,338` `EXTERNAL_CONTINUATION` regime decisions, an independent reconstruction from the logged M30 waves and protected breaks produced:
+
+```text
+progression mismatch = 0
+protected-break-count mismatch = 0
+leg-expansion mismatch = 0
+final PASS/REJECT mismatch = 0
+```
+
+Therefore the frozen D-137 formula was translated into the EA without detected PLAN-time classification drift.
+
+### Direct Development results
+
+Parent mode:
+
+```text
+46 trades / 15 wins
+Total = +45.436530R
+Mean = +0.987751R/trade
+Max DD = -11.204262R
+Longest losing streak = 11
+execution divergence = 0
+```
+
+Frozen Expansion V1:
+
+```text
+24 trades / 13 wins
+Total = +49.797314R
+Mean = +2.074888R/trade
+Max DD = -5.173397R
+Longest losing streak = 5
+execution divergence = 0
+```
+
+All 24 Expansion trades are exact Parent trades with identical R. Expansion removes 22 Parent-only trades:
+
+```text
+22 trades / 2 wins / 20 losses
+Total = -4.360784R
+Mean = -0.198217R/trade
+```
+
+This is direct evidence that the expansion axis adds information beyond the Parent on the Development Set.
+
+### Offline attribution is not final execution authority
+
+The frozen offline V1 attribution contained 20 trades, while the direct MT5 variant produced 24. The original 20 trades were reproduced with identical R. The four additional direct outcomes were explained by:
+
+```text
+same-entry contributor composition changing after a failing Root is removed
+opposite-direction exposure conflict disappearing after a failing Root is removed
+two late-December entries that closed in early January and were censored by calendar-bounded closed-trade attribution
+```
+
+Decision:
+
+```text
+offline PLAN-time post-filter = discovery/classification aid
+direct Strategy Tester execution = implemented-variant outcome authority
+```
+
+Annual trade cohorts should use entry year and allow late-year positions to reach terminal outcome.
+
+### Research harness modes
+
+The same research EA may expose the following comparison modes:
+
+```text
+V1_REGIME_PARENT_CLEAN_PERSISTENT
+V1_REGIME_V1_CLEAN_PERSISTENT_EXPANDING
+V1_REGIME_BASELINE_NO_GATE
+```
+
+`V1_REGIME_BASELINE_NO_GATE` disables only the research gate. It must not alter Root recognition, Sweep, CHoCH, FVG, Entry, SL, TP, merge, exposure, or broker lifecycle behavior.
+
+The baseline no-gate mode exists only to make direct A/B/C research comparisons reproducible inside one harness. It does not supersede build 1.91 as the frozen historical control identity.
+
+### Logging modes
+
+Long-run research output may use:
+
+```text
+RESEARCH_COMPACT
+FULL_AUDIT
+```
+
+`RESEARCH_COMPACT` keeps the M30 regime inputs/verdicts, scenario/execution milestones, actual fill/close lifecycle, and execution error/divergence evidence while suppressing high-volume detector/audit rows such as generic M1 FVG detection.
+
+This is a logging-only change.
+
+```text
+logging mode != strategy authority
+suppressed diagnostic row != suppressed strategy event
+```
+
+A suspicious period may be re-run with `FULL_AUDIT` without defining a new strategy variant.
+
+### Baseline impact
+
+```text
+AGENTS.md = unchanged
+EA_SPEC.md = unchanged
+build 1.91 = preserved strategy control
+Regime Research V1 = still research-only pending OOS
+```
+
+The separate recoverable pending-cancel retry remains outside this decision.
+
+---
+
+## D-140 — Frozen Regime Research V1 passes the first sealed 2022 OOS contract
+
+Status: ACTIVE OOS EVIDENCE / FIRST OOS PASS / NO AUTOMATIC BASELINE PROMOTION — 2026-08-20
+
+### Trigger
+
+D-137 froze the exact Regime Research V1 definition and the 2022 PASS/FAIL contract before 2022 was opened. D-139 then established direct MT5 Development classification/execution validity. The first sealed 2022 OOS was therefore opened without changing any V1 formula or threshold.
+
+### Pre-registered comparator
+
+The OOS contract compares:
+
+```text
+A. baseline EXTERNAL_CONTINUATION
+B. parent M30_CLEAN_PERSISTENT
+C. frozen M30_CLEAN_PERSISTENT_EXPANDING V1
+```
+
+The V1 PASS conditions were frozen as:
+
+```text
+clean closed V1 trades >= 5
+Total R > 0
+mean R/trade > 0
+Max DD less severe than 2022 continuation baseline
+longest losing streak no worse than 2022 continuation baseline
+```
+
+The expansion axis also had to avoid underperforming the Parent on both expectancy and drawdown.
+
+### 2022 direct results
+
+Baseline `EXTERNAL_CONTINUATION`:
+
+```text
+72 trades / 15 wins
+Total = -14.476581R
+Mean = -0.201064R/trade
+Max DD = -20.764118R
+Longest losing streak = 18
+execution divergence = 0
+```
+
+Parent:
+
+```text
+16 trades / 3 wins
+Total = -3.825354R
+Mean = -0.239085R/trade
+Max DD = -5.741120R
+Longest losing streak = 5
+execution divergence = 0
+```
+
+Frozen Expansion V1:
+
+```text
+6 trades / 1 win
+Total = +0.994756R
+Mean = +0.165793R/trade
+Max DD = -3.012334R
+Longest losing streak = 3
+execution divergence = 0
+```
+
+All six Expansion trades are exact Parent trades with identical R. The expansion gate removes ten Parent-only trades:
+
+```text
+10 trades / 2 wins / 8 losses
+Total = -4.820111R
+Mean = -0.482011R/trade
+```
+
+Therefore the expansion component improves both Parent expectancy and Parent drawdown in the untouched OOS.
+
+### OOS classification
+
+Every pre-registered condition is satisfied:
+
+```text
+trades >= 5                       -> PASS (6)
+Total R > 0                       -> PASS (+0.994756R)
+mean R/trade > 0                  -> PASS (+0.165793R)
+DD better than continuation       -> PASS (-3.012334R vs -20.764118R)
+loss streak no worse than control -> PASS (3 vs 18)
+expansion vs Parent expectancy    -> PASS
+expansion vs Parent drawdown      -> PASS
+```
+
+Decision:
+
+```text
+2022 FIRST SEALED OOS = PASS
+FROZEN EXPANSION AXIS OOS SUPPORT = PASS
+```
+
+The V1 definition remains unchanged after the OOS result.
+
+### Important limitation
+
+The 2022 V1 sample is small:
+
+```text
+6 trades
+1 winner
+5 losses
+```
+
+and the positive year depends materially on one approximately `+6.02R` winner. The OOS result therefore supports the pre-registered classifier but does not prove a smooth yearly return distribution or eliminate tail dependence.
+
+No new threshold, veto, or quality score may be added to make 2022 look better.
+
+### Next untouched confirmation
+
+The preferred next untouched period remains:
+
+```text
+2021
+```
+
+Run the frozen model without alteration and compare direct Baseline / Parent / Expansion.
+
+Only after that confirmation should the project make an explicit:
+
+```text
+PROMOTE
+or
+DO NOT PROMOTE
+```
+
+decision for baseline strategy authority.
+
+### Strategy authority after OOS PASS
+
+OOS PASS is not an automatic amendment to the Mentor V1 strategy contract.
+
+Current authority remains:
+
+```text
+AGENTS.md = unchanged
+EA_SPEC.md = unchanged
+build 1.91 = baseline control
+Regime Research V1 = OOS-supported research model
+```
+
+If the regime formula or threshold is changed after viewing 2022, the changed model is `Regime Research V2`. The 2022 period is no longer untouched OOS evidence for that changed model.

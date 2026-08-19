@@ -1,5 +1,34 @@
 # EA Backlog
 
+## Current research checkpoint — 2026-08-20
+
+Completed since the previous repository checkpoint:
+
+- [x] Recover exact 2025 build-1.91 raw ledger and re-run frozen PLAN-time regime formulas.
+- [x] Reject weak-progression BAD veto after 2025 sign reversal.
+- [x] Reject `directional_advance_norm > 1/3` as the V1 persistence replacement after 2025 failure.
+- [x] Freeze Regime Research V1 as `M30_CLEAN_PERSISTENT_EXPANDING` before opening 2022.
+- [x] Implement standalone direct MT5 research EA with Parent and Expansion modes.
+- [x] Independently verify 2,338 Development continuation regime decisions with zero formula/verdict mismatches.
+- [x] Complete 2023–2025 direct Parent run.
+- [x] Complete 2023–2025 direct Expansion V1 run.
+- [x] Verify every Expansion Development trade is an exact Parent trade and Expansion removes a net-negative 22-trade subset.
+- [x] Add `RESEARCH_COMPACT` / `FULL_AUDIT` logging modes for long runs; logging-only semantics.
+- [x] Add `V1_REGIME_BASELINE_NO_GATE` research-harness comparator without changing the baseline execution chain.
+- [x] Open and complete the first sealed 2022 OOS only after V1 freeze.
+- [x] 2022 direct Baseline / Parent / Expansion comparison completed with zero execution divergence.
+- [x] 2022 Regime Research V1 satisfies every pre-registered PASS condition.
+- [x] 2022 Expansion improves Parent on both expectancy and drawdown.
+
+Immediate next work:
+
+- [ ] Run preferred final untouched 2021 direct confirmation with the frozen V1 unchanged.
+- [ ] Compare 2021 Baseline `EXTERNAL_CONTINUATION` / Parent / Expansion under identical direct MT5 conditions.
+- [ ] Decide explicitly whether Regime Research V1 should be promoted into current strategy authority.
+- [ ] If promoted, update `AGENTS.md`, `EA_SPEC.md`, baseline implementation identity, and regression fixtures in one controlled change.
+- [ ] If any regime formula/threshold is changed after 2022, call it V2 and do not reuse 2022 as untouched OOS evidence.
+- [ ] Separately implement recoverable pending-cancel retry by exact broker ticket and run execution-parity regression; do not mix this with regime-model changes.
+
 ## P0 — Before coding
 
 - [ ] Map AGENTS.md rules to deterministic definitions.
@@ -11,7 +40,6 @@
 - [ ] Audit `ICTCockpitIndicator.mq5`.
 - [ ] Audit `MentorScenarioTraderEA.mq5`.
 - [ ] Produce reuse / replace / reject matrix.
-
 
 ## Current implementation checkpoint
 
@@ -27,6 +55,11 @@
 - D-125 corrected Phase 4B build 0.90: PASS; 13 PLANs / 6 preplanned contacts / 5 no-preplan contacts / retrospective planning 0.
 - D-126 build 1.00 Root-reaction sweep implementation: causal smoke PASS; 11 AUTHORIZED_SWEEP / 20 pools. Its extra Root-ownership filters are historical and superseded by D-127.
 - D-127 build 1.10 linear trigger pipeline: PASS in both LAST_OPPOSITE baseline and FVG-origin experiment runs; detector/sequence separation verified.
+- D-133 FVG-origin OB baseline + same-entry Root contributor merge: ACTIVE.
+- D-134 hedging-account same-direction independent add-ons: ACTIVE.
+- D-135 performance working-set optimization: PASS.
+- D-135A build 1.91 canceled-pending lifecycle hotfix: 2025 full-year parity PASS; one recoverable cancel-reject retry edge remains from the separate 2023–2024 run.
+- Regime Research V1 direct harness: Development validation PASS / 2022 first OOS PASS; not yet baseline strategy authority.
 
 ## P1 — Baseline implementation
 
@@ -39,16 +72,18 @@
 - [x] Scenario Sweep stage — D-127 first direction-compatible M1_SWEEP_DETECTED after Root contact; baseline 6/6, experiment-on 33/36
 - [ ] Structural Reaction liquidity authorization — corrected Root-based ownership/timing re-audit pending
 - [x] M1 CHoCH — D-127 M1_CHOCH_DETECTED mirrors STRUCTURE_PROTECTED_BREAK exactly; 2 baseline / 18 experiment scenario branches accepted
-- [x] Entry — D-128B implemented in integrated build 1.50; final validation pending
-- [x] SL — D-128B outward 20%-width tick normalization implemented; final validation pending
-- [x] TP — D-128B frozen-family nearest exact >=1R objective selection implemented; final validation pending
-- [x] Pending cancellation — D-131 objective/Root/direction authority + broker remove request implemented; final validation pending
+- [x] Entry — D-128B implemented in integrated build 1.50
+- [x] SL — D-128B outward 20%-width tick normalization implemented; current primary validation model later set to ROOT_OB_DISTAL_20
+- [x] TP — D-128B frozen-family nearest exact >=1R objective selection implemented
+- [x] Pending cancellation — D-131 objective/Root/direction authority + broker remove request implemented
 - [x] H4 long-horizon liquidity index — Phase 2 invariant verified
-- [ ] Hierarchical bootstrap / working-set pruning — D-125 bootstrap Root PLAN freeze smoke covered; broader pruning remains open
-- [x] Managed scenario/exposure identity by symbol + magic — integrated execution lock implemented; final validation pending
-- [x] Minimum-volume parity sizing — SYMBOL_VOLUME_MIN implemented; final validation pending
+- [ ] Hierarchical bootstrap / working-set pruning — D-135 active working-set performance optimization complete; broader historical-bootstrap audit remains open
+- [x] Managed scenario/exposure identity by symbol + magic — scenario-scoped hedging execution implemented
+- [x] Minimum-volume parity sizing — SYMBOL_VOLUME_MIN implemented
 - [x] Same-timestamp MTF processing order
-- [x] OnTradeTransaction ticket/history reconciliation — idempotent account/history reconciliation implemented; final validation pending
+- [x] OnTradeTransaction ticket/history reconciliation — idempotent account/history reconciliation implemented
+- [x] Same-entry Root contributor merge — D-133
+- [x] Same-direction independent add-on execution — D-134
 
 ## P2 — Validation
 
@@ -78,49 +113,55 @@
 - [x] Verify Root reintersection / sweep-time protected reference / latest-sweep replacement are absent
 - [x] FVG_ORIGIN_OB=true causal/additive smoke — baseline scenario rows preserved; 18 branches / 9 distinct accepted CHoCH events
 - [x] Implement D-128A causal M1 FVG detector/freshness/widest-selection stage after SCENARIO_CHOCH_ACCEPTED
-- [ ] Final integrated build 1.50 A/B run replaces the skipped isolated D-128A smoke; validate D-128A invariants inside the combined ledger
-- [ ] Verify every M1_FVG_DETECTED uses strict 60s Candle1->2->3 continuity
-- [ ] Verify every SCENARIO_FVG_CANDIDATE has FVG.available_at > scenario Sweep close and <= CHoCH close
-- [ ] Verify Candle1-before-Sweep / Candle2-Sweep / Candle3-after-Sweep causal cases are not falsely rejected
-- [ ] Verify PRE_SELECTION_RETEST excludes every post-formation touch through CHoCH selection
-- [ ] Verify selected FVG is unique widest in tick-normalized width; exact max tie is NO_TRADE
-- [ ] Verify no post-CHoCH FVG enters the frozen candidate set
-- [ ] Verify exact planned-R eligibility uses reward_ticks >= risk_ticks with no epsilon relaxation
-- [ ] Verify same-cycle submission guard rejects delayed catch-up signals
-- [ ] Verify partial-fill residual pending is canceled once and locks exposure on divergence
+- [x] D-128A invariants carried into later integrated long-run baseline builds
 - [x] Implement D-128B Entry / 20%-width SL / frozen-objective TP geometry in integrated build 1.50
-- [x] Resolve concurrent fully-authorized Root branches fail-closed as AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION; no arbitrary score/nearest selection
-- [x] Phase 4A map/reversal-permission smoke — independent scope remains valid
-- [x] Historical Phase 3B run preserved as old-implementation evidence only — CHILD_CREATED=7 / CHILD_INVALIDATED=6
-- [x] Phase 3A Root core smoke / causal CSV audit
-- [x] Phase 2 liquidity/sweep physical detector smoke / CSV causal audit
-- [x] Phase 1.1 structure smoke / causal log audit
-- [x] Compile Phase 1 with zero errors
-- [ ] Visual Strategy Tester inspection
-- [ ] Known manual/Codex case regression
-- [ ] In-sample implementation validation
-- [ ] Locked out-of-sample test
+- [x] D-133 same-entry contributor merge removes duplicate provenance without Root quality selection
+- [x] D-134 same-direction add-on execution and opposite-direction conflict handling validated in long-run baseline
+- [x] D-135/D-135A 2025 full-year execution lifecycle parity with zero divergence
+- [x] 2023–2025 Development regime-feature discovery and freeze
+- [x] 2023–2025 direct Parent / Expansion research execution
+- [x] First locked out-of-sample test — 2022 Regime Research V1 PASS
+- [ ] Preferred final untouched confirmation — 2021
+- [ ] Explicit Regime V1 promotion/no-promotion decision
+- [ ] Recoverable pending-cancel retry execution hotfix + regression
+- [ ] Final post-hotfix multi-year execution parity/profitability run if the execution hotfix changes broker lifecycle behavior
+- [ ] Live/paper forward validation before any production deployment
+
+Historical validation items retained for traceability:
+
+- [ ] Verify every M1_FVG_DETECTED uses strict 60s Candle1->2->3 continuity across the full integrated ledger.
+- [ ] Verify every SCENARIO_FVG_CANDIDATE has FVG.available_at > scenario Sweep close and <= CHoCH close across the full integrated ledger.
+- [ ] Verify Candle1-before-Sweep / Candle2-Sweep / Candle3-after-Sweep causal cases are not falsely rejected across a dedicated fixture.
+- [ ] Verify PRE_SELECTION_RETEST excludes every post-formation touch through CHoCH selection across a dedicated fixture.
+- [ ] Verify selected FVG is unique widest in tick-normalized width; exact max tie is NO_TRADE across a dedicated fixture.
+- [ ] Verify no post-CHoCH FVG enters the frozen candidate set across a dedicated fixture.
+- [ ] Verify exact planned-R eligibility uses reward_ticks >= risk_ticks with no epsilon relaxation across a dedicated fixture.
+- [ ] Verify same-cycle submission guard rejects delayed catch-up signals across a dedicated fixture.
+- [ ] Verify partial-fill residual pending is canceled once and locks exposure on divergence across a dedicated fixture.
+- [ ] Known manual/Codex case regression.
 
 ## Deferred
 
 - [ ] OB-only first-entry variant
 - [ ] CHoCH+BOS variant
 - [ ] Delivery FVG replacement
-- [ ] Add-on positions
-- [ ] Optimization
+- [ ] Delivery FVG add-on variant
+- [ ] Parameter optimization
 - [ ] Live execution
 
+## Integrated baseline execution history — build 1.50 onward
 
-## Integrated baseline execution — build 1.50
+Historical build 1.50 checkpoint:
 
 - [x] D-128A independent causal fresh widest-FVG selection implemented.
 - [x] D-128B selected FVG -> Entry / outward 20% SL / frozen-family nearest R>=1 TP implemented.
-- [x] D-129 same-epoch fully-authorized branch arbitration implemented fail-closed; no arbitrary Root selector.
+- [x] D-129 same-epoch fully-authorized branch arbitration implemented fail-closed; later superseded by D-132/D-133 contributor merge.
 - [x] D-130 Strategy Tester-only pending preflight/submission implemented with minimum-volume parity and persistent GTC checks.
 - [x] D-131 pending objective/Root/direction cancellation + ticket/history reconciliation implemented.
-- [ ] MetaEditor compile build 1.50.
-- [ ] January real-tick integrated run with `InpEnableFvgOriginObExperiment=false`.
-- [ ] Identical integrated run with `InpEnableFvgOriginObExperiment=true`.
-- [ ] Audit FVG -> geometry -> objective -> arbitration -> preflight -> orders -> fills -> exits/cancels.
-- [ ] Decide whether FVG_ORIGIN_OB remains experiment or is promoted only after completed-trade evidence.
-- [ ] Revisit same-direction provenance merge only if fail-closed arbitration materially discards otherwise identical completed signals; do not invent a selector.
+- [x] FVG_ORIGIN_OB was later promoted to a baseline recognizer by D-133.
+- [x] Same-entry Root merge was later formalized by D-133.
+- [x] Same-direction independent add-ons were later enabled by D-134.
+- [x] Long-run runtime was reduced by D-135 while preserving strategy semantics.
+- [x] D-135A restored broker-owned canceled-pending lifecycle parity in the 2025 regression.
+
+Current research execution harness is separate from baseline strategy authority and is documented in `REGIME_RESEARCH_2023_2025.md` and `TEST_RESULTS.md`.

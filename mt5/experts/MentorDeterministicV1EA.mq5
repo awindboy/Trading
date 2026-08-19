@@ -1,6 +1,6 @@
 //+------------------------------------------------------------------+
-//| MentorDeterministicV1EA.mq5                                     |
-//| Deterministic Mentor EA V1 - integrated baseline execution core      |
+//| MentorDeterministicV1EA_RegimeResearchV1.mq5                    |
+//| Frozen Regime Research V1 variant on D-135A / build 1.91 core   |
 //|                                                                  |
 //| Authority:                                                       |
 //|   AGENTS.md                                                      |
@@ -14,7 +14,7 @@
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - D135A canceled-pending lifecycle hotfix"
+#property description "Mentor deterministic V1 EA - frozen M30 Regime Research V1 variant"
 
 enum V1StopLossModel
   {
@@ -23,13 +23,42 @@ enum V1StopLossModel
    V1_SL_ROOT_OB_DISTAL_20
   };
 
+enum V1RegimeResearchMode
+  {
+   // Preserve the existing numeric identities for saved Strategy Tester sets.
+   V1_REGIME_PARENT_CLEAN_PERSISTENT=0,
+   V1_REGIME_V1_CLEAN_PERSISTENT_EXPANDING=1,
+   // Baseline control: no regime gate is allowed to reject a scenario.
+   V1_REGIME_BASELINE_NO_GATE=2
+  };
+
+// Logging is diagnostic-only and has no strategy authority.
+// RESEARCH_COMPACT keeps the causal facts needed for long-run regime analysis
+// and execution reconstruction while suppressing high-volume detector chatter.
+enum V1EventLogMode
+  {
+   V1_LOG_RESEARCH_COMPACT=0,
+   V1_LOG_FULL_AUDIT
+  };
+
 //--- execution identity / diagnostics
-input long   InpMagicNumber        = 26081601;
+input long   InpMagicNumber        = 26081901;
 input bool   InpWriteEventCsv      = true;
 input bool   InpVerboseLog         = false;
 input bool   InpLogBootstrapEvents = false;
-input V1StopLossModel InpStopLossModel = V1_SL_FVG_DISTAL_20;
-input string InpEventCsvFile       = "mentor_v1_d135a_events.csv";
+input V1StopLossModel InpStopLossModel = V1_SL_ROOT_OB_DISTAL_20;
+input V1RegimeResearchMode InpRegimeResearchMode = V1_REGIME_V1_CLEAN_PERSISTENT_EXPANDING;
+input V1EventLogMode InpEventLogMode = V1_LOG_RESEARCH_COMPACT;
+input string InpEventCsvFile       = "mentor_v1_regime_research_v1_compact_events.csv";
+
+// D-137/D-138 frozen research contract. These are intentionally NOT inputs:
+// 2022 OOS must not be tunable from Strategy Tester parameters.
+#define V1_REGIME_WAVE_COUNT                 12
+#define V1_REGIME_PROGRESSION_NUM             2
+#define V1_REGIME_PROGRESSION_DEN             3
+#define V1_REGIME_MAX_PROTECTED_BREAKS         1
+#define V1_REGIME_LEG_GROUP                    4
+#define V1_REGIME_EXPANSION_THRESHOLD        1.0
 
 // IMPORTANT:
 // This build may submit orders ONLY inside MT5 Strategy Tester. Live trading
@@ -225,6 +254,7 @@ struct V1SourceZone
    string            parent_zone_id;
    string            root_zone_id;
    string            scenario_owner_id;
+   bool              regime_research_rejected;
 
    string            containment_type;
    int               linked_event_type;
@@ -258,6 +288,25 @@ struct V1WaveRef
    // Deterministic swing-origin window used by Root/child OB discovery.
    datetime   origin_window_start;
    datetime   origin_window_end;
+  };
+
+struct V1RegimeResearchSnapshot
+  {
+   bool              valid;
+   bool              parent_pass;
+   bool              expansion_pass;
+   bool              v1_pass;
+   bool              selected_pass;
+   int               wave_count;
+   int               progression_success;
+   int               progression_total;
+   double            progression_ratio;
+   int               protected_break_count;
+   double            recent_leg_mean;
+   double            prior_leg_mean;
+   double            expansion_ratio;
+   string            state_name;
+   string            reason;
   };
 
 struct V1RefinementEvent
@@ -372,6 +421,21 @@ struct V1ScenarioPlan
    double            plan_reference_price;
    double            primary_directional_horizon;
    int               objective_count;
+
+   // D-138 Regime Research V1 snapshot. Classification is frozen at the
+   // baseline-equivalent PLAN moment and can never be recomputed for this plan.
+   bool              regime_research_v1_evaluated;
+   bool              regime_research_parent_pass;
+   bool              regime_research_expansion_pass;
+   bool              regime_research_v1_pass;
+   int               regime_m30_wave_count;
+   int               regime_progression_success;
+   int               regime_progression_total;
+   double            regime_progression_ratio;
+   int               regime_protected_break_count;
+   double            regime_recent_leg_mean;
+   double            regime_prior_leg_mean;
+   double            regime_leg_expansion_ratio;
 
    // Phase 4C source-contact / mature-sweep audit.
    datetime          source_contact_at;
@@ -765,6 +829,8 @@ int              g_waiting_execution_geometry_indices[];
 int              g_active_execution_scenario_indices[];
 long             g_root_reaction_state_version=0;
 long             g_log_rows_since_flush=0;
+long             g_log_rows_written=0;
+long             g_log_rows_suppressed=0;
 #define V1_CSV_FLUSH_BATCH 256
 V1StrategyLiquidityConsumption g_strategy_liquidity_consumed[];
 V1ScenarioEligiblePool g_scenario_eligible_pools[]; // superseded Phase-4C storage, runtime-dead
@@ -780,6 +846,14 @@ V1ExecutionCandidate g_execution_candidates[];
 datetime          g_m1_sweep_detector_bar_open=0;
 V1MapControl      g_map;
 string            g_scenario_layer_signature="";
+
+// D-138 research-only rolling state. The baseline detector remains unchanged;
+// this is a read-only attribution layer over already-confirmed M30 facts.
+V1WaveRef         g_regime_m30_waves[];
+datetime          g_regime_m30_protected_breaks[];
+long              g_regime_plan_pass=0;
+long              g_regime_plan_reject=0;
+
 datetime         g_last_current_open[V1_TF_COUNT];
 bool             g_cursor_bar_pending[V1_TF_COUNT];
 datetime         g_history_first_date[V1_TF_COUNT];
@@ -1219,6 +1293,13 @@ void D135UnregisterPreExecutionScenario(const int scenario_index)
    D135RemoveIndexValue(g_waiting_execution_geometry_indices,scenario_index);
   }
 
+string EventLogModeName(const V1EventLogMode mode)
+  {
+   if(mode==V1_LOG_FULL_AUDIT)
+      return "FULL_AUDIT";
+   return "RESEARCH_COMPACT";
+  }
+
 bool D135CriticalLogEvent(const string event_name)
   {
    return (event_name=="EA_START" ||
@@ -1232,13 +1313,99 @@ bool D135CriticalLogEvent(const string event_name)
            event_name=="ORDER_REJECTED");
   }
 
+bool ResearchCompactLogEvent(const string event_name,const string tf)
+  {
+   // Regime Research V1 can be independently recomputed from these M30 facts.
+   if(event_name=="WAVE_CONFIRMED")
+      return (tf=="M30");
+   if(event_name=="STRUCTURE_PROTECTED_BREAK")
+      return (tf=="M30");
+
+   // Research identity and PLAN-freeze classification.
+   if(event_name=="EA_START" ||
+      event_name=="EA_STOP" ||
+      event_name=="INIT_STATE" ||
+      event_name=="EXECUTION_EPOCH_START" ||
+      event_name=="REGIME_RESEARCH_VARIANT_START" ||
+      event_name=="REGIME_RESEARCH_PLAN_ACCEPTED" ||
+      event_name=="REGIME_RESEARCH_PLAN_REJECTED" ||
+      event_name=="REGIME_RESEARCH_STOP_SUMMARY" ||
+      event_name=="D135_STOP_SUMMARY")
+      return true;
+
+   // Causal scenario path after a regime-accepted PLAN.
+   if(event_name=="SCENARIO_PLANNED" ||
+      event_name=="SCENARIO_ROOT_CONTACT_BOUND" ||
+      event_name=="SCENARIO_SWEEP_ACCEPTED" ||
+      event_name=="SCENARIO_CHOCH_ACCEPTED" ||
+      event_name=="SCENARIO_FVG_SELECTED" ||
+      event_name=="SCENARIO_FVG_NO_ENTRY" ||
+      event_name=="SCENARIO_CANCELED" ||
+      event_name=="SCENARIO_EXECUTION_NO_TRADE")
+      return true;
+
+   // Contributor merge, Entry/SL/TP and broker lifecycle.
+   if(event_name=="EXECUTION_GEOMETRY_CANDIDATE_READY" ||
+      event_name=="MERGED_STOP_SELECTED" ||
+      event_name=="EXECUTION_CONTRIBUTOR_MERGED" ||
+      event_name=="EXECUTION_CONTRIBUTOR_TERMINATED" ||
+      event_name=="EXECUTION_OPPORTUNITY_MERGED" ||
+      event_name=="EXECUTION_CONTRIBUTORS_EXHAUSTED" ||
+      event_name=="FINAL_OBJECTIVE_SELECTED" ||
+      event_name=="OBJECTIVE_ELIGIBILITY_EVALUATED" ||
+      event_name=="EXECUTION_GEOMETRY_READY" ||
+      event_name=="EXECUTION_PREFLIGHT_OK" ||
+      event_name=="EXECUTION_AUTHORIZATION_BLOCKED" ||
+      event_name=="SAME_DIRECTION_ADDON_AUTHORIZED" ||
+      event_name=="PENDING_ORDER_ACCEPTED" ||
+      event_name=="PENDING_CANCEL_ACCEPTED" ||
+      event_name=="PENDING_CANCEL_REJECTED" ||
+      event_name=="PARTIAL_FILL_RESIDUAL_CANCEL_ACCEPTED" ||
+      event_name=="PARTIAL_FILL_RESIDUAL_CANCEL_REJECTED" ||
+      event_name=="POSITION_FILLED" ||
+      event_name=="POSITION_CLOSED")
+      return true;
+
+   // Failures that make a run unsuitable as profitability evidence.
+   if(event_name=="INIT_EXECUTION_RECOVERY_REQUIRED" ||
+      event_name=="LIQUIDITY_DETECTOR_ERROR" ||
+      event_name=="SOURCE_DETECTOR_ERROR" ||
+      event_name=="ROOT_REACTION_ERROR" ||
+      event_name=="EXECUTION_PREFLIGHT_FAILED" ||
+      event_name=="ORDER_REJECTED" ||
+      event_name=="EXECUTION_DIVERGENCE")
+      return true;
+
+   return false;
+  }
+
+bool ShouldEmitLogEvent(const string event_name,const string tf)
+  {
+   if(D135CriticalLogEvent(event_name))
+      return true;
+   if(InpEventLogMode==V1_LOG_FULL_AUDIT)
+      return true;
+   return ResearchCompactLogEvent(event_name,tf);
+  }
+
 void LogLine(const string event_name,
              const string tf,
              const datetime available_at,
              const string object_id,
              const string detail)
   {
-   if(g_in_bootstrap_replay && !InpLogBootstrapEvents)
+   if(!ShouldEmitLogEvent(event_name,tf))
+     {
+      g_log_rows_suppressed++;
+      return;
+     }
+
+   // Preserve the historical FULL_AUDIT bootstrap-volume switch. Compact
+   // mode deliberately keeps M30 wave/PB facts even during bootstrap so the
+   // first PLAN snapshots remain independently reproducible.
+   if(InpEventLogMode==V1_LOG_FULL_AUDIT &&
+      g_in_bootstrap_replay &&
+      !InpLogBootstrapEvents)
      {
       bool high_volume=
          (event_name=="WAVE_CONFIRMED" ||
@@ -1258,7 +1425,10 @@ void LogLine(const string event_name,
           event_name=="REVERSAL_PERMISSION_STATE");
 
       if(high_volume)
+        {
+         g_log_rows_suppressed++;
          return;
+        }
      }
 
    if(InpVerboseLog)
@@ -1279,6 +1449,7 @@ void LogLine(const string event_name,
              TimeToString(available_at,TIME_DATE|TIME_SECONDS),
              object_id,
              detail);
+   g_log_rows_written++;
    g_log_rows_since_flush++;
    if(g_log_rows_since_flush>=V1_CSV_FLUSH_BATCH || D135CriticalLogEvent(event_name))
      {
@@ -1374,9 +1545,15 @@ void InitializeAllStructureStates()
    ArrayResize(g_active_execution_scenario_indices,0);
    g_root_reaction_state_version=0;
    g_log_rows_since_flush=0;
+   g_log_rows_written=0;
+   g_log_rows_suppressed=0;
    ArrayResize(g_m1_sweep_detector_snapshot,0);
    ArrayResize(g_m1_sweep_detections,0);
    ArrayResize(g_m1_fvg_detections,0);
+   ArrayResize(g_regime_m30_waves,0);
+   ArrayResize(g_regime_m30_protected_breaks,0);
+   g_regime_plan_pass=0;
+   g_regime_plan_reject=0;
    g_m1_sweep_detector_bar_open=0;
    g_m1_choch_detection.valid=false;
    g_m1_choch_detection.id="";
@@ -1512,6 +1689,268 @@ datetime HistoricalAvailableAt(const MqlRates &rates[],
    return rates[index].time+seconds;
   }
 
+
+//+------------------------------------------------------------------+
+//| D-138 frozen Regime Research V1 attribution                      |
+//+------------------------------------------------------------------+
+string RegimeResearchModeName(const V1RegimeResearchMode mode)
+  {
+   if(mode==V1_REGIME_BASELINE_NO_GATE)
+      return "BASELINE_NO_REGIME_GATE";
+   if(mode==V1_REGIME_PARENT_CLEAN_PERSISTENT)
+      return "M30_CLEAN_PERSISTENT";
+   return "M30_CLEAN_PERSISTENT_EXPANDING";
+  }
+
+void ClearRegimeResearchSnapshot(V1RegimeResearchSnapshot &snapshot)
+  {
+   snapshot.valid=false;
+   snapshot.parent_pass=false;
+   snapshot.expansion_pass=false;
+   snapshot.v1_pass=false;
+   snapshot.selected_pass=false;
+   snapshot.wave_count=0;
+   snapshot.progression_success=0;
+   snapshot.progression_total=0;
+   snapshot.progression_ratio=0.0;
+   snapshot.protected_break_count=0;
+   snapshot.recent_leg_mean=0.0;
+   snapshot.prior_leg_mean=0.0;
+   snapshot.expansion_ratio=0.0;
+   snapshot.state_name="UNKNOWN";
+   snapshot.reason="UNINITIALIZED";
+  }
+
+void PruneRegimeM30ProtectedBreaks()
+  {
+   if(ArraySize(g_regime_m30_waves)<V1_REGIME_WAVE_COUNT)
+      return;
+
+   datetime oldest=g_regime_m30_waves[0].available_at;
+   int write=0;
+   int n=ArraySize(g_regime_m30_protected_breaks);
+   for(int i=0;i<n;i++)
+     {
+      if(g_regime_m30_protected_breaks[i]<oldest)
+         continue;
+      if(write!=i)
+         g_regime_m30_protected_breaks[write]=g_regime_m30_protected_breaks[i];
+      write++;
+     }
+   ArrayResize(g_regime_m30_protected_breaks,write);
+  }
+
+void PushRegimeM30Wave(const V1WaveRef &wave)
+  {
+   if(!wave.valid || !wave.is_wave)
+      return;
+
+   int n=ArraySize(g_regime_m30_waves);
+   if(n<V1_REGIME_WAVE_COUNT)
+     {
+      if(ArrayResize(g_regime_m30_waves,n+1,V1_REGIME_WAVE_COUNT)<0)
+         return;
+      g_regime_m30_waves[n]=wave;
+     }
+   else
+     {
+      for(int i=1;i<V1_REGIME_WAVE_COUNT;i++)
+         g_regime_m30_waves[i-1]=g_regime_m30_waves[i];
+      g_regime_m30_waves[V1_REGIME_WAVE_COUNT-1]=wave;
+     }
+
+   PruneRegimeM30ProtectedBreaks();
+  }
+
+void RecordRegimeM30ProtectedBreak(const datetime available_at)
+  {
+   if(available_at<=0)
+      return;
+   int n=ArraySize(g_regime_m30_protected_breaks);
+   if(ArrayResize(g_regime_m30_protected_breaks,n+1,16)<0)
+      return;
+   g_regime_m30_protected_breaks[n]=available_at;
+   PruneRegimeM30ProtectedBreaks();
+  }
+
+bool EvaluateRegimeResearchSnapshot(const V1ScenarioDraft &draft,
+                                    const datetime frozen_at,
+                                    V1RegimeResearchSnapshot &snapshot)
+  {
+   ClearRegimeResearchSnapshot(snapshot);
+
+   // Baseline control lives in this same executable for causal A/B/C tests.
+   // It must not use regime state as a scenario authorization gate.
+   // The research rolling buffers may still be maintained for diagnostics,
+   // but no scope/progression/PB/expansion condition can reject a PLAN here.
+   if(InpRegimeResearchMode==V1_REGIME_BASELINE_NO_GATE)
+     {
+      snapshot.valid=false;
+      snapshot.selected_pass=true;
+      snapshot.state_name="BASELINE_NO_REGIME_GATE";
+      snapshot.reason="BASELINE_NO_REGIME_GATE";
+      return true;
+     }
+
+   if(draft.scope!=V1_SCOPE_EXTERNAL_CONTINUATION)
+     {
+      snapshot.reason="SCOPE_NOT_EXTERNAL_CONTINUATION";
+      return false;
+     }
+
+   int n=ArraySize(g_regime_m30_waves);
+   snapshot.wave_count=n;
+   if(n<V1_REGIME_WAVE_COUNT)
+     {
+      snapshot.reason="INSUFFICIENT_M30_WAVES";
+      return false;
+     }
+
+   V1WaveRef waves[V1_REGIME_WAVE_COUNT];
+   for(int i=0;i<V1_REGIME_WAVE_COUNT;i++)
+     {
+      if(!g_regime_m30_waves[i].valid ||
+         !g_regime_m30_waves[i].is_wave ||
+         g_regime_m30_waves[i].available_at>frozen_at)
+        {
+         snapshot.reason="M30_WAVE_NOT_CAUSALLY_AVAILABLE_AT_PLAN";
+         return false;
+        }
+      waves[i]=g_regime_m30_waves[i];
+     }
+
+   bool have_high=false;
+   bool have_low=false;
+   double last_high=0.0;
+   double last_low=0.0;
+   int success=0;
+   int total=0;
+
+   for(int i=0;i<V1_REGIME_WAVE_COUNT;i++)
+     {
+      if(waves[i].side==V1_SIDE_HIGH)
+        {
+         if(have_high)
+           {
+            total++;
+            if((draft.direction>0 && waves[i].price>last_high) ||
+               (draft.direction<0 && waves[i].price<last_high))
+               success++;
+           }
+         last_high=waves[i].price;
+         have_high=true;
+        }
+      else if(waves[i].side==V1_SIDE_LOW)
+        {
+         if(have_low)
+           {
+            total++;
+            if((draft.direction>0 && waves[i].price>last_low) ||
+               (draft.direction<0 && waves[i].price<last_low))
+               success++;
+           }
+         last_low=waves[i].price;
+         have_low=true;
+        }
+     }
+
+   snapshot.progression_success=success;
+   snapshot.progression_total=total;
+   if(total<=0)
+     {
+      snapshot.reason="NO_SAME_SIDE_M30_COMPARISONS";
+      return false;
+     }
+   snapshot.progression_ratio=(double)success/(double)total;
+
+   datetime span_start=waves[0].available_at;
+   int pb_count=0;
+   for(int i=0;i<ArraySize(g_regime_m30_protected_breaks);i++)
+      if(g_regime_m30_protected_breaks[i]>=span_start &&
+         g_regime_m30_protected_breaks[i]<=frozen_at)
+         pb_count++;
+   snapshot.protected_break_count=pb_count;
+
+   bool progression_pass=
+      (success*V1_REGIME_PROGRESSION_DEN >=
+       total*V1_REGIME_PROGRESSION_NUM);
+   bool stability_pass=(pb_count<=V1_REGIME_MAX_PROTECTED_BREAKS);
+   snapshot.parent_pass=(progression_pass && stability_pass);
+
+   double recent_sum=0.0;
+   double prior_sum=0.0;
+   int recent_start=V1_REGIME_WAVE_COUNT-V1_REGIME_LEG_GROUP;
+   int prior_start=recent_start-V1_REGIME_LEG_GROUP;
+
+   for(int i=recent_start;i<V1_REGIME_WAVE_COUNT;i++)
+      recent_sum+=MathAbs(waves[i].price-waves[i-1].price);
+   for(int i=prior_start;i<recent_start;i++)
+      prior_sum+=MathAbs(waves[i].price-waves[i-1].price);
+
+   snapshot.recent_leg_mean=recent_sum/(double)V1_REGIME_LEG_GROUP;
+   snapshot.prior_leg_mean=prior_sum/(double)V1_REGIME_LEG_GROUP;
+   if(snapshot.prior_leg_mean>0.0)
+      snapshot.expansion_ratio=
+         snapshot.recent_leg_mean/snapshot.prior_leg_mean;
+
+   snapshot.expansion_pass=
+      (snapshot.prior_leg_mean>0.0 &&
+       snapshot.expansion_ratio>V1_REGIME_EXPANSION_THRESHOLD);
+   snapshot.v1_pass=(snapshot.parent_pass && snapshot.expansion_pass);
+   snapshot.selected_pass=
+      (InpRegimeResearchMode==V1_REGIME_PARENT_CLEAN_PERSISTENT ?
+       snapshot.parent_pass : snapshot.v1_pass);
+   snapshot.valid=true;
+
+   if(!progression_pass)
+      snapshot.reason="PROGRESSION_BELOW_TWO_THIRDS";
+   else if(!stability_pass)
+      snapshot.reason="PROTECTED_BREAK_CHURN_GT_ONE";
+   else if(InpRegimeResearchMode==V1_REGIME_V1_CLEAN_PERSISTENT_EXPANDING &&
+           snapshot.prior_leg_mean<=0.0)
+      snapshot.reason="INVALID_PRIOR_LEG_MEAN";
+   else if(InpRegimeResearchMode==V1_REGIME_V1_CLEAN_PERSISTENT_EXPANDING &&
+           !snapshot.expansion_pass)
+      snapshot.reason="RECENT_M30_LEGS_NOT_EXPANDING";
+   else
+      snapshot.reason="PASS";
+
+   if(snapshot.selected_pass)
+      snapshot.state_name=RegimeResearchModeName(InpRegimeResearchMode);
+   else
+      snapshot.state_name="UNKNOWN";
+
+   return snapshot.selected_pass;
+  }
+
+void LogRegimeResearchSnapshot(const string event_name,
+                               const V1ScenarioDraft &draft,
+                               const datetime frozen_at,
+                               const V1RegimeResearchSnapshot &snapshot)
+  {
+   LogLine(event_name,
+           "M30",
+           frozen_at,
+           draft.root_zone_id,
+           StringFormat("mode=%s scope=%s direction=%s state=%s selected_pass=%s reason=%s wave_count=%d progression_success=%d progression_total=%d progression=%.8f progression_required=2/3 protected_break_count=%d protected_break_max=1 parent_pass=%s recent4_leg_mean=%.10f prior4_leg_mean=%.10f leg_expansion_ratio=%.8f expansion_required_gt=1.0 expansion_pass=%s v1_pass=%s snapshot=SCENARIO_PLAN_FREEZE complement_label=UNKNOWN threshold_inputs=false",
+                        RegimeResearchModeName(InpRegimeResearchMode),
+                        ScenarioScopeName(draft.scope),
+                        DirectionName(draft.direction),
+                        snapshot.state_name,
+                        snapshot.selected_pass ? "true" : "false",
+                        snapshot.reason,
+                        snapshot.wave_count,
+                        snapshot.progression_success,
+                        snapshot.progression_total,
+                        snapshot.progression_ratio,
+                        snapshot.protected_break_count,
+                        snapshot.parent_pass ? "true" : "false",
+                        snapshot.recent_leg_mean,
+                        snapshot.prior_leg_mean,
+                        snapshot.expansion_ratio,
+                        snapshot.expansion_pass ? "true" : "false",
+                        snapshot.v1_pass ? "true" : "false"));
+  }
 
 //+------------------------------------------------------------------+
 //| Liquidity working-set logic                                      |
@@ -2109,7 +2548,6 @@ bool SourcePathHasSessionGap(const ENUM_TIMEFRAMES tf,
   {
    if(start_time<=0 || end_time<=start_time)
       return false;
-
    MqlRates bars[];
    ArraySetAsSeries(bars,false);
    ResetLastError();
@@ -2450,6 +2888,7 @@ bool AddRootCandidateFromOrigin(const int tf_index,
    g_sources[n].parent_zone_id="";
    g_sources[n].root_zone_id=root_id;
    g_sources[n].scenario_owner_id="";
+   g_sources[n].regime_research_rejected=false;
    g_sources[n].containment_type="ROOT";
    g_sources[n].linked_event_type=event_type;
    g_sources[n].linked_event_bar_open=break_bar.time;
@@ -3213,6 +3652,8 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          ClearWave(empty);
          LogStructureEvent(s,V1_EVENT_PROTECTED_BREAK,-1,
                            broken,empty,bar,available_at);
+         if(tf_index==2)
+            RecordRegimeM30ProtectedBreak(available_at);
          if(tf_index==5)
             RecordD127M1ChochDetection(s,-1,broken,bar,available_at);
          InvalidateRootsForStructureOwner(tf_index,available_at,bar);
@@ -3265,6 +3706,8 @@ void EvaluateExistingStructureBreaks(const int tf_index,
          ClearWave(empty);
          LogStructureEvent(s,V1_EVENT_PROTECTED_BREAK,1,
                            broken,empty,bar,available_at);
+         if(tf_index==2)
+            RecordRegimeM30ProtectedBreak(available_at);
          if(tf_index==5)
             RecordD127M1ChochDetection(s,1,broken,bar,available_at);
          InvalidateRootsForStructureOwner(tf_index,available_at,bar);
@@ -4333,6 +4776,20 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
    if(source_index<0)
       return;
 
+   V1RegimeResearchSnapshot regime_snapshot;
+   bool regime_pass=
+      EvaluateRegimeResearchSnapshot(draft,frozen_at,regime_snapshot);
+   if(!regime_pass)
+     {
+      g_sources[source_index].regime_research_rejected=true;
+      g_regime_plan_reject++;
+      LogRegimeResearchSnapshot("REGIME_RESEARCH_PLAN_REJECTED",
+                                draft,
+                                frozen_at,
+                                regime_snapshot);
+      return;
+     }
+
    string scenario_id=StringFormat("scenario:%s:%s:%I64d:%s",
                                    ScenarioScopeName(draft.scope),
                                    DirectionName(draft.direction),
@@ -4371,6 +4828,18 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
    g_scenarios[n].plan_reference_price=plan_reference_price;
    g_scenarios[n].primary_directional_horizon=primary_horizon;
    g_scenarios[n].objective_count=ArraySize(family);
+   g_scenarios[n].regime_research_v1_evaluated=regime_snapshot.valid;
+   g_scenarios[n].regime_research_parent_pass=regime_snapshot.parent_pass;
+   g_scenarios[n].regime_research_expansion_pass=regime_snapshot.expansion_pass;
+   g_scenarios[n].regime_research_v1_pass=regime_snapshot.v1_pass;
+   g_scenarios[n].regime_m30_wave_count=regime_snapshot.wave_count;
+   g_scenarios[n].regime_progression_success=regime_snapshot.progression_success;
+   g_scenarios[n].regime_progression_total=regime_snapshot.progression_total;
+   g_scenarios[n].regime_progression_ratio=regime_snapshot.progression_ratio;
+   g_scenarios[n].regime_protected_break_count=regime_snapshot.protected_break_count;
+   g_scenarios[n].regime_recent_leg_mean=regime_snapshot.recent_leg_mean;
+   g_scenarios[n].regime_prior_leg_mean=regime_snapshot.prior_leg_mean;
+   g_scenarios[n].regime_leg_expansion_ratio=regime_snapshot.expansion_ratio;
    g_scenarios[n].source_contact_at=0;
    g_scenarios[n].source_contact_bar_open=0;
    g_scenarios[n].eligible_pool_count_at_contact=0;
@@ -4515,6 +4984,11 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
                         primary_horizon,
                         ArraySize(family)));
 
+   g_regime_plan_pass++;
+   LogRegimeResearchSnapshot("REGIME_RESEARCH_PLAN_ACCEPTED",
+                             draft,
+                             frozen_at,
+                             regime_snapshot);
    g_scenarios_planned++;
    g_precontact_root_plans++;
   }
@@ -4535,7 +5009,8 @@ void RefreshScenarioLayer(const datetime available_at,const bool force=false)
      {
       if(!g_sources[root_index].valid ||
          g_sources[root_index].kind!=V1_SOURCE_ROOT ||
-         g_sources[root_index].strategy_state!=V1_SOURCE_ACTIVE)
+         g_sources[root_index].strategy_state!=V1_SOURCE_ACTIVE ||
+         g_sources[root_index].regime_research_rejected)
          continue;
 
       const string root_id=g_sources[root_index].id;
@@ -4809,7 +5284,6 @@ long D128AWidthTicks(const double bottom,const double top)
       return 0;
    return (long)MathRound((top-bottom)/tick);
   }
-
 bool D128ABarIntersectsFvg(const MqlRates &bar,
                            const V1M1FvgDetection &fvg)
   {
@@ -5409,8 +5883,7 @@ bool BuildEntryAndStopCandidateForScenario(const int scenario_index,
      }
    else if(InpStopLossModel==V1_SL_ROOT_OB_DISTAL_20)
      {
-      double root_width=
-         g_scenarios[scenario_index].source_top-
+      double root_width=         g_scenarios[scenario_index].source_top-
          g_scenarios[scenario_index].source_bottom;
 
       if(root_width<=0.0)
@@ -5709,8 +6182,7 @@ bool VolumeOnStep(const double volume,const double minimum,const double step)
 
 bool IsAcceptableTradeRetcode(const uint retcode)
   {
-   return (retcode==0 ||
-           retcode==TRADE_RETCODE_DONE ||
+   return (retcode==0 ||           retcode==TRADE_RETCODE_DONE ||
            retcode==TRADE_RETCODE_PLACED ||
            retcode==TRADE_RETCODE_DONE_PARTIAL);
   }
@@ -6009,8 +6481,7 @@ bool D133ScenarioHasLiveObjectiveAtPriceTick(const string scenario_id,
    string representative_liquidity_id="";
 
    for(int i=0;i<ArraySize(g_objective_candidates);i++)
-     {
-      if(!g_objective_candidates[i].valid ||
+     {      if(!g_objective_candidates[i].valid ||
          g_objective_candidates[i].scenario_id!=scenario_id ||
          D133PriceTickIndex(g_objective_candidates[i].price)!=price_tick ||
          ObjectiveCandidateConsumedNow(g_objective_candidates[i]))
@@ -6309,8 +6780,7 @@ void D133TerminateMergedSecondaries(const int master_index,
                            g_scenarios[i].id,
                            g_scenarios[i].root_zone_id,
                            reason));
-     }
-  }
+     }  }
 
 void D133FreezeSameEntryContributorMerge(const datetime available_at)
   {
@@ -6610,7 +7080,6 @@ void ProcessIntegratedExecutionAuthorizationEpoch(const datetime available_at)
         {
          if(processed[j] || !epoch_candidates[j].valid)
             continue;
-
          if(!D133SameEntryScenarioIdentity(
                epoch_candidates[i].scenario_index,
                epoch_candidates[j].scenario_index))
@@ -6909,8 +7378,7 @@ void ReconcileScenarioExecution(const int scenario_index,const datetime observed
      }
 
    if(g_scenarios[scenario_index].position_closed_at!=0)
-     {
-      D135RemoveIndexValue(g_active_execution_scenario_indices,scenario_index);
+     {      D135RemoveIndexValue(g_active_execution_scenario_indices,scenario_index);
       return;
      }
 
@@ -7209,8 +7677,7 @@ void PrepareD126SweepBarSnapshot(const datetime bar_open)
      }
 
    if(scenario_count>0)
-      g_sweep_bar_snapshots++;
-  }
+      g_sweep_bar_snapshots++;  }
 
 bool D126SnapshotContainsScenario(const string scenario_id)
   {
@@ -7509,8 +7976,7 @@ void UpdateM1StrategyLiquidityOverlay(const MqlRates &bar,
      {
       if(!g_liquidity[i].valid ||
          g_liquidity[i].strategy_consumed ||
-         g_liquidity[i].available_at>bar.time)
-         continue;
+         g_liquidity[i].available_at>bar.time)         continue;
 
       int consumption=
          PhysicalConsumptionForBar(g_liquidity[i].side,
@@ -7809,8 +8275,7 @@ void ProcessScenarioSourceContactAndSweep(const MqlRates &bar,
                               g_scenarios[s].source_bottom,
                               g_scenarios[s].source_top,
                               TimeToString(bar.time,TIME_DATE|TIME_SECONDS),
-                              bar.high,
-                              bar.low,
+                              bar.high,                              bar.low,
                               bar.close,
                               TimeToString(g_sources[source_index].available_at,TIME_DATE|TIME_SECONDS),
                               TimeToString(g_scenarios[s].frozen_at,TIME_DATE|TIME_SECONDS),
@@ -8110,7 +8575,6 @@ void LogScenarioSnapshot(const datetime available_at)
       else if(g_scenarios[i].scope==V1_SCOPE_EXTERNAL_REVERSAL)
          reversal++;
      }
-
    LogLine("SCENARIO_STATE",
            "",
            available_at,
@@ -8192,6 +8656,8 @@ bool ConfirmWaveIfAny(V1StructureState &s,
    LogLine("WAVE_CONFIRMED",s.name,available_at,wave.id,detail);
 
    CopyWave(wave,s.last_wave);
+   if(s.tf==PERIOD_M30)
+      PushRegimeM30Wave(wave);
    PushRangeWave(s,wave);
 
    if(s.trend==V1_TREND_NEUTRAL || s.trend==V1_TREND_TRANSITION)
@@ -8409,8 +8875,7 @@ bool EvaluateLocalRefinementBreak(V1StructureState &state,
 
       if(bar.close>state.neutral_high.price)
         {
-         V1WaveRef broken,protected_ref;
-         CopyWave(state.neutral_high,broken);
+         V1WaveRef broken,protected_ref;         CopyWave(state.neutral_high,broken);
          CopyWave(state.neutral_low,protected_ref);
 
          PromoteInitialTrend(state,1,broken,bar,available_at);
@@ -8709,8 +9174,7 @@ void StoreWaitingPostContactLineage(const V1RootReactionTracker &tracker)
    StoreRefinementLineage(lineage);
   }
 
-void RegisterPostContactRootWatch(const V1SourceZone &root,const datetime snapshot_at,const bool bootstrap_scan)
-  {
+void RegisterPostContactRootWatch(const V1SourceZone &root,const datetime snapshot_at,const bool bootstrap_scan)  {
    if(!root.valid || root.kind!=V1_SOURCE_ROOT || root.strategy_state!=V1_SOURCE_ACTIVE || FindRootReactionTrackerByRootId(root.id)>=0)
       return;
 
@@ -8997,6 +9461,7 @@ void CandidateToSourcePreview(const V1SourceZone &parent,
    child.parent_zone_id=parent.id;
    child.root_zone_id=root.id;
    child.scenario_owner_id="";
+   child.regime_research_rejected=false;
    child.containment_type=candidate.containment_type;
    child.linked_event_type=candidate.linked_event_type;
    child.linked_event_bar_open=candidate.linked_event_bar_open;
@@ -9009,8 +9474,7 @@ void CandidateToSourcePreview(const V1SourceZone &parent,
 
 void LogChildCreated(const V1SourceZone &child,const datetime lineage_frozen_at)
   {
-   string detail=StringFormat(
-      "kind=CHILD state=ACTIVE direction=%s source_reason=%s parent_zone_id=%s root_zone_id=%s bottom=%.10f top=%.10f origin_open=%.10f origin_close=%.10f origin_time=%s origin_window_start=%s origin_window_end=%s origin_wave_id=%s linked_event_type=%s linked_structure_event_id=%s linked_event_bar_open=%s containment_type=%s child_available_at=%s root_contact_at=%s root_contact_bar_open=%s post_contact=true lineage_frozen_at=%s scenario_owner_id=UNBOUND strategy_authority=false",
+   string detail=StringFormat(      "kind=CHILD state=ACTIVE direction=%s source_reason=%s parent_zone_id=%s root_zone_id=%s bottom=%.10f top=%.10f origin_open=%.10f origin_close=%.10f origin_time=%s origin_window_start=%s origin_window_end=%s origin_wave_id=%s linked_event_type=%s linked_structure_event_id=%s linked_event_bar_open=%s containment_type=%s child_available_at=%s root_contact_at=%s root_contact_bar_open=%s post_contact=true lineage_frozen_at=%s scenario_owner_id=UNBOUND strategy_authority=false",
       DirectionName(child.direction),child.source_reason,child.parent_zone_id,child.root_zone_id,child.bottom,child.top,
       child.origin_open,child.origin_close,TimeToString(child.origin_time,TIME_DATE|TIME_SECONDS),
       TimeToString(child.origin_window_start,TIME_DATE|TIME_SECONDS),TimeToString(child.origin_window_end,TIME_DATE|TIME_SECONDS),
@@ -9209,8 +9673,7 @@ void ProcessPostContactChildBar(const int tf_index,const MqlRates &bar,const dat
         }
       if(TimeframeHierarchyRank(child_tf)<=TimeframeHierarchyRank(g_sources[root_index].tf))
         { pos++; continue; }
-      if(tf_index==2)
-         ProcessReactionStateForTracker(i,g_root_reactions[i].m30_state,child_tf,bar,available_at);
+      if(tf_index==2)         ProcessReactionStateForTracker(i,g_root_reactions[i].m30_state,child_tf,bar,available_at);
       else if(tf_index==3)
          ProcessReactionStateForTracker(i,g_root_reactions[i].m15_state,child_tf,bar,available_at);
       else
@@ -9409,8 +9872,7 @@ void AddRuntimeEvent(V1RuntimeBarEvent &events[],const int tf_index,const MqlRat
   }
 
 void CollectNewClosedBars(const int tf_index,V1RuntimeBarEvent &events[],const datetime observed_at)
-  {
-   if(observed_at<=0) return;
+  {   if(observed_at<=0) return;
    ENUM_TIMEFRAMES tf=g_timeframes[tf_index];
    datetime current_open=iTime(_Symbol,tf,0);
    if(current_open<=0) return;
@@ -9516,10 +9978,18 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=1.91 property_version=1.00 magic=%I64d phase=D135A_CANCELED_PENDING_LIFECYCLE_HOTFIX strategy_semantics=D134_UNCHANGED fvg_origin_ob_baseline=true sl_model=%s same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=1.92R1L2 property_version=1.00 magic=%I64d phase=REGIME_RESEARCH_V1_LOG_OPTIMIZED_BASELINE_TOGGLE strategy_semantics=D134_EXECUTION_CORE_UNCHANGED fvg_origin_ob_baseline=true sl_model=%s regime_mode=%s event_log_mode=%s same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         StopLossModelName((int)InpStopLossModel),
+                        RegimeResearchModeName(InpRegimeResearchMode),
+                        EventLogModeName(InpEventLogMode),
                         AccountInfoInteger(ACCOUNT_MARGIN_MODE)));
+   LogLine("REGIME_RESEARCH_VARIANT_START","M30",TimeCurrent(),"",
+           StringFormat("mode=%s event_log_mode=%s regime_gate_enabled=%s gate_scope=%s plan_snapshot=true wave_count=12 progression_required=2/3 protected_break_max=1 expansion_required_gt=1.0 expansion_required_only_in_v1_mode=true thresholds_are_not_inputs=true baseline_no_gate_available=true pending_cancel_retry_change=false strategy_core_change=false",
+                        RegimeResearchModeName(InpRegimeResearchMode),
+                        EventLogModeName(InpEventLogMode),
+                        (InpRegimeResearchMode==V1_REGIME_BASELINE_NO_GATE ? "false" : "true"),
+                        (InpRegimeResearchMode==V1_REGIME_BASELINE_NO_GATE ? "NONE" : "EXTERNAL_CONTINUATION")));
    if(HasManagedAccountExposure())
      {
       g_init_state=V1_INIT_EXECUTION_RECOVERY_REQUIRED;
@@ -9546,10 +10016,21 @@ void OnDeinit(const int reason)
                         g_scenario_ambiguous_fvg,g_execution_geometry_ready,g_no_r_eligible_objective,g_simultaneous_authorization_ambiguous,g_exposure_blocked,
                         g_execution_infeasible,g_order_rejected,g_orders_accepted,g_positions_filled,g_pending_cancellations,g_cancel_rejected,g_execution_divergences,
                         g_positions_closed,g_authorized_sweep_events,g_authorized_sweep_pools,g_structural_reaction_created,g_source_contacts));
+   LogLine("REGIME_RESEARCH_STOP_SUMMARY","M30",TimeCurrent(),"",
+           StringFormat("mode=%s event_log_mode=%s plan_pass=%I64d plan_reject=%I64d rolling_m30_waves=%d rolling_m30_protected_breaks=%d csv_rows_written=%I64d log_calls_suppressed=%I64d thresholds_are_not_inputs=true baseline_no_gate_available=true strategy_core_change=false",
+                        RegimeResearchModeName(InpRegimeResearchMode),
+                        EventLogModeName(InpEventLogMode),
+                        g_regime_plan_pass,
+                        g_regime_plan_reject,
+                        ArraySize(g_regime_m30_waves),
+                        ArraySize(g_regime_m30_protected_breaks),
+                        g_log_rows_written,
+                        g_log_rows_suppressed));
    LogLine("D135_STOP_SUMMARY","",TimeCurrent(),"",
-           StringFormat("strategy_semantics=D134_UNCHANGED sl_model=%s fvg_origin_ob_baseline=true same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true merged_execution_opportunities=%I64d merged_contributor_branches=%I64d simultaneous_opposite_ambiguous_opportunities=%I64d same_direction_addon_authorized=%I64d opposite_direction_exposure_blocked=%I64d perf_waiting_root=%d perf_ready_root=%d perf_waiting_sweep=%d perf_waiting_trigger=%d perf_waiting_geometry=%d perf_active_execution=%d csv_flush_batch=%d",
-                        
+           StringFormat("strategy_semantics=D134_UNCHANGED sl_model=%s event_log_mode=%s fvg_origin_ob_baseline=true same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true merged_execution_opportunities=%I64d merged_contributor_branches=%I64d simultaneous_opposite_ambiguous_opportunities=%I64d same_direction_addon_authorized=%I64d opposite_direction_exposure_blocked=%I64d perf_waiting_root=%d perf_ready_root=%d perf_waiting_sweep=%d perf_waiting_trigger=%d perf_waiting_geometry=%d perf_active_execution=%d csv_flush_batch=%d csv_rows_written=%I64d log_calls_suppressed=%I64d strategy_core_change=false research_toggle_extension=true",
+
                         StopLossModelName((int)InpStopLossModel),
+                        EventLogModeName(InpEventLogMode),
                         g_execution_opportunities_merged,
                         g_execution_contributors_merged,
                         g_simultaneous_authorization_ambiguous,
@@ -9561,7 +10042,9 @@ void OnDeinit(const int reason)
                         ArraySize(g_waiting_trigger_scenario_indices),
                         ArraySize(g_waiting_execution_geometry_indices),
                         ArraySize(g_active_execution_scenario_indices),
-                        V1_CSV_FLUSH_BATCH));
+                        V1_CSV_FLUSH_BATCH,
+                        g_log_rows_written,
+                        g_log_rows_suppressed));
 
    if(g_log_handle!=INVALID_HANDLE)
      {

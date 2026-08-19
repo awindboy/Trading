@@ -1,35 +1,42 @@
 # Strategy Robustness Research State
 
-Last updated: 2026-08-19
-Status: ACTIVE — REGIME FEATURE DISCOVERY
-Baseline: Mentor deterministic V1 / build 1.91
+Last updated: 2026-08-20
+Status: REGIME RESEARCH V1 FROZEN / DIRECT DEVELOPMENT VALIDATED / 2022 FIRST OOS PASS / NOT YET BASELINE AUTHORITY
+Baseline control: Mentor deterministic V1 / build 1.91
+Research harness: Regime Research V1 family `1.92R1`, current logging/baseline-toggle revision `1.92R1L2`
 Strategy authority: unchanged; `AGENTS.md` remains highest authority
 
 ## Current phase
 
-The deterministic execution pipeline is substantially complete. TradingView visual-audit work has been completed for the current research purpose, and the project has moved from broad semantic inspection into **causal regime-feature discovery**.
+The broad 2023–2025 regime-feature search is complete for V1.
 
-The current problem is not parameter optimization. The question is:
+The frozen research model has now passed:
 
-> Under which causally observable market states does the existing continuation setup retain positive expectancy?
+```text
+1. 2025 same-formula transfer check
+2. direct MT5 Development Set execution comparison
+3. first sealed 2022 OOS contract
+```
 
-Read the durable feature ledger next:
+The next research step is **final untouched confirmation**, preferably 2021, followed by an explicit promotion/no-promotion decision. Do not tune V1 on the already-opened 2022 result.
+
+Read the full evidence ledger:
 
 `docs/ea/REGIME_RESEARCH_2023_2025.md`
 
-## Development / OOS protocol
+## Dataset protocol
 
 ```text
 2023–2025 = Development / Research
-2022      = SEALED first OOS
+2022      = first sealed OOS — now opened and completed
 2021      = preferred final untouched confirmation
 ```
 
-Do not inspect 2022 before the exact regime definition is frozen. If a model is changed after viewing 2022, 2022 loses OOS status.
+The frozen V1 definition was fixed before 2022 was opened and was not changed afterward.
 
-## Baseline long-run problem
+## Baseline problem that motivated regime research
 
-Clean attribution previously established:
+Clean build-1.91 attribution:
 
 ```text
 2023: +44.94R
@@ -37,151 +44,315 @@ Clean attribution previously established:
 2025:  +8.68R
 ```
 
-The baseline is low-win-rate and tail-dependent. 2024 weakness is broad and is not explained by the known execution divergence or by simply disabling reversal.
+Continuation-only:
 
-Therefore implementation correctness and strategy quality remain separate research questions.
+```text
+2023: +48.31R
+2024: -28.45R
+2025: +15.94R
+```
 
-## First strong regime discovery
+The baseline is low-win-rate, tail-dependent, and regime-unstable. The large 2024 deterioration could not be explained by the known execution divergence or by simply removing reversal.
 
-The first meaningful three-year candidate is:
+## Frozen parent state
 
 `M30_CLEAN_PERSISTENT`
 
 ```text
 scope = EXTERNAL_CONTINUATION
+snapshot = scenario PLAN freeze
 latest 12 confirmed M30 waves
 progression >= 2/3
-M30 PROTECTED_BREAK inside same 12-wave span <= 1
+M30 PROTECTED_BREAK inside the same 12-wave span <= 1
 ```
 
-Previously recorded Development-Set result:
+Canonical offline PLAN-freeze Development result:
 
 ```text
-36 trades / 15 wins / 41.7%
-+55.32R
-mean +1.54R/trade
-Max DD ≈ -6R
-longest losing streak = 6
-
-2023 +46.93R
-2024  +2.82R
-2025  +5.58R
+39 trades / 15 wins
++52.489559R
+mean +1.345886R/trade
+Max DD -8.1724R
+longest losing streak 8
 ```
 
-This is **research evidence only**, not a baseline strategy rule.
-
-The complement is deliberately called `UNKNOWN`, not BAD.
-
-## Current strict snapshot contract
-
-All new feature research uses scenario `PLAN` freeze as the snapshot epoch.
-
-Only objects already available by `plan_frozen_at` may enter the feature state. No contact, Sweep, CHoCH, Entry, fill, or later outcome may define the regime snapshot.
-
-A strict 2023–2024 reconstruction of `M30_CLEAN_PERSISTENT` remains positive:
+This state represents:
 
 ```text
-31 trades / +47.90R
-2023 +47.22R
-2024 +0.69R
+DIRECTION
++ PERSISTENCE
++ STRUCTURAL STABILITY
 ```
 
-It is not yet uniformly positive by direction and remains dependent on a small number of large winners, so it is not frozen for OOS yet.
+## Frozen Regime Research V1
 
-## Feature pass completed
+`M30_CLEAN_PERSISTENT_EXPANDING`
 
-The following axes have now been analyzed from the raw 2023–2024 ledger:
+Adds exactly one axis to the Parent:
 
 ```text
-Persistence
-Structural churn
-Progression magnitude
-Expansion / compression
-Structure cleanliness / overlap
-Trend maturity
-H1/M30 agreement
-Structural location
+leg_expansion_ratio > 1.0
+
+leg_expansion_ratio =
+mean(abs(last 4 M30 wave-to-wave legs))
+/
+mean(abs(previous 4 M30 wave-to-wave legs))
 ```
 
-### Retained
-
-1. **Persistence** — strongest primary axis.
-2. **Structural stability** — repeated protected breaks are adverse, especially together with weak progression.
-3. **Progression magnitude** — `directional_advance_norm` is highly promising, but strongly correlated with progression and should be studied as an alternative representation rather than stacked.
-4. **Impulse vs retracement** — secondary expansion candidate only; needs raw-2025 recheck.
-
-### Not supported as standalone rules
+Full conceptual model:
 
 ```text
-explicit overlap threshold
-trend maturity cutoff
+DIRECTION
++ PERSISTENCE
++ STRUCTURAL STABILITY
++ EXPANSION
+```
+
+Canonical offline Development result:
+
+```text
+20 trades / 13 wins / 65.0%
++53.847843R
+mean +2.692392R/trade
+Max DD -3.012821R
+longest losing streak 3
+```
+
+The `>1.0` boundary is frozen because it means the recent four M30 legs are larger on average than the immediately preceding four. It was not selected as an arbitrary decimal optimum.
+
+## Feature search outcome
+
+### Retained in V1
+
+```text
+progression >= 2/3
+PB <= 1 inside the same 12-wave span
+leg_expansion_ratio > 1.0
+```
+
+### Rejected / downgraded after 2025 recheck
+
+Weak progression as a standalone BAD veto failed transfer:
+
+```text
+progression <= 0.50
+2025: 12 trades / +11.316R
+```
+
+Magnitude-aware persistence failed as a V1 replacement:
+
+```text
+directional_advance_norm > 1/3
+2025: 16 trades / -7.889R
+```
+
+### Not included
+
+```text
+impulse_retrace threshold
+retracement-depth threshold
+explicit overlap/cleanliness threshold
+trend maturity / owner BOS-count band
 H1/M30 agreement veto
-structural/PD location veto
-generic expansion threshold
+PD/range-location veto
+EMA / ADX / ATR / RSI
 multi-factor quality score
 ```
 
-## Strong BAD-regime candidate
+Protected-break churn remains adverse across all three Development years, but its information is already represented by the Parent's `PB <= 1` requirement.
 
-Under the strict PLAN-freeze reconstruction:
+## Direct Development Set execution
 
-```text
-M30 progression <= 0.50
-44 trades / 6 wins
--27.80R
-2023 -4.29R
-2024 -23.51R
-positive quarters = 0 / 8
-```
+Post-filtering was not accepted as final evidence because removing scenarios can alter contributor merge, hedging exposure, opposite-direction conflicts, pending lifecycle, and later opportunity availability.
 
-This is stronger BAD-state evidence than a generic Bull/Bear/Range label. It is still research evidence, not an authorized veto.
+The direct research EA therefore ran the Parent and Expansion modes independently.
 
-## Strong new alternate persistence representation
+### Formula implementation parity
 
-`directional_advance_norm` measures the median signed same-side M30 advance relative to typical M30 swing-leg size.
-
-A broad threshold sensitivity band remains positive in 2023 and 2024 rather than depending on a single knife-edge cutoff. For example `> 1/3` gives:
+The full-audit Expansion run contained 2,338 `EXTERNAL_CONTINUATION` regime decisions. Independent reconstruction from logged M30 waves/PB events produced:
 
 ```text
-27 trades / +35.78R
-Max DD = -4.74R
-longest losing streak = 4
-2023 +31.66R
-2024  +4.12R
+progression mismatch = 0
+PB-count mismatch = 0
+leg-expansion mismatch = 0
+PASS/REJECT mismatch = 0
 ```
 
-Both LONG and SHORT are positive in each available year at this illustrative split.
+### Parent direct — 2023–2025
 
-However correlation with the original progression score is about `0.84`; it is not an independent new axis.
+```text
+46 trades / 15 wins / 32.6%
++45.436530R
+mean +0.987751R/trade
+Max DD -11.204262R
+longest losing streak 11
 
-## Multiple-testing discipline
+2023 +45.219207R
+2024  -3.364869R
+2025  +3.582192R
+```
 
-All tried representations, including failures, are recorded in `REGIME_RESEARCH_2023_2025.md`.
+### Expansion direct — 2023–2025
 
-Do not optimize the 2023–2025 equity curve by stacking every favorable subset. Several attractive combinations collapse trade count too far and are explicitly classified as overfit warnings.
+```text
+24 trades / 13 wins / 54.2%
++49.797314R
+mean +2.074888R/trade
+Max DD -5.173397R
+longest losing streak 5
 
-## 2025 limitation and next step
+2023 +43.879687R
+2024  -1.687467R
+2025  +7.605095R
+```
 
-The exact raw 2025 ledger used by the prior audit was not available in the current runtime. Therefore the new feature formulas beyond the already-recorded `M30_CLEAN_PERSISTENT` discovery must be re-derived on 2025 before any Regime Research V1 freeze.
+All 24 Expansion trades are exact members of the Parent run with identical R.
 
-Immediate research sequence:
+Expansion removes:
 
-1. re-run the frozen PLAN-time feature formulas on raw 2025;
-2. reject features that materially reverse sign;
-3. compare `progression` versus `directional_advance_norm` as alternative persistence representations;
-4. decide whether `impulse_retrace_ratio` adds genuinely independent information;
-5. freeze the smallest defensible regime model;
-6. only then open 2022 OOS.
+```text
+22 Parent trades
+2 wins / 20 losses
+-4.360784R
+mean -0.198217R/trade
+```
+
+So the additional Expansion axis improved expectancy and drawdown in direct execution, not only in offline classification.
+
+## Why offline and direct results differ
+
+The original offline frozen V1 attribution was:
+
+```text
+20 trades / +53.847843R
+```
+
+The direct V1 run was:
+
+```text
+24 trades / +49.797314R
+```
+
+The original 20 trades were all reproduced exactly. Four additional direct trades explain the difference.
+
+Two were genuine causal portfolio-state effects:
+
+```text
+1. a baseline FAIL master Root was removed, allowing PASS contributors at the same Entry to merge and execute;
+2. a FAIL opposite-direction position was removed, releasing a later PASS trade from exposure conflict.
+```
+
+Two were late-December 2024 positions already present in the baseline path but excluded from the old calendar-bounded closed-trade attribution because they closed in early 2025.
+
+Conclusion:
+
+> Offline post-filtering is useful for discovery and PLAN classification; direct Strategy Tester execution is the authority for final strategy-variant performance.
+
+## 2022 first OOS result
+
+The pre-registered contract required V1:
+
+```text
+trades >= 5
+Total R > 0
+mean R/trade > 0
+Max DD less severe than baseline continuation
+longest losing streak no worse than baseline continuation
+```
+
+Direct results:
+
+| Mode | Trades | Wins | Total R | Mean R/trade | Max DD | Longest loss streak |
+|---|---:|---:|---:|---:|---:|---:|
+| Baseline continuation | 72 | 15 | -14.476581R | -0.201064R | -20.764118R | 18 |
+| Parent | 16 | 3 | -3.825354R | -0.239085R | -5.741120R | 5 |
+| Frozen Expansion V1 | 6 | 1 | +0.994756R | +0.165793R | -3.012334R | 3 |
+
+Classification:
+
+```text
+2022 FIRST OOS = PASS
+```
+
+The expansion component also satisfies its separate requirement because it improves both Parent expectancy and Parent drawdown.
+
+The six Expansion trades are exact Parent members with identical R. The ten Parent-only trades sum to:
+
+```text
+-4.820111R
+mean -0.482011R/trade
+```
+
+## OOS caveat
+
+The 2022 V1 sample is small and tail-dependent:
+
+```text
+6 trades
+1 winner ≈ +6.023R
+5 losses ≈ -5.028R
+net ≈ +0.995R
+```
+
+This is enough to satisfy the frozen OOS contract, but not enough to call robustness proven.
+
+## Current research harness
+
+Current ResearchMode options:
+
+```text
+V1_REGIME_PARENT_CLEAN_PERSISTENT
+V1_REGIME_V1_CLEAN_PERSISTENT_EXPANDING
+V1_REGIME_BASELINE_NO_GATE
+```
+
+`BASELINE_NO_GATE` disables regime authorization only; the execution core remains unchanged.
+
+Long-run event logging defaults to:
+
+```text
+RESEARCH_COMPACT
+```
+
+with `FULL_AUDIT` retained for diagnostic reruns. The logging change has no strategy authority.
+
+## Next decision gate
+
+Run the preferred untouched 2021 confirmation with the frozen model unchanged.
+
+Recommended comparison:
+
+```text
+A. BASELINE_NO_GATE
+B. PARENT_CLEAN_PERSISTENT
+C. CLEAN_PERSISTENT_EXPANDING
+```
+
+Evaluate:
+
+```text
+Total/mean R
+Max R drawdown
+longest losing streak
+year/direction behavior
+trade count
+large-winner concentration
+execution divergence
+```
+
+If 2021 is supportive, make a separate explicit promotion decision before touching `AGENTS.md` or `EA_SPEC.md`.
+
+If any formula/threshold is changed after the 2022 result, the changed model is V2 and 2022 cannot be reused as its OOS proof.
 
 ## Parallel execution-safety item
 
-Build 1.91 still has one separate recoverable pending-cancel rejection retry edge case. It must be closed before a multi-year run is called a final profitability baseline, but it does not explain the regime instability and does not block observational regime research.
-
-## Working principle
+The recoverable pending-cancel rejection retry remains separate:
 
 ```text
-Direction describes where structure points.
-Regime research asks whether that structure is actually progressing and stable enough to trade.
+strategy cancellation required
++ exact pending still live
++ broker cancel rejected for recoverable condition
+-> retry exact ticket when permitted
 ```
 
-Preserve the deterministic baseline as control until OOS evidence justifies a strategy change.
+Do not mix this lifecycle fix into the interpretation of Regime Research V1 results.
