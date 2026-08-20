@@ -1,9 +1,9 @@
 # EA Development Handoff
 
 Last updated: 2026-08-20
-Repository base checked before this update: `260d14e714bbd635448d466d12d848b9ef80ba39`
-Status: D-135A / BUILD 1.91 CONTROL PRESERVED / REGIME RESEARCH V1 FROZEN BUT DEPRIORITIZED / 2025 18-SYMBOL NO-GATE BASE-EDGE WARNING
-Current phase: **BASE EDGE AUDIT** — D-142A `EDGE_AUDIT_V1` stage-forward shadow harness prepared; local compile and audit-OFF/audit-ON parity pending
+Repository base checked before this update: `418471c7a0c9bc9e45bb075f43e1d726daef4ebf`
+Status: D-135A CONTROL PRESERVED / D-142A PARITY PASS / D-143 SIX-SYMBOL FRONT-END AUDIT ANALYZED / D-144 EXACT-TICK BARRIER AUDIT PREPARED
+Current phase: **REACTION / ENTRY BARRIER AUDIT** — D-144 `1.92R1L6` exact-tick shadow comparison of ROOT_CONTACT → SWEEP → CHOCH → FVG → ACTUAL_FILL; strategy authority unchanged
 2021 status: **KEEP UNTOUCHED**
 Strategy authority: **UNCHANGED**
 
@@ -18,6 +18,135 @@ Strategy authority: **UNCHANGED**
 - `docs/ea/BACKLOG.md` is the active work queue.
 
 No finding in the 2025 cross-symbol study changes `AGENTS.md` or `EA_SPEC.md` by itself.
+
+
+## D-142A validation and six-symbol result
+
+D-142A passed its GOLD January audit OFF/ON parity gate. The two main ledgers were byte-identical, and stage identity/timing plus forward-label/right-censor accounting matched.
+
+The first 2025 contrast panel used:
+
+```text
+BTCUSD
+CADJPY
+GBPCAD
+GOLD
+SILVER
+USDJPY
+```
+
+Key front-end findings now control the next research step:
+
+```text
+MAP snapshots = 35,284
+PLAN = 7,589
+ROOT_CONTACT = 4,809
+SWEEP = 3,753
+CHOCH = 1,746
+FVG = 1,550
+ACTUAL_FILL = 519
+```
+
+Continuation timing from the same panel:
+
+```text
+owner start -> Root causal structure median:
+LONG  ~39.5h
+SHORT ~48.5h
+
+PLAN -> Root contact median:
+LONG  ~6.5h
+SHORT ~9.0h
+
+owner age at Root contact median:
+LONG  ~59h
+SHORT ~73h
+```
+
+For 4,809 PLAN/contact pairs, owner ID, active-map TF, H1 state, M30 state, and scenario direction remained unchanged from PLAN to contact. The warning is therefore not a trivial stale-plan-after-map-flip bug.
+
+However, H1 persistent-map direction showed an inverse 24h relationship on all six symbols: the raw 24h return after H1-LONG states was lower than after H1-SHORT states. Across 60 comparable symbol-month blocks, 42 (70%) showed the same inverse ordering. H1 mature direction is therefore a priority causal suspect, not yet a strategy veto.
+
+Root contact itself recovered local directional response: continuation 24h direction correctness moved from approximately 53.3% LONG / 38.7% SHORT at PLAN to 54.5% LONG / 49.5% SHORT at contact, with positive mean signed 24h moves for both directions. This raises the possibility that Root reaction contains local information while the inherited higher-timeframe trend/objective interpretation is wrong or stale.
+
+The user objective for the eventual strategy is **>=50% win rate**. Research must therefore investigate the direction-selection architecture itself, not stop after filtering a subset of losses.
+
+
+## D-143 six-symbol front-end result — analyzed
+
+D-143 unified ledgers for `BTCUSD / CADJPY / GBPCAD / GOLD / SILVER / USDJPY` were analyzed from structure formation through final fills. Main findings:
+
+```text
+PLAN -> Root Contact is intentionally a pullback:
+  LONG opposite-direction move before contact = 99.66%
+  SHORT opposite-direction move before contact = 99.95%
+
+H1 continuation BOS, 24h same-direction correctness:
+  LONG  = 55.2% / mean signed +0.131%
+  SHORT = 38.9% / mean signed -0.255%
+
+M30 continuation BOS, 24h same-direction correctness:
+  LONG  = 53.5% / mean signed +0.095%
+  SHORT = 40.1% / mean signed -0.219%
+
+Root Contact, 24h same-direction correctness:
+  LONG  = 54.5% / mean signed +0.139%
+  SHORT = 49.5% / mean signed +0.120%
+```
+
+The key result is not simply that the map is wrong. Even eventual losing trades often react correctly from the Root first: at 4h after Root Contact, `74.6%` of LONG losses and `70.2%` of SHORT losses were still moving in the scenario direction. By CHoCH, those same losing cohorts were only `37.9%` LONG / `33.7%` SHORT in the scenario direction.
+
+The front end also fans one directional hypothesis into repeated exposure. Among SHORT structure events that produced at least two actual trades, `36` events produced `88` trades with only `2` wins (`2.27%`). Restricting to one trade per event still does not approach the user's `>=50%` win-rate objective, so simple duplicate suppression is not treated as the solution.
+
+A separate lifecycle inconsistency was observed: `49` continuation contacts had a frozen PLAN direction that no longer matched the current highest map direction; `7` reached actual trades and all `7` lost. This remains a specific authority-survival audit item, not the explanation for the whole loss distribution.
+
+Static front-end causal features alone did not reveal a robust `50%` winner subset. The next measurement therefore standardizes the outcome geometry rather than adding a filter.
+
+## D-144 exact-tick measurement contract
+
+D-144 keeps the D-143 unified ledger and adds zero-authority tick-first-hit virtual outcomes at:
+
+```text
+ROOT_CONTACT
+SWEEP
+CHOCH
+FVG
+ACTUAL_FILL
+```
+
+For stage-to-stage comparison, `1R` is frozen once on the first causally actionable tick after Root Contact using the existing baseline `ROOT_OB_DISTAL_20` geometry. The same absolute R distance is reused at Sweep/CHoCH/FVG so information decay is not confused with a changing volatility or stop scale.
+
+Each stage creates SAME_DIRECTION and FLIPPED_DIRECTION shadow entries and records exact tick ordering for:
+
+```text
++1.0R vs -1R
++1.5R vs -1R
++2.0R vs -1R
+```
+
+ACTUAL_FILL is measured separately with the actual `fill_price -> normalized_sl` distance as 1R. Exact fill barriers are emitted only when the fill is observed with zero whole-second lag; otherwise the audit records a skip rather than reconstructing missed ticks.
+
+No D-144 result may authorize or reject a trade. `2021` remains untouched.
+
+## D-143 next instrumentation
+
+D-143 does not change strategy authority. It adds shadow evidence for:
+
+```text
+H1/M30 INITIAL_BOS
+H1/M30 continuation BOS
+H1/M30 PROTECTED_BREAK
+hourly active MAP state
+all created H1/M30/M15 Roots
+PLAN
+all physical Root contacts, including NO_PREPLAN
+preplanned ROOT_CONTACT
+existing Sweep / CHoCH / FVG / Fill identities
+```
+
+The audit freezes owner age, latest same-direction BOS age, latest protected update/break timing, Root creation/origin timing, H1/M30 context at Root creation, compatible Root ordinal under each owner, PLAN ordinal, and Root-create/PLAN/contact delays. 15m/1h/4h/24h forward return/MFE/MAE remain shadow labels.
+
+Logging is unified: strategy rows and `EDGE_AUDIT_*` rows share **one `InpEventCsvFile`**. There is no separate Edge Audit CSV input. Audit OFF/ON parity compares the unified ledgers after removing `EDGE_AUDIT_*` rows.
 
 ## Current deterministic control
 
@@ -783,11 +912,67 @@ Keep these changes isolated from strategy research.
 
 ## Immediate next actions
 
-1. Apply the D-142A `1.92R1L4` package and compile.
-2. Run GOLD January 2025 with `InpEnableEdgeAudit=false`.
-3. Run the identical fixture with `InpEnableEdgeAudit=true`.
-4. Compare the main strategy ledgers; any strategy difference invalidates D-142A.
-5. If parity passes, run GOLD / BTCUSD / GBPCAD / CADJPY / SILVER / USDJPY with audit ON.
-6. Analyze MAP -> PLAN -> CONTACT -> SWEEP -> CHOCH -> FVG by LONG/SHORT and horizon.
-7. Only after locating the edge/failure stage, decide whether D-142B exact fill virtual barriers are necessary.
+1. Apply D-143 `1.92R1L5` and compile with 0 errors.
+2. Run a short GOLD January fixture with audit OFF and ON, using one unique event filename per run.
+3. Compare unified ledgers after excluding `EDGE_AUDIT_*`; any remaining strategy-row difference invalidates D-143.
+4. Inspect D-143 structure/Root/PLAN/contact joins and forward-label completeness.
+5. If parity passes, re-run the six-symbol 2025 panel with audit ON; only **one CSV per symbol** is required.
+6. Analyze direction formation first: INITIAL_BOS → continuation BOS/PB → owner persistence → Root ordinal/age → PLAN → physical contact.
+7. Only after the front-end direction/Root relationship is understood should CHoCH-reference or exact-fill barrier variants resume.
 8. Keep 2021 untouched.
+
+---
+
+## D-144 GOLD finding -> D-145 runner-context transition
+
+The first exact-tick D-144 run was completed on GOLD 2025 only because the multi-stage virtual barrier fan-out increased tester wall time by roughly 9x. The event file itself grew by only about 15%, so the dominant cost is the per-tick tracker population rather than CSV bytes alone.
+
+GOLD continuation actual fills:
+
+```text
+51 fills
+current structural-TP winners = 14 / 51 = 27.45%
+exact +1R before -1R = 30 / 51 = 58.82%
+exact +1.5R before -1R = 25 / 51 = 49.02%
+exact +2R before -1R = 20 / 51 = 39.22%
+```
+
+Direction split at +1R:
+
+```text
+LONG  = 21 / 35 = 60.00%
+SHORT =  9 / 16 = 56.25%
+```
+
+Of the 37 continuation trades that eventually lost under the current structural objective, 16 had first reached +1R, 11 had reached +1.5R, and 7 had reached +2R. Therefore the next question is not a fixed-R optimization problem. It is why a valid filled trade sometimes exhausts near 1R and sometimes develops into a 2R+ runner.
+
+Current phase is **D-145 RUNNER MARKET-CONTEXT AUDIT**.
+
+D-145 removes the expensive Root/Sweep/CHoCH/FVG mirror barrier population and the already-completed D-143 front-end forward labels. Only:
+
+```text
+selected-FVG -> fill pre-fill displacement tracker
+actual filled trade runner tracker
+```
+
+remain tick-active.
+
+Two causal snapshots are recorded:
+
+```text
+A. ACTUAL_FILL market background
+B. FIRST +1R market/continuation state
+```
+
+Exact outcomes remain observational only:
+
+```text
+1R before SL
+2R before SL
+3R before SL
+structural TP before SL
+```
+
+The research objective is to identify structural mechanisms whose relationship to runner extension survives direction, month, symbol, and later periods. Do not choose an R threshold from pooled hit-rate optimization.
+
+`2021 = KEEP UNTOUCHED`.

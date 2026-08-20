@@ -1,7 +1,7 @@
 # EA Backlog
 
 Last updated: 2026-08-20
-Current phase: **BASE EDGE AUDIT**
+Current phase: **D-145 RUNNER MARKET-CONTEXT AUDIT**
 Strategy authority: unchanged
 
 ## P0 — Base-edge audit
@@ -147,6 +147,24 @@ D-127 strategy value = NOW UNDER BASE-EDGE AUDIT
 
 Implementation correctness and predictive profitability are separate questions.
 
+
+## P0 — D-143 front-end causal audit — ANALYZED
+
+- [x] D-142A GOLD January audit OFF/ON parity PASS.
+- [x] First six-symbol 2025 stage-forward panel analyzed.
+- [x] Identify H1 persistent-map direction / owner persistence as front-end priority suspect.
+- [x] Apply/compile D-143 `1.92R1L5` and collect the six-symbol 2025 unified panel.
+- [ ] Verify unified-ledger audit OFF/ON parity after filtering `EDGE_AUDIT_*`.
+- [ ] Re-run BTCUSD / CADJPY / GBPCAD / GOLD / SILVER / USDJPY 2025 with one unified CSV each.
+- [ ] Measure INITIAL_BOS and continuation-BOS forward direction accuracy by TF/direction/month.
+- [ ] Measure owner age and last-BOS age versus forward direction accuracy and realized trade win rate.
+- [ ] Measure compatible Root ordinal within owner versus Root contact response and eventual trade outcome.
+- [ ] Compare all created Roots → physical contacts → PLAN-selected Roots → preplanned contacts to locate selection bias.
+- [ ] Determine whether Root contact predicts only local reaction or sustained continuation to structural objective.
+- [x] Interpret D-143 before resuming exact barrier work; no strategy filter promoted from D-143.
+
+Research target: eventual strategy win rate `>= 50%`; loss filtering alone is not sufficient evidence.
+
 ## Historical implementation items still open
 
 - [ ] Root OB internal-swing completeness audit.
@@ -213,3 +231,64 @@ Action:
 Action:
 
 - treat that as evidence against the current Mentor implementation/theory, not as a reason to add more complexity.
+
+
+## P0 — D-144 reaction / entry exact-tick barrier audit
+
+- [x] Freeze standardized stage-comparison R as the first causal Root-contact market entry to `ROOT_OB_DISTAL_20` distance.
+- [x] Freeze target set before the run: `1.0R / 1.5R / 2.0R`, each versus `-1R`.
+- [x] Compare SAME_DIRECTION and FLIPPED_DIRECTION at ROOT_CONTACT / SWEEP / CHOCH / FVG.
+- [x] Measure ACTUAL_FILL separately with actual `fill_price -> normalized_sl` R.
+- [x] Require exact tick first-hit ordering; never infer fill barrier order from M1 OHLC.
+- [x] Keep all D-144 output in the same unified `InpEventCsvFile`.
+- [ ] MetaEditor compile D-144 `1.92R1L6` with 0 errors.
+- [ ] GOLD 2025-01 audit OFF/ON unified-ledger parity smoke.
+- [ ] Confirm non-audit rows are identical after filtering `EDGE_AUDIT_*`.
+- [ ] Confirm barrier activation/result integrity and zero unexplained duplicates.
+- [ ] Run the same six-symbol 2025 panel.
+- [ ] Compute stage × direction × target-R win rates and unresolved rates.
+- [ ] Test whether Root/Sweep can clear 50% at 1R and whether CHoCH/FVG/Fill destroy that edge.
+- [ ] Test whether flipped-direction controls outperform the scenario direction at any stage.
+- [ ] Only after this measurement define one strategy variant.
+
+Research guardrails:
+
+```text
+No SHORT veto.
+No owner-age threshold.
+No Root-count cutoff.
+No arbitrary ATR/percent R scale.
+No CHoCH filter in D-144.
+No TP redesign in D-144.
+2021 remains untouched.
+```
+
+## P0 — D-145 runner market-context audit
+
+- [x] D-144 GOLD exact-tick single-symbol validation completed.
+- [x] Confirm GOLD continuation actual Fill reaches +1R before -1R in 30/51 trades (58.82%).
+- [x] Confirm +1.5R is 25/51 and +2R is 20/51; do not optimize a fixed TP from these points.
+- [x] Identify D-144 runtime cost as multi-stage per-tick tracker fan-out; retire that harness from broad runs.
+- [x] Prepare lightweight D-145 build `1.92R1L7`.
+- [ ] MetaEditor compile D-145 with 0 errors.
+- [ ] GOLD audit OFF/ON non-audit parity smoke.
+- [ ] Confirm D-145 tester speed is materially closer to D-143/control than D-144.
+- [ ] Collect ACTUAL_FILL background snapshots and FIRST +1R snapshots.
+- [ ] Compare +1R winners that fail before 2R vs trades that reach 2R+.
+- [ ] Test **relationship direction**, not optimized thresholds, for:
+  - current H1/M30 move maturity / remaining structural room;
+  - current M30 net directional advance and leg expansion;
+  - selected-FVG pre-fill displacement before retest;
+  - Fill -> +1R speed and adverse excursion;
+  - H1/M30/M1 structural reinforcement or contradiction after Fill.
+- [ ] Require consistency across LONG/SHORT and multiple calendar blocks before treating a feature as causal.
+- [ ] If GOLD mechanism is coherent, broaden to selected additional symbols; do not brute-force all symbols until the logging/runtime contract is proven.
+
+Research prohibition:
+
+```text
+Do not select 1.2R / 1.3R / 1.4R because pooled win rate crosses 50%.
+Do not derive age, time, range-position, progression, or displacement cutoffs from this GOLD sample.
+Do not use outcome-known data at Fill snapshot.
+Do not consume 2021.
+```

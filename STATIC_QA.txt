@@ -1,0 +1,49 @@
+D-143 FRONT-END CAUSAL AUDIT — STATIC QA
+========================================
+
+Checked GitHub source identity
+- repo: awindboy/Trading
+- commit: 418471c7a0c9bc9e45bb075f43e1d726daef4ebf
+- EA blob: 3c6abf7434c389a133615ef40101caace1a7c504
+- EdgeAuditV1.mqh blob: 149020c4f989da18a71699c05610a636db7310ca
+- DECISIONS blob: e3f8b090527c8bacf092737fcf71096bb2a5c48a
+- TEST_RESULTS blob: 35d857b7ea4d63c5490d069c5934f845af2a83bf
+
+Source-anchor review
+- D-142A enum/input/prototype anchors verified against current GitHub source.
+- LogStructureEvent hook anchor verified.
+- LogRootCreated hook anchor verified.
+- LogRootInvalidated hook anchor verified.
+- ROOT_CONTACT_OBSERVED / bound_scenario / has_preplan hook location verified.
+- OnInit main CSV open ordering verified.
+- Existing PLAN/ROOT_CONTACT/SWEEP/CHOCH/FVG/FILL hooks preserved.
+- Existing same-timestamp M1 pre-strategy label feed preserved.
+
+Audit isolation
+- EdgeAuditV1.mqh contains no FileOpen().
+- InpEdgeAuditCsvFile is absent.
+- Audit writes only through existing g_log_handle.
+- Audit rows are prefixed EDGE_AUDIT_*.
+- Audit direct writes do not increment baseline g_log_rows_written.
+- Static scan found no assignments to g_scenarios/g_structure/g_sources/g_map/g_root_reactions state.
+- Exact-fill virtual barriers remain deferred.
+
+MQL static checks
+- lexical (), {}, [] delimiter balance: PASS.
+- StringFormat placeholder/argument count scan: PASS.
+- largest checked StringFormat argument count after split: 38.
+- MetaEditor compilation is NOT available in this environment; local compile remains mandatory.
+
+Python tools
+- apply_front_end_causal_audit.py py_compile: PASS.
+- compare_unified_audit_parity.py py_compile: PASS.
+- summarize_front_end_audit.py py_compile: PASS.
+- unified parity self-test: PASS.
+- audit structure summary self-test: PASS.
+
+Research contract
+- strategy authority unchanged.
+- 2021 untouched.
+- unified single event ledger.
+- D-143 front-end stages: H1/M30 structure events, MAP, all ROOT_CREATED, all physical Root contacts, existing scenario funnel.
+- 15m/1h/4h/24h causal M1 forward labels retained.

@@ -5669,7 +5669,7 @@ strategy semantics = D134_EXECUTION_CORE_UNCHANGED
 
 ## D-142 — BASE EDGE AUDIT V1 is shadow-only and precedes strategy redesign
 
-Status: D-142A PREPARED / LOCAL COMPILE + AUDIT-OFF/AUDIT-ON PARITY PENDING — 2026-08-20
+Status: D-142A VALIDATED / D-143 FRONT-END AUDIT SUPERSEDES NEXT RESEARCH STEP — 2026-08-20
 
 ### Trigger
 
@@ -5739,4 +5739,85 @@ After D-142A identifies where signal quality improves or deteriorates, change on
 
 ```text
 2021 = KEEP UNTOUCHED
+```
+
+---
+
+## D-143 — Front-end causal audit precedes downstream strategy variants; research logging is unified
+
+Status: PREPARED SHADOW RESEARCH / STRATEGY AUTHORITY UNCHANGED — 2026-08-20
+
+### Trigger
+
+D-142A passed its audit OFF/ON parity gate, then the first six-symbol 2025 contrast panel exposed a more upstream problem than the originally planned fill-barrier experiment.
+
+The six-symbol panel was:
+
+```text
+BTCUSD
+CADJPY
+GBPCAD
+GOLD
+SILVER
+USDJPY
+```
+
+The panel showed that the current H1 persistent direction may behave like a lagging classification while Root contact still creates a local directional response. Median continuation owner age at Root contact was approximately `59h` LONG and `73h` SHORT. The PLAN-to-contact map owner/trend state remained identical for every paired scenario, so this is not a simple stale-plan-after-map-flip defect.
+
+The user research objective for the eventual strategy is a realized trade win rate of at least `50%`. Removing a subset of losing CHoCHs is therefore not sufficient by itself. Direction formation and its causal relationship to later Roots must be audited first.
+
+### D-143 decision
+
+Prepared research identity:
+
+```text
+build = 1.92R1L5
+phase = FRONT_END_CAUSAL_AUDIT_V1_UNIFIED_LEDGER
+strategy semantics = D134_EXECUTION_CORE_UNCHANGED
+```
+
+D-143 adds shadow observations for:
+
+```text
+H1/M30 INITIAL_BOS
+H1/M30 continuation BOS
+H1/M30 PROTECTED_BREAK
+hourly active MAP
+all H1/M30/M15 ROOT_CREATED identities
+all physical Root contacts, including NO_PREPLAN
+existing PLAN / ROOT_CONTACT / SWEEP / CHOCH / FVG / ACTUAL_FILL checkpoints
+```
+
+It records owner/BOS/protected-update age, compatible Root ordinals, Root origin/create timing, PLAN ordinal, Root-create-to-contact and PLAN-to-contact timing, and H1/M30 context at Root creation/contact. The existing 15m/1h/4h/24h forward return/MFE/MAE shadow labels remain causal and research-only.
+
+No owner-age threshold, Root-count threshold, direction veto, or strategy filter is authorized by this instrumentation.
+
+### Unified event ledger
+
+D-142A used a separate edge-audit CSV. D-143 intentionally removes that split.
+
+```text
+single output = InpEventCsvFile
+research event prefix = EDGE_AUDIT_*
+```
+
+The audit writes to the already-open event handle and keeps its own row counters. Baseline logger counters are not incremented by audit-only rows.
+
+Audit OFF/ON parity is therefore defined as:
+
+```text
+remove rows where event starts EDGE_AUDIT_
+-> every remaining strategy/event row must be exactly identical
+```
+
+This logging change has no strategy authority.
+
+### Deferred work
+
+Exact tick-order fill virtual barriers and CHoCH-reference strategy variants remain deferred until the front-end direction/Root relationship is understood.
+
+```text
+2021 = KEEP UNTOUCHED
+AGENTS.md = unchanged
+EA_SPEC.md = unchanged
 ```

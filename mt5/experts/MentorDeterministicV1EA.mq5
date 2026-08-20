@@ -14,7 +14,7 @@
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - Regime V1 harness + shadow Base Edge Audit V1"
+#property description "Mentor deterministic V1 EA - unified front-end causal audit research harness"
 
 enum V1StopLossModel
   {
@@ -53,13 +53,20 @@ enum V1PositionSizingMode
 // D-142A shadow-only base-edge checkpoints. No strategy authority.
 enum V1EdgeAuditStage
   {
+   // Preserve D-142A numeric identities for the existing stage hooks.
    V1_EDGE_STAGE_MAP=0,
    V1_EDGE_STAGE_PLAN,
    V1_EDGE_STAGE_ROOT_CONTACT,
    V1_EDGE_STAGE_SWEEP,
    V1_EDGE_STAGE_CHOCH,
    V1_EDGE_STAGE_FVG,
-   V1_EDGE_STAGE_FILL
+   V1_EDGE_STAGE_FILL,
+   // D-143 front-end causal populations. Shadow-only.
+   V1_EDGE_STAGE_STRUCTURE_INITIAL_BOS,
+   V1_EDGE_STAGE_STRUCTURE_BOS,
+   V1_EDGE_STAGE_STRUCTURE_PROTECTED_BREAK,
+   V1_EDGE_STAGE_ROOT_CREATED,
+   V1_EDGE_STAGE_PHYSICAL_ROOT_CONTACT
   };
 
 //--- execution identity / diagnostics
@@ -75,9 +82,9 @@ input double InpFixedRiskMoneyPerTrade = 100.0;
 input double InpEquityRiskPercentPerTrade = 1.0;
 input string InpEventCsvFile       = "mentor_v1_regime_research_v1_compact_events.csv";
 
-// D-142A EDGE_AUDIT_V1 is shadow-only. Default OFF is the parity control.
+// D-143 EDGE_AUDIT_V1 is shadow-only. Default OFF is the parity control.
+// Audit rows now share InpEventCsvFile and use the EDGE_AUDIT_* event prefix.
 input bool   InpEnableEdgeAudit     = false;
-input string InpEdgeAuditCsvFile    = "mentor_v1_edge_audit_v1.csv";
 
 // D-137/D-138 frozen research contract. These are intentionally NOT inputs:
 // 2022 OOS must not be tunable from Strategy Tester parameters.
@@ -2409,7 +2416,7 @@ void ProcessIntegratedExecutionAuthorizationEpoch(const datetime available_at);
 void ManageIntegratedExecution(const MqlTick &tick);
 bool HasManagedAccountExposure();
 
-// D-142A shadow instrumentation; definitions included immediately before OnInit.
+// D-143 shadow instrumentation; definitions included immediately before OnInit.
 void EdgeAuditResetState();
 bool EdgeAuditInit();
 void EdgeAuditDeinit(const int reason);
@@ -2418,6 +2425,10 @@ void EdgeAuditOnScenarioStage(const int stage,const int scenario_index,const dat
 void EdgeAuditOnActualFill(const int scenario_index,const datetime observed_at);
 void EdgeAuditOnM1BarBeforeStrategy(const MqlRates &bar,const datetime available_at);
 void EdgeAuditOnTick(const MqlTick &tick);
+void EdgeAuditOnStructureEvent(const V1StructureState &state,const int event_type,const int direction,const V1WaveRef &broken,const V1WaveRef &protected_ref,const MqlRates &bar,const datetime available_at);
+void EdgeAuditOnRootCreated(const V1SourceZone &root,const int event_type,const MqlRates &break_bar);
+void EdgeAuditOnRootInvalidated(const V1SourceZone &root,const datetime available_at,const string reason,const MqlRates &bar);
+void EdgeAuditOnPhysicalRootContact(const V1SourceZone &root,const MqlRates &bar,const datetime available_at,const int bound_scenario,const bool has_preplan);
 
 void LogLiquidityConsumption(const V1LiquidityPool &pool,
                              const MqlRates &bar,
@@ -2819,6 +2830,7 @@ void LogRootCreated(const V1SourceZone &root,
            root.available_at,
            root.id,
            detail);
+   EdgeAuditOnRootCreated(root,event_type,break_bar);
   }
 
 void LogRootRejected(const int tf_index,
@@ -3093,6 +3105,7 @@ void LogRootInvalidated(const V1SourceZone &root,
            available_at,
            root.id,
            detail);
+   EdgeAuditOnRootInvalidated(root,available_at,reason,bar);
   }
 
 int FindRefinementByRootId(const string root_id)
@@ -3707,6 +3720,7 @@ void LogStructureEvent(V1StructureState &s,
       protected_ref.valid ? DoubleToString(protected_ref.price,_Digits) : "NA");
 
    LogLine("STRUCTURE_"+EventName(event_type),s.name,available_at,id,detail);
+   EdgeAuditOnStructureEvent(s,event_type,direction,broken,protected_ref,bar,available_at);
   }
 
 void EvaluateExistingStructureBreaks(const int tf_index,
@@ -9687,6 +9701,7 @@ void ProcessPostContactRootContacts(const MqlRates &bar,const datetime available
       LogLine("ROOT_CONTACT_OBSERVED","M1",available_at,root.id,
               StringFormat("direction=%s root_tf=%s root_available_at=%s contact_bar_open=%s bottom=%.10f top=%.10f optional_child_observation_enabled=true child_strategy_authority=false root_remains_strategy_source=true historical_child_authorization=false phase4b_precontact_plan_checked=true linear_trigger_pipeline=true",
                            DirectionName(root.direction),TfName(root.tf),TimeToString(root.available_at,TIME_DATE|TIME_SECONDS),TimeToString(bar.time,TIME_DATE|TIME_SECONDS),root.bottom,root.top));
+      EdgeAuditOnPhysicalRootContact(root,bar,available_at,bound_scenario,has_preplan);
      }
   }
 void TryAddPostContactChildCandidate(const V1RootReactionTracker &tracker,
@@ -10300,7 +10315,7 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
    g_m1_sweep_detector_bar_open=0;
   }
 
-// D-142A shadow-only BASE EDGE AUDIT V1 implementation.
+// D-143 shadow-only FRONT-END CAUSAL AUDIT / unified-ledger implementation.
 #include "EdgeAuditV1.mqh"
 
 int OnInit()
@@ -10319,7 +10334,6 @@ int OnInit()
 
    InitializeAllStructureStates();
    EdgeAuditResetState();
-   EdgeAuditInit(); // audit failure cannot alter strategy execution
    if(InpWriteEventCsv)
      {
       g_log_handle=FileOpen(InpEventCsvFile,FILE_READ|FILE_WRITE|FILE_CSV|FILE_ANSI|FILE_SHARE_READ,',');
@@ -10331,10 +10345,11 @@ int OnInit()
         }
       else PrintFormat("MentorV1 failed to open event CSV '%s', err=%d",InpEventCsvFile,GetLastError());
      }
+   EdgeAuditInit(); // unified audit requires the already-open main event handle
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=1.92R1L4 property_version=1.00 magic=%I64d phase=BASE_EDGE_AUDIT_V1_STAGE_FORWARD_SHADOW strategy_semantics=D134_EXECUTION_CORE_UNCHANGED fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=1.92R1L5 property_version=1.00 magic=%I64d phase=FRONT_END_CAUSAL_AUDIT_V1_UNIFIED_LEDGER strategy_semantics=D134_EXECUTION_CORE_UNCHANGED fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         _Symbol,
                         AccountInfoString(ACCOUNT_CURRENCY),

@@ -587,4 +587,90 @@ MAP hourly state
 
 MAP through FVG receives 15m / 1h / 4h / 24h signed-return, MFE, and MAE labels. Exact fill-time virtual barriers are intentionally deferred to D-142B so the first instrumentation change can be parity-tested in isolation.
 
-Status: **code prepared / compile pending / audit OFF-ON parity pending**.
+Status: **D-142A parity PASS; first six-symbol 2025 panel analyzed.**
+
+
+## D-142A six-symbol stage audit — front-end escalation
+
+The first post-parity panel used BTCUSD, CADJPY, GBPCAD, GOLD, SILVER, and USDJPY. It confirmed that the audit population is large enough for stage research and revealed that the next question must move upstream from CHoCH to direction formation.
+
+### Direction/Root timing
+
+Continuation medians:
+
+```text
+owner start -> Root causal structure: LONG 39.5h / SHORT 48.5h
+PLAN -> Root contact:              LONG  6.5h / SHORT  9.0h
+owner age at Root contact:         LONG 59h   / SHORT 73h
+```
+
+One stable owner can generate many later Root/PLAN opportunities. Among continuation owner episodes, median PLAN count was 9, p90 43, maximum 166. This does not imply 166 trades, but it proves repeated opportunity inheritance under one persistent directional owner.
+
+### H1 direction warning
+
+For each of the six symbols, future raw 24h return following H1-LONG states was lower than following H1-SHORT states. 42/60 comparable symbol-month blocks had the same inverse ordering. This is the strongest current reason to inspect map formation/refresh before adding downstream trigger filters.
+
+### Root contact is not equivalent to trend confirmation
+
+For continuation scenarios, 24h direction correctness changed approximately from:
+
+```text
+PLAN:         LONG 53.3% / SHORT 38.7%
+ROOT_CONTACT: LONG 54.5% / SHORT 49.5%
+```
+
+Mean signed 24h response from contact was positive for both LONG and SHORT. Root contact can therefore contain a local reaction even if the higher-timeframe directional owner is stale or wrong for the final objective horizon.
+
+### D-143 hypothesis set
+
+Do not convert the observations into owner-age or Root-count cutoffs. Instrument the causal variables first:
+
+```text
+INITIAL_BOS timing
+continuation BOS timing/count
+protected-swing update timing
+latest protected break
+owner age / last-BOS age
+all Root creation identities and ordinals
+Root origin/create delay
+Root create -> PLAN delay
+PLAN -> physical contact delay
+all physical contacts, including NO_PREPLAN
+H1 and M30 context at Root create/contact
+```
+
+Then test whether direction accuracy decays with age, refreshes after continuation BOS, changes by Root ordinal, or only appears as a short-lived reaction at contact.
+
+
+## D-143 front-end causal panel follow-up
+
+The unified D-143 six-symbol rerun confirms that the negative baseline is not explained by one downstream defect alone. H1/M30 bearish continuation structure is weak as a forward classifier, but Root Contact frequently recovers local scenario-direction response. The current chain then loses a large part of that response by CHoCH/FVG. Repeated scenarios from the same directional/structure premise materially amplify losing streaks, but one-trade-per-premise counterfactuals remain far below the desired win rate.
+
+This moves the evidence gate from static front-end filtering to standardized exact-tick entry timing. D-144 measures the same-direction and flipped-direction first-hit outcomes at Root Contact, Sweep, CHoCH, FVG and actual Fill without changing any strategy rule.
+
+---
+
+## D-144 GOLD exact-tick runner clue
+
+The first D-144 exact-tick barrier run was restricted to GOLD 2025 because the full stage barrier population made Strategy Tester roughly 9x slower. This one-symbol result is research evidence, not a strategy promotion.
+
+Continuation actual fills:
+
+| Outcome geometry | Wins / 51 | Hit rate |
+| --- | ---: | ---: |
+| current structural TP | 14 / 51 | 27.45% |
+| +1R before -1R | 30 / 51 | 58.82% |
+| +1.5R before -1R | 25 / 51 | 49.02% |
+| +2R before -1R | 20 / 51 | 39.22% |
+
+This does not justify selecting a fixed R from the table. It proves a more useful fact: a substantial fraction of current eventual losers first become profitable, and the transition from `1R reaction` to `multi-R delivery` is now a separable research problem.
+
+D-145 therefore asks what market state distinguishes:
+
+```text
+Fill -> +1R -> SL before 2R
+vs
+Fill -> +1R -> 2R+
+```
+
+using only information causally known at Fill and at the first +1R touch.

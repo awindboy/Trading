@@ -329,6 +329,50 @@ actual-fill direction-flipped mirror:    1R / 2R / 3R
 
 These tick-order virtual barriers are **not implemented in D-142A**. No shadow result may ever affect same-run strategy authorization.
 
+
+## Six-symbol D-142A front-end evidence
+
+The first contrast panel is no longer only a downstream-trigger audit. It exposed a more upstream question.
+
+```text
+H1 active-map LONG vs SHORT future raw 24h return ordering:
+BTCUSD  -0.143%p
+CADJPY  -0.066%p
+GBPCAD  -0.012%p
+GOLD    -0.115%p
+SILVER  -0.192%p
+USDJPY  -0.042%p
+```
+
+All six are inverse to the ordering expected from a useful directional classifier. 42/60 comparable symbol-month blocks show the same inverse ordering. This is a warning, not proof of an anti-signal, because hourly snapshots are serially dependent.
+
+The current owner can persist for days while many new Root/PLAN opportunities inherit it. Median owner age at physical preplanned contact is about 59h LONG and 73h SHORT. The owner/trend state nevertheless remained exactly unchanged from PLAN to contact in all 4,809 paired scenarios, so the issue is not a simple map-flip bookkeeping defect.
+
+At Root contact, local 24h signed response becomes positive on average in both directions and direction correctness improves materially for SHORT. This makes the core research question:
+
+```text
+Does the H1/M30 owner classify an already-completed move too late,
+while a Root contact still produces a local reaction that is incorrectly
+interpreted as continuation toward a distant external objective?
+```
+
+## D-143 FRONT-END CAUSAL AUDIT
+
+Priority order is now:
+
+```text
+INITIAL_BOS / direction formation
+→ owner persistence and continuation refresh
+→ Root creation and Root ordinal under owner
+→ PLAN selection
+→ physical Root contact
+→ only then downstream Sweep / CHoCH / FVG / Entry
+```
+
+D-143 logs all research rows into the normal `InpEventCsvFile` with an `EDGE_AUDIT_*` event prefix. No separate audit file is used.
+
+The eventual strategy target is `>=50%` realized trade win rate. A variant that merely removes some losses without demonstrating a credible path to that target is not sufficient.
+
 ## Simple benchmarks
 
 After the audit harness:
@@ -379,3 +423,47 @@ open 2021
 ```
 
 until the base-edge audit identifies a specific causal failure or surviving edge.
+
+
+## D-143 conclusion / D-144 transition
+
+The six-symbol D-143 panel does not support a simple explanation that all losses begin with a wrong direction. Bearish H1/M30 continuation classification is weak, but Root contact frequently produces the intended local reaction before the current trigger chain loses it. Repeated Root/PLAN fan-out amplifies bad directional hypotheses but suppressing duplicates alone remains far below the `>=50%` win-rate objective.
+
+Therefore the next evidence gate is D-144 exact tick barrier measurement. The decisive table will be:
+
+| Stage | Same-dir 1R WR | Same-dir 1.5R WR | Same-dir 2R WR | Flipped 1R WR |
+|---|---:|---:|---:|---:|
+| ROOT_CONTACT | ? | ? | ? | ? |
+| SWEEP | ? | ? | ? | ? |
+| CHOCH | ? | ? | ? | ? |
+| FVG | ? | ? | ? | ? |
+| ACTUAL_FILL | ? | ? | ? | ? |
+
+No strategy redesign occurs until this table is measured across the same six-symbol panel and checked by symbol/month/direction.
+
+---
+
+## Current runner-extension research state — D-145
+
+GOLD 2025 D-144 established that current actual Fill is not equivalent to a 27% directional signal when standardized to a 1R objective. The same 51 continuation fills produced a 58.82% exact +1R-before-SL hit rate, while +2R fell to 39.22%.
+
+This is **not** authority for a 1R TP. The project objective remains a strategy with `>=50%` win rate while preserving meaningful reward greater than 1R. The current research question is therefore the conditional continuation mechanism:
+
+> after the same filled entry has proven itself by reaching +1R, which causally-known market background and newly formed structure distinguish 2R+ delivery from 1R exhaustion?
+
+Pre-registered descriptive axes for D-145:
+
+```text
+HTF directional maturity / remaining structural room
+current M30 net directional advance
+current M30 same-side progression
+current M30 leg expansion / contraction
+protected-break churn
+selected-FVG -> Fill maximum pre-fill displacement
+selected-FVG -> Fill adverse retrace
+Fill -> first +1R time and pre-1R MAE
+new H1/M30/M1 same-direction vs opposite structure events after Fill
+current M1 state at +1R
+```
+
+No axis has a frozen trading threshold. Generalization requires the qualitative relationship to survive multiple independent cuts.

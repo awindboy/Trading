@@ -1,70 +1,102 @@
-# EDGE_AUDIT_V1 Measurement Contract
+# EDGE_AUDIT_V1 / D-144 Exact-Tick Reaction-Entry Measurement Contract
 
 Last updated: 2026-08-20
-Repository base: `260d14e714bbd635448d466d12d848b9ef80ba39`
-Prepared build: `1.92R1L4`
-Phase: `BASE_EDGE_AUDIT_V1_STAGE_FORWARD_SHADOW`
+Current research build: `1.92R1L5`
+Current phase: `FRONT_END_CAUSAL_AUDIT_V1_UNIFIED_LEDGER`
 Strategy authority: **NONE**
-Validation: **PREPARED / COMPILE + AUDIT-OFF/AUDIT-ON PARITY PENDING**
 
 ## Purpose
 
-The current question is not which filter improves the strategy. It is:
+The audit measures where predictive information appears or disappears. It may observe and log only. It may not authorize, reject, delay, resize, merge, cancel, or otherwise change a strategy trade.
 
-> At what point, if any, does the deterministic pipeline contain predictive information about future price?
-
-D-142A measures this without changing the strategy being measured.
-
-## Non-authority contract
-
-The audit may observe and log only. It cannot:
+The current research priority is the front of the chain:
 
 ```text
-authorize / reject / rank / delay / resize / merge / cancel
-change direction / Entry / SL / TP / exposure state
+H1/M30 structure formation
+→ persistent directional owner
+→ H1/M30/M15 Root creation
+→ PLAN selection
+→ physical Root contact
+→ preplanned Root contact
+→ Sweep / CHoCH / FVG / Fill identity
 ```
 
-Audit output is a separate CSV. Audit file-open failure disables only the audit.
+This priority follows the six-symbol 2025 evidence that H1 persistent-map direction may lag future price while Root contact still shows a local directional response.
 
-## Why MAP uses cadence sampling
+## Unified ledger
 
-MAP is persistent state. Measuring only MAP transition events would bias the sample toward moments of structural change.
-
-D-142A therefore samples the final highest active MAP once per H1 wall-clock cadence after the complete same-timestamp MTF group.
-
-The intended funnel is:
+D-143 uses only the normal:
 
 ```text
-MAP hourly state
-        ↓ selected subset
-PLAN = MAP + eligible Root + objective family
-        ↓
-ROOT_CONTACT
-        ↓
+InpEventCsvFile
+```
+
+There is **no separate Edge Audit CSV input**.
+
+The standard six-column schema remains:
+
+```text
+observed_at,event,timeframe,available_at,object_id,detail
+```
+
+Research rows are distinguished only by:
+
+```text
+event starts with EDGE_AUDIT_
+```
+
+Audit rows are written directly to the existing event handle and do not increment the baseline logger's row counters. This permits audit OFF/ON parity after filtering `EDGE_AUDIT_*` rows.
+
+## Shadow populations
+
+D-143 records:
+
+```text
+STRUCTURE_INITIAL_BOS  H1/M30
+STRUCTURE_BOS          H1/M30 continuation BOS
+STRUCTURE_PROTECTED_BREAK H1/M30
+MAP                    hourly highest active map
+ROOT_CREATED           every active Root created by H1/M30/M15 structure
+PLAN                   baseline scenario PLAN
+PHYSICAL_ROOT_CONTACT  every observed Root contact, including NO_PREPLAN
+ROOT_CONTACT           preplanned scenario-bound contact
 SWEEP
-        ↓
 CHOCH
-        ↓
 FVG
-        ↓
-ACTUAL_FILL
+ACTUAL_FILL identity
 ```
 
-PLAN must not be mislabeled as pure MAP evidence.
+The distinction between `PHYSICAL_ROOT_CONTACT` and `ROOT_CONTACT` is deliberate. It allows offline comparison of the complete Root-contact population against the subset selected by map/objective planning.
 
-## Snapshot stages
+## Front-end causal fields
 
-- `MAP`: final highest active H1, otherwise mature M30; reference is the M1 close available at that timestamp.
-- `PLAN`: existing scenario PLAN freeze; reference is `plan_reference_price`.
-- `ROOT_CONTACT`: Root-contact M1 bar close.
-- `SWEEP`: accepted D-127 Sweep bar close; current `SEQUENCE_ONLY` semantics remain unchanged.
-- `CHOCH`: accepted D-127 protected-break CHoCH bar close.
-- `FVG`: decision-cycle close at unique widest causal-fresh FVG selection.
-- `ACTUAL_FILL`: actual fill price, logged for identity/joining in D-142A.
+The audit records enough state to join direction formation to Root/PLAN/contact without hindsight:
 
-## Forward labels — D-142A
+```text
+owner ID and owner start
+owner age
+last INITIAL_BOS
+last continuation BOS
+last same-direction BOS
+last protected-swing update
+last protected break
+continuation-BOS count
+compatible Root event/candidate ordinals under H1 and M30 owners
+PLAN ordinal under the frozen active owner
+Root TF / source recognizer / origin / creation timestamp
+Root origin -> creation delay
+H1 and M30 owner context at Root creation
+Root creation -> PLAN/contact delay
+PLAN -> contact delay
+H1/M30 context at contact
+PLAN-frozen owner vs current owner/direction
+```
 
-For `MAP` through `FVG`, fixed wall-clock horizons are:
+No owner-age, Root-count, or BOS-age cutoff is a strategy rule in D-143.
+
+## Forward labels
+
+For causal stages with a bar-close reference price:
 
 ```text
 15m
@@ -73,9 +105,7 @@ For `MAP` through `FVG`, fixed wall-clock horizons are:
 24h
 ```
 
-Only subsequently completed M1 bars may update the path.
-
-Output:
+record:
 
 ```text
 signed_return_pct
@@ -83,60 +113,15 @@ mfe_pct
 mae_pct
 ```
 
-MAE is negative.
+Only subsequently completed M1 bars may contribute. If a target falls in a session gap, use the last causally available close at or before the target; never backdate the reopening price.
 
-If a target falls in a market/session gap, use only the last causally available close at or before the target. `end_lag_seconds` records how stale that mark is. A future reopening price is never backdated to the target.
+The M1 bar that creates a new same-timestamp strategy event is fed to existing snapshots **before** the new event snapshot is created, so a new snapshot cannot count its own creation bar as future excursion.
 
-## Same-timestamp causality
+`ACTUAL_FILL` remains identity-only in this build. Exact tick-order 1R/1.5R/2R/3R virtual barriers are deferred until the front-end direction/Root problem is understood.
 
-At timestamp `T`, the M1 bar that has just completed must update **old** audit snapshots before any new MAP/PLAN/Contact/Sweep/CHoCH/FVG snapshot at `T` is created.
+## Bootstrap
 
-Therefore the audit receives the completed M1 bar at the beginning of the timestamp group, before the strategy processes new facts in that group.
-
-A CHoCH/FVG snapshot cannot use the bar that created it as its own future MFE/MAE.
-
-## Why ACTUAL_FILL exact virtuals are deferred
-
-Actual fills can occur inside an M1 bar. M1 OHLC cannot prove fill-before-extreme ordering inside that minute.
-
-D-142A therefore logs fill identity only and does **not** pretend M1 data provides exact fill-to-horizon or 1R/2R/3R first-hit ordering.
-
-After D-142A proves zero strategy impact, D-142B may add Strategy Tester tick-order shadow barriers:
-
-```text
-same direction 1R / 2R / 3R
-flipped direction 1R / 2R / 3R
-```
-
-This separation keeps the first instrumentation change narrow and auditable.
-
-## CSV schema
-
-```text
-observed_at
-event
-stage
-symbol
-stage_at
-snapshot_id
-scenario_id
-scope
-direction
-reference_price
-horizon_seconds
-value1
-value2
-value3
-detail
-```
-
-For `FORWARD_LABEL`:
-
-```text
-value1 = signed_return_pct
-value2 = mfe_pct
-value3 = mae_pct
-```
+H1/M30 tracker state and active Root metadata are reconstructed during bootstrap so runtime ages and ordinals are causally correct. High-volume bootstrap research snapshots are not emitted. Runtime snapshots begin after bootstrap.
 
 ## Required parity test
 
@@ -147,21 +132,11 @@ A. InpEnableEdgeAudit = false
 B. InpEnableEdgeAudit = true
 ```
 
-Everything else must be identical.
+Use a different `InpEventCsvFile` name for A and B.
 
-Required same main-strategy path:
+Compare after deleting/filtering all rows whose event starts with `EDGE_AUDIT_`. The remaining six-column rows must be exactly identical. Any remaining strategy-path difference invalidates D-143.
 
-```text
-PLAN / Root Contact / Sweep / CHoCH / FVG
-Entry / SL / TP / contributor merge
-pending / fill / cancel / close / divergence
-```
-
-Only B may create the separate edge-audit CSV.
-
-Any strategy difference invalidates D-142A research output.
-
-## Recommended first smoke
+Recommended smoke:
 
 ```text
 GOLD
@@ -172,37 +147,161 @@ FIXED_RISK_MONEY = 100
 ROOT_OB_DISTAL_20
 ```
 
-After parity, a first mixed edge panel should include:
+## Post-parity research panel
 
 ```text
-GOLD
 BTCUSD
-GBPCAD
 CADJPY
+GBPCAD
+GOLD
 SILVER
 USDJPY
 ```
 
-This intentionally contains previous positive and strongly negative continuation symbols.
+Only one unified CSV per symbol is needed.
 
-## Interpretation
+## First questions
+
+1. Does INITIAL_BOS itself predict its declared direction at 1h/4h/24h?
+2. Does continuation BOS refresh that predictive edge or simply extend a stale owner?
+3. Does direction accuracy decay with owner age or last-BOS age without arbitrary thresholds?
+4. Do later compatible Roots under the same owner degrade versus early Roots?
+5. Does Root contact create only short-horizon reaction or sustained continuation?
+6. Is PLAN selecting better or worse Roots than the full physical-contact population?
+7. Are H1 and M30 relationships symmetric across LONG/SHORT and across symbols/months?
+
+Do not turn exploratory buckets into production cutoffs without cross-symbol/time validation.
+
+## Explicit non-actions
+
+D-143 does not:
 
 ```text
-MAP ≈ null
--> re-evaluate the fundamental direction hypothesis.
-
-MAP positive, PLAN/contact stronger
--> Root/context selection may add information.
-
-PLAN/contact positive, Sweep/CHoCH deteriorate
--> trigger timing / causal ownership becomes the primary suspect.
-
-CHOCH positive, FVG deteriorates
--> FVG selection/retest timing becomes the suspect.
+change AGENTS.md
+change EA_SPEC.md
+change Map/Root/Sweep/CHoCH/FVG definitions
+add SHORT veto
+add owner-age cutoff
+add Root-count cutoff
+add RR cap
+add PD veto
+restore D-126 filters
+open 2021
 ```
 
-Do not add a SHORT veto, RR cap, time cutoff, PD veto, generic score, or restore D-126 wholesale from this first audit.
-
-## 2021
-
 `2021` remains untouched.
+
+
+## D-144 exact-tick barrier extension
+
+D-144 build identity:
+
+```text
+1.92R1L6
+REACTION_ENTRY_BARRIER_AUDIT_V1_EXACT_TICK
+```
+
+The D-143 forward-label population remains unchanged. D-144 adds exact-tick virtual barrier trackers only; it does not change strategy state.
+
+### Stage-comparison R
+
+At a preplanned physical Root contact, the first tick at or after the causally available M1 contact close freezes:
+
+```text
+contact executable entry = Ask for LONG / Bid for SHORT
+root distal = Root.bottom - 0.20*Root.width for LONG
+              Root.top    + 0.20*Root.width for SHORT
+contact_R = abs(contact executable entry - root distal)
+```
+
+This exact absolute `contact_R` is reused at `ROOT_CONTACT`, `SWEEP`, `CHOCH`, and `FVG`. Each later stage enters virtually at the first executable tick after that stage becomes known but keeps the same R distance. This isolates timing/information decay from changing stop geometry.
+
+At each stage:
+
+```text
+SAME_DIRECTION
+FLIPPED_DIRECTION
+
++1.0R vs -1R
++1.5R vs -1R
++2.0R vs -1R
+```
+
+LONG barriers are evaluated on Bid; SHORT barriers on Ask. Therefore target/stop ordering is exact to Strategy Tester tick order.
+
+### ACTUAL_FILL R
+
+For an actual fill:
+
+```text
+fill_R = abs(fill_price - normalized_sl)
+```
+
+SAME_DIRECTION uses the actual fill and risk. A flipped-direction mirror uses the same numeric fill/risk only as a direction-isolation research control and is explicitly labeled non-executable as an opposite market fill.
+
+If `observed_at != fill_at` at whole-second precision, D-144 refuses to reconstruct exact fill barrier ordering and writes `EDGE_AUDIT_BARRIER_SKIPPED`.
+
+### Events
+
+```text
+EDGE_AUDIT_CONTACT_RISK_ANCHOR
+EDGE_AUDIT_BARRIER_ARMED
+EDGE_AUDIT_BARRIER_ACTIVATED
+EDGE_AUDIT_BARRIER_RESULT
+EDGE_AUDIT_BARRIER_SKIPPED
+EDGE_AUDIT_BARRIER_CENSORED
+```
+
+`EDGE_AUDIT_BARRIER_RESULT` is one row per target level. `TP_FIRST` and `SL_FIRST` are independent for each target. A 1R target can therefore win while the same path later loses the 1.5R/2R tests.
+
+There is no arbitrary time cutoff. Unresolved trackers are right-censored only at tester termination.
+
+---
+
+## D-145 lightweight runner-context contract
+
+D-144 multi-stage barriers are superseded for broad research runs because they impose excessive per-tick cost. D-145 keeps the unified event ledger but disables:
+
+```text
+hourly MAP forward labels
+structure/Root population forward labels
+Root Contact/Sweep/CHoCH/FVG virtual barriers
+flipped-direction virtual barriers
+```
+
+Tick-active research objects are limited to:
+
+```text
+1. selected FVG waiting for actual Fill
+   -> measure pre-fill directional displacement and adverse return
+
+2. actual Fill
+   -> measure exact 1R / 2R / 3R / structural-TP vs normalized SL
+```
+
+Snapshot A — `EDGE_AUDIT_RUNNER_FILL_SNAPSHOT` freezes current:
+
+```text
+scenario / direction / scope
+actual fill / normalized SL / R geometry
+Root / FVG identities and geometry
+PLAN/Contact/Sweep/CHoCH/FVG elapsed times
+selected-FVG -> Fill max favorable/adverse displacement
+current highest map identity
+H1/M30 owner/BOS/protected-break state
+H1/M30 protected->external range position and remaining room in R
+current 12-wave M30 progression, net directional advance, PB count, expansion
+current M1 structure state
+```
+
+Snapshot B — `EDGE_AUDIT_RUNNER_1R_SNAPSHOT` freezes the same current background at the first exact +1R touch plus:
+
+```text
+Fill -> +1R elapsed time
+R/hour descriptive speed
+maximum adverse R before +1R
+new same/opposite H1/M30/M1 structure-event counts since Fill
+new same/opposite protected-break counts since Fill
+```
+
+No logged field has strategy authority. No threshold is selected by D-145.

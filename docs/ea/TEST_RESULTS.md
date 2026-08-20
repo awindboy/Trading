@@ -570,3 +570,54 @@ strongest negative-edge warning.
 The next strategy research step is not another filter search.
 
 It is `EDGE_AUDIT_V1`.
+
+---
+
+## 2026-08-20 — D-142A parity PASS and first six-symbol front-end audit
+
+### GOLD January parity smoke
+
+D-142A `1.92R1L4` was run with identical GOLD January 2025 conditions, first with `InpEnableEdgeAudit=false`, then `true`.
+
+The two main strategy ledgers were byte-identical:
+
+```text
+SHA-256 = db4e312e6699dc162a873f83289ec1221bb030b50a2945a320c830e6f793ea60
+```
+
+Stage counts, scenario identities/timestamps, forward-label completeness, right-censor accounting, and basic MFE/MAE causal consistency also passed. D-142A shadow instrumentation is therefore accepted as non-authoritative measurement infrastructure.
+
+### First 2025 contrast panel
+
+```text
+BTCUSD / CADJPY / GBPCAD / GOLD / SILVER / USDJPY
+```
+
+Audit population:
+
+```text
+MAP = 35,284
+PLAN = 7,589
+ROOT_CONTACT = 4,809
+SWEEP = 3,753
+CHOCH = 1,746
+FVG = 1,550
+ACTUAL_FILL = 519
+execution divergence = 0 in these six runs
+```
+
+Front-end continuation timing:
+
+```text
+owner start -> Root causal structure median: LONG 39.5h / SHORT 48.5h
+PLAN -> Root contact median:              LONG  6.5h / SHORT  9.0h
+owner age at Root contact median:         LONG 59h   / SHORT 73h
+```
+
+Every paired PLAN/contact retained the same owner ID, active-map TF, H1 state, M30 state, and scenario direction. This rules out a simple map-flip-with-stale-plan explanation.
+
+For H1-active hourly MAP states, future raw 24h return after LONG states was lower than after SHORT states on all six symbols. 42/60 comparable symbol-month blocks showed the same inverse ordering. Because hourly states are serially dependent, this is a research warning rather than a standalone significance claim.
+
+At Root contact, continuation 24h direction correctness was approximately `54.5%` LONG / `49.5%` SHORT versus `53.3%` LONG / `38.7%` SHORT at PLAN, and mean signed 24h response from contact was positive for both directions. This supports a new distinction between local Root reaction and sustained higher-timeframe continuation.
+
+Decision: move the next instrumentation step upstream to D-143 front-end causal audit before implementing fill-barrier or CHoCH strategy variants.
