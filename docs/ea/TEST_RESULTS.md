@@ -621,3 +621,27 @@ For H1-active hourly MAP states, future raw 24h return after LONG states was low
 At Root contact, continuation 24h direction correctness was approximately `54.5%` LONG / `49.5%` SHORT versus `53.3%` LONG / `38.7%` SHORT at PLAN, and mean signed 24h response from contact was positive for both directions. This supports a new distinction between local Root reaction and sustained higher-timeframe continuation.
 
 Decision: move the next instrumentation step upstream to D-143 front-end causal audit before implementing fill-barrier or CHoCH strategy variants.
+
+---
+
+## 2026-08-21 — D-144 GOLD exact-tick result and D-145 transition
+
+The first D-144 run was restricted to GOLD 2025 because the multi-stage exact-tick barrier population increased tester time by roughly 9x while file size increased only about 15%, indicating per-tick tracker fan-out as the dominant cost.
+
+Continuation actual fills:
+
+```text
+51 fills
+structural TP = 14 wins / 27.45%
++1R before SL = 30 / 58.82%
++1.5R before SL = 25 / 49.02%
++2R before SL = 20 / 39.22%
+
++1R direction split:
+LONG 21 / 35 = 60.00%
+SHORT 9 / 16 = 56.25%
+```
+
+Among 37 continuation trades that eventually lost under the existing structural objective, 16 first reached +1R, 11 reached +1.5R, and 7 reached +2R. This demonstrates that the low structural-TP win rate is not equivalent to a uniformly wrong filled direction.
+
+The result is one symbol-year and does not establish a fixed TP. D-145 therefore measures the causal difference between `+1R then exhaust before 2R` and `+1R then reach 2R+`, while removing the D-144 multi-stage barrier fan-out.

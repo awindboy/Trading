@@ -5821,3 +5821,214 @@ Exact tick-order fill virtual barriers and CHoCH-reference strategy variants rem
 AGENTS.md = unchanged
 EA_SPEC.md = unchanged
 ```
+
+---
+
+## D-144 — Measure Root reaction and entry timing with standardized exact-tick barriers before changing strategy
+
+Status: ANALYZED ON GOLD 2025 / SUPERSEDED FOR BROAD RUNS BY D-145 / STRATEGY AUTHORITY UNCHANGED — 2026-08-21
+
+### Trigger
+
+The six-symbol D-143 front-end panel showed three simultaneous effects:
+
+```text
+1. H1/M30 bearish continuation classification is weak as an unconditional forward direction signal.
+2. Root Contact frequently recovers a local scenario-direction response, including in trades that later lose.
+3. The response deteriorates materially by the current CHoCH/FVG timing, while one directional premise can fan out into repeated Root/PLAN exposure.
+```
+
+Simple static front-end filters did not reveal a robust path to the user's eventual `>=50%` realized win-rate objective. D-144 therefore changes the measurement geometry, not the strategy.
+
+### Frozen D-144 measurement
+
+Research identity:
+
+```text
+build = 1.92R1L6
+phase = REACTION_ENTRY_BARRIER_AUDIT_V1_EXACT_TICK
+strategy semantics = D134_EXECUTION_CORE_UNCHANGED
+strategy authority = NONE
+```
+
+Stages:
+
+```text
+ROOT_CONTACT
+SWEEP
+CHOCH
+FVG
+ACTUAL_FILL
+```
+
+Frozen targets:
+
+```text
++1.0R vs -1R
++1.5R vs -1R
++2.0R vs -1R
+```
+
+No target is chosen by optimization.
+
+### Comparable stage R
+
+At each preplanned physical Root Contact, the first tick at/after the causally known contact close freezes:
+
+```text
+ROOT_OB_DISTAL_20 stop geometry
++
+market-executable scenario-direction entry side
+=
+contact_R
+```
+
+The same absolute `contact_R` distance is reused for ROOT_CONTACT, SWEEP, CHOCH and FVG virtual market entries. This isolates stage timing/information loss from a changing R scale.
+
+Every stage is measured in:
+
+```text
+SAME_DIRECTION
+FLIPPED_DIRECTION
+```
+
+LONG outcome barriers use Bid and SHORT outcome barriers use Ask. First-hit ordering is therefore taken from exact tester ticks, not reconstructed from M1 OHLC.
+
+### Actual fill
+
+ACTUAL_FILL uses:
+
+```text
+fill_R = abs(fill_price - normalized_sl)
+```
+
+The same-direction tracker is the directly relevant standardized entry-edge test. The flipped tracker uses the same numeric fill and R only as a direction-isolation control and is explicitly non-executable as an opposite market fill.
+
+If the fill is not observed in the same whole second as `fill_at`, exact fill barrier reconstruction is refused and logged as skipped.
+
+### Governance
+
+D-144 does not add:
+
+```text
+SHORT veto
+owner-age cutoff
+Root-count cutoff
+H1/M30 agreement gate
+CHoCH reference filter
+TP replacement
+SL replacement
+```
+
+A stage crossing 50% in pooled 2025 data is not sufficient for promotion. Breadth by symbol/month/direction and later untouched validation remain required.
+
+`2021 = KEEP UNTOUCHED`.
+
+### First exact-tick evidence — GOLD 2025
+
+```text
+continuation fills = 51
+structural TP winners = 14 / 27.45%
++1R before SL = 30 / 58.82%
++1.5R before SL = 25 / 49.02%
++2R before SL = 20 / 39.22%
+
++1R split:
+LONG 21/35 = 60.00%
+SHORT 9/16 = 56.25%
+```
+
+The stage/mirror fan-out increased tester time by roughly 9x, so D-144 is retained as evidence but not used for broad runner-context runs.
+
+---
+
+## D-145 — Study 1R exhaustion versus 2R+ delivery from causal market context, not R optimization
+
+Status: PREPARED LIGHTWEIGHT SHADOW RESEARCH / STRATEGY AUTHORITY UNCHANGED — 2026-08-21
+
+### Trigger
+
+The first D-144 exact-tick run on GOLD 2025 showed that the same continuation fills behave very differently under standardized reward geometry:
+
+```text
+51 continuation fills
+current structural-TP winners = 14 / 51 = 27.45%
++1R before -1R              = 30 / 51 = 58.82%
++1.5R before -1R            = 25 / 51 = 49.02%
++2R before -1R              = 20 / 51 = 39.22%
+```
+
+This is not permission to choose the R point whose pooled hit rate looks best. The project objective is `>=50%` win rate with meaningful reward greater than 1R, so the research problem is now conditional continuation:
+
+> among entries that already prove themselves by reaching +1R, what causally-known market background distinguishes 2R+ delivery from exhaustion before 2R?
+
+### D-145 measurement identity
+
+```text
+build = 1.92R1L7
+phase = RUNNER_MARKET_CONTEXT_AUDIT_V1_LIGHTWEIGHT
+strategy semantics = D134_EXECUTION_CORE_UNCHANGED
+strategy authority = NONE
+```
+
+The expensive D-144 Root/Sweep/CHoCH/FVG mirror-barrier fan-out is removed. D-143 front-end forward labels are also disabled because that census is complete.
+
+Tick-active research objects are limited to:
+
+```text
+selected execution FVG waiting for actual Fill
+actual filled runner
+```
+
+### Fill snapshot
+
+`EDGE_AUDIT_RUNNER_FILL_SNAPSHOT` freezes only information causally known at Fill, including:
+
+```text
+current H1/M30 map/owner/BOS/PB state
+current H1/M30 protected->external range position and remaining room in actual R
+current latest-12 M30 progression
+current M30 net directional advance normalized by mean leg size
+current M30 PB count and leg expansion
+current M1 state
+Root/FVG geometry and stage ages
+selected-FVG -> Fill prospective max favorable/adverse displacement
+structural objective room in actual Fill-to-SL R
+```
+
+### First +1R snapshot
+
+At the first exact +1R touch before SL, `EDGE_AUDIT_RUNNER_1R_SNAPSHOT` records the current market state again plus:
+
+```text
+Fill -> +1R elapsed time
+max adverse R before +1R
+new same/opposite H1/M30/M1 directional events since Fill
+new same/opposite protected breaks since Fill
+```
+
+Exact observational labels remain:
+
+```text
+1R before SL
+2R before SL
+3R before SL
+structural TP before SL
+```
+
+### Governance
+
+D-145 does not choose or test a trading threshold. In particular it does not add:
+
+```text
+fixed 1.xR TP
+owner-age cutoff
+FVG-retest-time cutoff
+range-position cutoff
+M30 progression/advance cutoff
+runner score
+```
+
+A candidate mechanism must preserve the direction of its relationship across LONG/SHORT, calendar blocks, additional symbols, and later untouched evidence. Numerical cutoffs are downstream implementation questions only after a structural mechanism survives.
+
+`2021 = KEEP UNTOUCHED`.
