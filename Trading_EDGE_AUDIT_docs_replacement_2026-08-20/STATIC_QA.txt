@@ -1,0 +1,36 @@
+EDGE_AUDIT_V1 D-142A static QA
+Date: 2026-08-20
+Target main: 260d14e714bbd635448d466d12d848b9ef80ba39
+
+Checks completed in ChatGPT runtime:
+- apply_edge_audit_v1.py: Python syntax compile PASS
+- compare_edge_audit_parity.py: Python syntax compile PASS
+- compare_edge_audit_parity.py self-test against identical GOLD.csv: PASS (6,360 rows)
+- EdgeAuditV1.mqh delimiter sanity: parentheses/braces/brackets balanced
+- D-142A module contains no tick-level virtual barrier implementation
+- ACTUAL_FILL is identity-only; D-142B is explicitly deferred
+- docs updated to current repository base commit
+- patcher source guards target exact Git blobs:
+  EA        33912d32d5861b1d2ccb7e77a9f6a09446db41ac
+  DECISIONS 834ccb6929ead8a3729df14a2c547ed5a07920dc
+- patch anchors were checked against current GitHub source for:
+  position sizing enum/input area
+  PLAN storage
+  Root contact
+  D-127 Sweep
+  D-127 CHoCH
+  D-128A FVG selection
+  fill reconciliation
+  ProcessRuntimeClosedBars timestamp grouping
+  OnInit / OnDeinit / OnTick
+
+Not possible in ChatGPT runtime:
+- MetaEditor/MQL5 compilation
+- MT5 Strategy Tester execution
+
+Required local validation before this build is called validated:
+1. MetaEditor compile = 0 errors.
+2. GOLD 2025-01 audit OFF run.
+3. Identical GOLD 2025-01 audit ON run.
+4. compare_edge_audit_parity.py => PARITY PASS.
+5. Review ON edge-audit CSV for stage/forward-label integrity.

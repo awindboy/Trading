@@ -14,7 +14,7 @@
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - frozen M30 Regime Research V1 variant"
+#property description "Mentor deterministic V1 EA - Regime V1 harness + shadow Base Edge Audit V1"
 
 enum V1StopLossModel
   {
@@ -50,6 +50,18 @@ enum V1PositionSizingMode
    V1_SIZE_EQUITY_PERCENT_RISK=2
   };
 
+// D-142A shadow-only base-edge checkpoints. No strategy authority.
+enum V1EdgeAuditStage
+  {
+   V1_EDGE_STAGE_MAP=0,
+   V1_EDGE_STAGE_PLAN,
+   V1_EDGE_STAGE_ROOT_CONTACT,
+   V1_EDGE_STAGE_SWEEP,
+   V1_EDGE_STAGE_CHOCH,
+   V1_EDGE_STAGE_FVG,
+   V1_EDGE_STAGE_FILL
+  };
+
 //--- execution identity / diagnostics
 input long   InpMagicNumber        = 26081901;
 input bool   InpWriteEventCsv      = true;
@@ -62,6 +74,10 @@ input V1PositionSizingMode InpPositionSizingMode = V1_SIZE_MINIMUM_VOLUME_PARITY
 input double InpFixedRiskMoneyPerTrade = 100.0;
 input double InpEquityRiskPercentPerTrade = 1.0;
 input string InpEventCsvFile       = "mentor_v1_regime_research_v1_compact_events.csv";
+
+// D-142A EDGE_AUDIT_V1 is shadow-only. Default OFF is the parity control.
+input bool   InpEnableEdgeAudit     = false;
+input string InpEdgeAuditCsvFile    = "mentor_v1_edge_audit_v1.csv";
 
 // D-137/D-138 frozen research contract. These are intentionally NOT inputs:
 // 2022 OOS must not be tunable from Strategy Tester parameters.
@@ -2392,6 +2408,16 @@ void PruneD128AM1FvgDetections();
 void ProcessIntegratedExecutionAuthorizationEpoch(const datetime available_at);
 void ManageIntegratedExecution(const MqlTick &tick);
 bool HasManagedAccountExposure();
+
+// D-142A shadow instrumentation; definitions included immediately before OnInit.
+void EdgeAuditResetState();
+bool EdgeAuditInit();
+void EdgeAuditDeinit(const int reason);
+void EdgeAuditOnMapSample(const datetime available_at,const string sample_reason);
+void EdgeAuditOnScenarioStage(const int stage,const int scenario_index,const datetime stage_at,const double reference_price,const string extra);
+void EdgeAuditOnActualFill(const int scenario_index,const datetime observed_at);
+void EdgeAuditOnM1BarBeforeStrategy(const MqlRates &bar,const datetime available_at);
+void EdgeAuditOnTick(const MqlTick &tick);
 
 void LogLiquidityConsumption(const V1LiquidityPool &pool,
                              const MqlRates &bar,
@@ -5049,6 +5075,8 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
                         primary_horizon,
                         ArraySize(family)));
 
+   EdgeAuditOnScenarioStage(V1_EDGE_STAGE_PLAN,n,frozen_at,plan_reference_price,
+                            "baseline_plan_after_map_root_objective_qualification=true");
    g_regime_plan_pass++;
    LogRegimeResearchSnapshot("REGIME_RESEARCH_PLAN_ACCEPTED",
                              draft,
@@ -5280,6 +5308,8 @@ void ProcessD127ScenarioSweepStage(const MqlRates &bar,
       g_scenarios[sidx].strategy_state=V1_STRATEGY_WAITING_TRIGGER;
       D135RemoveIndexValue(g_waiting_sweep_scenario_indices,sidx);
       D135AddUniqueIndex(g_waiting_trigger_scenario_indices,sidx);
+      EdgeAuditOnScenarioStage(V1_EDGE_STAGE_SWEEP,sidx,available_at,bar.close,
+                               "d127_sequence_only_sweep=true");
       g_scenario_sweep_accepts++;
 
       LogLine("SCENARIO_SWEEP_ACCEPTED","M1",available_at,stage_id,
@@ -5317,6 +5347,8 @@ void ProcessD127ScenarioChochStage(const MqlRates &bar,
       g_scenarios[sidx].scenario_choch_at=available_at;
       g_scenarios[sidx].strategy_state=V1_STRATEGY_WAITING_FVG;
       D135RemoveIndexValue(g_waiting_trigger_scenario_indices,sidx);
+      EdgeAuditOnScenarioStage(V1_EDGE_STAGE_CHOCH,sidx,available_at,bar.close,
+                               "d127_generic_protected_break_choch=true");
       g_scenario_choch_accepts++;
 
       LogLine("SCENARIO_CHOCH_ACCEPTED","M1",available_at,g_m1_choch_detection.id,
@@ -5675,6 +5707,8 @@ void ProcessD128AScenarioFvgFreeze(const int scenario_index,
    g_scenarios[scenario_index].selected_fvg_width_ticks=selected.width_ticks;
    g_scenarios[scenario_index].strategy_state=V1_STRATEGY_WAITING_EXECUTION_GEOMETRY;
    D135AddUniqueIndex(g_waiting_execution_geometry_indices,scenario_index);
+   EdgeAuditOnScenarioStage(V1_EDGE_STAGE_FVG,scenario_index,available_at,choch_bar.close,
+                            "unique_widest_causal_fresh_fvg_selected=true");
    g_scenario_fvg_selected++;
 
    LogLine("SCENARIO_FVG_SELECTED",
@@ -7525,6 +7559,7 @@ void MarkScenarioFilled(const int scenario_index,
       g_scenarios[scenario_index].entry_deal_commission=HistoryDealGetDouble(deal_ticket,DEAL_COMMISSION);
       g_scenarios[scenario_index].entry_deal_fee=HistoryDealGetDouble(deal_ticket,DEAL_FEE);
      }
+   EdgeAuditOnActualFill(scenario_index,observed_at);
    g_positions_filled++;
 
    // D-133: once the shared order fills, the implementation master owns the
@@ -9570,6 +9605,8 @@ void BindPreplannedScenarioToRootContact(const V1SourceZone &root,const MqlRates
    g_scenarios[scenario_index].source_contact_bar_open=bar.time;
    g_scenarios[scenario_index].strategy_state=V1_STRATEGY_WAITING_SWEEP;
    D135AddUniqueIndex(g_waiting_sweep_scenario_indices,scenario_index);
+   EdgeAuditOnScenarioStage(V1_EDGE_STAGE_ROOT_CONTACT,scenario_index,available_at,bar.close,
+                            "preplanned_root_contact_bound=true");
    g_scenario_root_contacts++;
 
    LogLine("SCENARIO_ROOT_CONTACT_BOUND","M1",available_at,g_scenarios[scenario_index].id,
@@ -10216,13 +10253,27 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
       if(group_time==0 || events[i].available_at!=group_time)
         {
          if(group_time!=0)
-           { EnsurePostContactRootWatches(group_time,false); RefreshScenarioLayer(group_time,false); }
+           {
+            EnsurePostContactRootWatches(group_time,false);
+            EdgeAuditOnMapSample(group_time,"COMPLETE_TIMESTAMP_GROUP");
+            RefreshScenarioLayer(group_time,false);
+           }
          group_time=events[i].available_at;
          group_pre_m1_authorization_done=false;
          datetime d127_m1_bar_open=0;
          for(int j=i;j<ArraySize(events) && events[j].available_at==group_time;j++)
             if(events[j].tf_index==5) { d127_m1_bar_open=events[j].bar.time; break; }
-         if(d127_m1_bar_open>0) PrepareD127M1SweepDetectorSnapshot(d127_m1_bar_open);
+         if(d127_m1_bar_open>0)
+           {
+            for(int j=i;j<ArraySize(events) && events[j].available_at==group_time;j++)
+              {
+               if(events[j].tf_index!=5)
+                  continue;
+               EdgeAuditOnM1BarBeforeStrategy(events[j].bar,group_time);
+               break;
+              }
+            PrepareD127M1SweepDetectorSnapshot(d127_m1_bar_open);
+           }
          else
            {
             ArrayResize(g_m1_sweep_detector_snapshot,0);
@@ -10239,11 +10290,18 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
       ProcessClosedBar(events[i].tf_index,events[i].bar,events[i].available_at);
      }
    if(group_time!=0)
-     { EnsurePostContactRootWatches(group_time,false); RefreshScenarioLayer(group_time,false); }
+     {
+      EnsurePostContactRootWatches(group_time,false);
+      EdgeAuditOnMapSample(group_time,"COMPLETE_TIMESTAMP_GROUP");
+      RefreshScenarioLayer(group_time,false);
+     }
    ArrayResize(g_m1_sweep_detector_snapshot,0);
    ArrayResize(g_m1_sweep_detections,0);
    g_m1_sweep_detector_bar_open=0;
   }
+
+// D-142A shadow-only BASE EDGE AUDIT V1 implementation.
+#include "EdgeAuditV1.mqh"
 
 int OnInit()
   {
@@ -10260,6 +10318,8 @@ int OnInit()
      }
 
    InitializeAllStructureStates();
+   EdgeAuditResetState();
+   EdgeAuditInit(); // audit failure cannot alter strategy execution
    if(InpWriteEventCsv)
      {
       g_log_handle=FileOpen(InpEventCsvFile,FILE_READ|FILE_WRITE|FILE_CSV|FILE_ANSI|FILE_SHARE_READ,',');
@@ -10274,7 +10334,7 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=1.92R1L3 property_version=1.00 magic=%I64d phase=REGIME_RESEARCH_V1_MULTI_SYMBOL_RISK_SIZING strategy_semantics=D134_EXECUTION_CORE_UNCHANGED fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=1.92R1L4 property_version=1.00 magic=%I64d phase=BASE_EDGE_AUDIT_V1_STAGE_FORWARD_SHADOW strategy_semantics=D134_EXECUTION_CORE_UNCHANGED fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         _Symbol,
                         AccountInfoString(ACCOUNT_CURRENCY),
@@ -10307,6 +10367,7 @@ int OnInit()
 void OnDeinit(const int reason)
   {
    EventKillTimer();
+   EdgeAuditDeinit(reason);
    LogLine("EA_STOP","",TimeCurrent(),"",
            StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d root_contexts_ready=%I64d children_created_strategy_sources=%I64d optional_child_observations=%I64d post_contact_child_events=%I64d children_invalidated_strategy_sources=%I64d legacy_refinements_ready=%I64d legacy_refinements_no_child=%I64d legacy_refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_no_objective=%I64d objective_candidates_frozen=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d m1_sweep_detected=%I64d scenario_sweeps_accepted=%I64d m1_choch_detected=%I64d scenario_choch_accepted=%I64d m1_fvg_detected=%I64d m1_fvg_gap_rejected=%I64d scenario_fvg_candidates=%I64d scenario_fvg_preselection_retests=%I64d scenario_fvg_selected=%I64d scenario_no_causal_fvg=%I64d scenario_ambiguous_fvg=%I64d execution_geometry_ready=%I64d no_r_eligible_objective=%I64d simultaneous_authorization_ambiguous=%I64d exposure_blocked=%I64d execution_infeasible=%I64d order_rejected=%I64d orders_accepted=%I64d positions_filled=%I64d pending_cancellations=%I64d cancel_rejected=%I64d execution_divergences=%I64d positions_closed=%I64d d126_authorized_sweep_events_historical_runtime_dead=%I64d d126_authorized_sweep_pools_historical_runtime_dead=%I64d structural_reaction_created=%I64d source_contacts_superseded_phase4c=%I64d",
                         reason,InitStateName(g_init_state),ArraySize(g_liquidity),g_liquidity_created,g_liquidity_sweeps,g_liquidity_body_deliveries,ArraySize(g_sources),
@@ -10386,6 +10447,7 @@ void OnTick()
      }
    ProcessRuntimeClosedBars((datetime)tick.time);
    ManageIntegratedExecution(tick);
+   EdgeAuditOnTick(tick);
   }
 
 void OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)

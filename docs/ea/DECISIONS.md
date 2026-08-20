@@ -5646,3 +5646,97 @@ Regime Research V1 = OOS-supported research model
 ```
 
 If the regime formula or threshold is changed after viewing 2022, the changed model is `Regime Research V2`. The 2022 period is no longer untouched OOS evidence for that changed model.
+
+---
+
+## D-141 — Cross-symbol position sizing is an execution-only research layer
+
+Status: ACTIVE RESEARCH HARNESS / STRATEGY SEMANTICS UNCHANGED — 2026-08-20
+
+Research build `1.92R1L3` added minimum-volume, fixed-money, and equity-percent sizing modes for cross-symbol testing.
+
+Risk-sized modes use MT5 `OrderCalcProfit` on the already-frozen Entry -> SL geometry. Volume is normalized downward to symbol MIN/MAX/STEP and may under-use target risk but must not intentionally exceed it. `OrderCalcMargin` is diagnostic; `OrderCheck` remains final execution-feasibility authority.
+
+This layer changes no Map, Root, Sweep, CHoCH, FVG, Entry, SL, TP, contributor-merge, or direction/exposure rule. Cross-symbol strategy comparison remains primarily R-based.
+
+```text
+AGENTS.md = unchanged
+EA_SPEC.md = unchanged
+strategy semantics = D134_EXECUTION_CORE_UNCHANGED
+```
+
+---
+
+## D-142 — BASE EDGE AUDIT V1 is shadow-only and precedes strategy redesign
+
+Status: D-142A PREPARED / LOCAL COMPILE + AUDIT-OFF/AUDIT-ON PARITY PENDING — 2026-08-20
+
+### Trigger
+
+The 2025 18-symbol NO-GATE study remained negative after excluding every execution-divergent symbol-year:
+
+```text
+EXTERNAL_CONTINUATION
+901 trades / 165 wins
+-179.573032R
+mean -0.199304R/trade
+planned-barrier-only = -166.492129R
+```
+
+The largest warning is bearish continuation. Therefore the project must first locate whether predictive information exists before adding another strategy filter.
+
+### D-142A decision
+
+Prepared build:
+
+```text
+1.92R1L4
+BASE_EDGE_AUDIT_V1_STAGE_FORWARD_SHADOW
+strategy semantics = D134_EXECUTION_CORE_UNCHANGED
+```
+
+No audit output may authorize/reject/modify/delay/resize/cancel a strategy trade. Audit file-open failure disables only the audit.
+
+D-142A records:
+
+```text
+hourly final highest-MAP state
+PLAN
+ROOT_CONTACT
+SWEEP
+CHOCH
+FVG
+ACTUAL_FILL snapshot
+```
+
+For MAP through FVG it records future 15m / 1h / 4h / 24h directional return, MFE, and MAE from subsequently completed M1 bars only.
+
+MAP is sampled on a fixed H1 cadence after the complete same-timestamp MTF group because MAP is persistent state; transition-only sampling would bias the population.
+
+If a horizon falls in a market gap, only the last causally available close at or before the target is used. A reopening price is not backdated.
+
+ACTUAL_FILL is logged for identity/joining only in D-142A. Exact fill-to-horizon and same-direction/flipped 1R/2R/3R virtual barriers are deliberately deferred to D-142B until D-142A proves strategy parity. This keeps the first instrumentation change narrow.
+
+### Acceptance gate
+
+Before using D-142A evidence:
+
+```text
+MetaEditor compile = 0 errors
+audit OFF fixture = complete
+audit ON identical fixture = complete
+main PLAN/FVG/Entry/SL/TP/order/fill/cancel/close/divergence path = identical
+only audit ON writes the separate audit CSV
+```
+
+Any strategy difference invalidates the audit build.
+
+### Research governance
+
+Do not derive an immediate SHORT veto, RR cap, time cutoff, PD veto, quality score, or D-126 restoration from the 2025 result.
+
+After D-142A identifies where signal quality improves or deteriorates, change one causal hypothesis at a time.
+
+```text
+2021 = KEEP UNTOUCHED
+```
