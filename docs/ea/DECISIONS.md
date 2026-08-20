@@ -6032,3 +6032,80 @@ runner score
 A candidate mechanism must preserve the direction of its relationship across LONG/SHORT, calendar blocks, additional symbols, and later untouched evidence. Numerical cutoffs are downstream implementation questions only after a structural mechanism survives.
 
 `2021 = KEEP UNTOUCHED`.
+
+---
+
+## D-146 — Separate Entry survival from winner continuation; test post-+1R M30 structure before changing exits
+
+Status: PRE-REGISTERED SHADOW RESEARCH / STRATEGY AUTHORITY UNCHANGED — 2026-08-21
+
+### Evidence trigger
+
+D-145 generalized the first useful runner relationship across:
+
+```text
+GOLD 2023 / 2024 / 2025
+BTCUSD 2025
+SILVER 2025
+CADJPY 2025
+```
+
+Among resolved continuation trades that already reached +1R:
+
+```text
+190 comparable +1R successes
+129 reached +2R before SL
+```
+
+At the first +1R moment, eventual +2R runners had lower current M30 protected-to-external range progress in:
+
+```text
+6 / 6 market-year aggregate cells
+11 / 11 comparable market-year x direction cells
+```
+
+This relationship did not generalize as an Entry-success discriminator.
+
+2025 cross-market continuation Fill-to-1R remained:
+
+```text
+132 / 321 = 41.1%
+```
+
+### Decision
+
+Research is split into two explicit problems:
+
+```text
+A. Entry survival: Fill -> +1R
+B. Winner continuation: +1R -> +2R+
+```
+
+D-146 addresses only B.
+
+D-146 will observe M30 structure from exact first +1R until exact +2R-or-SL and test whether outward M30 structure refresh or deterioration explains D-145 maturity exceptions.
+
+### Governance
+
+D-146 has no trade authority and does not authorize:
+
+```text
+fixed 1R/2R TP
+progress threshold
+remaining-room threshold
+M30 maturity Entry veto
+runner score
+TP/SL modification
+direction-specific special rule
+```
+
+`AGENTS.md` and `EA_SPEC.md` remain unchanged.
+
+`2021 = KEEP UNTOUCHED`.
+
+Detailed contracts:
+
+```text
+docs/ea/D145_RUNNER_GENERALIZATION_RESULTS.md
+docs/ea/D146_CONTINUATION_STATE_AUDIT.md
+```

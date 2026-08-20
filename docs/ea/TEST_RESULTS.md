@@ -645,3 +645,121 @@ SHORT 9 / 16 = 56.25%
 Among 37 continuation trades that eventually lost under the existing structural objective, 16 first reached +1R, 11 reached +1.5R, and 7 reached +2R. This demonstrates that the low structural-TP win rate is not equivalent to a uniformly wrong filled direction.
 
 The result is one symbol-year and does not establish a fixed TP. D-145 therefore measures the causal difference between `+1R then exhaust before 2R` and `+1R then reach 2R+`, while removing the D-144 multi-stage barrier fan-out.
+
+---
+
+## 2026-08-21 — D-145 runner generalization panel
+
+Research identity:
+
+```text
+build = 1.92R1L7
+phase = RUNNER_MARKET_CONTEXT_AUDIT_V1_LIGHTWEIGHT
+strategy authority = NONE
+```
+
+Development/generalization panel:
+
+```text
+GOLD 2023
+GOLD 2024
+GOLD 2025
+BTCUSD 2025
+SILVER 2025
+CADJPY 2025
+```
+
+Continuation exact-tick outcomes:
+
+| Market-year | Fill | +1R | +2R | +3R | P(+2R | +1R) |
+|---|---:|---:|---:|---:|---:|
+| GOLD 2023 | 64 | 35 | 27 | 22 | 77.1% |
+| GOLD 2024 | 52 | 24 | 17 | 10 | 70.8% |
+| GOLD 2025 | 51 | 30 | 20 | 16 | 66.7% |
+| BTCUSD 2025 | 114 | 54 | 40 | 34 | 75.5%* |
+| SILVER 2025 | 45 | 18 | 7 | 6 | 38.9% |
+| CADJPY 2025 | 111 | 30 | 18 | 10 | 60.0% |
+
+`*` One BTCUSD +1R trade is right-censored for the +2R outcome and is excluded from the conditional denominator.
+
+Aggregate:
+
+```text
+fills = 437
++1R successes = 191
+resolved +1R successes for +2R comparison = 190
++2R successes = 129
+P(+2R | +1R) = 67.9%
+```
+
+2025 cross-market Entry-survival warning:
+
+```text
+GOLD    30/51  = 58.8%
+BTCUSD  54/114 = 47.4%
+SILVER  18/45  = 40.0%
+CADJPY  30/111 = 27.0%
+total   132/321 = 41.1%
+```
+
+Therefore D-145 does not solve the final >=50% Entry/win-rate requirement.
+
+Primary runner finding:
+
+At first +1R, median M30 protected-to-current-external range progress was lower for eventual +2R runners in all six market-year aggregate cells:
+
+```text
+GOLD23   1.061 -> 0.691
+GOLD24   0.867 -> 0.644
+GOLD25   0.918 -> 0.796
+BTC25    0.955 -> 0.788
+SILVER25 0.946 -> 0.724
+CADJPY25 0.770 -> 0.565
+```
+
+Direction-level consistency:
+
+```text
+11 / 11 comparable market-year x direction cells
+```
+
+Coverage:
+
+```text
+190 resolved +1R conditional trades
+147 with valid comparable scenario-direction M30 range
+```
+
+Supporting evidence:
+
+Risk-normalized remaining distance to current M30 external was larger for runners in all six aggregate cells, but this measure contains the Fill-to-SL risk denominator and is secondary to range progress.
+
+Negative/generalization findings:
+
+```text
+M30 net advance = unstable
+FVG timing/displacement = unstable
++1R speed = unstable
+simple progression/PB = weak
+M1 continuation = inconsistent
+standalone M30 expansion = insufficient cross-market consistency
+clean-path / low-MAE rule = contradicted by runners often taking more pre-1R MAE
+```
+
+Most important interpretation boundary:
+
+```text
+M30 maturity @ +1R may describe +1R -> +2R continuation.
+It is NOT a proven Fill -> +1R Entry filter.
+```
+
+Classification:
+
+```text
+D-145 cross-market runner relationship = PROMISING / GENERALIZED DESCRIPTIVELY
+causal exit authority = NOT ESTABLISHED
+Entry-survival solution = NOT ESTABLISHED
+fixed-R TP promotion = NOT AUTHORIZED
+```
+
+Next measurement: D-146 post-+1R M30 continuation-state audit.
