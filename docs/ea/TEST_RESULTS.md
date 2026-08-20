@@ -1,48 +1,54 @@
-# D-135A Long-Run Validation, Regime Research, and 2022 OOS Evidence
+# EA Validation and Research Evidence Ledger
 
 Date recorded: 2026-08-20
-Repository base checked before this update: `0d9ca2cc72dceb6e982df4700ee83f42a11135af`
+Repository base checked before this update: `2ce911297ea2f5b8d26f0ba78d2ac132445ac0a8`
 
-This ledger preserves the execution-validation evidence for build 1.91 and the later Regime Research V1 direct-development / first-OOS results. Historical results are retained even when a later test gives a cleaner comparison.
+This file keeps the current high-value execution and research evidence. Historical results remain valid unless explicitly marked contaminated or superseded.
 
-Research calculation convention for the direct runs:
+## Calculation convention
+
+Canonical price R:
 
 ```text
-trade R denominator = actual fill to frozen strategy SL
-LONG R  = (actual exit - actual fill) / (actual fill - strategy SL)
-SHORT R = (actual fill - actual exit) / (strategy SL - actual fill)
+risk_distance = abs(actual_fill - frozen_strategy_SL)
 
-year attribution = entry/fill year
-trade-sequence Max DD / losing streak = chronological fill-order R sequence
-execution-divergent trades = excluded from strategy-performance evidence
+LONG R  = (actual_exit - actual_fill) / risk_distance
+SHORT R = (actual_fill - actual_exit) / risk_distance
 ```
 
-Late-year positions are allowed to reach their actual terminal exit even if the exit occurs in the next calendar year.
+Using the absolute denominator is required so rare fill-through-stop cases remain losses rather than changing sign mathematically.
 
-## 1. D-135A 2025 full-year regression
+Other conventions:
 
-EA identity:
+```text
+year attribution = entry/fill year
+execution-divergent symbol-year = not final profitability evidence
+late-year entry cohort should be allowed to reach terminal exit
+```
+
+## 1. Historical D-135A 2025 GOLD execution regression
+
+Identity:
 
 ```text
 build = 1.91
 phase = D135A_CANCELED_PENDING_LIFECYCLE_HOTFIX
-SL model = ROOT_OB_DISTAL_20
-model = Every tick based on real ticks
-period = 2025-01-01 ~ 2025-12-31
+SL = ROOT_OB_DISTAL_20
+period = 2025
+Every tick based on real ticks
 ```
 
-Uploaded D-135A event CSV:
+Ledger:
 
 ```text
 rows = 234,277
 SHA-256 = 1bd119c4d3aea9ab759a24541de71be01d0379fa948927bede2a1dae5b9d7b65
-user-reported runtime ≈ 7 minutes 10 seconds
 ```
 
-D-134 lifecycle parity target and D-135A result:
+Execution result:
 
 ```text
-execution geometry ready = 74
+geometry ready = 74
 pending accepted = 73
 pending canceled = 15
 filled = 58
@@ -51,130 +57,37 @@ opposite-direction conflict = 1
 execution divergence = 0
 ```
 
-Primary June regression fixture passed:
-- the LONG pending around Entry `3388.90` was canceled after Root invalidation;
-- the later SHORT around Entry `3397.25` was no longer falsely blocked by the orphan LONG pending.
-
-Secondary November canceled-pending fixture around Entry `4138.03` also received normal broker cancellation.
-
-Canonical Entry/FVG/SL/TP/fill/close economics matched the D-134 baseline. Simultaneous same-direction order ticket numbering could differ because working-set traversal order is not strategy priority.
-
 Classification:
 
 ```text
 D-135 performance optimization = PASS
-D-135A canceled-pending lifecycle hotfix = PASS
-2025 D-134 execution lifecycle parity = PASS
-2025 execution divergence = 0
+D-135A canceled-pending lifecycle hotfix = PASS for this 2025 fixture
+D-134 execution-lifecycle parity = PASS
 ```
 
-Performance:
+Runtime improved from roughly nine hours in D-134 to about seven minutes in D-135A-class execution.
+
+## 2. Historical 2023–2024 execution edge case
+
+The prior two-year run exposed a still-unfixed recoverable cancellation case:
 
 ```text
-D-134 ≈ 9 hours
-D-135A ≈ 7m10s
-speedup ≈ 75x
-```
-
-## 2. D-135A 2023–2024 two-year run
-
-Uploaded event ledger:
-
-```text
-period = 2023-01-01 ~ 2024-12-31
-build = 1.91
-phase = D135A_CANCELED_PENDING_LIFECYCLE_HOTFIX
-rows = 442,722
-SHA-256 = 16be6cc44e57dadd9e32250d3e8df9cd1de4e14575a55c0732bc3427a237744e
-```
-
-Execution funnel:
-
-```text
-execution geometry = 159
-pending accepted = 148
-filled = 130
-closed = 126
-normal pending cancel = 17
-pending cancel reject = 1
-tester-end open positions = 4
-tester-end live pending = 1
-```
-
-Because the run contains one execution divergence and unfinished tester-end exposure, it is **not a clean final profitability baseline**.
-
-## 3. 2023 versus 2024 preliminary strategy result
-
-Closed-trade research summary:
-
-```text
-2023
-closed trades = 70
-wins = 23
-losses = 47
-win rate ≈ 32.9%
-realized ≈ +44.94R
-
-2024
-clean closed trades = 55 after excluding the known divergence trade
-wins = 5
-realized ≈ -35.56R
-```
-
-Continuation-only clean attribution:
-
-```text
-2023 EXTERNAL_CONTINUATION ≈ +48.31R
-2024 EXTERNAL_CONTINUATION ≈ -28.45R
-```
-
-The broad 2024 weakness remains after excluding the single known divergence and cannot be explained by reversal alone.
-
-## 4. Remaining execution edge case discovered in the historical baseline run
-
-Observed scenario:
-
-```text
-2023-12-20
-LONG pending accepted
-Entry = 2029.55
-SL = 2026.35
-TP = 2047.77
-
-2023-12-22
-strategy cancellation required
-broker cancellation rejected
-retcode = 10018
-comment = Market closed
-
-build 1.91 did not retry the pending cancellation
-
-2024-01-05
-the strategy-canceled pending later filled
+2023-12-20 LONG pending accepted
+2023-12-22 strategy cancellation required
+broker cancel rejected
+retcode 10018 / Market closed
+2024-01-05 stale pending later filled
 -> FILLED_AFTER_STRATEGY_CANCELLATION
 -> EXECUTION_DIVERGENCE
 ```
 
-Required future execution behavior remains:
+This issue is confirmed again across multiple 2025 symbols in Section 7.
 
-```text
-strategy cancellation remains required
-+ exact pending still live
-+ cancellation rejected for recoverable broker condition
+## 3. Historical Gold baseline annual evidence
 
--> remain in managed execution working set
--> keep exposure/divergence lock
--> retry exact-ticket cancellation later
--> terminalize only after cancel or fill proof
-```
+Clean build-1.91 attribution previously used for regime discovery:
 
-This is an execution-safety problem, not a regime explanation, and was not mixed into Regime Research V1.
-
-## 5. Development-set baseline evidence that motivated regime research
-
-Clean build-1.91 outcomes used as the Development control:
-
-| Year | Clean closed trades | Wins | Total R | Mean R/trade |
+| Year | Clean closed trades | Wins | Total R | Mean R |
 |---|---:|---:|---:|---:|
 | 2023 | 70 | 23 | +44.937806R | +0.641969R |
 | 2024 | 55 | 5 | -35.555410R | -0.646462R |
@@ -188,427 +101,472 @@ Continuation-only:
 2025: 51 trades / +15.936463R
 ```
 
-This baseline is low-win-rate, tail-dependent, and regime-unstable. The research objective therefore became annual consistency, expectancy, drawdown, streak behavior, and large-winner dependence rather than total R alone.
+This evidence motivated regime research because the same baseline was strongly unstable by year.
 
-## 6. Frozen Regime Research V1 before 2022
+## 4. Frozen Regime Research V1 Development evidence
 
 Parent:
 
 `M30_CLEAN_PERSISTENT`
 
+Direct 2023–2025:
+
 ```text
-scope = EXTERNAL_CONTINUATION
-latest 12 confirmed M30 waves available by PLAN freeze
-progression >= 2/3
-M30 PROTECTED_BREAK inside the same 12-wave span <= 1
+46 trades / 15 wins
++45.436530R
+mean +0.987751R
+Max DD -11.204262R
+longest losing streak 11
+execution divergence = 0
 ```
 
-Frozen V1:
+Frozen Expansion:
 
 `M30_CLEAN_PERSISTENT_EXPANDING`
 
-adds exactly:
+Direct 2023–2025:
 
 ```text
-leg_expansion_ratio > 1.0
-
-leg_expansion_ratio =
-mean(abs(last 4 M30 wave-to-wave legs))
-/
-mean(abs(previous 4 immediately preceding legs))
-```
-
-Canonical offline PLAN-freeze Development attribution before direct execution:
-
-| Variant | Trades | Wins | Total R | Mean R | Max DD | Longest loss streak |
-|---|---:|---:|---:|---:|---:|---:|
-| Parent | 39 | 15 | +52.489559R | +1.345886R | -8.1724R | 8 |
-| Frozen V1 | 20 | 13 | +53.847843R | +2.692392R | -3.012821R | 3 |
-
-Frozen V1 by year:
-
-```text
-2023: 12 trades / 8 wins / +43.879687R
-2024:  3 trades / 1 win  /  +2.363062R
-2025:  5 trades / 4 wins /  +7.605095R
-```
-
-The exact freeze and failed/retained feature history are preserved in `docs/ea/REGIME_RESEARCH_2023_2025.md`.
-
-## 7. Direct MT5 Development validation — Parent
-
-Source:
-
-```text
-file = 25(1).csv
-period = 2023-01-01 ~ 2025-12-31
-mode = M30_CLEAN_PERSISTENT
-rows = 9,710
-bytes = 5,477,452
-SHA-256 = aeba85cc7fe396d21db4e93d2967f8dd27513d7e61c66faba174a04b096257c2
-log mode = RESEARCH_COMPACT
+24 trades / 13 wins
++49.797314R
+mean +2.074888R
+PF ≈ 5.4352
+Max DD -5.173397R
+longest losing streak 5
 execution divergence = 0
 ```
+
+All 24 Expansion trades were exact Parent members with identical R.
+
+Expansion removed:
+
+```text
+22 Parent trades
+2 wins / 20 losses
+-4.360784R
+mean -0.198217R
+```
+
+This remains valid Development evidence.
+
+## 5. Frozen Regime Research V1 2022 first sealed OOS
+
+Baseline continuation:
+
+```text
+72 trades / 15 wins
+-14.476581R
+mean -0.201064R
+Max DD -20.764118R
+longest losing streak 18
+```
+
+Parent:
+
+```text
+16 trades / 3 wins
+-3.825354R
+mean -0.239085R
+Max DD -5.741120R
+longest losing streak 5
+```
+
+Frozen Expansion:
+
+```text
+6 trades / 1 win
++0.994756R
+mean +0.165793R
+Max DD -3.012334R
+longest losing streak 3
+execution divergence = 0
+```
+
+Pre-registered classification:
+
+```text
+2022 FIRST SEALED OOS = PASS
+Expansion incremental support vs Parent = PASS
+```
+
+Caveat:
+
+```text
+6 trades
+1 winner ≈ +6.02R
+5 losses ≈ -5.03R
+```
+
+This is transfer evidence, not broad robustness proof.
+
+## 6. 2025 18-symbol NO-GATE source
+
+User-provided bundle analyzed directly:
+
+```text
+ALL.zip
+bytes = 6,847,884
+SHA-256 = 9408fd91c70a2a75e55888f43fa915652cd5b3b24b10415b536b49d74a9ea6eb
+files = 18 CSV
+```
+
+Symbols:
+
+```text
+BTCUSD CADCHF CADJPY CHFJPY EURCAD EURCHF EURGBP EURJPY EURUSD
+GBPCAD GBPCHF GBPJPY GBPUSD GOLD SILVER USDCAD USDCHF USDJPY
+```
+
+All files identify:
+
+```text
+build = 1.92R1L3
+phase = REGIME_RESEARCH_V1_MULTI_SYMBOL_RISK_SIZING
+regime_mode = BASELINE_NO_REGIME_GATE
+event_log_mode = RESEARCH_COMPACT
+position_sizing_mode = FIXED_RISK_MONEY
+fixed_risk_money = 100
+SL = ROOT_OB_DISTAL_20
+strategy_semantics = D134_EXECUTION_CORE_UNCHANGED
+```
+
+Aggregate funnel:
+
+```text
+PLANs = 22,272
+geometry ready = 1,957
+NO_R = 112
+exposure blocked = 157
+execution infeasible = 107
+orders accepted = 1,681
+positions filled = 1,477
+pending canceled = 199
+cancel rejected = 3
+execution divergences = 8
+positions closed = 1,463
+```
+
+Tester-end state:
+
+```text
+filled - closed = 14 open filled positions
+active execution = 17
+```
+
+The 2025-origin cohort is right-censored and should later be terminalized beyond year-end.
+
+## 7. 2025 cross-symbol execution divergences
+
+### Recoverable cancel rejection followed by stale fill — 3
+
+```text
+EURGBP:
+cancel rejected 2025-02-03
+retcode 10018 / Market closed
+stale order filled 2025-03-06
+
+GBPUSD:
+cancel rejected 2025-02-03
+retcode 10018 / Market closed
+stale order filled 2025-02-04
+
+USDCHF:
+cancel rejected 2025-07-28
+retcode 10018 / Market closed
+stale order filled later 2025-07-28
+```
+
+Conclusion:
+
+```text
+recoverable pending-cancel retry is a cross-symbol lifecycle defect
+```
+
+### Pending disappeared without fill or strategy-cancel proof — 5
+
+```text
+EURCAD order 42   — 2025-04-07
+GBPJPY order 144  — 2025-07-29
+GBPUSD order 130  — 2025-08-14
+GBPJPY order 224  — 2025-11-11
+GBPUSD order 213  — 2025-12-22
+```
+
+Conclusion:
+
+```text
+this is a second execution defect class
+root cause not yet proven
+```
+
+Contaminated symbol-years:
+
+```text
+EURCAD
+EURGBP
+GBPJPY
+GBPUSD
+USDCHF
+```
+
+Do not use their year-level profitability as final strategy evidence until re-run after the lifecycle fix.
+
+## 8. Raw 18-symbol closed result — diagnostic only
+
+```text
+1,463 trades
+246 TP / 1,217 SL
+win rate = 16.8148%
+Total = -418.221912R
+Mean = -0.285866R
+R PF ≈ 0.6686
+```
+
+Continuation:
+
+```text
+1,310 trades
+219 wins
+-390.519384R
+mean -0.298106R
+PF ≈ 0.6542
+```
+
+This is diagnostic because five symbols are execution-contaminated.
+
+## 9. Divergence-free 13-symbol panel
+
+Symbols:
+
+```text
+BTCUSD CADCHF CADJPY CHFJPY EURCHF EURJPY EURUSD
+GBPCAD GBPCHF GOLD SILVER USDCAD USDJPY
+```
+
+All scopes:
+
+```text
+1,023 trades
+187 wins
+18.2796%
+-193.184127R
+mean -0.188841R
+PF ≈ 0.7768
+```
+
+Continuation:
+
+```text
+901 trades
+165 wins
+18.3130%
+-179.573032R
+mean -0.199304R
+PF ≈ 0.7637
+```
+
+Reversal:
+
+```text
+122 trades
+22 wins
+18.0328%
+-13.611095R
+mean -0.111566R
+PF ≈ 0.8714
+```
+
+## 10. Strategy-planned barrier rescore
+
+For the divergence-free continuation trades:
+
+```text
+TP deal -> +planned_R
+SL deal -> -1R
+```
+
+This intentionally removes execution-price overshoot and money-layer effects.
 
 Result:
 
 ```text
-46 trades / 15 wins / 32.61%
-Total = +45.436530R
-Mean = +0.987751R/trade
-R Profit Factor ≈ 2.4518
-Max DD = -11.204262R
-Longest losing streak = 11
+901 trades
+165 TP
+planned-barrier total = -166.492129R
+mean = -0.184786R
 ```
 
-By entry year:
+Conclusion:
+
+> Execution realism is not the main cause of the negative expectancy.  
+> The planned Entry/SL/TP decisions are already negative as a set.
+
+## 11. Stylized barrier-null diagnostic
+
+Diagnostic only:
 
 ```text
-2023: 23 trades / 9 wins / +45.219207R
-2024: 14 trades / 2 wins /  -3.364869R
-2025:  9 trades / 4 wins /  +3.582192R
+P(TP first) = 1 / (1 + planned_R)
 ```
 
-Execution funnel:
+901 divergence-free continuation trades:
 
 ```text
-pending accepted = 59
-filled = 46
-closed = 46
-canceled before fill = 13
-execution divergence = 0
+expected wins = 205.7306
+actual wins = 165
+
+expected TP rate = 22.8336%
+actual TP rate = 18.3130%
 ```
 
-## 8. Direct MT5 Development validation — Frozen Expansion V1
-
-Source:
+Independence-only Poisson-binomial:
 
 ```text
-file = 25.csv
-period = 2023-01-01 ~ 2025-12-31
-mode = M30_CLEAN_PERSISTENT_EXPANDING
-rows = 608,893
-bytes = 236,873,208
-SHA-256 = e43cd7e12e672d21afc63ed2bbcb5837ea5ca0dd8f1270401979ac203a2f7ca3
-log mode = pre-compact full audit
-execution divergence = 0
+P(X <= 165) ≈ 0.0003157
 ```
 
-Independent formula-reconstruction QA across all `2,338` EXTERNAL_CONTINUATION regime decisions:
+Do not use this as final inference because trades are correlated and markets are not zero-drift Brownian barriers.
+
+Use it as evidence that the baseline fails a first weak null benchmark.
+
+## 12. Direction split
+
+LONG:
 
 ```text
-progression mismatch = 0
-protected-break-count mismatch = 0
-leg-expansion mismatch = 0
-final PASS/REJECT mismatch = 0
+460 trades / 101 wins
+actual WR 21.9565%
+null WR 23.0821%
+planned-barrier -4.181063R
+canonical -13.361419R
 ```
 
-Execution result:
+SHORT:
 
 ```text
-24 trades / 13 wins / 54.17%
-Total = +49.797314R
-Mean = +2.074888R/trade
-R Profit Factor ≈ 5.4352
-Max DD = -5.173397R
-Longest losing streak = 5
+441 trades / 64 wins
+actual WR 14.5125%
+null WR 22.5744%
+planned-barrier -162.311067R
+canonical -166.211613R
 ```
 
-By entry year:
+SHORT independence-only diagnostic:
 
 ```text
-2023: 12 trades / 8 wins / +43.879687R
-2024:  7 trades / 1 win  /  -1.687467R
-2025:  5 trades / 4 wins /  +7.605095R
+expected wins = 99.5530
+actual = 64
+P(X <= 64) ≈ 0.00000603
 ```
 
-Execution funnel:
+Classification:
 
 ```text
-Regime accepted PLANs = 428
-Root contact = 274
-Sweep = 191
-CHoCH = 109
-FVG selected = 84
-execution geometry = 34
-pending accepted = 34
-filled = 24
-closed = 24
-canceled before fill = 10
-execution divergence = 0
+LONG 2025 base edge = NOT DEMONSTRATED
+SHORT 2025 base edge = STRONG NEGATIVE-EDGE WARNING
 ```
 
-## 9. Direct Development A/B — Expansion increment
+No permanent direction veto is authorized.
 
-Every one of the 24 Expansion trades is an exact Parent trade with identical scenario/economic R. Common-trade R difference is `0`.
+## 13. H1-state split
 
-Expansion removes exactly 22 Parent trades:
+| H1 state | Trades | Wins | Actual WR | Null WR | Planned-barrier R | Canonical R |
+|---|---:|---:|---:|---:|---:|---:|
+| BULLISH | 355 | 80 | 22.54% | 23.65% | -1.4545R | -8.6640R |
+| BEARISH | 329 | 46 | 13.98% | 22.78% | -139.8579R | -141.9049R |
+| TRANSITION | 217 | 39 | 17.97% | 21.58% | -25.1797R | -29.0041R |
+
+The mature H1 bearish continuation path is the dominant negative cluster.
+
+## 14. Planned-R split
+
+| Planned R | Trades | Wins | Actual WR | Null WR | Planned-barrier R | Canonical R |
+|---|---:|---:|---:|---:|---:|---:|
+| 1–2R | 217 | 68 | 31.34% | 40.89% | -47.9764R | -52.5583R |
+| 2–4R | 251 | 53 | 21.12% | 26.16% | -44.6526R | -47.3145R |
+| 4–8R | 247 | 31 | 12.55% | 15.12% | -41.7568R | -43.8615R |
+| 8–16R | 137 | 13 | 9.49% | 8.68% | +16.8937R | +15.7447R |
+| 16R+ | 49 | 0 | 0.00% | 4.30% | -49.0000R | -51.5835R |
+
+Do not turn the 16R+ observation into a new threshold without independent confirmation.
+
+## 15. Per-symbol divergence-free continuation
+
+| Symbol | Trades | Wins | WR | Null WR | Canonical R |
+|---|---:|---:|---:|---:|---:|
+| BTCUSD | 112 | 28 | 25.00% | 22.37% | +15.6835R |
+| CADCHF | 32 | 4 | 12.50% | 22.39% | -12.8645R |
+| CADJPY | 111 | 9 | 8.11% | 21.00% | -61.1590R |
+| CHFJPY | 66 | 15 | 22.73% | 23.17% | -9.5899R |
+| EURCHF | 42 | 8 | 19.05% | 27.47% | -20.9184R |
+| EURJPY | 76 | 15 | 19.74% | 21.66% | -10.5871R |
+| EURUSD | 82 | 16 | 19.51% | 21.48% | -9.7424R |
+| GBPCAD | 68 | 15 | 22.06% | 23.03% | +16.9811R |
+| GBPCHF | 56 | 7 | 12.50% | 23.47% | -32.0104R |
+| GOLD | 51 | 14 | 27.45% | 21.10% | +15.9365R |
+| SILVER | 45 | 4 | 8.89% | 20.86% | -30.4628R |
+| USDCAD | 79 | 14 | 17.72% | 25.31% | -24.4038R |
+| USDJPY | 81 | 16 | 19.75% | 25.11% | -16.4358R |
+
+Positive = 3/13. Negative = 10/13.
+
+## 16. Trigger-chain timing
+
+Among the 901 divergence-free continuation trades:
 
 ```text
-22 trades / 2 wins / 20 losses
-Total = -4.360784R
-Mean = -0.198217R/trade
+PLAN -> Root contact:
+median 10.73h / p90 88.97h / max 683.50h
+
+Root contact -> Sweep:
+median 2.33h / p90 11.65h / max 81.45h
+
+Sweep -> CHoCH:
+median 2.03h / p90 13.07h / max 100.02h
+
+FVG selection -> Fill:
+median 0.85h / p90 15.63h / max 142.66h
 ```
 
-By entry year:
+This is evidence for a causal-ownership audit, not for arbitrary time thresholds.
+
+## 17. Fixed-risk sizing check
+
+Across the 18-symbol run:
 
 ```text
-2023: 11 removed / +1.339520R
-2024:  7 removed / -1.677402R
-2025:  4 removed / -4.022903R
+target risk = $100
+planned risk intentionally normalized downward to volume step
+no intended over-target planned-risk behavior observed in the closed-trade reconstruction
 ```
 
-Therefore the direct Development comparison supports the expansion axis as incremental:
+Cross-symbol strategy comparison should remain primarily R-based because coarse volume steps can under-use the $100 target materially on some symbols.
+
+## 18. Current evidence classification
+
+The project can now support the following statements:
 
 ```text
-Parent    = +45.436530R / mean +0.987751R / DD -11.204262R / streak 11
-Expansion = +49.797314R / mean +2.074888R / DD  -5.173397R / streak 5
+Frozen Regime V1 historical evidence = preserved.
+2022 first OOS PASS = preserved.
+
+2025 18-symbol NO-GATE baseline =
+broad negative result.
+
+Divergence-free continuation =
+negative across 10/13 symbols.
+
+Execution defects =
+real and must be fixed,
+but do not explain the main negative expectancy.
+
+Base continuation predictive edge =
+NOT DEMONSTRATED.
+
+Bearish continuation =
+strongest negative-edge warning.
 ```
 
-The result is not explained by a changed downstream Entry/SL/TP on common trades.
+The next strategy research step is not another filter search.
 
-## 10. Why offline post-filter counts differ from direct MT5 execution
-
-The frozen offline V1 had 20 trades; direct V1 produced 24. All original 20 were reproduced with identical R. Four additional direct trades were explained by causal execution state:
-
-1. **2024-04-30 LONG ≈ -1R** — an H1 same-entry contributor failed the regime gate while M15 same-entry contributors passed; after the H1 branch disappeared, the surviving M15 contributors could merge and execute.
-2. **2024-12-13 LONG ≈ -1.001592R** — the baseline opportunity had been blocked by an opposite SHORT exposure whose Root failed the regime gate; removing that exposure released the LONG.
-3. **2024-12-17 SHORT ≈ -1.030270R** — already filled in the old baseline but excluded from calendar-2024 closed-trade attribution because it closed on 2025-01-02.
-4. **2024-12-18 SHORT ≈ -1.018667R** — same year-end right-censoring issue.
-
-Research rule:
-
-```text
-offline post-filter = discovery / PLAN classification aid
-direct Strategy Tester = final implemented-variant execution authority
-```
-
-Year statistics should cohort by **entry year** and allow late-year positions to reach terminal outcome rather than truncating open trades at December 31.
-
-## 11. Compact logging validation
-
-The original 3-year Expansion full audit generated:
-
-```text
-608,893 rows
-≈ 226 MiB
-```
-
-The largest single source was global `M1_FVG_DETECTED`, with about 272,603 rows and roughly half the text volume.
-
-The research harness therefore introduced a logging-only selector:
-
-```text
-RESEARCH_COMPACT
-FULL_AUDIT
-```
-
-`RESEARCH_COMPACT` retains:
-
-```text
-M30 WAVE_CONFIRMED
-M30 STRUCTURE_PROTECTED_BREAK
-regime ACCEPT/REJECT snapshot
-scenario PLAN / Root contact / Sweep / CHoCH / selected FVG
-Entry/SL/TP geometry
-merge/add-on/exposure decision
-pending/fill/cancel/close
-execution error/divergence
-```
-
-and suppresses high-volume detector/audit noise not required for ordinary long-run research.
-
-The 3-year Parent compact run was approximately:
-
-```text
-9,710 rows
-5.2 MiB
-```
-
-with zero execution divergence. This logging change has no strategy authority.
-
-## 12. 2022 first sealed OOS — data provenance
-
-The Parent and Expansion runs were accidentally appended into one CSV and were split by their separate `EA_START` boundaries before analysis.
-
-Combined research-mode file:
-
-```text
-file = 25(2).csv
-rows = 6,766
-bytes = 3,279,300
-SHA-256 = 7a9df6350eed1f93938b485ae3eecde8ddf42464a734d5b29e7e2b4a56e26bd1
-run 0 = Parent
-run 1 = Frozen Expansion V1
-```
-
-Baseline no-gate file:
-
-```text
-file = no_gate.csv
-rows = 6,857
-bytes = 4,383,745
-SHA-256 = 40c0bf0f744504f9d12ff7a777fc85a8366ab2b3bd168a23f6a35599f944b42a
-mode = BASELINE_NO_REGIME_GATE
-execution divergence = 0
-```
-
-## 13. 2022 baseline direct result
-
-All baseline scopes:
-
-```text
-85 trades / 17 wins / 20.0%
-Total = -19.209190R
-Mean = -0.225990R/trade
-Max DD = -24.339604R
-Longest losing streak = 13
-R Profit Factor ≈ 0.7187
-```
-
-Pre-registered OOS comparator — baseline `EXTERNAL_CONTINUATION` only:
-
-```text
-72 trades / 15 wins / 20.83%
-Total = -14.476581R
-Mean = -0.201064R/trade
-Max DD = -20.764118R
-Longest losing streak = 18
-```
-
-Baseline reversal:
-
-```text
-13 trades / 2 wins
-Total = -4.732610R
-```
-
-## 14. 2022 Parent direct result
-
-```text
-16 trades / 3 wins / 18.75%
-Total = -3.825354R
-Mean = -0.239085R/trade
-Max DD = -5.741120R
-Longest losing streak = 5
-R Profit Factor ≈ 0.7083
-execution divergence = 0
-```
-
-The Parent alone therefore did **not** turn 2022 expectancy positive.
-
-## 15. 2022 frozen Expansion V1 direct result
-
-```text
-6 trades / 1 win / 16.67%
-Total = +0.994756R
-Mean = +0.165793R/trade
-Max DD = -3.012334R
-Longest losing streak = 3
-R Profit Factor ≈ 1.1979
-execution divergence = 0
-```
-
-Approximate trade-R sequence:
-
-```text
--1.008R
--1.003R
--1.002R
-+6.023R
--1.011R
--1.004R
-----------------
-+0.995R
-```
-
-Important caveat: the 2022 V1 result is a very small six-trade sample and is strongly dependent on one approximately +6R winner. It is a PASS under the pre-registered contract, but not evidence of a smooth or high-confidence yearly return distribution by itself.
-
-## 16. 2022 Parent versus Expansion increment
-
-All six Expansion trades are exact members of the Parent run and have identical R.
-
-Expansion removes ten Parent-only trades:
-
-```text
-10 trades / 2 wins / 8 losses
-Total = -4.820111R
-Mean = -0.482011R/trade
-R Profit Factor ≈ 0.4039
-```
-
-Thus in the untouched 2022 OOS:
-
-```text
-Parent    = -3.825354R / mean -0.239085R / DD -5.741120R
-Expansion = +0.994756R / mean +0.165793R / DD -3.012334R
-```
-
-The expansion axis improved both expectancy and drawdown, satisfying the separately frozen incremental-support condition.
-
-## 17. Pre-registered 2022 OOS classification
-
-Frozen before opening 2022:
-
-```text
-INCONCLUSIVE if V1 clean closed trades < 5
-
-PASS candidate if:
-trades >= 5
-AND Total R > 0
-AND mean R/trade > 0
-AND Max DD less severe than 2022 continuation baseline
-AND longest losing streak no worse than 2022 continuation baseline
-
-FAIL otherwise
-```
-
-Observed:
-
-| Condition | Required | Observed | Result |
-|---|---:|---:|---|
-| Clean V1 trades | >= 5 | 6 | PASS |
-| Total R | > 0 | +0.994756R | PASS |
-| Mean R/trade | > 0 | +0.165793R | PASS |
-| Max DD | better than -20.764118R | -3.012334R | PASS |
-| Longest loss streak | <= 18 | 3 | PASS |
-| Expansion vs Parent expectancy+DD | not worse on both | better on both | PASS |
-
-Final classification:
-
-```text
-2022 FIRST SEALED OOS = PASS
-FROZEN EXPANSION AXIS OOS SUPPORT = PASS
-```
-
-No V1 formula or threshold was changed after viewing 2022.
-
-## 18. Current interpretation and next validation
-
-The evidence now supports the following bounded statement:
-
-```text
-The frozen M30_CLEAN_PERSISTENT_EXPANDING research gate
-survived direct Development execution and the pre-registered 2022 OOS contract.
-```
-
-It does **not** yet imply automatic baseline strategy promotion.
-
-Current authority remains:
-
-```text
-AGENTS.md = unchanged
-EA_SPEC.md = unchanged
-build 1.91 baseline = preserved control
-```
-
-Next preferred validation:
-
-```text
-2021 untouched direct A/B/C confirmation
--> explicit promotion / no-promotion decision
-```
-
-If the formula or threshold changes after the already-opened 2022 result, the changed model is Regime Research V2 and 2022 is no longer untouched OOS evidence for it.
-
-The recoverable pending-cancel retry remains a separate execution-safety item and must not be mixed into the regime hypothesis without a controlled regression.
+It is `EDGE_AUDIT_V1`.
