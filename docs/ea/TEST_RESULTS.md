@@ -939,3 +939,72 @@ GOLD 2025 SP+EM V2 ledger SHA-256: `7969c8de223893bc6a5aec23f0077395aea3c3c69e71
 BTCUSD 2025 SP+EM V2 ledger SHA-256: `9ffb7c5aa1ac2a238f1fbebf08ed357d7ceb024dd11564520dbd442e8bfada7e`. Continuation closed population: 63 / 25 wins / WR 39.68% / avg winner +1.137R / expectancy -0.163R / total -10.262R / max DD 11.25R / streak 7. Reversal was 19/19 losses, about -19.68R. One continuation fill remained unresolved at tester end, so BTC is diagnostic rather than final profitability evidence.
 
 Common structural conclusion: SP can convert +1R survivors to winners, but Entry survival can still dominate results; +2R -> near-cost-BE often surrenders too much open profit; M30 room-rich state remains promising for runner discrimination. EM V2 helped GOLD shape but has a BTC generalization warning. D-150 therefore separates a continuation-only V2 line and removes reversal contamination from future solution research.
+
+## 2026-08-22 — V2 continuation-only bootstrap evidence and D-151 handoff
+
+Latest GitHub fork identity before D-151 package:
+
+```text
+HEAD = ad39986173568fe3b96d7dc9cadf793cd2f77aef
+V2 = 2.00R0L0 / V2_CONTINUATION_ONLY_BOOTSTRAP
+```
+
+### GOLD 2025 V2 SP+EM clean second run
+
+The user-provided `GOLD(7).csv` contained two appended tester runs. The second `$100 fixed-risk` run was isolated for analysis.
+
+```text
+42 closed continuation trades
+22 winners
+WR = 52.38%
+avg winner = +1.515R
+avg loser = -1.039R
+expectancy = +0.299R/trade
+total = +12.550R
+max closed-trade DD = 6.05R
+longest nonpositive streak = 3
+reversal PLAN/fill/close = 0/0/0
+execution divergence = 0
+cancel rejected = 0
+unresolved = 0
+```
+
+At first +1R:
+
+```text
+STRONG:  6/8 reached +2R = 75.0%
+DEFAULT: 3/16 reached +2R = 18.75%
+```
+
+One January GOLD stop gap realized approximately `-2.47R` despite nominal 1R geometry. This is retained as real execution/tail-risk evidence and is not normalized away.
+
+### BTCUSD 2025 inherited D149 SP+EM diagnostic
+
+Continuation closed cohort:
+
+```text
+63 closed
+25 winners
+WR = 39.68%
+avg winner = +1.137R
+avg loser = -1.018R
+expectancy = -0.163R/trade
+total = -10.262R
+max closed-trade DD = 11.25R
+longest nonpositive streak = 7
+```
+
+The run was right-censored by one open continuation fill and predates the continuation-only V2 fork, so it remains diagnostic rather than final V2 evidence.
+
+### Interpretation
+
+GOLD and BTC support the same decomposition:
+
+```text
+1. pre-+1R Entry survival is a separate bottleneck;
+2. M30 room/maturity at +1R remains a promising runner discriminator;
+3. +2R -> near-cost-BE leaves too much realized-profit giveback;
+4. EM has not yet generalized cleanly enough for baseline promotion.
+```
+
+D-151 therefore adds shadow causal instrumentation before D-152 strategy variants are designed.

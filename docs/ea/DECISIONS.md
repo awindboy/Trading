@@ -6215,3 +6215,30 @@ EM V1 is demoted because it did not shorten the isolated EM loss streak. The sam
 Status: ACTIVE / 2026-08-22
 
 Decision: freeze V1 as a historical control and fork a separate V2 EA. V2 authorizes `EXTERNAL_CONTINUATION` only across all markets. `EXTERNAL_REVERSAL` retains no V2 PLAN/order authority. Reason: current strategy research and promising evidence are continuation-specific, reversal has not supplied durable positive performance, and mixing reversal into equity/performance obscures runner, profit-protection, and genuine-loss research. SP/EM remain research toggles rather than automatic V2 baseline promotion.
+
+## D-151 — V2 target escalation + causal research platform
+
+Status: `ACTIVE V2 RESEARCH DECISION / STRATEGY AUTHORITY UNCHANGED`
+
+V2 remains continuation-only. No reversal lane is restored.
+
+The active research objective is raised to either:
+
+```text
+A. cost-adjusted realized WR >= 70%, avg winner >1R, positive expectancy
+or
+B. the extreme frontier: every accepted trade final aggregate net R >= +1R
+```
+
+B is explicitly an aspirational frontier, not a guarantee. It may not be manufactured with look-ahead, outcome-known filtering, partial-deal counting, right-censor imputation, or R-denominator changes.
+
+D-151 does not change Entry/SL/TP. It adds one-run ledger hygiene plus shadow-only instrumentation for:
+
+```text
+Fill -> +1R/original-SL survival
+post-SL recovery vs map-support loss
++1R M30 runner state
++2R -> 3R/4R/5R/structural retracement path
+```
+
+Any strategy change based on D-151 must be a separately pre-registered D-152 variant and must generalize beyond the discovery market/year.

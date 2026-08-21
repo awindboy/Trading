@@ -98,3 +98,27 @@ winner concentration
 ```
 
 SP and EM must also report their own action/state counts.
+
+## 7. D-151 research-platform requirements
+
+Target implementation identity:
+
+```text
+2.01R0L1 / V2_CAUSAL_RESEARCH_PLATFORM_V1
+```
+
+D-151 adds no new strategy authorization. Required implementation changes are:
+
+```text
+one tester run = one ledger
+native low-volume D151 shadow audit
+Fill snapshot for actual continuation fills
+exact Fill -> +1R/original-SL stage tracking
+post-SL recovery vs map-support-loss shadow taxonomy
+real +2R -> structural-TP/original-SL price-path shadow
+post-+2R minimum-R-before-3R/4R/5R measurements
+```
+
+`InpV2D151CausalAudit` must be independently switchable and must pass audit-OFF/audit-ON strategy-event parity before its evidence is used.
+
+D-151 events are measurement rows. They are never an Entry or exit trigger in build `2.01R0L1`.

@@ -1,10 +1,10 @@
 # EA Development Handoff
 
 Last updated: 2026-08-22
-Repository base before this handoff package: `b3068c0b445005fe455405ed18fb1f82198231df`
-Current code/research build: `2.00R0L0 / V2_CONTINUATION_ONLY_BOOTSTRAP`
-Current research phase: **D-150 V2 CONTINUATION-ONLY FORK / LOCAL COMPILE + BOOTSTRAP VALIDATION PENDING**
-Strategy semantics: **V1 FROZEN / V2 CONTINUATION-ONLY ACTIVE DEVELOPMENT**
+Repository base before this handoff package: `ad39986173568fe3b96d7dc9cadf793cd2f77aef`
+Current code/research build: `2.01R0L1 / V2_CAUSAL_RESEARCH_PLATFORM_V1`
+Current research phase: **D-151 V2 CAUSAL RESEARCH PLATFORM / LOCAL COMPILE + NON-INTERFERENCE VALIDATION PENDING**
+Strategy semantics: **V1 FROZEN / V2 CONTINUATION-ONLY / D151 SHADOW RESEARCH**
 Strategy authority: **V2 -> docs/ea/v2/AGENTS_V2.md; V1 preserved as historical control**
 2021 status: **KEEP UNTOUCHED**
 
@@ -512,3 +512,7 @@ V2 is research only. ORIGINAL + EM_OFF remains baseline authority. 2021 remains 
 ## D-150 active routing — V2
 
 The active development line is now V2. Read `docs/ea/v2/HANDOFF_V2.md` after root `AGENTS.md`. V1/D149 documents remain historical evidence and controls; do not add new reversal strategy work to V1.
+
+## D-151 V2 routing note
+
+Active work now resumes from `docs/ea/v2/HANDOFF_V2.md` and `docs/ea/v2/D151_V2_CAUSAL_RESEARCH_PLATFORM.md`. V1/D149 documents remain historical evidence.

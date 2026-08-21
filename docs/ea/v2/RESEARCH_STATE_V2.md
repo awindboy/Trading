@@ -55,3 +55,28 @@ EM V2 reduced GOLD DD/streak but BTC shadow outcomes indicate it may remove reco
 4. Entry-survival failure mechanism research
 5. EM redesign only after SP and Entry populations are cleanly separated
 ```
+
+## D-151 target escalation and measurement phase
+
+The previous `>=50%` objective is superseded for active V2 research by:
+
+```text
+Primary stretch target:
+realized cost-adjusted WR >= 70%
+while avg winner > 1R and expectancy > 0
+
+Extreme frontier:
+all accepted trades final aggregate net R >= +1R
+```
+
+The current GOLD/BTC evidence is far below the extreme frontier and BTC is below the primary target. D-151 therefore prioritizes causal discrimination over additional discretionary filters.
+
+Current stage questions:
+
+```text
+ENTRY: what causally-known Fill state separates +1R survival from original-SL-first?
+RUNNER: what +1R state separates local reaction from +2R+ continuation?
+PRESERVATION: after +2R, how much retracement do eventual 3R/5R/structural winners truly need?
+```
+
+D-151 native audit measures all three without changing a trade.

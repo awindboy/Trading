@@ -3,8 +3,8 @@
 //| Frozen Regime Research V1 variant on D-135A / build 1.91 core   |
 //|                                                                  |
 //| Authority:                                                       |
-//|   AGENTS.md                                                      |
-//|   docs/ea/EA_SPEC.md                                             |
+//|   docs/ea/v2/AGENTS_V2.md                                       |
+//|   docs/ea/v2/EA_SPEC_V2.md                                      |
 //|                                                                  |
 //| D135A canceled-pending lifecycle hotfix on D135 performance core. |
 //| Root -> Sweep -> CHoCH -> causal fresh widest FVG -> geometry.       |
@@ -13,8 +13,8 @@
 //| Live trading remains hard-blocked; tester execution only.        |
 //+------------------------------------------------------------------+
 #property strict
-#property version   "2.00"
-#property description "Mentor deterministic V2 EA - continuation-only research"
+#property version   "2.01"
+#property description "Mentor deterministic V2 EA - D151 causal research platform"
 
 // D-150 V2 fork contract:
 // - V1 source is frozen separately.
@@ -119,6 +119,10 @@ input string InpEventCsvFile       = "mentor_v2_continuation_events.csv";
 // D-143 EDGE_AUDIT_V1 is shadow-only. Default OFF is the parity control.
 // Audit rows now share InpEventCsvFile and use the EDGE_AUDIT_* event prefix.
 input bool   InpEnableEdgeAudit     = false;
+
+// D-151 V2 native shadow audit: minimal actual-fill tracking plus post-SL/post-2R
+// counterfactual price paths. It never authorizes, cancels, or modifies a trade.
+input bool   InpV2D151CausalAudit  = true;
 
 // D-147 research parameter is intentionally frozen; no fraction optimization in this phase.
 #define V1_D147_PARTIAL_FRACTION 0.50
@@ -1153,6 +1157,542 @@ long g_d149_sp_v2_cost_be_moves=0;
 long g_d149_sp_v2_cost_be_refreshes=0;
 long g_d149_sp_v2_cost_be_unavailable=0;
 
+
+//+------------------------------------------------------------------+
+//| D-151 V2 causal research platform                                |
+//| Shadow-only measurement. No Entry/SL/TP/order authority.         |
+//+------------------------------------------------------------------+
+struct V2D151Tracker
+  {
+   bool       valid;
+   int        scenario_index;
+   string     scenario_id;
+   int        direction;
+   datetime   fill_at;
+   double     fill_price;
+   double     normalized_sl;
+   double     risk_price;
+   double     structural_tp;
+   double     structural_tp_r;
+   double     peak_r_while_open;
+   double     trough_r_while_open;
+
+   bool       reached_1r;
+   datetime   one_r_at;
+   bool       reached_2r;
+   datetime   two_r_at;
+
+   // Price-path milestones after real +2R. They remain shadow-observable
+   // after the broker position closes so profit-floor research does not
+   // confuse actual exit behavior with the counterfactual continuation path.
+   bool       path_reached_3r;
+   datetime   path_three_r_at;
+   bool       path_reached_4r;
+   datetime   path_four_r_at;
+   bool       path_reached_5r;
+   datetime   path_five_r_at;
+   double     post2_running_min_r;
+   double     post2_peak_r;
+   double     min_before_3r;
+   double     min_before_4r;
+   double     min_before_5r;
+   bool       min_before_3r_frozen;
+   bool       min_before_4r_frozen;
+   bool       min_before_5r_frozen;
+   bool       post2_shadow_active;
+   bool       post2_shadow_terminal;
+   string     post2_shadow_outcome;
+   datetime   post2_shadow_terminal_at;
+
+   // Fill -> +1R survival and lightweight post-SL counterfactual taxonomy.
+   double     pre1_mfe_r;
+   double     pre1_mae_r;
+   bool       pre1_failure;
+   datetime   pre1_failure_at;
+   bool       pre1_shadow_active;
+   bool       pre1_shadow_terminal;
+   string     pre1_shadow_outcome;
+   datetime   pre1_shadow_terminal_at;
+   bool       pre1_entry_recovered;
+   datetime   pre1_entry_recovered_at;
+   double     pre1_shadow_min_r;
+   double     pre1_shadow_max_r;
+   bool       map_support_same_at_sl;
+   bool       root_alive_at_sl;
+   bool       frozen_owner_alive_at_sl;
+   int        highest_map_direction_at_sl;
+
+   bool       actual_closed;
+   datetime   actual_close_at;
+   double     actual_net_r;
+   long       actual_exit_reason;
+  };
+
+V2D151Tracker g_d151_trackers[];
+long g_d151_fills=0;
+long g_d151_one_r=0;
+long g_d151_two_r=0;
+long g_d151_pre1_failures=0;
+long g_d151_pre1_recovered_1r=0;
+long g_d151_pre1_map_loss=0;
+long g_d151_pre1_censored=0;
+long g_d151_post2_structural=0;
+long g_d151_post2_original_sl=0;
+long g_d151_post2_censored=0;
+
+bool D151Enabled()
+  {
+   return InpV2D151CausalAudit;
+  }
+
+long D151AgeSeconds(const datetime later,const datetime earlier)
+  {
+   if(later<=0 || earlier<=0 || later<earlier) return -1;
+   return (long)(later-earlier);
+  }
+
+int D151FindTracker(const int scenario_index)
+  {
+   for(int i=0;i<ArraySize(g_d151_trackers);i++)
+      if(g_d151_trackers[i].valid && g_d151_trackers[i].scenario_index==scenario_index)
+         return i;
+   return -1;
+  }
+
+int D151HighestMapDirection()
+  {
+   if(IsMatureDirectionalTrend(g_structure[1].trend))
+      return TrendDirection(g_structure[1].trend);
+   if(IsMatureDirectionalTrend(g_structure[2].trend))
+      return TrendDirection(g_structure[2].trend);
+   return 0;
+  }
+
+bool D151RootAlive(const int scenario_index)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios)) return false;
+   int idx=FindActiveSourceById(g_scenarios[scenario_index].root_zone_id);
+   return (idx>=0 && g_sources[idx].kind==V1_SOURCE_ROOT);
+  }
+
+bool D151FrozenOwnerAlive(const int scenario_index)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios)) return false;
+   int si=-1;
+   if(g_scenarios[scenario_index].active_map_tf==PERIOD_H1) si=1;
+   else if(g_scenarios[scenario_index].active_map_tf==PERIOD_M30) si=2;
+   if(si<0 || !IsMatureDirectionalTrend(g_structure[si].trend)) return false;
+   return (TrendDirection(g_structure[si].trend)==g_scenarios[scenario_index].direction &&
+           g_structure[si].owner_id==g_scenarios[scenario_index].owner_id);
+  }
+
+void D151ReadM30AtOneR(const int direction,
+                       const double one_r_price,
+                       const double risk,
+                       bool &range_available,
+                       string &owner_id,
+                       double &protected_price,
+                       double &external_price,
+                       double &progress,
+                       double &remaining_r,
+                       string &state_name)
+  {
+   range_available=false;
+   owner_id="";
+   protected_price=0.0;
+   external_price=0.0;
+   progress=0.0;
+   remaining_r=0.0;
+   state_name="DEFAULT";
+   if(risk<=0.0 || !IsMatureDirectionalTrend(g_structure[2].trend) ||
+      TrendDirection(g_structure[2].trend)!=direction)
+      return;
+
+   V1WaveRef protected_wave;
+   V1WaveRef external_wave;
+   if(direction>0)
+     {
+      protected_wave=g_structure[2].protected_low;
+      external_wave=g_structure[2].external_high;
+     }
+   else
+     {
+      protected_wave=g_structure[2].protected_high;
+      external_wave=g_structure[2].external_low;
+     }
+   if(!protected_wave.valid || !external_wave.valid) return;
+
+   double span=(double)direction*(external_wave.price-protected_wave.price);
+   if(span<=LiquidityTickSize()) return;
+
+   range_available=true;
+   owner_id=g_structure[2].owner_id;
+   protected_price=protected_wave.price;
+   external_price=external_wave.price;
+   progress=((double)direction*(one_r_price-protected_price))/span;
+   remaining_r=((double)direction*(external_price-one_r_price))/risk;
+   if(remaining_r>=V1_D149_SP_STRONG_ROOM_R-1.0e-10)
+      state_name="STRONG_RUNNER";
+  }
+
+void D151OnFill(const int scenario_index,const datetime observed_at)
+  {
+   if(!D151Enabled() || scenario_index<0 || scenario_index>=ArraySize(g_scenarios) ||
+      !g_scenarios[scenario_index].valid ||
+      g_scenarios[scenario_index].scope!=V1_SCOPE_EXTERNAL_CONTINUATION)
+      return;
+   if(D151FindTracker(scenario_index)>=0) return;
+
+   double risk=g_scenarios[scenario_index].exit_initial_risk_price;
+   if(risk<=0.0)
+      risk=MathAbs(g_scenarios[scenario_index].fill_price-g_scenarios[scenario_index].normalized_sl);
+   if(risk<=LiquidityTickSize())
+     {
+      LogLine("D151_TRACKER_SKIPPED","M1",observed_at,g_scenarios[scenario_index].id,
+              "reason=INVALID_FILL_TO_ORIGINAL_SL_RISK strategy_authority=false");
+      return;
+     }
+
+   int n=ArraySize(g_d151_trackers);
+   ArrayResize(g_d151_trackers,n+1);
+   V2D151Tracker t;
+   t.valid=true;
+   t.scenario_index=scenario_index;
+   t.scenario_id=g_scenarios[scenario_index].id;
+   t.direction=g_scenarios[scenario_index].direction;
+   t.fill_at=g_scenarios[scenario_index].fill_at;
+   t.fill_price=g_scenarios[scenario_index].fill_price;
+   t.normalized_sl=g_scenarios[scenario_index].normalized_sl;
+   t.risk_price=risk;
+   t.structural_tp=g_scenarios[scenario_index].final_objective_price;
+   t.structural_tp_r=(double)t.direction*(t.structural_tp-t.fill_price)/risk;
+   t.peak_r_while_open=0.0;
+   t.trough_r_while_open=0.0;
+   t.reached_1r=false; t.one_r_at=0;
+   t.reached_2r=false; t.two_r_at=0;
+   t.path_reached_3r=false; t.path_three_r_at=0;
+   t.path_reached_4r=false; t.path_four_r_at=0;
+   t.path_reached_5r=false; t.path_five_r_at=0;
+   t.post2_running_min_r=0.0; t.post2_peak_r=0.0;
+   t.min_before_3r=0.0; t.min_before_4r=0.0; t.min_before_5r=0.0;
+   t.min_before_3r_frozen=false; t.min_before_4r_frozen=false; t.min_before_5r_frozen=false;
+   t.post2_shadow_active=false; t.post2_shadow_terminal=false; t.post2_shadow_outcome=""; t.post2_shadow_terminal_at=0;
+   t.pre1_mfe_r=0.0; t.pre1_mae_r=0.0;
+   t.pre1_failure=false; t.pre1_failure_at=0; t.pre1_shadow_active=false; t.pre1_shadow_terminal=false;
+   t.pre1_shadow_outcome=""; t.pre1_shadow_terminal_at=0; t.pre1_entry_recovered=false; t.pre1_entry_recovered_at=0;
+   t.pre1_shadow_min_r=0.0; t.pre1_shadow_max_r=0.0;
+   t.map_support_same_at_sl=false; t.root_alive_at_sl=false; t.frozen_owner_alive_at_sl=false; t.highest_map_direction_at_sl=0;
+   t.actual_closed=false; t.actual_close_at=0; t.actual_net_r=0.0; t.actual_exit_reason=0;
+   g_d151_trackers[n]=t;
+   g_d151_fills++;
+
+   double fvg_width_r=g_scenarios[scenario_index].selected_fvg_width/risk;
+   double root_width_r=MathAbs(g_scenarios[scenario_index].source_top-g_scenarios[scenario_index].source_bottom)/risk;
+   LogLine("D151_FILL_SNAPSHOT","M1",observed_at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s fill=%.10f original_sl=%.10f risk_price=%.10f structural_tp=%.10f structural_tp_r=%.8f active_map_tf=%s owner_id=%s root_id=%s source_tf=%s h1_trend=%s h1_owner=%s m30_trend=%s m30_owner=%s highest_map_direction=%s root_alive=%s frozen_owner_alive=%s plan_to_contact_s=%I64d contact_to_sweep_s=%I64d sweep_to_choch_s=%I64d fvg_to_fill_s=%I64d fvg_width_r=%.8f root_width_r=%.8f strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),t.fill_price,t.normalized_sl,t.risk_price,t.structural_tp,t.structural_tp_r,
+                        TfName(g_scenarios[scenario_index].active_map_tf),g_scenarios[scenario_index].owner_id,
+                        g_scenarios[scenario_index].root_zone_id,TfName(g_scenarios[scenario_index].source_tf),
+                        TrendName(g_structure[1].trend),g_structure[1].owner_id=="" ? "NA" : g_structure[1].owner_id,
+                        TrendName(g_structure[2].trend),g_structure[2].owner_id=="" ? "NA" : g_structure[2].owner_id,
+                        DirectionName(D151HighestMapDirection()),D151RootAlive(scenario_index) ? "true" : "false",
+                        D151FrozenOwnerAlive(scenario_index) ? "true" : "false",
+                        D151AgeSeconds(g_scenarios[scenario_index].source_contact_at,g_scenarios[scenario_index].frozen_at),
+                        D151AgeSeconds(g_scenarios[scenario_index].active_sweep_at,g_scenarios[scenario_index].source_contact_at),
+                        D151AgeSeconds(g_scenarios[scenario_index].scenario_choch_at,g_scenarios[scenario_index].active_sweep_at),
+                        D151AgeSeconds(t.fill_at,g_scenarios[scenario_index].selected_fvg_available_at),
+                        fvg_width_r,root_width_r));
+  }
+
+void D151MarkOneR(V2D151Tracker &t,const datetime at)
+  {
+   if(t.reached_1r) return;
+   t.reached_1r=true;
+   t.one_r_at=at;
+   g_d151_one_r++;
+   bool range_available=false;
+   string owner_id="",state_name="DEFAULT";
+   double protected_price=0.0,external_price=0.0,progress=0.0,remaining_r=0.0;
+   double one_r_price=t.fill_price+(double)t.direction*t.risk_price;
+   D151ReadM30AtOneR(t.direction,one_r_price,t.risk_price,range_available,owner_id,
+                     protected_price,external_price,progress,remaining_r,state_name);
+   LogLine("D151_PLUS_1R","M1",at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s one_r_price=%.10f pre1_mfe_r=%.8f pre1_mae_r=%.8f m30_range_available=%s m30_owner=%s m30_protected=%.10f m30_external=%.10f m30_progress=%.8f m30_remaining_r=%.8f runner_state=%s strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),one_r_price,t.pre1_mfe_r,t.pre1_mae_r,
+                        range_available ? "true" : "false",owner_id=="" ? "NA" : owner_id,
+                        protected_price,external_price,progress,remaining_r,state_name));
+  }
+
+void D151MarkTwoR(V2D151Tracker &t,const datetime at)
+  {
+   if(t.reached_2r) return;
+   t.reached_2r=true;
+   t.two_r_at=at;
+   t.post2_shadow_active=true;
+   t.post2_running_min_r=2.0;
+   t.post2_peak_r=2.0;
+   g_d151_two_r++;
+   LogLine("D151_PLUS_2R","M1",at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s two_r_price=%.10f actual_position_open=%s post2_shadow_armed=true shadow_terminal=STRUCTURAL_TP_OR_ORIGINAL_SL strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),t.fill_price+(double)t.direction*2.0*t.risk_price,
+                        t.actual_closed ? "false" : "true"));
+  }
+
+void D151Post2Milestones(V2D151Tracker &t,const datetime at,const double r)
+  {
+   if(!t.post2_shadow_active || t.post2_shadow_terminal) return;
+   if(r<t.post2_running_min_r) t.post2_running_min_r=r;
+   if(r>t.post2_peak_r) t.post2_peak_r=r;
+
+   if(!t.path_reached_3r && r>=3.0-1.0e-10)
+     {
+      t.path_reached_3r=true; t.path_three_r_at=at;
+      t.min_before_3r=t.post2_running_min_r; t.min_before_3r_frozen=true;
+      LogLine("D151_POST2_MILESTONE","M1",at,t.scenario_id,
+              StringFormat("scenario_id=%s milestone=PLUS_3R min_r_since_plus2=%.8f peak_r_since_plus2=%.8f actual_position_open=%s strategy_authority=false",
+                           t.scenario_id,t.min_before_3r,t.post2_peak_r,t.actual_closed ? "false" : "true"));
+     }
+   if(!t.path_reached_4r && r>=4.0-1.0e-10)
+     {
+      t.path_reached_4r=true; t.path_four_r_at=at;
+      t.min_before_4r=t.post2_running_min_r; t.min_before_4r_frozen=true;
+      LogLine("D151_POST2_MILESTONE","M1",at,t.scenario_id,
+              StringFormat("scenario_id=%s milestone=PLUS_4R min_r_since_plus2=%.8f peak_r_since_plus2=%.8f actual_position_open=%s strategy_authority=false",
+                           t.scenario_id,t.min_before_4r,t.post2_peak_r,t.actual_closed ? "false" : "true"));
+     }
+   if(!t.path_reached_5r && r>=5.0-1.0e-10)
+     {
+      t.path_reached_5r=true; t.path_five_r_at=at;
+      t.min_before_5r=t.post2_running_min_r; t.min_before_5r_frozen=true;
+      LogLine("D151_POST2_MILESTONE","M1",at,t.scenario_id,
+              StringFormat("scenario_id=%s milestone=PLUS_5R min_r_since_plus2=%.8f peak_r_since_plus2=%.8f actual_position_open=%s strategy_authority=false",
+                           t.scenario_id,t.min_before_5r,t.post2_peak_r,t.actual_closed ? "false" : "true"));
+     }
+  }
+
+void D151Post2Terminal(V2D151Tracker &t,const string outcome,const datetime at,const double r)
+  {
+   if(!t.post2_shadow_active || t.post2_shadow_terminal) return;
+   if(r<t.post2_running_min_r) t.post2_running_min_r=r;
+   if(r>t.post2_peak_r) t.post2_peak_r=r;
+   t.post2_shadow_active=false;
+   t.post2_shadow_terminal=true;
+   t.post2_shadow_outcome=outcome;
+   t.post2_shadow_terminal_at=at;
+   if(outcome=="STRUCTURAL_TP") g_d151_post2_structural++;
+   else if(outcome=="ORIGINAL_SL") g_d151_post2_original_sl++;
+   LogLine("D151_POST2_TERMINAL","M1",at,t.scenario_id,
+           StringFormat("scenario_id=%s outcome=%s terminal_r=%.8f min_r_since_plus2=%.8f peak_r_since_plus2=%.8f reached_3r=%s min_before_3r=%.8f reached_4r=%s min_before_4r=%.8f reached_5r=%s min_before_5r=%.8f actual_closed=%s actual_net_r=%.8f strategy_authority=false",
+                        t.scenario_id,outcome,r,t.post2_running_min_r,t.post2_peak_r,
+                        t.path_reached_3r ? "true" : "false",t.min_before_3r_frozen ? t.min_before_3r : 0.0,
+                        t.path_reached_4r ? "true" : "false",t.min_before_4r_frozen ? t.min_before_4r : 0.0,
+                        t.path_reached_5r ? "true" : "false",t.min_before_5r_frozen ? t.min_before_5r : 0.0,
+                        t.actual_closed ? "true" : "false",t.actual_net_r));
+  }
+
+void D151Pre1ShadowTerminal(V2D151Tracker &t,const string outcome,const datetime at)
+  {
+   if(!t.pre1_shadow_active || t.pre1_shadow_terminal) return;
+   t.pre1_shadow_active=false;
+   t.pre1_shadow_terminal=true;
+   t.pre1_shadow_outcome=outcome;
+   t.pre1_shadow_terminal_at=at;
+   if(outcome=="RECOVERED_PLUS_1R_BEFORE_MAP_LOSS") g_d151_pre1_recovered_1r++;
+   else if(outcome=="MAP_SUPPORT_LOST_AFTER_SL") g_d151_pre1_map_loss++;
+   LogLine("D151_PRE1_SHADOW_TERMINAL","M1",at,t.scenario_id,
+           StringFormat("scenario_id=%s outcome=%s entry_recovered=%s shadow_min_r=%.8f shadow_max_r=%.8f root_alive_now=%s frozen_owner_alive_now=%s highest_map_direction_now=%s strategy_authority=false",
+                        t.scenario_id,outcome,t.pre1_entry_recovered ? "true" : "false",
+                        t.pre1_shadow_min_r,t.pre1_shadow_max_r,D151RootAlive(t.scenario_index) ? "true" : "false",
+                        D151FrozenOwnerAlive(t.scenario_index) ? "true" : "false",DirectionName(D151HighestMapDirection())));
+  }
+
+void D151ArmPre1Failure(V2D151Tracker &t,const datetime at,const double failure_r)
+  {
+   if(t.pre1_failure || t.reached_1r) return;
+   t.pre1_failure=true;
+   t.pre1_failure_at=at;
+   t.pre1_shadow_min_r=failure_r;
+   t.pre1_shadow_max_r=failure_r;
+   t.highest_map_direction_at_sl=D151HighestMapDirection();
+   t.map_support_same_at_sl=(t.highest_map_direction_at_sl==t.direction);
+   t.root_alive_at_sl=D151RootAlive(t.scenario_index);
+   t.frozen_owner_alive_at_sl=D151FrozenOwnerAlive(t.scenario_index);
+   g_d151_pre1_failures++;
+   LogLine("D151_PRE1_FAILURE","M1",at,t.scenario_id,
+           StringFormat("scenario_id=%s failure_r=%.8f pre1_mfe_r=%.8f pre1_mae_r=%.8f map_support_same_at_sl=%s highest_map_direction_at_sl=%s root_alive_at_sl=%s frozen_owner_alive_at_sl=%s root_id=%s source_tf=%s strategy_authority=false",
+                        t.scenario_id,failure_r,t.pre1_mfe_r,t.pre1_mae_r,
+                        t.map_support_same_at_sl ? "true" : "false",DirectionName(t.highest_map_direction_at_sl),
+                        t.root_alive_at_sl ? "true" : "false",t.frozen_owner_alive_at_sl ? "true" : "false",
+                        g_scenarios[t.scenario_index].root_zone_id,TfName(g_scenarios[t.scenario_index].source_tf)));
+   if(!t.map_support_same_at_sl)
+     {
+      t.pre1_shadow_terminal=true;
+      t.pre1_shadow_outcome="MAP_SUPPORT_NOT_SAME_AT_SL";
+      t.pre1_shadow_terminal_at=at;
+      g_d151_pre1_map_loss++;
+      LogLine("D151_PRE1_SHADOW_TERMINAL","M1",at,t.scenario_id,
+              StringFormat("scenario_id=%s outcome=MAP_SUPPORT_NOT_SAME_AT_SL entry_recovered=false shadow_min_r=%.8f shadow_max_r=%.8f root_alive_now=%s frozen_owner_alive_now=%s highest_map_direction_now=%s strategy_authority=false",
+                           t.scenario_id,t.pre1_shadow_min_r,t.pre1_shadow_max_r,
+                           D151RootAlive(t.scenario_index) ? "true" : "false",
+                           D151FrozenOwnerAlive(t.scenario_index) ? "true" : "false",DirectionName(D151HighestMapDirection())));
+      return;
+     }
+   t.pre1_shadow_active=true;
+  }
+
+void D151ProcessPre1Shadow(V2D151Tracker &t,const MqlTick &tick,const double r)
+  {
+   if(!t.pre1_shadow_active || t.pre1_shadow_terminal) return;
+   if(r<t.pre1_shadow_min_r) t.pre1_shadow_min_r=r;
+   if(r>t.pre1_shadow_max_r) t.pre1_shadow_max_r=r;
+
+   // Closed-bar map processing occurs before this callback. Preserve D148's
+   // causal ordering: newly-known support loss outranks a later tick recovery.
+   if(D151HighestMapDirection()!=t.direction)
+     {
+      D151Pre1ShadowTerminal(t,"MAP_SUPPORT_LOST_AFTER_SL",(datetime)tick.time);
+      return;
+     }
+   if(!t.pre1_entry_recovered && r>=0.0-1.0e-10)
+     {
+      t.pre1_entry_recovered=true;
+      t.pre1_entry_recovered_at=(datetime)tick.time;
+      LogLine("D151_PRE1_ENTRY_RECOVERED","M1",(datetime)tick.time,t.scenario_id,
+              StringFormat("scenario_id=%s recovery_r=%.8f root_alive=%s frozen_owner_alive=%s strategy_authority=false",
+                           t.scenario_id,r,D151RootAlive(t.scenario_index) ? "true" : "false",
+                           D151FrozenOwnerAlive(t.scenario_index) ? "true" : "false"));
+     }
+   if(r>=1.0-1.0e-10)
+      D151Pre1ShadowTerminal(t,"RECOVERED_PLUS_1R_BEFORE_MAP_LOSS",(datetime)tick.time);
+  }
+
+void D151AuditOnTick(const MqlTick &tick)
+  {
+   if(!D151Enabled()) return;
+   for(int i=0;i<ArraySize(g_d151_trackers);i++)
+     {
+      if(!g_d151_trackers[i].valid || g_d151_trackers[i].risk_price<=0.0) continue;
+      V2D151Tracker t=g_d151_trackers[i];
+      double px=(t.direction>0 ? tick.bid : tick.ask);
+      if(px<=0.0) continue;
+      double r=(double)t.direction*(px-t.fill_price)/t.risk_price;
+
+      if(!t.actual_closed)
+        {
+         if(r>t.peak_r_while_open) t.peak_r_while_open=r;
+         if(r<t.trough_r_while_open) t.trough_r_while_open=r;
+         if(!t.reached_1r)
+           {
+            if(r>t.pre1_mfe_r) t.pre1_mfe_r=r;
+            if(r<t.pre1_mae_r) t.pre1_mae_r=r;
+           }
+         if(!t.reached_1r && r>=1.0-1.0e-10) D151MarkOneR(t,(datetime)tick.time);
+         if(t.reached_1r && !t.reached_2r && r>=2.0-1.0e-10) D151MarkTwoR(t,(datetime)tick.time);
+         if(!t.reached_1r && !t.pre1_failure && r<=-1.0+1.0e-10)
+            D151ArmPre1Failure(t,(datetime)tick.time,r);
+        }
+
+      if(t.post2_shadow_active && !t.post2_shadow_terminal)
+        {
+         D151Post2Milestones(t,(datetime)tick.time,r);
+         bool structural=(t.direction>0 ? px>=t.structural_tp-1.0e-10 : px<=t.structural_tp+1.0e-10);
+         bool original_sl=(t.direction>0 ? px<=t.normalized_sl+1.0e-10 : px>=t.normalized_sl-1.0e-10);
+         if(structural) D151Post2Terminal(t,"STRUCTURAL_TP",(datetime)tick.time,r);
+         else if(original_sl) D151Post2Terminal(t,"ORIGINAL_SL",(datetime)tick.time,r);
+        }
+
+      if(t.pre1_shadow_active && !t.pre1_shadow_terminal)
+         D151ProcessPre1Shadow(t,tick,r);
+
+      g_d151_trackers[i]=t;
+     }
+  }
+
+void D151OnPositionClosed(const int scenario_index,
+                          const datetime exit_at,
+                          const double realized_net_money,
+                          const long exit_reason)
+  {
+   if(!D151Enabled()) return;
+   int i=D151FindTracker(scenario_index);
+   if(i<0) return;
+   V2D151Tracker t=g_d151_trackers[i];
+   if(t.actual_closed) return;
+
+   double exit_price=g_scenarios[scenario_index].exit_price;
+   double exit_r=(t.risk_price>0.0 ? (double)t.direction*(exit_price-t.fill_price)/t.risk_price : 0.0);
+   if(!t.reached_1r && exit_r>=1.0-1.0e-10) D151MarkOneR(t,exit_at);
+   if(t.reached_1r && !t.reached_2r && exit_r>=2.0-1.0e-10) D151MarkTwoR(t,exit_at);
+   if(exit_reason==DEAL_REASON_SL && !t.reached_1r && !t.pre1_failure)
+      D151ArmPre1Failure(t,exit_at,exit_r);
+
+   double risk_money=g_scenarios[scenario_index].actual_fill_risk_money;
+   if(risk_money<=0.0) risk_money=g_scenarios[scenario_index].planned_risk_money;
+   if(risk_money<=0.0) risk_money=g_scenarios[scenario_index].target_risk_money;
+   t.actual_closed=true;
+   t.actual_close_at=exit_at;
+   t.actual_exit_reason=exit_reason;
+   t.actual_net_r=(risk_money>0.0 ? realized_net_money/risk_money : 0.0);
+
+   if(t.post2_shadow_active && !t.post2_shadow_terminal)
+     {
+      D151Post2Milestones(t,exit_at,exit_r);
+      bool structural=(t.direction>0 ? exit_price>=t.structural_tp-1.0e-10 : exit_price<=t.structural_tp+1.0e-10);
+      if(exit_reason==DEAL_REASON_TP || structural)
+         D151Post2Terminal(t,"STRUCTURAL_TP",exit_at,exit_r);
+     }
+
+   LogLine("D151_ACTUAL_CLOSE","M1",exit_at,t.scenario_id,
+           StringFormat("scenario_id=%s exit_reason=%I64d actual_exit_r=%.8f actual_net_r=%.8f reached_1r=%s reached_2r=%s post2_shadow_active=%s pre1_failure=%s peak_r_while_open=%.8f trough_r_while_open=%.8f strategy_authority=false",
+                        t.scenario_id,exit_reason,exit_r,t.actual_net_r,t.reached_1r ? "true" : "false",
+                        t.reached_2r ? "true" : "false",t.post2_shadow_active ? "true" : "false",
+                        t.pre1_failure ? "true" : "false",t.peak_r_while_open,t.trough_r_while_open));
+   g_d151_trackers[i]=t;
+  }
+
+void D151OnTesterEnd(const datetime at)
+  {
+   if(!D151Enabled()) return;
+   for(int i=0;i<ArraySize(g_d151_trackers);i++)
+     {
+      if(!g_d151_trackers[i].valid) continue;
+      V2D151Tracker t=g_d151_trackers[i];
+      if(t.pre1_shadow_active && !t.pre1_shadow_terminal)
+        {
+         t.pre1_shadow_active=false;
+         t.pre1_shadow_terminal=true;
+         t.pre1_shadow_outcome="RIGHT_CENSORED";
+         t.pre1_shadow_terminal_at=at;
+         g_d151_pre1_censored++;
+         LogLine("D151_PRE1_SHADOW_TERMINAL","M1",at,t.scenario_id,
+                 StringFormat("scenario_id=%s outcome=RIGHT_CENSORED entry_recovered=%s shadow_min_r=%.8f shadow_max_r=%.8f strategy_authority=false",
+                              t.scenario_id,t.pre1_entry_recovered ? "true" : "false",t.pre1_shadow_min_r,t.pre1_shadow_max_r));
+        }
+      if(t.post2_shadow_active && !t.post2_shadow_terminal)
+        {
+         t.post2_shadow_active=false;
+         t.post2_shadow_terminal=true;
+         t.post2_shadow_outcome="RIGHT_CENSORED";
+         t.post2_shadow_terminal_at=at;
+         g_d151_post2_censored++;
+         LogLine("D151_POST2_TERMINAL","M1",at,t.scenario_id,
+                 StringFormat("scenario_id=%s outcome=RIGHT_CENSORED terminal_r=NA min_r_since_plus2=%.8f peak_r_since_plus2=%.8f reached_3r=%s min_before_3r=%.8f reached_4r=%s min_before_4r=%.8f reached_5r=%s min_before_5r=%.8f actual_closed=%s actual_net_r=%.8f strategy_authority=false",
+                              t.scenario_id,t.post2_running_min_r,t.post2_peak_r,
+                              t.path_reached_3r ? "true" : "false",t.min_before_3r_frozen ? t.min_before_3r : 0.0,
+                              t.path_reached_4r ? "true" : "false",t.min_before_4r_frozen ? t.min_before_4r : 0.0,
+                              t.path_reached_5r ? "true" : "false",t.min_before_5r_frozen ? t.min_before_5r : 0.0,
+                              t.actual_closed ? "true" : "false",t.actual_net_r));
+        }
+      g_d151_trackers[i]=t;
+     }
+   LogLine("D151_RESEARCH_STOP","M1",at,"",
+           StringFormat("build=2.01R0L1 phase=V2_CAUSAL_RESEARCH_PLATFORM_V1 trackers=%d fills=%I64d plus1=%I64d plus2=%I64d pre1_failures=%I64d pre1_recovered_plus1=%I64d pre1_map_loss=%I64d pre1_censored=%I64d post2_structural=%I64d post2_original_sl=%I64d post2_censored=%I64d strategy_authority=false no_trade_modification=true",
+                        ArraySize(g_d151_trackers),g_d151_fills,g_d151_one_r,g_d151_two_r,g_d151_pre1_failures,
+                        g_d151_pre1_recovered_1r,g_d151_pre1_map_loss,g_d151_pre1_censored,
+                        g_d151_post2_structural,g_d151_post2_original_sl,g_d151_post2_censored));
+  }
+
+
 string SmartPartialStateName(const int state)
   {
    if(state==V1_SP_STATE_STRONG_RUNNER) return "STRONG_RUNNER";
@@ -1579,8 +2119,8 @@ bool ResearchCompactLogEvent(const string event_name,const string tf)
    if(event_name=="STRUCTURE_PROTECTED_BREAK")
       return (tf=="M30");
 
-   // D147/D149 action rows are low-volume research-critical diagnostics.
-   if(StringFind(event_name,"D147_")==0 || StringFind(event_name,"D149_")==0)
+   // D147/D149/D151 action rows are low-volume research-critical diagnostics.
+   if(StringFind(event_name,"D147_")==0 || StringFind(event_name,"D149_")==0 || StringFind(event_name,"D151_")==0)
       return true;
 
    // Research identity and PLAN-freeze classification.
@@ -8466,6 +9006,7 @@ void MarkScenarioFilled(const int scenario_index,
       g_scenarios[scenario_index].entry_deal_fee=HistoryDealGetDouble(deal_ticket,DEAL_FEE);
      }
    EdgeAuditOnActualFill(scenario_index,observed_at);
+   D151OnFill(scenario_index,observed_at);
    g_positions_filled++;
 
    // D-133: once the shared order fills, the implementation master owns the
@@ -9677,6 +10218,7 @@ void ReconcileScenarioExecution(const int scenario_index,const datetime observed
                         TimeToString(exit_time,TIME_DATE|TIME_SECONDS),exit_price,exit_reason,
                         g_scenarios[scenario_index].normalized_sl,g_scenarios[scenario_index].final_objective_price,
                         ExecutionStatusName(g_scenarios[scenario_index].execution_status)));
+   D151OnPositionClosed(scenario_index,exit_time,realized_net_money,exit_reason);
    if(InpEpisodeManagementMode==V1_EM_ENTRY_SURVIVAL_QUARANTINE_V2)
       D149EMV2OnPositionClosed(scenario_index,exit_time,realized_net_money,exit_reason);
    else
@@ -12215,7 +12757,8 @@ int OnInit()
    EdgeAuditResetState();
    if(InpWriteEventCsv)
      {
-      g_log_handle=FileOpen(InpEventCsvFile,FILE_READ|FILE_WRITE|FILE_CSV|FILE_ANSI|FILE_SHARE_READ,',');
+      FileDelete(InpEventCsvFile); // V2 invariant: one tester run = one ledger.
+      g_log_handle=FileOpen(InpEventCsvFile,FILE_WRITE|FILE_CSV|FILE_ANSI|FILE_SHARE_READ,',');
       if(g_log_handle!=INVALID_HANDLE)
         {
          if(FileSize(g_log_handle)==0)
@@ -12228,7 +12771,7 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=2.00R0L0 property_version=1.00 magic=%I64d phase=V2_CONTINUATION_ONLY_BOOTSTRAP strategy_semantics=V2_CONTINUATION_ONLY_BASELINE_PLUS_SP_EM_RESEARCH_TOGGLES fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=2.01R0L1 property_version=2.01 magic=%I64d phase=V2_CAUSAL_RESEARCH_PLATFORM_V1 strategy_semantics=V2_CONTINUATION_ONLY_PLUS_D151_SHADOW_CAUSAL_RESEARCH fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         _Symbol,
                         AccountInfoString(ACCOUNT_CURRENCY),
@@ -12240,7 +12783,7 @@ int OnInit()
                         InpEquityRiskPercentPerTrade,
                         AccountInfoInteger(ACCOUNT_MARGIN_MODE)));
    LogLine("D149_RESEARCH_START","M1",TimeCurrent(),"",
-           StringFormat("exit_mode=%s em_mode=%s build=2.00R0L0 sp_strong_fraction=%.8f sp_v1_default_fraction=%.8f sp_strong_room_r=%.8f sp_v2_default_lock_buffer_r=%.8f sp_v2_cost_be_buffer_r=%.8f sp_v2_continuation_only=true structural_tp_retained=true em_v2_failure=SL_BEFORE_PLUS_1R em_v2_quarantine_after=2 em_v2_release=SHADOW_OR_PREEXISTING_REAL_PLUS_1R em_v2_force_cancel_existing=false d148_audit_allowed_only_on_control=true",
+           StringFormat("exit_mode=%s em_mode=%s build=2.01R0L1 sp_strong_fraction=%.8f sp_v1_default_fraction=%.8f sp_strong_room_r=%.8f sp_v2_default_lock_buffer_r=%.8f sp_v2_cost_be_buffer_r=%.8f sp_v2_continuation_only=true structural_tp_retained=true em_v2_failure=SL_BEFORE_PLUS_1R em_v2_quarantine_after=2 em_v2_release=SHADOW_OR_PREEXISTING_REAL_PLUS_1R em_v2_force_cancel_existing=false d148_audit_allowed_only_on_control=true",
                         ExitManagementModeName((int)InpExitManagementMode),EpisodeManagementModeName((int)InpEpisodeManagementMode),
                         V1_D149_SP_STRONG_PARTIAL_FRACTION,V1_D149_SP_DEFAULT_PARTIAL_FRACTION,V1_D149_SP_STRONG_ROOM_R,
                         V1_D149_SP_V2_DEFAULT_LOCK_BUFFER_R,V1_D149_SP_V2_COST_BE_BUFFER_R));
@@ -12269,6 +12812,7 @@ int OnInit()
 void OnDeinit(const int reason)
   {
    EventKillTimer();
+   D151OnTesterEnd(TimeCurrent());
    EdgeAuditDeinit(reason);
    D149EMV2OnTesterEnd(TimeCurrent());
    LogLine("D149_RESEARCH_STOP","M1",TimeCurrent(),"",
@@ -12367,6 +12911,7 @@ void OnTick()
      }
    ProcessRuntimeClosedBars((datetime)tick.time);
    ManageIntegratedExecution(tick);
+   D151AuditOnTick(tick);
    EdgeAuditOnTick(tick);
   }
 

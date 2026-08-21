@@ -155,3 +155,41 @@ zero unresolved execution divergence in the evidence used
 ```
 
 A market-specific rule may be retained only if explicitly classified as market-specific rather than silently generalized.
+
+## 8. D-151 stretch objective and research governance
+
+Effective from D-151, V2 raises its research objective.
+
+Primary stretch target:
+
+```text
+cost-adjusted realized WR >= 70%
++
+average winner > 1R
++
+positive expectancy
++
+robustness across markets and periods
+```
+
+Alternative extreme frontier:
+
+```text
+100% of accepted trades
+final aggregate net R >= +1.0R
+```
+
+The second frontier is mathematically equivalent to accepting no losing trade and realizing at least +1R on every accepted trade. It is a research aspiration, not a guaranteed property.
+
+For both targets:
+
+- final **aggregate** trade outcome is the unit; partial deals are not separate wins;
+- R remains anchored to actual Fill vs original normalized SL;
+- spread/commission/slippage/swap remain in the economic result;
+- no right-censor imputation;
+- no outcome-known rejection;
+- no future-state backfill;
+- no one-market/year promotion;
+- no filter stack whose only justification is hitting the target number.
+
+D-151 is shadow instrumentation only. It has no Entry, SL, TP, sizing, order, or EM authority. Its purpose is to measure the three V2 causal stages with enough resolution to design later controlled variants.

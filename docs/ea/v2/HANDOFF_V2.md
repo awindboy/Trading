@@ -84,3 +84,23 @@ EM V2 helped GOLD drawdown/streak shape but showed a generalization warning on B
 4. Use those runs to isolate SP from EM and remove reversal contamination.
 5. Before changing +2R protection, build a post-+2R retracement audit of true large winners.
 6. Continue Entry-failure research separately; do not use the +1R runner variable as an Entry filter.
+
+## D-151 active handoff
+
+Current target build is now:
+
+```text
+2.01R0L1 / V2_CAUSAL_RESEARCH_PLATFORM_V1
+```
+
+The bootstrap fork itself has been validated on GOLD 2025 with zero reversal plans/fills/closes and clean execution. The next phase is not immediate threshold tuning. D-151 instruments the three continuation stages independently:
+
+```text
+Fill -> +1R
++1R -> +2R+
++2R -> tail continuation / giveback
+```
+
+Read `docs/ea/v2/D151_V2_CAUSAL_RESEARCH_PLATFORM.md` immediately after this handoff.
+
+New project stretch target is `>=70%` cost-adjusted realized WR while preserving >1R average winner and positive expectancy, with `100% of accepted trades final net R >= +1R` retained as an extreme research frontier rather than a guarantee.

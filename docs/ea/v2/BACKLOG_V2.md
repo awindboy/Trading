@@ -43,3 +43,24 @@ Current phase: `D-150 V2 CONTINUATION-ONLY FORK`
 - [ ] After GOLD/BTC isolation, expand to SILVER and CADJPY.
 - [ ] Require clean execution and terminalized cohorts.
 - [ ] Report LONG/SHORT separately before pooled conclusions.
+
+## P0 — D-151 V2 causal research platform
+
+- [x] Raise active V2 stretch target to `>=70%` cost-adjusted realized WR with avg winner >1R and positive expectancy.
+- [x] Record `all accepted trades final net R >= +1R` as an extreme frontier, not a guaranteed claim.
+- [x] Keep reversal trading authority disabled.
+- [x] Pre-register D-151 as shadow-only; no new strategy threshold.
+- [x] Make V2 event CSV one-run-per-ledger instead of append-across-runs.
+- [x] Add actual-fill causal snapshot.
+- [x] Add exact Fill -> +1R/original-SL tracking.
+- [x] Add post-SL +1R-recovery vs map-support-loss shadow taxonomy.
+- [x] Add real +2R post-trade price-path shadow through structural TP/original SL.
+- [x] Freeze min-R-before-3R/4R/5R for profit-floor research.
+- [ ] MetaEditor compile = 0 errors.
+- [ ] D151 audit OFF/ON canonical strategy-event parity PASS.
+- [ ] GOLD25 SP-only clean D151 ledger.
+- [ ] BTC25 SP-only terminalized D151 ledger.
+- [ ] GOLD23/GOLD24 generalization.
+- [ ] SILVER25/CADJPY25 cross-market generalization.
+- [ ] Design D-152 Entry variant only from relations that survive independent data.
+- [ ] Design D-152 profit-floor variant only after post-+2R retracement evidence.
