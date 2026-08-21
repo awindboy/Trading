@@ -1,10 +1,10 @@
 # Strategy Robustness Research State
 
-Last updated: 2026-08-21
+Last updated: 2026-08-22
 Repository base before handoff package: `b3068c0b445005fe455405ed18fb1f82198231df`
-Current code/research identity: `1.96R1L12 / SP_EM_RESEARCH_V2`
-Current research phase: **D-149 SP + EM V2 — IMPLEMENTED / LOCAL COMPILE + CONTROLLED VALIDATION PENDING**
-Strategy authority: **UNCHANGED; ORIGINAL + EM_OFF CONTROL PRESERVED; V1 MODES RETAINED**
+Current code/research identity: `2.00R0L0 / V2_CONTINUATION_ONLY_BOOTSTRAP`
+Current research phase: **D-150 V2 CONTINUATION-ONLY FORK**
+Strategy authority: **V2 CONTINUATION ONLY; see docs/ea/v2/AGENTS_V2.md**
 2021: **UNTOUCHED**
 
 ## Objective
@@ -272,3 +272,7 @@ EM V1 did not solve the observed loss clusters. It reduced continuation trade co
 The next hypothesis is therefore global **Entry-survival quarantine**, not owner-level concurrency suppression. EM V2 counts only `SL before +1R`, quarantines after two consecutive such failures, and requires a causally observed shadow +1R setup before new real risk is allowed.
 
 Do not interpret either V2 rule as strategy authority before multi-year and cross-market validation.
+
+## D-150 V2 research routing
+
+Active solution research is split into: (1) +1R runner discrimination, (2) post-+2R profit preservation without tail destruction, and (3) genuine Entry-loss / cluster mechanism. Reversal execution is outside V2 scope.

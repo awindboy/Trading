@@ -1,11 +1,11 @@
 # EA Development Handoff
 
-Last updated: 2026-08-21
+Last updated: 2026-08-22
 Repository base before this handoff package: `b3068c0b445005fe455405ed18fb1f82198231df`
-Current code/research build: `1.96R1L12 / SP_EM_RESEARCH_V2`
-Current research phase: **D-149 SP + EM V2 — IMPLEMENTED / LOCAL COMPILE + CONTROLLED VALIDATION PENDING**
-Strategy semantics: **D134 BASELINE CONTROL PRESERVED / D149 V1 CONTROLS PRESERVED / V2 RESEARCH TOGGLES ADDED**
-Strategy authority: **UNCHANGED; ORIGINAL + EM_OFF IS BASELINE CONTROL**
+Current code/research build: `2.00R0L0 / V2_CONTINUATION_ONLY_BOOTSTRAP`
+Current research phase: **D-150 V2 CONTINUATION-ONLY FORK / LOCAL COMPILE + BOOTSTRAP VALIDATION PENDING**
+Strategy semantics: **V1 FROZEN / V2 CONTINUATION-ONLY ACTIVE DEVELOPMENT**
+Strategy authority: **V2 -> docs/ea/v2/AGENTS_V2.md; V1 preserved as historical control**
 2021 status: **KEEP UNTOUCHED**
 
 ## 1. Mandatory authority / startup order
@@ -508,3 +508,7 @@ EM V2:
 - the successful shadow setup itself remains untraded; the next setup is the first eligible real trade.
 
 V2 is research only. ORIGINAL + EM_OFF remains baseline authority. 2021 remains untouched.
+
+## D-150 active routing — V2
+
+The active development line is now V2. Read `docs/ea/v2/HANDOFF_V2.md` after root `AGENTS.md`. V1/D149 documents remain historical evidence and controls; do not add new reversal strategy work to V1.

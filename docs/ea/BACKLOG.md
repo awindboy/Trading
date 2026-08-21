@@ -1,6 +1,6 @@
 # EA Backlog
 
-Last updated: 2026-08-21
+Last updated: 2026-08-22
 Current phase: **D-149 SP + EM V2 — IMPLEMENTED / LOCAL COMPILE + CONTROLLED VALIDATION PENDING**
 Strategy authority: **UNCHANGED; V1/V2 RESEARCH TOGGLES ONLY**
 2021: **KEEP UNTOUCHED**
@@ -223,3 +223,13 @@ Validation still required:
 - [ ] Cross-market validation only after GOLD multi-year direction is known.
 
 Do not tune the two-failure quarantine count, 25% strong fraction, or M30 structural strong-state rule from GOLD 2025 after seeing V2 results.
+
+## D-150 V2 continuation-only fork
+
+- [x] Freeze V1 historical line.
+- [x] Create V2 continuation-only authority and EA fork package.
+- [ ] Compile V2 with 0 errors.
+- [ ] Confirm zero reversal PLAN/fill/close events.
+- [ ] Re-run GOLD/BTC continuation-only SP isolated before changing SP/EM again.
+- [ ] Audit post-+2R retracement before adding a positive profit lock.
+- [ ] Keep Entry-survival research separate from winner continuation.

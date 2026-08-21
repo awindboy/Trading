@@ -6209,3 +6209,9 @@ EM V1 is demoted because it did not shorten the isolated EM loss streak. The sam
 11. EM V2 retains the first-failure fresh same-direction map-delivery gate but removes same-owner concurrency suppression and owner hard-lock as primary controls.
 12. Existing pending/filled positions are not force-canceled when quarantine begins in V2; this isolates authorization of new risk from lifecycle cancellation semantics.
 13. ORIGINAL + EM_OFF remains baseline. AGENTS/EA_SPEC authority is unchanged. 2021 remains untouched.
+
+## D-150 — V2 becomes continuation-only active development line
+
+Status: ACTIVE / 2026-08-22
+
+Decision: freeze V1 as a historical control and fork a separate V2 EA. V2 authorizes `EXTERNAL_CONTINUATION` only across all markets. `EXTERNAL_REVERSAL` retains no V2 PLAN/order authority. Reason: current strategy research and promising evidence are continuation-specific, reversal has not supplied durable positive performance, and mixing reversal into equity/performance obscures runner, profit-protection, and genuine-loss research. SP/EM remain research toggles rather than automatic V2 baseline promotion.

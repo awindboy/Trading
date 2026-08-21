@@ -1,5 +1,10 @@
 # 스승님식 Deterministic EA V1 전략 실행 계약
 
+> **D-150 V2 ACTIVE DEVELOPMENT ROUTING**  
+> `MentorDeterministicV1EA.mq5` and the V1 contract below are frozen historical controls.  
+> Active V2 development uses `mt5/experts/MentorDeterministicV2EA.mq5` and `docs/ea/v2/AGENTS_V2.md`.  
+> For V2 only, `docs/ea/v2/AGENTS_V2.md` overrides V1-specific scenario-scope statements below. V1 history is not rewritten.
+
 - 상태: `FROZEN / CURRENT V1 STRATEGY AUTHORITY`
 - 제정일: `2026-08-01`
 - 최근 개정: `2026-08-18` (`FVG-origin OB baseline; same-entry Root merge; hedging-account same-direction add-on execution`)

@@ -931,3 +931,11 @@ SP V2 = IMPLEMENTED / VALIDATION PENDING
 EM V2 = IMPLEMENTED / VALIDATION PENDING
 baseline authority = UNCHANGED
 ```
+
+## 2026-08-22 — D-149 V2 cross-market handoff into continuation-only V2
+
+GOLD 2025 SP+EM V2 ledger SHA-256: `7969c8de223893bc6a5aec23f0077395aea3c3c69e71997111608c9676bbc4d9`. Continuation: 41 closed / 22 wins / WR 53.66% / avg winner +1.515R / expectancy +0.331R / total +13.555R / max DD 6.05R / longest nonpositive streak 3. The same run's reversal lane was 7/7 losses, about -7.40R.
+
+BTCUSD 2025 SP+EM V2 ledger SHA-256: `9ffb7c5aa1ac2a238f1fbebf08ed357d7ceb024dd11564520dbd442e8bfada7e`. Continuation closed population: 63 / 25 wins / WR 39.68% / avg winner +1.137R / expectancy -0.163R / total -10.262R / max DD 11.25R / streak 7. Reversal was 19/19 losses, about -19.68R. One continuation fill remained unresolved at tester end, so BTC is diagnostic rather than final profitability evidence.
+
+Common structural conclusion: SP can convert +1R survivors to winners, but Entry survival can still dominate results; +2R -> near-cost-BE often surrenders too much open profit; M30 room-rich state remains promising for runner discrimination. EM V2 helped GOLD shape but has a BTC generalization warning. D-150 therefore separates a continuation-only V2 line and removes reversal contamination from future solution research.
