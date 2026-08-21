@@ -1,11 +1,11 @@
 # EA Development Handoff
 
 Last updated: 2026-08-21
-Repository base before this handoff package: `f0a9be86d7d8af4e22b21e9b657669aae1245fbd`
-Current code/audit build: `1.92R1L8 / CONTINUATION_STATE_AUDIT_V1_SHADOW`
-Current research phase: **D-146 CONTINUATION STATE AUDIT — IMPLEMENTED / LOCAL COMPILE + PARITY PENDING**
-Strategy semantics: **D134_EXECUTION_CORE_UNCHANGED**
-Strategy authority: **UNCHANGED**
+Repository base before this handoff package: `c541b19d68ac1589575bfaf1ab07abf1ee296a09`
+Current code/research build: `1.93R1L9 / EXIT_ARCHITECTURE_RESEARCH_V1`
+Current research phase: **D-147 EXIT ARCHITECTURE RESEARCH V1 — IMPLEMENTED / LOCAL COMPILE + BASELINE PARITY PENDING**
+Strategy semantics: **D134 ENTRY + INITIAL GEOMETRY UNCHANGED / D147 POST-FILL EXIT VARIANT**
+Strategy authority: **UNCHANGED; ORIGINAL MODE IS BASELINE CONTROL**
 2021 status: **KEEP UNTOUCHED**
 
 ## 1. Mandatory authority / startup order
@@ -328,3 +328,42 @@ The first concrete validation task is:
 > MetaEditor compile with 0 errors, then run the GOLD short-window Audit OFF/ON smoke and require exact non-audit parity before using any D-146 evidence.
 
 After parity, run GOLD 2025 full-year Audit ON and validate D-146 terminal uniqueness, causal M30 event ordering, original-+1R-external tracking, and runtime before broader reruns.
+
+## D-147 EXIT ARCHITECTURE RESEARCH V1 — IMPLEMENTED / LOCAL COMPILE + BASELINE PARITY PENDING
+
+D-147 is a controlled post-fill research variant. It does not change PLAN, Root/Sweep/CHoCH/FVG authorization, Entry, initial normalized SL, position sizing, structural objective selection, or initial structural TP.
+
+Modes:
+
+```text
+V1_EXIT_ORIGINAL
+  exact baseline post-fill server SL/TP behavior
+
+V1_EXIT_R_STEP_TRAILING
+  R0 = |actual fill - original normalized SL|, frozen forever
+  +1R -> SL 0R
+  +2R -> SL +1R
+  +3R -> SL +2R
+  ...
+  structural TP retained
+
+V1_EXIT_R_STEP_PARTIAL
+  each newly reached integer R closes 50% of CURRENT remaining volume
+  original SL retained
+  structural TP retained
+  if broker min/step volume makes a true partial impossible, do not substitute a full close
+```
+
+The 50% fraction is frozen and not exposed as an optimizer input. D-145/D-146 M30 maturity is not used as a threshold or gate in this first exit experiment.
+
+Required validation order:
+
+```text
+1. MetaEditor compile = 0 errors
+2. D-147 ORIGINAL vs D-146 baseline canonical event parity = PASS
+3. GOLD 2025 ORIGINAL / TRAILING / PARTIAL under identical settings
+4. compare realized net WR, average winner/loser R, cost-adjusted expectancy, DD, loss streak, direction split, large-winner dependence
+5. only then expand to the development panel
+```
+
+Use `InpEnableEdgeAudit=false` for the D-147 performance comparison so the D-146 counterfactual tracker does not complicate the exit-variant ledger. 2021 remains untouched.

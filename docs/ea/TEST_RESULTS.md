@@ -763,3 +763,24 @@ fixed-R TP promotion = NOT AUTHORIZED
 ```
 
 Next measurement: D-146 post-+1R M30 continuation-state audit.
+
+## D-146 GOLD 2025 continuation-state audit — preliminary validated ledger
+
+Source: user-provided GOLD 2025 unified event ledger, analyzed 2026-08-21.
+
+```text
+continuation fills = 51
++1R = 30 / 51 = 58.82%
++2R = 20 / 51 = 39.22%
++2R | +1R = 20 / 30 = 66.67%
+D146 T0 = 30
+D146 terminals = 30
+D146 censored = 0
+execution divergence = 0
+```
+
+D-145 relation reproduced: valid-range +2R runners had lower +1R M30 progress (median 0.796 vs 0.918) and more remaining external room (0.954R vs 0.232R).
+
+Ten trades reached +1R and then failed before +2R; their post-+1R peak total-R levels were approximately 1.083, 1.219, 1.246, 1.364, 1.463, 1.518, 1.560, 1.737, 1.746, 1.893. This confirms material post-fill giveback and motivates D-147 exit-architecture research, but does not authorize a fixed TP.
+
+See `D146_CONTINUATION_STATE_AUDIT.md` for instrumentation caveats. D-147 performance results are pending local compile/parity and MT5 Strategy Tester runs.

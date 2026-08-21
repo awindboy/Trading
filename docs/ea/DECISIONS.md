@@ -6117,3 +6117,13 @@ Detailed contracts:
 docs/ea/D145_RUNNER_GENERALIZATION_RESULTS.md
 docs/ea/D146_CONTINUATION_STATE_AUDIT.md
 ```
+
+## D-147 — isolate post-fill exit architecture before using M30 continuation state as strategy authority
+
+Decision: introduce one research toggle with three modes: `ORIGINAL`, `R_STEP_TRAILING`, `R_STEP_PARTIAL`.
+
+R is frozen from actual fill to the original normalized strategy SL. Trailing uses integer-R staircase protection; partial mode realizes 50% of the then-current remaining volume at each newly reached integer R. The structural TP stays active in both variants. The partial fraction is frozen rather than optimized.
+
+Reason: D-144/D-145 show substantial favorable excursion that is later given back, while D-145 separately shows that Fill -> +1R survival is not solved. A mechanical exit comparison can measure the contribution of profit giveback without reusing the M30 continuation variable as an Entry filter or fitting a maturity threshold.
+
+Research authority only. `AGENTS.md` / `EA_SPEC.md` baseline authority is unchanged. 2021 remains untouched.

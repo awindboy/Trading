@@ -14,7 +14,7 @@
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - D-146 continuation-state shadow audit harness"
+#property description "Mentor deterministic V1 EA - D-147 exit-architecture research harness"
 
 enum V1StopLossModel
   {
@@ -50,6 +50,14 @@ enum V1PositionSizingMode
    V1_SIZE_EQUITY_PERCENT_RISK=2
   };
 
+// D-147 controlled exit-architecture research. ORIGINAL preserves baseline behavior.
+enum V1ExitManagementMode
+  {
+   V1_EXIT_ORIGINAL=0,
+   V1_EXIT_R_STEP_TRAILING,
+   V1_EXIT_R_STEP_PARTIAL
+  };
+
 // D-142A shadow-only base-edge checkpoints. No strategy authority.
 enum V1EdgeAuditStage
   {
@@ -78,6 +86,7 @@ input V1StopLossModel InpStopLossModel = V1_SL_ROOT_OB_DISTAL_20;
 input V1RegimeResearchMode InpRegimeResearchMode = V1_REGIME_V1_CLEAN_PERSISTENT_EXPANDING;
 input V1EventLogMode InpEventLogMode = V1_LOG_RESEARCH_COMPACT;
 input V1PositionSizingMode InpPositionSizingMode = V1_SIZE_MINIMUM_VOLUME_PARITY;
+input V1ExitManagementMode InpExitManagementMode = V1_EXIT_ORIGINAL;
 input double InpFixedRiskMoneyPerTrade = 100.0;
 input double InpEquityRiskPercentPerTrade = 1.0;
 input string InpEventCsvFile       = "mentor_v1_regime_research_v1_compact_events.csv";
@@ -85,6 +94,9 @@ input string InpEventCsvFile       = "mentor_v1_regime_research_v1_compact_event
 // D-143 EDGE_AUDIT_V1 is shadow-only. Default OFF is the parity control.
 // Audit rows now share InpEventCsvFile and use the EDGE_AUDIT_* event prefix.
 input bool   InpEnableEdgeAudit     = false;
+
+// D-147 research parameter is intentionally frozen; no fraction optimization in this phase.
+#define V1_D147_PARTIAL_FRACTION 0.50
 
 // D-137/D-138 frozen research contract. These are intentionally NOT inputs:
 // 2022 OOS must not be tunable from Strategy Tester parameters.
@@ -556,6 +568,18 @@ struct V1ScenarioPlan
    double            exit_deal_swap;
    double            exit_deal_fee;
 
+
+   // D-147 fill-frozen exit-management state. Entry/initial SL/structural TP remain unchanged.
+   int               exit_management_mode;
+   double            exit_initial_risk_price;
+   int               exit_highest_r_step_seen;
+   int               exit_last_completed_r_step;
+   double            exit_dynamic_sl;
+   int               exit_partial_count;
+   bool              exit_partial_disabled;
+   datetime          exit_last_action_attempt_at;
+   int               exit_last_action_attempt_step;
+
    datetime          pending_submitted_at;
    uint              request_id;
    ulong             broker_order_ticket;
@@ -989,6 +1013,22 @@ long             g_pending_cancellations=0;
 long             g_cancel_rejected=0;
 long             g_execution_divergences=0;
 long             g_positions_closed=0;
+
+long             g_d147_trailing_moves=0;
+long             g_d147_partial_closes=0;
+long             g_d147_action_rejections=0;
+long             g_d147_partial_infeasible=0;
+
+string ExitManagementModeName(const int mode)
+  {
+   switch(mode)
+     {
+      case V1_EXIT_ORIGINAL:       return "ORIGINAL";
+      case V1_EXIT_R_STEP_TRAILING:return "R_STEP_TRAILING";
+      case V1_EXIT_R_STEP_PARTIAL: return "R_STEP_PARTIAL";
+     }
+   return "UNKNOWN";
+  }
 
 //+------------------------------------------------------------------+
 //| Helpers                                                          |
@@ -4994,6 +5034,15 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
    g_scenarios[n].exit_deal_commission=0.0;
    g_scenarios[n].exit_deal_swap=0.0;
    g_scenarios[n].exit_deal_fee=0.0;
+   g_scenarios[n].exit_management_mode=V1_EXIT_ORIGINAL;
+   g_scenarios[n].exit_initial_risk_price=0.0;
+   g_scenarios[n].exit_highest_r_step_seen=0;
+   g_scenarios[n].exit_last_completed_r_step=0;
+   g_scenarios[n].exit_dynamic_sl=0.0;
+   g_scenarios[n].exit_partial_count=0;
+   g_scenarios[n].exit_partial_disabled=false;
+   g_scenarios[n].exit_last_action_attempt_at=0;
+   g_scenarios[n].exit_last_action_attempt_step=0;
    g_scenarios[n].pending_submitted_at=0;
    g_scenarios[n].request_id=0;
    g_scenarios[n].broker_order_ticket=0;
@@ -7568,6 +7617,15 @@ void MarkScenarioFilled(const int scenario_index,
                           g_scenarios[scenario_index].fill_price,
                           g_scenarios[scenario_index].normalized_sl,
                           g_scenarios[scenario_index].actual_fill_risk_money);
+   g_scenarios[scenario_index].exit_management_mode=(int)InpExitManagementMode;
+   g_scenarios[scenario_index].exit_initial_risk_price=MathAbs(g_scenarios[scenario_index].fill_price-g_scenarios[scenario_index].normalized_sl);
+   g_scenarios[scenario_index].exit_highest_r_step_seen=0;
+   g_scenarios[scenario_index].exit_last_completed_r_step=0;
+   g_scenarios[scenario_index].exit_dynamic_sl=g_scenarios[scenario_index].normalized_sl;
+   g_scenarios[scenario_index].exit_partial_count=0;
+   g_scenarios[scenario_index].exit_partial_disabled=false;
+   g_scenarios[scenario_index].exit_last_action_attempt_at=0;
+   g_scenarios[scenario_index].exit_last_action_attempt_step=0;
    if(deal_ticket>0)
      {
       g_scenarios[scenario_index].entry_deal_commission=HistoryDealGetDouble(deal_ticket,DEAL_COMMISSION);
@@ -7688,6 +7746,311 @@ bool RequestResidualPendingCancellationAfterFill(const int scenario_index,
    return false;
   }
 
+
+//+------------------------------------------------------------------+
+//| D-147 controlled exit-architecture research                      |
+//+------------------------------------------------------------------+
+bool D147GetManagedPositionState(const int scenario_index,
+                                 ulong &position_ticket,
+                                 double &open_price,
+                                 double &volume,
+                                 double &current_sl,
+                                 double &current_tp)
+  {
+   position_ticket=0;
+   open_price=0.0;
+   volume=0.0;
+   current_sl=0.0;
+   current_tp=0.0;
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios) ||
+      g_scenarios[scenario_index].broker_position_id==0)
+      return false;
+
+   if(!FindManagedPositionByIdentifier(g_scenarios[scenario_index].broker_position_id,
+                                       position_ticket,open_price))
+      return false;
+   if(position_ticket==0 || !PositionSelectByTicket(position_ticket))
+      return false;
+
+   volume=PositionGetDouble(POSITION_VOLUME);
+   current_sl=PositionGetDouble(POSITION_SL);
+   current_tp=PositionGetDouble(POSITION_TP);
+   return (volume>0.0);
+  }
+
+ENUM_ORDER_TYPE_FILLING D147MarketFillingMode()
+  {
+   long flags=SymbolInfoInteger(_Symbol,SYMBOL_FILLING_MODE);
+   if((flags & SYMBOL_FILLING_FOK)==SYMBOL_FILLING_FOK)
+      return ORDER_FILLING_FOK;
+   if((flags & SYMBOL_FILLING_IOC)==SYMBOL_FILLING_IOC)
+      return ORDER_FILLING_IOC;
+   return ORDER_FILLING_RETURN;
+  }
+
+double D147NormalizeVolumeDown(const double raw_volume)
+  {
+   double step=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_STEP);
+   if(step<=0.0 || raw_volume<=0.0)
+      return 0.0;
+   double units=MathFloor(raw_volume/step+1.0e-10);
+   return NormalizeDouble(units*step,8);
+  }
+
+bool D147TrailingTargetLegal(const int direction,
+                             const MqlTick &tick,
+                             const double target_sl)
+  {
+   double point=SymbolInfoDouble(_Symbol,SYMBOL_POINT);
+   double min_distance=(double)MathMax(SymbolInfoInteger(_Symbol,SYMBOL_TRADE_STOPS_LEVEL),
+                                       SymbolInfoInteger(_Symbol,SYMBOL_TRADE_FREEZE_LEVEL))*point;
+   double eps=LiquidityTickSize()*1.0e-6;
+   if(direction>0)
+      return (tick.bid-target_sl+eps>=min_distance);
+   return (target_sl-tick.ask+eps>=min_distance);
+  }
+
+bool D147RequestTrailingStop(const int scenario_index,
+                             const MqlTick &tick,
+                             const ulong position_ticket,
+                             const double current_sl,
+                             const double current_tp,
+                             const int target_step,
+                             const double target_sl)
+  {
+   double eps=LiquidityTickSize()*0.5;
+   if((g_scenarios[scenario_index].direction>0 && current_sl>0.0 && target_sl<=current_sl+eps) ||
+      (g_scenarios[scenario_index].direction<0 && current_sl>0.0 && target_sl>=current_sl-eps))
+     {
+      g_scenarios[scenario_index].exit_last_completed_r_step=target_step;
+      g_scenarios[scenario_index].exit_dynamic_sl=current_sl;
+      return true;
+     }
+
+   if(!D147TrailingTargetLegal(g_scenarios[scenario_index].direction,tick,target_sl))
+      return false;
+
+   datetime observed_at=(datetime)tick.time;
+   if(g_scenarios[scenario_index].exit_last_action_attempt_at==observed_at &&
+      g_scenarios[scenario_index].exit_last_action_attempt_step==target_step)
+      return false;
+   g_scenarios[scenario_index].exit_last_action_attempt_at=observed_at;
+   g_scenarios[scenario_index].exit_last_action_attempt_step=target_step;
+
+   MqlTradeRequest request;
+   MqlTradeResult result;
+   ZeroMemory(request);
+   ZeroMemory(result);
+   request.action=TRADE_ACTION_SLTP;
+   request.magic=(ulong)InpMagicNumber;
+   request.symbol=_Symbol;
+   request.position=position_ticket;
+   request.sl=target_sl;
+   request.tp=current_tp;
+
+   ResetLastError();
+   bool call_ok=OrderSend(request,result);
+   bool accepted=(call_ok && (IsAcceptableTradeRetcode(result.retcode) || result.retcode==TRADE_RETCODE_NO_CHANGES));
+   if(!accepted)
+     {
+      g_d147_action_rejections++;
+      LogLine("D147_TRAILING_SL_REJECTED","M1",observed_at,g_scenarios[scenario_index].id,
+              StringFormat("scenario_id=%s position_ticket=%I64u target_step=%d target_sl=%.10f current_sl=%.10f current_tp=%.10f call_ok=%s retcode=%u comment=%s last_error=%d retry=true",
+                           g_scenarios[scenario_index].id,position_ticket,target_step,target_sl,current_sl,current_tp,
+                           call_ok ? "true" : "false",result.retcode,result.comment,GetLastError()));
+      return false;
+     }
+
+   g_scenarios[scenario_index].exit_last_completed_r_step=target_step;
+   g_scenarios[scenario_index].exit_dynamic_sl=target_sl;
+   g_d147_trailing_moves++;
+   LogLine("D147_TRAILING_SL_MOVED","M1",observed_at,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s position_ticket=%I64u reached_step=%d new_sl_r=%d actual_fill=%.10f initial_risk_price=%.10f old_sl=%.10f new_sl=%.10f structural_tp=%.10f retcode=%u comment=%s",
+                        g_scenarios[scenario_index].id,position_ticket,target_step,target_step-1,
+                        g_scenarios[scenario_index].fill_price,g_scenarios[scenario_index].exit_initial_risk_price,
+                        current_sl,target_sl,current_tp,result.retcode,result.comment));
+   return true;
+  }
+
+bool D147RequestPartialClose(const int scenario_index,
+                             const MqlTick &tick,
+                             const ulong position_ticket,
+                             const double current_volume,
+                             const int target_step)
+  {
+   double min_volume=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MIN);
+   double step=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_STEP);
+   double eps=MathMax(1.0e-10,step*1.0e-6);
+   double close_volume=D147NormalizeVolumeDown(current_volume*V1_D147_PARTIAL_FRACTION);
+   double remaining=current_volume-close_volume;
+
+   if(close_volume<min_volume-eps || remaining<min_volume-eps || close_volume<=0.0)
+     {
+      g_scenarios[scenario_index].exit_partial_disabled=true;
+      g_d147_partial_infeasible++;
+      LogLine("D147_PARTIAL_INFEASIBLE","M1",(datetime)tick.time,g_scenarios[scenario_index].id,
+              StringFormat("scenario_id=%s target_step=%d current_volume=%.8f requested_fraction=%.8f normalized_close=%.8f remaining=%.8f volume_min=%.8f volume_step=%.8f action=KEEP_REMAINDER_ON_ORIGINAL_SL_TP full_close_substitution=false",
+                           g_scenarios[scenario_index].id,target_step,current_volume,V1_D147_PARTIAL_FRACTION,
+                           close_volume,remaining,min_volume,step));
+      return false;
+     }
+
+   datetime observed_at=(datetime)tick.time;
+   if(g_scenarios[scenario_index].exit_last_action_attempt_at==observed_at &&
+      g_scenarios[scenario_index].exit_last_action_attempt_step==target_step)
+      return false;
+   g_scenarios[scenario_index].exit_last_action_attempt_at=observed_at;
+   g_scenarios[scenario_index].exit_last_action_attempt_step=target_step;
+
+   MqlTradeRequest request;
+   MqlTradeResult result;
+   ZeroMemory(request);
+   ZeroMemory(result);
+   request.action=TRADE_ACTION_DEAL;
+   request.magic=(ulong)InpMagicNumber;
+   request.symbol=_Symbol;
+   request.position=position_ticket;
+   request.volume=close_volume;
+   request.type=(g_scenarios[scenario_index].direction>0 ? ORDER_TYPE_SELL : ORDER_TYPE_BUY);
+   double market_reference_price=(g_scenarios[scenario_index].direction>0 ? tick.bid : tick.ask);
+   long execution_mode=SymbolInfoInteger(_Symbol,SYMBOL_TRADE_EXEMODE);
+   request.price=(execution_mode==SYMBOL_TRADE_EXECUTION_MARKET ? 0.0 : market_reference_price);
+   request.type_filling=D147MarketFillingMode();
+   request.deviation=0;
+   request.comment=StringFormat("D147-P%d-R%d",scenario_index,target_step);
+
+   ResetLastError();
+   bool call_ok=OrderSend(request,result);
+   bool accepted=(call_ok && IsAcceptableTradeRetcode(result.retcode));
+   if(!accepted)
+     {
+      g_d147_action_rejections++;
+      LogLine("D147_PARTIAL_CLOSE_REJECTED","M1",observed_at,g_scenarios[scenario_index].id,
+              StringFormat("scenario_id=%s position_ticket=%I64u target_step=%d close_volume=%.8f current_volume=%.8f price=%.10f filling=%d call_ok=%s retcode=%u comment=%s last_error=%d retry=true",
+                           g_scenarios[scenario_index].id,position_ticket,target_step,close_volume,current_volume,market_reference_price,
+                           (int)request.type_filling,call_ok ? "true" : "false",result.retcode,result.comment,GetLastError()));
+      return false;
+     }
+
+   g_scenarios[scenario_index].exit_last_completed_r_step=target_step;
+   g_scenarios[scenario_index].exit_partial_count++;
+   g_d147_partial_closes++;
+   LogLine("D147_PARTIAL_CLOSE_ACCEPTED","M1",observed_at,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s position_ticket=%I64u reached_step=%d close_fraction_of_remaining=%.8f requested_volume=%.8f pre_close_volume=%.8f expected_remaining=%.8f execution_price=%.10f structural_sl=%.10f structural_tp=%.10f retcode=%u deal=%I64u order=%I64u comment=%s",
+                        g_scenarios[scenario_index].id,position_ticket,target_step,V1_D147_PARTIAL_FRACTION,
+                        close_volume,current_volume,remaining,(result.price>0.0 ? result.price : market_reference_price),g_scenarios[scenario_index].normalized_sl,
+                        g_scenarios[scenario_index].final_objective_price,result.retcode,result.deal,result.order,result.comment));
+   return true;
+  }
+
+void D147ManageFilledPosition(const int scenario_index,const MqlTick &tick)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios) ||
+      g_scenarios[scenario_index].strategy_state!=V1_STRATEGY_FILLED)
+      return;
+
+   int mode=g_scenarios[scenario_index].exit_management_mode;
+   if(mode==V1_EXIT_ORIGINAL)
+      return;
+   if(g_scenarios[scenario_index].exit_initial_risk_price<=0.0)
+      return;
+
+   ulong position_ticket=0;
+   double open_price=0.0,volume=0.0,current_sl=0.0,current_tp=0.0;
+   if(!D147GetManagedPositionState(scenario_index,position_ticket,open_price,volume,current_sl,current_tp))
+      return;
+
+   double px=(g_scenarios[scenario_index].direction>0 ? tick.bid : tick.ask);
+   double favorable_r=(double)g_scenarios[scenario_index].direction*
+                       (px-g_scenarios[scenario_index].fill_price)/
+                       g_scenarios[scenario_index].exit_initial_risk_price;
+   int reached_step=(int)MathFloor(favorable_r+1.0e-10);
+   if(reached_step<1)
+      return;
+   if(reached_step>g_scenarios[scenario_index].exit_highest_r_step_seen)
+      g_scenarios[scenario_index].exit_highest_r_step_seen=reached_step;
+
+   if(mode==V1_EXIT_R_STEP_TRAILING)
+     {
+      int target_step=g_scenarios[scenario_index].exit_highest_r_step_seen;
+      if(target_step<=g_scenarios[scenario_index].exit_last_completed_r_step)
+         return;
+      double raw_target=g_scenarios[scenario_index].fill_price+
+                        (double)g_scenarios[scenario_index].direction*
+                        (double)(target_step-1)*g_scenarios[scenario_index].exit_initial_risk_price;
+      double target_sl=(g_scenarios[scenario_index].direction>0 ?
+                        NormalizePriceFloorToTick(raw_target) : NormalizePriceCeilToTick(raw_target));
+      D147RequestTrailingStop(scenario_index,tick,position_ticket,current_sl,current_tp,target_step,target_sl);
+      return;
+     }
+
+   if(mode==V1_EXIT_R_STEP_PARTIAL && !g_scenarios[scenario_index].exit_partial_disabled)
+     {
+      int target_step=g_scenarios[scenario_index].exit_last_completed_r_step+1;
+      if(target_step<=g_scenarios[scenario_index].exit_highest_r_step_seen)
+         D147RequestPartialClose(scenario_index,tick,position_ticket,volume,target_step);
+     }
+  }
+
+bool D147AggregateExitDealsForPosition(const ulong position_id,
+                                       const datetime from_time,
+                                       ulong &latest_deal,
+                                       datetime &latest_time,
+                                       double &latest_price,
+                                       long &latest_reason,
+                                       double &profit_sum,
+                                       double &commission_sum,
+                                       double &swap_sum,
+                                       double &fee_sum,
+                                       int &exit_deal_count)
+  {
+   latest_deal=0;
+   latest_time=0;
+   latest_price=0.0;
+   latest_reason=0;
+   profit_sum=0.0;
+   commission_sum=0.0;
+   swap_sum=0.0;
+   fee_sum=0.0;
+   exit_deal_count=0;
+   if(position_id==0)
+      return false;
+
+   datetime from=(from_time>86400 ? from_time-86400 : 0);
+   if(!HistorySelect(from,TimeCurrent()+60))
+      return false;
+
+   long latest_msc=-1;
+   for(int i=0;i<HistoryDealsTotal();i++)
+     {
+      ulong deal=HistoryDealGetTicket(i);
+      if(deal==0 ||
+         HistoryDealGetString(deal,DEAL_SYMBOL)!=_Symbol ||
+         (long)HistoryDealGetInteger(deal,DEAL_MAGIC)!=InpMagicNumber ||
+         (ulong)HistoryDealGetInteger(deal,DEAL_POSITION_ID)!=position_id)
+         continue;
+      ENUM_DEAL_ENTRY entry=(ENUM_DEAL_ENTRY)HistoryDealGetInteger(deal,DEAL_ENTRY);
+      if(entry!=DEAL_ENTRY_OUT && entry!=DEAL_ENTRY_OUT_BY && entry!=DEAL_ENTRY_INOUT)
+         continue;
+
+      exit_deal_count++;
+      profit_sum+=HistoryDealGetDouble(deal,DEAL_PROFIT);
+      commission_sum+=HistoryDealGetDouble(deal,DEAL_COMMISSION);
+      swap_sum+=HistoryDealGetDouble(deal,DEAL_SWAP);
+      fee_sum+=HistoryDealGetDouble(deal,DEAL_FEE);
+      long msc=HistoryDealGetInteger(deal,DEAL_TIME_MSC);
+      if(msc>latest_msc || (msc==latest_msc && deal>latest_deal))
+        {
+         latest_msc=msc;
+         latest_deal=deal;
+         latest_time=(datetime)HistoryDealGetInteger(deal,DEAL_TIME);
+         latest_price=HistoryDealGetDouble(deal,DEAL_PRICE);
+         latest_reason=HistoryDealGetInteger(deal,DEAL_REASON);
+        }
+     }
+   return (exit_deal_count>0 && latest_deal>0);
+  }
+
 void ReconcileScenarioExecution(const int scenario_index,const datetime observed_at,const bool force_history_probe=false)
   {
    if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios))
@@ -7784,19 +8147,38 @@ void ReconcileScenarioExecution(const int scenario_index,const datetime observed
    datetime exit_time=0;
    double exit_price=0.0;
    long exit_reason=0;
-   if(!FindExitDealForPosition(g_scenarios[scenario_index].broker_position_id,
-                               g_scenarios[scenario_index].fill_at,
-                               exit_deal,exit_time,exit_price,exit_reason))
-      return;
+   double exit_profit=0.0,exit_commission=0.0,exit_swap=0.0,exit_fee=0.0;
+   int exit_deal_count=0;
+
+   if(g_scenarios[scenario_index].exit_management_mode==V1_EXIT_R_STEP_PARTIAL)
+     {
+      if(!D147AggregateExitDealsForPosition(g_scenarios[scenario_index].broker_position_id,
+                                            g_scenarios[scenario_index].fill_at,
+                                            exit_deal,exit_time,exit_price,exit_reason,
+                                            exit_profit,exit_commission,exit_swap,exit_fee,exit_deal_count))
+         return;
+     }
+   else
+     {
+      if(!FindExitDealForPosition(g_scenarios[scenario_index].broker_position_id,
+                                  g_scenarios[scenario_index].fill_at,
+                                  exit_deal,exit_time,exit_price,exit_reason))
+         return;
+      exit_deal_count=1;
+      exit_profit=HistoryDealGetDouble(exit_deal,DEAL_PROFIT);
+      exit_commission=HistoryDealGetDouble(exit_deal,DEAL_COMMISSION);
+      exit_swap=HistoryDealGetDouble(exit_deal,DEAL_SWAP);
+      exit_fee=HistoryDealGetDouble(exit_deal,DEAL_FEE);
+     }
 
    g_scenarios[scenario_index].position_closed_at=exit_time;
    g_scenarios[scenario_index].exit_price=exit_price;
    g_scenarios[scenario_index].exit_reason=exit_reason;
    g_scenarios[scenario_index].exit_deal_ticket=exit_deal;
-   g_scenarios[scenario_index].exit_deal_profit=HistoryDealGetDouble(exit_deal,DEAL_PROFIT);
-   g_scenarios[scenario_index].exit_deal_commission=HistoryDealGetDouble(exit_deal,DEAL_COMMISSION);
-   g_scenarios[scenario_index].exit_deal_swap=HistoryDealGetDouble(exit_deal,DEAL_SWAP);
-   g_scenarios[scenario_index].exit_deal_fee=HistoryDealGetDouble(exit_deal,DEAL_FEE);
+   g_scenarios[scenario_index].exit_deal_profit=exit_profit;
+   g_scenarios[scenario_index].exit_deal_commission=exit_commission;
+   g_scenarios[scenario_index].exit_deal_swap=exit_swap;
+   g_scenarios[scenario_index].exit_deal_fee=exit_fee;
    if(!g_scenarios[scenario_index].execution_divergence)
       g_scenarios[scenario_index].execution_status=V1_EXEC_CLOSED;
    g_positions_closed++;
@@ -7849,10 +8231,13 @@ void ManageIntegratedExecution(const MqlTick &tick)
          g_scenarios[scenario_index].broker_order_ticket==0)
          continue;
 
-      // Filled positions are individually owned by their frozen server SL/TP.
-      // Same-direction later scenarios may coexist in separate hedging positions.
+      // D-147 changes only post-fill management. ORIGINAL returns immediately and
+      // therefore preserves the baseline frozen server SL/TP behavior.
       if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_FILLED)
+        {
+         D147ManageFilledPosition(scenario_index,tick);
          continue;
+        }
 
       if(g_scenarios[scenario_index].strategy_state==V1_STRATEGY_PENDING &&
          (FinalObjectiveConsumed(g_scenarios[scenario_index]) ||
@@ -10349,7 +10734,7 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=1.92R1L8 property_version=1.00 magic=%I64d phase=CONTINUATION_STATE_AUDIT_V1_SHADOW strategy_semantics=D134_EXECUTION_CORE_UNCHANGED fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=1.93R1L9 property_version=1.00 magic=%I64d phase=EXIT_ARCHITECTURE_RESEARCH_V1 strategy_semantics=D134_ENTRY_INITIAL_GEOMETRY_UNCHANGED_D147_EXIT_VARIANT fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         _Symbol,
                         AccountInfoString(ACCOUNT_CURRENCY),
@@ -10360,6 +10745,9 @@ int OnInit()
                         InpFixedRiskMoneyPerTrade,
                         InpEquityRiskPercentPerTrade,
                         AccountInfoInteger(ACCOUNT_MARGIN_MODE)));
+   LogLine("D147_EXIT_VARIANT_START","M1",TimeCurrent(),"",
+           StringFormat("mode=%s partial_fraction=%.8f r_basis=ACTUAL_FILL_TO_ORIGINAL_NORMALIZED_SL structural_tp_retained=true original_mode_baseline_control=true trailing_rule=PLUS_N_R_THEN_SL_N_MINUS_1_R partial_rule=HALF_REMAINING_AT_EACH_NEW_INTEGER_R full_close_substitution_on_min_volume=false m30_threshold_used=false entry_change=false initial_sl_change=false initial_tp_change=false audit_recommended_off_for_performance_comparison=true",
+                        ExitManagementModeName((int)InpExitManagementMode),V1_D147_PARTIAL_FRACTION));
    LogLine("REGIME_RESEARCH_VARIANT_START","M30",TimeCurrent(),"",
            StringFormat("mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f regime_gate_enabled=%s gate_scope=%s plan_snapshot=true wave_count=12 progression_required=2/3 protected_break_max=1 expansion_required_gt=1.0 expansion_required_only_in_v1_mode=true thresholds_are_not_inputs=true baseline_no_gate_available=true pending_cancel_retry_change=false strategy_core_change=false sizing_layer_only=true",
                         RegimeResearchModeName(InpRegimeResearchMode),
@@ -10383,6 +10771,10 @@ void OnDeinit(const int reason)
   {
    EventKillTimer();
    EdgeAuditDeinit(reason);
+   LogLine("D147_EXIT_VARIANT_STOP","M1",TimeCurrent(),"",
+           StringFormat("mode=%s trailing_moves=%I64d partial_closes=%I64d action_rejections=%I64d partial_infeasible=%I64d partial_fraction=%.8f structural_tp_retained=true 2021_untouched=true",
+                        ExitManagementModeName((int)InpExitManagementMode),g_d147_trailing_moves,g_d147_partial_closes,
+                        g_d147_action_rejections,g_d147_partial_infeasible,V1_D147_PARTIAL_FRACTION));
    LogLine("EA_STOP","",TimeCurrent(),"",
            StringFormat("reason=%d init_state=%s active_liquidity=%d liquidity_created=%I64d sweeps=%I64d body_deliveries=%I64d active_sources=%d roots_created=%I64d root_price_invalidated=%I64d root_structure_invalidated=%I64d root_watches_created=%I64d root_watches_prior_touch_rejected=%I64d root_contacts_observed=%I64d root_contexts_ready=%I64d children_created_strategy_sources=%I64d optional_child_observations=%I64d post_contact_child_events=%I64d children_invalidated_strategy_sources=%I64d legacy_refinements_ready=%I64d legacy_refinements_no_child=%I64d legacy_refinements_ambiguous=%I64d reference_touches=%I64d reference_sweeps=%I64d reference_continuations=%I64d permission_opens=%I64d permission_closes=%I64d reversal_permission=%s scenarios_planned=%I64d scenarios_canceled=%I64d scenarios_no_objective=%I64d objective_candidates_frozen=%I64d precontact_root_plans=%I64d scenario_root_contacts=%I64d root_contacts_without_preplan=%I64d m1_sweep_detected=%I64d scenario_sweeps_accepted=%I64d m1_choch_detected=%I64d scenario_choch_accepted=%I64d m1_fvg_detected=%I64d m1_fvg_gap_rejected=%I64d scenario_fvg_candidates=%I64d scenario_fvg_preselection_retests=%I64d scenario_fvg_selected=%I64d scenario_no_causal_fvg=%I64d scenario_ambiguous_fvg=%I64d execution_geometry_ready=%I64d no_r_eligible_objective=%I64d simultaneous_authorization_ambiguous=%I64d exposure_blocked=%I64d execution_infeasible=%I64d order_rejected=%I64d orders_accepted=%I64d positions_filled=%I64d pending_cancellations=%I64d cancel_rejected=%I64d execution_divergences=%I64d positions_closed=%I64d d126_authorized_sweep_events_historical_runtime_dead=%I64d d126_authorized_sweep_pools_historical_runtime_dead=%I64d structural_reaction_created=%I64d source_contacts_superseded_phase4c=%I64d",
                         reason,InitStateName(g_init_state),ArraySize(g_liquidity),g_liquidity_created,g_liquidity_sweeps,g_liquidity_body_deliveries,ArraySize(g_sources),

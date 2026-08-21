@@ -106,3 +106,22 @@ Always:
 - No arbitrary scores/veto stacks.
 - Separate implementation correctness, strategy profitability, execution integrity, and portfolio risk.
 - `2021 = KEEP UNTOUCHED` until a deliberately sealed validation stage.
+
+## D-147 EXIT ARCHITECTURE RESEARCH V1
+
+- [x] preserve ORIGINAL baseline mode
+- [x] add actual-fill-risk frozen R-step trailing mode
+- [x] retain structural TP under trailing mode
+- [x] add frozen 50%-of-remaining integer-R partial mode
+- [x] retain original SL and structural TP under partial mode
+- [x] fail safe on broker min/step volume instead of substituting full close
+- [x] aggregate partial-exit deals for final realized-net accounting
+- [x] add D-147 result summarizer and ORIGINAL baseline comparator
+- [ ] MetaEditor compile 0 errors
+- [ ] D-147 ORIGINAL canonical parity vs D-146 baseline
+- [ ] GOLD 2025 three-mode comparison
+- [ ] development-panel cross-market validation
+- [ ] decide whether any exit mode deserves promotion beyond research
+- [ ] separately resume Fill -> +1R Entry-survival causal study
+
+`2021` remains untouched.

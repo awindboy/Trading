@@ -1,10 +1,10 @@
 # Strategy Robustness Research State
 
 Last updated: 2026-08-21
-Repository base before handoff package: `f0a9be86d7d8af4e22b21e9b657669aae1245fbd`
-Current code/audit identity: `1.92R1L8 / CONTINUATION_STATE_AUDIT_V1_SHADOW`
-Current research phase: **D-146 CONTINUATION STATE AUDIT — IMPLEMENTED / TEST PENDING**
-Strategy authority: **UNCHANGED**
+Repository base before handoff package: `c541b19d68ac1589575bfaf1ab07abf1ee296a09`
+Current code/research identity: `1.93R1L9 / EXIT_ARCHITECTURE_RESEARCH_V1`
+Current research phase: **D-147 EXIT ARCHITECTURE RESEARCH V1 — IMPLEMENTED / COMPILE + BASELINE PARITY PENDING**
+Strategy authority: **UNCHANGED; ORIGINAL MODE IS BASELINE CONTROL**
 2021: **UNTOUCHED**
 
 ## Objective
@@ -202,3 +202,17 @@ Detailed evidence:
 
 Next measurement contract:
 - `docs/ea/D146_CONTINUATION_STATE_AUDIT.md`
+
+## D-147 controlled exit-architecture branch
+
+The next controlled strategy research branch is now D-147. It asks how much of the current realized-performance problem comes from post-fill profit giveback rather than Entry survival.
+
+It intentionally does **not** use the D-145 M30 progress relationship as a threshold. The first comparison isolates mechanical exit architecture:
+
+```text
+ORIGINAL vs R_STEP_TRAILING vs R_STEP_PARTIAL
+```
+
+All three share the same Entry, original normalized SL, frozen structural objective, and initial structural TP. `R_STEP_PARTIAL` uses a frozen 50% of remaining volume at each newly reached integer R; no pooled parameter optimization is authorized.
+
+Entry survival (`Fill -> +1R`) remains a separate causal study. A good D-147 result cannot be used as evidence that the Entry architecture has been fixed.

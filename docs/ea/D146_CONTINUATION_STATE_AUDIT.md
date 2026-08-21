@@ -318,3 +318,29 @@ The current 2025 cross-market continuation Fill-to-1R rate is 41.1%.
 D-146 does not solve it.
 
 A separate later/parallel Entry-survival study must use only information known at or before Fill and must not import post-+1R maturity as an Entry filter.
+
+## GOLD 2025 D-146 preliminary validation note — 2026-08-21
+
+The uploaded GOLD 2025 unified ledger reproduced the prior continuation population exactly:
+
+```text
+EXTERNAL_CONTINUATION fills = 51
++1R before normalized SL = 30 / 51 = 58.82%
++2R before normalized SL = 20 / 51 = 39.22%
+P(+2R | +1R) = 20 / 30 = 66.67%
+D-146 armed = 30
+D-146 terminal = 30
+D-146 censored = 0
+execution divergence = 0
+```
+
+The D-145 M30 maturity relation was reproduced on valid scenario-direction M30 ranges: +2R runners had lower median range progress (0.796 vs 0.918) and more remaining external room (0.954R vs 0.232R).
+
+D-146 outward refresh was common in both constrained runners and constrained failures, so it is not by itself an exit discriminator. PROTECTED_BREAK appeared in 4/10 trade-level failures and 0/20 +2R winners, but the four trades correspond to only three independent M30 PB events and PB occurred after substantial giveback, so it is too late to claim winner-protection authority.
+
+Instrumentation caveats discovered during analysis:
+
+1. the PB callback is emitted before `EnterTransition`, therefore D-146 fields labeled post-state (`owner_changed`, `trend_lost`, `after_m30_*`) are pre-transition on PB rows;
+2. the original D-146 summarizer used `external_available` rather than `one_r_m30_range_available` for one geometry classification, misclassifying three GOLD cases. Correct GOLD geometry is 11 room-rich / 13 external-constrained / 6 M30-range-unavailable.
+
+These caveats do not invalidate exact +1R/+2R/SL barriers or PB timestamps, but D-146 MQL instrumentation is not silently repaired inside D-147. A separate instrumentation correction remains available if D-146 causal-state research is resumed.

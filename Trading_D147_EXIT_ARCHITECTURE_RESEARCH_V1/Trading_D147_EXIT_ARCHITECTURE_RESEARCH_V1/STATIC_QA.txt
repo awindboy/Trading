@@ -1,0 +1,48 @@
+D-147 EXIT ARCHITECTURE RESEARCH V1 — STATIC QA
+Date: 2026-08-21
+Repository: awindboy/Trading
+Required Git HEAD: c541b19d68ac1589575bfaf1ab07abf1ee296a09
+Target build: 1.93R1L9 / EXIT_ARCHITECTURE_RESEARCH_V1
+
+Authority boundary:
+- AGENTS.md unchanged
+- EA_SPEC.md unchanged
+- 2021 untouched
+- Entry / scenario authorization / initial normalized SL / frozen structural objective / initial structural TP unchanged
+- ORIGINAL is baseline-control mode
+
+D-147 semantics:
+- R frozen from actual fill to original normalized SL
+- TRAILING: +N R -> SL +(N-1) R
+- PARTIAL: frozen 50% of current remaining volume at each newly reached integer R
+- structural TP retained in both variants
+- partial fraction is not an input
+- no M30 progress/remaining-room threshold or Entry gate
+- partial min-volume failure never substitutes a full close
+- partial mode aggregates all position exit deals for final realized-net accounting
+
+Fail-closed installer:
+- exact HEAD required
+- expected result regenerated from committed HEAD
+- working target must equal exact HEAD or exact generated D-147 result
+- idempotent rerun accepted
+- unexpected local edits rejected
+- new tools/docs refuse unknown existing content
+
+Static checks completed in packaging environment:
+- apply_d147_exit_architecture.py py_compile: PASS
+- summarize_d147_exit_architecture.py py_compile: PASS
+- compare_d147_original_baseline.py py_compile: PASS
+- D147 enum brace balance: PASS
+- D147 scenario fields brace balance: PASS
+- D147 helper block brace balance: PASS
+- D147 helper StringFormat format-specifier/argument counts: PASS (6/6 calls)
+- baseline comparator self-test on GOLD(6).csv: PASS, 6358 canonical rows
+- synthetic D147 partial ledger summarizer: PASS
+
+Not available in packaging environment:
+- MetaEditor MQL5 compile: PENDING USER LOCAL TEST
+- MT5 broker-side SLTP request validation: PENDING USER LOCAL TEST
+- MT5 partial-close request validation across symbols: PENDING USER LOCAL TEST
+- D147 ORIGINAL vs D146 independent run parity: PENDING USER LOCAL TEST
+- GOLD 2025 TRAILING/PARTIAL Strategy Tester results: PENDING USER LOCAL TEST
