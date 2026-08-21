@@ -1,7 +1,7 @@
 # EA Backlog
 
 Last updated: 2026-08-21
-Current phase: **D-146 CONTINUATION STATE AUDIT — IMPLEMENTED / COMPILE + PARITY PENDING**
+Current phase: **D-148 ENTRY SURVIVAL FAILURE TAXONOMY — IMPLEMENTED / COMPILE + AUDIT PARITY PENDING**
 Strategy authority: **UNCHANGED**
 2021: **KEEP UNTOUCHED**
 
@@ -125,3 +125,28 @@ Always:
 - [ ] separately resume Fill -> +1R Entry-survival causal study
 
 `2021` remains untouched.
+
+## P0 — D-148 Entry-survival failure taxonomy
+
+- [x] define population as `EXTERNAL_CONTINUATION + normalized SL before +1R`
+- [x] keep exact Fill-to-SL risk and exact Bid/Ask barrier semantics
+- [x] freeze original PLAN map timeframe/owner and Root identity
+- [x] record frozen-owner protected break separately from total map-direction support
+- [x] record Root invalidation separately
+- [x] after SL, shadow-track original Entry recovery and original +1R recovery
+- [x] terminalize on +1R recovery vs current H1/M30 direction-support loss vs right censor
+- [x] no arbitrary post-SL time cutoff
+- [x] retain runner after real position close without changing broker/strategy state
+- [ ] MetaEditor compile 0 errors
+- [ ] GOLD short audit OFF/ON non-audit parity PASS
+- [ ] GOLD 2025 D-148 EVENT INTEGRITY PASS
+- [ ] classify the 21 GOLD 2025 `<1R` failures by causal outcome
+- [ ] compare causal pre-Fill context across failure classes and +1R controls
+- [ ] decide whether D-148B needs extra M1 reaction-strength / correction-completion instrumentation
+- [ ] validate any discovered relation on other GOLD years before strategy authority
+
+### Future — smart partial management (recorded, not active)
+
+- [ ] revisit `R_STEP_PARTIAL` together with D-145/D-146 continuation state so the fraction left as runner can depend on causally available post-+1R structure rather than a blind fixed 50%
+- [ ] preserve a mechanical PARTIAL control when that study begins
+- [ ] do not optimize a pooled M30-progress cutoff or partial fraction from GOLD 2025

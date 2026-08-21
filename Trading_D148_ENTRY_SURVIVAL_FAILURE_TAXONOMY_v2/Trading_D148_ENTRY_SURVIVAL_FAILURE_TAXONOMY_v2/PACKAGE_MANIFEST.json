@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "package": "Trading_D148_ENTRY_SURVIVAL_FAILURE_TAXONOMY_v2",
+  "date": "2026-08-21",
+  "repository": "awindboy/Trading",
+  "expectedHead": "1889f9d5c53bc37e6061b9e309fa11b1534c1123",
+  "targetBuild": "1.94R1L10 / ENTRY_SURVIVAL_FAILURE_TAXONOMY_V1_SHADOW",
+  "strategyAuthority": "NONE",
+  "files": [
+    {
+      "path": "README_D148_APPLY.md",
+      "bytes": 5473,
+      "sha256": "28df570abaaa80cc17fab31d5412db5336173d584fa68fb73269377b86b34b05"
+    },
+    {
+      "path": "STATIC_QA.txt",
+      "bytes": 3236,
+      "sha256": "cfe3eb5ac7f487e9630c63332786b3223be8282918a0b8971c465025695fd78f"
+    },
+    {
+      "path": "payload/docs/ea/D148_ENTRY_SURVIVAL_FAILURE_TAXONOMY.md",
+      "bytes": 10414,
+      "sha256": "3f0a9a8382cc0c4afb172caff445cc9e98535d90b70742e8006b38775e288bc8"
+    },
+    {
+      "path": "payload/tools/summarize_d148_entry_survival_failure_taxonomy.py",
+      "bytes": 16626,
+      "sha256": "edc24800e6bda0d9de06d093a74269b2970d567da8383d91b3f0630ac72b4536"
+    },
+    {
+      "path": "tools/apply_d148_entry_survival_failure_taxonomy.py",
+      "bytes": 60839,
+      "sha256": "051f523e45314f31575390cb65a5d846c3b2db181b6e992472a3ac819e3180cc"
+    }
+  ]
+}

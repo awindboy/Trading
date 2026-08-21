@@ -6127,3 +6127,30 @@ R is frozen from actual fill to the original normalized strategy SL. Trailing us
 Reason: D-144/D-145 show substantial favorable excursion that is later given back, while D-145 separately shows that Fill -> +1R survival is not solved. A mechanical exit comparison can measure the contribution of profit giveback without reusing the M30 continuation variable as an Entry filter or fitting a maturity threshold.
 
 Research authority only. `AGENTS.md` / `EA_SPEC.md` baseline authority is unchanged. 2021 remains untouched.
+
+## D-148 — classify `<1R` failures before changing Entry
+
+Status: ACTIVE RESEARCH DECISION / ZERO STRATEGY AUTHORITY
+
+GOLD 2025 D-147 confirmed that exit management can repair profit giveback only after favorable excursion exists. The continuation trades that never reached +1R were unchanged across ORIGINAL / TRAILING / PARTIAL.
+
+Therefore the next research branch isolates `Fill -> +1R` failure and asks whether each SL-first trade is better explained by:
+
+```text
+higher-timeframe direction support failure
+vs
+entry/correction timing or SL sensitivity while direction remains supported
+```
+
+D-148 observes exact causal state and post-SL counterfactual price only. It does not change Entry, SL, TP, exit management, map state, or order lifecycle.
+
+A frozen PLAN owner protected break is recorded as an authority-event, but is not automatically called total direction failure: same-direction successor H1/M30 authority may exist.
+
+Separately record a future research idea:
+
+```text
+SMART_PARTIAL_WITH_CONTINUATION_STATE
+= combine mechanical partial realization with causally available +1R continuation state to reduce needless big-winner haircut
+```
+
+This idea is backlog only and is not implemented in D-148.

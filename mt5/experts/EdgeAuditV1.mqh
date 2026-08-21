@@ -1,13 +1,13 @@
 //+------------------------------------------------------------------+
 //| EdgeAuditV1.mqh                                                  |
-//| D-146 CONTINUATION STATE AUDIT -- shadow measurement          |
+//| D-148 ENTRY SURVIVAL FAILURE TAXONOMY -- shadow measurement   |
 //|                                                                  |
 //| STRATEGY AUTHORITY: NONE                                         |
 //| This module may observe and log. It may not change a trade.      |
 //+------------------------------------------------------------------+
 
-#define V1_EDGE_AUDIT_BUILD       "1.92R1L8"
-#define V1_EDGE_AUDIT_PHASE       "CONTINUATION_STATE_AUDIT_V1_SHADOW"
+#define V1_EDGE_AUDIT_BUILD       "1.94R1L10"
+#define V1_EDGE_AUDIT_PHASE       "ENTRY_SURVIVAL_FAILURE_TAXONOMY_V1_SHADOW"
 #define V1_EDGE_FLUSH_BATCH       256
 #define V1_EDGE_ALL_MASK          15
 #define V1_EDGE_H15               900
@@ -213,6 +213,55 @@ struct V1EdgeRunnerTracker
    long       d146_m30_outward_external_refresh_count;
    datetime   d146_first_outward_external_refresh_at;
    datetime   d146_first_deterioration_at;
+
+
+   // D-148 shadow-only Entry-survival failure taxonomy. No strategy authority.
+   bool       d148_eligible;
+   bool       d148_pre_sl_resolved;
+   bool       d148_post_sl_active;
+   bool       d148_terminal;
+   string     d148_terminal_outcome;
+   datetime   d148_resolved_at;
+   int        d148_original_map_tf;
+   string     d148_original_owner_id;
+   string     d148_root_id;
+   bool       d148_original_authority_alive_at_fill;
+   bool       d148_frozen_owner_invalidated;
+   datetime   d148_frozen_owner_invalidated_at;
+   bool       d148_map_support_loss_seen;
+   datetime   d148_first_map_support_loss_at;
+   int        d148_first_map_support_loss_direction;
+   string     d148_first_map_support_loss_tf;
+   string     d148_first_map_support_loss_owner_id;
+   datetime   d148_post_sl_map_support_loss_at;
+   int        d148_post_sl_map_support_loss_direction;
+   string     d148_post_sl_map_support_loss_tf;
+   string     d148_post_sl_map_support_loss_owner_id;
+   datetime   d148_root_invalidated_at;
+   string     d148_root_invalidation_reason;
+   datetime   d148_sl_at;
+   double     d148_sl_exit_side_price;
+   double     d148_pre_sl_mfe_r;
+   double     d148_pre_sl_mae_r;
+   bool       d148_map_support_same_at_sl;
+   bool       d148_entry_recovered_after_sl;
+   datetime   d148_entry_recovered_at;
+   bool       d148_one_r_recovered_after_sl;
+   datetime   d148_one_r_recovered_at;
+   double     d148_post_sl_max_adverse_r_from_fill;
+   double     d148_post_sl_max_favorable_r_from_fill;
+   long       d148_h1_same_events_at_sl;
+   long       d148_h1_opp_events_at_sl;
+   long       d148_m30_same_events_at_sl;
+   long       d148_m30_opp_events_at_sl;
+   long       d148_m1_same_events_at_sl;
+   long       d148_m1_opp_events_at_sl;
+   long       d148_h1_same_pb_at_sl;
+   long       d148_h1_opp_pb_at_sl;
+   long       d148_m30_same_pb_at_sl;
+   long       d148_m30_opp_pb_at_sl;
+   long       d148_m1_same_pb_at_sl;
+   long       d148_m1_opp_pb_at_sl;
   };
 
 
@@ -242,6 +291,17 @@ long g_edge_d146_structure_events=0;
 long g_edge_d146_original_external_deliveries=0;
 long g_edge_d146_terminals=0;
 long g_edge_d146_censored=0;
+
+long g_edge_d148_eligible=0;
+long g_edge_d148_one_r_controls=0;
+long g_edge_d148_sl_failures=0;
+long g_edge_d148_entry_recoveries=0;
+long g_edge_d148_one_r_recoveries=0;
+long g_edge_d148_map_loss_terminals=0;
+long g_edge_d148_frozen_owner_invalidations=0;
+long g_edge_d148_root_invalidations=0;
+long g_edge_d148_censored=0;
+long g_edge_d148_pre_sl_censored=0;
 
 // Event counters are observation-only. They let the +1R snapshot measure how
 // structure changed after Fill without turning any event into trade authority.
@@ -1233,6 +1293,343 @@ void EdgeAuditSnapshotAtOneR(V1EdgeRunnerTracker &r,const datetime at,const doub
    g_edge_runner_one_r_snapshots++;
   }
 
+
+//+------------------------------------------------------------------+
+//| D-148 Entry-survival failure taxonomy -- shadow only             |
+//+------------------------------------------------------------------+
+void EdgeAuditD148CurrentMapState(int &direction,string &tf_name,string &owner_id)
+  {
+   ENUM_TIMEFRAMES tf=EdgeAuditHighestMapTf();
+   direction=HighestActiveMapDirection();
+   tf_name=(tf==PERIOD_CURRENT ? "NONE" : TfName(tf));
+   owner_id="NA";
+   if(tf==PERIOD_H1 && g_structure[1].owner_id!="") owner_id=g_structure[1].owner_id;
+   else if(tf==PERIOD_M30 && g_structure[2].owner_id!="") owner_id=g_structure[2].owner_id;
+  }
+
+bool EdgeAuditD148OriginalAuthorityAlive(const V1EdgeRunnerTracker &r)
+  {
+   int index=-1;
+   if(r.d148_original_map_tf==(int)PERIOD_H1) index=1;
+   else if(r.d148_original_map_tf==(int)PERIOD_M30) index=2;
+   if(index<0 || r.d148_original_owner_id=="") return false;
+   return (g_structure[index].owner_id==r.d148_original_owner_id &&
+           TrendDirection(g_structure[index].trend)==r.direction);
+  }
+
+void EdgeAuditD148ResetRunner(V1EdgeRunnerTracker &r)
+  {
+   r.d148_eligible=false;
+   r.d148_pre_sl_resolved=false;
+   r.d148_post_sl_active=false;
+   r.d148_terminal=false;
+   r.d148_terminal_outcome="";
+   r.d148_resolved_at=0;
+   r.d148_original_map_tf=(int)PERIOD_CURRENT;
+   r.d148_original_owner_id="";
+   r.d148_root_id="";
+   r.d148_original_authority_alive_at_fill=false;
+   r.d148_frozen_owner_invalidated=false;
+   r.d148_frozen_owner_invalidated_at=0;
+   r.d148_map_support_loss_seen=false;
+   r.d148_first_map_support_loss_at=0;
+   r.d148_first_map_support_loss_direction=0;
+   r.d148_first_map_support_loss_tf="";
+   r.d148_first_map_support_loss_owner_id="";
+   r.d148_post_sl_map_support_loss_at=0;
+   r.d148_post_sl_map_support_loss_direction=0;
+   r.d148_post_sl_map_support_loss_tf="";
+   r.d148_post_sl_map_support_loss_owner_id="";
+   r.d148_root_invalidated_at=0;
+   r.d148_root_invalidation_reason="";
+   r.d148_sl_at=0;
+   r.d148_sl_exit_side_price=0.0;
+   r.d148_pre_sl_mfe_r=0.0;
+   r.d148_pre_sl_mae_r=0.0;
+   r.d148_map_support_same_at_sl=false;
+   r.d148_entry_recovered_after_sl=false;
+   r.d148_entry_recovered_at=0;
+   r.d148_one_r_recovered_after_sl=false;
+   r.d148_one_r_recovered_at=0;
+   r.d148_post_sl_max_adverse_r_from_fill=0.0;
+   r.d148_post_sl_max_favorable_r_from_fill=-1.0e100;
+   r.d148_h1_same_events_at_sl=0;
+   r.d148_h1_opp_events_at_sl=0;
+   r.d148_m30_same_events_at_sl=0;
+   r.d148_m30_opp_events_at_sl=0;
+   r.d148_m1_same_events_at_sl=0;
+   r.d148_m1_opp_events_at_sl=0;
+   r.d148_h1_same_pb_at_sl=0;
+   r.d148_h1_opp_pb_at_sl=0;
+   r.d148_m30_same_pb_at_sl=0;
+   r.d148_m30_opp_pb_at_sl=0;
+   r.d148_m1_same_pb_at_sl=0;
+   r.d148_m1_opp_pb_at_sl=0;
+  }
+
+void EdgeAuditD148ArmAtFill(V1EdgeRunnerTracker &r,const V1ScenarioPlan &p,const datetime at)
+  {
+   EdgeAuditD148ResetRunner(r);
+   if(p.scope!=V1_SCOPE_EXTERNAL_CONTINUATION) return;
+   r.d148_eligible=true;
+   r.d148_original_map_tf=(int)p.active_map_tf;
+   r.d148_original_owner_id=p.owner_id;
+   r.d148_root_id=p.root_zone_id;
+   r.d148_original_authority_alive_at_fill=EdgeAuditD148OriginalAuthorityAlive(r);
+   int map_dir=0; string map_tf="NONE",map_owner="NA";
+   EdgeAuditD148CurrentMapState(map_dir,map_tf,map_owner);
+   g_edge_d148_eligible++;
+   EdgeAuditWrite("EDGE_AUDIT_D148_FILL_STATE","TICK",at,r.scenario_id,
+      StringFormat("scenario_id=%s direction=%s fill_at=%s active_map_tf_at_plan=%s frozen_owner_id=%s frozen_owner_alive_at_fill=%s current_highest_map_tf=%s current_map_owner_id=%s current_map_direction=%s current_map_support_same=%s root_id=%s fill_price=%.10f normalized_sl=%.10f target_1r=%.10f risk_distance=%.10f strategy_authority=false",
+                   r.scenario_id,DirectionName(r.direction),EdgeAuditTimeOrNA(r.fill_at),TfName((ENUM_TIMEFRAMES)r.d148_original_map_tf),
+                   r.d148_original_owner_id=="" ? "NA" : r.d148_original_owner_id,
+                   r.d148_original_authority_alive_at_fill ? "true" : "false",map_tf,map_owner,DirectionName(map_dir),
+                   map_dir==r.direction ? "true" : "false",r.d148_root_id=="" ? "NA" : r.d148_root_id,
+                   r.fill_price,r.normalized_sl,r.target_1r,r.risk_distance));
+  }
+
+string EdgeAuditD148PostSlEventDelta(const V1EdgeRunnerTracker &r)
+  {
+   return StringFormat("post_sl_h1_same_events=%I64d post_sl_h1_opp_events=%I64d post_sl_m30_same_events=%I64d post_sl_m30_opp_events=%I64d post_sl_m1_same_events=%I64d post_sl_m1_opp_events=%I64d post_sl_h1_same_pb=%I64d post_sl_h1_opp_pb=%I64d post_sl_m30_same_pb=%I64d post_sl_m30_opp_pb=%I64d post_sl_m1_same_pb=%I64d post_sl_m1_opp_pb=%I64d",
+      EdgeAuditDirCounter(PERIOD_H1,r.direction)-r.d148_h1_same_events_at_sl,
+      EdgeAuditDirCounter(PERIOD_H1,-r.direction)-r.d148_h1_opp_events_at_sl,
+      EdgeAuditDirCounter(PERIOD_M30,r.direction)-r.d148_m30_same_events_at_sl,
+      EdgeAuditDirCounter(PERIOD_M30,-r.direction)-r.d148_m30_opp_events_at_sl,
+      EdgeAuditDirCounter(PERIOD_M1,r.direction)-r.d148_m1_same_events_at_sl,
+      EdgeAuditDirCounter(PERIOD_M1,-r.direction)-r.d148_m1_opp_events_at_sl,
+      EdgeAuditPbCounter(PERIOD_H1,r.direction)-r.d148_h1_same_pb_at_sl,
+      EdgeAuditPbCounter(PERIOD_H1,-r.direction)-r.d148_h1_opp_pb_at_sl,
+      EdgeAuditPbCounter(PERIOD_M30,r.direction)-r.d148_m30_same_pb_at_sl,
+      EdgeAuditPbCounter(PERIOD_M30,-r.direction)-r.d148_m30_opp_pb_at_sl,
+      EdgeAuditPbCounter(PERIOD_M1,r.direction)-r.d148_m1_same_pb_at_sl,
+      EdgeAuditPbCounter(PERIOD_M1,-r.direction)-r.d148_m1_opp_pb_at_sl);
+  }
+
+void EdgeAuditD148Terminal(V1EdgeRunnerTracker &r,const string outcome,const datetime at,const double px)
+  {
+   if(!r.d148_eligible || r.d148_terminal) return;
+   r.d148_post_sl_active=false;
+   r.d148_terminal=true;
+   r.d148_terminal_outcome=outcome;
+   r.d148_resolved_at=at;
+   int map_dir=0; string map_tf="NONE",map_owner="NA";
+   EdgeAuditD148CurrentMapState(map_dir,map_tf,map_owner);
+   double extra_beyond_sl=MathMax(0.0,r.d148_post_sl_max_adverse_r_from_fill-1.0);
+   string detail=StringFormat("scenario_id=%s direction=%s outcome=%s sl_at=%s resolved_at=%s exit_side_price=%.10f fill_price=%.10f risk_distance=%.10f pre_sl_mfe_r=%.10f pre_sl_mae_r=%.10f map_support_same_at_sl=%s entry_recovered_after_sl=%s entry_recovered_at=%s one_r_recovered_after_sl=%s one_r_recovered_at=%s post_sl_max_adverse_r_from_fill=%.10f post_sl_extra_beyond_sl_r=%.10f post_sl_max_favorable_r_from_fill=%.10f frozen_owner_invalidated=%s frozen_owner_invalidated_at=%s first_map_support_loss_at=%s first_map_support_loss_direction=%s first_map_support_loss_tf=%s first_map_support_loss_owner_id=%s post_sl_map_support_loss_at=%s post_sl_map_support_loss_direction=%s post_sl_map_support_loss_tf=%s post_sl_map_support_loss_owner_id=%s root_invalidated_at=%s root_invalidation_reason=%s current_highest_map_tf=%s current_map_owner_id=%s current_map_direction=%s strategy_authority=false",
+      r.scenario_id,DirectionName(r.direction),outcome,EdgeAuditTimeOrNA(r.d148_sl_at),EdgeAuditTimeOrNA(at),px,r.fill_price,r.risk_distance,
+      r.d148_pre_sl_mfe_r,r.d148_pre_sl_mae_r,r.d148_map_support_same_at_sl ? "true" : "false",
+      r.d148_entry_recovered_after_sl ? "true" : "false",EdgeAuditTimeOrNA(r.d148_entry_recovered_at),
+      r.d148_one_r_recovered_after_sl ? "true" : "false",EdgeAuditTimeOrNA(r.d148_one_r_recovered_at),
+      r.d148_post_sl_max_adverse_r_from_fill,extra_beyond_sl,r.d148_post_sl_max_favorable_r_from_fill,
+      r.d148_frozen_owner_invalidated ? "true" : "false",EdgeAuditTimeOrNA(r.d148_frozen_owner_invalidated_at),
+      EdgeAuditTimeOrNA(r.d148_first_map_support_loss_at),DirectionName(r.d148_first_map_support_loss_direction),
+      r.d148_first_map_support_loss_tf=="" ? "NA" : r.d148_first_map_support_loss_tf,
+      r.d148_first_map_support_loss_owner_id=="" ? "NA" : r.d148_first_map_support_loss_owner_id,
+      EdgeAuditTimeOrNA(r.d148_post_sl_map_support_loss_at),DirectionName(r.d148_post_sl_map_support_loss_direction),
+      r.d148_post_sl_map_support_loss_tf=="" ? "NA" : r.d148_post_sl_map_support_loss_tf,
+      r.d148_post_sl_map_support_loss_owner_id=="" ? "NA" : r.d148_post_sl_map_support_loss_owner_id,
+      EdgeAuditTimeOrNA(r.d148_root_invalidated_at),r.d148_root_invalidation_reason=="" ? "NA" : r.d148_root_invalidation_reason,
+      map_tf,map_owner,DirectionName(map_dir));
+   detail+=" "+EdgeAuditD148PostSlEventDelta(r);
+   if(r.scenario_index>=0 && r.scenario_index<ArraySize(g_scenarios) && g_scenarios[r.scenario_index].valid)
+      detail+=" "+EdgeAuditRunnerMarketContext(g_scenarios[r.scenario_index],at,px,r.risk_distance,"d148_terminal");
+   EdgeAuditWrite("EDGE_AUDIT_D148_TERMINAL","TICK",at,r.scenario_id,detail);
+   if(outcome=="ORIGINAL_1R_RECOVERED_BEFORE_MAP_SUPPORT_LOSS") g_edge_d148_one_r_recoveries++;
+   else g_edge_d148_map_loss_terminals++;
+  }
+
+void EdgeAuditD148OnOneRBeforeSl(V1EdgeRunnerTracker &r,const datetime at,const double px)
+  {
+   if(!r.d148_eligible || r.d148_pre_sl_resolved) return;
+   r.d148_pre_sl_resolved=true;
+   r.d148_terminal=true;
+   r.d148_terminal_outcome="ONE_R_CONTROL";
+   r.d148_resolved_at=at;
+   int map_dir=0; string map_tf="NONE",map_owner="NA";
+   EdgeAuditD148CurrentMapState(map_dir,map_tf,map_owner);
+   EdgeAuditWrite("EDGE_AUDIT_D148_1R_CONTROL","TICK",at,r.scenario_id,
+      StringFormat("scenario_id=%s direction=%s one_r_at=%s exit_side_price=%.10f fill_price=%.10f risk_distance=%.10f pre_1r_mfe_r=%.10f pre_1r_mae_r=%.10f frozen_owner_invalidated_before_1r=%s frozen_owner_invalidated_at=%s map_support_loss_seen_before_1r=%s first_map_support_loss_at=%s root_invalidated_before_1r=%s root_invalidated_at=%s current_highest_map_tf=%s current_map_owner_id=%s current_map_direction=%s strategy_authority=false",
+         r.scenario_id,DirectionName(r.direction),EdgeAuditTimeOrNA(at),px,r.fill_price,r.risk_distance,r.max_favorable_r,r.max_adverse_r,
+         r.d148_frozen_owner_invalidated ? "true" : "false",EdgeAuditTimeOrNA(r.d148_frozen_owner_invalidated_at),
+         r.d148_map_support_loss_seen ? "true" : "false",EdgeAuditTimeOrNA(r.d148_first_map_support_loss_at),
+         r.d148_root_invalidated_at>0 ? "true" : "false",EdgeAuditTimeOrNA(r.d148_root_invalidated_at),map_tf,map_owner,DirectionName(map_dir)));
+   g_edge_d148_one_r_controls++;
+  }
+
+void EdgeAuditD148FreezeSlCounters(V1EdgeRunnerTracker &r)
+  {
+   r.d148_h1_same_events_at_sl=EdgeAuditDirCounter(PERIOD_H1,r.direction);
+   r.d148_h1_opp_events_at_sl=EdgeAuditDirCounter(PERIOD_H1,-r.direction);
+   r.d148_m30_same_events_at_sl=EdgeAuditDirCounter(PERIOD_M30,r.direction);
+   r.d148_m30_opp_events_at_sl=EdgeAuditDirCounter(PERIOD_M30,-r.direction);
+   r.d148_m1_same_events_at_sl=EdgeAuditDirCounter(PERIOD_M1,r.direction);
+   r.d148_m1_opp_events_at_sl=EdgeAuditDirCounter(PERIOD_M1,-r.direction);
+   r.d148_h1_same_pb_at_sl=EdgeAuditPbCounter(PERIOD_H1,r.direction);
+   r.d148_h1_opp_pb_at_sl=EdgeAuditPbCounter(PERIOD_H1,-r.direction);
+   r.d148_m30_same_pb_at_sl=EdgeAuditPbCounter(PERIOD_M30,r.direction);
+   r.d148_m30_opp_pb_at_sl=EdgeAuditPbCounter(PERIOD_M30,-r.direction);
+   r.d148_m1_same_pb_at_sl=EdgeAuditPbCounter(PERIOD_M1,r.direction);
+   r.d148_m1_opp_pb_at_sl=EdgeAuditPbCounter(PERIOD_M1,-r.direction);
+  }
+
+void EdgeAuditD148OnSlFirst(V1EdgeRunnerTracker &r,const datetime at,const double px,const double signed_r)
+  {
+   if(!r.d148_eligible || r.d148_pre_sl_resolved) return;
+   r.d148_pre_sl_resolved=true;
+   r.d148_sl_at=at;
+   r.d148_sl_exit_side_price=px;
+   r.d148_pre_sl_mfe_r=r.max_favorable_r;
+   r.d148_pre_sl_mae_r=r.max_adverse_r;
+   r.d148_post_sl_max_adverse_r_from_fill=MathMax(0.0,-signed_r);
+   r.d148_post_sl_max_favorable_r_from_fill=signed_r;
+   EdgeAuditD148FreezeSlCounters(r);
+   int map_dir=0; string map_tf="NONE",map_owner="NA";
+   EdgeAuditD148CurrentMapState(map_dir,map_tf,map_owner);
+   r.d148_map_support_same_at_sl=(map_dir==r.direction);
+   g_edge_d148_sl_failures++;
+   string detail=StringFormat("scenario_id=%s direction=%s sl_at=%s exit_side_price=%.10f fill_price=%.10f normalized_sl=%.10f risk_distance=%.10f pre_sl_mfe_r=%.10f pre_sl_mae_r=%.10f active_map_tf_at_plan=%s frozen_owner_id=%s frozen_owner_alive_at_fill=%s frozen_owner_invalidated_before_sl=%s frozen_owner_invalidated_at=%s map_support_loss_seen_before_sl=%s first_map_support_loss_at=%s map_support_same_at_sl=%s current_highest_map_tf=%s current_map_owner_id=%s current_map_direction=%s root_id=%s root_invalidated_before_sl=%s root_invalidated_at=%s root_invalidation_reason=%s strategy_authority=false",
+      r.scenario_id,DirectionName(r.direction),EdgeAuditTimeOrNA(at),px,r.fill_price,r.normalized_sl,r.risk_distance,
+      r.d148_pre_sl_mfe_r,r.d148_pre_sl_mae_r,TfName((ENUM_TIMEFRAMES)r.d148_original_map_tf),
+      r.d148_original_owner_id=="" ? "NA" : r.d148_original_owner_id,r.d148_original_authority_alive_at_fill ? "true" : "false",
+      r.d148_frozen_owner_invalidated ? "true" : "false",EdgeAuditTimeOrNA(r.d148_frozen_owner_invalidated_at),
+      r.d148_map_support_loss_seen ? "true" : "false",EdgeAuditTimeOrNA(r.d148_first_map_support_loss_at),
+      r.d148_map_support_same_at_sl ? "true" : "false",map_tf,map_owner,DirectionName(map_dir),
+      r.d148_root_id=="" ? "NA" : r.d148_root_id,r.d148_root_invalidated_at>0 ? "true" : "false",
+      EdgeAuditTimeOrNA(r.d148_root_invalidated_at),r.d148_root_invalidation_reason=="" ? "NA" : r.d148_root_invalidation_reason);
+   if(r.scenario_index>=0 && r.scenario_index<ArraySize(g_scenarios) && g_scenarios[r.scenario_index].valid)
+      detail+=" "+EdgeAuditRunnerMarketContext(g_scenarios[r.scenario_index],at,px,r.risk_distance,"d148_sl");
+   EdgeAuditWrite("EDGE_AUDIT_D148_SL_FAILURE","TICK",at,r.scenario_id,detail);
+   r.d148_post_sl_active=true;
+   if(!r.d148_map_support_same_at_sl)
+      EdgeAuditD148Terminal(r,"MAP_SUPPORT_NOT_SAME_AT_SL",at,px);
+  }
+
+void EdgeAuditD148TrackPostSl(V1EdgeRunnerTracker &r,const datetime at,const double px)
+  {
+   if(!r.d148_post_sl_active || r.d148_terminal || r.risk_distance<=0.0) return;
+   double signed_r=(r.direction>0 ? px-r.fill_price : r.fill_price-px)/r.risk_distance;
+   if(-signed_r>r.d148_post_sl_max_adverse_r_from_fill) r.d148_post_sl_max_adverse_r_from_fill=-signed_r;
+   if(signed_r>r.d148_post_sl_max_favorable_r_from_fill) r.d148_post_sl_max_favorable_r_from_fill=signed_r;
+   bool hit_entry=(r.direction>0 ? px>=r.fill_price : px<=r.fill_price);
+   bool hit_one=(r.direction>0 ? px>=r.target_1r : px<=r.target_1r);
+   if(hit_entry && !r.d148_entry_recovered_after_sl)
+     {
+      r.d148_entry_recovered_after_sl=true;
+      r.d148_entry_recovered_at=at;
+      g_edge_d148_entry_recoveries++;
+      EdgeAuditWrite("EDGE_AUDIT_D148_ENTRY_RECOVERED","TICK",at,r.scenario_id,
+         StringFormat("scenario_id=%s direction=%s sl_at=%s entry_recovered_at=%s exit_side_price=%.10f post_sl_max_adverse_r_from_fill=%.10f strategy_authority=false",
+                      r.scenario_id,DirectionName(r.direction),EdgeAuditTimeOrNA(r.d148_sl_at),EdgeAuditTimeOrNA(at),px,r.d148_post_sl_max_adverse_r_from_fill));
+     }
+   if(hit_one)
+     {
+      r.d148_one_r_recovered_after_sl=true;
+      r.d148_one_r_recovered_at=at;
+      EdgeAuditD148Terminal(r,"ORIGINAL_1R_RECOVERED_BEFORE_MAP_SUPPORT_LOSS",at,px);
+     }
+  }
+
+void EdgeAuditD148OnStructureEvent(const V1StructureState &state,const int event_type,const int direction,const datetime available_at)
+  {
+   if(event_type!=V1_EVENT_PROTECTED_BREAK) return;
+   for(int i=0;i<ArraySize(g_edge_runners);i++)
+     {
+      if(!g_edge_runners[i].valid || !g_edge_runners[i].d148_eligible || g_edge_runners[i].d148_terminal || g_edge_runners[i].d148_frozen_owner_invalidated) continue;
+      if((int)state.tf!=g_edge_runners[i].d148_original_map_tf) continue;
+      if(g_edge_runners[i].d148_original_owner_id=="" || state.owner_id!=g_edge_runners[i].d148_original_owner_id) continue;
+      g_edge_runners[i].d148_frozen_owner_invalidated=true;
+      g_edge_runners[i].d148_frozen_owner_invalidated_at=available_at;
+      g_edge_d148_frozen_owner_invalidations++;
+      EdgeAuditWrite("EDGE_AUDIT_D148_FROZEN_OWNER_INVALIDATED",TfName(state.tf),available_at,g_edge_runners[i].scenario_id,
+         StringFormat("scenario_id=%s direction=%s active_map_tf_at_plan=%s frozen_owner_id=%s event_direction=%s invalidated_at=%s pre_sl_resolved=%s post_sl_active=%s callback_state_is_pre_transition=true protected_break_itself_is_causal_invalidation=true strategy_authority=false",
+                      g_edge_runners[i].scenario_id,DirectionName(g_edge_runners[i].direction),TfName((ENUM_TIMEFRAMES)g_edge_runners[i].d148_original_map_tf),g_edge_runners[i].d148_original_owner_id,
+                      DirectionName(direction),EdgeAuditTimeOrNA(available_at),g_edge_runners[i].d148_pre_sl_resolved ? "true" : "false",g_edge_runners[i].d148_post_sl_active ? "true" : "false"));
+     }
+  }
+
+void EdgeAuditD148OnRootInvalidated(const V1SourceZone &root,const datetime available_at,const string reason)
+  {
+   for(int i=0;i<ArraySize(g_edge_runners);i++)
+     {
+      if(!g_edge_runners[i].valid || !g_edge_runners[i].d148_eligible || g_edge_runners[i].d148_terminal || g_edge_runners[i].d148_root_invalidated_at>0) continue;
+      if(g_edge_runners[i].d148_root_id=="" || root.id!=g_edge_runners[i].d148_root_id) continue;
+      g_edge_runners[i].d148_root_invalidated_at=available_at;
+      g_edge_runners[i].d148_root_invalidation_reason=reason;
+      g_edge_d148_root_invalidations++;
+      EdgeAuditWrite("EDGE_AUDIT_D148_ROOT_INVALIDATED",TfName(root.tf),available_at,g_edge_runners[i].scenario_id,
+         StringFormat("scenario_id=%s direction=%s root_id=%s root_tf=%s invalidated_at=%s reason=%s pre_sl_resolved=%s post_sl_active=%s strategy_authority=false",
+                      g_edge_runners[i].scenario_id,DirectionName(g_edge_runners[i].direction),root.id,TfName(root.tf),EdgeAuditTimeOrNA(available_at),reason,
+                      g_edge_runners[i].d148_pre_sl_resolved ? "true" : "false",g_edge_runners[i].d148_post_sl_active ? "true" : "false"));
+     }
+  }
+
+void EdgeAuditD148OnMapSample(const datetime available_at,const string sample_reason)
+  {
+   int map_dir=0; string map_tf="NONE",map_owner="NA";
+   EdgeAuditD148CurrentMapState(map_dir,map_tf,map_owner);
+   for(int i=0;i<ArraySize(g_edge_runners);i++)
+     {
+      if(!g_edge_runners[i].valid || !g_edge_runners[i].d148_eligible || g_edge_runners[i].d148_terminal) continue;
+      if(map_dir==g_edge_runners[i].direction) continue;
+      if(!g_edge_runners[i].d148_map_support_loss_seen)
+        {
+         g_edge_runners[i].d148_map_support_loss_seen=true;
+         g_edge_runners[i].d148_first_map_support_loss_at=available_at;
+         g_edge_runners[i].d148_first_map_support_loss_direction=map_dir;
+         g_edge_runners[i].d148_first_map_support_loss_tf=map_tf;
+         g_edge_runners[i].d148_first_map_support_loss_owner_id=map_owner;
+         EdgeAuditWrite("EDGE_AUDIT_D148_MAP_SUPPORT_LOST",map_tf,available_at,g_edge_runners[i].scenario_id,
+            StringFormat("scenario_id=%s direction=%s lost_at=%s sample_reason=%s current_highest_map_tf=%s current_map_owner_id=%s current_map_direction=%s pre_sl_resolved=%s post_sl_active=%s frozen_owner_invalidated=%s frozen_owner_invalidated_at=%s strategy_authority=false",
+                         g_edge_runners[i].scenario_id,DirectionName(g_edge_runners[i].direction),EdgeAuditTimeOrNA(available_at),sample_reason,map_tf,map_owner,DirectionName(map_dir),
+                         g_edge_runners[i].d148_pre_sl_resolved ? "true" : "false",g_edge_runners[i].d148_post_sl_active ? "true" : "false",
+                         g_edge_runners[i].d148_frozen_owner_invalidated ? "true" : "false",EdgeAuditTimeOrNA(g_edge_runners[i].d148_frozen_owner_invalidated_at)));
+        }
+      if(g_edge_runners[i].d148_post_sl_active)
+        {
+         if(g_edge_runners[i].d148_post_sl_map_support_loss_at<=0)
+           {
+            g_edge_runners[i].d148_post_sl_map_support_loss_at=available_at;
+            g_edge_runners[i].d148_post_sl_map_support_loss_direction=map_dir;
+            g_edge_runners[i].d148_post_sl_map_support_loss_tf=map_tf;
+            g_edge_runners[i].d148_post_sl_map_support_loss_owner_id=map_owner;
+           }
+         double map_px=(g_edge_runners[i].direction>0 ? SymbolInfoDouble(_Symbol,SYMBOL_BID) : SymbolInfoDouble(_Symbol,SYMBOL_ASK));
+         EdgeAuditD148Terminal(g_edge_runners[i],"MAP_SUPPORT_LOST_AFTER_SL",available_at,map_px);
+        }
+     }
+  }
+
+void EdgeAuditD148Censor(V1EdgeRunnerTracker &r,const datetime at)
+  {
+   if(!r.d148_eligible || r.d148_terminal) return;
+   if(r.d148_post_sl_active)
+     {
+      r.d148_post_sl_active=false;
+      r.d148_terminal=true;
+      r.d148_terminal_outcome="RIGHT_CENSORED_AFTER_SL";
+      r.d148_resolved_at=at;
+      g_edge_d148_censored++;
+      EdgeAuditWrite("EDGE_AUDIT_D148_CENSORED","TICK",at,r.scenario_id,
+         StringFormat("scenario_id=%s direction=%s sl_at=%s censored_at=%s entry_recovered_after_sl=%s entry_recovered_at=%s post_sl_max_adverse_r_from_fill=%.10f post_sl_max_favorable_r_from_fill=%.10f frozen_owner_invalidated=%s frozen_owner_invalidated_at=%s first_map_support_loss_at=%s tester_end_right_censored=true strategy_authority=false",
+                      r.scenario_id,DirectionName(r.direction),EdgeAuditTimeOrNA(r.d148_sl_at),EdgeAuditTimeOrNA(at),
+                      r.d148_entry_recovered_after_sl ? "true" : "false",EdgeAuditTimeOrNA(r.d148_entry_recovered_at),
+                      r.d148_post_sl_max_adverse_r_from_fill,r.d148_post_sl_max_favorable_r_from_fill,
+                      r.d148_frozen_owner_invalidated ? "true" : "false",EdgeAuditTimeOrNA(r.d148_frozen_owner_invalidated_at),
+                      EdgeAuditTimeOrNA(r.d148_first_map_support_loss_at)));
+      return;
+     }
+   if(!r.d148_pre_sl_resolved)
+     {
+      r.d148_terminal=true;
+      r.d148_terminal_outcome="RIGHT_CENSORED_BEFORE_1R_OR_SL";
+      r.d148_resolved_at=at;
+      g_edge_d148_pre_sl_censored++;
+      EdgeAuditWrite("EDGE_AUDIT_D148_PRE_SL_CENSORED","TICK",at,r.scenario_id,
+         StringFormat("scenario_id=%s direction=%s fill_at=%s censored_at=%s max_favorable_r=%.10f max_adverse_r=%.10f tester_end_right_censored=true strategy_authority=false",
+                      r.scenario_id,DirectionName(r.direction),EdgeAuditTimeOrNA(r.fill_at),EdgeAuditTimeOrNA(at),r.max_favorable_r,r.max_adverse_r));
+     }
+  }
+
 void EdgeAuditProcessRunner(V1EdgeRunnerTracker &r,const MqlTick &tick)
   {
    if((datetime)tick.time<r.fill_at) return;
@@ -1240,6 +1637,11 @@ void EdgeAuditProcessRunner(V1EdgeRunnerTracker &r,const MqlTick &tick)
    if(px<=0.0 || r.risk_distance<=0.0) return;
    r.ticks_seen++;
    double signed_r=(r.direction>0 ? px-r.fill_price : r.fill_price-px)/r.risk_distance;
+   if(r.d148_post_sl_active)
+     {
+      EdgeAuditD148TrackPostSl(r,(datetime)tick.time,px);
+      return;
+     }
    if(signed_r>r.max_favorable_r) r.max_favorable_r=signed_r;
    if(-signed_r>r.max_adverse_r) r.max_adverse_r=-signed_r;
    if(!r.reached_1r && r.max_adverse_r>r.max_adverse_before_1r_r) r.max_adverse_before_1r_r=r.max_adverse_r;
@@ -1257,9 +1659,10 @@ void EdgeAuditProcessRunner(V1EdgeRunnerTracker &r,const MqlTick &tick)
       r.reached_1r=true;
       r.resolved_1r=true;
       r.first_1r_at=(datetime)tick.time;
+      EdgeAuditD148OnOneRBeforeSl(r,(datetime)tick.time,px);
       EdgeAuditEmitRunnerOutcome(r,"1R","REACHED_BEFORE_SL",(datetime)tick.time,px);
       EdgeAuditSnapshotAtOneR(r,(datetime)tick.time,px);
-      EdgeAuditD146Arm(r,(datetime)tick.time,px);
+      // D-148 intentionally does not arm D-146 post-1R continuation tracking.
      }
    if(hit_2 && !r.resolved_2r)
      {
@@ -1274,6 +1677,7 @@ void EdgeAuditProcessRunner(V1EdgeRunnerTracker &r,const MqlTick &tick)
 
    if(hit_sl)
      {
+      if(!r.reached_1r) EdgeAuditD148OnSlFirst(r,(datetime)tick.time,px,signed_r);
       if(r.d146_active && r.reached_1r) EdgeAuditD146Terminal(r,"SL_AFTER_1R",(datetime)tick.time,px);
       if(!r.resolved_1r) { r.resolved_1r=true; EdgeAuditEmitRunnerOutcome(r,"1R","SL_FIRST",(datetime)tick.time,px); }
       if(!r.resolved_2r) { r.resolved_2r=true; EdgeAuditEmitRunnerOutcome(r,"2R","SL_FIRST",(datetime)tick.time,px); }
@@ -1308,6 +1712,16 @@ void EdgeAuditResetState()
    g_edge_d146_original_external_deliveries=0;
    g_edge_d146_terminals=0;
    g_edge_d146_censored=0;
+   g_edge_d148_eligible=0;
+   g_edge_d148_one_r_controls=0;
+   g_edge_d148_sl_failures=0;
+   g_edge_d148_entry_recoveries=0;
+   g_edge_d148_one_r_recoveries=0;
+   g_edge_d148_map_loss_terminals=0;
+   g_edge_d148_frozen_owner_invalidations=0;
+   g_edge_d148_root_invalidations=0;
+   g_edge_d148_censored=0;
+   g_edge_d148_pre_sl_censored=0;
    ArrayInitialize(g_edge_h1_dir_events,0);
    ArrayInitialize(g_edge_m30_dir_events,0);
    ArrayInitialize(g_edge_m1_dir_events,0);
@@ -1329,8 +1743,8 @@ bool EdgeAuditInit()
      }
    g_edge_enabled=true;
    EdgeAuditWrite("EDGE_AUDIT_START","",TimeCurrent(),"",
-      StringFormat("build=%s phase=%s strategy_authority=false unified_ledger=true event_csv=%s lightweight=true tick_tracking=PREFILL_FVG_SELECTED|ACTUAL_FILL|D146_POST_1R_CONTINUATION_ONLY front_end_forward_labels=false stage_virtual_barriers=false mirror_direction=false fill_snapshot=true first_1r_snapshot=true d146_post_1r_state=true d146_population=EXTERNAL_CONTINUATION_1R_SUCCESS d146_terminal=EXACT_2R_OR_NORMALIZED_SL hypotheses=M30_OUTWARD_EXTERNAL_REFRESH|M30_DETERIORATION future_backfill=false strategy_change=false",
-                   V1_EDGE_AUDIT_BUILD,V1_EDGE_AUDIT_PHASE,InpEventCsvFile));
+      StringFormat("build=%s phase=%s strategy_authority=false unified_ledger=true event_csv=%s lightweight=true tick_tracking=CONTINUATION_PREFILL_FVG_SELECTED|CONTINUATION_ACTUAL_FILL_TO_1R_OR_SL|D148_POST_SL_FAILURE_ONLY front_end_forward_labels=false stage_virtual_barriers=false mirror_direction=false fill_snapshot=true first_1r_snapshot=true d146_post_1r_state=false d148_entry_survival_taxonomy=true d148_population=EXTERNAL_CONTINUATION_SL_BEFORE_1R d148_terminal=ORIGINAL_1R_RECOVERY_OR_MAP_SUPPORT_LOSS_OR_CENSOR d148_exit_mode_required=ORIGINAL observed_exit_mode=%s d148_no_time_cutoff=true d148_frozen_owner_break_is_context_not_terminal=true future_backfill=false strategy_change=false",
+                   V1_EDGE_AUDIT_BUILD,V1_EDGE_AUDIT_PHASE,InpEventCsvFile,ExitManagementModeName((int)InpExitManagementMode)));
    return true;
   }
 
@@ -1524,8 +1938,8 @@ void EdgeAuditOnStructureEvent(const V1StructureState &state,
       return;
 
    EdgeAuditCountStructureEvent(state.tf,event_type,direction);
-   if(state.tf==PERIOD_M30)
-      EdgeAuditD146OnM30StructureEvent(state,event_type,direction,broken,protected_ref,bar,available_at);
+   EdgeAuditD148OnStructureEvent(state,event_type,direction,available_at);
+   // D-146 post-1R mechanism tracking is intentionally dormant in D-148.
    if(state.tf!=PERIOD_H1 && state.tf!=PERIOD_M30)
       return;
 
@@ -1609,6 +2023,7 @@ void EdgeAuditOnRootInvalidated(const V1SourceZone &root,
   {
    if(!g_edge_enabled || !root.valid || root.kind!=V1_SOURCE_ROOT)
       return;
+   EdgeAuditD148OnRootInvalidated(root,available_at,reason);
    int index=EdgeAuditFindRootMeta(root.id);
    if(index>=0) EdgeAuditRemoveRootMetaAt(index);
   }
@@ -1635,14 +2050,16 @@ void EdgeAuditOnScenarioStage(const int stage,
       return;
    // The only pre-fill tick state retained is displacement after the selected
    // execution FVG. PLAN/Contact/Sweep/CHoCH forward labels were answered by D-143.
-   if(stage==V1_EDGE_STAGE_FVG)
+   if(stage==V1_EDGE_STAGE_FVG && g_scenarios[scenario_index].scope==V1_SCOPE_EXTERNAL_CONTINUATION)
       EdgeAuditArmPrefill(scenario_index,stage_at);
   }
 
 void EdgeAuditOnMapSample(const datetime available_at,const string sample_reason)
   {
-   // Disabled in D-145. Persistent MAP forward sampling was completed in D-143.
-   return;
+   // Persistent forward labels remain disabled. D-148 only checks the current
+   // H1/M30 directional support at completed timestamp groups for active taxonomy trackers.
+   if(!g_edge_enabled) return;
+   EdgeAuditD148OnMapSample(available_at,sample_reason);
   }
 
 void EdgeAuditUpdateExcursion(V1EdgeSnapshot &s,const MqlRates &bar)
@@ -1743,6 +2160,9 @@ void EdgeAuditOnActualFill(const int scenario_index,const datetime observed_at)
 
    int old=EdgeAuditFindPrefill(p.id); if(old>=0) EdgeAuditRemovePrefillAt(old);
 
+   // D-148 runner population is continuation-only. Reversal outcomes are outside this research question.
+   if(p.scope!=V1_SCOPE_EXTERNAL_CONTINUATION) return;
+
    int n=ArraySize(g_edge_runners);
    if(ArrayResize(g_edge_runners,n+1,16)<0) return;
    V1EdgeRunnerTracker r;
@@ -1770,6 +2190,7 @@ void EdgeAuditOnActualFill(const int scenario_index,const datetime observed_at)
    r.max_adverse_before_1r_r=0.0;
    r.ticks_seen=0;
    EdgeAuditD146ResetRunner(r);
+   EdgeAuditD148ArmAtFill(r,p,observed_at);
    r.h1_same_dir_events_at_fill=EdgeAuditDirCounter(PERIOD_H1,p.direction);
    r.h1_opposite_dir_events_at_fill=EdgeAuditDirCounter(PERIOD_H1,-p.direction);
    r.m30_same_dir_events_at_fill=EdgeAuditDirCounter(PERIOD_M30,p.direction);
@@ -1811,8 +2232,11 @@ void EdgeAuditOnTick(const MqlTick &tick)
       if(!g_edge_runners[i].valid)
         { EdgeAuditRemoveRunnerAt(i); continue; }
       EdgeAuditProcessRunner(g_edge_runners[i],tick);
+      if(g_edge_runners[i].d148_terminal && g_edge_runners[i].d148_terminal_outcome=="ONE_R_CONTROL")
+        { EdgeAuditRemoveRunnerAt(i); continue; }
       if(g_edge_runners[i].resolved_1r && g_edge_runners[i].resolved_2r &&
-         g_edge_runners[i].resolved_3r && g_edge_runners[i].resolved_structural)
+         g_edge_runners[i].resolved_3r && g_edge_runners[i].resolved_structural &&
+         !g_edge_runners[i].d148_post_sl_active)
         { EdgeAuditRemoveRunnerAt(i); continue; }
       i++;
      }
@@ -1827,6 +2251,7 @@ void EdgeAuditDeinit(const int reason)
      {
       if(!g_edge_runners[i].valid) continue;
       if(g_edge_runners[i].d146_active) EdgeAuditD146Censor(g_edge_runners[i],now);
+      EdgeAuditD148Censor(g_edge_runners[i],now);
       EdgeAuditWrite("EDGE_AUDIT_RUNNER_CENSORED","TICK",now,g_edge_runners[i].scenario_id,
          StringFormat("scenario_id=%s direction=%s fill_at=%s reached_1r=%s resolved_1r=%s resolved_2r=%s resolved_3r=%s resolved_structural=%s max_favorable_r=%.10f max_adverse_r=%.10f tester_end_right_censored=true strategy_authority=false",
                       g_edge_runners[i].scenario_id,DirectionName(g_edge_runners[i].direction),EdgeAuditTimeOrNA(g_edge_runners[i].fill_at),
@@ -1835,10 +2260,12 @@ void EdgeAuditDeinit(const int reason)
                       g_edge_runners[i].resolved_structural ? "true" : "false",g_edge_runners[i].max_favorable_r,g_edge_runners[i].max_adverse_r));
      }
    EdgeAuditWrite("EDGE_AUDIT_STOP","",now,"",
-      StringFormat("reason=%d rows=%I64d fill_snapshots=%I64d one_r_snapshots=%I64d runner_outcomes=%I64d runner_skipped=%I64d d146_armed=%I64d d146_structure_events=%I64d d146_original_external_deliveries=%I64d d146_terminals=%I64d d146_censored=%I64d active_prefill=%d active_runners=%d front_end_forward_labels=false stage_virtual_barriers=false lightweight=true strategy_authority=false",
+      StringFormat("reason=%d rows=%I64d fill_snapshots=%I64d one_r_snapshots=%I64d runner_outcomes=%I64d runner_skipped=%I64d d146_armed=%I64d d146_structure_events=%I64d d146_original_external_deliveries=%I64d d146_terminals=%I64d d146_censored=%I64d d148_eligible=%I64d d148_one_r_controls=%I64d d148_sl_failures=%I64d d148_entry_recoveries=%I64d d148_one_r_recoveries=%I64d d148_map_loss_terminals=%I64d d148_frozen_owner_invalidations=%I64d d148_root_invalidations=%I64d d148_censored=%I64d d148_pre_sl_censored=%I64d active_prefill=%d active_runners=%d front_end_forward_labels=false stage_virtual_barriers=false lightweight=true strategy_authority=false",
                    reason,g_edge_rows,g_edge_runner_fill_snapshots,g_edge_runner_one_r_snapshots,g_edge_runner_outcomes,
                    g_edge_runner_skipped,g_edge_d146_armed,g_edge_d146_structure_events,g_edge_d146_original_external_deliveries,
-                   g_edge_d146_terminals,g_edge_d146_censored,ArraySize(g_edge_prefill),ArraySize(g_edge_runners)));
+                   g_edge_d146_terminals,g_edge_d146_censored,g_edge_d148_eligible,g_edge_d148_one_r_controls,g_edge_d148_sl_failures,
+                   g_edge_d148_entry_recoveries,g_edge_d148_one_r_recoveries,g_edge_d148_map_loss_terminals,g_edge_d148_frozen_owner_invalidations,
+                   g_edge_d148_root_invalidations,g_edge_d148_censored,g_edge_d148_pre_sl_censored,ArraySize(g_edge_prefill),ArraySize(g_edge_runners)));
    g_edge_enabled=false;
   }
 //+------------------------------------------------------------------+

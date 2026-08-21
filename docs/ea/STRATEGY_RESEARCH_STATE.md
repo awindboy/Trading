@@ -1,10 +1,10 @@
 # Strategy Robustness Research State
 
 Last updated: 2026-08-21
-Repository base before handoff package: `c541b19d68ac1589575bfaf1ab07abf1ee296a09`
-Current code/research identity: `1.93R1L9 / EXIT_ARCHITECTURE_RESEARCH_V1`
-Current research phase: **D-147 EXIT ARCHITECTURE RESEARCH V1 — IMPLEMENTED / COMPILE + BASELINE PARITY PENDING**
-Strategy authority: **UNCHANGED; ORIGINAL MODE IS BASELINE CONTROL**
+Repository base before handoff package: `1889f9d5c53bc37e6061b9e309fa11b1534c1123`
+Current code/research identity: `1.94R1L10 / ENTRY_SURVIVAL_FAILURE_TAXONOMY_V1_SHADOW`
+Current research phase: **D-148 ENTRY SURVIVAL FAILURE TAXONOMY — IMPLEMENTED / COMPILE + AUDIT PARITY PENDING**
+Strategy authority: **UNCHANGED; D148 SHADOW ONLY**
 2021: **UNTOUCHED**
 
 ## Objective
@@ -216,3 +216,24 @@ ORIGINAL vs R_STEP_TRAILING vs R_STEP_PARTIAL
 All three share the same Entry, original normalized SL, frozen structural objective, and initial structural TP. `R_STEP_PARTIAL` uses a frozen 50% of remaining volume at each newly reached integer R; no pooled parameter optimization is authorized.
 
 Entry survival (`Fill -> +1R`) remains a separate causal study. A good D-147 result cannot be used as evidence that the Entry architecture has been fixed.
+
+## D-148 Entry-survival failure taxonomy
+
+Current priority shifts to the `Fill -> +1R` branch on GOLD while D-147 exit management remains a separate research branch.
+
+Primary D-148 question:
+
+> When a continuation fill reaches the original normalized SL before +1R, was the higher-timeframe directional premise already losing causal support, or did price stop the trade while the same direction remained structurally supported and later recover?
+
+Primary outcomes are causal sequence outcomes, not fitted features:
+
+```text
+ORIGINAL_1R_RECOVERED_BEFORE_MAP_SUPPORT_LOSS
+MAP_SUPPORT_NOT_SAME_AT_SL
+MAP_SUPPORT_LOST_AFTER_SL
+RIGHT_CENSORED_AFTER_SL
+```
+
+The frozen PLAN owner and Root are tracked as context. Their invalidation is not automatically equated with total direction failure.
+
+This phase is taxonomy/measurement only. Any future Entry timing, SL, M1 confirmation, Root-depth, or map-quality rule must be proposed only after the failure classes are measured.

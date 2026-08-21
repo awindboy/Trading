@@ -1,6 +1,6 @@
 # D-147 EXIT ARCHITECTURE RESEARCH V1
 
-Status: `IMPLEMENTED / LOCAL COMPILE + BASELINE PARITY PENDING`
+Status: `GOLD 2025 THREE-MODE RESULT RECORDED / CROSS-MARKET NOT YET VALIDATED`
 
 Build target:
 
@@ -247,3 +247,37 @@ cross-market and cross-period robustness
 ```
 
 Entry survival remains a separate research branch regardless of D-147 outcome.
+
+## GOLD 2025 three-mode result — 2026-08-21
+
+User-provided ledgers:
+
+```text
+GOLD_original.csv  SHA-256 6cae85b2913e81e7e847fb0c7794ee7c0926f1dfae140d37bd038f735a18d7d1
+GOLD_step.csv      SHA-256 462afaaf843d85b2a97a9f5287083f3c76cc83d9a426bfb7e21ca82f34acb2ab
+GOLD_particial.csv SHA-256 13b9ed5b95f3ec1db6a8138c10746f5f89f800f8e484c795d600e99c946c58ee
+```
+
+All modes retained the same 58 fills / 58 closes and zero execution divergence. The same Entry / initial SL / structural TP population was preserved.
+
+All-scope cost-adjusted net result:
+
+| Mode | WR | Avg winner | Avg loser | Expectancy | Total net R | Max DD | Loss streak |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| ORIGINAL | 24.14% | +3.827R | -1.092R | +0.095R | +5.532R | -23.00R | 11 |
+| R_STEP_TRAILING | 29.31% | +1.623R | -0.685R | -0.008R | -0.478R | -9.35R | 9 |
+| R_STEP_PARTIAL | 43.10% | +1.419R | -0.867R | +0.118R | +6.864R | -9.00R | 8 |
+
+Continuation-only (51 trades):
+
+```text
+ORIGINAL: WR 27.45%, expectancy +0.254R, avg winner +3.827R, max DD 19.53R
+TRAILING: WR 31.37%, expectancy +0.015R, avg winner +1.540R, max DD 8.10R
+PARTIAL:  WR 47.06%, expectancy +0.187R, avg winner +1.402R, max DD 7.66R
+```
+
+The 21 continuation trades that never reached +1R were identical across all three modes. Among 16 ORIGINAL trades that reached +1R and later realized a loss, PARTIAL improved all 16 and converted 10 into positive net trades, while preserving all 14 original continuation winners as positive trades. TRAILING protected giveback but cut too many large winners.
+
+Interpretation: mechanical PARTIAL is the strongest GOLD-2025 exit candidate, but it still reduces large-winner payoff and is not cross-market validated. A later smart-partial study may use the already-discovered +1R continuation state, but is not part of D-148.
+
+Instrumentation caveat: D147_* action rows are suppressed under RESEARCH_COMPACT, so execution-action counts were not directly visible in these three ledgers. The realized trade accounting and identical fill population remain usable; D-147 action-log QA remains separate.

@@ -14,7 +14,7 @@
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - D-147 exit-architecture research harness"
+#property description "Mentor deterministic V1 EA - D-148 entry-survival failure-taxonomy shadow audit harness"
 
 enum V1StopLossModel
   {
@@ -10700,7 +10700,7 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
    g_m1_sweep_detector_bar_open=0;
   }
 
-// D-146 shadow-only CONTINUATION STATE AUDIT implementation.
+// D-148 shadow-only ENTRY SURVIVAL FAILURE TAXONOMY implementation; D-146 post-1R tracker remains dormant.
 #include "EdgeAuditV1.mqh"
 
 int OnInit()
@@ -10734,7 +10734,7 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=1.93R1L9 property_version=1.00 magic=%I64d phase=EXIT_ARCHITECTURE_RESEARCH_V1 strategy_semantics=D134_ENTRY_INITIAL_GEOMETRY_UNCHANGED_D147_EXIT_VARIANT fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=1.94R1L10 property_version=1.00 magic=%I64d phase=ENTRY_SURVIVAL_FAILURE_TAXONOMY_V1_SHADOW strategy_semantics=D134_ENTRY_INITIAL_GEOMETRY_UNCHANGED_D147_EXIT_TOGGLE_PRESENT_D148_AUDIT_ONLY fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         _Symbol,
                         AccountInfoString(ACCOUNT_CURRENCY),

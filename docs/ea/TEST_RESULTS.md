@@ -784,3 +784,27 @@ D-145 relation reproduced: valid-range +2R runners had lower +1R M30 progress (m
 Ten trades reached +1R and then failed before +2R; their post-+1R peak total-R levels were approximately 1.083, 1.219, 1.246, 1.364, 1.463, 1.518, 1.560, 1.737, 1.746, 1.893. This confirms material post-fill giveback and motivates D-147 exit-architecture research, but does not authorize a fixed TP.
 
 See `D146_CONTINUATION_STATE_AUDIT.md` for instrumentation caveats. D-147 performance results are pending local compile/parity and MT5 Strategy Tester runs.
+
+## D-147 GOLD 2025 exit-architecture comparison
+
+Analyzed 2026-08-21 from user-provided Strategy Tester ledgers.
+
+```text
+ORIGINAL  : 58 trades, WR 24.14%, expectancy +0.095R, total +5.532R, max DD 23.00R
+TRAILING  : 58 trades, WR 29.31%, expectancy -0.008R, total -0.478R, max DD 9.35R
+PARTIAL   : 58 trades, WR 43.10%, expectancy +0.118R, total +6.864R, max DD 9.00R
+```
+
+Continuation-only:
+
+```text
+ORIGINAL  51 trades / 14 winners / WR 27.45% / expectancy +0.254R
+TRAILING  51 trades / 16 winners / WR 31.37% / expectancy +0.015R
+PARTIAL   51 trades / 24 winners / WR 47.06% / expectancy +0.187R
+```
+
+The `<1R` failure population was exactly 21 continuation trades and did not change across exit modes. This is now the D-148 Entry-survival taxonomy population.
+
+PARTIAL improved every one of the 16 ORIGINAL continuation trades that first reached +1R but later realized a loss; 10/16 became positive net trades. However large winners were materially haircut, so continuation-state-aware partial management is recorded only as a future research idea.
+
+D147 compact action rows were suppressed; action-level execution QA is not claimed from these ledgers.

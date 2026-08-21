@@ -1,11 +1,11 @@
 # EA Development Handoff
 
 Last updated: 2026-08-21
-Repository base before this handoff package: `c541b19d68ac1589575bfaf1ab07abf1ee296a09`
-Current code/research build: `1.93R1L9 / EXIT_ARCHITECTURE_RESEARCH_V1`
-Current research phase: **D-147 EXIT ARCHITECTURE RESEARCH V1 — IMPLEMENTED / LOCAL COMPILE + BASELINE PARITY PENDING**
-Strategy semantics: **D134 ENTRY + INITIAL GEOMETRY UNCHANGED / D147 POST-FILL EXIT VARIANT**
-Strategy authority: **UNCHANGED; ORIGINAL MODE IS BASELINE CONTROL**
+Repository base before this handoff package: `1889f9d5c53bc37e6061b9e309fa11b1534c1123`
+Current code/research build: `1.94R1L10 / ENTRY_SURVIVAL_FAILURE_TAXONOMY_V1_SHADOW`
+Current research phase: **D-148 ENTRY SURVIVAL FAILURE TAXONOMY — IMPLEMENTED / LOCAL COMPILE + AUDIT PARITY PENDING**
+Strategy semantics: **D134 ENTRY + INITIAL GEOMETRY UNCHANGED / D147 EXIT TOGGLE PRESENT / D148 SHADOW ONLY**
+Strategy authority: **UNCHANGED; D148 HAS NONE**
 2021 status: **KEEP UNTOUCHED**
 
 ## 1. Mandatory authority / startup order
@@ -367,3 +367,52 @@ Required validation order:
 ```
 
 Use `InpEnableEdgeAudit=false` for the D-147 performance comparison so the D-146 counterfactual tracker does not complicate the exit-variant ledger. 2021 remains untouched.
+
+## D-148 ENTRY SURVIVAL FAILURE TAXONOMY — IMPLEMENTED / LOCAL COMPILE + AUDIT PARITY PENDING
+
+D-147 established that post-+1R profit giveback and pre-+1R Entry survival are different problems. GOLD 2025 mechanical partial exits improved realized win-rate / drawdown behavior but did not change the 21 continuation trades that hit the original SL before +1R.
+
+D-148 now studies only:
+
+```text
+actual filled EXTERNAL_CONTINUATION
++
+normalized SL reached before first +1R
+```
+
+D-148 is shadow-only. It does not change Entry, SL, TP, exit mode, order lifecycle, sizing, map authority, or scenario authorization.
+
+For each failure it freezes exact SL-first time, then keeps a private shadow tracker after the real position is closed until the first of:
+
+```text
+original +1R price recovered
+current H1/M30 map no longer supports the trade direction
+Strategy Tester end (right censor)
+```
+
+`frozen owner invalidated` and `Root invalidated` are recorded separately. A frozen M30 owner break is not automatically treated as a directional premise failure because a same-direction H1/M30 successor authority may exist.
+
+Required test configuration:
+
+```text
+InpExitManagementMode = V1_EXIT_ORIGINAL
+InpEnableEdgeAudit = true for the audit run
+InpRegimeResearchMode = V1_REGIME_BASELINE_NO_GATE
+InpStopLossModel = V1_SL_ROOT_OB_DISTAL_20
+InpPositionSizingMode = V1_SIZE_FIXED_RISK_MONEY
+InpFixedRiskMoneyPerTrade = 100
+InpEventLogMode = V1_LOG_RESEARCH_COMPACT
+Every tick based on real ticks
+```
+
+Validation order:
+
+```text
+1. MetaEditor compile = 0 errors
+2. short GOLD audit OFF/ON non-audit parity PASS
+3. GOLD 2025 full Audit ON
+4. summarize_d148_entry_survival_failure_taxonomy.py => EVENT INTEGRITY PASS
+5. classify early-entry/stop-sensitivity vs map-premise failure before designing any Entry filter
+```
+
+No pooled threshold optimization. 2021 remains untouched.
