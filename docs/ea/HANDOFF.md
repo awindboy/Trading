@@ -1,11 +1,11 @@
 # EA Development Handoff
 
 Last updated: 2026-08-21
-Repository base before this handoff package: `1889f9d5c53bc37e6061b9e309fa11b1534c1123`
-Current code/research build: `1.94R1L10 / ENTRY_SURVIVAL_FAILURE_TAXONOMY_V1_SHADOW`
-Current research phase: **D-148 ENTRY SURVIVAL FAILURE TAXONOMY — IMPLEMENTED / LOCAL COMPILE + AUDIT PARITY PENDING**
-Strategy semantics: **D134 ENTRY + INITIAL GEOMETRY UNCHANGED / D147 EXIT TOGGLE PRESENT / D148 SHADOW ONLY**
-Strategy authority: **UNCHANGED; D148 HAS NONE**
+Repository base before this handoff package: `e449bc68b9e57bd7bd4170279057fddeb429985d`
+Current code/research build: `1.95R1L11 / SP_EM_RESEARCH_V1`
+Current research phase: **D-149 SMART PARTIAL + EPISODE MANAGEMENT — IMPLEMENTED / LOCAL VALIDATION PENDING**
+Strategy semantics: **D134 BASELINE CONTROL PRESERVED / D149 SP + EM CONTROLLED RESEARCH TOGGLES**
+Strategy authority: **UNCHANGED; ORIGINAL + EM_OFF IS BASELINE CONTROL**
 2021 status: **KEEP UNTOUCHED**
 
 ## 1. Mandatory authority / startup order
@@ -416,3 +416,44 @@ Validation order:
 ```
 
 No pooled threshold optimization. 2021 remains untouched.
+
+## D-149 SP + EM RESEARCH V1 — IMPLEMENTED / LOCAL VALIDATION PENDING
+
+Build: `1.95R1L11 / SP_EM_RESEARCH_V1`.
+
+Independent research toggles:
+
+```text
+Exit: ORIGINAL / R_STEP_TRAILING / R_STEP_PARTIAL / SMART_PARTIAL
+EM:   OFF / CAUSAL_EPISODE_V1
+```
+
+Primary four-run matrix:
+
+```text
+A ORIGINAL + EM_OFF        baseline control
+B SMART_PARTIAL + EM_OFF   SP isolated
+C ORIGINAL + EM_ACTIVE     EM isolated
+D SMART_PARTIAL + EM_ACTIVE combined
+```
+
+SP V1:
+- first +1R freezes causally available M30 protected/external state;
+- if current M30 external is at/beyond original +2R, close 25% only (`STRONG_RUNNER`);
+- otherwise/missing M30 range, close 50% (`DEFAULT`);
+- no repeated integer-R partials;
+- first +2R moves remaining SL to actual Fill;
+- structural TP remains unchanged.
+
+EM V1, continuation only:
+- episode identity = frozen active H1/M30 owner + direction;
+- one pending/filled exposure per same episode;
+- after first net loss, a fresh same-direction map delivery is required before one retry;
+- H1-led episode accepts same-owner H1 BOS or new same-direction M30 INITIAL_BOS/BOS as refresh;
+- M30-led episode requires same-owner M30 BOS;
+- second consecutive net loss hard-locks that owner until a new owner creates a new episode;
+- a positive realized-net trade resets the episode consecutive-loss count.
+
+D148 audit remains available only for `ORIGINAL + EM_OFF`. Do not enable D148 audit on SP/EM performance runs.
+
+2021 remains untouched.

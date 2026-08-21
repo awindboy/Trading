@@ -808,3 +808,28 @@ The `<1R` failure population was exactly 21 continuation trades and did not chan
 PARTIAL improved every one of the 16 ORIGINAL continuation trades that first reached +1R but later realized a loss; 10/16 became positive net trades. However large winners were materially haircut, so continuation-state-aware partial management is recorded only as a future research idea.
 
 D147 compact action rows were suppressed; action-level execution QA is not claimed from these ledgers.
+
+## D-147 / D-148 solution-research handoff evidence — 2026-08-21
+
+D-147 GOLD 2025 continuation control vs mechanical partial:
+
+```text
+ORIGINAL: 51 trades / WR 27.45% / expectancy +0.254R / avg winner +3.827R / max DD 19.53R
+PARTIAL:  51 trades / WR 47.06% / expectancy +0.187R / avg winner +1.402R / max DD 7.66R
+```
+
+Mechanical partial materially improved realized win shape and drawdown but cut large winners. This motivates D149 SP rather than promotion of the repeated 50%-remaining staircase.
+
+D-148 clean GOLD 2023-2025 continuation taxonomy:
+
+```text
+167 fills
+89 immediate +1R = 53.3%
+78 normalized-SL first = 46.7%
+27 / 78 SL-first later recovered original +1R before H1/M30 map-support loss = 34.6%
+51 / 78 lost map support before recovery = 65.4%
+18 / 27 recovery cases had original Root invalidated before recovery
+9 / 27 retained original Root through recovery
+```
+
+Interpretation: do not try to turn every SL into a winner. Separate true structural failure, local-source failure/re-entry opportunity, and the smaller same-Root timing/SL-sensitivity class. D149 EM addresses repeated correlated episode exposure; D149 SP addresses +1R giveback.

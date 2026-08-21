@@ -1,8 +1,8 @@
 # EA Backlog
 
 Last updated: 2026-08-21
-Current phase: **D-148 ENTRY SURVIVAL FAILURE TAXONOMY — IMPLEMENTED / COMPILE + AUDIT PARITY PENDING**
-Strategy authority: **UNCHANGED**
+Current phase: **D-149 SMART PARTIAL + EPISODE MANAGEMENT — IMPLEMENTED / LOCAL VALIDATION PENDING**
+Strategy authority: **UNCHANGED; RESEARCH TOGGLES ONLY**
 2021: **KEEP UNTOUCHED**
 
 ## P0 — D-146 post-+1R continuation-state audit
@@ -150,3 +150,25 @@ Always:
 - [ ] revisit `R_STEP_PARTIAL` together with D-145/D-146 continuation state so the fraction left as runner can depend on causally available post-+1R structure rather than a blind fixed 50%
 - [ ] preserve a mechanical PARTIAL control when that study begins
 - [ ] do not optimize a pooled M30-progress cutoff or partial fraction from GOLD 2025
+
+## P0 — D-149 SP + EM controlled solution research
+
+- [x] Add `V1_EXIT_SMART_PARTIAL` without changing existing mode numeric identities.
+- [x] SP +1R state uses D145/D146 M30 continuation geometry only.
+- [x] `STRONG_RUNNER`: current M30 external at/beyond original +2R -> 25% partial.
+- [x] `DEFAULT`: all other / M30-range-unavailable -> 50% partial.
+- [x] SP makes only one +1R partial; no repeated integer-R haircut.
+- [x] SP +2R -> remaining SL to actual Fill; structural TP retained.
+- [x] Add independent EM OFF/ACTIVE toggle.
+- [x] EM serializes same-owner episode exposure.
+- [x] First episode loss requires fresh map delivery before one retry.
+- [x] Second consecutive same-owner loss hard-locks until owner changes.
+- [x] Compact log allowlist includes D147/D149 action rows.
+- [ ] MetaEditor compile 0 errors.
+- [ ] ORIGINAL + EM_OFF behavior parity vs D148 control.
+- [ ] GOLD 2025 four-run matrix A/B/C/D.
+- [ ] GOLD 2023 and 2024 four-run matrix after clean 2025 execution.
+- [ ] Compare WR, avg winner, expectancy, DD, longest streak, winner concentration, SP state split, EM blocks and skipped baseline opportunity character.
+- [ ] Cross-market validation only after GOLD multi-year relation is understood.
+
+Do not tune 25/50 fractions or EM loss count from GOLD 2025 after seeing results. Any next variant must be separately pre-registered.

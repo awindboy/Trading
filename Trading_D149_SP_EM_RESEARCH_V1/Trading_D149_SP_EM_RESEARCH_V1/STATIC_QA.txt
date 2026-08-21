@@ -1,0 +1,84 @@
+D-149 SMART PARTIAL + EPISODE MANAGEMENT — STATIC QA
+Date: 2026-08-21
+Repository: awindboy/Trading
+Required Git HEAD: e449bc68b9e57bd7bd4170279057fddeb429985d
+Commit: docs: ready to D-148
+Target build: 1.95R1L11 / SP_EM_RESEARCH_V1
+Baseline control: V1_EXIT_ORIGINAL + V1_EM_OFF
+2021: KEEP UNTOUCHED
+
+Authority / scope
+- AGENTS.md: verify-only, not modified
+- docs/ea/EA_SPEC.md: verify-only, not modified
+- mt5/experts/EdgeAuditV1.mqh: verify-only, not modified
+- D134 Entry / initial normalized SL / position sizing / frozen structural objective / initial structural TP remain baseline control
+- SP is post-fill only
+- EM applies only to EXTERNAL_CONTINUATION exposure authorization / episode state
+- ORIGINAL + EM_OFF remains control
+
+Verified committed blobs
+- mt5/experts/MentorDeterministicV1EA.mq5 = 78c3542173137ff59d578826737e83d851d99adc
+- mt5/experts/EdgeAuditV1.mqh = 52f785c22a41295a4b58d8d6f8d79056e6c0c693
+- docs/ea/HANDOFF.md = cf302cd2e015d868149a79f554b92895051e4e2c
+- docs/ea/STRATEGY_RESEARCH_STATE.md = 293f763c29febec35359e6b51cca3ac40d32398f
+- docs/ea/BACKLOG.md = 1496193211d8543acb2d083a47f094d0b69f742f
+- docs/ea/DECISIONS.md = 864f7ae0deba7da917421e920574932831668ca5
+- docs/ea/TEST_RESULTS.md = 46626210558afaeeaaf44ae03861dd5f66d5a196
+- docs/ea/D147_EXIT_ARCHITECTURE_RESEARCH.md = bd4eaaa2969be104011751fa83888824ff7afbed
+- docs/ea/D148_ENTRY_SURVIVAL_FAILURE_TAXONOMY.md = a99bf71724a4c4abe0d9235947954cffd08da130
+
+SP frozen V1 design
+- V1_EXIT_SMART_PARTIAL appended after existing exit-mode numeric identities
+- first +1R freezes causal M30 state
+- STRONG_RUNNER iff valid same-direction M30 protected->external range and remaining room to external >= 1.0 original R
+- STRONG partial = 25% current volume once
+- DEFAULT/missing range partial = 50% current volume once
+- no repeated integer-R partial haircut
+- first observed +2R or higher -> remainder SL to actual Fill price
+- structural TP retained
+- broker min-volume partial failure never substitutes full close
+- BE rejection/temporary illegality remains retryable
+- partial-exit deal aggregation includes SMART_PARTIAL
+
+EM frozen V1 design
+- episode = active_map_tf + owner_id + direction
+- scope = EXTERNAL_CONTINUATION only
+- max one concurrent pending/filled exposure in same episode
+- first net non-positive result requires fresh post-loss map delivery
+- H1-led refresh: same-owner H1 BOS OR new same-direction M30 INITIAL_BOS/BOS
+- M30-led refresh: same-owner M30 BOS
+- refresh before loss cannot unlock retry
+- refreshed retry allowed once
+- second consecutive net non-positive result -> same-owner hard lock
+- positive aggregate realized-net result resets consecutive-loss count
+- execution-divergent result does not update episode state
+- no time cooldown / owner-age threshold / PB threshold / quality score
+
+Static checks performed
+- installer Python py_compile: PASS
+- D149 analyzer Python py_compile: PASS
+- D149 baseline comparator Python py_compile: PASS
+- synthetic 23-anchor EA transformation: PASS
+- inserted D149 enum/struct/scenario/global/helper block brace balance: PASS
+- inserted D149 StringFormat format-specifier/argument counts: PASS (11/11)
+- synthetic SMART_PARTIAL + EM ledger analyzer: D149 LEDGER INTEGRITY PASS
+- SP +2R BE management path is dispatched before any subsequent partial action
+- D149 action rows explicitly allowed in RESEARCH_COMPACT
+- D147 action rows also made compact-visible to repair the prior diagnostic suppression issue
+- D148 audit init guard requires ORIGINAL + EM_OFF
+
+Fail-closed installer behavior
+- exact HEAD required
+- exact committed blob identities checked
+- transformed target must be exact HEAD or exact generated D149 output
+- verify-only authority/audit files must be locally clean
+- unknown existing D149 doc/tool content is rejected
+- rerun on exact generated D149 output is idempotent
+
+NOT performed in packaging environment
+- MetaEditor MQL5 compile: PENDING USER LOCAL TEST
+- MT5 OrderSend broker-side SP partial-close validation: PENDING USER LOCAL TEST
+- MT5 TRADE_ACTION_SLTP +2R BE validation: PENDING USER LOCAL TEST
+- D149 ORIGINAL + EM_OFF parity against independent D148 baseline run: PENDING USER LOCAL TEST
+- GOLD 2025 four-run A/B/C/D Strategy Tester comparison: PENDING USER LOCAL TEST
+- GOLD 2023/2024 generalization: PENDING USER LOCAL TEST

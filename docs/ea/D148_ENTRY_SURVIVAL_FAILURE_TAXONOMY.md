@@ -378,3 +378,24 @@ Concept:
 This future study must retain a mechanical PARTIAL control and must not optimize a pooled M30-progress cutoff or partial fraction from GOLD 2025.
 
 It is intentionally not implemented in D-148.
+
+## GOLD 2023-2025 D-148 generalization result — 2026-08-21
+
+Clean continuation population after excluding the known 2024 stale-fill execution-divergence fixture:
+
+```text
+2023: 64 fills / 35 immediate +1R / 29 SL-first / 11 post-SL +1R recoveries
+2024: 52 clean fills / 24 immediate +1R / 28 SL-first / 9 post-SL +1R recoveries
+2025: 51 fills / 30 immediate +1R / 21 SL-first / 7 post-SL +1R recoveries
+
+total: 167 fills / 89 immediate +1R / 78 SL-first
+SL-first -> +1R before map-support loss = 27 / 78 = 34.6%
+SL-first -> map-support failure first = 51 / 78 = 65.4%
+```
+
+Among the 27 post-SL +1R recoveries, the original Root had already invalidated in 18. Only 9 retained the original Root through recovery. Therefore most recoveries are not evidence for globally widening the SL; they are evidence that a local source can fail while the higher-timeframe directional premise survives.
+
+Root-timeframe relationship survived all three years: M15-Root SL failures recovered later in the same HTF direction materially more often than H1/M30-Root failures. M30-led vs H1-led immediate-entry success did not generalize consistently and is not an Entry veto.
+
+Known contaminated fixture excluded from 2024 clean inference:
+`2023-12-22 cancel rejection retcode=10018 -> 2024-01-05 stale fill`.

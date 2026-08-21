@@ -281,3 +281,7 @@ The 21 continuation trades that never reached +1R were identical across all thre
 Interpretation: mechanical PARTIAL is the strongest GOLD-2025 exit candidate, but it still reduces large-winner payoff and is not cross-market validated. A later smart-partial study may use the already-discovered +1R continuation state, but is not part of D-148.
 
 Instrumentation caveat: D147_* action rows are suppressed under RESEARCH_COMPACT, so execution-action counts were not directly visible in these three ledgers. The realized trade accounting and identical fill population remain usable; D-147 action-log QA remains separate.
+
+## D-149 handoff from mechanical partial to Smart Partial
+
+D-147 mechanical `R_STEP_PARTIAL` remains a control. D-149 does not tune it. The new `SMART_PARTIAL` changes the architecture in one deliberate way: one partial at +1R, fraction selected by the D145/D146 +1R M30 continuation geometry, then +2R BE protection with no further mechanical partials. This is intended to preserve large structural winners that D-147 repeatedly cut at every integer R.

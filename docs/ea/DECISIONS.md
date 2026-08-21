@@ -6154,3 +6154,22 @@ SMART_PARTIAL_WITH_CONTINUATION_STATE
 ```
 
 This idea is backlog only and is not implemented in D-148.
+
+## D-149 — develop Smart Partial and Causal Episode Management as independent controls
+
+Status: ACTIVE RESEARCH DECISION
+
+Decision:
+
+1. Add `SMART_PARTIAL` as a fourth D147-compatible exit mode while preserving ORIGINAL as control.
+2. Freeze SP strong-state definition to a causal structural geometry: at first +1R, the current scenario-direction M30 external must lie at or beyond the original +2R price.
+3. Freeze SP partial fractions for V1: 25% in `STRONG_RUNNER`, 50% otherwise. Missing M30 range is not imputed into strong state.
+4. SP performs only the +1R partial. At first +2R, move the remainder SL to actual Fill and otherwise leave structural TP intact. No repeated staircase haircut after +2R.
+5. Add EM as an independent toggle scoped to EXTERNAL_CONTINUATION. Episode identity is frozen map owner + direction, not elapsed time or a fitted regime score.
+6. EM allows only one live/pending exposure per episode. After one net loss it requires new same-direction map delivery before one retry. After a second consecutive net loss, the owner is locked until owner identity changes. A positive net trade resets consecutive loss state.
+7. H1-led refresh may be same-owner H1 BOS or a new same-direction M30 INITIAL_BOS/BOS; M30-led refresh must be same-owner M30 BOS.
+8. Validate SP and EM separately before judging the combined mode.
+
+Reason:
+
+D147 showed mechanical partials improve realized shape but destroy large winners; D145/D146 supplied a stage-specific continuation signal. D148 and loss-cluster work showed that repeated exposure can amplify a single structural thesis. These two mechanisms address different causes and should not be conflated.

@@ -1,10 +1,10 @@
 # Strategy Robustness Research State
 
 Last updated: 2026-08-21
-Repository base before handoff package: `1889f9d5c53bc37e6061b9e309fa11b1534c1123`
-Current code/research identity: `1.94R1L10 / ENTRY_SURVIVAL_FAILURE_TAXONOMY_V1_SHADOW`
-Current research phase: **D-148 ENTRY SURVIVAL FAILURE TAXONOMY — IMPLEMENTED / COMPILE + AUDIT PARITY PENDING**
-Strategy authority: **UNCHANGED; D148 SHADOW ONLY**
+Repository base before handoff package: `e449bc68b9e57bd7bd4170279057fddeb429985d`
+Current code/research identity: `1.95R1L11 / SP_EM_RESEARCH_V1`
+Current research phase: **D-149 SMART PARTIAL + EPISODE MANAGEMENT — IMPLEMENTED / LOCAL VALIDATION PENDING**
+Strategy authority: **UNCHANGED; ORIGINAL + EM_OFF CONTROL PRESERVED**
 2021: **UNTOUCHED**
 
 ## Objective
@@ -237,3 +237,13 @@ RIGHT_CENSORED_AFTER_SL
 The frozen PLAN owner and Root are tracked as context. Their invalidation is not automatically equated with total direction failure.
 
 This phase is taxonomy/measurement only. Any future Entry timing, SL, M1 confirmation, Root-depth, or map-quality rule must be proposed only after the failure classes are measured.
+
+## D-149 active strategy research — SP + EM
+
+The project now tests two solution mechanisms rather than only describing failures.
+
+`SMART_PARTIAL (SP)` attacks post-+1R giveback while preserving large winners. It uses the D145/D146 relationship only at the stage where it was discovered: first +1R. The V1 strong state is structurally defined as `current M30 external at/beyond original +2R`, not a fitted progress percentile. Strong closes 25%; default/missing state closes 50%. At +2R all SP remainder moves to Fill BE and then remains open to structural TP.
+
+`EPISODE MANAGEMENT (EM)` attacks correlated repeated exposure. It does not mine a loser score. It groups continuation opportunities by frozen H1/M30 owner + direction, serializes exposure, requires new map delivery after the first loss, and hard-locks the same owner after a second consecutive net loss.
+
+Neither mechanism is promoted strategy authority until identical-condition GOLD multi-year and then cross-market tests support it.
