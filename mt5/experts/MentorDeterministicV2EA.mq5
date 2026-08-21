@@ -13,8 +13,8 @@
 //| Live trading remains hard-blocked; tester execution only.        |
 //+------------------------------------------------------------------+
 #property strict
-#property version   "2.01"
-#property description "Mentor deterministic V2 EA - D151 causal research platform"
+#property version   "2.02"
+#property description "Mentor deterministic V2 EA - D152 SP architecture research"
 
 // D-150 V2 fork contract:
 // - V1 source is frozen separately.
@@ -62,7 +62,12 @@ enum V1ExitManagementMode
    V1_EXIT_R_STEP_TRAILING,
    V1_EXIT_R_STEP_PARTIAL,
    V1_EXIT_SMART_PARTIAL,
-   V1_EXIT_SMART_PARTIAL_V2
+   V1_EXIT_SMART_PARTIAL_V2,
+   V1_EXIT_SMART_PARTIAL_V3_KNOWN_DEFAULT_CLOSE,
+   V1_EXIT_SMART_PARTIAL_V3_PROFIT_BANK,
+   V1_EXIT_SMART_PARTIAL_V3_BANK_3R_LOCK,
+   V1_EXIT_SMART_PARTIAL_V3_STRUCTURAL_BANK,
+   V1_EXIT_SMART_PARTIAL_V3_BANK_2R_LOCK_ONE
   };
 
 
@@ -636,6 +641,8 @@ struct V1ScenarioPlan
    bool              em_v2_one_r_reached;
    datetime          em_v2_one_r_reached_at;
    double            sp_v2_last_cost_be_target;
+   bool              sp_v3_bank2_done;
+   bool              sp_v3_bank3_done;
 
    datetime          pending_submitted_at;
    uint              request_id;
@@ -1179,6 +1186,8 @@ struct V2D151Tracker
 
    bool       reached_1r;
    datetime   one_r_at;
+   double     post1_pre2_min_r;
+   double     post1_pre2_max_r;
    bool       reached_2r;
    datetime   two_r_at;
 
@@ -1368,7 +1377,7 @@ void D151OnFill(const int scenario_index,const datetime observed_at)
    t.structural_tp_r=(double)t.direction*(t.structural_tp-t.fill_price)/risk;
    t.peak_r_while_open=0.0;
    t.trough_r_while_open=0.0;
-   t.reached_1r=false; t.one_r_at=0;
+   t.reached_1r=false; t.one_r_at=0; t.post1_pre2_min_r=0.0; t.post1_pre2_max_r=0.0;
    t.reached_2r=false; t.two_r_at=0;
    t.path_reached_3r=false; t.path_three_r_at=0;
    t.path_reached_4r=false; t.path_four_r_at=0;
@@ -1409,6 +1418,8 @@ void D151MarkOneR(V2D151Tracker &t,const datetime at)
    if(t.reached_1r) return;
    t.reached_1r=true;
    t.one_r_at=at;
+   t.post1_pre2_min_r=1.0;
+   t.post1_pre2_max_r=1.0;
    g_d151_one_r++;
    bool range_available=false;
    string owner_id="",state_name="DEFAULT";
@@ -1433,9 +1444,9 @@ void D151MarkTwoR(V2D151Tracker &t,const datetime at)
    t.post2_peak_r=2.0;
    g_d151_two_r++;
    LogLine("D151_PLUS_2R","M1",at,t.scenario_id,
-           StringFormat("scenario_id=%s direction=%s two_r_price=%.10f actual_position_open=%s post2_shadow_armed=true shadow_terminal=STRUCTURAL_TP_OR_ORIGINAL_SL strategy_authority=false",
+           StringFormat("scenario_id=%s direction=%s two_r_price=%.10f min_r_after_plus1_before_plus2=%.8f max_r_after_plus1_before_plus2=%.8f actual_position_open=%s post2_shadow_armed=true shadow_terminal=STRUCTURAL_TP_OR_ORIGINAL_SL strategy_authority=false",
                         t.scenario_id,DirectionName(t.direction),t.fill_price+(double)t.direction*2.0*t.risk_price,
-                        t.actual_closed ? "false" : "true"));
+                        t.post1_pre2_min_r,t.post1_pre2_max_r,t.actual_closed ? "false" : "true"));
   }
 
 void D151Post2Milestones(V2D151Tracker &t,const datetime at,const double r)
@@ -1587,6 +1598,11 @@ void D151AuditOnTick(const MqlTick &tick)
             if(r<t.pre1_mae_r) t.pre1_mae_r=r;
            }
          if(!t.reached_1r && r>=1.0-1.0e-10) D151MarkOneR(t,(datetime)tick.time);
+         if(t.reached_1r && !t.reached_2r)
+           {
+            if(r<t.post1_pre2_min_r) t.post1_pre2_min_r=r;
+            if(r>t.post1_pre2_max_r) t.post1_pre2_max_r=r;
+           }
          if(t.reached_1r && !t.reached_2r && r>=2.0-1.0e-10) D151MarkTwoR(t,(datetime)tick.time);
          if(!t.reached_1r && !t.pre1_failure && r<=-1.0+1.0e-10)
             D151ArmPre1Failure(t,(datetime)tick.time,r);
@@ -1686,7 +1702,7 @@ void D151OnTesterEnd(const datetime at)
       g_d151_trackers[i]=t;
      }
    LogLine("D151_RESEARCH_STOP","M1",at,"",
-           StringFormat("build=2.01R0L1 phase=V2_CAUSAL_RESEARCH_PLATFORM_V1 trackers=%d fills=%I64d plus1=%I64d plus2=%I64d pre1_failures=%I64d pre1_recovered_plus1=%I64d pre1_map_loss=%I64d pre1_censored=%I64d post2_structural=%I64d post2_original_sl=%I64d post2_censored=%I64d strategy_authority=false no_trade_modification=true",
+           StringFormat("build=2.02R0L2 phase=V2_SP_ARCHITECTURE_RESEARCH_V3 trackers=%d fills=%I64d plus1=%I64d plus2=%I64d pre1_failures=%I64d pre1_recovered_plus1=%I64d pre1_map_loss=%I64d pre1_censored=%I64d post2_structural=%I64d post2_original_sl=%I64d post2_censored=%I64d strategy_authority=false no_trade_modification=true",
                         ArraySize(g_d151_trackers),g_d151_fills,g_d151_one_r,g_d151_two_r,g_d151_pre1_failures,
                         g_d151_pre1_recovered_1r,g_d151_pre1_map_loss,g_d151_pre1_censored,
                         g_d151_post2_structural,g_d151_post2_original_sl,g_d151_post2_censored));
@@ -1716,6 +1732,11 @@ string ExitManagementModeName(const int mode)
       case V1_EXIT_R_STEP_PARTIAL: return "R_STEP_PARTIAL";
       case V1_EXIT_SMART_PARTIAL:  return "SMART_PARTIAL";
       case V1_EXIT_SMART_PARTIAL_V2: return "SMART_PARTIAL_V2";
+      case V1_EXIT_SMART_PARTIAL_V3_KNOWN_DEFAULT_CLOSE: return "SMART_PARTIAL_V3_KNOWN_DEFAULT_CLOSE";
+      case V1_EXIT_SMART_PARTIAL_V3_PROFIT_BANK: return "SMART_PARTIAL_V3_PROFIT_BANK";
+      case V1_EXIT_SMART_PARTIAL_V3_BANK_3R_LOCK: return "SMART_PARTIAL_V3_BANK_3R_LOCK";
+      case V1_EXIT_SMART_PARTIAL_V3_STRUCTURAL_BANK: return "SMART_PARTIAL_V3_STRUCTURAL_BANK";
+      case V1_EXIT_SMART_PARTIAL_V3_BANK_2R_LOCK_ONE: return "SMART_PARTIAL_V3_BANK_2R_LOCK_ONE";
      }
    return "UNKNOWN";
   }
@@ -2119,8 +2140,8 @@ bool ResearchCompactLogEvent(const string event_name,const string tf)
    if(event_name=="STRUCTURE_PROTECTED_BREAK")
       return (tf=="M30");
 
-   // D147/D149/D151 action rows are low-volume research-critical diagnostics.
-   if(StringFind(event_name,"D147_")==0 || StringFind(event_name,"D149_")==0 || StringFind(event_name,"D151_")==0)
+   // D147/D149/D151/D152 action rows are low-volume research-critical diagnostics.
+   if(StringFind(event_name,"D147_")==0 || StringFind(event_name,"D149_")==0 || StringFind(event_name,"D151_")==0 || StringFind(event_name,"D152_")==0)
       return true;
 
    // Research identity and PLAN-freeze classification.
@@ -6389,6 +6410,8 @@ void StoreScenarioPlan(const V1ScenarioDraft &draft,
    g_scenarios[n].em_v2_one_r_reached=false;
    g_scenarios[n].em_v2_one_r_reached_at=0;
    g_scenarios[n].sp_v2_last_cost_be_target=0.0;
+   g_scenarios[n].sp_v3_bank2_done=false;
+   g_scenarios[n].sp_v3_bank3_done=false;
    g_scenarios[n].pending_submitted_at=0;
    g_scenarios[n].request_id=0;
    g_scenarios[n].broker_order_ticket=0;
@@ -9000,6 +9023,8 @@ void MarkScenarioFilled(const int scenario_index,
    g_scenarios[scenario_index].em_v2_one_r_reached=false;
    g_scenarios[scenario_index].em_v2_one_r_reached_at=0;
    g_scenarios[scenario_index].sp_v2_last_cost_be_target=0.0;
+   g_scenarios[scenario_index].sp_v3_bank2_done=false;
+   g_scenarios[scenario_index].sp_v3_bank3_done=false;
    if(deal_ticket>0)
      {
       g_scenarios[scenario_index].entry_deal_commission=HistoryDealGetDouble(deal_ticket,DEAL_COMMISSION);
@@ -9920,6 +9945,354 @@ bool D149SPV2MaintainCostAdjustedBE(const int scenario_index,
    return true;
   }
 
+
+//+------------------------------------------------------------------+
+//| D-152 SP V3 architecture research family                         |
+//| Controlled alternatives to +2R cost-BE; continuation only.       |
+//+------------------------------------------------------------------+
+#define V2_D152_BANK_MIN_FLOOR_R       0.05
+#define V2_D152_BANK_MEANINGFUL_R      1.05
+#define V2_D152_NEXT_ROOM_R            1.00
+
+long g_d152_known_default_full_closes=0;
+long g_d152_bank2_actions=0;
+long g_d152_bank3_actions=0;
+long g_d152_bank_already_satisfied=0;
+long g_d152_bank_infeasible=0;
+long g_d152_structural_deep_room=0;
+long g_d152_structural_constrained=0;
+long g_d152_structural_unavailable=0;
+
+bool D152SPV3Mode(const int mode)
+  {
+   return (mode==V1_EXIT_SMART_PARTIAL_V3_KNOWN_DEFAULT_CLOSE ||
+           mode==V1_EXIT_SMART_PARTIAL_V3_PROFIT_BANK ||
+           mode==V1_EXIT_SMART_PARTIAL_V3_BANK_3R_LOCK ||
+           mode==V1_EXIT_SMART_PARTIAL_V3_STRUCTURAL_BANK ||
+           mode==V1_EXIT_SMART_PARTIAL_V3_BANK_2R_LOCK_ONE);
+  }
+
+bool D152SPV3KnownDefaultCloseMode(const int mode)
+  {
+   return mode==V1_EXIT_SMART_PARTIAL_V3_KNOWN_DEFAULT_CLOSE;
+  }
+
+bool D152SPV3BankMode(const int mode)
+  {
+   return (mode==V1_EXIT_SMART_PARTIAL_V3_PROFIT_BANK ||
+           mode==V1_EXIT_SMART_PARTIAL_V3_BANK_3R_LOCK ||
+           mode==V1_EXIT_SMART_PARTIAL_V3_STRUCTURAL_BANK ||
+           mode==V1_EXIT_SMART_PARTIAL_V3_BANK_2R_LOCK_ONE);
+  }
+
+void D152ReadM30MilestoneState(const int direction,
+                               const double reference_price,
+                               const double risk,
+                               bool &range_available,
+                               string &owner_id,
+                               double &protected_price,
+                               double &external_price,
+                               double &progress,
+                               double &remaining_r)
+  {
+   range_available=false;
+   owner_id="";
+   protected_price=0.0;
+   external_price=0.0;
+   progress=0.0;
+   remaining_r=0.0;
+   if(risk<=0.0 || !IsMatureDirectionalTrend(g_structure[2].trend) ||
+      TrendDirection(g_structure[2].trend)!=direction)
+      return;
+
+   bool have_protected=false,have_external=false;
+   if(direction>0)
+     {
+      if(g_structure[2].protected_low.valid)
+        { protected_price=g_structure[2].protected_low.price; have_protected=true; }
+      if(g_structure[2].external_high.valid)
+        { external_price=g_structure[2].external_high.price; have_external=true; }
+     }
+   else
+     {
+      if(g_structure[2].protected_high.valid)
+        { protected_price=g_structure[2].protected_high.price; have_protected=true; }
+      if(g_structure[2].external_low.valid)
+        { external_price=g_structure[2].external_low.price; have_external=true; }
+     }
+   if(!have_protected || !have_external) return;
+   double span=(double)direction*(external_price-protected_price);
+   if(span<=LiquidityTickSize()) return;
+   range_available=true;
+   owner_id=g_structure[2].owner_id;
+   progress=((double)direction*(reference_price-protected_price))/span;
+   remaining_r=((double)direction*(external_price-reference_price))/risk;
+  }
+
+bool D152SPV3WorstCaseAtOriginalSL(const int scenario_index,
+                                   const ulong position_ticket,
+                                   const double current_volume,
+                                   double &known_cash,
+                                   double &sl_cash,
+                                   double &terminal_cash,
+                                   double &terminal_r)
+  {
+   known_cash=D149SPV2KnownCash(scenario_index,position_ticket);
+   sl_cash=0.0;
+   terminal_cash=0.0;
+   terminal_r=0.0;
+   double risk_money=g_scenarios[scenario_index].actual_fill_risk_money;
+   if(risk_money<=0.0) risk_money=g_scenarios[scenario_index].planned_risk_money;
+   if(risk_money<=0.0 || current_volume<=0.0) return false;
+   if(!D149SPV2ExpectedGross(g_scenarios[scenario_index].direction,current_volume,
+                             g_scenarios[scenario_index].fill_price,
+                             g_scenarios[scenario_index].normalized_sl,sl_cash))
+      return false;
+   terminal_cash=known_cash+sl_cash;
+   terminal_r=terminal_cash/risk_money;
+   return true;
+  }
+
+bool D152SPV3ChooseBankVolume(const int scenario_index,
+                              const ulong position_ticket,
+                              const double current_volume,
+                              const double market_price,
+                              const double target_floor_r,
+                              double &close_volume,
+                              double &expected_lock_money,
+                              double &expected_lock_r,
+                              bool &already_satisfied)
+  {
+   close_volume=0.0;
+   expected_lock_money=0.0;
+   expected_lock_r=0.0;
+   already_satisfied=false;
+   double min_volume=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_MIN);
+   double step=SymbolInfoDouble(_Symbol,SYMBOL_VOLUME_STEP);
+   double eps=MathMax(1.0e-10,step*1.0e-6);
+   double risk_money=g_scenarios[scenario_index].actual_fill_risk_money;
+   if(risk_money<=0.0) risk_money=g_scenarios[scenario_index].planned_risk_money;
+   if(min_volume<=0.0 || step<=0.0 || risk_money<=0.0) return false;
+
+   double known_cash=0.0,sl_cash=0.0,current_terminal=0.0,current_terminal_r=0.0;
+   if(!D152SPV3WorstCaseAtOriginalSL(scenario_index,position_ticket,current_volume,
+                                      known_cash,sl_cash,current_terminal,current_terminal_r))
+      return false;
+   double required=target_floor_r*risk_money;
+   if(current_terminal+1.0e-8>=required)
+     {
+      already_satisfied=true;
+      expected_lock_money=current_terminal;
+      expected_lock_r=current_terminal_r;
+      return true;
+     }
+
+   int max_steps=(int)MathFloor((current_volume-min_volume+eps)/step);
+   if(max_steps<=0) return false;
+   for(int k=1;k<=max_steps;k++)
+     {
+      double candidate=D147NormalizeVolumeDown((double)k*step);
+      double remaining=current_volume-candidate;
+      if(candidate<min_volume-eps || remaining<min_volume-eps) continue;
+      double now_profit=0.0,remaining_sl_profit=0.0;
+      if(!D149SPV2ExpectedGross(g_scenarios[scenario_index].direction,candidate,
+                                g_scenarios[scenario_index].fill_price,market_price,now_profit))
+         continue;
+      if(!D149SPV2ExpectedGross(g_scenarios[scenario_index].direction,remaining,
+                                g_scenarios[scenario_index].fill_price,g_scenarios[scenario_index].normalized_sl,
+                                remaining_sl_profit))
+         continue;
+      double terminal=known_cash+now_profit+remaining_sl_profit;
+      if(terminal+1.0e-8>=required)
+        {
+         close_volume=candidate;
+         expected_lock_money=terminal;
+         expected_lock_r=terminal/risk_money;
+         return true;
+        }
+     }
+   return false;
+  }
+
+bool D152SPV3BankToFloor(const int scenario_index,
+                         const MqlTick &tick,
+                         const ulong position_ticket,
+                         const double current_volume,
+                         const double target_floor_r,
+                         const int milestone,
+                         bool &done_flag,
+                         const string reason)
+  {
+   if(done_flag) return false;
+   double market_price=(g_scenarios[scenario_index].direction>0 ? tick.bid : tick.ask);
+   double close_volume=0.0,lock_money=0.0,lock_r=0.0;
+   bool already=false;
+   bool feasible=D152SPV3ChooseBankVolume(scenario_index,position_ticket,current_volume,market_price,target_floor_r,
+                                          close_volume,lock_money,lock_r,already);
+   if(feasible && already)
+     {
+      done_flag=true;
+      g_d152_bank_already_satisfied++;
+      LogLine("D152_SP_BANK_ALREADY_SATISFIED","M1",(datetime)tick.time,g_scenarios[scenario_index].id,
+              StringFormat("scenario_id=%s milestone=PLUS_%dR reason=%s target_floor_r=%.8f modeled_original_sl_floor_r=%.8f no_action=true original_sl_preserved=true",
+                           g_scenarios[scenario_index].id,milestone,reason,target_floor_r,lock_r));
+      return false;
+     }
+   if(!feasible || close_volume<=0.0)
+     {
+      done_flag=true;
+      g_d152_bank_infeasible++;
+      LogLine("D152_SP_BANK_INFEASIBLE","M1",(datetime)tick.time,g_scenarios[scenario_index].id,
+              StringFormat("scenario_id=%s milestone=PLUS_%dR reason=%s target_floor_r=%.8f current_volume=%.8f action=KEEP_RUNNER original_sl_preserved=true full_close_fallback=false",
+                           g_scenarios[scenario_index].id,milestone,reason,target_floor_r,current_volume));
+      return false;
+     }
+
+   string action=StringFormat("D152_BANK_%dR",milestone);
+   if(!D149SPV2RequestClose(scenario_index,tick,position_ticket,current_volume,close_volume,action,lock_money,lock_r))
+      return false;
+   done_flag=true;
+   if(milestone==2) g_d152_bank2_actions++;
+   else if(milestone==3) g_d152_bank3_actions++;
+   LogLine("D152_SP_BANK_ACCEPTED","M1",(datetime)tick.time,g_scenarios[scenario_index].id,
+           StringFormat("scenario_id=%s milestone=PLUS_%dR reason=%s target_floor_r=%.8f modeled_original_sl_floor_r=%.8f close_volume=%.8f pre_close_volume=%.8f expected_remaining=%.8f original_sl_preserved=true structural_tp_preserved=true no_r_step_sl=true",
+                        g_scenarios[scenario_index].id,milestone,reason,target_floor_r,lock_r,close_volume,current_volume,
+                        MathMax(0.0,current_volume-close_volume)));
+   return true;
+  }
+
+bool D152SPV3KnownDefaultFirstProfit(const int scenario_index,
+                                     const MqlTick &tick,
+                                     const ulong position_ticket,
+                                     const double current_volume)
+  {
+   if(g_scenarios[scenario_index].sp_state==V1_SP_STATE_DEFAULT &&
+      g_scenarios[scenario_index].sp_m30_range_available)
+     {
+      double market_price=(g_scenarios[scenario_index].direction>0 ? tick.bid : tick.ask);
+      double gross=0.0;
+      D149SPV2ExpectedGross(g_scenarios[scenario_index].direction,current_volume,
+                            g_scenarios[scenario_index].fill_price,market_price,gross);
+      double risk_money=g_scenarios[scenario_index].actual_fill_risk_money;
+      if(risk_money<=0.0) risk_money=g_scenarios[scenario_index].planned_risk_money;
+      double known_cash=D149SPV2KnownCash(scenario_index,position_ticket);
+      double estimate=known_cash+gross;
+      double estimate_r=(risk_money>0.0 ? estimate/risk_money : 0.0);
+      if(D149SPV2RequestClose(scenario_index,tick,position_ticket,current_volume,current_volume,
+                              "D152_KNOWN_DEFAULT_FULL_AT_1R",estimate,estimate_r))
+        {
+         g_d152_known_default_full_closes++;
+         LogLine("D152_SP_KNOWN_DEFAULT_FULL_CLOSE","M1",(datetime)tick.time,g_scenarios[scenario_index].id,
+                 StringFormat("scenario_id=%s state=KNOWN_M30_RANGE_DEFAULT m30_remaining_r=%.8f m30_progress=%.8f rationale=PLUS_2R_LIES_BEYOND_CURRENT_M30_EXTERNAL expected_net_r=%.8f structural_tp_sacrificed=true research_variant=true",
+                              g_scenarios[scenario_index].id,g_scenarios[scenario_index].sp_m30_remaining_to_external_r,
+                              g_scenarios[scenario_index].sp_m30_range_progress,estimate_r));
+         return true;
+        }
+      return false;
+     }
+   return D149SPV2RequestFirstProfit(scenario_index,tick,position_ticket,current_volume);
+  }
+
+void D152SPV3ManageFilledPosition(const int scenario_index,const MqlTick &tick,const int mode)
+  {
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios) ||
+      g_scenarios[scenario_index].strategy_state!=V1_STRATEGY_FILLED ||
+      g_scenarios[scenario_index].scope!=V1_SCOPE_EXTERNAL_CONTINUATION ||
+      g_scenarios[scenario_index].exit_initial_risk_price<=0.0 || !D152SPV3Mode(mode))
+      return;
+
+   ulong position_ticket=0;
+   double open_price=0.0,volume=0.0,current_sl=0.0,current_tp=0.0;
+   if(!D147GetManagedPositionState(scenario_index,position_ticket,open_price,volume,current_sl,current_tp)) return;
+   double px=(g_scenarios[scenario_index].direction>0 ? tick.bid : tick.ask);
+   double favorable_r=(double)g_scenarios[scenario_index].direction*(px-g_scenarios[scenario_index].fill_price)/g_scenarios[scenario_index].exit_initial_risk_price;
+   int reached_step=(int)MathFloor(favorable_r+1.0e-10);
+   if(reached_step>g_scenarios[scenario_index].exit_highest_r_step_seen)
+      g_scenarios[scenario_index].exit_highest_r_step_seen=reached_step;
+   if(g_scenarios[scenario_index].exit_highest_r_step_seen>=1 && !g_scenarios[scenario_index].sp_state_frozen)
+      D149SPFreezeStateAtOneR(scenario_index,(datetime)tick.time);
+
+   if(D152SPV3KnownDefaultCloseMode(mode))
+     {
+      // Preserve V2's +2R cost-BE ordering; only the known DEFAULT +1R action differs.
+      if(g_scenarios[scenario_index].exit_highest_r_step_seen>=2)
+        {
+         if(D149SPV2MaintainCostAdjustedBE(scenario_index,tick,position_ticket,volume,current_sl,current_tp))
+            return;
+        }
+      if(g_scenarios[scenario_index].exit_highest_r_step_seen>=1 &&
+         !g_scenarios[scenario_index].sp_partial_done && !g_scenarios[scenario_index].exit_partial_disabled)
+         D152SPV3KnownDefaultFirstProfit(scenario_index,tick,position_ticket,volume);
+      return;
+     }
+
+   // Bank variants deliberately replace the +2R SL ratchet. First establish
+   // the same +1R SP cash leg, then realize only the minimum additional cash
+   // needed for the pre-registered fallback floor while the original SL and
+   // structural TP remain untouched for the residual runner.
+   if(g_scenarios[scenario_index].exit_highest_r_step_seen>=1 &&
+      !g_scenarios[scenario_index].sp_partial_done && !g_scenarios[scenario_index].exit_partial_disabled)
+     {
+      if(D149SPV2RequestFirstProfit(scenario_index,tick,position_ticket,volume))
+         return;
+      if(!D147GetManagedPositionState(scenario_index,position_ticket,open_price,volume,current_sl,current_tp)) return;
+     }
+
+   if(g_scenarios[scenario_index].exit_highest_r_step_seen>=2 && !g_scenarios[scenario_index].sp_v3_bank2_done)
+     {
+      double target=V2_D152_BANK_MIN_FLOOR_R;
+      string reason="UNCONDITIONAL_MIN_BANK";
+      if(mode==V1_EXIT_SMART_PARTIAL_V3_BANK_2R_LOCK_ONE)
+        {
+         target=V2_D152_BANK_MEANINGFUL_R;
+         reason="PLUS2_PROVED_CONTINUATION_LOCK_ONE_R";
+        }
+      else if(mode==V1_EXIT_SMART_PARTIAL_V3_STRUCTURAL_BANK)
+        {
+         bool range_available=false;
+         string owner_id="";
+         double protected_price=0.0,external_price=0.0,progress=0.0,remaining_r=0.0;
+         double two_r_price=g_scenarios[scenario_index].fill_price+(double)g_scenarios[scenario_index].direction*2.0*g_scenarios[scenario_index].exit_initial_risk_price;
+         D152ReadM30MilestoneState(g_scenarios[scenario_index].direction,two_r_price,g_scenarios[scenario_index].exit_initial_risk_price,
+                                   range_available,owner_id,protected_price,external_price,progress,remaining_r);
+         if(range_available && remaining_r<V2_D152_NEXT_ROOM_R-1.0e-10)
+           {
+            target=V2_D152_BANK_MEANINGFUL_R;
+            reason="M30_PLUS3_ROOM_CONSTRAINED";
+            g_d152_structural_constrained++;
+           }
+         else if(range_available)
+           {
+            target=V2_D152_BANK_MIN_FLOOR_R;
+            reason="M30_PLUS3_ROOM_AVAILABLE";
+            g_d152_structural_deep_room++;
+           }
+         else
+           {
+            target=V2_D152_BANK_MIN_FLOOR_R;
+            reason="M30_RANGE_UNAVAILABLE_DO_NOT_ASSUME_EXHAUSTION";
+            g_d152_structural_unavailable++;
+           }
+         LogLine("D152_SP_PLUS2_STATE","M30",(datetime)tick.time,g_scenarios[scenario_index].id,
+                 StringFormat("scenario_id=%s range_available=%s owner_id=%s protected=%.10f external=%.10f progress=%.8f remaining_from_plus2_r=%.8f target_bank_floor_r=%.8f reason=%s current_sp_state=%s",
+                              g_scenarios[scenario_index].id,range_available ? "true" : "false",owner_id=="" ? "NA" : owner_id,
+                              protected_price,external_price,progress,remaining_r,target,reason,SmartPartialStateName(g_scenarios[scenario_index].sp_state)));
+        }
+      if(D152SPV3BankToFloor(scenario_index,tick,position_ticket,volume,target,2,
+                              g_scenarios[scenario_index].sp_v3_bank2_done,reason))
+         return;
+      if(!D147GetManagedPositionState(scenario_index,position_ticket,open_price,volume,current_sl,current_tp)) return;
+     }
+
+   if(mode==V1_EXIT_SMART_PARTIAL_V3_BANK_3R_LOCK &&
+      g_scenarios[scenario_index].exit_highest_r_step_seen>=3 && !g_scenarios[scenario_index].sp_v3_bank3_done)
+     {
+      D152SPV3BankToFloor(scenario_index,tick,position_ticket,volume,V2_D152_BANK_MEANINGFUL_R,3,
+                          g_scenarios[scenario_index].sp_v3_bank3_done,"PLUS3_PROVED_CONTINUATION_LOCK_ONE_R");
+     }
+  }
+
+
 void D149SPV2ManageFilledPosition(const int scenario_index,const MqlTick &tick)
   {
    if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios) ||
@@ -9971,6 +10344,11 @@ void D147ManageFilledPosition(const int scenario_index,const MqlTick &tick)
    if(mode==V1_EXIT_SMART_PARTIAL_V2)
      {
       D149SPV2ManageFilledPosition(scenario_index,tick);
+      return;
+     }
+   if(D152SPV3Mode(mode))
+     {
+      D152SPV3ManageFilledPosition(scenario_index,tick,mode);
       return;
      }
    if(g_scenarios[scenario_index].exit_initial_risk_price<=0.0)
@@ -10173,7 +10551,8 @@ void ReconcileScenarioExecution(const int scenario_index,const datetime observed
 
    if(g_scenarios[scenario_index].exit_management_mode==V1_EXIT_R_STEP_PARTIAL ||
       g_scenarios[scenario_index].exit_management_mode==V1_EXIT_SMART_PARTIAL ||
-      g_scenarios[scenario_index].exit_management_mode==V1_EXIT_SMART_PARTIAL_V2)
+      g_scenarios[scenario_index].exit_management_mode==V1_EXIT_SMART_PARTIAL_V2 ||
+      D152SPV3Mode(g_scenarios[scenario_index].exit_management_mode))
      {
       if(!D147AggregateExitDealsForPosition(g_scenarios[scenario_index].broker_position_id,
                                             g_scenarios[scenario_index].fill_at,
@@ -12771,7 +13150,7 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=2.01R0L1 property_version=2.01 magic=%I64d phase=V2_CAUSAL_RESEARCH_PLATFORM_V1 strategy_semantics=V2_CONTINUATION_ONLY_PLUS_D151_SHADOW_CAUSAL_RESEARCH fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=2.02R0L2 property_version=2.02 magic=%I64d phase=V2_SP_ARCHITECTURE_RESEARCH_V3 strategy_semantics=V2_CONTINUATION_ONLY_PLUS_D151_D152_SP_RESEARCH fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         _Symbol,
                         AccountInfoString(ACCOUNT_CURRENCY),
@@ -12783,7 +13162,7 @@ int OnInit()
                         InpEquityRiskPercentPerTrade,
                         AccountInfoInteger(ACCOUNT_MARGIN_MODE)));
    LogLine("D149_RESEARCH_START","M1",TimeCurrent(),"",
-           StringFormat("exit_mode=%s em_mode=%s build=2.01R0L1 sp_strong_fraction=%.8f sp_v1_default_fraction=%.8f sp_strong_room_r=%.8f sp_v2_default_lock_buffer_r=%.8f sp_v2_cost_be_buffer_r=%.8f sp_v2_continuation_only=true structural_tp_retained=true em_v2_failure=SL_BEFORE_PLUS_1R em_v2_quarantine_after=2 em_v2_release=SHADOW_OR_PREEXISTING_REAL_PLUS_1R em_v2_force_cancel_existing=false d148_audit_allowed_only_on_control=true",
+           StringFormat("exit_mode=%s em_mode=%s build=2.02R0L2 sp_strong_fraction=%.8f sp_v1_default_fraction=%.8f sp_strong_room_r=%.8f sp_v2_default_lock_buffer_r=%.8f sp_v2_cost_be_buffer_r=%.8f sp_v2_continuation_only=true structural_tp_retained=true em_v2_failure=SL_BEFORE_PLUS_1R em_v2_quarantine_after=2 em_v2_release=SHADOW_OR_PREEXISTING_REAL_PLUS_1R em_v2_force_cancel_existing=false d148_audit_allowed_only_on_control=true",
                         ExitManagementModeName((int)InpExitManagementMode),EpisodeManagementModeName((int)InpEpisodeManagementMode),
                         V1_D149_SP_STRONG_PARTIAL_FRACTION,V1_D149_SP_DEFAULT_PARTIAL_FRACTION,V1_D149_SP_STRONG_ROOM_R,
                         V1_D149_SP_V2_DEFAULT_LOCK_BUFFER_R,V1_D149_SP_V2_COST_BE_BUFFER_R));

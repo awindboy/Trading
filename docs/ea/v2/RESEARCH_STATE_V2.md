@@ -80,3 +80,16 @@ PRESERVATION: after +2R, how much retracement do eventual 3R/5R/structural winne
 ```
 
 D-151 native audit measures all three without changing a trade.
+
+## D-152 SP architecture phase
+
+D-151 SP-only stage ceilings:
+
+```text
+GOLD25 Fill->+1R = 56.6%
+BTC25  Fill->+1R = 46.5%
+```
+
+Thus the 70% project WR target requires a later Entry-survival improvement. D-152's narrower objective is to increase the fraction of +1R survivors that finish with >=+1R while preserving multi-R tail expectancy. Current +1R-cohort final >=+1R rates are only 43.3% GOLD and 36.2% BTC despite >93% positive conversion.
+
+The next architecture question is whether realized-profit banking can decouple profit protection from SL tightness.

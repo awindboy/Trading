@@ -6242,3 +6242,9 @@ post-SL recovery vs map-support loss
 ```
 
 Any strategy change based on D-151 must be a separately pre-registered D-152 variant and must generalize beyond the discovery market/year.
+
+## D-152 — SP V3 profit-bank architecture research
+
+Status: `ACTIVE RESEARCH / NO BASELINE PROMOTION`.
+
+D151 GOLD/BTC SP-only evidence shows (1) +1R state conversion is already >93% positive, (2) overall WR is capped by Fill->+1R survival, and (3) fixed positive SL floors after +2R can kill eventual 5R+ winners. D152 therefore tests isolated profit-bank architectures rather than simply tightening the stop. Exact contracts are frozen in `docs/ea/v2/D152_SP_ARCHITECTURE_RESEARCH.md`.

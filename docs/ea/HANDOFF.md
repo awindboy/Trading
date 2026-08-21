@@ -1,10 +1,10 @@
 # EA Development Handoff
 
 Last updated: 2026-08-22
-Repository base before this handoff package: `ad39986173568fe3b96d7dc9cadf793cd2f77aef`
-Current code/research build: `2.01R0L1 / V2_CAUSAL_RESEARCH_PLATFORM_V1`
-Current research phase: **D-151 V2 CAUSAL RESEARCH PLATFORM / LOCAL COMPILE + NON-INTERFERENCE VALIDATION PENDING**
-Strategy semantics: **V1 FROZEN / V2 CONTINUATION-ONLY / D151 SHADOW RESEARCH**
+Repository base before this handoff package: `3ba8e121b567be9043ff524f5a7d2b4936fe5992`
+Current code/research build: `2.02R0L2 / V2_SP_ARCHITECTURE_RESEARCH_V3`
+Current research phase: **D-152 SP V3 CONTROLLED ARCHITECTURE COMPARISON / LOCAL COMPILE + TEST PENDING**
+Strategy semantics: **V1 FROZEN / V2 CONTINUATION-ONLY / D151 SHADOW + D152 SP RESEARCH MODES**
 Strategy authority: **V2 -> docs/ea/v2/AGENTS_V2.md; V1 preserved as historical control**
 2021 status: **KEEP UNTOUCHED**
 
@@ -516,3 +516,7 @@ The active development line is now V2. Read `docs/ea/v2/HANDOFF_V2.md` after roo
 ## D-151 V2 routing note
 
 Active work now resumes from `docs/ea/v2/HANDOFF_V2.md` and `docs/ea/v2/D151_V2_CAUSAL_RESEARCH_PLATFORM.md`. V1/D149 documents remain historical evidence.
+
+## D-152 V2 routing note
+
+Active V2 work is D-152 SP architecture research. Read `docs/ea/v2/HANDOFF_V2.md` then `docs/ea/v2/D152_SP_ARCHITECTURE_RESEARCH.md`.

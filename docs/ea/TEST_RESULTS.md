@@ -1008,3 +1008,35 @@ GOLD and BTC support the same decomposition:
 ```
 
 D-151 therefore adds shadow causal instrumentation before D-152 strategy variants are designed.
+
+## 2026-08-22 — D-151 GOLD/BTC SP-only evidence for D-152
+
+User-provided clean D151 SP-only ledgers:
+
+```text
+GOLD(10).csv
+53 fills / 53 closes
+WR 52.83%
+avg winner +1.373R
+expectancy +0.228R
+total +12.063R
++1R 30/53 = 56.6%
+STRONG +2R 9/11 = 81.8%
+DEFAULT +2R 3/19 = 15.8%
+
+BTCUSD(6).csv
+127 fills / 126 closes / 1 actual right-censor
+closed WR 44.44%
+avg winner +1.103R
+expectancy -0.066R
+total -8.337R
++1R 59/127 = 46.5%
+STRONG +2R 15/18 = 83.3%
+DEFAULT +2R 17/41 = 41.5%
+```
+
+Closed +1R cohort positive conversion: GOLD 93.3%, BTC 94.8%. Final >=+1R within the +1R cohort: GOLD 43.3%, BTC 36.2%.
+
+D151 post-+2R shadow: a hypothetical fixed +1R floor at +2R would have allowed only 2/6 eventual GOLD +5R paths and 7/15 BTC +5R paths to survive. Four BTC shadow structural-TP winners actually closed below +1R under current cost-BE before later shadow recovery; GOLD had zero such cases. This cross-market divergence motivates controlled profit-bank variants rather than a universal tighter SL.
+
+Counterfactual substitutions are diagnostic only, not realized strategy evidence. Replacing causally-known range-available DEFAULT trades by their first +1R execution price improved aggregate R by about +0.94R on GOLD and +2.71R on BTC in these ledgers, but the benefit was direction-concentrated, so it is tested as a research variant only.

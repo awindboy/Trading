@@ -193,3 +193,19 @@ For both targets:
 - no filter stack whose only justification is hitting the target number.
 
 D-151 is shadow instrumentation only. It has no Entry, SL, TP, sizing, order, or EM authority. Its purpose is to measure the three V2 causal stages with enough resolution to design later controlled variants.
+
+## 9. D-152 Smart Partial V3 research boundary
+
+D-152 adds controlled exit research modes only. `V1_EXIT_SMART_PARTIAL_V2` remains the parent SP control and no V3 mode is V2 baseline authority.
+
+The main causal distinction is preserved:
+
+```text
+Fill -> +1R = Entry-survival problem
++1R -> +2R+ = runner-discrimination problem
+post-+2R = profit-preservation / runner-breathing problem
+```
+
+D-151 GOLD/BTC SP-only data prove that post-+1R SP alone cannot produce the project-wide 70% WR target while Fill->+1R survival remains 56.6% on GOLD25 and 46.5% on BTC25. D-152 therefore optimizes conditional payoff/retained R without pretending to solve Entry survival.
+
+A fixed +2R -> +1R stop is not promoted: D-151 shadow paths show it would cut many eventual +5R trades. D-152 instead tests profit banking through partial realization while the residual runner retains its original structural SL/TP.

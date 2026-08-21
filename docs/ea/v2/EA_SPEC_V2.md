@@ -122,3 +122,17 @@ post-+2R minimum-R-before-3R/4R/5R measurements
 `InpV2D151CausalAudit` must be independently switchable and must pass audit-OFF/audit-ON strategy-event parity before its evidence is used.
 
 D-151 events are measurement rows. They are never an Entry or exit trigger in build `2.01R0L1`.
+
+## 8. D-152 SP V3 research modes
+
+Build `2.02R0L2 / V2_SP_ARCHITECTURE_RESEARCH_V3` adds five independently selectable research modes:
+
+```text
+SMART_PARTIAL_V3_KNOWN_DEFAULT_CLOSE
+SMART_PARTIAL_V3_PROFIT_BANK
+SMART_PARTIAL_V3_BANK_3R_LOCK
+SMART_PARTIAL_V3_STRUCTURAL_BANK
+SMART_PARTIAL_V3_BANK_2R_LOCK_ONE
+```
+
+See `D152_SP_ARCHITECTURE_RESEARCH.md` for exact contracts. None changes Entry authorization, initial SL, frozen structural TP, reversal policy, or V2 baseline authority. First comparisons require `EM_OFF`.

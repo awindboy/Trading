@@ -104,3 +104,9 @@ Fill -> +1R
 Read `docs/ea/v2/D151_V2_CAUSAL_RESEARCH_PLATFORM.md` immediately after this handoff.
 
 New project stretch target is `>=70%` cost-adjusted realized WR while preserving >1R average winner and positive expectancy, with `100% of accepted trades final net R >= +1R` retained as an extreme research frontier rather than a guarantee.
+
+## D-152 active SP handoff
+
+Current build target is `2.02R0L2 / V2_SP_ARCHITECTURE_RESEARCH_V3`. D-151 GOLD25/BTC25 SP-only ledgers are complete enough to reject a blind tighter +2R stop and to begin isolated SP architecture tests.
+
+Read `docs/ea/v2/D152_SP_ARCHITECTURE_RESEARCH.md` immediately after this file. Test the five V3 modes separately with EM OFF; do not combine them until isolated effects are measured.

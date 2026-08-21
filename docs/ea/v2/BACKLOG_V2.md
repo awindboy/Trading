@@ -64,3 +64,18 @@ Current phase: `D-150 V2 CONTINUATION-ONLY FORK`
 - [ ] SILVER25/CADJPY25 cross-market generalization.
 - [ ] Design D-152 Entry variant only from relations that survive independent data.
 - [ ] Design D-152 profit-floor variant only after post-+2R retracement evidence.
+
+## P0 — D-152 SP V3 controlled comparison
+
+- [x] Reject fixed +2R -> +1R SL as the primary next path from D151 retracement evidence.
+- [x] Preserve SP V2 as parent control.
+- [x] Add known-range DEFAULT full-close research mode.
+- [x] Add +2R minimum-profit-bank research mode.
+- [x] Add +2R bank + +3R meaningful-winner bank mode.
+- [x] Add causal +2R current-M30 structural-bank mode.
+- [x] Extend D151 +1R->+2R window with min/max R measurement.
+- [ ] Compile 0 errors.
+- [ ] GOLD25 five isolated V3 modes, EM OFF.
+- [ ] BTC25 five isolated V3 modes, EM OFF.
+- [ ] Compare final>=1R, avg winner, expectancy, DD, post2 saved/killed tails.
+- [ ] Validate any survivor on GOLD23/24 before combining variants.
