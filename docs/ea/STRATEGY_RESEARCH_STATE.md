@@ -1,9 +1,9 @@
 # Strategy Robustness Research State
 
 Last updated: 2026-08-21
-Repository base before handoff package: `b902a7795cc8b8f16adb8dba67b803875d07b97e`
-Current code/audit identity: `1.92R1L7 / RUNNER_MARKET_CONTEXT_AUDIT_V1_LIGHTWEIGHT`
-Next research phase: **D-146 CONTINUATION STATE AUDIT**
+Repository base before handoff package: `f0a9be86d7d8af4e22b21e9b657669aae1245fbd`
+Current code/audit identity: `1.92R1L8 / CONTINUATION_STATE_AUDIT_V1_SHADOW`
+Current research phase: **D-146 CONTINUATION STATE AUDIT — IMPLEMENTED / TEST PENDING**
 Strategy authority: **UNCHANGED**
 2021: **UNTOUCHED**
 
@@ -191,8 +191,8 @@ It is not automatically combined with D-145 runner maturity, and no composite sc
 
 ## Next decisions
 
-1. Implement the smallest D-146 shadow tracker.
-2. Validate non-interference and event integrity.
+1. Compile the D-146 shadow tracker and validate audit OFF/ON non-interference.
+2. Validate D-146 event integrity and runtime on GOLD 2025.
 3. Test whether post-+1R M30 state transitions explain +2R success/failure across the development panel.
 4. Only if a causal mechanism survives, design one controlled winner-extension strategy variant.
 5. Separately open the Entry-survival causal study needed to lift Fill->+1R toward the final >=50% requirement.

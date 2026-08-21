@@ -1,7 +1,7 @@
 # EA Backlog
 
 Last updated: 2026-08-21
-Current phase: **D-146 CONTINUATION STATE AUDIT — NEXT**
+Current phase: **D-146 CONTINUATION STATE AUDIT — IMPLEMENTED / COMPILE + PARITY PENDING**
 Strategy authority: **UNCHANGED**
 2021: **KEEP UNTOUCHED**
 
@@ -14,15 +14,15 @@ Strategy authority: **UNCHANGED**
 - [x] Confirm the same relationship in 11/11 comparable market-year x direction cells.
 - [x] Confirm M30 maturity is not a stable Fill-time Entry-success discriminator.
 - [x] Demote M30 net advance, FVG timing/displacement, +1R speed, simple progression/PB, M1 confirmation, and standalone leg expansion as general runner rules.
-- [ ] Freeze D-146 measurement contract in code with zero strategy authority.
-- [ ] At first +1R, freeze current M30 owner/protected/external/range state.
-- [ ] From +1R until +2R-or-SL, count/identify causal M30 same-direction BOS, opposite events, protected breaks, owner changes, and external refreshes.
-- [ ] Record whether the +1R-time external was delivered before terminal resolution.
-- [ ] Record whether a new outward M30 external becomes causally available before +2R.
-- [ ] At exact `+2R_REACHED` or `SL_AFTER_1R`, freeze terminal M30 state.
-- [ ] Keep exact tick outcome ordering; no OHLC reconstruction.
-- [ ] Keep unified one-file event ledger.
-- [ ] Keep active research objects restricted to actual +1R-success trades.
+- [x] Freeze D-146 measurement contract in code with zero strategy authority.
+- [x] At first +1R, freeze current M30 owner/protected/external/range state.
+- [x] From +1R until +2R-or-SL, count/identify causal M30 same-direction BOS, opposite events, protected breaks, owner changes, and external refreshes.
+- [x] Record whether the +1R-time external was delivered before terminal resolution.
+- [x] Record whether a new outward M30 external becomes causally available before +2R.
+- [x] At exact `+2R_REACHED` or `SL_AFTER_1R`, freeze terminal M30 state.
+- [x] Keep exact tick outcome ordering; no OHLC reconstruction.
+- [x] Keep unified one-file event ledger.
+- [x] Keep active research objects restricted to actual +1R-success trades.
 - [ ] MetaEditor compile with 0 errors.
 - [ ] GOLD smoke audit OFF/ON non-audit parity PASS.
 - [ ] Validate D-146 event completeness and runtime on GOLD 2025.

@@ -1,9 +1,9 @@
 # EA Development Handoff
 
 Last updated: 2026-08-21
-Repository base before this handoff package: `b902a7795cc8b8f16adb8dba67b803875d07b97e`
-Current code/audit build: `1.92R1L7 / RUNNER_MARKET_CONTEXT_AUDIT_V1_LIGHTWEIGHT`
-Current research phase: **D-146 CONTINUATION STATE AUDIT — PREP / NOT YET IMPLEMENTED**
+Repository base before this handoff package: `f0a9be86d7d8af4e22b21e9b657669aae1245fbd`
+Current code/audit build: `1.92R1L8 / CONTINUATION_STATE_AUDIT_V1_SHADOW`
+Current research phase: **D-146 CONTINUATION STATE AUDIT — IMPLEMENTED / LOCAL COMPILE + PARITY PENDING**
 Strategy semantics: **D134_EXECUTION_CORE_UNCHANGED**
 Strategy authority: **UNCHANGED**
 2021 status: **KEEP UNTOUCHED**
@@ -321,6 +321,10 @@ Do not mix execution-integrity fixes with strategy-research variants.
 
 The next session should begin by reading GitHub, not by reconstructing this chat.
 
-The first concrete engineering task is:
+The D-146 shadow extension is now prepared in `EdgeAuditV1.mqh` as build `1.92R1L8`.
 
-> inspect current `EdgeAuditV1.mqh` / EA hooks and design the smallest D-146 shadow extension that records M30 structure changes from first +1R until exact +2R-or-SL resolution, without strategy authority and without reintroducing heavy tracker fan-out.
+The first concrete validation task is:
+
+> MetaEditor compile with 0 errors, then run the GOLD short-window Audit OFF/ON smoke and require exact non-audit parity before using any D-146 evidence.
+
+After parity, run GOLD 2025 full-year Audit ON and validate D-146 terminal uniqueness, causal M30 event ordering, original-+1R-external tracking, and runtime before broader reruns.

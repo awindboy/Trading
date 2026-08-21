@@ -1,8 +1,10 @@
 # D-146 Continuation State Audit
 
 Date: 2026-08-21
-Status: **RESEARCH CONTRACT / NOT YET IMPLEMENTED**
+Status: **IMPLEMENTED SHADOW MEASUREMENT / LOCAL COMPILE + PARITY PENDING**
 Strategy authority: **NONE**
+Implementation identity: `1.92R1L8 / CONTINUATION_STATE_AUDIT_V1_SHADOW`
+Measurement logic surface: `mt5/experts/EdgeAuditV1.mqh`; EA changes are diagnostic identity only and strategy/order hooks remain unchanged
 Parent evidence: `docs/ea/D145_RUNNER_GENERALIZATION_RESULTS.md`
 2021: **KEEP UNTOUCHED**
 
@@ -229,6 +231,18 @@ large target grids
 ```
 
 Use the existing single unified CSV.
+
+Implemented D-146 event rows:
+
+```text
+EDGE_AUDIT_D146_1R_STATE
+EDGE_AUDIT_D146_M30_EVENT
+EDGE_AUDIT_D146_ORIGINAL_EXTERNAL_DELIVERED
+EDGE_AUDIT_D146_TERMINAL
+EDGE_AUDIT_D146_CENSORED
+```
+
+The +1R-time M30 external is frozen as its own identity. A later M30 external is logged as a later causal state and is never backfilled into the +1R snapshot.
 
 ## 10. Strategy non-interference
 

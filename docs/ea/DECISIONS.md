@@ -6037,7 +6037,7 @@ A candidate mechanism must preserve the direction of its relationship across LON
 
 ## D-146 — Separate Entry survival from winner continuation; test post-+1R M30 structure before changing exits
 
-Status: PRE-REGISTERED SHADOW RESEARCH / STRATEGY AUTHORITY UNCHANGED — 2026-08-21
+Status: IMPLEMENTED SHADOW MEASUREMENT / LOCAL COMPILE + PARITY PENDING / STRATEGY AUTHORITY UNCHANGED — 2026-08-21
 
 ### Evidence trigger
 
@@ -6084,6 +6084,14 @@ B. Winner continuation: +1R -> +2R+
 D-146 addresses only B.
 
 D-146 will observe M30 structure from exact first +1R until exact +2R-or-SL and test whether outward M30 structure refresh or deterioration explains D-145 maturity exceptions.
+
+### Implementation freeze
+
+Build `1.92R1L8 / CONTINUATION_STATE_AUDIT_V1_SHADOW` implements D-146 measurement logic only inside `EdgeAuditV1.mqh`. `MentorDeterministicV1EA.mq5` changes only its research-harness description and `EA_START` build/phase identity; strategy/order hooks are unchanged.
+
+The implementation arms only actual `EXTERNAL_CONTINUATION` runners at their first exact +1R touch. It freezes the then-causal M30 owner/protected/external state, tracks later M30 structure events only while unresolved to +2R/SL, and terminalizes at the first exact `+2R_REACHED` or `SL_AFTER_1R`. The original +1R-time external keeps its own immutable identity; later outward externals are separate causal refresh events and are never backfilled. Right-censored tester endings remain censored.
+
+Audit rows stay in the existing unified ledger under `EDGE_AUDIT_*`. No Entry, SL, TP, order, scenario, map, structure, sizing, or exposure state is modified by D-146.
 
 ### Governance
 

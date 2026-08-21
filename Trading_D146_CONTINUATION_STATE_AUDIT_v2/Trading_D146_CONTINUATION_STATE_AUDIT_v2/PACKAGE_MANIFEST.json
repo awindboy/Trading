@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "package": "Trading_D146_CONTINUATION_STATE_AUDIT",
+  "date": "2026-08-21",
+  "repository": "awindboy/Trading",
+  "expectedHead": "f0a9be86d7d8af4e22b21e9b657669aae1245fbd",
+  "targetBuild": "1.92R1L8 / CONTINUATION_STATE_AUDIT_V1_SHADOW",
+  "strategyAuthority": "NONE",
+  "expectedHeadBlobs": {
+    "mt5/experts/MentorDeterministicV1EA.mq5": "3268fbe3ae1e02d8252814a7f8f0412deda45444",
+    "mt5/experts/EdgeAuditV1.mqh": "a1237f0bf6a4bdc0e7e24b5f11283654e682fd7d",
+    "docs/ea/HANDOFF.md": "d99ced6e6f9e49373b713c7996489aae186eab76",
+    "docs/ea/D146_CONTINUATION_STATE_AUDIT.md": "6ef6d45fc22287057e207083e09af14a094a9538",
+    "docs/ea/STRATEGY_RESEARCH_STATE.md": "912b40e93e2ebff75586f50bac6f92fa852a99a3",
+    "docs/ea/BACKLOG.md": "e6881c509540637bddfdb20e9faf2fd14fc84637",
+    "docs/ea/DECISIONS.md": "bf3b5e7851bc5a3645f3802c4090c27eb1ee04c5"
+  },
+  "files": [
+    {
+      "path": "README_D146_APPLY.md",
+      "bytes": 5505,
+      "sha256": "b291d7d940ab9a44020349d884993e33010572b99a6001567dff62166b57475d"
+    },
+    {
+      "path": "STATIC_QA.txt",
+      "bytes": 2431,
+      "sha256": "2a81ef1bcad2cfc16b5eed80efcdaa369b835fd9e71eea829128ffc390c5c1ee"
+    },
+    {
+      "path": "payload/tools/summarize_d146_continuation_state_audit.py",
+      "bytes": 14520,
+      "sha256": "c9c6ab245098c7416793d2b4f05628e4bde51cf1d3b087f34728cf57e4755d43"
+    },
+    {
+      "path": "tools/apply_d146_continuation_state_audit.py",
+      "bytes": 46365,
+      "sha256": "f73a52480367a3da7da57f159605fe4495ea19a745a7ba2348f75a5ff9c758c3"
+    }
+  ]
+}

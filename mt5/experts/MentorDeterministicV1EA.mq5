@@ -14,7 +14,7 @@
 //+------------------------------------------------------------------+
 #property strict
 #property version   "1.00"
-#property description "Mentor deterministic V1 EA - lightweight runner market-context audit harness"
+#property description "Mentor deterministic V1 EA - D-146 continuation-state shadow audit harness"
 
 enum V1StopLossModel
   {
@@ -10315,7 +10315,7 @@ void ProcessRuntimeClosedBars(const datetime observed_at)
    g_m1_sweep_detector_bar_open=0;
   }
 
-// D-145 shadow-only LIGHTWEIGHT RUNNER MARKET-CONTEXT AUDIT implementation.
+// D-146 shadow-only CONTINUATION STATE AUDIT implementation.
 #include "EdgeAuditV1.mqh"
 
 int OnInit()
@@ -10349,7 +10349,7 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=1.92R1L7 property_version=1.00 magic=%I64d phase=RUNNER_MARKET_CONTEXT_AUDIT_V1_LIGHTWEIGHT strategy_semantics=D134_EXECUTION_CORE_UNCHANGED fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=1.92R1L8 property_version=1.00 magic=%I64d phase=CONTINUATION_STATE_AUDIT_V1_SHADOW strategy_semantics=D134_EXECUTION_CORE_UNCHANGED fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         _Symbol,
                         AccountInfoString(ACCOUNT_CURRENCY),

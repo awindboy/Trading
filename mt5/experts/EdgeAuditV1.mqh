@@ -1,13 +1,13 @@
 //+------------------------------------------------------------------+
 //| EdgeAuditV1.mqh                                                  |
-//| D-145 RUNNER MARKET-CONTEXT AUDIT -- lightweight shadow       |
+//| D-146 CONTINUATION STATE AUDIT -- shadow measurement          |
 //|                                                                  |
 //| STRATEGY AUTHORITY: NONE                                         |
 //| This module may observe and log. It may not change a trade.      |
 //+------------------------------------------------------------------+
 
-#define V1_EDGE_AUDIT_BUILD       "1.92R1L7"
-#define V1_EDGE_AUDIT_PHASE       "RUNNER_MARKET_CONTEXT_AUDIT_V1_LIGHTWEIGHT"
+#define V1_EDGE_AUDIT_BUILD       "1.92R1L8"
+#define V1_EDGE_AUDIT_PHASE       "CONTINUATION_STATE_AUDIT_V1_SHADOW"
 #define V1_EDGE_FLUSH_BATCH       256
 #define V1_EDGE_ALL_MASK          15
 #define V1_EDGE_H15               900
@@ -107,6 +107,27 @@ struct V1EdgePrefillTracker
    long       tick_count;
   };
 
+
+// D-146: compact causal M30 state used only by +1R-success continuation audit.
+struct V1EdgeD146M30State
+  {
+   bool       valid;
+   bool       protected_available;
+   bool       external_available;
+   bool       range_available;
+   int        trend;
+   int        trend_direction;
+   string     owner_id;
+   datetime   owner_started_at;
+   string     protected_id;
+   double     protected_price;
+   string     external_id;
+   double     external_price;
+   double     range_span;
+   double     range_progress;
+   double     remaining_to_external_r;
+  };
+
 struct V1EdgeRunnerTracker
   {
    bool       valid;
@@ -145,6 +166,53 @@ struct V1EdgeRunnerTracker
    long       m30_opposite_pb_events_at_fill;
    long       m1_same_pb_events_at_fill;
    long       m1_opposite_pb_events_at_fill;
+
+   // D-146 shadow-only continuation-state audit. These fields have no strategy authority.
+   bool       d146_eligible;
+   bool       d146_active;
+   bool       d146_terminal;
+   string     d146_terminal_outcome;
+   datetime   d146_resolved_at;
+   datetime   d146_last_tick_at;
+   double     d146_last_tick_price;
+   double     d146_post_1r_mfe_r;
+   double     d146_post_1r_mae_r;
+
+   int        d146_one_r_m30_trend;
+   string     d146_one_r_m30_owner_id;
+   datetime   d146_one_r_m30_owner_started_at;
+   string     d146_one_r_m30_protected_id;
+   double     d146_one_r_m30_protected_price;
+   string     d146_one_r_m30_external_id;
+   double     d146_one_r_m30_external_price;
+   bool       d146_one_r_m30_range_available;
+   double     d146_one_r_m30_range_span;
+   double     d146_one_r_m30_range_progress;
+   double     d146_one_r_m30_remaining_to_external_r;
+
+   bool       d146_original_external_available;
+   bool       d146_original_external_at_or_beyond_at_1r;
+   bool       d146_original_external_delivered_after_1r;
+   datetime   d146_original_external_delivered_at;
+   bool       d146_original_external_replaced_after_1r;
+   datetime   d146_original_external_replaced_at;
+
+   string     d146_last_m30_owner_id;
+   int        d146_last_m30_trend;
+   string     d146_last_valid_m30_protected_id;
+   double     d146_last_valid_m30_protected_price;
+   string     d146_last_valid_m30_external_id;
+   double     d146_last_valid_m30_external_price;
+
+   long       d146_m30_same_direction_initial_bos_count;
+   long       d146_m30_same_direction_bos_count;
+   long       d146_m30_opposite_direction_event_count;
+   long       d146_m30_protected_break_count;
+   long       d146_m30_owner_change_count;
+   long       d146_m30_trend_loss_count;
+   long       d146_m30_outward_external_refresh_count;
+   datetime   d146_first_outward_external_refresh_at;
+   datetime   d146_first_deterioration_at;
   };
 
 
@@ -169,6 +237,11 @@ long g_edge_runner_fill_snapshots=0;
 long g_edge_runner_one_r_snapshots=0;
 long g_edge_runner_outcomes=0;
 long g_edge_runner_skipped=0;
+long g_edge_d146_armed=0;
+long g_edge_d146_structure_events=0;
+long g_edge_d146_original_external_deliveries=0;
+long g_edge_d146_terminals=0;
+long g_edge_d146_censored=0;
 
 // Event counters are observation-only. They let the +1R snapshot measure how
 // structure changed after Fill without turning any event into trade authority.
@@ -649,6 +722,394 @@ string EdgeAuditM1Context(const int direction,const string prefix)
                        prefix,external_id,prefix,external_price);
   }
 
+
+//+------------------------------------------------------------------+
+//| D-146 continuation-state audit helpers                           |
+//+------------------------------------------------------------------+
+void EdgeAuditD146ReadM30State(const V1StructureState &state,
+                               const int direction,
+                               const double price,
+                               const double risk,
+                               V1EdgeD146M30State &s)
+  {
+   s.valid=(state.tf==PERIOD_M30);
+   s.protected_available=false;
+   s.external_available=false;
+   s.range_available=false;
+   s.trend=state.trend;
+   s.trend_direction=TrendDirection(state.trend);
+   s.owner_id=state.owner_id;
+   s.owner_started_at=state.owner_started_at;
+   s.protected_id="";
+   s.protected_price=0.0;
+   s.external_id="";
+   s.external_price=0.0;
+   s.range_span=0.0;
+   s.range_progress=0.0;
+   s.remaining_to_external_r=0.0;
+
+   if(direction>0)
+     {
+      if(state.protected_low.valid)
+        {
+         s.protected_available=true;
+         s.protected_id=state.protected_low.id;
+         s.protected_price=state.protected_low.price;
+        }
+      if(state.external_high.valid)
+        {
+         s.external_available=true;
+         s.external_id=state.external_high.id;
+         s.external_price=state.external_high.price;
+        }
+     }
+   else if(direction<0)
+     {
+      if(state.protected_high.valid)
+        {
+         s.protected_available=true;
+         s.protected_id=state.protected_high.id;
+         s.protected_price=state.protected_high.price;
+        }
+      if(state.external_low.valid)
+        {
+         s.external_available=true;
+         s.external_id=state.external_low.id;
+         s.external_price=state.external_low.price;
+        }
+     }
+
+   if(!s.valid || direction==0 || !s.protected_available || !s.external_available || price<=0.0)
+      return;
+
+   double span=MathAbs(s.external_price-s.protected_price);
+   if(s.trend_direction!=direction || span<=MathMax(LiquidityTickSize(),1.0e-12))
+      return;
+
+   s.range_available=true;
+   s.range_span=span;
+   s.range_progress=(direction>0 ? (price-s.protected_price)/span : (s.protected_price-price)/span);
+   if(risk>0.0)
+      s.remaining_to_external_r=(direction>0 ? s.external_price-price : price-s.external_price)/risk;
+  }
+
+string EdgeAuditD146M30StateDetail(const V1EdgeD146M30State &s,const string prefix)
+  {
+   return StringFormat("%s_valid=%s %s_trend=%s %s_trend_direction=%s %s_owner_id=%s %s_owner_started_at=%s %s_protected_available=%s %s_protected_id=%s %s_protected_price=%.10f %s_external_available=%s %s_external_id=%s %s_external_price=%.10f %s_range_available=%s %s_range_span=%.10f %s_range_progress=%.10f %s_remaining_to_external_r=%.10f",
+      prefix,s.valid ? "true" : "false",
+      prefix,TrendName(s.trend),
+      prefix,DirectionName(s.trend_direction),
+      prefix,s.owner_id=="" ? "NA" : s.owner_id,
+      prefix,EdgeAuditTimeOrNA(s.owner_started_at),
+      prefix,s.protected_available ? "true" : "false",
+      prefix,s.protected_id=="" ? "NA" : s.protected_id,
+      prefix,s.protected_price,
+      prefix,s.external_available ? "true" : "false",
+      prefix,s.external_id=="" ? "NA" : s.external_id,
+      prefix,s.external_price,
+      prefix,s.range_available ? "true" : "false",
+      prefix,s.range_span,
+      prefix,s.range_progress,
+      prefix,s.remaining_to_external_r);
+  }
+
+void EdgeAuditD146ResetRunner(V1EdgeRunnerTracker &r)
+  {
+   r.d146_eligible=(r.scope==V1_SCOPE_EXTERNAL_CONTINUATION);
+   r.d146_active=false;
+   r.d146_terminal=false;
+   r.d146_terminal_outcome="";
+   r.d146_resolved_at=0;
+   r.d146_last_tick_at=0;
+   r.d146_last_tick_price=0.0;
+   r.d146_post_1r_mfe_r=0.0;
+   r.d146_post_1r_mae_r=0.0;
+
+   r.d146_one_r_m30_trend=V1_TREND_NEUTRAL;
+   r.d146_one_r_m30_owner_id="";
+   r.d146_one_r_m30_owner_started_at=0;
+   r.d146_one_r_m30_protected_id="";
+   r.d146_one_r_m30_protected_price=0.0;
+   r.d146_one_r_m30_external_id="";
+   r.d146_one_r_m30_external_price=0.0;
+   r.d146_one_r_m30_range_available=false;
+   r.d146_one_r_m30_range_span=0.0;
+   r.d146_one_r_m30_range_progress=0.0;
+   r.d146_one_r_m30_remaining_to_external_r=0.0;
+
+   r.d146_original_external_available=false;
+   r.d146_original_external_at_or_beyond_at_1r=false;
+   r.d146_original_external_delivered_after_1r=false;
+   r.d146_original_external_delivered_at=0;
+   r.d146_original_external_replaced_after_1r=false;
+   r.d146_original_external_replaced_at=0;
+
+   r.d146_last_m30_owner_id="";
+   r.d146_last_m30_trend=V1_TREND_NEUTRAL;
+   r.d146_last_valid_m30_protected_id="";
+   r.d146_last_valid_m30_protected_price=0.0;
+   r.d146_last_valid_m30_external_id="";
+   r.d146_last_valid_m30_external_price=0.0;
+
+   r.d146_m30_same_direction_initial_bos_count=0;
+   r.d146_m30_same_direction_bos_count=0;
+   r.d146_m30_opposite_direction_event_count=0;
+   r.d146_m30_protected_break_count=0;
+   r.d146_m30_owner_change_count=0;
+   r.d146_m30_trend_loss_count=0;
+   r.d146_m30_outward_external_refresh_count=0;
+   r.d146_first_outward_external_refresh_at=0;
+   r.d146_first_deterioration_at=0;
+  }
+
+void EdgeAuditD146TrackTick(V1EdgeRunnerTracker &r,const datetime at,const double px)
+  {
+   if(!r.d146_active || r.d146_terminal || r.risk_distance<=0.0 || px<=0.0)
+      return;
+
+   r.d146_last_tick_at=at;
+   r.d146_last_tick_price=px;
+   double signed_r=(r.direction>0 ? px-r.fill_price : r.fill_price-px)/r.risk_distance;
+   double favorable_after_1r=MathMax(0.0,signed_r-1.0);
+   double adverse_after_1r=MathMax(0.0,1.0-signed_r);
+   if(favorable_after_1r>r.d146_post_1r_mfe_r) r.d146_post_1r_mfe_r=favorable_after_1r;
+   if(adverse_after_1r>r.d146_post_1r_mae_r) r.d146_post_1r_mae_r=adverse_after_1r;
+
+   if(r.d146_original_external_available &&
+      !r.d146_original_external_at_or_beyond_at_1r &&
+      !r.d146_original_external_delivered_after_1r)
+     {
+      bool reached=(r.direction>0 ? px>=r.d146_one_r_m30_external_price : px<=r.d146_one_r_m30_external_price);
+      if(reached)
+        {
+         r.d146_original_external_delivered_after_1r=true;
+         r.d146_original_external_delivered_at=at;
+         EdgeAuditWrite("EDGE_AUDIT_D146_ORIGINAL_EXTERNAL_DELIVERED","TICK",at,r.scenario_id,
+            StringFormat("scenario_id=%s direction=%s one_r_at=%s original_external_id=%s original_external_price=%.10f delivered_at=%s exit_side_price=%.10f after_t0=true strategy_authority=false",
+                         r.scenario_id,DirectionName(r.direction),EdgeAuditTimeOrNA(r.first_1r_at),
+                         r.d146_one_r_m30_external_id=="" ? "NA" : r.d146_one_r_m30_external_id,
+                         r.d146_one_r_m30_external_price,EdgeAuditTimeOrNA(at),px));
+         g_edge_d146_original_external_deliveries++;
+        }
+     }
+  }
+
+void EdgeAuditD146Arm(V1EdgeRunnerTracker &r,const datetime at,const double px)
+  {
+   if(!r.d146_eligible || r.d146_active || r.d146_terminal || r.first_1r_at<=0)
+      return;
+
+   V1EdgeD146M30State s;
+   EdgeAuditD146ReadM30State(g_structure[2],r.direction,px,r.risk_distance,s);
+   r.d146_active=true;
+   r.d146_last_tick_at=at;
+   r.d146_last_tick_price=px;
+   r.d146_one_r_m30_trend=s.trend;
+   r.d146_one_r_m30_owner_id=s.owner_id;
+   r.d146_one_r_m30_owner_started_at=s.owner_started_at;
+   r.d146_one_r_m30_protected_id=s.protected_id;
+   r.d146_one_r_m30_protected_price=s.protected_price;
+   r.d146_one_r_m30_external_id=s.external_id;
+   r.d146_one_r_m30_external_price=s.external_price;
+   r.d146_one_r_m30_range_available=s.range_available;
+   r.d146_one_r_m30_range_span=s.range_span;
+   r.d146_one_r_m30_range_progress=s.range_progress;
+   r.d146_one_r_m30_remaining_to_external_r=s.remaining_to_external_r;
+
+   r.d146_original_external_available=s.external_available;
+   if(s.external_available)
+      r.d146_original_external_at_or_beyond_at_1r=(r.direction>0 ? px>=s.external_price : px<=s.external_price);
+
+   r.d146_last_m30_owner_id=s.owner_id;
+   r.d146_last_m30_trend=s.trend;
+   if(s.protected_available)
+     {
+      r.d146_last_valid_m30_protected_id=s.protected_id;
+      r.d146_last_valid_m30_protected_price=s.protected_price;
+     }
+   if(s.external_available)
+     {
+      r.d146_last_valid_m30_external_id=s.external_id;
+      r.d146_last_valid_m30_external_price=s.external_price;
+     }
+
+   double signed_r=(r.direction>0 ? px-r.fill_price : r.fill_price-px)/r.risk_distance;
+   r.d146_post_1r_mfe_r=MathMax(0.0,signed_r-1.0);
+   r.d146_post_1r_mae_r=MathMax(0.0,1.0-signed_r);
+
+   EdgeAuditWrite("EDGE_AUDIT_D146_1R_STATE","TICK",at,r.scenario_id,
+      StringFormat("scenario_id=%s scope=%s direction=%s fill_at=%s one_r_at=%s one_r_price=%.10f target_2r=%.10f risk_distance=%.10f original_external_available=%s original_external_at_or_beyond_at_1r=%s original_external_future_backfill=false %s %s strategy_authority=false",
+         r.scenario_id,ScenarioScopeName(r.scope),DirectionName(r.direction),EdgeAuditTimeOrNA(r.fill_at),
+         EdgeAuditTimeOrNA(at),px,r.target_2r,r.risk_distance,
+         r.d146_original_external_available ? "true" : "false",
+         r.d146_original_external_at_or_beyond_at_1r ? "true" : "false",
+         EdgeAuditCurrentMapIdentity(at,r.direction),EdgeAuditD146M30StateDetail(s,"one_r_m30")));
+   g_edge_d146_armed++;
+  }
+
+void EdgeAuditD146OnM30StructureEvent(const V1StructureState &state,
+                                      const int event_type,
+                                      const int event_direction,
+                                      const V1WaveRef &broken,
+                                      const V1WaveRef &protected_ref,
+                                      const MqlRates &bar,
+                                      const datetime available_at)
+  {
+   if(state.tf!=PERIOD_M30)
+      return;
+
+   for(int i=0;i<ArraySize(g_edge_runners);i++)
+     {
+      if(!g_edge_runners[i].valid || !g_edge_runners[i].d146_active || g_edge_runners[i].d146_terminal)
+         continue;
+      V1EdgeRunnerTracker r=g_edge_runners[i];
+      if(available_at<r.first_1r_at)
+         continue;
+
+      string before_owner=r.d146_last_m30_owner_id;
+      int before_trend=r.d146_last_m30_trend;
+      string before_protected_id=r.d146_last_valid_m30_protected_id;
+      double before_protected_price=r.d146_last_valid_m30_protected_price;
+      string before_external_id=r.d146_last_valid_m30_external_id;
+      double before_external_price=r.d146_last_valid_m30_external_price;
+
+      V1EdgeD146M30State s;
+      EdgeAuditD146ReadM30State(state,r.direction,bar.close,r.risk_distance,s);
+
+      bool directional_event=(event_type==V1_EVENT_INITIAL_BOS || event_type==V1_EVENT_BOS);
+      bool same_direction=(directional_event && event_direction==r.direction);
+      bool opposite_direction=(directional_event && event_direction==-r.direction);
+      bool protected_break=(event_type==V1_EVENT_PROTECTED_BREAK);
+      bool owner_changed=(before_owner!="" && before_owner!=s.owner_id);
+      bool trend_lost=(TrendDirection(before_trend)==r.direction && s.trend_direction!=r.direction);
+      bool outward_refresh=false;
+      if(same_direction && before_external_price>0.0 && s.external_available)
+        {
+         double eps=MathMax(LiquidityTickSize()*0.5,1.0e-12);
+         outward_refresh=(r.direction>0 ? s.external_price>before_external_price+eps : s.external_price<before_external_price-eps);
+        }
+
+      if(event_type==V1_EVENT_INITIAL_BOS && same_direction)
+         r.d146_m30_same_direction_initial_bos_count++;
+      if(event_type==V1_EVENT_BOS && same_direction)
+         r.d146_m30_same_direction_bos_count++;
+      if(opposite_direction)
+         r.d146_m30_opposite_direction_event_count++;
+      if(protected_break)
+         r.d146_m30_protected_break_count++;
+      if(owner_changed)
+         r.d146_m30_owner_change_count++;
+      if(trend_lost)
+         r.d146_m30_trend_loss_count++;
+      if(outward_refresh)
+        {
+         r.d146_m30_outward_external_refresh_count++;
+         if(r.d146_first_outward_external_refresh_at<=0)
+            r.d146_first_outward_external_refresh_at=available_at;
+        }
+
+      if(r.d146_first_deterioration_at<=0 && (protected_break || opposite_direction || owner_changed || trend_lost))
+         r.d146_first_deterioration_at=available_at;
+
+      if(r.d146_original_external_available && s.external_available)
+        {
+         double eps=MathMax(LiquidityTickSize()*0.5,1.0e-12);
+         bool replaced=(s.external_id!=r.d146_one_r_m30_external_id ||
+                        MathAbs(s.external_price-r.d146_one_r_m30_external_price)>eps);
+         if(replaced && !r.d146_original_external_replaced_after_1r)
+           {
+            r.d146_original_external_replaced_after_1r=true;
+            r.d146_original_external_replaced_at=available_at;
+           }
+        }
+
+      EdgeAuditWrite("EDGE_AUDIT_D146_M30_EVENT","M30",available_at,r.scenario_id,
+         StringFormat("scenario_id=%s direction=%s one_r_at=%s event_type=%s event_direction=%s event_bar_open=%s event_available_at=%s same_direction=%s opposite_direction=%s protected_break=%s owner_changed=%s trend_lost=%s outward_external_refresh=%s broken_id=%s broken_price=%.10f protected_ref_id=%s protected_ref_price=%.10f before_owner_id=%s before_trend=%s before_protected_id=%s before_protected_price=%.10f before_external_id=%s before_external_price=%.10f %s strategy_authority=false",
+            r.scenario_id,DirectionName(r.direction),EdgeAuditTimeOrNA(r.first_1r_at),EventName(event_type),DirectionName(event_direction),
+            EdgeAuditTimeOrNA(bar.time),EdgeAuditTimeOrNA(available_at),
+            same_direction ? "true" : "false",opposite_direction ? "true" : "false",protected_break ? "true" : "false",
+            owner_changed ? "true" : "false",trend_lost ? "true" : "false",outward_refresh ? "true" : "false",
+            broken.valid ? broken.id : "NA",broken.valid ? broken.price : 0.0,
+            protected_ref.valid ? protected_ref.id : "NA",protected_ref.valid ? protected_ref.price : 0.0,
+            before_owner=="" ? "NA" : before_owner,TrendName(before_trend),
+            before_protected_id=="" ? "NA" : before_protected_id,before_protected_price,
+            before_external_id=="" ? "NA" : before_external_id,before_external_price,
+            EdgeAuditD146M30StateDetail(s,"after_m30")));
+      g_edge_d146_structure_events++;
+
+      r.d146_last_m30_owner_id=s.owner_id;
+      r.d146_last_m30_trend=s.trend;
+      if(s.protected_available)
+        {
+         r.d146_last_valid_m30_protected_id=s.protected_id;
+         r.d146_last_valid_m30_protected_price=s.protected_price;
+        }
+      if(s.external_available)
+        {
+         r.d146_last_valid_m30_external_id=s.external_id;
+         r.d146_last_valid_m30_external_price=s.external_price;
+        }
+
+      g_edge_runners[i]=r;
+     }
+  }
+
+void EdgeAuditD146Terminal(V1EdgeRunnerTracker &r,const string outcome,const datetime at,const double px)
+  {
+   if(!r.d146_active || r.d146_terminal)
+      return;
+   EdgeAuditD146TrackTick(r,at,px);
+
+   V1EdgeD146M30State s;
+   EdgeAuditD146ReadM30State(g_structure[2],r.direction,px,r.risk_distance,s);
+   r.d146_active=false;
+   r.d146_terminal=true;
+   r.d146_terminal_outcome=outcome;
+   r.d146_resolved_at=at;
+
+   EdgeAuditWrite("EDGE_AUDIT_D146_TERMINAL","TICK",at,r.scenario_id,
+      StringFormat("scenario_id=%s scope=%s direction=%s outcome=%s fill_at=%s one_r_at=%s resolved_at=%s time_from_1r_seconds=%I64d exit_side_price=%.10f post_1r_mfe_r=%.10f post_1r_mae_r=%.10f original_external_available=%s original_external_id=%s original_external_price=%.10f original_external_at_or_beyond_at_1r=%s original_external_delivered_after_1r=%s original_external_delivered_at=%s original_external_replaced_after_1r=%s original_external_replaced_at=%s m30_same_direction_initial_bos_count=%I64d m30_same_direction_bos_count=%I64d m30_opposite_direction_event_count=%I64d m30_protected_break_count=%I64d m30_owner_change_count=%I64d m30_trend_loss_count=%I64d m30_outward_external_refresh_count=%I64d first_outward_external_refresh_at=%s first_deterioration_at=%s one_r_m30_range_available=%s one_r_m30_range_progress=%.10f one_r_m30_remaining_to_external_r=%.10f %s strategy_authority=false",
+         r.scenario_id,ScenarioScopeName(r.scope),DirectionName(r.direction),outcome,
+         EdgeAuditTimeOrNA(r.fill_at),EdgeAuditTimeOrNA(r.first_1r_at),EdgeAuditTimeOrNA(at),
+         EdgeAuditAgeSeconds(at,r.first_1r_at),px,r.d146_post_1r_mfe_r,r.d146_post_1r_mae_r,
+         r.d146_original_external_available ? "true" : "false",
+         r.d146_one_r_m30_external_id=="" ? "NA" : r.d146_one_r_m30_external_id,
+         r.d146_one_r_m30_external_price,
+         r.d146_original_external_at_or_beyond_at_1r ? "true" : "false",
+         r.d146_original_external_delivered_after_1r ? "true" : "false",
+         EdgeAuditTimeOrNA(r.d146_original_external_delivered_at),
+         r.d146_original_external_replaced_after_1r ? "true" : "false",
+         EdgeAuditTimeOrNA(r.d146_original_external_replaced_at),
+         r.d146_m30_same_direction_initial_bos_count,r.d146_m30_same_direction_bos_count,
+         r.d146_m30_opposite_direction_event_count,r.d146_m30_protected_break_count,
+         r.d146_m30_owner_change_count,r.d146_m30_trend_loss_count,
+         r.d146_m30_outward_external_refresh_count,EdgeAuditTimeOrNA(r.d146_first_outward_external_refresh_at),
+         EdgeAuditTimeOrNA(r.d146_first_deterioration_at),
+         r.d146_one_r_m30_range_available ? "true" : "false",
+         r.d146_one_r_m30_range_progress,r.d146_one_r_m30_remaining_to_external_r,
+         EdgeAuditD146M30StateDetail(s,"terminal_m30")));
+   g_edge_d146_terminals++;
+  }
+
+void EdgeAuditD146Censor(V1EdgeRunnerTracker &r,const datetime at)
+  {
+   if(!r.d146_active || r.d146_terminal)
+      return;
+   V1EdgeD146M30State s;
+   EdgeAuditD146ReadM30State(g_structure[2],r.direction,r.d146_last_tick_price,r.risk_distance,s);
+   EdgeAuditWrite("EDGE_AUDIT_D146_CENSORED","TICK",at,r.scenario_id,
+      StringFormat("scenario_id=%s direction=%s fill_at=%s one_r_at=%s censored_at=%s last_tick_at=%s last_tick_price=%.10f post_1r_mfe_r=%.10f post_1r_mae_r=%.10f original_external_delivered_after_1r=%s m30_same_direction_initial_bos_count=%I64d m30_same_direction_bos_count=%I64d m30_opposite_direction_event_count=%I64d m30_protected_break_count=%I64d m30_owner_change_count=%I64d m30_trend_loss_count=%I64d m30_outward_external_refresh_count=%I64d tester_end_right_censored=true %s strategy_authority=false",
+         r.scenario_id,DirectionName(r.direction),EdgeAuditTimeOrNA(r.fill_at),EdgeAuditTimeOrNA(r.first_1r_at),
+         EdgeAuditTimeOrNA(at),EdgeAuditTimeOrNA(r.d146_last_tick_at),r.d146_last_tick_price,
+         r.d146_post_1r_mfe_r,r.d146_post_1r_mae_r,
+         r.d146_original_external_delivered_after_1r ? "true" : "false",
+         r.d146_m30_same_direction_initial_bos_count,r.d146_m30_same_direction_bos_count,
+         r.d146_m30_opposite_direction_event_count,r.d146_m30_protected_break_count,
+         r.d146_m30_owner_change_count,r.d146_m30_trend_loss_count,
+         r.d146_m30_outward_external_refresh_count,EdgeAuditD146M30StateDetail(s,"censor_m30")));
+   g_edge_d146_censored++;
+  }
+
 void EdgeAuditArmPrefill(const int scenario_index,const datetime stage_at)
   {
    if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios) || !g_scenarios[scenario_index].valid)
@@ -782,6 +1243,8 @@ void EdgeAuditProcessRunner(V1EdgeRunnerTracker &r,const MqlTick &tick)
    if(signed_r>r.max_favorable_r) r.max_favorable_r=signed_r;
    if(-signed_r>r.max_adverse_r) r.max_adverse_r=-signed_r;
    if(!r.reached_1r && r.max_adverse_r>r.max_adverse_before_1r_r) r.max_adverse_before_1r_r=r.max_adverse_r;
+   if(r.d146_active)
+      EdgeAuditD146TrackTick(r,(datetime)tick.time,px);
 
    bool hit_sl=(r.direction>0 ? px<=r.normalized_sl : px>=r.normalized_sl);
    bool hit_1=(r.direction>0 ? px>=r.target_1r : px<=r.target_1r);
@@ -796,9 +1259,14 @@ void EdgeAuditProcessRunner(V1EdgeRunnerTracker &r,const MqlTick &tick)
       r.first_1r_at=(datetime)tick.time;
       EdgeAuditEmitRunnerOutcome(r,"1R","REACHED_BEFORE_SL",(datetime)tick.time,px);
       EdgeAuditSnapshotAtOneR(r,(datetime)tick.time,px);
+      EdgeAuditD146Arm(r,(datetime)tick.time,px);
      }
    if(hit_2 && !r.resolved_2r)
-     { r.resolved_2r=true; EdgeAuditEmitRunnerOutcome(r,"2R","REACHED_BEFORE_SL",(datetime)tick.time,px); }
+     {
+      if(r.d146_active) EdgeAuditD146Terminal(r,"+2R_REACHED",(datetime)tick.time,px);
+      r.resolved_2r=true;
+      EdgeAuditEmitRunnerOutcome(r,"2R","REACHED_BEFORE_SL",(datetime)tick.time,px);
+     }
    if(hit_3 && !r.resolved_3r)
      { r.resolved_3r=true; EdgeAuditEmitRunnerOutcome(r,"3R","REACHED_BEFORE_SL",(datetime)tick.time,px); }
    if(hit_structural && !r.resolved_structural)
@@ -806,6 +1274,7 @@ void EdgeAuditProcessRunner(V1EdgeRunnerTracker &r,const MqlTick &tick)
 
    if(hit_sl)
      {
+      if(r.d146_active && r.reached_1r) EdgeAuditD146Terminal(r,"SL_AFTER_1R",(datetime)tick.time,px);
       if(!r.resolved_1r) { r.resolved_1r=true; EdgeAuditEmitRunnerOutcome(r,"1R","SL_FIRST",(datetime)tick.time,px); }
       if(!r.resolved_2r) { r.resolved_2r=true; EdgeAuditEmitRunnerOutcome(r,"2R","SL_FIRST",(datetime)tick.time,px); }
       if(!r.resolved_3r) { r.resolved_3r=true; EdgeAuditEmitRunnerOutcome(r,"3R","SL_FIRST",(datetime)tick.time,px); }
@@ -834,6 +1303,11 @@ void EdgeAuditResetState()
    g_edge_runner_one_r_snapshots=0;
    g_edge_runner_outcomes=0;
    g_edge_runner_skipped=0;
+   g_edge_d146_armed=0;
+   g_edge_d146_structure_events=0;
+   g_edge_d146_original_external_deliveries=0;
+   g_edge_d146_terminals=0;
+   g_edge_d146_censored=0;
    ArrayInitialize(g_edge_h1_dir_events,0);
    ArrayInitialize(g_edge_m30_dir_events,0);
    ArrayInitialize(g_edge_m1_dir_events,0);
@@ -855,7 +1329,7 @@ bool EdgeAuditInit()
      }
    g_edge_enabled=true;
    EdgeAuditWrite("EDGE_AUDIT_START","",TimeCurrent(),"",
-      StringFormat("build=%s phase=%s strategy_authority=false unified_ledger=true event_csv=%s lightweight=true tick_tracking=PREFILL_FVG_SELECTED|ACTUAL_FILL_ONLY front_end_forward_labels=false stage_virtual_barriers=false mirror_direction=false fill_snapshot=true first_1r_snapshot=true outcomes=1R|2R|3R|STRUCTURAL_TP_vs_SL hypotheses=MARKET_BACKGROUND|DIRECTIONAL_MATURITY|M30_NET_ADVANCE|PREFILL_DISPLACEMENT|POST_FILL_CONTINUATION strategy_change=false",
+      StringFormat("build=%s phase=%s strategy_authority=false unified_ledger=true event_csv=%s lightweight=true tick_tracking=PREFILL_FVG_SELECTED|ACTUAL_FILL|D146_POST_1R_CONTINUATION_ONLY front_end_forward_labels=false stage_virtual_barriers=false mirror_direction=false fill_snapshot=true first_1r_snapshot=true d146_post_1r_state=true d146_population=EXTERNAL_CONTINUATION_1R_SUCCESS d146_terminal=EXACT_2R_OR_NORMALIZED_SL hypotheses=M30_OUTWARD_EXTERNAL_REFRESH|M30_DETERIORATION future_backfill=false strategy_change=false",
                    V1_EDGE_AUDIT_BUILD,V1_EDGE_AUDIT_PHASE,InpEventCsvFile));
    return true;
   }
@@ -1050,6 +1524,8 @@ void EdgeAuditOnStructureEvent(const V1StructureState &state,
       return;
 
    EdgeAuditCountStructureEvent(state.tf,event_type,direction);
+   if(state.tf==PERIOD_M30)
+      EdgeAuditD146OnM30StructureEvent(state,event_type,direction,broken,protected_ref,bar,available_at);
    if(state.tf!=PERIOD_H1 && state.tf!=PERIOD_M30)
       return;
 
@@ -1293,6 +1769,7 @@ void EdgeAuditOnActualFill(const int scenario_index,const datetime observed_at)
    r.max_adverse_r=0.0;
    r.max_adverse_before_1r_r=0.0;
    r.ticks_seen=0;
+   EdgeAuditD146ResetRunner(r);
    r.h1_same_dir_events_at_fill=EdgeAuditDirCounter(PERIOD_H1,p.direction);
    r.h1_opposite_dir_events_at_fill=EdgeAuditDirCounter(PERIOD_H1,-p.direction);
    r.m30_same_dir_events_at_fill=EdgeAuditDirCounter(PERIOD_M30,p.direction);
@@ -1349,6 +1826,7 @@ void EdgeAuditDeinit(const int reason)
    for(int i=0;i<ArraySize(g_edge_runners);i++)
      {
       if(!g_edge_runners[i].valid) continue;
+      if(g_edge_runners[i].d146_active) EdgeAuditD146Censor(g_edge_runners[i],now);
       EdgeAuditWrite("EDGE_AUDIT_RUNNER_CENSORED","TICK",now,g_edge_runners[i].scenario_id,
          StringFormat("scenario_id=%s direction=%s fill_at=%s reached_1r=%s resolved_1r=%s resolved_2r=%s resolved_3r=%s resolved_structural=%s max_favorable_r=%.10f max_adverse_r=%.10f tester_end_right_censored=true strategy_authority=false",
                       g_edge_runners[i].scenario_id,DirectionName(g_edge_runners[i].direction),EdgeAuditTimeOrNA(g_edge_runners[i].fill_at),
@@ -1357,9 +1835,10 @@ void EdgeAuditDeinit(const int reason)
                       g_edge_runners[i].resolved_structural ? "true" : "false",g_edge_runners[i].max_favorable_r,g_edge_runners[i].max_adverse_r));
      }
    EdgeAuditWrite("EDGE_AUDIT_STOP","",now,"",
-      StringFormat("reason=%d rows=%I64d fill_snapshots=%I64d one_r_snapshots=%I64d runner_outcomes=%I64d runner_skipped=%I64d active_prefill=%d active_runners=%d front_end_forward_labels=false stage_virtual_barriers=false lightweight=true strategy_authority=false",
+      StringFormat("reason=%d rows=%I64d fill_snapshots=%I64d one_r_snapshots=%I64d runner_outcomes=%I64d runner_skipped=%I64d d146_armed=%I64d d146_structure_events=%I64d d146_original_external_deliveries=%I64d d146_terminals=%I64d d146_censored=%I64d active_prefill=%d active_runners=%d front_end_forward_labels=false stage_virtual_barriers=false lightweight=true strategy_authority=false",
                    reason,g_edge_rows,g_edge_runner_fill_snapshots,g_edge_runner_one_r_snapshots,g_edge_runner_outcomes,
-                   g_edge_runner_skipped,ArraySize(g_edge_prefill),ArraySize(g_edge_runners)));
+                   g_edge_runner_skipped,g_edge_d146_armed,g_edge_d146_structure_events,g_edge_d146_original_external_deliveries,
+                   g_edge_d146_terminals,g_edge_d146_censored,ArraySize(g_edge_prefill),ArraySize(g_edge_runners)));
    g_edge_enabled=false;
   }
 //+------------------------------------------------------------------+
