@@ -6173,3 +6173,39 @@ Decision:
 Reason:
 
 D147 showed mechanical partials improve realized shape but destroy large winners; D145/D146 supplied a stage-specific continuation signal. D148 and loss-cluster work showed that repeated exposure can amplify a single structural thesis. These two mechanisms address different causes and should not be conflated.
+
+## D-149B — D149 V1 result classification and V2 architecture freeze
+
+Date: 2026-08-21  
+Status: ACTIVE RESEARCH DECISION / NO BASELINE AUTHORITY
+
+### Evidence
+
+GOLD 2025 D149 V1 continuation:
+
+```text
+ORIGINAL: 51 / WR 27.45% / avg winner 3.827R / expectancy +0.254R / DD 19.53R / streak 11
+SP V1:    51 / WR 43.14% / avg winner 1.880R / expectancy +0.315R / DD 11.05R / streak 6
+EM V1:    29 / WR 27.59% / avg winner 4.842R / expectancy +0.563R / DD 15.13R / streak 14
+SP+EM V1: 30 / WR 43.33% / avg winner 2.256R / expectancy +0.538R / DD 8.29R / streak 7
+```
+
+SP V1 strong continuation state delivered +2R on `9/11`, compared with `4/19` DEFAULT. This validates use of the previously generalized D145/D146 +1R geometry as a runner-management state on this development year, not as an Entry filter.
+
+EM V1 is demoted because it did not shorten the isolated EM loss streak. The same-owner concurrency veto is specifically rejected for V2. Its 20 blocks mapped to 17 baseline fills totaling only about `-0.259R`, while the fresh-delivery gate mapped to five blocked baseline fills totaling about `-3.146R` and remains worth testing.
+
+### Decision
+
+1. Preserve V1 modes as controls.
+2. Add `SMART_PARTIAL_V2`, continuation only.
+3. Strong runner rule and 25% fraction remain unchanged; no 2025 threshold re-fit.
+4. DEFAULT uses minimum broker-valid protected realization rather than a blind 50% fraction. The target is a small positive modeled lock under original-SL fallback, not a fitted return optimum.
+5. When DEFAULT cannot be partially realized because the symbol volume step cannot leave a valid remainder, a logged full +1R close is allowed. This is an execution-granularity fallback, not the normal architecture.
+6. After +2R, maintain a forward-only cost-adjusted BE floor using current-known realized cash/carry. It may advance with negative carry and never retreat. Frozen structural TP remains.
+7. Add `ENTRY_SURVIVAL_QUARANTINE_V2` for EM. A genuine EM failure is only `original SL before +1R`.
+8. Two consecutive genuine Entry failures trigger global quarantine. This count is pre-registered from the user's objective of tolerating one/two losses before suppressing the rest; do not optimize it on GOLD 2025.
+9. Quarantine is not released by elapsed time, owner change alone, or a score. It requires an eligible shadow setup to reach +1R before its original SL, or an already-open real trade to do so.
+10. The validating shadow setup itself is not traded. This intentionally pays one missed winner as a causal requalification cost.
+11. EM V2 retains the first-failure fresh same-direction map-delivery gate but removes same-owner concurrency suppression and owner hard-lock as primary controls.
+12. Existing pending/filled positions are not force-canceled when quarantine begins in V2; this isolates authorization of new risk from lifecycle cancellation semantics.
+13. ORIGINAL + EM_OFF remains baseline. AGENTS/EA_SPEC authority is unchanged. 2021 remains untouched.

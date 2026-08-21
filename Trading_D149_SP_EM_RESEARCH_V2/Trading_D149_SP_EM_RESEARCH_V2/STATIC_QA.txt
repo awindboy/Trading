@@ -1,0 +1,62 @@
+D-149 SP/EM RESEARCH V2 STATIC QA
+Generated: 2026-08-21
+
+Repository authority / base
+- Latest GitHub HEAD rechecked: b3068c0b445005fe455405ed18fb1f82198231df
+- AGENTS.md verified expected blob: 9dcad4894cd7a995d41dba831b9eb2491feedbaf
+- EA_SPEC.md verified expected blob: ee550ae198f7b98f759526dce06dda9a86da95c5
+- MentorDeterministicV1EA.mq5 expected base blob: 362f23a3ae86491c3060864d6250198f08e5760f
+- EdgeAuditV1.mqh expected base blob: 52f785c22a41295a4b58d8d6f8d79056e6c0c693
+- Installer refuses a different HEAD/blob or unknown local edits.
+- AGENTS.md, EA_SPEC.md, and EdgeAuditV1.mqh are verify-only and are not modified.
+
+V1 evidence recheck
+- GOLD_SP.csv SHA-256:   739610b8825917b1fffbf524b0609f158f2c01f4409ecb9495af53f05cf6231f
+- GOLD_EM.csv SHA-256:   3854fd923ea6f18f55a57e984fec9149db25c181aa2ed1d3532cbe71039f4533
+- GOLD_SPEM.csv SHA-256: cbf887f1012afe8074f46b7968efdf7e171422af9b8fe3e1ad05c8fe9cd55175
+- Existing D149 V1 analyzer: PASS on all three supplied ledgers.
+- Supplied ledgers: execution divergence=0, cancel rejected=0, unresolved=0.
+
+Python / package code
+- apply_d149_sp_em_research_v2.py py_compile: PASS
+- summarize_d149_sp_em_v2.py py_compile: PASS
+
+EA transformation static checks
+- Synthetic current-V1 anchor transformation: PASS, 24/24 replace_once anchors.
+- Target build identity appears after transform: 1.96R1L12 / SP_EM_RESEARCH_V2.
+- EMV2 helper brace balance: PASS (0 final, never negative).
+- SPV2 helper brace balance: PASS (0 final, never negative).
+- Literal MQL StringFormat placeholder/argument checks in installer: PASS, 25/25.
+- EM V2 helper contains OrderSend: 0.
+- EM V2 helper contains TRADE_ACTION_*: 0.
+- EM V2 shadow therefore has no direct broker execution authority.
+- SP V2 manager explicitly requires EXTERNAL_CONTINUATION; reversal scenarios receive no SP V2 action.
+- V1 SMART_PARTIAL and CAUSAL_EPISODE_V1 enum identities are retained; V2 modes append after them.
+- ORIGINAL + EM_OFF remains the baseline control.
+
+EM V2 causal safeguards
+- Genuine failure definition: DEAL_REASON_SL before causally observed +1R.
+- +1R success resets global failure streak.
+- Server-side TP >= actual-fill +1R is recovered as +1R success at terminal reconciliation if OnTick did not observe the barrier first.
+- Two consecutive genuine Entry failures enter quarantine.
+- Quarantine does not expire by time.
+- Quarantine shadow uses frozen strategy Entry/SL and exact executable side after shadow fill (LONG Bid / SHORT Ask).
+- Shadow setup sends no broker order.
+- Existing real pending/filled exposure is not force-canceled by quarantine; this boundary is documented for interpretation.
+
+SP V2 safeguards
+- STRONG rule remains the D145/D146 rule used in SP V1; no GOLD25 threshold refit.
+- STRONG partial fraction remains 25%.
+- DEFAULT searches the minimum broker-valid close volume satisfying the frozen +0.05R modeled lock guard.
+- DEFAULT full close is allowed only as a logged volume-granularity fallback when a true protected partial is infeasible.
+- +2R cost-adjusted BE is forward-only and never loosens the SL.
+- Structural TP is retained.
+
+Analyzer synthetic tests
+- Valid synthetic V2 ledger: D149 V2 LEDGER INTEGRITY PASS, process exit 0.
+- Corrupted synthetic ledger with missing shadow terminal: analyzer FAIL, process exit 1.
+
+Not locally executable in this environment
+- MetaEditor/MQL5 compiler not available.
+- MT5 Strategy Tester/broker stop and partial-close behavior not available.
+- Required next validation: MetaEditor 0 errors -> short ORIGINAL+EM_OFF control parity -> GOLD 2025 SPV2 / EMV2 / SPV2+EMV2.

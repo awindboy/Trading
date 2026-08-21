@@ -833,3 +833,101 @@ D-148 clean GOLD 2023-2025 continuation taxonomy:
 ```
 
 Interpretation: do not try to turn every SL into a winner. Separate true structural failure, local-source failure/re-entry opportunity, and the smaller same-Root timing/SL-sensitivity class. D149 EM addresses repeated correlated episode exposure; D149 SP addresses +1R giveback.
+
+## 2026-08-21 — D-149 GOLD 2025 SP / EM V1 result and V2 handoff
+
+User-provided ledgers:
+
+```text
+GOLD_SP.csv
+GOLD_EM.csv
+GOLD_SPEM.csv
+```
+
+All three D149 ledgers passed the supplied D149 integrity analyzer and reported:
+
+```text
+execution divergence = 0
+cancel rejected = 0
+unresolved = 0
+```
+
+Continuation performance:
+
+| Variant | Trades | Wins | WR | Avg winner | Avg loser | Expectancy | Total | Max DD | Longest nonpositive streak |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| ORIGINAL control | 51 | 14 | 27.45% | +3.827R | -1.099R | +0.254R | +12.934R | 19.53R | 11 |
+| SP V1 | 51 | 22 | 43.14% | +1.880R | -0.872R | +0.315R | +16.071R | 11.05R | 6 |
+| EM V1 | 29 | 8 | 27.59% | +4.842R | -1.067R | +0.563R | +16.339R | 15.13R | 14 |
+| SP+EM V1 | 30 | 13 | 43.33% | +2.256R | -0.775R | +0.538R | +16.149R | 8.29R | 7 |
+
+The EM expectancy numbers are not sufficient for promotion because EM V1 removed a large share of trades and worsened its isolated longest streak. It must be judged by membership and streak behavior, not only expectancy per remaining trade.
+
+### SP V1
+
+Continuation +1R state counts:
+
+```text
+STRONG_RUNNER = 11
+DEFAULT = 19
+```
+
+Observed +2R / BE trigger:
+
+```text
+STRONG_RUNNER 9/11 = 81.8%
+DEFAULT       4/19 = 21.1%
+```
+
+This supports the D145/D146 structural strong-state concept for runner management on GOLD 2025.
+
+SP V1 still exposed two economic defects:
+
+1. Five continuation DEFAULT trades that had reached +1R still finished slightly negative after the 50% partial / remainder outcome and costs/slippage.
+2. One STRONG trade reached +2R and moved the remainder to Fill BE but still closed aggregate-negative (`exit profit +22.48`, `swap -32.05`, net `-9.57`, approximately `-0.105R`). Static price BE is therefore not sufficient for the stated no-negative-lock intent under carry.
+
+SP V2 addresses these defects without changing the strong-state threshold.
+
+### EM V1
+
+```text
+same-episode concurrent blocks = 20
+first-loss/no-refresh blocks = 6
+```
+
+Mapping the blocked scenario IDs back to the clean ORIGINAL population:
+
+```text
+concurrency blocks -> 17 baseline fills / 5 winners / 12 losers / about -0.259R total
+no-refresh blocks  ->  5 baseline fills / 1 winner  /  4 losers / about -3.146R total
+```
+
+The concurrency rule therefore removed many opportunities for little net loss avoidance and is rejected for V2. The post-failure fresh-delivery gate remains promising.
+
+The EM-only longest streak was 14, demonstrating that the dominant long loss cluster can cross owner episodes. EM V2 therefore moves the primary risk unit from `same owner episode` to `global consecutive Entry-survival failures` while retaining a local fresh-delivery gate.
+
+### D148 / loss-cluster context retained
+
+Clean GOLD 2023-2025 D148 continuation:
+
+```text
+167 fills
+89 immediate +1R = 53.3%
+78 SL-first = 46.7%
+27/78 recovered original +1R before H1/M30 support loss = 34.6%
+51/78 lost map support first = 65.4%
+18/27 recovery cases invalidated the original Root first
+9/27 kept the original Root through recovery
+```
+
+Long realized-loss streaks are not a single Entry-failure population: earlier sequence analysis found both repeated structural exposure and +1R giveback inside the streaks. This is why SP and EM remain separate controls.
+
+Classification:
+
+```text
+SP V1 = PROMISING / KEEP AS CONTROL
+EM V1 = DEMOTED / KEEP AS NEGATIVE CONTROL
+SP V2 = IMPLEMENTED / VALIDATION PENDING
+EM V2 = IMPLEMENTED / VALIDATION PENDING
+baseline authority = UNCHANGED
+```

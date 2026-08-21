@@ -1,8 +1,8 @@
 # EA Backlog
 
 Last updated: 2026-08-21
-Current phase: **D-149 SMART PARTIAL + EPISODE MANAGEMENT — IMPLEMENTED / LOCAL VALIDATION PENDING**
-Strategy authority: **UNCHANGED; RESEARCH TOGGLES ONLY**
+Current phase: **D-149 SP + EM V2 — IMPLEMENTED / LOCAL COMPILE + CONTROLLED VALIDATION PENDING**
+Strategy authority: **UNCHANGED; V1/V2 RESEARCH TOGGLES ONLY**
 2021: **KEEP UNTOUCHED**
 
 ## P0 — D-146 post-+1R continuation-state audit
@@ -172,3 +172,54 @@ Always:
 - [ ] Cross-market validation only after GOLD multi-year relation is understood.
 
 Do not tune 25/50 fractions or EM loss count from GOLD 2025 after seeing results. Any next variant must be separately pre-registered.
+
+## P0 — D-149 SP/EM V2 controlled revision
+
+V1 result status:
+
+- [x] MetaEditor compile / tester execution successful for supplied D149 research runs.
+- [x] GOLD 2025 SP V1 ledger integrity PASS; 51 continuation fills.
+- [x] GOLD 2025 EM V1 ledger integrity PASS; 29 continuation fills.
+- [x] GOLD 2025 SP+EM V1 ledger integrity PASS; 30 continuation fills.
+- [x] SP V1 classified PROMISING: continuation WR 43.14%, avg winner 1.880R, expectancy +0.315R, DD 11.05R, streak 6.
+- [x] Confirm SP strong-state +2R separation on continuation: 9/11 vs 4/19.
+- [x] EM V1 classified DEMOTED: longest streak 14 despite large trade suppression.
+- [x] Remove same-episode concurrency block from V2 design.
+- [x] Retain post-genuine-failure fresh map-delivery gate.
+
+SP V2 implementation:
+
+- [x] preserve V1 SMART_PARTIAL as a control and add `V1_EXIT_SMART_PARTIAL_V2`.
+- [x] scope SP V2 to EXTERNAL_CONTINUATION only.
+- [x] preserve strong-state rule and 25% strong partial; no new runner threshold fit.
+- [x] DEFAULT uses a broker-volume-step search for the minimum partial that models a small positive terminal lock if the remainder returns to original SL.
+- [x] DEFAULT may full-close at +1R only when broker volume granularity makes any protected partial impossible; explicit diagnostic required.
+- [x] +2R uses current-known-cost-adjusted forward-only BE rather than static Fill BE.
+- [x] structural TP remains unchanged.
+
+EM V2 implementation:
+
+- [x] preserve EM V1 as a control and add `V1_EM_ENTRY_SURVIVAL_QUARANTINE_V2`.
+- [x] remove same-episode concurrent-exposure veto from V2.
+- [x] count only exact-tick real `SL before +1R` as genuine Entry failure.
+- [x] reset the global failure streak when a real continuation trade reaches +1R.
+- [x] enter quarantine after two consecutive genuine Entry failures.
+- [x] keep the same-episode fresh-delivery requirement after a genuine failure.
+- [x] during quarantine arm at most one no-broker shadow setup at a time.
+- [x] shadow pending validation checks objective delivery, original Root validity, and frozen map-owner authority before simulated fill.
+- [x] shadow post-fill terminal is +1R vs original SL using executable-side Bid/Ask.
+- [x] shadow +1R releases quarantine; shadow SL keeps quarantine.
+- [x] do not force-cancel already-open/pending real exposure when quarantine begins in V2.
+
+Validation still required:
+
+- [ ] MetaEditor compile V2 = 0 errors.
+- [ ] ORIGINAL + EM_OFF parity against D149 V1 control.
+- [ ] GOLD 2025 SP V2 isolated.
+- [ ] GOLD 2025 EM V2 isolated.
+- [ ] GOLD 2025 SP V2 + EM V2 combined.
+- [ ] Compare V1 vs V2 opportunity membership, WR, avg winner, expectancy, DD, streak, quarantine time, shadow validation cost, and winner concentration.
+- [ ] If 2025 V2 is coherent, run GOLD 2023 and 2024 without changing constants.
+- [ ] Cross-market validation only after GOLD multi-year direction is known.
+
+Do not tune the two-failure quarantine count, 25% strong fraction, or M30 structural strong-state rule from GOLD 2025 after seeing V2 results.

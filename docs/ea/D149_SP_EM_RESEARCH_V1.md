@@ -1,7 +1,7 @@
 # D-149 SMART PARTIAL + EPISODE MANAGEMENT RESEARCH V1
 
 Date: 2026-08-21  
-Status: **IMPLEMENTED / LOCAL VALIDATION PENDING**  
+Status: **V1 GOLD 2025 COMPLETED / V1 MODES RETAINED AS CONTROLS / V2 IMPLEMENTED SEPARATELY**  
 Build: `1.95R1L11 / SP_EM_RESEARCH_V1`  
 Baseline strategy authority: **UNCHANGED**  
 Baseline control: `V1_EXIT_ORIGINAL + V1_EM_OFF`  
@@ -315,3 +315,34 @@ EM hard lock = second consecutive same-episode net loss
 ```
 
 These are not optimizer inputs. Do not tune them after seeing GOLD 2025. Any changed fraction, room definition or loss-count policy is a separately registered variant.
+
+## 12. GOLD 2025 V1 result — completed 2026-08-21
+
+D149 V1 is no longer validation-pending. The supplied GOLD 2025 SP, EM, and SP+EM ledgers all passed event integrity with zero execution divergence/cancel rejection.
+
+Continuation:
+
+```text
+SP V1    51 trades / WR 43.14% / avg winner 1.880R / expectancy +0.315R / DD 11.05R / streak 6
+EM V1    29 trades / WR 27.59% / avg winner 4.842R / expectancy +0.563R / DD 15.13R / streak 14
+SP+EM V1 30 trades / WR 43.33% / avg winner 2.256R / expectancy +0.538R / DD 8.29R / streak 7
+```
+
+The SP structural state separated +2R continuation strongly on this year (`STRONG 9/11`, `DEFAULT 4/19`). SP V1 is therefore retained as a promising control.
+
+EM V1 failed its main purpose. Same-episode concurrency suppression greatly reduced trade count but did not suppress the long loss cluster. EM V1 is retained only as a negative/control variant.
+
+The exact result and V2 contract are in `D149_SP_EM_RESULTS_V1_AND_V2_PLAN.md`.
+
+## 13. V2 revision
+
+Build target: `1.96R1L12 / SP_EM_RESEARCH_V2`.
+
+New modes preserve V1 numeric identities and controls:
+
+```text
+V1_EXIT_SMART_PARTIAL_V2
+V1_EM_ENTRY_SURVIVAL_QUARANTINE_V2
+```
+
+No V2 rule changes PLAN, Root/Sweep/CHoCH/FVG authorization, initial Entry, initial normalized SL, frozen structural TP, or baseline mode.

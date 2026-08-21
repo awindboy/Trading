@@ -1,0 +1,70 @@
+{
+  "package": "Trading_D149_SP_EM_RESEARCH_V2",
+  "date": "2026-08-21",
+  "repository": "awindboy/Trading",
+  "expected_head": "b3068c0b445005fe455405ed18fb1f82198231df",
+  "target_build": "1.96R1L12 / SP_EM_RESEARCH_V2",
+  "baseline_control": "V1_EXIT_ORIGINAL + V1_EM_OFF",
+  "expected_blobs": {
+    "mt5/experts/MentorDeterministicV1EA.mq5": "362f23a3ae86491c3060864d6250198f08e5760f",
+    "mt5/experts/EdgeAuditV1.mqh": "52f785c22a41295a4b58d8d6f8d79056e6c0c693",
+    "docs/ea/HANDOFF.md": "4cd6625217ec27a482e1c050ba1eab3a13832e26",
+    "docs/ea/STRATEGY_RESEARCH_STATE.md": "6c645a462d4f227a0430b76e4a1e22576420a2bd",
+    "docs/ea/BACKLOG.md": "62189f9dabd36b6c4bfdb89e15bf497a76c2b97c",
+    "docs/ea/DECISIONS.md": "6edce4e1a453fcf4c71a1eb561a2d3b7a0e7e5eb",
+    "docs/ea/TEST_RESULTS.md": "490f0f9e856291c24799396c9e584e528f3ec5ec",
+    "docs/ea/D149_SP_EM_RESEARCH_V1.md": "d812f2dbece6ded7b809fa09784d123c7a1967c1",
+    "AGENTS.md": "9dcad4894cd7a995d41dba831b9eb2491feedbaf",
+    "docs/ea/EA_SPEC.md": "ee550ae198f7b98f759526dce06dda9a86da95c5"
+  },
+  "source_ledgers": {
+    "GOLD_SP.csv": "739610b8825917b1fffbf524b0609f158f2c01f4409ecb9495af53f05cf6231f",
+    "GOLD_EM.csv": "3854fd923ea6f18f55a57e984fec9149db25c181aa2ed1d3532cbe71039f4533",
+    "GOLD_SPEM.csv": "cbf887f1012afe8074f46b7968efdf7e171422af9b8fe3e1ad05c8fe9cd55175"
+  },
+  "transformed_repo_files": [
+    "mt5/experts/MentorDeterministicV1EA.mq5",
+    "docs/ea/HANDOFF.md",
+    "docs/ea/STRATEGY_RESEARCH_STATE.md",
+    "docs/ea/BACKLOG.md",
+    "docs/ea/DECISIONS.md",
+    "docs/ea/TEST_RESULTS.md",
+    "docs/ea/D149_SP_EM_RESEARCH_V1.md"
+  ],
+  "added_repo_files": [
+    "docs/ea/D149_SP_EM_RESULTS_V1_AND_V2_PLAN.md",
+    "tools/summarize_d149_sp_em_v2.py"
+  ],
+  "verify_only": [
+    "AGENTS.md",
+    "docs/ea/EA_SPEC.md",
+    "mt5/experts/EdgeAuditV1.mqh"
+  ],
+  "package_files": [
+    {
+      "path": "README_D149_V2_APPLY.md",
+      "sha256": "6c1431345792ad7cffe946ece78ebfafc45d0a7608ca3d632944ef645e9b0d50",
+      "bytes": 4242
+    },
+    {
+      "path": "STATIC_QA.txt",
+      "sha256": "c456858d32fa617a17c5608ef6f00b6a0c4a7fc78f405af90e3ae09eacfb3c02",
+      "bytes": 3582
+    },
+    {
+      "path": "payload/docs/ea/D149_SP_EM_RESULTS_V1_AND_V2_PLAN.md",
+      "sha256": "2e4624a35f8ea7b500f7e143a319d3ae7bcb54360b619a8fec6bb1c6a18d22d5",
+      "bytes": 14267
+    },
+    {
+      "path": "payload/tools/summarize_d149_sp_em_v2.py",
+      "sha256": "ff9b0d6722b23c4a33c8254ff4f80ab0bb843db46ac97612f5868db66fcbbdd3",
+      "bytes": 11797
+    },
+    {
+      "path": "tools/apply_d149_sp_em_research_v2.py",
+      "sha256": "8d6f8f650804d1f6b610012f1418c60092906994d8f8a9f91ff04f9101132d0f",
+      "bytes": 81373
+    }
+  ]
+}

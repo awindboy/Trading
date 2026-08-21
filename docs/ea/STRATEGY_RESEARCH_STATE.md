@@ -1,10 +1,10 @@
 # Strategy Robustness Research State
 
 Last updated: 2026-08-21
-Repository base before handoff package: `e449bc68b9e57bd7bd4170279057fddeb429985d`
-Current code/research identity: `1.95R1L11 / SP_EM_RESEARCH_V1`
-Current research phase: **D-149 SMART PARTIAL + EPISODE MANAGEMENT — IMPLEMENTED / LOCAL VALIDATION PENDING**
-Strategy authority: **UNCHANGED; ORIGINAL + EM_OFF CONTROL PRESERVED**
+Repository base before handoff package: `b3068c0b445005fe455405ed18fb1f82198231df`
+Current code/research identity: `1.96R1L12 / SP_EM_RESEARCH_V2`
+Current research phase: **D-149 SP + EM V2 — IMPLEMENTED / LOCAL COMPILE + CONTROLLED VALIDATION PENDING**
+Strategy authority: **UNCHANGED; ORIGINAL + EM_OFF CONTROL PRESERVED; V1 MODES RETAINED**
 2021: **UNTOUCHED**
 
 ## Objective
@@ -247,3 +247,28 @@ The project now tests two solution mechanisms rather than only describing failur
 `EPISODE MANAGEMENT (EM)` attacks correlated repeated exposure. It does not mine a loser score. It groups continuation opportunities by frozen H1/M30 owner + direction, serializes exposure, requires new map delivery after the first loss, and hard-locks the same owner after a second consecutive net loss.
 
 Neither mechanism is promoted strategy authority until identical-condition GOLD multi-year and then cross-market tests support it.
+
+## D-149 V1 solution result and current V2 hypothesis
+
+GOLD 2025 establishes two different solution priorities.
+
+### Smart Partial
+
+SP V1 improved continuation WR, expectancy, drawdown, and streak simultaneously relative to ORIGINAL while preserving materially more winner size than D147 mechanical PARTIAL. This is the first implemented exit architecture in the current chain that improved GOLD 2025 continuation expectancy above ORIGINAL while also reducing drawdown/streak.
+
+The strong-state separator behaved as intended at the stage where it was discovered:
+
+```text
+STRONG_RUNNER: +2R 9/11 = 81.8%
+DEFAULT:       +2R 4/19 = 21.1%
+```
+
+SP V2 therefore does not mine a new runner threshold. It preserves the structural `current M30 external at/beyond original +2R` rule and fixes two execution/economic defects only: DEFAULT terminal protection and cost-adjusted +2R BE.
+
+### Episode Management
+
+EM V1 did not solve the observed loss clusters. It reduced continuation trade count from 51 to 29 while the longest nonpositive streak increased from 11 to 14. Its 20 concurrency blocks corresponded to only 17 baseline fills and removed approximately `-0.259R` total; the useful six no-refresh blocks corresponded to five baseline fills totaling approximately `-3.146R`.
+
+The next hypothesis is therefore global **Entry-survival quarantine**, not owner-level concurrency suppression. EM V2 counts only `SL before +1R`, quarantines after two consecutive such failures, and requires a causally observed shadow +1R setup before new real risk is allowed.
+
+Do not interpret either V2 rule as strategy authority before multi-year and cross-market validation.

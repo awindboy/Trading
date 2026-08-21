@@ -1,10 +1,10 @@
 # EA Development Handoff
 
 Last updated: 2026-08-21
-Repository base before this handoff package: `e449bc68b9e57bd7bd4170279057fddeb429985d`
-Current code/research build: `1.95R1L11 / SP_EM_RESEARCH_V1`
-Current research phase: **D-149 SMART PARTIAL + EPISODE MANAGEMENT — IMPLEMENTED / LOCAL VALIDATION PENDING**
-Strategy semantics: **D134 BASELINE CONTROL PRESERVED / D149 SP + EM CONTROLLED RESEARCH TOGGLES**
+Repository base before this handoff package: `b3068c0b445005fe455405ed18fb1f82198231df`
+Current code/research build: `1.96R1L12 / SP_EM_RESEARCH_V2`
+Current research phase: **D-149 SP + EM V2 — IMPLEMENTED / LOCAL COMPILE + CONTROLLED VALIDATION PENDING**
+Strategy semantics: **D134 BASELINE CONTROL PRESERVED / D149 V1 CONTROLS PRESERVED / V2 RESEARCH TOGGLES ADDED**
 Strategy authority: **UNCHANGED; ORIGINAL + EM_OFF IS BASELINE CONTROL**
 2021 status: **KEEP UNTOUCHED**
 
@@ -15,10 +15,11 @@ On every new session or resumed development:
 1. Check the latest GitHub commit first.
 2. Read `AGENTS.md` first. It remains the highest V1 strategy authority.
 3. Read this `docs/ea/HANDOFF.md`.
-4. Read `docs/ea/D145_RUNNER_GENERALIZATION_RESULTS.md`.
-5. Read `docs/ea/D146_CONTINUATION_STATE_AUDIT.md`.
-6. Read `docs/ea/STRATEGY_RESEARCH_STATE.md` and `docs/ea/BACKLOG.md`.
-7. Use `DECISIONS.md`, `TEST_RESULTS.md`, `EA_SPEC.md`, and older research docs only as needed.
+4. Read `docs/ea/D149_SP_EM_RESULTS_V1_AND_V2_PLAN.md` for the current solution-research evidence and V2 contract.
+5. Read `docs/ea/D145_RUNNER_GENERALIZATION_RESULTS.md` and `docs/ea/D146_CONTINUATION_STATE_AUDIT.md` for the runner-state evidence behind SP.
+6. Read `docs/ea/D148_ENTRY_SURVIVAL_FAILURE_TAXONOMY.md` for the Entry-failure classes constraining EM.
+7. Read `docs/ea/STRATEGY_RESEARCH_STATE.md` and `docs/ea/BACKLOG.md`.
+8. Use `DECISIONS.md`, `TEST_RESULTS.md`, `EA_SPEC.md`, and older research docs only as needed.
 
 If chat memory conflicts with current GitHub, GitHub wins.
 
@@ -457,3 +458,53 @@ EM V1, continuation only:
 D148 audit remains available only for `ORIGINAL + EM_OFF`. Do not enable D148 audit on SP/EM performance runs.
 
 2021 remains untouched.
+
+## D-149 V1 result -> V2 revision — 2026-08-21
+
+The GOLD 2025 A/B/C/D research ledgers are now locally validated for the three supplied research variants. Detailed evidence and the pre-registered V2 fix are frozen in:
+
+`docs/ea/D149_SP_EM_RESULTS_V1_AND_V2_PLAN.md`
+
+Key continuation results:
+
+```text
+ORIGINAL control: 51 trades / WR 27.45% / avg winner 3.827R / expectancy +0.254R / DD 19.53R / streak 11
+SP V1:            51 trades / WR 43.14% / avg winner 1.880R / expectancy +0.315R / DD 11.05R / streak 6
+EM V1:            29 trades / WR 27.59% / avg winner 4.842R / expectancy +0.563R / DD 15.13R / streak 14
+SP+EM V1:         30 trades / WR 43.33% / avg winner 2.256R / expectancy +0.538R / DD 8.29R / streak 7
+```
+
+Interpretation:
+
+- SP V1 is **PROMISING**. The pre-registered strong state separated +2R continuation on GOLD 2025: continuation `STRONG_RUNNER 9/11 = 81.8%` vs `DEFAULT 4/19 = 21.1%`.
+- EM V1 is **DEMOTED**. Same-episode concurrency blocking removed many trades without shortening the longest loss streak; EM-only streak worsened to 14.
+- The useful EM V1 component is the post-failure fresh-delivery requirement. Concurrent exposure blocking is removed from V2.
+- D-148 clean GOLD 2023-2025 remains the Entry-side causal basis: 167 continuation fills, 78 SL-first, 27/78 recovered +1R before map-support loss, including 18 local-source-failure recoveries and 9 same-Root recoveries.
+
+Current build after this package: `1.96R1L12 / SP_EM_RESEARCH_V2`.
+
+V2 adds controls without deleting V1:
+
+```text
+V1_EXIT_SMART_PARTIAL_V2
+V1_EM_ENTRY_SURVIVAL_QUARANTINE_V2
+```
+
+SP V2:
+- only EXTERNAL_CONTINUATION is managed;
+- strong state remains the same D145/D146 structural rule and keeps the 25% partial;
+- DEFAULT chooses the minimum broker-valid +1R close volume whose modeled original-SL fallback retains a small positive gross/cost buffer;
+- if a true DEFAULT partial is impossible because of volume granularity, a logged +1R full-close fallback is allowed;
+- after +2R the remainder receives a forward-only, current-known-cost-adjusted BE floor, recalculated as carry accumulates;
+- structural TP remains frozen.
+
+EM V2:
+- no same-episode concurrency block;
+- a same episode still needs fresh same-direction map delivery after a genuine Entry failure;
+- only `SL before +1R` counts as an EM failure; +1R-then-giveback is an exit problem and does not count;
+- two consecutive genuine Entry failures enter global quarantine;
+- during quarantine real submissions are blocked and one eligible setup at a time is shadowed with its frozen Entry/SL geometry;
+- quarantine ends only after a shadow +1R success or an already-open real trade reaches +1R;
+- the successful shadow setup itself remains untraded; the next setup is the first eligible real trade.
+
+V2 is research only. ORIGINAL + EM_OFF remains baseline authority. 2021 remains untouched.
