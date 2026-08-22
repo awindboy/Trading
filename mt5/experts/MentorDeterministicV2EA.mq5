@@ -13,8 +13,8 @@
 //| Live trading remains hard-blocked; tester execution only.        |
 //+------------------------------------------------------------------+
 #property strict
-#property version   "2.06"
-#property description "Mentor deterministic V2 EA - D154F causal lineage audit"
+#property version   "2.07"
+#property description "Mentor deterministic V2 EA - D154G HTF Root birth lineage audit"
 
 // D-150 V2 fork contract:
 // - V1 source is frozen separately.
@@ -148,6 +148,11 @@ input bool   InpV2D154CReaccelerationFvgAudit = false;
 // belongs to one M1 correction reaction rather than sequence-only events.
 // No Entry/SL/TP/order/sizing/EM authority.
 input bool   InpV2D154FCausalLineageAudit = false;
+
+// D-154G shadow-only: freeze H1/M30 owner context when each Root is born,
+// then compare it with the frozen PLAN owner for every actual-fill contributor.
+// No Entry/SL/TP/order/sizing/EM authority.
+input bool   InpV2D154GHTFRootLineageAudit = false;
 // D-147 research parameter is intentionally frozen; no fraction optimization in this phase.
 #define V1_D147_PARTIAL_FRACTION 0.50
 
@@ -1636,6 +1641,78 @@ void D154FOnTesterStart(const datetime at);
 void D154FOnTesterEnd(const datetime at);
 
 
+
+// D-154G shadow-only HTF Root birth-lineage audit.
+// Tracks whether each actual-fill contributor Root was born under the same
+// H1/M30 owner that later authorized its frozen PLAN, without changing strategy.
+struct V2D154GRootBirth
+  {
+   bool              valid;
+   string            root_zone_id;
+   ENUM_TIMEFRAMES   root_tf;
+   int               direction;
+   datetime          root_available_at;
+   datetime          root_origin_time;
+   int               linked_event_type;
+   string            linked_structure_event_id;
+   string            root_tf_owner_id;
+   datetime          root_tf_owner_started_at;
+
+   int               h1_trend;
+   string            h1_owner_id;
+   datetime          h1_owner_started_at;
+   int               m30_trend;
+   string            m30_owner_id;
+   datetime          m30_owner_started_at;
+
+   ENUM_TIMEFRAMES   birth_primary_tf;
+   string            birth_primary_owner_id;
+   datetime          birth_primary_owner_started_at;
+   int               birth_primary_direction;
+  };
+
+struct V2D154GTracker
+  {
+   bool              valid;
+   int               scenario_index;
+   string            scenario_id;
+   int               direction;
+   datetime          fill_at;
+   int               contributor_count;
+   int               classified_count;
+   int               same_plan_tf_owner_count;
+   int               prior_same_tf_owner_count;
+   int               prior_same_tf_same_dir_count;
+   int               prior_same_tf_opposite_dir_count;
+   int               m30_to_h1_bridge_count;
+   int               h1_to_m30_legacy_count;
+   int               no_plan_tf_owner_at_birth_count;
+   int               other_context_count;
+   int               snapshot_missing_count;
+   bool              stale_prior_owner_present;
+   string            fill_lineage_class;
+   bool              primary_outcome_logged;
+   string            primary_outcome;
+   datetime          primary_outcome_at;
+  };
+
+V2D154GRootBirth g_d154g_root_births[];
+V2D154GTracker g_d154g_trackers[];
+long g_d154g_root_births_seen=0;
+long g_d154g_fills=0;
+long g_d154g_fills_with_prior_owner=0;
+long g_d154g_fills_snapshot_missing=0;
+long g_d154g_plus1=0;
+long g_d154g_sl=0;
+long g_d154g_censored=0;
+
+void D154GOnRootCreated(const V1SourceZone &root);
+void D154GOnFill(const int scenario_index,const datetime observed_at);
+void D154GOnPrimaryReference(const int scenario_index,const string outcome,const datetime at);
+void D154GOnTesterStart(const datetime at);
+void D154GOnTesterEnd(const datetime at);
+
+
 bool D151Enabled()
   {
    return InpV2D151CausalAudit;
@@ -1823,6 +1900,7 @@ void D151MarkOneR(V2D151Tracker &t,const datetime at)
    D154BOnPrimaryReference(t.scenario_index,"PLUS_1R",at);
    D154COnPrimaryReference(t.scenario_index,"PLUS_1R",at);
    D154FOnPrimaryReference(t.scenario_index,"PLUS_1R",at);
+   D154GOnPrimaryReference(t.scenario_index,"PLUS_1R",at);
   }
 
 void D151MarkTwoR(V2D151Tracker &t,const datetime at)
@@ -1931,6 +2009,7 @@ void D151ArmPre1Failure(V2D151Tracker &t,const datetime at,const double failure_
    D154BOnPrimaryReference(t.scenario_index,"SL_FIRST",at);
    D154COnPrimaryReference(t.scenario_index,"SL_FIRST",at);
    D154FOnPrimaryReference(t.scenario_index,"SL_FIRST",at);
+   D154GOnPrimaryReference(t.scenario_index,"SL_FIRST",at);
    if(!t.map_support_same_at_sl)
      {
       t.pre1_shadow_terminal=true;
@@ -2098,7 +2177,7 @@ void D151OnTesterEnd(const datetime at)
       g_d151_trackers[i]=t;
      }
    LogLine("D151_RESEARCH_STOP","M1",at,"",
-           StringFormat("build=2.06R0L6 phase=V2_D154F_CAUSAL_LINEAGE_AUDIT trackers=%d fills=%I64d plus1=%I64d plus2=%I64d pre1_failures=%I64d pre1_recovered_plus1=%I64d pre1_map_loss=%I64d pre1_censored=%I64d post2_structural=%I64d post2_original_sl=%I64d post2_censored=%I64d strategy_authority=false no_trade_modification=true",
+           StringFormat("build=2.07R0L7 phase=V2_D154G_HTF_ROOT_BIRTH_LINEAGE_AUDIT trackers=%d fills=%I64d plus1=%I64d plus2=%I64d pre1_failures=%I64d pre1_recovered_plus1=%I64d pre1_map_loss=%I64d pre1_censored=%I64d post2_structural=%I64d post2_original_sl=%I64d post2_censored=%I64d strategy_authority=false no_trade_modification=true",
                         ArraySize(g_d151_trackers),g_d151_fills,g_d151_one_r,g_d151_two_r,g_d151_pre1_failures,
                         g_d151_pre1_recovered_1r,g_d151_pre1_map_loss,g_d151_pre1_censored,
                         g_d151_post2_structural,g_d151_post2_original_sl,g_d151_post2_censored));
@@ -2551,7 +2630,7 @@ void D154AOnTesterStart(const datetime at)
    if(!InpV2D154EntrySurvivalAudit)
       return;
    LogLine("D154A_RESEARCH_START","M1",at,"",
-           StringFormat("enabled=%s d151_dependency=%s build=2.06R0L6 hypothesis=M1_TRANSITION_TO_OWNER_COMPLETION_PLUS_POST_SL_SOURCE_SUCCESSION strategy_authority=false entry_change=false sl_change=false tp_change=false em_change=false 2021_untouched=true",
+           StringFormat("enabled=%s d151_dependency=%s build=2.07R0L7 hypothesis=M1_TRANSITION_TO_OWNER_COMPLETION_PLUS_POST_SL_SOURCE_SUCCESSION strategy_authority=false entry_change=false sl_change=false tp_change=false em_change=false 2021_untouched=true",
                         D154AEnabled() ? "true" : "false",
                         InpV2D151CausalAudit ? "true" : "false"));
   }
@@ -2901,7 +2980,7 @@ void D154BOnTesterStart(const datetime at)
    if(!InpV2D154BConfirmationAudit)
       return;
    LogLine("D154B_RESEARCH_START","M1",at,"",
-           StringFormat("enabled=%s build=2.06R0L6 population=ACTUAL_FILL_WHILE_M1_TRANSITION first_confirmation=FIRST_POST_FILL_M1_INITIAL_BOS candidate_entry=FIRST_EXECUTABLE_TICK_AFTER_CAUSAL_CONFIRMATION_CLOSE stop=ORIGINAL_NORMALIZED_SL target=PLUS_1R_FROM_SHADOW_ENTRY structural_tp_must_be_at_least_1R=true strategy_authority=false real_entry_change=false real_sl_change=false real_tp_change=false sizing_change=false em_change=false",
+           StringFormat("enabled=%s build=2.07R0L7 population=ACTUAL_FILL_WHILE_M1_TRANSITION first_confirmation=FIRST_POST_FILL_M1_INITIAL_BOS candidate_entry=FIRST_EXECUTABLE_TICK_AFTER_CAUSAL_CONFIRMATION_CLOSE stop=ORIGINAL_NORMALIZED_SL target=PLUS_1R_FROM_SHADOW_ENTRY structural_tp_must_be_at_least_1R=true strategy_authority=false real_entry_change=false real_sl_change=false real_tp_change=false sizing_change=false em_change=false",
                         D154BEnabled() ? "true" : "false"));
   }
 
@@ -2957,6 +3036,415 @@ void D154BOnTesterEnd(const datetime at)
 //| D-154F Causal-lineage shadow audit                               |
 //| Observation only. No Entry/SL/TP/order/sizing/EM authority.      |
 //+------------------------------------------------------------------+
+
+//+------------------------------------------------------------------+
+//| D-154G HTF Root birth-lineage shadow audit                       |
+//| Observation only. No Entry/SL/TP/order/sizing/EM authority.      |
+//+------------------------------------------------------------------+
+bool D154GEnabled()
+  {
+   return (InpV2D154GHTFRootLineageAudit && InpV2D151CausalAudit);
+  }
+
+int D154GRootTfIndex(const ENUM_TIMEFRAMES tf)
+  {
+   if(tf==PERIOD_H1) return 1;
+   if(tf==PERIOD_M30) return 2;
+   if(tf==PERIOD_M15) return 3;
+   return -1;
+  }
+
+int D154GFindRootBirth(const string root_id)
+  {
+   for(int i=ArraySize(g_d154g_root_births)-1;i>=0;i--)
+      if(g_d154g_root_births[i].valid && g_d154g_root_births[i].root_zone_id==root_id)
+         return i;
+   return -1;
+  }
+
+int D154GFindTracker(const int scenario_index)
+  {
+   for(int i=0;i<ArraySize(g_d154g_trackers);i++)
+      if(g_d154g_trackers[i].valid && g_d154g_trackers[i].scenario_index==scenario_index)
+         return i;
+   return -1;
+  }
+
+int D154GFindScenarioLocal(const string scenario_id)
+  {
+   for(int i=0;i<ArraySize(g_scenarios);i++)
+      if(g_scenarios[i].valid && g_scenarios[i].id==scenario_id)
+         return i;
+   return -1;
+  }
+
+void D154GOnRootCreated(const V1SourceZone &root)
+  {
+   if(!D154GEnabled() || !root.valid || root.kind!=V1_SOURCE_ROOT || root.id=="")
+      return;
+   if(D154GFindRootBirth(root.id)>=0)
+      return;
+
+   int n=ArraySize(g_d154g_root_births);
+   if(ArrayResize(g_d154g_root_births,n+1,128)<0)
+      return;
+
+   V2D154GRootBirth b;
+   ZeroMemory(b);
+   b.valid=true;
+   b.root_zone_id=root.id;
+   b.root_tf=root.tf;
+   b.direction=root.direction;
+   b.root_available_at=root.available_at;
+   b.root_origin_time=root.origin_time;
+   b.linked_event_type=root.linked_event_type;
+   b.linked_structure_event_id=root.linked_structure_event_id;
+
+   int rti=D154GRootTfIndex(root.tf);
+   if(rti>=0)
+     {
+      b.root_tf_owner_id=g_structure[rti].owner_id;
+      b.root_tf_owner_started_at=g_structure[rti].owner_started_at;
+     }
+
+   b.h1_trend=g_structure[1].trend;
+   b.h1_owner_id=g_structure[1].owner_id;
+   b.h1_owner_started_at=g_structure[1].owner_started_at;
+   b.m30_trend=g_structure[2].trend;
+   b.m30_owner_id=g_structure[2].owner_id;
+   b.m30_owner_started_at=g_structure[2].owner_started_at;
+   b.birth_primary_tf=PERIOD_CURRENT;
+   b.birth_primary_owner_id="";
+   b.birth_primary_owner_started_at=0;
+   b.birth_primary_direction=0;
+
+   if(IsMatureDirectionalTrend(b.h1_trend) && b.h1_owner_id!="")
+     {
+      b.birth_primary_tf=PERIOD_H1;
+      b.birth_primary_owner_id=b.h1_owner_id;
+      b.birth_primary_owner_started_at=b.h1_owner_started_at;
+      b.birth_primary_direction=TrendDirection(b.h1_trend);
+     }
+   else if(IsMatureDirectionalTrend(b.m30_trend) && b.m30_owner_id!="")
+     {
+      b.birth_primary_tf=PERIOD_M30;
+      b.birth_primary_owner_id=b.m30_owner_id;
+      b.birth_primary_owner_started_at=b.m30_owner_started_at;
+      b.birth_primary_direction=TrendDirection(b.m30_trend);
+     }
+
+   g_d154g_root_births[n]=b;
+   g_d154g_root_births_seen++;
+  }
+
+int D154GClassifyContributor(const int scenario_index,
+                             string &lineage_class,
+                             bool &stale_same_tf,
+                             bool &stale_same_dir,
+                             bool &stale_opposite_dir,
+                             bool &m30_to_h1_bridge,
+                             bool &h1_to_m30_legacy,
+                             bool &no_plan_tf_owner)
+  {
+   lineage_class="SNAPSHOT_MISSING";
+   stale_same_tf=false;
+   stale_same_dir=false;
+   stale_opposite_dir=false;
+   m30_to_h1_bridge=false;
+   h1_to_m30_legacy=false;
+   no_plan_tf_owner=false;
+
+   if(scenario_index<0 || scenario_index>=ArraySize(g_scenarios) ||
+      !g_scenarios[scenario_index].valid)
+      return -1;
+
+   int bidx=D154GFindRootBirth(g_scenarios[scenario_index].root_zone_id);
+   if(bidx<0)
+      return -1;
+
+   V2D154GRootBirth b=g_d154g_root_births[bidx];
+   ENUM_TIMEFRAMES plan_tf=g_scenarios[scenario_index].active_map_tf;
+   string plan_owner=g_scenarios[scenario_index].owner_id;
+   int plan_direction=g_scenarios[scenario_index].direction;
+
+   string birth_plan_owner="";
+   int birth_plan_trend=V1_TREND_NEUTRAL;
+   if(plan_tf==PERIOD_H1)
+     {
+      birth_plan_owner=b.h1_owner_id;
+      birth_plan_trend=b.h1_trend;
+     }
+   else if(plan_tf==PERIOD_M30)
+     {
+      birth_plan_owner=b.m30_owner_id;
+      birth_plan_trend=b.m30_trend;
+     }
+   else
+     {
+      lineage_class="PLAN_MAP_TF_UNSUPPORTED";
+      return bidx;
+     }
+
+   if(plan_owner!="" && birth_plan_owner==plan_owner)
+     {
+      lineage_class="SAME_PLAN_TF_OWNER_AT_BIRTH";
+      return bidx;
+     }
+
+   if(birth_plan_owner!="")
+     {
+      stale_same_tf=true;
+      int birth_direction=TrendDirection(birth_plan_trend);
+      if(birth_direction==plan_direction)
+        {
+         stale_same_dir=true;
+         lineage_class="PRIOR_SAME_TF_OWNER_SAME_DIR";
+        }
+      else
+        {
+         stale_opposite_dir=true;
+         lineage_class="PRIOR_SAME_TF_OWNER_OPPOSITE_DIR";
+        }
+      return bidx;
+     }
+
+   no_plan_tf_owner=true;
+
+   // Important pre-registered exception: a Root born while H1 is not mature
+   // but same-direction M30 is mature may legitimately precede a later H1
+   // INITIAL_BOS. Do NOT label that M30->H1 promotion as stale.
+   if(plan_tf==PERIOD_H1 &&
+      b.m30_owner_id!="" &&
+      IsMatureDirectionalTrend(b.m30_trend) &&
+      TrendDirection(b.m30_trend)==plan_direction)
+     {
+      m30_to_h1_bridge=true;
+      lineage_class="M30_TO_H1_PROMOTION";
+      return bidx;
+     }
+
+   if(plan_tf==PERIOD_M30 &&
+      b.h1_owner_id!="" &&
+      IsMatureDirectionalTrend(b.h1_trend))
+     {
+      h1_to_m30_legacy=true;
+      if(TrendDirection(b.h1_trend)==plan_direction)
+         lineage_class="H1_CONTEXT_BEFORE_M30_PRIMARY_SAME_DIR";
+      else
+         lineage_class="H1_CONTEXT_BEFORE_M30_PRIMARY_OPPOSITE_DIR";
+      return bidx;
+     }
+
+   if(b.birth_primary_owner_id=="")
+      lineage_class="NO_DIRECTIONAL_PRIMARY_AT_BIRTH";
+   else if(b.birth_primary_direction==plan_direction)
+      lineage_class="OTHER_PRIMARY_SAME_DIR_AT_BIRTH";
+   else
+      lineage_class="OTHER_PRIMARY_OPPOSITE_DIR_AT_BIRTH";
+   return bidx;
+  }
+
+void D154GLogContributor(const int master_scenario_index,
+                         const int contributor_scenario_index,
+                         const int birth_index,
+                         const string lineage_class,
+                         const bool stale_same_tf,
+                         const datetime observed_at)
+  {
+   if(master_scenario_index<0 || master_scenario_index>=ArraySize(g_scenarios) ||
+      contributor_scenario_index<0 || contributor_scenario_index>=ArraySize(g_scenarios))
+      return;
+
+   string birth_h1_owner="NA",birth_m30_owner="NA",birth_primary_owner="NA",root_tf_owner="NA";
+   string birth_primary_tf="NA",birth_primary_direction="NONE";
+   string birth_h1_trend="UNKNOWN",birth_m30_trend="UNKNOWN";
+   long root_available_s=0,root_origin_s=0,root_age_at_plan_s=-1;
+   int linked_event_type=V1_EVENT_NONE;
+
+   if(birth_index>=0 && birth_index<ArraySize(g_d154g_root_births))
+     {
+      V2D154GRootBirth b=g_d154g_root_births[birth_index];
+      birth_h1_owner=(b.h1_owner_id=="" ? "NA" : b.h1_owner_id);
+      birth_m30_owner=(b.m30_owner_id=="" ? "NA" : b.m30_owner_id);
+      birth_primary_owner=(b.birth_primary_owner_id=="" ? "NA" : b.birth_primary_owner_id);
+      root_tf_owner=(b.root_tf_owner_id=="" ? "NA" : b.root_tf_owner_id);
+      birth_primary_tf=(b.birth_primary_tf==PERIOD_CURRENT ? "NONE" : TfName(b.birth_primary_tf));
+      birth_primary_direction=DirectionName(b.birth_primary_direction);
+      birth_h1_trend=TrendName(b.h1_trend);
+      birth_m30_trend=TrendName(b.m30_trend);
+      root_available_s=(long)b.root_available_at;
+      root_origin_s=(long)b.root_origin_time;
+      linked_event_type=b.linked_event_type;
+      if(g_scenarios[contributor_scenario_index].frozen_at>=b.root_available_at)
+         root_age_at_plan_s=(long)(g_scenarios[contributor_scenario_index].frozen_at-b.root_available_at);
+     }
+
+   LogLine("D154G_CONTRIBUTOR_LINEAGE","M1",observed_at,g_scenarios[master_scenario_index].id,
+           StringFormat("master_scenario_id=%s contributor_scenario_id=%s root_zone_id=%s source_tf=%s direction=%s plan_map_tf=%s plan_owner_id=%s plan_h1_owner_id=%s plan_m30_owner_id=%s root_available_s=%I64d root_origin_s=%I64d root_age_at_plan_s=%I64d linked_event_type=%s root_tf_owner_id=%s birth_h1_trend=%s birth_h1_owner_id=%s birth_m30_trend=%s birth_m30_owner_id=%s birth_primary_tf=%s birth_primary_owner_id=%s birth_primary_direction=%s lineage_class=%s stale_same_tf_owner=%s strategy_authority=false",
+                        g_scenarios[master_scenario_index].id,
+                        g_scenarios[contributor_scenario_index].id,
+                        g_scenarios[contributor_scenario_index].root_zone_id,
+                        TfName(g_scenarios[contributor_scenario_index].source_tf),
+                        DirectionName(g_scenarios[contributor_scenario_index].direction),
+                        TfName(g_scenarios[contributor_scenario_index].active_map_tf),
+                        g_scenarios[contributor_scenario_index].owner_id=="" ? "NA" : g_scenarios[contributor_scenario_index].owner_id,
+                        g_scenarios[contributor_scenario_index].h1_owner_id_at_freeze=="" ? "NA" : g_scenarios[contributor_scenario_index].h1_owner_id_at_freeze,
+                        g_scenarios[contributor_scenario_index].m30_owner_id_at_freeze=="" ? "NA" : g_scenarios[contributor_scenario_index].m30_owner_id_at_freeze,
+                        root_available_s,root_origin_s,root_age_at_plan_s,EventName(linked_event_type),
+                        root_tf_owner,birth_h1_trend,birth_h1_owner,birth_m30_trend,birth_m30_owner,
+                        birth_primary_tf,birth_primary_owner,birth_primary_direction,lineage_class,
+                        stale_same_tf ? "true" : "false"));
+  }
+
+void D154GOnFill(const int scenario_index,const datetime observed_at)
+  {
+   if(!D154GEnabled() ||
+      scenario_index<0 || scenario_index>=ArraySize(g_scenarios) ||
+      !g_scenarios[scenario_index].valid ||
+      g_scenarios[scenario_index].scope!=V1_SCOPE_EXTERNAL_CONTINUATION ||
+      D154GFindTracker(scenario_index)>=0)
+      return;
+
+   V2D154GTracker t;
+   ZeroMemory(t);
+   t.valid=true;
+   t.scenario_index=scenario_index;
+   t.scenario_id=g_scenarios[scenario_index].id;
+   t.direction=g_scenarios[scenario_index].direction;
+   t.fill_at=observed_at;
+
+   string contributor_text=g_scenarios[scenario_index].execution_contributor_scenario_ids;
+   if(contributor_text=="")
+      contributor_text=g_scenarios[scenario_index].id;
+
+   string contributor_ids[];
+   ushort sep=(ushort)StringGetCharacter("|",0);
+   int parsed=StringSplit(contributor_text,sep,contributor_ids);
+   if(parsed<=0)
+     {
+      ArrayResize(contributor_ids,1);
+      contributor_ids[0]=g_scenarios[scenario_index].id;
+      parsed=1;
+     }
+   t.contributor_count=parsed;
+
+   for(int i=0;i<parsed;i++)
+     {
+      int cidx=D154GFindScenarioLocal(contributor_ids[i]);
+      string lineage="SNAPSHOT_MISSING";
+      bool stale=false,stale_same=false,stale_opp=false,bridge=false,h1legacy=false,no_plan_owner=false;
+      int bidx=D154GClassifyContributor(cidx,lineage,stale,stale_same,stale_opp,bridge,h1legacy,no_plan_owner);
+
+      if(cidx<0 || bidx<0)
+        {
+         t.snapshot_missing_count++;
+         D154GLogContributor(scenario_index,(cidx>=0 ? cidx : scenario_index),bidx,lineage,false,observed_at);
+         continue;
+        }
+
+      t.classified_count++;
+      if(lineage=="SAME_PLAN_TF_OWNER_AT_BIRTH") t.same_plan_tf_owner_count++;
+      if(stale)
+        {
+         t.prior_same_tf_owner_count++;
+         if(stale_same) t.prior_same_tf_same_dir_count++;
+         if(stale_opp) t.prior_same_tf_opposite_dir_count++;
+        }
+      if(bridge) t.m30_to_h1_bridge_count++;
+      if(h1legacy) t.h1_to_m30_legacy_count++;
+      if(no_plan_owner) t.no_plan_tf_owner_at_birth_count++;
+      if(!stale && lineage!="SAME_PLAN_TF_OWNER_AT_BIRTH" && !bridge && !h1legacy)
+         t.other_context_count++;
+
+      D154GLogContributor(scenario_index,cidx,bidx,lineage,stale,observed_at);
+     }
+
+   t.stale_prior_owner_present=(t.prior_same_tf_owner_count>0);
+   if(t.snapshot_missing_count>0)
+      t.fill_lineage_class="SNAPSHOT_MISSING";
+   else if(t.stale_prior_owner_present)
+      t.fill_lineage_class="HAS_PRIOR_SAME_TF_OWNER";
+   else if(t.same_plan_tf_owner_count==t.contributor_count)
+      t.fill_lineage_class="ALL_SAME_PLAN_TF_OWNER";
+   else if(t.m30_to_h1_bridge_count>0 &&
+           (t.same_plan_tf_owner_count+t.m30_to_h1_bridge_count)==t.contributor_count)
+      t.fill_lineage_class="SAME_OR_M30_TO_H1_PROMOTION";
+   else
+      t.fill_lineage_class="OTHER_NON_STALE_CONTEXT";
+
+   int n=ArraySize(g_d154g_trackers);
+   if(ArrayResize(g_d154g_trackers,n+1)<0)
+      return;
+   g_d154g_trackers[n]=t;
+   g_d154g_fills++;
+   if(t.stale_prior_owner_present) g_d154g_fills_with_prior_owner++;
+   if(t.snapshot_missing_count>0) g_d154g_fills_snapshot_missing++;
+
+   LogLine("D154G_HTF_ROOT_LINEAGE_FILL","M1",observed_at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s contributor_count=%d classified_count=%d same_plan_tf_owner_count=%d prior_same_tf_owner_count=%d prior_same_tf_same_dir_count=%d prior_same_tf_opposite_dir_count=%d m30_to_h1_bridge_count=%d h1_to_m30_legacy_count=%d no_plan_tf_owner_at_birth_count=%d other_context_count=%d snapshot_missing_count=%d stale_prior_owner_present=%s fill_lineage_class=%s primary_exposure=ANY_CONTRIBUTOR_PRIOR_OWNER_ON_SAME_PLAN_MAP_TF m30_to_h1_promotion_stale=false strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),t.contributor_count,t.classified_count,
+                        t.same_plan_tf_owner_count,t.prior_same_tf_owner_count,t.prior_same_tf_same_dir_count,
+                        t.prior_same_tf_opposite_dir_count,t.m30_to_h1_bridge_count,t.h1_to_m30_legacy_count,
+                        t.no_plan_tf_owner_at_birth_count,t.other_context_count,t.snapshot_missing_count,
+                        t.stale_prior_owner_present ? "true" : "false",t.fill_lineage_class));
+  }
+
+void D154GOnPrimaryReference(const int scenario_index,const string outcome,const datetime at)
+  {
+   if(!D154GEnabled())
+      return;
+   int idx=D154GFindTracker(scenario_index);
+   if(idx<0)
+     {
+      LogLine("D154G_INTEGRITY_WARNING","M1",at,"",
+              StringFormat("scenario_index=%d outcome=%s reason=NO_FILL_TRACKER strategy_authority=false",scenario_index,outcome));
+      return;
+     }
+
+   V2D154GTracker t=g_d154g_trackers[idx];
+   if(t.primary_outcome_logged)
+      return;
+   t.primary_outcome_logged=true;
+   t.primary_outcome=outcome;
+   t.primary_outcome_at=at;
+   g_d154g_trackers[idx]=t;
+
+   if(outcome=="PLUS_1R") g_d154g_plus1++;
+   else if(outcome=="SL_FIRST") g_d154g_sl++;
+   else if(outcome=="RIGHT_CENSORED") g_d154g_censored++;
+
+   LogLine("D154G_PRIMARY_OUTCOME","M1",at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s outcome=%s contributor_count=%d same_plan_tf_owner_count=%d prior_same_tf_owner_count=%d prior_same_tf_same_dir_count=%d prior_same_tf_opposite_dir_count=%d m30_to_h1_bridge_count=%d h1_to_m30_legacy_count=%d no_plan_tf_owner_at_birth_count=%d other_context_count=%d snapshot_missing_count=%d stale_prior_owner_present=%s fill_lineage_class=%s primary_hypothesis=PRIOR_SAME_TF_OWNER_LOWER_FILL_TO_PLUS1R strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),outcome,t.contributor_count,
+                        t.same_plan_tf_owner_count,t.prior_same_tf_owner_count,t.prior_same_tf_same_dir_count,
+                        t.prior_same_tf_opposite_dir_count,t.m30_to_h1_bridge_count,t.h1_to_m30_legacy_count,
+                        t.no_plan_tf_owner_at_birth_count,t.other_context_count,t.snapshot_missing_count,
+                        t.stale_prior_owner_present ? "true" : "false",t.fill_lineage_class));
+  }
+
+void D154GOnTesterStart(const datetime at)
+  {
+   if(!D154GEnabled())
+      return;
+   LogLine("D154G_RESEARCH_START","M1",at,"",
+           "build=2.07R0L7 phase=V2_D154G_HTF_ROOT_BIRTH_LINEAGE_AUDIT population=ACTUAL_FILLED_CONTINUATION unit=EXECUTION_FILL_WITH_MERGED_CONTRIBUTORS observation_root_birth=CREATING_INITIAL_BOS_OR_BOS_AVAILABLE_AT primary_exposure=ANY_CONTRIBUTOR_PRIOR_OWNER_ON_SAME_PLAN_MAP_TF hypothesis=PRIOR_SAME_TF_OWNER_LOWER_FILL_TO_PLUS1R m30_to_h1_promotion_stale=false threshold_fit=false strategy_authority=false entry_change=false sl_change=false tp_change=false sizing_change=false em_change=false");
+  }
+
+void D154GOnTesterEnd(const datetime at)
+  {
+   if(!D154GEnabled())
+      return;
+   for(int i=0;i<ArraySize(g_d154g_trackers);i++)
+      if(g_d154g_trackers[i].valid && !g_d154g_trackers[i].primary_outcome_logged)
+         D154GOnPrimaryReference(g_d154g_trackers[i].scenario_index,"RIGHT_CENSORED",at);
+
+   LogLine("D154G_RESEARCH_STOP","M1",at,"",
+           StringFormat("build=2.07R0L7 root_birth_records=%I64d fills=%I64d fills_with_prior_same_tf_owner=%I64d fills_snapshot_missing=%I64d plus1=%I64d sl_first=%I64d censored=%I64d primary_hypothesis=PRIOR_SAME_TF_OWNER_LOWER_FILL_TO_PLUS1R strategy_authority=false no_trade_modification=true",
+                        g_d154g_root_births_seen,g_d154g_fills,g_d154g_fills_with_prior_owner,
+                        g_d154g_fills_snapshot_missing,g_d154g_plus1,g_d154g_sl,g_d154g_censored));
+  }
+
+
 bool D154FEnabled()
   {
    return (InpV2D154FCausalLineageAudit && InpV2D151CausalAudit);
@@ -3399,7 +3887,7 @@ void D154FOnTesterStart(const datetime at)
       return;
 
    LogLine("D154F_RESEARCH_START","M1",at,"",
-           StringFormat("enabled=%s build=2.06R0L6 question=SEQUENCE_ONLY_VS_SAME_REACTION_LINEAGE population=EXTERNAL_CONTINUATION_CURRENT_BASELINE root_contact_snapshot=true sweep_prebar_snapshot=true primary_test=CHOCH_BREAKS_SWEEP_TIME_FROZEN_OPPOSITE_M1_PROTECTED_BOUNDARY matched_sweep_identity_logged=true fvg_c1_relation_logged=true strategy_authority=false no_trade_modification=true",
+           StringFormat("enabled=%s build=2.07R0L7 question=SEQUENCE_ONLY_VS_SAME_REACTION_LINEAGE population=EXTERNAL_CONTINUATION_CURRENT_BASELINE root_contact_snapshot=true sweep_prebar_snapshot=true primary_test=CHOCH_BREAKS_SWEEP_TIME_FROZEN_OPPOSITE_M1_PROTECTED_BOUNDARY matched_sweep_identity_logged=true fvg_c1_relation_logged=true strategy_authority=false no_trade_modification=true",
                         D154FEnabled() ? "true" : "false"));
   }
 
@@ -3847,7 +4335,7 @@ void D154COnTesterStart(const datetime at)
       return;
 
    LogLine("D154C_RESEARCH_START","M1",at,"",
-           StringFormat("enabled=%s build=2.06R0L6 population=ACTUAL_FILL_WHILE_M1_TRANSITION confirmation=FIRST_POST_FILL_M1_INITIAL_BOS first_same_dir_only=true source=FIRST_SAME_DIR_M1_FVG displacement_candle_start_must_be_at_or_after_confirmation=true entry=FVG_PROXIMAL_EDGE_FIRST_EXECUTABLE_RETEST stop=ORIGINAL_NORMALIZED_SL target=PLUS_1R_FROM_NEW_ENTRY structural_tp_retained=true structural_tp_must_be_at_least_1R=true primary_terminal_before_retest=NO_SHADOW_ENTRY post_sl_reentry=false second_fvg_retry=false strategy_authority=false",
+           StringFormat("enabled=%s build=2.07R0L7 population=ACTUAL_FILL_WHILE_M1_TRANSITION confirmation=FIRST_POST_FILL_M1_INITIAL_BOS first_same_dir_only=true source=FIRST_SAME_DIR_M1_FVG displacement_candle_start_must_be_at_or_after_confirmation=true entry=FVG_PROXIMAL_EDGE_FIRST_EXECUTABLE_RETEST stop=ORIGINAL_NORMALIZED_SL target=PLUS_1R_FROM_NEW_ENTRY structural_tp_retained=true structural_tp_must_be_at_least_1R=true primary_terminal_before_retest=NO_SHADOW_ENTRY post_sl_reentry=false second_fvg_retry=false strategy_authority=false",
                         D154CEnabled() ? "true" : "false"));
   }
 
@@ -4319,6 +4807,8 @@ bool ResearchCompactLogEvent(const string event_name,const string tf)
    if(StringFind(event_name,"D154C_")==0)
       return true;
    if(StringFind(event_name,"D154F_")==0)
+      return true;
+   if(StringFind(event_name,"D154G_")==0)
       return true;
    // Regime Research V1 can be independently recomputed from these M30 facts.
    if(event_name=="WAVE_CONFIRMED")
@@ -5925,6 +6415,7 @@ bool AddRootCandidateFromOrigin(const int tf_index,
 
    g_roots_created++;
    LogRootCreated(g_sources[n],event_type,break_bar);
+   D154GOnRootCreated(g_sources[n]);
 
    // D-122: Root creation never authorizes historical child refinement.
    // Runtime Root watches are registered only after the full same-timestamp
@@ -11232,6 +11723,7 @@ void MarkScenarioFilled(const int scenario_index,
    D154BOnFill(scenario_index,observed_at);
    D154COnFill(scenario_index,observed_at);
    D154FOnFill(scenario_index,observed_at);
+   D154GOnFill(scenario_index,observed_at);
    g_positions_filled++;
 
    // D-133: once the shared order fills, the implementation master owns the
@@ -15351,7 +15843,7 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=2.06R0L6 property_version=2.05 magic=%I64d phase=V2_D154F_CAUSAL_LINEAGE_AUDIT strategy_semantics=V2_CONTINUATION_ONLY_PLUS_D151_D152_SP_RESEARCH_PLUS_D154A_D154B_D154C_D154F_SHADOW fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=2.07R0L7 property_version=2.05 magic=%I64d phase=V2_D154G_HTF_ROOT_BIRTH_LINEAGE_AUDIT strategy_semantics=V2_CONTINUATION_ONLY_PLUS_D151_D152_SP_RESEARCH_PLUS_D154A_D154B_D154C_D154F_D154G_SHADOW fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         _Symbol,
                         AccountInfoString(ACCOUNT_CURRENCY),
@@ -15366,8 +15858,9 @@ int OnInit()
    D154BOnTesterStart(TimeCurrent());
    D154COnTesterStart(TimeCurrent());
    D154FOnTesterStart(TimeCurrent());
+   D154GOnTesterStart(TimeCurrent());
    LogLine("D149_RESEARCH_START","M1",TimeCurrent(),"",
-           StringFormat("exit_mode=%s em_mode=%s build=2.06R0L6 sp_strong_fraction=%.8f sp_v1_default_fraction=%.8f sp_strong_room_r=%.8f sp_v2_default_lock_buffer_r=%.8f sp_v2_cost_be_buffer_r=%.8f sp_v2_continuation_only=true structural_tp_retained=true em_v2_failure=SL_BEFORE_PLUS_1R em_v2_quarantine_after=2 em_v2_release=SHADOW_OR_PREEXISTING_REAL_PLUS_1R em_v2_force_cancel_existing=false d148_audit_allowed_only_on_control=true",
+           StringFormat("exit_mode=%s em_mode=%s build=2.07R0L7 sp_strong_fraction=%.8f sp_v1_default_fraction=%.8f sp_strong_room_r=%.8f sp_v2_default_lock_buffer_r=%.8f sp_v2_cost_be_buffer_r=%.8f sp_v2_continuation_only=true structural_tp_retained=true em_v2_failure=SL_BEFORE_PLUS_1R em_v2_quarantine_after=2 em_v2_release=SHADOW_OR_PREEXISTING_REAL_PLUS_1R em_v2_force_cancel_existing=false d148_audit_allowed_only_on_control=true",
                         ExitManagementModeName((int)InpExitManagementMode),EpisodeManagementModeName((int)InpEpisodeManagementMode),
                         V1_D149_SP_STRONG_PARTIAL_FRACTION,V1_D149_SP_DEFAULT_PARTIAL_FRACTION,V1_D149_SP_STRONG_ROOM_R,
                         V1_D149_SP_V2_DEFAULT_LOCK_BUFFER_R,V1_D149_SP_V2_COST_BE_BUFFER_R));
@@ -15401,6 +15894,7 @@ void OnDeinit(const int reason)
    D154BOnTesterEnd(TimeCurrent());
    D154COnTesterEnd(TimeCurrent());
    D154FOnTesterEnd(TimeCurrent());
+   D154GOnTesterEnd(TimeCurrent());
    EdgeAuditDeinit(reason);
    D149EMV2OnTesterEnd(TimeCurrent());
    LogLine("D149_RESEARCH_STOP","M1",TimeCurrent(),"",

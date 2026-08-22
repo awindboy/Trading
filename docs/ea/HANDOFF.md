@@ -1,5 +1,9 @@
 # EA Development Handoff
 
+> **V2 ACTIVE ROUTING — 2026-08-22 / D-154G**  
+> Current V2 phase is `D-154G HTF ROOT BIRTH LINEAGE AUDIT`. For active V2 work, `docs/ea/v2/HANDOFF_V2.md` and `docs/ea/v2/AGENTS_V2.md` override stale phase labels in the historical body below.  
+> D-154F local M1 lineage / TRANSITION hypotheses were not promoted; baseline strategy semantics remain unchanged.
+
 Last updated: 2026-08-22
 Repository base before this documentation update: `7cb26133235c45a3756492af951900f15213f8cb`
 Current code/research build: `2.02R0L2 / V2_SP_ARCHITECTURE_RESEARCH_V3`

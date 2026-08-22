@@ -1,74 +1,59 @@
 # V2 Backlog
 
 Last updated: 2026-08-22  
-Current phase: `D-152 COMPLETE / ENTRY SURVIVAL NEXT`  
+Current phase: `D-154G HTF ROOT BIRTH LINEAGE AUDIT`  
 2021: `KEEP UNTOUCHED`
 
-## P0 — V2 continuation-only foundation
+## P0 — Foundation / causal separation
 
-- [x] Freeze V1 historical control.
-- [x] Create independent V2 EA.
-- [x] Remove reversal order authority.
-- [x] Validate continuation-only GOLD bootstrap.
-- [x] Keep Entry / runner / exit / exposure research separated.
+- [x] V1 frozen historical control.
+- [x] V2 EXTERNAL_CONTINUATION-only authority.
+- [x] Separate Entry survival, winner continuation, exit architecture and exposure risk.
+- [x] D151 exact Fill -> +1R / SL-first causal platform.
+- [x] D153 MT5 real-tick batch automation.
 
-## P0 — D-151 causal platform
+## P0 — Exit / winner continuation
 
-- [x] Raise active stretch target to `>=70%` realized WR with avg winner >1R and positive expectancy.
-- [x] Record `all accepted trades final net R >= +1R` as extreme frontier.
-- [x] Add Fill -> +1R tracking.
-- [x] Add post-SL recovery/map-loss taxonomy.
-- [x] Add +2R shadow retracement tracking.
-- [x] Add min-R-before-3R/4R/5R measurements.
-- [x] Produce clean GOLD25/BTC25 SP-only research ledgers.
+- [x] D152 V3 matrix complete.
+- [x] V3E `BANK_2R_LOCK_ONE` selected as provisional post-+1R research reference.
+- [ ] Validate V3E broadly before any baseline promotion.
+- [ ] Keep M30 +1R runner maturity out of Entry authorization.
 
-## P0 — D-152 SP V3 controlled comparison
+## P0 — Entry-survival research completed so far
 
-- [x] Reject blind +2R -> +1R stop tightening.
-- [x] Implement V3A known-default close.
-- [x] Implement V3B small profit bank.
-- [x] Implement V3C +3R lock bank.
-- [x] Implement V3D structural bank.
-- [x] Implement V3E +2R lock-one bank.
-- [x] Compile/run D-152 through the automated GOLD25/BTC25 matrix.
-- [x] Compare WR, final>=1R, avg winner, expectancy, total R and DD.
-- [x] Identify V3E as provisional SP leader.
-- [x] Demote V3A/V3B/V3C/V3D for now.
-- [x] Reject blanket full-close fallback when V3E banking is broker-infeasible.
-- [ ] Validate V3E outside GOLD25/BTC25 before baseline promotion.
-- [ ] Do not tune another same-sample SP threshold before Entry research.
+- [x] D148 failure taxonomy: separate true premise failure from local-source failure / later recovery.
+- [x] D149 EM did not provide a general Entry solution.
+- [x] D154A Fill-time M1 maturity rejected as universal gate.
+- [x] D154B wait-for-SAME-INITIAL_BOS delayed entry rejected.
+- [x] D154C confirmation -> fresh FVG retest rejected as universal replacement.
+- [x] D154D new Root after prior SL failed OOS generalization.
+- [x] D154F exact frozen-boundary CHoCH not promoted.
+- [x] D154F GOLD23 sweep-time TRANSITION discovery failed validation and is rejected as veto.
 
-## P0 — Entry survival
+## P0 — D-154G HTF Root birth lineage
 
-- [x] Confirm SP cannot mathematically solve 70% whole-strategy WR at current Fill->+1 survival.
-- [ ] Separate true HTF/map failure from local-source failure.
-- [ ] Study same-Root timing / stop sensitivity without look-ahead.
-- [ ] Study post-SL recovery/re-entry only through shadow causal ordering first.
-- [ ] Search for causally available confirmation after a failed local source.
-- [ ] Keep M30 +1R maturity out of Entry authorization.
-- [ ] Require GOLD/BTC relation direction before any real Entry variant.
+- [ ] Compile build 2.07R0L7 with 0 errors.
+- [ ] GOLD23 Q1 audit OFF/ON non-interference parity PASS.
+- [ ] GOLD23 clean discovery through 2023-12-21.
+- [ ] Test primary `HAS_PRIOR_SAME_TF_OWNER` relation without threshold fitting.
+- [ ] Preserve merged contributor structure; do not double-count contributor rows as trades.
+- [ ] If discovery supports, run frozen validation panel: GOLD24/GOLD25/BTCUSD25/SILVER25/CADJPY25.
+- [ ] If validation fails, reject without Root-age/source-TF/market-specific rescue.
 
-## P1 — Episode / exposure management
+## P1 — Next HTF representation branch if D-154G fails
 
-- [ ] Keep EM experimental.
-- [ ] Quantify profitable setups removed by quarantine.
-- [ ] Revisit probe/quarantine only after Entry-survival mechanism is clearer.
-- [ ] Do not optimize loss count / cooldown on one market-year.
+- [ ] Study nested H1/M30 continuation-vs-correction-vs-failure state causally.
+- [ ] Distinguish direction label from structural persistence without a generic quality score.
+- [ ] Use shadow instrumentation first.
+
+## P1 — EM / exposure
+
+- [ ] Keep EM OFF during D-154G.
+- [ ] Revisit episode/exposure management only after Entry premise is clearer.
 
 ## P1 — Robustness
 
-- [ ] After a credible Entry solution, validate outside discovery data.
+- [ ] Require temporal and cross-market validation before promotion.
 - [ ] Preserve LONG/SHORT reporting.
 - [ ] Preserve right-censoring.
-- [ ] Exclude execution-divergent runs from profitability evidence.
-
-## P0 — D-153 MT5 batch automation
-
-- [x] Generate per-case `.set` and `.ini`.
-- [x] Execute MT5 Strategy Tester sequentially.
-- [x] Use `Every tick based on real ticks`.
-- [x] Recover tester-agent CSVs from the Windows global Tester sandbox.
-- [x] Create unique CSV per case.
-- [x] Produce manifest / repro configuration / run log.
-- [x] Produce Desktop ZIP.
-- [x] Complete the first 12-run D-152 matrix end-to-end.
+- [ ] Exclude execution-divergent evidence.

@@ -1,148 +1,94 @@
 # V2 Development Handoff
 
 Last updated: 2026-08-22  
-Repository state before this documentation update: `7cb26133235c45a3756492af951900f15213f8cb`  
-Current EA build: `2.02R0L2 / V2_SP_ARCHITECTURE_RESEARCH_V3`  
-Current phase: **D-152 SP V3 MATRIX COMPLETE / V3E PROVISIONAL SP REFERENCE / ENTRY SURVIVAL NEXT**  
+Repository base before D-154G package: `9808edb2a7c816e5d6630a7d79e35bf525bbe549`  
+Current committed EA: `2.06R0L6 / V2_D154F_CAUSAL_LINEAGE_AUDIT`  
+Target research build: `2.07R0L7 / V2_D154G_HTF_ROOT_BIRTH_LINEAGE_AUDIT`  
+Current phase: **D-154F COMPLETE / LOCAL-M1 HYPOTHESES NOT PROMOTED / D-154G HTF ROOT BIRTH LINEAGE NEXT**  
 V1: **FROZEN HISTORICAL CONTROL**  
 2021: **KEEP UNTOUCHED**
 
 ## Startup order
 
-For active V2 work:
-
 1. Check latest GitHub commit.
 2. Read root `AGENTS.md`.
-3. Read `docs/ea/v2/AGENTS_V2.md` as V2 strategy authority.
+3. Read `docs/ea/v2/AGENTS_V2.md`.
 4. Read root `docs/ea/HANDOFF.md`.
 5. Read this file.
-6. Read `docs/ea/v2/D152_SP_V3_RESULTS.md`.
-7. Read `docs/ea/v2/RESEARCH_STATE_V2.md` and `BACKLOG_V2.md`.
-8. Read older D145/D146/D148/D149/D151/D152 design docs only as needed.
+6. Read `docs/ea/v2/D154F_CAUSAL_LINEAGE_RESULTS.md`.
+7. Read `docs/ea/v2/D154G_HTF_ROOT_BIRTH_LINEAGE_AUDIT.md`.
+8. Read `docs/ea/v2/RESEARCH_STATE_V2.md` and `BACKLOG_V2.md`.
+9. Read D148/D151/D152 evidence only as needed.
 
-If chat memory conflicts with GitHub, GitHub wins.
+GitHub remains the Single Source of Truth.
 
-## Current strategy authority
+## Strategy authority
 
-V2 remains:
+Unchanged:
 
 ```text
 EXTERNAL_CONTINUATION only
-BASELINE_NO_REGIME_GATE control
+BASELINE_NO_REGIME_GATE
 ROOT_OB_DISTAL_20
-structural objective TP
-no reversal order authority
+LAST_OPPOSITE_OB + FVG_ORIGIN_OB
+PD reference only
+same-entry Root merge
+same-direction hedging add-ons
 no look-ahead
 ```
 
-D-152 research results do **not** yet modify `AGENTS_V2.md` or `EA_SPEC_V2.md`.
+D-154G is shadow-only and has no strategy authority.
 
-## D-153 infrastructure status
+## Post-+1R reference / EM
 
-The automated MT5 batch runner is now validated end-to-end on the D-152 matrix.
-
-Observed successful workflow:
+For current Entry-survival research runs:
 
 ```text
-case definition
--> per-run .set/.ini
--> terminal64.exe /config
--> Every tick based on real ticks
--> unique ledger CSV
--> result collection
--> manifest/repro files
--> Desktop ZIP
+SP/exit research reference = V3E BANK_2R_LOCK_ONE (mode 9)
+EM = OFF
 ```
 
-The completed artifact contained all 12 GOLD/BTC D-152 runs and was successfully used for the current analysis.
+V3E is still provisional and is not baseline promotion.
 
-## D-152 completed result
+## D-154F completed result
 
-Read:
+Read `D154F_CAUSAL_LINEAGE_RESULTS.md`.
 
-`docs/ea/v2/D152_SP_V3_RESULTS.md`
+Key decisions:
 
-Primary decision:
+- `DIRECT_FROZEN_BREAK` not promoted.
+- GOLD23 `TRANSITION at sweep` discovery did not generalize and is rejected as a veto.
+- BTC25 and CADJPY25 reversed the GOLD23 relation.
+- Do not tune local M1 timing/state thresholds to rescue D-154F.
+- M1 confirmation research pauses while the project moves upstream.
+
+## Current causal question
+
+The current code can authorize a Root because its direction matches the current H1/M30 continuation map and its zone lies inside the current map range, even though the Root does not store the H1/M30 owner context that existed when it was born.
+
+D-154G asks whether actual fills are weaker when one or more same-entry contributor Roots were born under a **different mature owner on the same timeframe later frozen into that contributor's PLAN**.
+
+`M30 -> later H1 promotion` is explicitly separated from stale prior-owner lineage.
+
+## Required validation order
 
 ```text
-provisional post-+1R SP reference
-= V3E BANK_2R_LOCK_ONE
+1. Apply D-154G package on exact D-154F committed EA state.
+2. MetaEditor compile = 0 errors.
+3. Refresh Strategy Tester preset; confirm InpV2D154GHTFRootLineageAudit exists.
+4. GOLD23 Q1 D154G OFF/ON parity.
+5. compare_d154g_parity.py => PASS.
+6. GOLD23 clean discovery through 2023-12-21.
+7. Analyze frozen stale-owner definition.
+8. Only if discovery warrants it, run pre-registered GOLD24/GOLD25/BTC25/SILVER25/CADJPY25 validation.
 ```
 
-Key evidence:
+Do not run validation early. Do not alter the stale definition after seeing discovery.
 
-```text
-GOLD V3E:
-53 closed
-WR 52.83%
-final >= +1R 33.96%
-avg winner +1.328R
-expectancy +0.203R
-total +10.783R
-DD 6.807R
+## If D-154G validates
 
-BTC V3E:
-127 fills / 125 closed / 2 right-censored
-WR 44.00% on closed
-final >= +1R 32.80%
-avg winner +1.225R
-expectancy -0.022R
-total -2.750R
-DD 14.233R
-```
+Only then consider one controlled strategy variant that requires current-episode Root ownership. The exact rule must be derived from the validated lineage class, not from Root age or a fitted score.
 
-V3E is **not baseline promotion**. It is the current research reference.
+## If D-154G fails
 
-## Why SP research pauses
-
-Fill -> +1R remains the binding ceiling:
-
-```text
-GOLD25   30/53 = 56.6%
-BTCUSD25 60/127 = 47.2%
-```
-
-Post-+1R SP already converts roughly 93-95% of survivors into positive outcomes.
-
-Therefore the project cannot reach the active `>=70%` realized-WR stretch target through exit management alone.
-
-## Current next problem
-
-Primary research returns to:
-
-```text
-Fill -> +1R Entry survival
-```
-
-Required separation remains:
-
-```text
-true HTF/map directional failure
-vs
-local source failure while HTF survives
-vs
-same-Root timing / stop sensitivity
-vs
-correlated repeated Entry failure
-```
-
-Do not reuse M30 +1R runner maturity as an Entry filter.
-
-A post-SL recovery/re-entry hypothesis may be studied only with causal shadow measurement first. No real re-entry rule is authorized yet.
-
-## EM status
-
-EM remains experimental.
-
-GOLD showed risk-cluster benefits, but BTC showed a generalization warning because quarantine could discard stronger recovery opportunities.
-
-Do not combine a new Entry rule with EM before the Entry mechanism is understood independently.
-
-## Immediate next work
-
-1. Keep V3E as the provisional post-+1R reference.
-2. Stop same-sample D-152 threshold tuning.
-3. Use the D151/D148 failure taxonomy to formulate the next Entry-survival causal audit.
-4. Implement shadow-only instrumentation before real Entry/re-entry changes.
-5. Use D-153 batch automation for GOLD25/BTC25 validation.
-6. Preserve right-censoring and execution-integrity requirements.
+Do not tune Root age, source TF, direction or market exceptions. Move to the next HTF premise representation question, such as nested H1/M30 continuation/correction state, while preserving the baseline control.

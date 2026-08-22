@@ -6267,3 +6267,18 @@ Decision rationale:
 - Additional same-sample SP threshold tuning is paused.
 
 The next primary bottleneck is Entry survival (`Fill -> +1R`), which remains 56.6% GOLD25 and 47.2% BTC25 in this matrix.
+
+## D-154G — HTF Root birth-lineage audit before any new Entry gate
+
+Status: `RESEARCH / SHADOW-ONLY`  
+Date: `2026-08-22`
+
+Decision:
+- D-154F `DIRECT_FROZEN_BREAK` is not promoted.
+- GOLD23 `TRANSITION at sweep` discovery did not generalize to GOLD24/GOLD25/BTC25/SILVER25/CADJPY25 and is rejected as an Entry veto.
+- M1 confirmation variants pause. The next causal question moves upstream to HTF map -> Root ownership.
+- D-154G defines stale prior-owner exposure only when a contributor Root was born while the same PLAN-map timeframe already had a different mature owner.
+- Same-direction M30 -> later H1 promotion is explicitly not classified as stale.
+- D-154G has no Entry, SL, TP, sizing, order, SP, or EM authority.
+- Discovery is GOLD23; validation remains GOLD24/GOLD25/BTCUSD25/SILVER25/CADJPY25. No threshold fitting or market-specific rescue is allowed.
+
