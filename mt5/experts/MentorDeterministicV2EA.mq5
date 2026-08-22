@@ -13,8 +13,8 @@
 //| Live trading remains hard-blocked; tester execution only.        |
 //+------------------------------------------------------------------+
 #property strict
-#property version   "2.03"
-#property description "Mentor deterministic V2 EA - D154A entry survival ownership audit"
+#property version   "2.04"
+#property description "Mentor deterministic V2 EA - D154B post-fill confirmation shadow audit"
 
 // D-150 V2 fork contract:
 // - V1 source is frozen separately.
@@ -132,6 +132,11 @@ input bool   InpV2D151CausalAudit  = true;
 // D-154A shadow-only Entry-survival mechanism audit. It depends on D151
 // for exact Fill -> +1R / original-SL barrier ordering. No strategy authority.
 input bool   InpV2D154EntrySurvivalAudit = false;
+
+// D-154B shadow-only: for actual fills occurring while M1 is TRANSITION,
+// test the first post-Fill INITIAL_BOS as a delayed confirmation entry.
+// Requires D151 for exact original Fill/+1R/SL ordering; no strategy authority.
+input bool   InpV2D154BConfirmationAudit = false;
 
 // D-147 research parameter is intentionally frozen; no fraction optimization in this phase.
 #define V1_D147_PARTIAL_FRACTION 0.50
@@ -1345,6 +1350,75 @@ void D154AConsiderSuccessorStage(const int candidate_scenario_index,
                                  const datetime at);
 
 
+
+// D-154B shadow-only confirmation-entry audit.
+// Population: actual EXTERNAL_CONTINUATION fills observed while M1 is TRANSITION.
+// It tests the first post-Fill M1 INITIAL_BOS without changing the real trade.
+struct V2D154BTracker
+  {
+   bool       valid;
+   int        scenario_index;
+   string     scenario_id;
+   int        direction;
+   datetime   fill_at;
+   double     original_fill;
+   double     original_sl;
+   double     original_risk;
+   double     structural_tp;
+
+   bool       first_initial_seen;
+   int        first_initial_direction;
+   datetime   first_initial_at;
+   double     first_initial_bar_close;
+
+   bool       primary_reference_logged;
+   string     primary_outcome;
+   datetime   primary_terminal_at;
+
+   bool       candidate_armed;
+   datetime   candidate_at;
+   double     shadow_entry;
+   double     shadow_entry_r_from_original;
+   double     shadow_risk;
+   double     shadow_plus1_price;
+   double     structural_tp_r;
+   double     spread_at_entry;
+
+   bool       shadow_terminal;
+   string     shadow_outcome;
+   datetime   shadow_terminal_at;
+   double     shadow_mfe_r;
+   double     shadow_mae_r;
+
+   bool       map_support_lost;
+   datetime   map_support_lost_at;
+  };
+
+V2D154BTracker g_d154b_trackers[];
+long g_d154b_transition_fills=0;
+long g_d154b_first_same=0;
+long g_d154b_first_opposite=0;
+long g_d154b_no_initial_before_primary=0;
+long g_d154b_candidates_armed=0;
+long g_d154b_candidates_infeasible_room=0;
+long g_d154b_shadow_plus1=0;
+long g_d154b_shadow_sl=0;
+long g_d154b_shadow_censored=0;
+
+void D154BOnFill(const int scenario_index,const datetime observed_at);
+void D154BOnStructureEvent(const V1StructureState &state,
+                           const int event_type,
+                           const int direction,
+                           const MqlRates &bar,
+                           const datetime available_at);
+void D154BOnPrimaryReference(const int scenario_index,
+                             const string outcome,
+                             const datetime at);
+void D154BAuditOnTick(const MqlTick &tick);
+void D154BOnTesterStart(const datetime at);
+void D154BOnTesterEnd(const datetime at);
+
+
 bool D151Enabled()
   {
    return InpV2D151CausalAudit;
@@ -1529,6 +1603,7 @@ void D151MarkOneR(V2D151Tracker &t,const datetime at)
                         range_available ? "true" : "false",owner_id=="" ? "NA" : owner_id,
                         protected_price,external_price,progress,remaining_r,state_name));
    D154AOnOneR(t.scenario_index,at);
+   D154BOnPrimaryReference(t.scenario_index,"PLUS_1R",at);
   }
 
 void D151MarkTwoR(V2D151Tracker &t,const datetime at)
@@ -1634,6 +1709,7 @@ void D151ArmPre1Failure(V2D151Tracker &t,const datetime at,const double failure_
                         t.root_alive_at_sl ? "true" : "false",t.frozen_owner_alive_at_sl ? "true" : "false",
                         g_scenarios[t.scenario_index].root_zone_id,TfName(g_scenarios[t.scenario_index].source_tf)));
    D154AOnPre1Failure(t.scenario_index,at,t.map_support_same_at_sl,t.root_alive_at_sl);
+   D154BOnPrimaryReference(t.scenario_index,"SL_FIRST",at);
    if(!t.map_support_same_at_sl)
      {
       t.pre1_shadow_terminal=true;
@@ -1801,7 +1877,7 @@ void D151OnTesterEnd(const datetime at)
       g_d151_trackers[i]=t;
      }
    LogLine("D151_RESEARCH_STOP","M1",at,"",
-           StringFormat("build=2.03R0L3 phase=V2_D154A_ENTRY_SURVIVAL_OWNERSHIP_AUDIT trackers=%d fills=%I64d plus1=%I64d plus2=%I64d pre1_failures=%I64d pre1_recovered_plus1=%I64d pre1_map_loss=%I64d pre1_censored=%I64d post2_structural=%I64d post2_original_sl=%I64d post2_censored=%I64d strategy_authority=false no_trade_modification=true",
+           StringFormat("build=2.04R0L4 phase=V2_D154B_POST_FILL_CONFIRMATION_SHADOW trackers=%d fills=%I64d plus1=%I64d plus2=%I64d pre1_failures=%I64d pre1_recovered_plus1=%I64d pre1_map_loss=%I64d pre1_censored=%I64d post2_structural=%I64d post2_original_sl=%I64d post2_censored=%I64d strategy_authority=false no_trade_modification=true",
                         ArraySize(g_d151_trackers),g_d151_fills,g_d151_one_r,g_d151_two_r,g_d151_pre1_failures,
                         g_d151_pre1_recovered_1r,g_d151_pre1_map_loss,g_d151_pre1_censored,
                         g_d151_post2_structural,g_d151_post2_original_sl,g_d151_post2_censored));
@@ -2254,7 +2330,7 @@ void D154AOnTesterStart(const datetime at)
    if(!InpV2D154EntrySurvivalAudit)
       return;
    LogLine("D154A_RESEARCH_START","M1",at,"",
-           StringFormat("enabled=%s d151_dependency=%s build=2.03R0L3 hypothesis=M1_TRANSITION_TO_OWNER_COMPLETION_PLUS_POST_SL_SOURCE_SUCCESSION strategy_authority=false entry_change=false sl_change=false tp_change=false em_change=false 2021_untouched=true",
+           StringFormat("enabled=%s d151_dependency=%s build=2.04R0L4 hypothesis=M1_TRANSITION_TO_OWNER_COMPLETION_PLUS_POST_SL_SOURCE_SUCCESSION strategy_authority=false entry_change=false sl_change=false tp_change=false em_change=false 2021_untouched=true",
                         D154AEnabled() ? "true" : "false",
                         InpV2D151CausalAudit ? "true" : "false"));
   }
@@ -2298,6 +2374,355 @@ void D154AOnTesterEnd(const datetime at)
                         g_d154a_plus1,g_d154a_sl_first,g_d154a_primary_censored,
                         g_d154a_recovery_plus1,g_d154a_recovery_map_loss,
                         g_d154a_recovery_censored,g_d154a_successor_stage_rows));
+  }
+
+
+
+//+------------------------------------------------------------------+
+//| D-154B Post-Fill M1 confirmation-entry shadow audit              |
+//| No real Entry/SL/TP/order/sizing/EM authority.                   |
+//+------------------------------------------------------------------+
+bool D154BEnabled()
+  {
+   return (InpV2D154BConfirmationAudit && InpV2D151CausalAudit);
+  }
+
+int D154BFindTracker(const int scenario_index)
+  {
+   for(int i=0;i<ArraySize(g_d154b_trackers);i++)
+      if(g_d154b_trackers[i].valid &&
+         g_d154b_trackers[i].scenario_index==scenario_index)
+         return i;
+   return -1;
+  }
+
+void D154BOnFill(const int scenario_index,const datetime observed_at)
+  {
+   if(!D154BEnabled() ||
+      scenario_index<0 || scenario_index>=ArraySize(g_scenarios) ||
+      !g_scenarios[scenario_index].valid ||
+      g_scenarios[scenario_index].scope!=V1_SCOPE_EXTERNAL_CONTINUATION ||
+      g_structure[5].trend!=V1_TREND_TRANSITION ||
+      D154BFindTracker(scenario_index)>=0)
+      return;
+
+   double risk=g_scenarios[scenario_index].exit_initial_risk_price;
+   if(risk<=0.0)
+      risk=MathAbs(g_scenarios[scenario_index].fill_price-
+                   g_scenarios[scenario_index].normalized_sl);
+   if(risk<=LiquidityTickSize())
+     {
+      LogLine("D154B_TRACKER_SKIPPED","M1",observed_at,g_scenarios[scenario_index].id,
+              "reason=INVALID_ORIGINAL_RISK strategy_authority=false");
+      return;
+     }
+
+   int n=ArraySize(g_d154b_trackers);
+   if(ArrayResize(g_d154b_trackers,n+1)<0)
+      return;
+
+   V2D154BTracker t;
+   t.valid=true;
+   t.scenario_index=scenario_index;
+   t.scenario_id=g_scenarios[scenario_index].id;
+   t.direction=g_scenarios[scenario_index].direction;
+   t.fill_at=g_scenarios[scenario_index].fill_at;
+   t.original_fill=g_scenarios[scenario_index].fill_price;
+   t.original_sl=g_scenarios[scenario_index].normalized_sl;
+   t.original_risk=risk;
+   t.structural_tp=g_scenarios[scenario_index].final_objective_price;
+   t.first_initial_seen=false;
+   t.first_initial_direction=0;
+   t.first_initial_at=0;
+   t.first_initial_bar_close=0.0;
+   t.primary_reference_logged=false;
+   t.primary_outcome="";
+   t.primary_terminal_at=0;
+   t.candidate_armed=false;
+   t.candidate_at=0;
+   t.shadow_entry=0.0;
+   t.shadow_entry_r_from_original=0.0;
+   t.shadow_risk=0.0;
+   t.shadow_plus1_price=0.0;
+   t.structural_tp_r=0.0;
+   t.spread_at_entry=0.0;
+   t.shadow_terminal=false;
+   t.shadow_outcome="";
+   t.shadow_terminal_at=0;
+   t.shadow_mfe_r=0.0;
+   t.shadow_mae_r=0.0;
+   t.map_support_lost=false;
+   t.map_support_lost_at=0;
+   g_d154b_trackers[n]=t;
+   g_d154b_transition_fills++;
+
+   LogLine("D154B_TRANSITION_FILL","M1",observed_at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s fill_at_s=%I64d original_fill=%.10f original_sl=%.10f original_risk=%.10f structural_tp=%.10f m1_state_at_fill=%s transition_bias=%s strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),(long)t.fill_at,
+                        t.original_fill,t.original_sl,t.original_risk,t.structural_tp,
+                        TrendName(g_structure[5].trend),
+                        DirectionName(g_structure[5].transition_bias)));
+  }
+
+void D154BMarkShadowTerminal(const int tracker_index,
+                             const string outcome,
+                             const datetime at,
+                             const double terminal_r)
+  {
+   if(tracker_index<0 || tracker_index>=ArraySize(g_d154b_trackers))
+      return;
+   V2D154BTracker t=g_d154b_trackers[tracker_index];
+   if(!t.valid || !t.candidate_armed || t.shadow_terminal)
+      return;
+
+   t.candidate_armed=false;
+   t.shadow_terminal=true;
+   t.shadow_outcome=outcome;
+   t.shadow_terminal_at=at;
+   if(terminal_r>t.shadow_mfe_r) t.shadow_mfe_r=terminal_r;
+   if(terminal_r<t.shadow_mae_r) t.shadow_mae_r=terminal_r;
+
+   if(outcome=="PLUS_1R") g_d154b_shadow_plus1++;
+   else if(outcome=="ORIGINAL_SL") g_d154b_shadow_sl++;
+   else if(outcome=="RIGHT_CENSORED") g_d154b_shadow_censored++;
+
+   LogLine("D154B_SHADOW_TERMINAL","M1",at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s outcome=%s terminal_r=%.8f shadow_entry=%.10f shadow_risk=%.10f shadow_plus1=%.10f original_sl=%.10f structural_tp=%.10f structural_tp_r=%.8f confirmation_r_from_original=%.8f shadow_mfe_r=%.8f shadow_mae_r=%.8f map_support_lost=%s map_support_lost_at_s=%I64d primary_outcome=%s strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),outcome,terminal_r,
+                        t.shadow_entry,t.shadow_risk,t.shadow_plus1_price,
+                        t.original_sl,t.structural_tp,t.structural_tp_r,
+                        t.shadow_entry_r_from_original,t.shadow_mfe_r,t.shadow_mae_r,
+                        t.map_support_lost ? "true" : "false",(long)t.map_support_lost_at,
+                        t.primary_reference_logged ? t.primary_outcome : "PENDING"));
+   g_d154b_trackers[tracker_index]=t;
+  }
+
+void D154BOnStructureEvent(const V1StructureState &state,
+                           const int event_type,
+                           const int direction,
+                           const MqlRates &bar,
+                           const datetime available_at)
+  {
+   if(!D154BEnabled() ||
+      state.tf!=PERIOD_M1 ||
+      event_type!=V1_EVENT_INITIAL_BOS)
+      return;
+
+   for(int i=0;i<ArraySize(g_d154b_trackers);i++)
+     {
+      V2D154BTracker t=g_d154b_trackers[i];
+      if(!t.valid || t.first_initial_seen || available_at<=t.fill_at)
+         continue;
+
+      int d151_index=D151FindTracker(t.scenario_index);
+      if(d151_index<0)
+         continue;
+      if(g_d151_trackers[d151_index].reached_1r ||
+         g_d151_trackers[d151_index].pre1_failure)
+         continue;
+
+      t.first_initial_seen=true;
+      t.first_initial_direction=direction;
+      t.first_initial_at=available_at;
+      t.first_initial_bar_close=bar.close;
+
+      string relation=(direction==t.direction ? "SAME_DIR" : "OPPOSITE_DIR");
+      LogLine("D154B_FIRST_INITIAL_BOS","M1",available_at,t.scenario_id,
+              StringFormat("scenario_id=%s direction=%s relation=%s event_direction=%s event_at_s=%I64d bar_close=%.10f minutes_after_fill=%.4f strategy_authority=false",
+                           t.scenario_id,DirectionName(t.direction),relation,
+                           DirectionName(direction),(long)available_at,bar.close,
+                           (double)(available_at-t.fill_at)/60.0));
+
+      if(direction!=t.direction)
+        {
+         g_d154b_first_opposite++;
+         g_d154b_trackers[i]=t;
+         continue;
+        }
+
+      g_d154b_first_same++;
+
+      MqlTick q;
+      if(!SymbolInfoTick(_Symbol,q) || q.bid<=0.0 || q.ask<=0.0)
+        {
+         g_d154b_candidates_infeasible_room++;
+         LogLine("D154B_CANDIDATE_INFEASIBLE","M1",available_at,t.scenario_id,
+                 StringFormat("scenario_id=%s reason=NO_EXECUTABLE_TICK bar_close=%.10f strategy_authority=false",
+                              t.scenario_id,bar.close));
+         g_d154b_trackers[i]=t;
+         continue;
+        }
+
+      double entry=(t.direction>0 ? q.ask : q.bid);
+      double shadow_risk=(double)t.direction*(entry-t.original_sl);
+      if(shadow_risk<=LiquidityTickSize())
+        {
+         g_d154b_candidates_infeasible_room++;
+         LogLine("D154B_CANDIDATE_INFEASIBLE","M1",available_at,t.scenario_id,
+                 StringFormat("scenario_id=%s reason=NONPOSITIVE_ENTRY_TO_ORIGINAL_SL entry=%.10f original_sl=%.10f strategy_authority=false",
+                              t.scenario_id,entry,t.original_sl));
+         g_d154b_trackers[i]=t;
+         continue;
+        }
+
+      double structural_room=(double)t.direction*(t.structural_tp-entry);
+      double structural_tp_r=structural_room/shadow_risk;
+      double entry_r_from_original=(double)t.direction*(entry-t.original_fill)/t.original_risk;
+
+      t.candidate_at=available_at;
+      t.shadow_entry=entry;
+      t.shadow_entry_r_from_original=entry_r_from_original;
+      t.shadow_risk=shadow_risk;
+      t.shadow_plus1_price=entry+(double)t.direction*shadow_risk;
+      t.structural_tp_r=structural_tp_r;
+      t.spread_at_entry=q.ask-q.bid;
+
+      if(structural_tp_r<1.0-1.0e-10)
+        {
+         g_d154b_candidates_infeasible_room++;
+         LogLine("D154B_CANDIDATE_INFEASIBLE","M1",available_at,t.scenario_id,
+                 StringFormat("scenario_id=%s reason=STRUCTURAL_TP_LT_PLUS_1R executable_entry=%.10f spread=%.10f original_r=%.8f shadow_risk=%.10f structural_tp=%.10f structural_tp_r=%.8f strategy_authority=false",
+                              t.scenario_id,entry,t.spread_at_entry,entry_r_from_original,
+                              shadow_risk,t.structural_tp,structural_tp_r));
+         g_d154b_trackers[i]=t;
+         continue;
+        }
+
+      t.candidate_armed=true;
+      t.shadow_mfe_r=0.0;
+      t.shadow_mae_r=0.0;
+      g_d154b_candidates_armed++;
+
+      LogLine("D154B_CANDIDATE_ARMED","M1",available_at,t.scenario_id,
+              StringFormat("scenario_id=%s direction=%s confirmation_at_s=%I64d bar_close=%.10f executable_entry=%.10f spread=%.10f confirmation_r_from_original=%.8f original_sl=%.10f shadow_risk=%.10f shadow_plus1=%.10f structural_tp=%.10f structural_tp_r=%.8f entry_model=FIRST_TICK_AFTER_CAUSAL_INITIAL_BOS_CLOSE sl_model=ORIGINAL_NORMALIZED_SL target_model=PLUS_1R_FROM_SHADOW_ENTRY strategy_authority=false",
+                           t.scenario_id,DirectionName(t.direction),(long)available_at,
+                           bar.close,entry,t.spread_at_entry,entry_r_from_original,
+                           t.original_sl,shadow_risk,t.shadow_plus1_price,
+                           t.structural_tp,structural_tp_r));
+      g_d154b_trackers[i]=t;
+     }
+  }
+
+void D154BOnPrimaryReference(const int scenario_index,
+                             const string outcome,
+                             const datetime at)
+  {
+   if(!D154BEnabled())
+      return;
+   int i=D154BFindTracker(scenario_index);
+   if(i<0)
+      return;
+
+   V2D154BTracker t=g_d154b_trackers[i];
+   if(t.primary_reference_logged)
+      return;
+
+   t.primary_reference_logged=true;
+   t.primary_outcome=outcome;
+   t.primary_terminal_at=at;
+
+   if(!t.first_initial_seen)
+      g_d154b_no_initial_before_primary++;
+
+   LogLine("D154B_PRIMARY_REFERENCE","M1",at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s primary_outcome=%s terminal_at_s=%I64d first_initial_seen=%s first_initial_relation=%s candidate_armed=%s shadow_terminal=%s strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),outcome,(long)at,
+                        t.first_initial_seen ? "true" : "false",
+                        !t.first_initial_seen ? "NONE" :
+                           (t.first_initial_direction==t.direction ? "SAME_DIR" : "OPPOSITE_DIR"),
+                        t.candidate_armed ? "true" : "false",
+                        t.shadow_terminal ? "true" : "false"));
+   g_d154b_trackers[i]=t;
+  }
+
+void D154BAuditOnTick(const MqlTick &tick)
+  {
+   if(!D154BEnabled())
+      return;
+
+   for(int i=0;i<ArraySize(g_d154b_trackers);i++)
+     {
+      V2D154BTracker t=g_d154b_trackers[i];
+      if(!t.valid || !t.candidate_armed || t.shadow_terminal ||
+         t.shadow_risk<=LiquidityTickSize())
+         continue;
+
+      double px=(t.direction>0 ? tick.bid : tick.ask);
+      if(px<=0.0)
+         continue;
+      double r=(double)t.direction*(px-t.shadow_entry)/t.shadow_risk;
+
+      if(r>t.shadow_mfe_r) t.shadow_mfe_r=r;
+      if(r<t.shadow_mae_r) t.shadow_mae_r=r;
+
+      if(!t.map_support_lost && D151HighestMapDirection()!=t.direction)
+        {
+         t.map_support_lost=true;
+         t.map_support_lost_at=(datetime)tick.time;
+         LogLine("D154B_MAP_SUPPORT_LOSS","M1",(datetime)tick.time,t.scenario_id,
+                 StringFormat("scenario_id=%s shadow_r=%.8f highest_map_direction_now=%s candidate_remains_shadow_active=true strategy_authority=false",
+                              t.scenario_id,r,DirectionName(D151HighestMapDirection())));
+        }
+
+      g_d154b_trackers[i]=t;
+
+      // Executable-side barrier ordering. The original normalized SL remains
+      // fixed; +1R is recomputed from the later executable confirmation entry.
+      if(r<=-1.0+1.0e-10)
+         D154BMarkShadowTerminal(i,"ORIGINAL_SL",(datetime)tick.time,r);
+      else if(r>=1.0-1.0e-10)
+         D154BMarkShadowTerminal(i,"PLUS_1R",(datetime)tick.time,r);
+     }
+  }
+
+void D154BOnTesterStart(const datetime at)
+  {
+   if(!InpV2D154BConfirmationAudit)
+      return;
+   LogLine("D154B_RESEARCH_START","M1",at,"",
+           StringFormat("enabled=%s build=2.04R0L4 population=ACTUAL_FILL_WHILE_M1_TRANSITION first_confirmation=FIRST_POST_FILL_M1_INITIAL_BOS candidate_entry=FIRST_EXECUTABLE_TICK_AFTER_CAUSAL_CONFIRMATION_CLOSE stop=ORIGINAL_NORMALIZED_SL target=PLUS_1R_FROM_SHADOW_ENTRY structural_tp_must_be_at_least_1R=true strategy_authority=false real_entry_change=false real_sl_change=false real_tp_change=false sizing_change=false em_change=false",
+                        D154BEnabled() ? "true" : "false"));
+  }
+
+void D154BOnTesterEnd(const datetime at)
+  {
+   if(!InpV2D154BConfirmationAudit)
+      return;
+
+   if(D154BEnabled())
+     {
+      for(int i=0;i<ArraySize(g_d154b_trackers);i++)
+        {
+         V2D154BTracker t=g_d154b_trackers[i];
+         if(!t.valid)
+            continue;
+
+         if(!t.primary_reference_logged)
+           {
+            int d151_index=D151FindTracker(t.scenario_index);
+            string primary="RIGHT_CENSORED";
+            if(d151_index>=0)
+              {
+               if(g_d151_trackers[d151_index].reached_1r) primary="PLUS_1R";
+               else if(g_d151_trackers[d151_index].pre1_failure) primary="SL_FIRST";
+              }
+            D154BOnPrimaryReference(t.scenario_index,primary,at);
+            t=g_d154b_trackers[i];
+           }
+
+         if(t.candidate_armed && !t.shadow_terminal)
+            D154BMarkShadowTerminal(i,"RIGHT_CENSORED",at,0.0);
+        }
+     }
+
+   LogLine("D154B_RESEARCH_STOP","M1",at,"",
+           StringFormat("enabled=%s trackers=%d transition_fills=%I64d first_same=%I64d first_opposite=%I64d no_initial_before_primary=%I64d candidates_armed=%I64d candidates_infeasible_room=%I64d shadow_plus1=%I64d shadow_sl=%I64d shadow_censored=%I64d strategy_authority=false no_trade_modification=true",
+                        D154BEnabled() ? "true" : "false",
+                        ArraySize(g_d154b_trackers),g_d154b_transition_fills,
+                        g_d154b_first_same,g_d154b_first_opposite,
+                        g_d154b_no_initial_before_primary,g_d154b_candidates_armed,
+                        g_d154b_candidates_infeasible_room,g_d154b_shadow_plus1,
+                        g_d154b_shadow_sl,g_d154b_shadow_censored));
   }
 
 
@@ -2727,6 +3152,8 @@ bool D135CriticalLogEvent(const string event_name)
 bool ResearchCompactLogEvent(const string event_name,const string tf)
   {
    if(StringFind(event_name,"D154A_")==0)
+      return true;
+   if(StringFind(event_name,"D154B_")==0)
       return true;
    // Regime Research V1 can be independently recomputed from these M30 facts.
    if(event_name=="WAVE_CONFIRMED")
@@ -5711,6 +6138,7 @@ void LogStructureEvent(V1StructureState &s,
    D149EMOnStructureEvent(s,event_type,direction,available_at);
    EdgeAuditOnStructureEvent(s,event_type,direction,broken,protected_ref,bar,available_at);
    D154AOnStructureEvent(s,event_type,direction,bar,available_at);
+   D154BOnStructureEvent(s,event_type,direction,bar,available_at);
   }
 
 void EvaluateExistingStructureBreaks(const int tf_index,
@@ -9630,6 +10058,7 @@ void MarkScenarioFilled(const int scenario_index,
    EdgeAuditOnActualFill(scenario_index,observed_at);
    D151OnFill(scenario_index,observed_at);
    D154AOnFill(scenario_index,observed_at);
+   D154BOnFill(scenario_index,observed_at);
    g_positions_filled++;
 
    // D-133: once the shared order fills, the implementation master owns the
@@ -13748,7 +14177,7 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=2.03R0L3 property_version=2.02 magic=%I64d phase=V2_D154A_ENTRY_SURVIVAL_OWNERSHIP_AUDIT strategy_semantics=V2_CONTINUATION_ONLY_PLUS_D151_D152_SP_RESEARCH_PLUS_D154A_SHADOW fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=2.04R0L4 property_version=2.02 magic=%I64d phase=V2_D154B_POST_FILL_CONFIRMATION_SHADOW strategy_semantics=V2_CONTINUATION_ONLY_PLUS_D151_D152_SP_RESEARCH_PLUS_D154A_D154B_SHADOW fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         _Symbol,
                         AccountInfoString(ACCOUNT_CURRENCY),
@@ -13760,8 +14189,9 @@ int OnInit()
                         InpEquityRiskPercentPerTrade,
                         AccountInfoInteger(ACCOUNT_MARGIN_MODE)));
    D154AOnTesterStart(TimeCurrent());
+   D154BOnTesterStart(TimeCurrent());
    LogLine("D149_RESEARCH_START","M1",TimeCurrent(),"",
-           StringFormat("exit_mode=%s em_mode=%s build=2.03R0L3 sp_strong_fraction=%.8f sp_v1_default_fraction=%.8f sp_strong_room_r=%.8f sp_v2_default_lock_buffer_r=%.8f sp_v2_cost_be_buffer_r=%.8f sp_v2_continuation_only=true structural_tp_retained=true em_v2_failure=SL_BEFORE_PLUS_1R em_v2_quarantine_after=2 em_v2_release=SHADOW_OR_PREEXISTING_REAL_PLUS_1R em_v2_force_cancel_existing=false d148_audit_allowed_only_on_control=true",
+           StringFormat("exit_mode=%s em_mode=%s build=2.04R0L4 sp_strong_fraction=%.8f sp_v1_default_fraction=%.8f sp_strong_room_r=%.8f sp_v2_default_lock_buffer_r=%.8f sp_v2_cost_be_buffer_r=%.8f sp_v2_continuation_only=true structural_tp_retained=true em_v2_failure=SL_BEFORE_PLUS_1R em_v2_quarantine_after=2 em_v2_release=SHADOW_OR_PREEXISTING_REAL_PLUS_1R em_v2_force_cancel_existing=false d148_audit_allowed_only_on_control=true",
                         ExitManagementModeName((int)InpExitManagementMode),EpisodeManagementModeName((int)InpEpisodeManagementMode),
                         V1_D149_SP_STRONG_PARTIAL_FRACTION,V1_D149_SP_DEFAULT_PARTIAL_FRACTION,V1_D149_SP_STRONG_ROOM_R,
                         V1_D149_SP_V2_DEFAULT_LOCK_BUFFER_R,V1_D149_SP_V2_COST_BE_BUFFER_R));
@@ -13792,6 +14222,7 @@ void OnDeinit(const int reason)
    EventKillTimer();
    D151OnTesterEnd(TimeCurrent());
    D154AOnTesterEnd(TimeCurrent());
+   D154BOnTesterEnd(TimeCurrent());
    EdgeAuditDeinit(reason);
    D149EMV2OnTesterEnd(TimeCurrent());
    LogLine("D149_RESEARCH_STOP","M1",TimeCurrent(),"",
@@ -13891,6 +14322,7 @@ void OnTick()
    ProcessRuntimeClosedBars((datetime)tick.time);
    ManageIntegratedExecution(tick);
    D151AuditOnTick(tick);
+   D154BAuditOnTick(tick);
    EdgeAuditOnTick(tick);
   }
 
