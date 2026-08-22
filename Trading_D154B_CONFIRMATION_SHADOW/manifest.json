@@ -1,0 +1,19 @@
+{
+  "package": "Trading_D154B_CONFIRMATION_SHADOW",
+  "base_head": "3bf78e1d34a6721b9fe32115f8f6af050babbda6",
+  "expected_base_ea_blob": "a6312fc7d0554374058719e805c5b77ad91acd1a",
+  "target_local_build": "2.04R0L4",
+  "strategy_authority_changed": false,
+  "github_write_performed": false,
+  "permanent_docs_updated": false,
+  "files": {
+    "README.md": "88360b0e9e97cf62666b1b3ff4078555fefb3b8f05a8bbf363d4aecb3663e23b",
+    "apply_d154b.py": "7d3c075b0e064d23fc03de96480d9d68995fa3189dac44c082d13aa10840eb7c",
+    "repo_files/tools/compare_d154b_parity.py": "cf2b56b9d6128ce833613c3d4f167c3a88ea763ef14fdbc031ce632e27e64543",
+    "repo_files/tools/run_d154b_gold_btc_2025.py": "6827837c7c4f01a6610072580cd0ea2b138d9ca69c79b634829f345ce402df37",
+    "repo_files/tools/run_d154b_parity_gold_short.py": "5f63b6790f1fe3850821d08b3941734bbc33d706e62ff23b009802e5a27d7b72",
+    "repo_files/tools/summarize_d154b_confirmation.py": "83b7826ed89ae1ffd0e8a0b8378000098b69d8fd1064b2ebe045f8b27cb42705",
+    "research/D154A_LOCAL_RESULT_MEMO.md": "59d03f63245429f8545adfcff373ddf52782273c64b97210969f54079b09f7a5",
+    "research/D154B_CONFIRMATION_SHADOW_CONTRACT.md": "e83d28de903a56c881f013fd26a1f4f2e210f379af76a6708dc6b829b293a6b4"
+  }
+}
