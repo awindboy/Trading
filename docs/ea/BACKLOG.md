@@ -233,3 +233,15 @@ Do not tune the two-failure quarantine count, 25% strong fraction, or M30 struct
 - [ ] Re-run GOLD/BTC continuation-only SP isolated before changing SP/EM again.
 - [ ] Audit post-+2R retracement before adding a positive profit lock.
 - [ ] Keep Entry-survival research separate from winner continuation.
+
+## D-152 completed / next Entry-survival phase
+
+- [x] Complete GOLD25/BTCUSD25 SP V3 automated matrix.
+- [x] Select V3E `BANK_2R_LOCK_ONE` as provisional SP reference.
+- [x] Demote V3A/V3B/V3C/V3D for now.
+- [x] Reject blanket full-close fallback on broker-infeasible V3E banks.
+- [x] Validate D-153 batch automation end-to-end.
+- [ ] Pause same-sample SP threshold tuning.
+- [ ] Return primary research to `Fill -> +1R` Entry survival.
+- [ ] Use shadow-only causal measurement before any real re-entry/Entry change.
+- [ ] Keep EM separate until Entry mechanism is understood.

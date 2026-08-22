@@ -1,9 +1,9 @@
 # EA Development Handoff
 
 Last updated: 2026-08-22
-Repository base before this handoff package: `3ba8e121b567be9043ff524f5a7d2b4936fe5992`
+Repository base before this documentation update: `7cb26133235c45a3756492af951900f15213f8cb`
 Current code/research build: `2.02R0L2 / V2_SP_ARCHITECTURE_RESEARCH_V3`
-Current research phase: **D-152 SP V3 CONTROLLED ARCHITECTURE COMPARISON / LOCAL COMPILE + TEST PENDING**
+Current research phase: **D-152 SP V3 MATRIX COMPLETE / V3E PROVISIONAL SP REFERENCE / ENTRY SURVIVAL NEXT**
 Strategy semantics: **V1 FROZEN / V2 CONTINUATION-ONLY / D151 SHADOW + D152 SP RESEARCH MODES**
 Strategy authority: **V2 -> docs/ea/v2/AGENTS_V2.md; V1 preserved as historical control**
 2021 status: **KEEP UNTOUCHED**
@@ -520,3 +520,33 @@ Active work now resumes from `docs/ea/v2/HANDOFF_V2.md` and `docs/ea/v2/D151_V2_
 ## D-152 V2 routing note
 
 Active V2 work is D-152 SP architecture research. Read `docs/ea/v2/HANDOFF_V2.md` then `docs/ea/v2/D152_SP_ARCHITECTURE_RESEARCH.md`.
+
+## D-152 completed SP V3 matrix — current routing
+
+The D-153 automated GOLD25/BTCUSD25 real-tick batch is complete and clean.
+
+Primary research result:
+
+```text
+V3E BANK_2R_LOCK_ONE
+= provisional post-+1R SP reference
+= NOT baseline authority
+```
+
+Read immediately:
+
+`docs/ea/v2/D152_SP_V3_RESULTS.md`
+
+Key interpretation:
+
+```text
+GOLD25 Fill -> +1R = 56.6%
+BTC25 Fill -> +1R  = 47.2%
+
+post-+1R management is no longer the primary bottleneck
+next primary research = Entry survival
+```
+
+Do not perform additional same-sample SP threshold tuning before the Entry-survival causal study.
+
+D-153 batch automation is validated end-to-end and should be reused for subsequent GOLD25/BTC25 research matrices.

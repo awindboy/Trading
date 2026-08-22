@@ -6248,3 +6248,22 @@ Any strategy change based on D-151 must be a separately pre-registered D-152 var
 Status: `ACTIVE RESEARCH / NO BASELINE PROMOTION`.
 
 D151 GOLD/BTC SP-only evidence shows (1) +1R state conversion is already >93% positive, (2) overall WR is capped by Fill->+1R survival, and (3) fixed positive SL floors after +2R can kill eventual 5R+ winners. D152 therefore tests isolated profit-bank architectures rather than simply tightening the stop. Exact contracts are frozen in `docs/ea/v2/D152_SP_ARCHITECTURE_RESEARCH.md`.
+
+## D-152 SP V3 matrix decision — 2026-08-22
+
+The clean GOLD25/BTCUSD25 matrix selects `SMART_PARTIAL_V3_BANK_2R_LOCK_ONE` (V3E) as the **provisional post-+1R SP reference**.
+
+This is not baseline promotion and does not change `AGENTS_V2.md` or `EA_SPEC_V2.md`.
+
+Decision rationale:
+
+- V3E most consistently advances the `final net R >= +1R` frontier while preserving average winner >1R.
+- Closed +2R cohort finished >=+1R in 11/12 GOLD and 31/31 BTC cases.
+- Broker-feasible V3E banks finished >=+1R in 8/8 GOLD and 27/27 BTC cases.
+- V3E materially reduced GOLD drawdown and reduced concentration in the largest winners.
+- BTC expectancy improved close to breakeven but remains slightly negative, so promotion is not justified.
+- V3A/V3B/V3C/V3D are demoted for now.
+- A blanket `bank infeasible -> full close` fallback is rejected because 7/8 observed infeasible cases still became >+1R runners.
+- Additional same-sample SP threshold tuning is paused.
+
+The next primary bottleneck is Entry survival (`Fill -> +1R`), which remains 56.6% GOLD25 and 47.2% BTC25 in this matrix.

@@ -1,9 +1,9 @@
 # Strategy Robustness Research State
 
 Last updated: 2026-08-22
-Repository base before handoff package: `b3068c0b445005fe455405ed18fb1f82198231df`
-Current code/research identity: `2.00R0L0 / V2_CONTINUATION_ONLY_BOOTSTRAP`
-Current research phase: **D-150 V2 CONTINUATION-ONLY FORK**
+Repository base before current documentation update: `7cb26133235c45a3756492af951900f15213f8cb`
+Current code/research identity: `2.02R0L2 / V2_SP_ARCHITECTURE_RESEARCH_V3`
+Current research phase: **D-152 SP V3 COMPLETE / ENTRY SURVIVAL NEXT**
 Strategy authority: **V2 CONTINUATION ONLY; see docs/ea/v2/AGENTS_V2.md**
 2021: **UNTOUCHED**
 
@@ -11,19 +11,25 @@ Strategy authority: **V2 CONTINUATION ONLY; see docs/ea/v2/AGENTS_V2.md**
 
 The project does not target a cosmetic 50% hit rate at 1R.
 
-The target remains:
+The active V2 stretch target is:
 
 ```text
-realized win rate >= 50%
+cost-adjusted realized win rate >= 70%
 +
-average winner / target meaningfully > 1R
+average winner > 1R
 +
-positive expectancy after spread/commission/slippage
+positive expectancy
 +
 robustness across symbols and periods
 ```
 
-A 50% win rate at exactly 1R is gross breakeven and is not the project objective.
+The extreme research frontier is:
+
+```text
+all accepted trades final aggregate net R >= +1R
+```
+
+This is an aspiration, not a guaranteed property. A 50% win rate at exactly 1R remains insufficient after costs.
 
 ## Current baseline interpretation
 
@@ -276,3 +282,39 @@ Do not interpret either V2 rule as strategy authority before multi-year and cros
 ## D-150 V2 research routing
 
 Active solution research is split into: (1) +1R runner discrimination, (2) post-+2R profit preservation without tail destruction, and (3) genuine Entry-loss / cluster mechanism. Reversal execution is outside V2 scope.
+
+## D-152 SP V3 completed result
+
+The clean GOLD25/BTCUSD25 matrix establishes `V3E BANK_2R_LOCK_ONE` as the provisional SP reference.
+
+```text
+GOLD V3E:
+WR 52.83%
+final >= +1R 33.96%
+avg winner +1.328R
+expectancy +0.203R
+DD 6.807R
+
+BTC V3E:
+WR 44.00% on closed
+final >= +1R 32.80%
+avg winner +1.225R
+expectancy -0.022R
+DD 14.233R
+```
+
+V3E is not baseline authority.
+
+The key stage ceiling is now Entry survival:
+
+```text
+GOLD25 Fill -> +1R = 56.6%
+BTC25 Fill -> +1R  = 47.2%
+```
+
+At roughly 95% post-+1R positive conversion, the 70% final-WR target would require Fill->+1R survival near 73.7%.
+
+Therefore primary research returns to Entry survival. Additional GOLD25/BTC25 SP threshold tuning is paused.
+
+Detailed result:
+`docs/ea/v2/D152_SP_V3_RESULTS.md`

@@ -1,0 +1,19 @@
+{
+  "package": "Trading_D152_RESULTS_DOC_UPDATE",
+  "expected_head": "7cb26133235c45a3756492af951900f15213f8cb",
+  "batch_artifact_sha256": "e28cc77bb7c6419b958fdd77873a1e81fdf546ab9f52c7c776532cdf0e607d37",
+  "strategy_code_modified": false,
+  "v3e_status": "provisional_sp_reference_not_baseline",
+  "next_primary_research": "entry_survival",
+  "expected_blobs": {
+    "docs/ea/HANDOFF.md": "d98e221ffc4b430ee20b289266573b9da41b9373",
+    "docs/ea/STRATEGY_RESEARCH_STATE.md": "c1c766bd0c52b66934e705d5188fab86c5950d63",
+    "docs/ea/BACKLOG.md": "04dda3330558200bdbe41b4a5f6f9cedf5c8bfb7",
+    "docs/ea/DECISIONS.md": "b67fa8af44cd4cb9ac907afec0a4f470f4ded447",
+    "docs/ea/TEST_RESULTS.md": "710445d3b5d80de4cc020d992f64bcd769daa95a",
+    "docs/ea/v2/HANDOFF_V2.md": "5c97abe6b91d5fbe32e135b08d5e8a991817c002",
+    "docs/ea/v2/RESEARCH_STATE_V2.md": "acb3abb5839223f376cb5f52feaa0e4bc3b8d400",
+    "docs/ea/v2/BACKLOG_V2.md": "6dc2c4926ddbf620accada993e339c400e5276b7",
+    "docs/ea/v2/D153_MT5_BATCH_AUTOMATION.md": "7126a026319f2efa04fe304a48363b482d29f9b6"
+  }
+}

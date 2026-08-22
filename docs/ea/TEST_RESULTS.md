@@ -1040,3 +1040,64 @@ Closed +1R cohort positive conversion: GOLD 93.3%, BTC 94.8%. Final >=+1R within
 D151 post-+2R shadow: a hypothetical fixed +1R floor at +2R would have allowed only 2/6 eventual GOLD +5R paths and 7/15 BTC +5R paths to survive. Four BTC shadow structural-TP winners actually closed below +1R under current cost-BE before later shadow recovery; GOLD had zero such cases. This cross-market divergence motivates controlled profit-bank variants rather than a universal tighter SL.
 
 Counterfactual substitutions are diagnostic only, not realized strategy evidence. Replacing causally-known range-available DEFAULT trades by their first +1R execution price improved aggregate R by about +0.94R on GOLD and +2.71R on BTC in these ledgers, but the benefit was direction-concentrated, so it is tested as a research variant only.
+
+## D-152 SP V3 automated matrix — 2026-08-22
+
+Batch artifact:
+
+```text
+Trading_D152_SP_V3_20260822_044945.zip
+SHA256 e28cc77bb7c6419b958fdd77873a1e81fdf546ab9f52c7c776532cdf0e607d37
+```
+
+Test universe:
+
+```text
+GOLD / BTCUSD
+2025.01.01 -> 2025.12.31
+M1
+Every tick based on real ticks
+EM OFF
+D151 audit ON
+6 SP modes x 2 symbols = 12 runs
+```
+
+Integrity:
+
+```text
+all terminal return codes = 0
+EA_START / EA_STOP present
+execution divergence = 0
+pending cancel rejection = 0
+```
+
+Provisional leader: `V3E BANK_2R_LOCK_ONE`.
+
+GOLD V3E:
+
+```text
+53 closed
+WR 52.83%
+final >= +1R 33.96%
+avg winner +1.328R
+expectancy +0.203R
+total +10.783R
+max closed-R DD 6.807R
+```
+
+BTCUSD V3E:
+
+```text
+127 fills / 125 closed / 2 right-censored
+WR 44.00% on closed
+final >= +1R 32.80%
+avg winner +1.225R
+expectancy -0.022R
+total -2.750R
+max closed-R DD 14.233R
+```
+
+No censored trade is imputed.
+
+Detailed matrix and interpretation:
+`docs/ea/v2/D152_SP_V3_RESULTS.md`
