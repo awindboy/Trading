@@ -1,7 +1,7 @@
 # V2 Backlog
 
 Last updated: 2026-08-22  
-Current phase: `D-154J HTF DELIVERY GEOMETRY — GOLD25 vs CADJPY25`  
+Current phase: `D-154K CROSS-SCALE REACTION / NOISE — GOLD25 vs CADJPY25`  
 2021: `KEEP UNTOUCHED`
 
 ## P0 — Foundation
@@ -52,9 +52,21 @@ Current phase: `D-154J HTF DELIVERY GEOMETRY — GOLD25 vs CADJPY25`
 
 ## P0 — D-154J GOLD25 vs CADJPY25 geometry
 
-- [ ] Apply/compile `2.09R0L9`.
-- [ ] Dual-symbol Q1 2025 OFF/ON parity PASS for GOLD and CADJPY.
-- [ ] In the same command, run full-year GOLD25 + CADJPY25 geometry only after parity passes.
-- [ ] Compare stage-wise H1/M30 progress, remaining fraction, remaining R and contact->CHOCH/Fill progress deltas.
+- [x] Apply/compile `2.09R0L9`.
+- [x] Dual-symbol Q1 2025 OFF/ON parity PASS for GOLD and CADJPY.
+- [x] In the same command, run full-year GOLD25 + CADJPY25 geometry only after parity passes.
+- [x] Compare stage-wise H1/M30 progress, remaining fraction, remaining R and contact->CHOCH/Fill progress deltas.
 - [ ] Preserve LONG/SHORT and right-censoring.
 - [ ] Do not threshold-fit or create market-specific rules from the contrastive pair.
+
+
+## P0 — D-154K GOLD25 vs CADJPY25 cross-scale reaction/noise
+
+- [ ] Apply/compile `2.10R0L10`.
+- [ ] Dual-symbol Q1 2025 OFF/ON non-interference parity PASS.
+- [ ] Full-year GOLD25 + CADJPY25 one-command contrastive run.
+- [ ] Compare reaction M1 mean TR, directional efficiency, path/range/excursions.
+- [ ] Compare risk/FVG/Root/HTF span/remaining relative to reaction M1 TR.
+- [ ] Compare spread/R, spread/TR and fill slippage/R.
+- [ ] Compare CHOCH->Fill pullback relative to reaction TR and 1R.
+- [ ] Preserve LONG/SHORT; do not create symbol-specific thresholds from this pair.

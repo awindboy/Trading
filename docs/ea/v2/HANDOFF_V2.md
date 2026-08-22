@@ -1,10 +1,10 @@
 # V2 Development Handoff
 
 Last updated: 2026-08-23  
-Repository base before D-154J package: `fdb5a9f3b7e166d9be56b9cb77af4eff56e57eeb`  
-Current committed EA: `2.08R0L8 / V2_D154H_HTF_NESTED_CAUSAL_REPLAY`  
-Target research build: `2.09R0L9 / V2_D154J_HTF_DELIVERY_GEOMETRY`  
-Current phase: **D-154H/D-154I COMPLETE / NO UNIVERSAL HTF EVENT VETO / D-154J GOLD25-vs-CADJPY25 GEOMETRY NEXT**  
+Repository base before D-154K package: `1203b3f0923ecbdfa7d87662470e9b246df70e8e`  
+Current committed EA: `2.09R0L9 / V2_D154J_HTF_DELIVERY_GEOMETRY`  
+Target research build: `2.10R0L10 / V2_D154K_CROSS_SCALE_REACTION_NOISE`  
+Current phase: **D-154J COMPLETE / SIMPLE HTF EXHAUSTION REJECTED / D-154K GOLD25-vs-CADJPY25 CROSS-SCALE NEXT**  
 V1: **FROZEN HISTORICAL CONTROL**  
 2021: **KEEP UNTOUCHED**
 
@@ -71,3 +71,12 @@ D-154H discovery does not authorize a gate. Any candidate sequence family discov
 - Contrastive discovery pair is GOLD25 vs CADJPY25, the widest same-year Fill->+1R gap in the current panel.
 - Geometry is measured causally at PLAN, Root contact, first post-contact same-direction HTF BOS, Sweep, CHOCH, Pending and Fill.
 - No progress threshold, score, market exception, Entry/SL/TP/SP/EM change is allowed in D-154J.
+
+
+## D-154J completed result / D-154K next
+
+- GOLD25 Fill->+1R = 30/53 = 56.6%; CADJPY25 = 30/113 = 26.5%.
+- CADJPY did not enter later in protected->external geometry; at Fill, median plan progress was lower and remaining fraction/R was larger than GOLD.
+- Even narrow H1-primary + M30-aligned LONG subsets retained a very large performance gap, so current HTF progress alone does not explain the market contrast.
+- D-154K measures the scale relationship between the M1 Root-reaction path and actual 1R/FVG/Root/HTF geometry, plus spread and fill slippage.
+- No noise threshold, score, symbol-specific gate, Entry/SL/TP/SP/EM change is authorized.

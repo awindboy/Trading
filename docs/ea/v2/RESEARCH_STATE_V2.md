@@ -1,9 +1,9 @@
 # V2 Research State
 
 Last updated: 2026-08-22  
-Phase: `D-154J HTF DELIVERY GEOMETRY — GOLD25 vs CADJPY25`  
-Current committed EA before phase: `2.08R0L8 / D154H`  
-Target research build: `2.09R0L9 / D154J`  
+Phase: `D-154K CROSS-SCALE REACTION / NOISE — GOLD25 vs CADJPY25`  
+Current committed EA before phase: `2.09R0L9 / D154J`  
+Target research build: `2.10R0L10 / D154K`  
 Authority: `docs/ea/v2/AGENTS_V2.md`  
 2021: `KEEP UNTOUCHED`
 
@@ -50,3 +50,12 @@ D-154H is discovery instrumentation. It may describe exact sequence families and
 ## D-154J governance
 
 Contrastive discovery only: GOLD25 and CADJPY25, same 2025 period. Record unclamped H1/M30 protected-to-external progress and remaining room at causal stages. Do not fit a threshold or infer that either market needs a separate strategy from this phase alone. Any candidate geometry relation must later be frozen and tested outside this pair.
+
+
+## D-154J result
+
+Simple HTF exhaustion is rejected as the explanation for the GOLD25/CADJPY25 survival gap. CADJPY generally retained more protected-to-external room at Entry, not less. No progress threshold is promoted.
+
+## D-154K governance
+
+Contrastive discovery remains GOLD25 vs CADJPY25. For each actual Fill, reconstruct only already-completed M1 bars from Root contact through accepted CHOCH and measure reaction true-range scale, path efficiency, excursions and CHOCH-to-Fill pullback. Normalize actual risk, FVG width, Root width, current-plan HTF span/remaining, spread and fill slippage by the causal reaction M1 mean true range. No threshold fitting or market-specific rule is allowed.

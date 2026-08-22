@@ -6311,3 +6311,16 @@ Decision:
 - D-154J measures causal protected-to-external geometry instead of another boolean HTF filter.
 - D-154J contrastive discovery uses GOLD25 and CADJPY25 together because they have the widest 2025 Fill->+1R gap in the current panel.
 - No strategy authority changes.
+
+
+## D-154K — Cross-scale Root-reaction / execution-noise audit
+
+Status: `RESEARCH / SHADOW-ONLY`  
+Date: `2026-08-23`
+
+Decision:
+- D-154J rejects simple HTF protected-to-external exhaustion as the explanation for the GOLD25 vs CADJPY25 Entry-survival gap.
+- The same structural label and similar HTF geometry can still produce very different Fill->+1R probabilities, so the next contrast tests scale relationships rather than another HTF boolean.
+- D-154K reconstructs the completed Root-contact -> accepted-CHOCH M1 reaction at Fill and measures mean true range, path length, directional efficiency, range and excursions.
+- Actual risk, FVG width, Root width, current-plan HTF span/remaining, spread, fill slippage and CHOCH->Fill pullback are normalized against that causal reaction scale.
+- Discovery contrast is GOLD25 vs CADJPY25 together. No threshold fitting, score, market-specific veto, Entry, SL, TP, sizing, SP or EM change is authorized.
