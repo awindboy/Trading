@@ -3,7 +3,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-BASE_HEAD="1203b3f0923ecbdfa7d87662470e9b246df70e8e"
+BASE_HEAD="8d37866e42c59669fd4ee8fa7bfacbeb50c1e546"
 EA=Path("mt5/experts/MentorDeterministicV2EA.mq5")
 RUNNER=Path("tools/run_d154k_gold_cadjpy25.py")
 
