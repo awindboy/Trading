@@ -13,8 +13,8 @@
 //| Live trading remains hard-blocked; tester execution only.        |
 //+------------------------------------------------------------------+
 #property strict
-#property version   "2.05"
-#property description "Mentor deterministic V2 EA - D154C reacceleration FVG shadow audit"
+#property version   "2.06"
+#property description "Mentor deterministic V2 EA - D154F causal lineage audit"
 
 // D-150 V2 fork contract:
 // - V1 source is frozen separately.
@@ -143,6 +143,11 @@ input bool   InpV2D154BConfirmationAudit = false;
 // first new same-direction M1 FVG and shadow its first retest.
 // Original normalized SL and structural TP remain frozen; no strategy authority.
 input bool   InpV2D154CReaccelerationFvgAudit = false;
+
+// D-154F shadow-only: test whether Root -> Sweep -> CHoCH -> FVG
+// belongs to one M1 correction reaction rather than sequence-only events.
+// No Entry/SL/TP/order/sizing/EM authority.
+input bool   InpV2D154FCausalLineageAudit = false;
 // D-147 research parameter is intentionally frozen; no fraction optimization in this phase.
 #define V1_D147_PARTIAL_FRACTION 0.50
 
@@ -1516,6 +1521,121 @@ void D154COnTesterStart(const datetime at);
 void D154COnTesterEnd(const datetime at);
 
 
+
+// D-154F shadow-only causal-lineage audit.
+// Tests whether the accepted sweep and accepted CHoCH actually belong to the
+// same M1 correction reaction that existed when the sweep bar began.
+struct V2D154FTracker
+  {
+   bool              valid;
+   int               scenario_index;
+   string            scenario_id;
+   int               direction;
+   ENUM_TIMEFRAMES   source_tf;
+   string            root_zone_id;
+   string            root_source_reason;
+
+   datetime          root_contact_at;
+   datetime          root_contact_bar_open;
+   int               root_contact_m1_trend;
+   string            root_contact_m1_owner_id;
+   string            root_contact_expected_boundary_id;
+   double            root_contact_expected_boundary_price;
+   string            root_contact_state_class;
+   long              root_contact_structure_events;
+
+   bool              sweep_prebar_snapshot_valid;
+   datetime          sweep_prebar_open;
+   int               sweep_pre_m1_trend;
+   string            sweep_pre_m1_owner_id;
+   string            sweep_expected_boundary_id;
+   double            sweep_expected_boundary_price;
+   string            sweep_pre_state_class;
+   long              sweep_pre_structure_events;
+
+   bool              sweep_accepted;
+   datetime          sweep_at;
+   datetime          sweep_bar_open;
+   int               sweep_matched_count;
+   int               sweep_min_pool_age_seconds;
+   int               sweep_max_pool_age_seconds;
+   int               sweep_external_count;
+   int               sweep_defended_count;
+   int               sweep_reaction_count;
+   int               sweep_tf_m1_count;
+   int               sweep_tf_m5_count;
+   int               sweep_tf_m15_count;
+   int               sweep_tf_m30_count;
+   int               sweep_tf_h1_count;
+   int               sweep_tf_h4_count;
+   int               sweep_inside_root_count;
+   int               sweep_beyond_root_distal_count;
+   int               sweep_other_side_of_root_count;
+   int               contact_to_sweep_structure_events;
+   bool              m1_owner_changed_contact_to_sweep;
+
+   bool              choch_accepted;
+   datetime          choch_at;
+   datetime          choch_bar_open;
+   string            choch_broken_swing_id;
+   double            choch_broken_price;
+   string            lineage_class;
+   int               intermediate_structure_events_after_sweep;
+
+   bool              fvg_selected;
+   string            selected_fvg_id;
+   datetime          selected_fvg_candle1_open;
+   datetime          selected_fvg_candle2_open;
+   datetime          selected_fvg_candle3_open;
+   bool              fvg_c1_before_sweep_bar;
+   bool              fvg_c1_is_sweep_bar;
+   bool              fvg_c2_after_sweep_bar;
+
+   bool              filled;
+   datetime          fill_at;
+   double            fill_price;
+   double            original_sl;
+   double            original_risk;
+
+   bool              primary_outcome_logged;
+   string            primary_outcome;
+   datetime          primary_outcome_at;
+  };
+
+V2D154FTracker g_d154f_trackers[];
+long g_d154f_root_contacts=0;
+long g_d154f_sweeps=0;
+long g_d154f_choch=0;
+long g_d154f_direct_breaks=0;
+long g_d154f_different_breaks=0;
+long g_d154f_no_opposite_reference=0;
+long g_d154f_snapshot_missing=0;
+long g_d154f_fills=0;
+long g_d154f_plus1=0;
+long g_d154f_sl=0;
+long g_d154f_censored=0;
+
+void D154FOnRootContact(const int scenario_index,
+                        const MqlRates &bar,
+                        const datetime available_at);
+void D154FOnSweepBarOpen(const datetime bar_open);
+void D154FOnSweepAccepted(const int scenario_index,
+                          const MqlRates &bar,
+                          const datetime available_at);
+void D154FOnChochAccepted(const int scenario_index,
+                          const MqlRates &bar,
+                          const datetime available_at);
+void D154FOnFvgSelected(const int scenario_index,
+                        const datetime available_at);
+void D154FOnFill(const int scenario_index,
+                 const datetime observed_at);
+void D154FOnPrimaryReference(const int scenario_index,
+                             const string outcome,
+                             const datetime at);
+void D154FOnTesterStart(const datetime at);
+void D154FOnTesterEnd(const datetime at);
+
+
 bool D151Enabled()
   {
    return InpV2D151CausalAudit;
@@ -1702,6 +1822,7 @@ void D151MarkOneR(V2D151Tracker &t,const datetime at)
    D154AOnOneR(t.scenario_index,at);
    D154BOnPrimaryReference(t.scenario_index,"PLUS_1R",at);
    D154COnPrimaryReference(t.scenario_index,"PLUS_1R",at);
+   D154FOnPrimaryReference(t.scenario_index,"PLUS_1R",at);
   }
 
 void D151MarkTwoR(V2D151Tracker &t,const datetime at)
@@ -1809,6 +1930,7 @@ void D151ArmPre1Failure(V2D151Tracker &t,const datetime at,const double failure_
    D154AOnPre1Failure(t.scenario_index,at,t.map_support_same_at_sl,t.root_alive_at_sl);
    D154BOnPrimaryReference(t.scenario_index,"SL_FIRST",at);
    D154COnPrimaryReference(t.scenario_index,"SL_FIRST",at);
+   D154FOnPrimaryReference(t.scenario_index,"SL_FIRST",at);
    if(!t.map_support_same_at_sl)
      {
       t.pre1_shadow_terminal=true;
@@ -1976,7 +2098,7 @@ void D151OnTesterEnd(const datetime at)
       g_d151_trackers[i]=t;
      }
    LogLine("D151_RESEARCH_STOP","M1",at,"",
-           StringFormat("build=2.05R0L5 phase=V2_D154C_REACCELERATION_FVG_SHADOW trackers=%d fills=%I64d plus1=%I64d plus2=%I64d pre1_failures=%I64d pre1_recovered_plus1=%I64d pre1_map_loss=%I64d pre1_censored=%I64d post2_structural=%I64d post2_original_sl=%I64d post2_censored=%I64d strategy_authority=false no_trade_modification=true",
+           StringFormat("build=2.06R0L6 phase=V2_D154F_CAUSAL_LINEAGE_AUDIT trackers=%d fills=%I64d plus1=%I64d plus2=%I64d pre1_failures=%I64d pre1_recovered_plus1=%I64d pre1_map_loss=%I64d pre1_censored=%I64d post2_structural=%I64d post2_original_sl=%I64d post2_censored=%I64d strategy_authority=false no_trade_modification=true",
                         ArraySize(g_d151_trackers),g_d151_fills,g_d151_one_r,g_d151_two_r,g_d151_pre1_failures,
                         g_d151_pre1_recovered_1r,g_d151_pre1_map_loss,g_d151_pre1_censored,
                         g_d151_post2_structural,g_d151_post2_original_sl,g_d151_post2_censored));
@@ -2429,7 +2551,7 @@ void D154AOnTesterStart(const datetime at)
    if(!InpV2D154EntrySurvivalAudit)
       return;
    LogLine("D154A_RESEARCH_START","M1",at,"",
-           StringFormat("enabled=%s d151_dependency=%s build=2.05R0L5 hypothesis=M1_TRANSITION_TO_OWNER_COMPLETION_PLUS_POST_SL_SOURCE_SUCCESSION strategy_authority=false entry_change=false sl_change=false tp_change=false em_change=false 2021_untouched=true",
+           StringFormat("enabled=%s d151_dependency=%s build=2.06R0L6 hypothesis=M1_TRANSITION_TO_OWNER_COMPLETION_PLUS_POST_SL_SOURCE_SUCCESSION strategy_authority=false entry_change=false sl_change=false tp_change=false em_change=false 2021_untouched=true",
                         D154AEnabled() ? "true" : "false",
                         InpV2D151CausalAudit ? "true" : "false"));
   }
@@ -2779,7 +2901,7 @@ void D154BOnTesterStart(const datetime at)
    if(!InpV2D154BConfirmationAudit)
       return;
    LogLine("D154B_RESEARCH_START","M1",at,"",
-           StringFormat("enabled=%s build=2.05R0L5 population=ACTUAL_FILL_WHILE_M1_TRANSITION first_confirmation=FIRST_POST_FILL_M1_INITIAL_BOS candidate_entry=FIRST_EXECUTABLE_TICK_AFTER_CAUSAL_CONFIRMATION_CLOSE stop=ORIGINAL_NORMALIZED_SL target=PLUS_1R_FROM_SHADOW_ENTRY structural_tp_must_be_at_least_1R=true strategy_authority=false real_entry_change=false real_sl_change=false real_tp_change=false sizing_change=false em_change=false",
+           StringFormat("enabled=%s build=2.06R0L6 population=ACTUAL_FILL_WHILE_M1_TRANSITION first_confirmation=FIRST_POST_FILL_M1_INITIAL_BOS candidate_entry=FIRST_EXECUTABLE_TICK_AFTER_CAUSAL_CONFIRMATION_CLOSE stop=ORIGINAL_NORMALIZED_SL target=PLUS_1R_FROM_SHADOW_ENTRY structural_tp_must_be_at_least_1R=true strategy_authority=false real_entry_change=false real_sl_change=false real_tp_change=false sizing_change=false em_change=false",
                         D154BEnabled() ? "true" : "false"));
   }
 
@@ -2830,6 +2952,485 @@ void D154BOnTesterEnd(const datetime at)
 //| D-154C Post-confirmation reacceleration-FVG shadow audit         |
 //| No real Entry/SL/TP/order/sizing/EM authority.                   |
 //+------------------------------------------------------------------+
+
+//+------------------------------------------------------------------+
+//| D-154F Causal-lineage shadow audit                               |
+//| Observation only. No Entry/SL/TP/order/sizing/EM authority.      |
+//+------------------------------------------------------------------+
+bool D154FEnabled()
+  {
+   return (InpV2D154FCausalLineageAudit && InpV2D151CausalAudit);
+  }
+
+int D154FFindTracker(const int scenario_index)
+  {
+   for(int i=0;i<ArraySize(g_d154f_trackers);i++)
+      if(g_d154f_trackers[i].valid &&
+         g_d154f_trackers[i].scenario_index==scenario_index)
+         return i;
+   return -1;
+  }
+
+void D154FFreezeM1CorrectionSnapshot(const int direction,
+                                     int &trend,
+                                     string &owner_id,
+                                     string &boundary_id,
+                                     double &boundary_price,
+                                     string &state_class)
+  {
+   trend=g_structure[5].trend;
+   owner_id=g_structure[5].owner_id;
+   boundary_id="";
+   boundary_price=0.0;
+   state_class="UNKNOWN";
+
+   if(trend==V1_TREND_TRANSITION)
+     {
+      state_class="TRANSITION";
+      return;
+     }
+   if(trend==V1_TREND_NEUTRAL)
+     {
+      state_class="NEUTRAL";
+      return;
+     }
+
+   int m1_direction=TrendDirection(trend);
+   if(m1_direction==direction)
+     {
+      state_class="SAME_DIR_MATURE";
+      return;
+     }
+
+   if(direction>0 && trend==V1_TREND_BEARISH)
+     {
+      if(g_structure[5].protected_high.valid)
+        {
+         boundary_id=g_structure[5].protected_high.id;
+         boundary_price=g_structure[5].protected_high.price;
+         state_class="OPPOSITE_MATURE_WITH_BOUNDARY";
+        }
+      else
+         state_class="OPPOSITE_MATURE_NO_BOUNDARY";
+      return;
+     }
+
+   if(direction<0 && trend==V1_TREND_BULLISH)
+     {
+      if(g_structure[5].protected_low.valid)
+        {
+         boundary_id=g_structure[5].protected_low.id;
+         boundary_price=g_structure[5].protected_low.price;
+         state_class="OPPOSITE_MATURE_WITH_BOUNDARY";
+        }
+      else
+         state_class="OPPOSITE_MATURE_NO_BOUNDARY";
+      return;
+     }
+
+   state_class="UNCLASSIFIED_DIRECTIONAL";
+  }
+
+void D154FOnRootContact(const int scenario_index,
+                        const MqlRates &bar,
+                        const datetime available_at)
+  {
+   if(!D154FEnabled() ||
+      scenario_index<0 || scenario_index>=ArraySize(g_scenarios) ||
+      !g_scenarios[scenario_index].valid ||
+      g_scenarios[scenario_index].scope!=V1_SCOPE_EXTERNAL_CONTINUATION ||
+      D154FFindTracker(scenario_index)>=0)
+      return;
+
+   int n=ArraySize(g_d154f_trackers);
+   if(ArrayResize(g_d154f_trackers,n+1)<0)
+      return;
+
+   V2D154FTracker t;
+   ZeroMemory(t);
+   t.valid=true;
+   t.scenario_index=scenario_index;
+   t.scenario_id=g_scenarios[scenario_index].id;
+   t.direction=g_scenarios[scenario_index].direction;
+   t.source_tf=g_scenarios[scenario_index].source_tf;
+   t.root_zone_id=g_scenarios[scenario_index].root_zone_id;
+   t.root_source_reason="NA";
+
+   int root_index=FindActiveSourceById(t.root_zone_id);
+   if(root_index>=0)
+      t.root_source_reason=g_sources[root_index].source_reason;
+
+   t.root_contact_at=available_at;
+   t.root_contact_bar_open=bar.time;
+   D154FFreezeM1CorrectionSnapshot(t.direction,
+                                  t.root_contact_m1_trend,
+                                  t.root_contact_m1_owner_id,
+                                  t.root_contact_expected_boundary_id,
+                                  t.root_contact_expected_boundary_price,
+                                  t.root_contact_state_class);
+   t.root_contact_structure_events=g_structure[5].structure_events;
+   t.lineage_class="PENDING";
+
+   g_d154f_trackers[n]=t;
+   g_d154f_root_contacts++;
+
+   LogLine("D154F_ROOT_CONTACT","M1",available_at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s root_zone_id=%s source_tf=%s root_source_reason=%s root_contact_bar_open_s=%I64d m1_trend=%s m1_owner_id=%s expected_boundary_id=%s expected_boundary_price=%.10f state_class=%s m1_structure_events=%I64d strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),t.root_zone_id,
+                        TfName(t.source_tf),t.root_source_reason,(long)t.root_contact_bar_open,
+                        TrendName(t.root_contact_m1_trend),
+                        t.root_contact_m1_owner_id=="" ? "NA" : t.root_contact_m1_owner_id,
+                        t.root_contact_expected_boundary_id=="" ? "NA" : t.root_contact_expected_boundary_id,
+                        t.root_contact_expected_boundary_price,t.root_contact_state_class,
+                        t.root_contact_structure_events));
+  }
+
+void D154FOnSweepBarOpen(const datetime bar_open)
+  {
+   if(!D154FEnabled())
+      return;
+
+   for(int i=0;i<ArraySize(g_d154f_trackers);i++)
+     {
+      V2D154FTracker t=g_d154f_trackers[i];
+      if(!t.valid || t.sweep_accepted ||
+         t.scenario_index<0 || t.scenario_index>=ArraySize(g_scenarios) ||
+         !g_scenarios[t.scenario_index].valid ||
+         g_scenarios[t.scenario_index].strategy_state!=V1_STRATEGY_WAITING_SWEEP ||
+         g_scenarios[t.scenario_index].source_contact_at<=0)
+         continue;
+
+      t.sweep_prebar_snapshot_valid=true;
+      t.sweep_prebar_open=bar_open;
+      D154FFreezeM1CorrectionSnapshot(t.direction,
+                                     t.sweep_pre_m1_trend,
+                                     t.sweep_pre_m1_owner_id,
+                                     t.sweep_expected_boundary_id,
+                                     t.sweep_expected_boundary_price,
+                                     t.sweep_pre_state_class);
+      t.sweep_pre_structure_events=g_structure[5].structure_events;
+      g_d154f_trackers[i]=t;
+     }
+  }
+
+void D154FOnSweepAccepted(const int scenario_index,
+                          const MqlRates &bar,
+                          const datetime available_at)
+  {
+   if(!D154FEnabled())
+      return;
+
+   int ti=D154FFindTracker(scenario_index);
+   if(ti<0)
+      return;
+
+   V2D154FTracker t=g_d154f_trackers[ti];
+   if(t.sweep_accepted)
+      return;
+
+   bool snapshot_ok=(t.sweep_prebar_snapshot_valid &&
+                     t.sweep_prebar_open==bar.time);
+   if(!snapshot_ok)
+     {
+      t.sweep_prebar_snapshot_valid=false;
+      t.sweep_pre_state_class="SNAPSHOT_MISSING";
+      t.sweep_expected_boundary_id="";
+      t.sweep_expected_boundary_price=0.0;
+      t.sweep_pre_m1_owner_id="";
+      t.sweep_pre_m1_trend=V1_TREND_NEUTRAL;
+      t.sweep_pre_structure_events=g_structure[5].structure_events;
+     }
+
+   t.sweep_accepted=true;
+   t.sweep_at=available_at;
+   t.sweep_bar_open=bar.time;
+   t.sweep_matched_count=0;
+   t.sweep_min_pool_age_seconds=-1;
+   t.sweep_max_pool_age_seconds=-1;
+   t.contact_to_sweep_structure_events=
+      (int)MathMax(0.0,(double)(t.sweep_pre_structure_events-
+                               t.root_contact_structure_events));
+   t.m1_owner_changed_contact_to_sweep=
+      (t.root_contact_m1_owner_id!=t.sweep_pre_m1_owner_id ||
+       t.root_contact_m1_trend!=t.sweep_pre_m1_trend);
+
+   int required_side=(t.direction>0 ? V1_SIDE_LOW : V1_SIDE_HIGH);
+   for(int i=0;i<ArraySize(g_m1_sweep_detections);i++)
+     {
+      if(!g_m1_sweep_detections[i].valid ||
+         g_m1_sweep_detections[i].side!=required_side)
+         continue;
+
+      t.sweep_matched_count++;
+      int age=(int)(bar.time-g_m1_sweep_detections[i].pool_available_at);
+      if(age<0) age=0;
+      if(t.sweep_min_pool_age_seconds<0 || age<t.sweep_min_pool_age_seconds)
+         t.sweep_min_pool_age_seconds=age;
+      if(t.sweep_max_pool_age_seconds<0 || age>t.sweep_max_pool_age_seconds)
+         t.sweep_max_pool_age_seconds=age;
+
+      if(g_m1_sweep_detections[i].family==V1_LIQ_EXTERNAL_SWING)
+         t.sweep_external_count++;
+      else if(g_m1_sweep_detections[i].family==V1_LIQ_DEFENDED_RANGE_EDGE)
+         t.sweep_defended_count++;
+      else if(g_m1_sweep_detections[i].family==V1_LIQ_STRUCTURAL_REACTION)
+         t.sweep_reaction_count++;
+
+      ENUM_TIMEFRAMES tf=g_m1_sweep_detections[i].tf;
+      if(tf==PERIOD_M1) t.sweep_tf_m1_count++;
+      else if(tf==PERIOD_M5) t.sweep_tf_m5_count++;
+      else if(tf==PERIOD_M15) t.sweep_tf_m15_count++;
+      else if(tf==PERIOD_M30) t.sweep_tf_m30_count++;
+      else if(tf==PERIOD_H1) t.sweep_tf_h1_count++;
+      else if(tf==PERIOD_H4) t.sweep_tf_h4_count++;
+
+      double pool_price=(required_side==V1_SIDE_LOW ?
+                         g_m1_sweep_detections[i].bottom :
+                         g_m1_sweep_detections[i].top);
+      bool inside=(pool_price>=g_scenarios[scenario_index].source_bottom &&
+                   pool_price<=g_scenarios[scenario_index].source_top);
+      bool distal=(t.direction>0 ?
+                   pool_price<g_scenarios[scenario_index].source_bottom :
+                   pool_price>g_scenarios[scenario_index].source_top);
+      if(inside) t.sweep_inside_root_count++;
+      else if(distal) t.sweep_beyond_root_distal_count++;
+      else t.sweep_other_side_of_root_count++;
+     }
+
+   g_d154f_trackers[ti]=t;
+   g_d154f_sweeps++;
+
+   LogLine("D154F_SWEEP_ACCEPTED","M1",available_at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s sweep_bar_open_s=%I64d prebar_snapshot_valid=%s sweep_pre_m1_trend=%s sweep_pre_m1_owner_id=%s expected_boundary_id=%s expected_boundary_price=%.10f sweep_pre_state_class=%s contact_to_sweep_structure_events=%d owner_or_trend_changed_contact_to_sweep=%s matched_count=%d multi_pool_identity=%s min_pool_age_s=%d max_pool_age_s=%d family_external=%d family_defended=%d family_reaction=%d tf_m1=%d tf_m5=%d tf_m15=%d tf_m30=%d tf_h1=%d tf_h4=%d inside_root=%d beyond_root_distal=%d other_side_of_root=%d current_authority_rule=SEQUENCE_ONLY strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),(long)t.sweep_bar_open,
+                        snapshot_ok ? "true" : "false",
+                        TrendName(t.sweep_pre_m1_trend),
+                        t.sweep_pre_m1_owner_id=="" ? "NA" : t.sweep_pre_m1_owner_id,
+                        t.sweep_expected_boundary_id=="" ? "NA" : t.sweep_expected_boundary_id,
+                        t.sweep_expected_boundary_price,t.sweep_pre_state_class,
+                        t.contact_to_sweep_structure_events,
+                        t.m1_owner_changed_contact_to_sweep ? "true" : "false",
+                        t.sweep_matched_count,
+                        t.sweep_matched_count>1 ? "true" : "false",
+                        t.sweep_min_pool_age_seconds,t.sweep_max_pool_age_seconds,
+                        t.sweep_external_count,t.sweep_defended_count,t.sweep_reaction_count,
+                        t.sweep_tf_m1_count,t.sweep_tf_m5_count,t.sweep_tf_m15_count,
+                        t.sweep_tf_m30_count,t.sweep_tf_h1_count,t.sweep_tf_h4_count,
+                        t.sweep_inside_root_count,t.sweep_beyond_root_distal_count,
+                        t.sweep_other_side_of_root_count));
+  }
+
+void D154FOnChochAccepted(const int scenario_index,
+                          const MqlRates &bar,
+                          const datetime available_at)
+  {
+   if(!D154FEnabled())
+      return;
+
+   int ti=D154FFindTracker(scenario_index);
+   if(ti<0)
+      return;
+
+   V2D154FTracker t=g_d154f_trackers[ti];
+   if(!t.sweep_accepted || t.choch_accepted)
+      return;
+
+   t.choch_accepted=true;
+   t.choch_at=available_at;
+   t.choch_bar_open=bar.time;
+   t.choch_broken_swing_id=g_m1_choch_detection.broken_swing_id;
+   t.choch_broken_price=g_m1_choch_detection.broken_price;
+
+   long delta=g_structure[5].structure_events-t.sweep_pre_structure_events;
+   t.intermediate_structure_events_after_sweep=(int)MathMax(0.0,(double)(delta-1));
+
+   if(!t.sweep_prebar_snapshot_valid)
+     {
+      t.lineage_class="SNAPSHOT_MISSING";
+      g_d154f_snapshot_missing++;
+     }
+   else if(t.sweep_pre_state_class!="OPPOSITE_MATURE_WITH_BOUNDARY" ||
+           t.sweep_expected_boundary_id=="")
+     {
+      t.lineage_class="NO_OPPOSITE_MATURE_REFERENCE";
+      g_d154f_no_opposite_reference++;
+     }
+   else if(t.choch_broken_swing_id==t.sweep_expected_boundary_id)
+     {
+      t.lineage_class="DIRECT_FROZEN_BREAK";
+      g_d154f_direct_breaks++;
+     }
+   else
+     {
+      t.lineage_class="DIFFERENT_BOUNDARY";
+      g_d154f_different_breaks++;
+     }
+
+   g_d154f_trackers[ti]=t;
+   g_d154f_choch++;
+
+   LogLine("D154F_CHOCH_LINEAGE","M1",available_at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s sweep_bar_open_s=%I64d choch_bar_open_s=%I64d sweep_pre_state_class=%s frozen_expected_boundary_id=%s frozen_expected_boundary_price=%.10f actual_broken_swing_id=%s actual_broken_price=%.10f lineage_class=%s direct_same_reaction=%s intermediate_structure_events_after_sweep=%d current_authority_rule=SEQUENCE_ONLY strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),(long)t.sweep_bar_open,
+                        (long)t.choch_bar_open,t.sweep_pre_state_class,
+                        t.sweep_expected_boundary_id=="" ? "NA" : t.sweep_expected_boundary_id,
+                        t.sweep_expected_boundary_price,
+                        t.choch_broken_swing_id=="" ? "NA" : t.choch_broken_swing_id,
+                        t.choch_broken_price,t.lineage_class,
+                        t.lineage_class=="DIRECT_FROZEN_BREAK" ? "true" : "false",
+                        t.intermediate_structure_events_after_sweep));
+  }
+
+void D154FOnFvgSelected(const int scenario_index,
+                        const datetime available_at)
+  {
+   if(!D154FEnabled())
+      return;
+
+   int ti=D154FFindTracker(scenario_index);
+   if(ti<0)
+      return;
+
+   V2D154FTracker t=g_d154f_trackers[ti];
+   if(t.fvg_selected || g_scenarios[scenario_index].selected_fvg_id=="")
+      return;
+
+   t.fvg_selected=true;
+   t.selected_fvg_id=g_scenarios[scenario_index].selected_fvg_id;
+   t.selected_fvg_candle1_open=g_scenarios[scenario_index].selected_fvg_candle1_open;
+   t.selected_fvg_candle2_open=g_scenarios[scenario_index].selected_fvg_candle2_open;
+   t.selected_fvg_candle3_open=g_scenarios[scenario_index].selected_fvg_candle3_open;
+   t.fvg_c1_before_sweep_bar=(t.selected_fvg_candle1_open<t.sweep_bar_open);
+   t.fvg_c1_is_sweep_bar=(t.selected_fvg_candle1_open==t.sweep_bar_open);
+   t.fvg_c2_after_sweep_bar=(t.selected_fvg_candle2_open>t.sweep_bar_open);
+   g_d154f_trackers[ti]=t;
+
+   LogLine("D154F_FVG_LINEAGE","M1",available_at,t.scenario_id,
+           StringFormat("scenario_id=%s lineage_class=%s selected_fvg_id=%s c1_open_s=%I64d c2_open_s=%I64d c3_open_s=%I64d sweep_bar_open_s=%I64d c1_before_sweep_bar=%s c1_is_sweep_bar=%s c2_after_sweep_bar=%s current_rule_allows_c1_pre_sweep=true strategy_authority=false",
+                        t.scenario_id,t.lineage_class,t.selected_fvg_id,
+                        (long)t.selected_fvg_candle1_open,(long)t.selected_fvg_candle2_open,
+                        (long)t.selected_fvg_candle3_open,(long)t.sweep_bar_open,
+                        t.fvg_c1_before_sweep_bar ? "true" : "false",
+                        t.fvg_c1_is_sweep_bar ? "true" : "false",
+                        t.fvg_c2_after_sweep_bar ? "true" : "false"));
+  }
+
+void D154FOnFill(const int scenario_index,
+                 const datetime observed_at)
+  {
+   if(!D154FEnabled())
+      return;
+
+   int ti=D154FFindTracker(scenario_index);
+   if(ti<0)
+     {
+      LogLine("D154F_INTEGRITY_WARNING","M1",observed_at,
+              g_scenarios[scenario_index].id,
+              "reason=FILL_WITHOUT_LINEAGE_TRACKER strategy_authority=false");
+      return;
+     }
+
+   V2D154FTracker t=g_d154f_trackers[ti];
+   if(t.filled)
+      return;
+
+   t.filled=true;
+   t.fill_at=g_scenarios[scenario_index].fill_at;
+   t.fill_price=g_scenarios[scenario_index].fill_price;
+   t.original_sl=g_scenarios[scenario_index].normalized_sl;
+   t.original_risk=MathAbs(t.fill_price-t.original_sl);
+   g_d154f_trackers[ti]=t;
+   g_d154f_fills++;
+
+   LogLine("D154F_LINEAGE_FILL","M1",observed_at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s source_tf=%s root_zone_id=%s lineage_class=%s sweep_pre_state_class=%s direct_same_reaction=%s contact_to_sweep_structure_events=%d intermediate_structure_events_after_sweep=%d owner_or_trend_changed_contact_to_sweep=%s sweep_matched_count=%d multi_pool_identity=%s fvg_c1_before_sweep_bar=%s fvg_c1_is_sweep_bar=%s fill_at_s=%I64d fill_price=%.10f original_sl=%.10f original_risk=%.10f strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),TfName(t.source_tf),
+                        t.root_zone_id,t.lineage_class,t.sweep_pre_state_class,
+                        t.lineage_class=="DIRECT_FROZEN_BREAK" ? "true" : "false",
+                        t.contact_to_sweep_structure_events,
+                        t.intermediate_structure_events_after_sweep,
+                        t.m1_owner_changed_contact_to_sweep ? "true" : "false",
+                        t.sweep_matched_count,
+                        t.sweep_matched_count>1 ? "true" : "false",
+                        t.fvg_c1_before_sweep_bar ? "true" : "false",
+                        t.fvg_c1_is_sweep_bar ? "true" : "false",
+                        (long)t.fill_at,t.fill_price,t.original_sl,t.original_risk));
+  }
+
+void D154FOnPrimaryReference(const int scenario_index,
+                             const string outcome,
+                             const datetime at)
+  {
+   if(!D154FEnabled())
+      return;
+
+   int ti=D154FFindTracker(scenario_index);
+   if(ti<0)
+      return;
+
+   V2D154FTracker t=g_d154f_trackers[ti];
+   if(!t.filled || t.primary_outcome_logged)
+      return;
+
+   t.primary_outcome_logged=true;
+   t.primary_outcome=outcome;
+   t.primary_outcome_at=at;
+   g_d154f_trackers[ti]=t;
+
+   if(outcome=="PLUS_1R") g_d154f_plus1++;
+   else if(outcome=="SL_FIRST") g_d154f_sl++;
+   else if(outcome=="RIGHT_CENSORED") g_d154f_censored++;
+
+   LogLine("D154F_PRIMARY_OUTCOME","M1",at,t.scenario_id,
+           StringFormat("scenario_id=%s direction=%s source_tf=%s lineage_class=%s sweep_pre_state_class=%s direct_same_reaction=%s outcome=%s sweep_matched_count=%d multi_pool_identity=%s fvg_c1_before_sweep_bar=%s contact_to_sweep_structure_events=%d intermediate_structure_events_after_sweep=%d strategy_authority=false",
+                        t.scenario_id,DirectionName(t.direction),TfName(t.source_tf),
+                        t.lineage_class,t.sweep_pre_state_class,
+                        t.lineage_class=="DIRECT_FROZEN_BREAK" ? "true" : "false",
+                        outcome,t.sweep_matched_count,
+                        t.sweep_matched_count>1 ? "true" : "false",
+                        t.fvg_c1_before_sweep_bar ? "true" : "false",
+                        t.contact_to_sweep_structure_events,
+                        t.intermediate_structure_events_after_sweep));
+  }
+
+void D154FOnTesterStart(const datetime at)
+  {
+   if(!InpV2D154FCausalLineageAudit)
+      return;
+
+   LogLine("D154F_RESEARCH_START","M1",at,"",
+           StringFormat("enabled=%s build=2.06R0L6 question=SEQUENCE_ONLY_VS_SAME_REACTION_LINEAGE population=EXTERNAL_CONTINUATION_CURRENT_BASELINE root_contact_snapshot=true sweep_prebar_snapshot=true primary_test=CHOCH_BREAKS_SWEEP_TIME_FROZEN_OPPOSITE_M1_PROTECTED_BOUNDARY matched_sweep_identity_logged=true fvg_c1_relation_logged=true strategy_authority=false no_trade_modification=true",
+                        D154FEnabled() ? "true" : "false"));
+  }
+
+void D154FOnTesterEnd(const datetime at)
+  {
+   if(!InpV2D154FCausalLineageAudit)
+      return;
+
+   if(D154FEnabled())
+     {
+      for(int i=0;i<ArraySize(g_d154f_trackers);i++)
+        {
+         if(g_d154f_trackers[i].valid &&
+            g_d154f_trackers[i].filled &&
+            !g_d154f_trackers[i].primary_outcome_logged)
+            D154FOnPrimaryReference(g_d154f_trackers[i].scenario_index,
+                                    "RIGHT_CENSORED",at);
+        }
+     }
+
+   LogLine("D154F_RESEARCH_STOP","M1",at,"",
+           StringFormat("enabled=%s trackers=%d root_contacts=%I64d sweeps=%I64d choch=%I64d direct_breaks=%I64d different_breaks=%I64d no_opposite_reference=%I64d snapshot_missing=%I64d fills=%I64d plus1=%I64d sl=%I64d censored=%I64d strategy_authority=false no_trade_modification=true",
+                        D154FEnabled() ? "true" : "false",
+                        ArraySize(g_d154f_trackers),g_d154f_root_contacts,
+                        g_d154f_sweeps,g_d154f_choch,g_d154f_direct_breaks,
+                        g_d154f_different_breaks,g_d154f_no_opposite_reference,
+                        g_d154f_snapshot_missing,g_d154f_fills,g_d154f_plus1,
+                        g_d154f_sl,g_d154f_censored));
+  }
+
+
 bool D154CEnabled()
   {
    return (InpV2D154CReaccelerationFvgAudit && InpV2D151CausalAudit);
@@ -3246,7 +3847,7 @@ void D154COnTesterStart(const datetime at)
       return;
 
    LogLine("D154C_RESEARCH_START","M1",at,"",
-           StringFormat("enabled=%s build=2.05R0L5 population=ACTUAL_FILL_WHILE_M1_TRANSITION confirmation=FIRST_POST_FILL_M1_INITIAL_BOS first_same_dir_only=true source=FIRST_SAME_DIR_M1_FVG displacement_candle_start_must_be_at_or_after_confirmation=true entry=FVG_PROXIMAL_EDGE_FIRST_EXECUTABLE_RETEST stop=ORIGINAL_NORMALIZED_SL target=PLUS_1R_FROM_NEW_ENTRY structural_tp_retained=true structural_tp_must_be_at_least_1R=true primary_terminal_before_retest=NO_SHADOW_ENTRY post_sl_reentry=false second_fvg_retry=false strategy_authority=false",
+           StringFormat("enabled=%s build=2.06R0L6 population=ACTUAL_FILL_WHILE_M1_TRANSITION confirmation=FIRST_POST_FILL_M1_INITIAL_BOS first_same_dir_only=true source=FIRST_SAME_DIR_M1_FVG displacement_candle_start_must_be_at_or_after_confirmation=true entry=FVG_PROXIMAL_EDGE_FIRST_EXECUTABLE_RETEST stop=ORIGINAL_NORMALIZED_SL target=PLUS_1R_FROM_NEW_ENTRY structural_tp_retained=true structural_tp_must_be_at_least_1R=true primary_terminal_before_retest=NO_SHADOW_ENTRY post_sl_reentry=false second_fvg_retry=false strategy_authority=false",
                         D154CEnabled() ? "true" : "false"));
   }
 
@@ -3716,6 +4317,8 @@ bool ResearchCompactLogEvent(const string event_name,const string tf)
    if(StringFind(event_name,"D154B_")==0)
       return true;
    if(StringFind(event_name,"D154C_")==0)
+      return true;
+   if(StringFind(event_name,"D154F_")==0)
       return true;
    // Regime Research V1 can be independently recomputed from these M30 facts.
    if(event_name=="WAVE_CONFIRMED")
@@ -8196,6 +8799,7 @@ void PrepareD127M1SweepDetectorSnapshot(const datetime bar_open)
    ArrayResize(g_m1_sweep_detector_snapshot,0);
    ArrayResize(g_m1_sweep_detections,0);
    g_m1_sweep_detector_bar_open=bar_open;
+   D154FOnSweepBarOpen(bar_open);
 
    // Detector causality only: use liquidity that is already known when the
    // M1 bar begins. No Root, scenario, direction, distance, family-ranking,
@@ -8329,6 +8933,7 @@ void ProcessD127ScenarioSweepStage(const MqlRates &bar,
       EdgeAuditOnScenarioStage(V1_EDGE_STAGE_SWEEP,sidx,available_at,bar.close,
                                "d127_sequence_only_sweep=true");
       g_scenario_sweep_accepts++;
+      D154FOnSweepAccepted(sidx,bar,available_at);
 
       LogLine("SCENARIO_SWEEP_ACCEPTED","M1",available_at,stage_id,
               StringFormat("scenario_id=%s root_zone_id=%s direction=%s required_side=%s root_contact_at=%s sweep_bar_open=%s sweep_extreme=%.10f detector_count=%d detector_ids=%s liquidity_ids=%s state=WAITING_CHOCH rule=SEQUENCE_ONLY root_reintersection=false family_whitelist=false child_required=false choch_reference_freeze=false",
@@ -8369,6 +8974,7 @@ void ProcessD127ScenarioChochStage(const MqlRates &bar,
       EdgeAuditOnScenarioStage(V1_EDGE_STAGE_CHOCH,sidx,available_at,bar.close,
                                "d127_generic_protected_break_choch=true");
       g_scenario_choch_accepts++;
+      D154FOnChochAccepted(sidx,bar,available_at);
 
       LogLine("SCENARIO_CHOCH_ACCEPTED","M1",available_at,g_m1_choch_detection.id,
               StringFormat("scenario_id=%s root_zone_id=%s direction=%s scenario_sweep_event_id=%s sweep_bar_open=%s choch_bar_open=%s broken_swing_id=%s broken_price=%.10f state=WAITING_FVG rule=SEQUENCE_ONLY detector_source=M1_CHOCH_DETECTED extra_reference_filter=false opposite_trend_at_sweep_filter=false initial_bos_fallback=false child_required=false fvg_search_enabled=true order_authorization=false",
@@ -8726,6 +9332,7 @@ void ProcessD128AScenarioFvgFreeze(const int scenario_index,
    g_scenarios[scenario_index].selected_fvg_width=selected.width;
    g_scenarios[scenario_index].selected_fvg_width_ticks=selected.width_ticks;
    D154AOnScenarioFvgSelected(scenario_index,available_at);
+   D154FOnFvgSelected(scenario_index,available_at);
    g_scenarios[scenario_index].strategy_state=V1_STRATEGY_WAITING_EXECUTION_GEOMETRY;
    D135AddUniqueIndex(g_waiting_execution_geometry_indices,scenario_index);
    EdgeAuditOnScenarioStage(V1_EDGE_STAGE_FVG,scenario_index,available_at,choch_bar.close,
@@ -10624,6 +11231,7 @@ void MarkScenarioFilled(const int scenario_index,
    D154AOnFill(scenario_index,observed_at);
    D154BOnFill(scenario_index,observed_at);
    D154COnFill(scenario_index,observed_at);
+   D154FOnFill(scenario_index,observed_at);
    g_positions_filled++;
 
    // D-133: once the shared order fills, the implementation master owns the
@@ -14008,6 +14616,7 @@ void BindPreplannedScenarioToRootContact(const V1SourceZone &root,const MqlRates
    EdgeAuditOnScenarioStage(V1_EDGE_STAGE_ROOT_CONTACT,scenario_index,available_at,bar.close,
                             "preplanned_root_contact_bound=true");
    g_scenario_root_contacts++;
+   D154FOnRootContact(scenario_index,bar,available_at);
 
    LogLine("SCENARIO_ROOT_CONTACT_BOUND","M1",available_at,g_scenarios[scenario_index].id,
            StringFormat("root_zone_id=%s strategy_source_id=%s strategy_source_kind=ROOT plan_frozen_at=%s root_contact_at=%s root_contact_bar_open=%s scope=%s direction=%s active_map_tf=%s objective_count=%d state=WAITING_SWEEP child_required=false linear_trigger_pipeline=true next_stage=WAITING_SWEEP",
@@ -14742,7 +15351,7 @@ int OnInit()
    EventSetTimer(1);
    KickHistoryRequests();
    LogLine("EA_START","",TimeCurrent(),"",
-           StringFormat("build=2.05R0L5 property_version=2.05 magic=%I64d phase=V2_D154C_REACCELERATION_FVG_SHADOW strategy_semantics=V2_CONTINUATION_ONLY_PLUS_D151_D152_SP_RESEARCH_PLUS_D154A_D154B_D154C_SHADOW fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
+           StringFormat("build=2.06R0L6 property_version=2.05 magic=%I64d phase=V2_D154F_CAUSAL_LINEAGE_AUDIT strategy_semantics=V2_CONTINUATION_ONLY_PLUS_D151_D152_SP_RESEARCH_PLUS_D154A_D154B_D154C_D154F_SHADOW fvg_origin_ob_baseline=true symbol=%s account_currency=%s sl_model=%s regime_mode=%s event_log_mode=%s position_sizing_mode=%s fixed_risk_money=%.8f equity_risk_pct=%.8f same_entry_root_merge=true same_direction_addons=true opposite_direction_coexistence=false hedging_account_required=true account_margin_mode=%I64d tester_execution_only=true live_execution=false",
                         InpMagicNumber,
                         _Symbol,
                         AccountInfoString(ACCOUNT_CURRENCY),
@@ -14756,8 +15365,9 @@ int OnInit()
    D154AOnTesterStart(TimeCurrent());
    D154BOnTesterStart(TimeCurrent());
    D154COnTesterStart(TimeCurrent());
+   D154FOnTesterStart(TimeCurrent());
    LogLine("D149_RESEARCH_START","M1",TimeCurrent(),"",
-           StringFormat("exit_mode=%s em_mode=%s build=2.05R0L5 sp_strong_fraction=%.8f sp_v1_default_fraction=%.8f sp_strong_room_r=%.8f sp_v2_default_lock_buffer_r=%.8f sp_v2_cost_be_buffer_r=%.8f sp_v2_continuation_only=true structural_tp_retained=true em_v2_failure=SL_BEFORE_PLUS_1R em_v2_quarantine_after=2 em_v2_release=SHADOW_OR_PREEXISTING_REAL_PLUS_1R em_v2_force_cancel_existing=false d148_audit_allowed_only_on_control=true",
+           StringFormat("exit_mode=%s em_mode=%s build=2.06R0L6 sp_strong_fraction=%.8f sp_v1_default_fraction=%.8f sp_strong_room_r=%.8f sp_v2_default_lock_buffer_r=%.8f sp_v2_cost_be_buffer_r=%.8f sp_v2_continuation_only=true structural_tp_retained=true em_v2_failure=SL_BEFORE_PLUS_1R em_v2_quarantine_after=2 em_v2_release=SHADOW_OR_PREEXISTING_REAL_PLUS_1R em_v2_force_cancel_existing=false d148_audit_allowed_only_on_control=true",
                         ExitManagementModeName((int)InpExitManagementMode),EpisodeManagementModeName((int)InpEpisodeManagementMode),
                         V1_D149_SP_STRONG_PARTIAL_FRACTION,V1_D149_SP_DEFAULT_PARTIAL_FRACTION,V1_D149_SP_STRONG_ROOM_R,
                         V1_D149_SP_V2_DEFAULT_LOCK_BUFFER_R,V1_D149_SP_V2_COST_BE_BUFFER_R));
@@ -14790,6 +15400,7 @@ void OnDeinit(const int reason)
    D154AOnTesterEnd(TimeCurrent());
    D154BOnTesterEnd(TimeCurrent());
    D154COnTesterEnd(TimeCurrent());
+   D154FOnTesterEnd(TimeCurrent());
    EdgeAuditDeinit(reason);
    D149EMV2OnTesterEnd(TimeCurrent());
    LogLine("D149_RESEARCH_STOP","M1",TimeCurrent(),"",
