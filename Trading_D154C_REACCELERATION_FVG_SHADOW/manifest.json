@@ -1,0 +1,19 @@
+{
+  "package": "Trading_D154C_REACCELERATION_FVG_SHADOW",
+  "base_head": "af4643738192b68109adc5ddc192234619690a20",
+  "expected_ea_blob": "42b0632df8388dc8800c6b4b6820272c6cff1208",
+  "target_local_build": "2.05R0L5",
+  "strategy_authority_changed": false,
+  "github_write_performed": false,
+  "permanent_docs_updated": false,
+  "files": {
+    "README.md": "988c0a66287f8d9b9c38eefbae42a7692f2f35d659968f4364cf17b351faa5d9",
+    "apply_d154c.py": "fb9e9cc24936e5ea29227149ffc0267fa2bc01b337d454a9e66f8a0fa390ab68",
+    "repo_files/tools/compare_d154c_parity.py": "919752396bb1afc51d95012de475dc34e50bb5c3e3e9f133649d4cea00b2e450",
+    "repo_files/tools/run_d154c_gold_btc_2025.py": "cb38aeb8f9eb1932cc219224bef315a58e091ee06c128762d837167a79f30800",
+    "repo_files/tools/run_d154c_parity_gold_q1.py": "451867706c447afef59cc383613a1f1478373bac614f8c941933c7cd995e5917",
+    "repo_files/tools/summarize_d154c_reacceleration.py": "b8443c94d6802033eb3015fa50a4d2c1c050191d86987dc7847d716f7d18ff0d",
+    "research/D154B_RESULT_MEMO.md": "4b7b187c46e55e4573cfe79c92fd998428ce6ac8599f9e202800b3c389e712a0",
+    "research/D154C_REACCELERATION_FVG_SHADOW_CONTRACT.md": "c82c920abd98a0c668c1e2139e1a44250dde4f76b808345cde7a8c3f496d13c9"
+  }
+}
