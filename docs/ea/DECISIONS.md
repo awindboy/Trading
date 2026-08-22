@@ -6282,3 +6282,18 @@ Decision:
 - D-154G has no Entry, SL, TP, sizing, order, SP, or EM authority.
 - Discovery is GOLD23; validation remains GOLD24/GOLD25/BTCUSD25/SILVER25/CADJPY25. No threshold fitting or market-specific rescue is allowed.
 
+## D-154H — Preserve ordered HTF state transitions before designing another Entry gate
+
+Status: `RESEARCH / SHADOW-ONLY`  
+Date: `2026-08-22`
+
+Decision:
+- D-154G prior-owner Root reuse had zero observed coverage across 457 discovery+validation fills.
+- GOLD23 same-owner pre-entry BOS refresh did not generalize; no refresh-cancel rule is promoted.
+- Simple static H1/M30 alignment also did not generalize.
+- The next phase must not add another scalar threshold, quality score, or market-specific exception.
+- D-154H records ordered H1/M30 INITIAL_BOS/BOS/PROTECTED_BREAK events and exact PLAN/Root-contact/Sweep/CHOCH/Pending/Fill stage anchors.
+- The actual Fill remains the outcome unit even with merged Root contributors.
+- D-154H is discovery instrumentation only: no sequence discovered on GOLD23 may become a strategy gate until separately frozen and validated.
+- Entry, SL, TP, sizing, order lifecycle, SP and EM authority are unchanged.
+
