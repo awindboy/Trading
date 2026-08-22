@@ -1,7 +1,7 @@
 # V2 Backlog
 
 Last updated: 2026-08-22  
-Current phase: `D-154H HTF NESTED CAUSAL REPLAY`  
+Current phase: `D-154J HTF DELIVERY GEOMETRY — GOLD25 vs CADJPY25`  
 2021: `KEEP UNTOUCHED`
 
 ## P0 — Foundation
@@ -48,3 +48,13 @@ Current phase: `D-154H HTF NESTED CAUSAL REPLAY`
 - [ ] Preserve right-censoring.
 - [ ] Exclude execution-divergent evidence.
 - [ ] Reject candidate relations that reverse on independent data rather than threshold-rescuing them.
+
+
+## P0 — D-154J GOLD25 vs CADJPY25 geometry
+
+- [ ] Apply/compile `2.09R0L9`.
+- [ ] Dual-symbol Q1 2025 OFF/ON parity PASS for GOLD and CADJPY.
+- [ ] In the same command, run full-year GOLD25 + CADJPY25 geometry only after parity passes.
+- [ ] Compare stage-wise H1/M30 progress, remaining fraction, remaining R and contact->CHOCH/Fill progress deltas.
+- [ ] Preserve LONG/SHORT and right-censoring.
+- [ ] Do not threshold-fit or create market-specific rules from the contrastive pair.

@@ -1,10 +1,10 @@
 # V2 Development Handoff
 
-Last updated: 2026-08-22  
-Repository base before D-154H package: `0c2561619b70eff6deafa90cf9a79730de2e5848`  
-Current committed EA: `2.07R0L7 / V2_D154G_HTF_ROOT_BIRTH_LINEAGE_AUDIT`  
-Target research build: `2.08R0L8 / V2_D154H_HTF_NESTED_CAUSAL_REPLAY`  
-Current phase: **D-154G COMPLETE / NO HTF FILTER PROMOTED / D-154H NESTED CAUSAL REPLAY NEXT**  
+Last updated: 2026-08-23  
+Repository base before D-154J package: `fdb5a9f3b7e166d9be56b9cb77af4eff56e57eeb`  
+Current committed EA: `2.08R0L8 / V2_D154H_HTF_NESTED_CAUSAL_REPLAY`  
+Target research build: `2.09R0L9 / V2_D154J_HTF_DELIVERY_GEOMETRY`  
+Current phase: **D-154H/D-154I COMPLETE / NO UNIVERSAL HTF EVENT VETO / D-154J GOLD25-vs-CADJPY25 GEOMETRY NEXT**  
 V1: **FROZEN HISTORICAL CONTROL**  
 2021: **KEEP UNTOUCHED**
 
@@ -61,3 +61,13 @@ D-154H discovery does not authorize a gate. Any candidate sequence family discov
 5. Run GOLD23 clean discovery through 2023-12-21.
 6. Send discovery ZIP for sequence analysis.
 ```
+
+
+## D-154I result and D-154J next
+
+- D-154I post-contact same-direction H1/M30 BOS was weaker pooled but reversed on GOLD24 and BTC25; no universal veto.
+- Sweep-time `H1_PRIMARY_M30_TRANSITION` also failed validation.
+- D-154J therefore measures uncompressed delivery geometry rather than another event boolean.
+- Contrastive discovery pair is GOLD25 vs CADJPY25, the widest same-year Fill->+1R gap in the current panel.
+- Geometry is measured causally at PLAN, Root contact, first post-contact same-direction HTF BOS, Sweep, CHOCH, Pending and Fill.
+- No progress threshold, score, market exception, Entry/SL/TP/SP/EM change is allowed in D-154J.

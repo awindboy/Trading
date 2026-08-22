@@ -1,9 +1,9 @@
 # V2 Research State
 
 Last updated: 2026-08-22  
-Phase: `D-154H HTF NESTED CAUSAL REPLAY`  
-Current committed EA before phase: `2.07R0L7 / D154G`  
-Target research build: `2.08R0L8 / D154H`  
+Phase: `D-154J HTF DELIVERY GEOMETRY — GOLD25 vs CADJPY25`  
+Current committed EA before phase: `2.08R0L8 / D154H`  
+Target research build: `2.09R0L9 / D154J`  
 Authority: `docs/ea/v2/AGENTS_V2.md`  
 2021: `KEEP UNTOUCHED`
 
@@ -45,3 +45,8 @@ OFF during D-154H.
 Population: actual filled continuation. Unit: actual Fill. Causal window: PLAN -> Fill. HTF event types: H1/M30 INITIAL_BOS/BOS/PROTECTED_BREAK. Stage anchors: PLAN/ROOT_CONTACT/SWEEP/CHOCH/PENDING/FILL.
 
 D-154H is discovery instrumentation. It may describe exact sequence families and their outcomes on GOLD23, but may not promote a same-sample gate, fit thresholds, create scores, or invent market-specific exceptions.
+
+
+## D-154J governance
+
+Contrastive discovery only: GOLD25 and CADJPY25, same 2025 period. Record unclamped H1/M30 protected-to-external progress and remaining room at causal stages. Do not fit a threshold or infer that either market needs a separate strategy from this phase alone. Any candidate geometry relation must later be frozen and tested outside this pair.

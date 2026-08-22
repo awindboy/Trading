@@ -6297,3 +6297,17 @@ Decision:
 - D-154H is discovery instrumentation only: no sequence discovered on GOLD23 may become a strategy gate until separately frozen and validated.
 - Entry, SL, TP, sizing, order lifecycle, SP and EM authority are unchanged.
 
+
+
+## D-154I / D-154J — Event veto rejected; move to HTF delivery geometry
+
+Status: `RESEARCH / SHADOW-ONLY`  
+Date: `2026-08-23`
+
+Decision:
+- D-154I primary post-contact same-direction H1/M30 BOS relation is not promoted: GOLD24 and BTC25 reversed the discovery direction.
+- D-154I secondary H1-primary/M30-TRANSITION-at-sweep relation is rejected.
+- Do not rescue either relation with timeframe, direction, count or time thresholds.
+- D-154J measures causal protected-to-external geometry instead of another boolean HTF filter.
+- D-154J contrastive discovery uses GOLD25 and CADJPY25 together because they have the widest 2025 Fill->+1R gap in the current panel.
+- No strategy authority changes.
