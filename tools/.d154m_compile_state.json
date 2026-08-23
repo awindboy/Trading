@@ -1,0 +1,13 @@
+{
+  "base_git_head": "f5fef409cce86cfc1636d7b4f267cbd126b1979c",
+  "repo_ea": "C:\\Users\\awind\\OneDrive\\문서\\Trading\\mt5\\experts\\MentorDeterministicV2EA.mq5",
+  "repo_ea_sha256": "af6d3fa3ec9148422d4257f0aac45a553e3db83bb672aa095da4a5ed7636afe1",
+  "data_dir": "C:\\Users\\awind\\AppData\\Roaming\\MetaQuotes\\Terminal\\BB16F565FAAA6B23A20C26C49416FF05",
+  "terminal_exe": "C:\\Program Files\\XM Global MT5\\terminal64.exe",
+  "terminal_source": "C:\\Users\\awind\\AppData\\Roaming\\MetaQuotes\\Terminal\\BB16F565FAAA6B23A20C26C49416FF05\\MQL5\\Experts\\MentorDeterministicV2EA.mq5",
+  "terminal_source_sha256": "af6d3fa3ec9148422d4257f0aac45a553e3db83bb672aa095da4a5ed7636afe1",
+  "terminal_ex5": "C:\\Users\\awind\\AppData\\Roaming\\MetaQuotes\\Terminal\\BB16F565FAAA6B23A20C26C49416FF05\\MQL5\\Experts\\MentorDeterministicV2EA.ex5",
+  "terminal_ex5_sha256_before": "8cdbffcc55c9c1430640a8b6dda24064743d7c6668208346687fb77a9e93aa92",
+  "backup": "C:\\Users\\awind\\AppData\\Roaming\\MetaQuotes\\Terminal\\BB16F565FAAA6B23A20C26C49416FF05\\MQL5\\Experts\\MentorDeterministicV2EA.mq5.pre_d154m.bak",
+  "target_build": "2.11R0L11"
+}

@@ -6324,3 +6324,49 @@ Decision:
 - D-154K reconstructs the completed Root-contact -> accepted-CHOCH M1 reaction at Fill and measures mean true range, path length, directional efficiency, range and excursions.
 - Actual risk, FVG width, Root width, current-plan HTF span/remaining, spread, fill slippage and CHOCH->Fill pullback are normalized against that causal reaction scale.
 - Discovery contrast is GOLD25 vs CADJPY25 together. No threshold fitting, score, market-specific veto, Entry, SL, TP, sizing, SP or EM change is authorized.
+
+
+## D-154K / D-154L — Relative execution-friction scale is a supported cross-market mechanism
+
+Status: `RESEARCH FINDING / NO STRATEGY AUTHORITY`  
+Date: `2026-08-23`
+
+Decision:
+- D154K rejected simple risk/local-noise mismatch and found GOLD25/CADJPY25 strategy geometry broadly similar relative to causal M1 Root-reaction true range.
+- The dominant contrast was broker spread relative to reaction TR, actual 1R and selected FVG width.
+- D154L froze `median spread / Root-contact->CHOCH mean M1 TR` before validation.
+- BTC25 and SILVER25 independently fell between GOLD25 and CADJPY25 in the preregistered direction: 2025 relative friction increased GOLD < BTC < SILVER < CADJPY while Fill->+1R survival decreased GOLD > BTC > SILVER > CADJPY.
+- This supports an execution/environment transfer mechanism.
+- It does not authorize a per-trade spread threshold, market-name veto, or claim that cost explains GOLD year-to-year regime variation.
+- No baseline Entry, SL, TP, sizing, SP or EM change.
+
+## D-154M — Test quote-side outcome flips before any execution rule
+
+Status: `RESEARCH / SHADOW-ONLY`  
+Date: `2026-08-23`
+
+Decision:
+- Before designing an execution filter or changing SL/Entry, directly compare D151 actual executable-side barrier outcomes with an entry-side quote counterfactual.
+- LONG actual barriers use BID; D154M shadow uses ASK.
+- SHORT actual barriers use ASK; D154M shadow uses BID.
+- Actual Fill, original normalized SL, initial R and exact +1R barrier remain unchanged.
+- The shadow is explicitly `ENTRY_SIDE_QUOTE_BARRIER_RACE`, not a synthetic zero-spread mid-price model.
+- Primary observation is `ACTUAL_SL_TO_SHADOW_PLUS_1R` by market and direction.
+- Any `ACTUAL_PLUS_1R_TO_SHADOW_SL` is an instrumentation-integrity warning.
+- D154M has no trade authority and cannot justify a spread threshold from the same sample.
+
+
+## D-154M — Post-Fill quote-side friction is causal but only a partial cross-market explanation
+
+Status: `SUPPORTED PARTIAL MECHANISM / NO STRATEGY AUTHORITY`  
+Date: `2026-08-23`
+
+Decision:
+- D154M actual-vs-entry-side-quote barrier tracking passed GOLD/CADJPY Q1 non-interference parity and full-panel integrity.
+- CADJPY25 improved from 30/113 (26.5%) actual +1R survival to 47/113 (41.6%) in the entry-side quote shadow; 17/83 actual SL-first trades flipped to shadow +1R.
+- BTC25 improved from 47.2% to 52.8% with 7/67 SL-first flips.
+- GOLD25 improved only 1.9pp.
+- SILVER25 produced zero flips and remained 39.1%.
+- Therefore executable exit-side quote friction is a real causal mechanism, but it is not the universal explanation behind D154L's market-level cost ordering.
+- No spread threshold, symbol veto, SL widening, target change, or Entry change is authorized.
+- D154N will test the remaining pre-Fill execution pathway: delay/depth between the first opposite-quote touch of the intended pending Entry and the executable Entry quote / actual Fill.

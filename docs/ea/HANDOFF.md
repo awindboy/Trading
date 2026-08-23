@@ -1,8 +1,8 @@
 # EA Development Handoff
 
-> **V2 ACTIVE ROUTING — 2026-08-23 / D-154K**  
-> Current V2 phase is `D-154K CROSS-SCALE REACTION / NOISE — GOLD25 vs CADJPY25`. For active V2 work, `docs/ea/v2/HANDOFF_V2.md` and `docs/ea/v2/AGENTS_V2.md` override stale phase labels in the historical body below.  
-> D-154J rejected simple HTF exhaustion as the GOLD/CADJPY explanation; baseline strategy semantics remain unchanged.
+> **V2 ACTIVE ROUTING — 2026-08-23 / D-154M**  
+> Current V2 phase is `D-154M EXECUTION-FRICTION COUNTERFACTUAL`. Read `docs/ea/v2/HANDOFF_V2.md` and `docs/ea/v2/RESEARCH_SYNTHESIS_D154A_D154L.md` before new design work.  
+> D154L supports execution cost relative to causal M1 scale as a cross-market transfer mechanism, but not as a per-trade filter or universal yearly determinant. Baseline strategy semantics remain unchanged.
 
 Last updated: 2026-08-22
 Repository base before this documentation update: `7cb26133235c45a3756492af951900f15213f8cb`

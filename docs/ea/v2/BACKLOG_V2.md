@@ -1,72 +1,77 @@
 # V2 Backlog
 
-Last updated: 2026-08-22  
-Current phase: `D-154K CROSS-SCALE REACTION / NOISE — GOLD25 vs CADJPY25`  
+Last updated: 2026-08-23  
+Current phase: `D-154N PENDING-TO-FILL QUOTE-SIDE DELAY / DEPTH AUDIT`  
 2021: `KEEP UNTOUCHED`
 
 ## P0 — Foundation
 
 - [x] V1 frozen; V2 continuation-only.
-- [x] D151 Fill -> +1R / SL-first causal platform.
+- [x] D151 exact Fill->+1R / SL-first causal platform.
 - [x] D153 real-tick batch automation.
-- [x] Keep Entry, winner continuation, exit and exposure research separate.
+- [x] Entry, winner continuation, exit and exposure kept separate.
 
 ## P0 — Entry-survival research completed
 
 - [x] D148 failure taxonomy.
 - [x] D149 EM not a general Entry solution.
-- [x] D154A Fill-time M1 maturity not universal.
+- [x] D154A Fill-time M1 maturity rejected.
 - [x] D154B delayed SAME INITIAL_BOS rejected.
-- [x] D154C fresh-FVG retest replacement rejected.
-- [x] D154D new Root after failure failed OOS.
-- [x] D154F frozen-boundary CHOCH not promoted; TRANSITION sweep veto failed validation.
-- [x] D154G prior-owner Root reuse had zero coverage.
-- [x] D154G same-owner pre-entry BOS refresh failed generalization.
-- [x] Simple static H1/M30 alignment demoted.
+- [x] D154C fresh-FVG replacement rejected.
+- [x] D154D new-Root rescue failed OOS.
+- [x] D154F M1 causal lineage / transition veto not promoted.
+- [x] D154G stale prior-owner Root had zero coverage.
+- [x] D154G same-owner BOS refresh failed validation.
+- [x] Static H1/M30 alignment demoted.
+- [x] D154H ordered HTF replay completed.
+- [x] D154I post-contact HTF BOS veto failed validation.
+- [x] D154J simple HTF exhaustion explanation rejected.
+- [x] D154K GOLD25/CADJPY25 cross-scale contrast completed.
+- [x] D154L cost-scale transfer validation completed.
 
-## P0 — D-154H nested causal replay
+## P0 — D154K/L retained finding
 
-- [ ] Apply/compile `2.08R0L8`.
-- [ ] Confirm research input exists.
-- [ ] GOLD23 Q1 OFF/ON non-interference parity PASS.
-- [ ] GOLD23 clean discovery through 2023-12-21.
-- [ ] Verify monotonic HTF event sequence and stage-anchor integrity.
-- [ ] Reconstruct contributor PLAN -> contact -> sweep -> CHOCH -> pending -> Fill paths.
-- [ ] Report frequent sequence families descriptively; do not fit thresholds/scores.
-- [ ] Formulate a small causal hypothesis set only after discovery.
-- [ ] Freeze definitions before any GOLD24/GOLD25/BTCUSD25/SILVER25/CADJPY25 validation.
+- [x] 2025 market ordering: spread/reactionTR GOLD < BTC < SILVER < CADJPY.
+- [x] 2025 survival ordering: GOLD > BTC > SILVER > CADJPY.
+- [x] Cross-market cost-scale mechanism supported.
+- [x] Per-trade spread threshold not supported.
+- [x] Universal year/regime determinant not established.
 
-## P1 — Exit / EM
+## P0 — D154M
 
-- [ ] Keep V3E provisional until broad validation.
-- [ ] Keep EM OFF during D-154H.
-- [ ] Revisit exposure management only after Entry premise representation improves.
+- [x] Apply `2.11R0L11`.
+- [x] Compile exact runner-selected terminal MQ5 with 0 errors.
+- [x] Verify runner EX5 SHA changed.
+- [x] GOLD/CADJPY Q1 D154M OFF/ON canonical parity PASS.
+- [x] Require D154M Fill count == pair outcome count.
+- [x] Require zero D154M integrity warnings.
+- [x] Run GOLD23/GOLD24/GOLD25/BTC25/SILVER25/CADJPY25.
+- [x] Report actual WR vs entry-side-quote shadow WR.
+- [x] Report `ACTUAL_SL_TO_SHADOW_PLUS_1R` by market/direction.
+- [x] Reject any `ACTUAL_PLUS_1R_TO_SHADOW_SL` as instrumentation integrity failure.
+- [ ] Do not fit a spread threshold from D154M.
 
-## P1 — Robustness
+## P1 — after D154M
 
-- [ ] Preserve LONG/SHORT reporting.
-- [ ] Preserve right-censoring.
-- [ ] Exclude execution-divergent evidence.
-- [ ] Reject candidate relations that reverse on independent data rather than threshold-rescuing them.
+If friction flips scale monotonically with D154L:
+- preregister a separate execution-design hypothesis before strategy changes.
 
+If flips are small:
+- retain cost-scale as environment viability correlation but return to non-cost market-regime causes for Entry survival.
 
-## P0 — D-154J GOLD25 vs CADJPY25 geometry
+## P1 — winner continuation / exit
 
-- [x] Apply/compile `2.09R0L9`.
-- [x] Dual-symbol Q1 2025 OFF/ON parity PASS for GOLD and CADJPY.
-- [x] In the same command, run full-year GOLD25 + CADJPY25 geometry only after parity passes.
-- [x] Compare stage-wise H1/M30 progress, remaining fraction, remaining R and contact->CHOCH/Fill progress deltas.
-- [ ] Preserve LONG/SHORT and right-censoring.
-- [ ] Do not threshold-fit or create market-specific rules from the contrastive pair.
+- [ ] Keep M30 +1R maturity separate from Entry research.
+- [ ] Keep V3E provisional until broad strategy-level validation.
+- [ ] Revisit exposure only after Entry mechanism is better understood.
 
 
-## P0 — D-154K GOLD25 vs CADJPY25 cross-scale reaction/noise
+## P0 — D154N pending-to-Fill quote-side delay/depth
 
-- [ ] Apply/compile `2.10R0L10`.
-- [ ] Dual-symbol Q1 2025 OFF/ON non-interference parity PASS.
-- [ ] Full-year GOLD25 + CADJPY25 one-command contrastive run.
-- [ ] Compare reaction M1 mean TR, directional efficiency, path/range/excursions.
-- [ ] Compare risk/FVG/Root/HTF span/remaining relative to reaction M1 TR.
-- [ ] Compare spread/R, spread/TR and fill slippage/R.
-- [ ] Compare CHOCH->Fill pullback relative to reaction TR and 1R.
-- [ ] Preserve LONG/SHORT; do not create symbol-specific thresholds from this pair.
+- [ ] Shadow-only instrumentation.
+- [ ] Freeze pending Entry/FVG/Root/SL at accepted pending placement.
+- [ ] Record first opposite-quote Entry touch and first executable-quote Entry touch.
+- [ ] Measure touch->Fill delay/depth and normalize by FVG/risk.
+- [ ] GOLD/CADJPY Q1 OFF/ON parity before evidence.
+- [ ] Compare GOLD25/BTC25/SILVER25/CADJPY25 with LONG/SHORT preserved.
+- [ ] Do not fit pending offsets or spread thresholds.

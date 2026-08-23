@@ -1,61 +1,95 @@
 # V2 Research State
 
-Last updated: 2026-08-22  
-Phase: `D-154K CROSS-SCALE REACTION / NOISE — GOLD25 vs CADJPY25`  
-Current committed EA before phase: `2.09R0L9 / D154J`  
-Target research build: `2.10R0L10 / D154K`  
+Last updated: 2026-08-23  
+Phase: `D-154N PENDING-TO-FILL QUOTE-SIDE DELAY / DEPTH AUDIT`  
+Current tested base: `2.10R0L10 / D154K`  
+Target build: `2.11R0L11 / D154M`  
 Authority: `docs/ea/v2/AGENTS_V2.md`  
 2021: `KEEP UNTOUCHED`
 
-## Active objective
+## Primary objective
 
-Primary stretch target remains cost-adjusted realized WR >=70%, average winner >1R, positive expectancy and robustness across markets/periods. No filter stack may be justified merely by reaching the target.
+Build a robust continuation strategy with:
+- realized WR >=50% as a baseline condition;
+- average winner meaningfully >1R;
+- positive cost-adjusted expectancy;
+- persistence across periods and markets.
+
+No threshold stack is justified merely because it raises in-sample WR.
 
 ## Axis A — Fill -> +1R Entry survival
 
-Status: **PRIMARY BOTTLENECK / HTF REPRESENTATION UNDER STUDY**
+Status: **PRIMARY BOTTLENECK / EXECUTION-TRANSFER MECHANISM UNDER CAUSAL TEST**
 
-Known 2025 survival:
-
+2025:
 ```text
-GOLD25    30/53  = 56.6%
-BTCUSD25  60/127 = 47.2%
-SILVER25  18/46  = 39.1%
-CADJPY25  30/113 = 26.5%
+GOLD25    56.6%
+BTC25     47.2%
+SILVER25  39.1%
+CADJPY25  26.5%
 ```
 
-Local M1 confirmation variants D154A/B/C/F did not establish a general Entry gate. D154D new-Root rescue failed OOS. D154G prior-owner Root reuse had zero coverage, while its same-owner BOS-refresh proxy failed validation.
+D154A-J removed many M1/HTF timing and geometry explanations.
 
-Current research no longer assumes one static HTF feature will separate winners. D154H reconstructs ordered nested H1/M30 state transitions from PLAN to Fill.
+D154K/L currently support one cross-market mechanism:
+```text
+higher broker spread relative to causal M1 reaction scale
+-> lower cross-market Fill->+1R survival
+```
 
-## Axis B — +1R winner continuation
+This is not yet a per-trade Entry gate.
 
-Keep separate. M30 protected-to-external maturity at +1R remains runner research, not Entry authority.
+D154M now asks whether actual quote-side barrier mechanics directly flip SL-first outcomes.
 
-## Axis C — Profit preservation
+## Axis B — +1R -> +2R winner continuation
 
-V3E `BANK_2R_LOCK_ONE` remains the provisional post-+1R reference, not baseline authority.
+Keep separate.
 
-## EM
+Lower M30 protected-to-external progress at +1R remains the strongest descriptive continuation relation. It is not Entry authority.
 
-OFF during D-154H.
+## Axis C — post+1R / post+2R profit preservation
 
-## D-154H governance
+V3E `BANK_2R_LOCK_ONE` remains provisional research reference only.
 
-Population: actual filled continuation. Unit: actual Fill. Causal window: PLAN -> Fill. HTF event types: H1/M30 INITIAL_BOS/BOS/PROTECTED_BREAK. Stage anchors: PLAN/ROOT_CONTACT/SWEEP/CHOCH/PENDING/FILL.
+## D154M governance
 
-D-154H is discovery instrumentation. It may describe exact sequence families and their outcomes on GOLD23, but may not promote a same-sample gate, fit thresholds, create scores, or invent market-specific exceptions.
+Population:
+```text
+actual filled EXTERNAL_CONTINUATION
+```
+
+Actual outcome:
+```text
+D151 executable-side Fill->+1R / original-SL race
+```
+
+Shadow:
+```text
+LONG ASK vs same +1R / SL
+SHORT BID vs same +1R / SL
+```
+
+No fill/barrier modification. No zero-spread synthetic price.
+
+Primary result:
+```text
+count and rate of ACTUAL_SL_TO_SHADOW_PLUS_1R
+```
+
+Report by market and direction.
+
+Do not:
+- optimize a spread threshold;
+- exclude a symbol from the same sample;
+- widen SL;
+- change Entry/FVG;
+- infer cost is the only temporal regime variable.
 
 
-## D-154J governance
+## D154M result
 
-Contrastive discovery only: GOLD25 and CADJPY25, same 2025 period. Record unclamped H1/M30 protected-to-external progress and remaining room at causal stages. Do not fit a threshold or infer that either market needs a separate strategy from this phase alone. Any candidate geometry relation must later be frozen and tested outside this pair.
+Post-Fill quote-side friction is causal but partial. CADJPY25 had 17/83 actual SL-first trades flip to entry-side-quote +1R, BTC25 had 7/67, while SILVER25 had 0/28. D154L cost-scale remains a market-level viability relation, but cannot be equated with this one barrier mechanism.
 
+## D154N governance
 
-## D-154J result
-
-Simple HTF exhaustion is rejected as the explanation for the GOLD25/CADJPY25 survival gap. CADJPY generally retained more protected-to-external room at Entry, not less. No progress threshold is promoted.
-
-## D-154K governance
-
-Contrastive discovery remains GOLD25 vs CADJPY25. For each actual Fill, reconstruct only already-completed M1 bars from Root contact through accepted CHOCH and measure reaction true-range scale, path efficiency, excursions and CHOCH-to-Fill pullback. Normalize actual risk, FVG width, Root width, current-plan HTF span/remaining, spread and fill slippage by the causal reaction M1 mean true range. No threshold fitting or market-specific rule is allowed.
+Test pending-placement -> opposite-quote first Entry touch -> executable-quote Entry touch / actual Fill delay and depth. No pending offset, spread threshold, direction exception or strategy change.

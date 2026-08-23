@@ -63,6 +63,8 @@ def parity_check(zp:Path):
                     break
             raise BatchError(msg)
         on_rows=sum(r.get("event","").startswith("D154K_") for r in onr)
+        if on_rows<=0:
+            raise BatchError(f"{sym}: D154K_ON_EMITTED_ZERO_ROWS; tester is not running the expected compact-logger build")
         print(f"{sym}: D154K NON-INTERFERENCE PARITY PASS | canonical_rows={len(a)} | d154k_on_rows={on_rows}")
 
 def main():
