@@ -6370,3 +6370,51 @@ Decision:
 - Therefore executable exit-side quote friction is a real causal mechanism, but it is not the universal explanation behind D154L's market-level cost ordering.
 - No spread threshold, symbol veto, SL widening, target change, or Entry change is authorized.
 - D154N will test the remaining pre-Fill execution pathway: delay/depth between the first opposite-quote touch of the intended pending Entry and the executable Entry quote / actual Fill.
+
+
+## D-154UL — Validate the account/feed change before adding new Entry instrumentation
+
+Status: `ACTIVE VALIDATION / NO STRATEGY AUTHORITY`  
+Date: `2026-08-23`
+
+Decision:
+- The execution environment changed from the Standard account used for D154K/L/M to XM Ultra Low.
+- Ultra Low symbols are `GOLD#`, `BTCUSD#`, `SILVER#`, and `CADJPY#`.
+- Before D154N, rerun the existing D154K+D154M shadow measurements on the same 2025 four-market panel.
+- Standard 2025 evidence is frozen as the comparison benchmark and must not be overwritten.
+- The primary natural-experiment comparison is relative spread scale -> actual Fill->+1R survival -> D154M quote-side flip incidence.
+- Changes in actual Fill population are part of the environment effect and must be reported rather than silently paired.
+- No spread threshold, symbol veto, pending offset, SL/TP/Entry/sizing/SP/EM change is authorized from D154UL.
+- D154N remains queued after D154UL interpretation.
+
+
+## D-154UL — Ultra Low natural experiment strengthens execution-friction causality but does not solve Entry survival
+
+Status: `COMPLETE / NO STRATEGY AUTHORITY`  
+Date: `2026-08-24`
+
+Decision:
+- XM Ultra Low materially reduced the exact D154K friction ratios relative to the prior Standard environment.
+- Ultra Low 2025 actual survival was GOLD# 58.2%, BTCUSD# 48.8%, SILVER# 38.3%, CADJPY# 30.1%.
+- D154M actual-SL -> entry-side-quote +1R flips fell from Standard 1/7/0/17 to Ultra Low 0/3/0/10 for GOLD/BTC/SILVER/CADJPY.
+- BTC and CADJPY retained >98% exact scenario-id overlap; across all 329 common Standard/Ultra scenarios, 7 outcomes improved SL_FIRST->PLUS_1R and 0 worsened.
+- This further supports execution friction as a causal market-level component.
+- It also confirms that lower spread alone is not sufficient to make high-friction markets compatible with the current Entry architecture.
+- No per-trade spread threshold, symbol veto, Entry, SL, TP, sizing, SP, or EM change is authorized.
+
+## D-154O — Prioritize broad Gold-like market-universe validation before deeper high-friction rescue
+
+Status: `ACTIVE RESEARCH / NO STRATEGY AUTHORITY`  
+Date: `2026-08-24`
+
+Decision:
+- The next primary question is whether the V2 strategy reproduces GOLD-like Entry survival on a broad set of Ultra Low markets whose execution friction is naturally similar to GOLD#.
+- D154N pre-Fill quote-delay/depth research is deferred, not rejected.
+- Stage A uses one fixed week (`2026-08-17 .. 2026-08-23`) of outcome-blind M1+spread chart data across a user-supplied broad Ultra Low symbol universe.
+- Stage A raw metrics are explicitly proxies; they must not be mislabeled as exact D154K `spread/reactionTR`, `spread/1R`, or selected-causal-FVG metrics.
+- Same-week GOLD# is the reference.
+- No weighted GoldLikeScore is authorized.
+- A Gold-like shortlist and a small non-Gold-like control cohort must be frozen before any one-year performance result is generated.
+- Stage B uses 2025 Every-tick-real-ticks with the unchanged strategy plus D151/D154K/D154M to test exact Entry survival and execution geometry.
+- Tiny Fill populations are insufficient evidence, not successful markets.
+- A positive 2025 broad-market relation still requires an additional disjoint-year confirmation before any production market-eligibility authority.

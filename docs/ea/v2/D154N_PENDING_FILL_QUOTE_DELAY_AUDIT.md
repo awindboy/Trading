@@ -1,88 +1,52 @@
 # D-154N — Pending-to-Fill Quote-Side Delay / Depth Audit
 
-Status: NEXT RESEARCH CONTRACT / SHADOW-ONLY  
-Date: 2026-08-23
+Status: DEFERRED / NOT REJECTED  
+Date updated: 2026-08-24
 
-## Why this phase
+D154N remains a valid shadow-only execution research idea, but it is no longer the immediate next phase.
 
-D154M proved that post-Fill executable quote-side friction directly flips many CADJPY and some BTC outcomes, but it explains none of SILVER25's failures.
+## Deferred question
 
-Spread can also act **before Fill**.
+Measure:
 
-For a pending Entry price, one quote side can cross the price before the executable Entry quote crosses it. The actual Fill therefore may occur later in the retracement, after the market has moved farther through the setup.
-
-D154N tests this remaining execution pathway before returning to broader market-regime research.
-
-## Unit
-
-Actual filled `EXTERNAL_CONTINUATION` scenario.
-
-## Frozen anchors
-
-At accepted pending placement freeze:
-- scenario id and direction;
-- intended pending Entry price;
-- selected FVG bounds/width;
-- Root bounds/width;
-- normalized SL;
-- active map;
-- pending accepted time/tick.
-
-Track both BID and ASK until actual Fill.
-
-## Primary causal observations
-
-For LONG buy pending:
 ```text
-first BID cross/touch of Entry price
-first ASK executable cross/touch of Entry price
-actual Fill
+pending accepted
+-> first non-entry quote touch of intended Entry
+-> first executable Entry quote touch
+-> actual Fill
 ```
 
-For SHORT sell pending:
+LONG:
 ```text
-first ASK cross/touch of Entry price
-first BID executable cross/touch of Entry price
-actual Fill
+non-entry quote = BID
+executable quote = ASK
 ```
 
-Record:
-- whether the opposite quote touched first;
-- milliseconds/seconds from opposite-quote touch to executable-quote touch / Fill;
-- quote displacement during that interval;
-- maximum adverse excursion of the executable quote before Fill;
-- spread at pending placement, first opposite-quote touch, and Fill;
-- delay/depth normalized by FVG width and initial risk once Fill freezes risk.
-
-## Primary question
-
-Does the low-survival market group enter materially later/deeper after the setup has already reached the intended structural price on the opposite quote?
-
-This is a market/execution-mechanism audit, not an Entry filter.
-
-## Required reporting
-
-Compare:
+SHORT:
 ```text
-GOLD25
-BTC25
-SILVER25
-CADJPY25
+non-entry quote = ASK
+executable quote = BID
 ```
 
-Keep LONG/SHORT separate because entry quote asymmetry may matter.
+Potential measurements:
+- touch-to-executable delay;
+- touch-to-Fill delay;
+- penetration beyond Entry;
+- spread at touch;
+- normalization by FVG/risk.
 
-Use GOLD23/GOLD24 only as temporal context after the 2025 cross-market contrast is understood.
+## Why deferred
 
-## Prohibited inference
+D154UL confirmed that execution friction is causal, but the strategic question changed.
 
-No:
-- pending-price offset;
-- spread threshold;
-- symbol exclusion;
-- SL widening;
-- FVG widening;
-- market-order substitution;
-- direction-specific strategy rule.
+If the current strategy already works across multiple markets with GOLD-like execution scale, the higher-value architecture may be a compatible market universe rather than increasingly complex rescue logic for high-friction markets.
 
-If pre-Fill delay/depth also fails to explain SILVER/CADJPY residual weakness, stop expanding execution-cost explanations and return to underlying regime/path-quality research.
+Therefore D154O broad-market screening takes priority.
+
+## Resume condition
+
+Resume D154N only if:
+- D154O does not find a sufficiently robust Gold-like market cohort; or
+- a later execution-design question specifically requires separating pre-Fill quote delay from underlying path quality.
+
+No D154N strategy authority exists.

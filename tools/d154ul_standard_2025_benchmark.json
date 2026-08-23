@@ -1,0 +1,56 @@
+{
+  "environment": "XM_STANDARD_PRE_ULTRA_LOW_SWITCH",
+  "period": "2025",
+  "build": "2.11R0L11",
+  "symbols": {
+    "GOLD": {
+      "fills": 53,
+      "actual_plus1": 30,
+      "actual_survival": 0.5660377358490566,
+      "shadow_plus1": 31,
+      "shadow_survival": 0.5849056603773585,
+      "sl_to_shadow_plus1": 1,
+      "median_spread_over_reaction_tr": 0.3417,
+      "median_spread_over_risk": 0.0281,
+      "median_spread_over_fvg": 0.4615
+    },
+    "BTCUSD": {
+      "fills": 127,
+      "actual_plus1": 60,
+      "actual_survival": 0.47244094488188976,
+      "shadow_plus1": 67,
+      "shadow_survival": 0.5275590551181102,
+      "sl_to_shadow_plus1": 7,
+      "median_spread_over_reaction_tr": 1.0147,
+      "median_spread_over_risk": 0.0632,
+      "median_spread_over_fvg": 1.0256
+    },
+    "SILVER": {
+      "fills": 46,
+      "actual_plus1": 18,
+      "actual_survival": 0.391304347826087,
+      "shadow_plus1": 18,
+      "shadow_survival": 0.391304347826087,
+      "sl_to_shadow_plus1": 0,
+      "median_spread_over_reaction_tr": 1.7011,
+      "median_spread_over_risk": 0.1471,
+      "median_spread_over_fvg": 2.0992
+    },
+    "CADJPY": {
+      "fills": 113,
+      "actual_plus1": 30,
+      "actual_survival": 0.26548672566371684,
+      "shadow_plus1": 47,
+      "shadow_survival": 0.415929203539823,
+      "sl_to_shadow_plus1": 17,
+      "median_spread_over_reaction_tr": 2.1255,
+      "median_spread_over_risk": 0.1496,
+      "median_spread_over_fvg": 2.6875
+    }
+  },
+  "interpretation": [
+    "D154L cost-scale supported as cross-market viability relation.",
+    "D154M post-fill quote-side friction supported as partial cause.",
+    "Standard benchmark is historical evidence and must not be overwritten by Ultra Low results."
+  ]
+}

@@ -1,12 +1,15 @@
 # V2 Development Handoff
 
-Last updated: 2026-08-23  
-Git HEAD at D154M package creation: `f5fef409cce86cfc1636d7b4f267cbd126b1979c`  
-Current tested research base: `2.10R0L10 / D154K` with compact-log terminal sync  
-Target research build: `2.11R0L11 / V2_D154M_EXECUTION_FRICTION_COUNTERFACTUAL`  
-Current phase: **D154M COMPLETE / POST-FILL QUOTE FRICTION PARTIAL CAUSE / D154N NEXT**  
+Last updated: 2026-08-24  
+Git HEAD before this local phase update: `110bd7d274ae4480c779cdcdc5c9c539e86611da`  
+Current tested EA: `2.11R0L11 / V2_D154M_EXECUTION_FRICTION_COUNTERFACTUAL`  
+Current execution environment: **XM Ultra Low**  
+Current phase: **D154O BROAD-MARKET GOLD-LIKE EXECUTION-SUITABILITY SCREEN — ACTIVE**  
+D154N: **DEFERRED / NOT REJECTED**  
 V1: **FROZEN HISTORICAL CONTROL**  
 2021: **KEEP UNTOUCHED**
+
+GitHub is the Single Source of Truth. This handoff is intended to be committed before the next ChatGPT session.
 
 ## Startup order for the next session
 
@@ -15,12 +18,11 @@ V1: **FROZEN HISTORICAL CONTROL**
 3. Read `docs/ea/v2/AGENTS_V2.md`.
 4. Read root `docs/ea/HANDOFF.md`.
 5. Read this file.
-6. Read `docs/ea/v2/RESEARCH_SYNTHESIS_D154A_D154L.md`.
-7. Read `docs/ea/v2/D154L_COST_SCALE_TRANSFER_VALIDATION_RESULTS.md`.
-8. Read `docs/ea/v2/D154M_EXECUTION_FRICTION_COUNTERFACTUAL.md`.
+6. Read `docs/ea/v2/RESEARCH_SYNTHESIS_D154A_D154UL.md`.
+7. Read `docs/ea/v2/D154UL_ULTRA_LOW_EXECUTION_ENVIRONMENT_RESULTS.md`.
+8. Read `docs/ea/v2/D154O_BROAD_MARKET_GOLD_LIKE_SCREEN.md`.
 9. Then inspect `RESEARCH_STATE_V2.md`, `BACKLOG_V2.md`, and current code.
-
-GitHub remains the Single Source of Truth.
+10. Do **not** start D154N unless D154O is explicitly closed or deprioritized.
 
 ## Strategy authority
 
@@ -38,135 +40,263 @@ opposite-direction coexistence blocked
 no look-ahead
 ```
 
-No D154A-L research result has changed baseline Entry authority.
+No D154A-UL result has authorized:
+- a new Entry gate;
+- a spread threshold;
+- a symbol veto;
+- SL widening;
+- FVG widening;
+- TP/sizing/SP/EM changes.
 
-## Current objective
+## Research-stage separation
 
-Entry survival remains the main unresolved bottleneck.
-
-2025:
-
-```text
-GOLD25    30/53  = 56.6%
-BTC25     60/127 = 47.2%
-SILVER25  18/46  = 39.1%
-CADJPY25  30/113 = 26.5%
-```
-
-Keep Entry survival separate from +1R winner continuation and post+2R exit architecture.
-
-## Research state in one page
-
-Rejected / demoted as universal Entry rules:
-- Fill-time M1 maturity;
-- delayed same-direction INITIAL_BOS;
-- fresh-FVG replacement Entry;
-- post-SL new Root rescue;
-- M1 TRANSITION-at-sweep veto;
-- stale prior-owner Root;
-- any same-owner BOS refresh cancellation;
-- static H1/M30 alignment;
-- post-contact same-direction HTF BOS veto;
-- simple HTF protected-to-external exhaustion.
-
-Supported but stage-limited:
-- M30 maturity at +1R for winner continuation;
-- V3E as provisional post+1R profit-preservation reference.
-
-Strongest current cross-market Entry-survival mechanism:
-- execution friction relative to causal M1 reaction scale.
-
-D154K:
-```text
-GOLD25 spread/reactionTR = 0.342, survival 56.6%
-CADJPY spread/reactionTR = 2.125, survival 26.5%
-```
-
-D154L 2025 transfer:
-```text
-GOLD   0.342 -> 56.6%
-BTC    1.015 -> 47.2%
-SILVER 1.701 -> 39.1%
-CADJPY 2.125 -> 26.5%
-```
-
-Interpretation boundary:
-- supported as cross-market transfer/viability mechanism;
-- not supported as a per-trade spread filter;
-- not sufficient to explain yearly GOLD regime changes.
-
-## Immediate D154M question
-
-Directly compare actual executable barrier outcome with an entry-side quote counterfactual.
+Keep separate:
 
 ```text
-Actual:
-LONG=BID
-SHORT=ASK
-
-Shadow:
-LONG=ASK
-SHORT=BID
+Fill -> +1R       = Entry survival
++1R -> +2R        = winner continuation
+post +2R          = exit architecture
+execution         = broker / quote mechanics
+market universe   = environment compatibility
+portfolio         = exposure risk
 ```
 
-Same actual Fill, original SL and +1R barriers.
+## Current Entry-survival evidence
 
-Primary count:
-```text
-actual SL_FIRST -> shadow PLUS_1R
-```
-
-This is shadow-only and has no strategy authority.
-
-## D154M execution order
+Standard-account 2025:
 
 ```text
-1. Apply D154M package.
-2. Compile the exact runner-selected terminal MQ5; require 0 errors.
-3. Run tools/verify_d154m_terminal_compile.py.
-4. Run tools/run_d154m_friction_counterfactual.py.
-5. Require GOLD/CADJPY Q1 OFF/ON canonical parity.
-6. Analyze GOLD23/GOLD24/GOLD25/BTC25/SILVER25/CADJPY25 pair outcomes.
-7. Do not design a spread threshold from the same results.
+          spread/reactionTR   spread/1R   spread/FVG   Entry survival
+GOLD            0.342          0.028       0.462         56.6%
+BTC             1.015          0.063       1.026         47.2%
+SILVER          1.701          0.147       2.099         39.1%
+CADJPY          2.125          0.150       2.688         26.5%
 ```
 
-## Critical infrastructure note
-
-The D154K session exposed a source/binary routing trap: `mt5_batch_runner.py` executes the EX5 discovered inside the selected MT5 AppData data directory. Repo MQ5 changes are not sufficient unless the exact runner-selected terminal source is compiled.
-
-The D154M apply package therefore:
-- discovers the exact runner terminal;
-- copies the repo source beside the selected EX5;
-- records pre-compile EX5 SHA;
-- requires post-compile SHA change before the test.
-
-Do not remove this safeguard.
-
-
-## D154M completed / D154N next
-
-D154M clean result:
+Ultra Low 2025:
 
 ```text
-cell       actual WR   entry-side quote shadow WR   actual SL -> shadow +1R
-GOLD23     52.3%       60.0%                        5
-GOLD24     46.2%       48.1%                        1
-GOLD25     56.6%       58.5%                        1
-BTC25      47.2%       52.8%                        7
-SILVER25   39.1%       39.1%                        0
-CADJPY25   26.5%       41.6%                       17
+          spread/reactionTR   spread/1R   spread/FVG   Entry survival
+GOLD#           0.162          0.014       0.247         58.2%
+BTCUSD#         0.541          0.032       0.551         48.8%
+SILVER#         1.303          0.108       1.500         38.3%
+CADJPY#         1.631          0.124       2.056         30.1%
 ```
 
-There were zero impossible `ACTUAL_PLUS_1R_TO_SHADOW_SL` pairs and zero D154M integrity warnings.
+The market-level cost-scale relationship has survived:
+- D154K discovery contrast;
+- D154L cross-market validation;
+- D154M direct post-Fill quote counterfactual;
+- D154UL account/feed natural experiment.
+
+## D154M / D154UL causal evidence
+
+Standard D154M actual SL-first -> entry-side quote +1R flips:
+
+```text
+GOLD       1
+BTC        7
+SILVER     0
+CADJPY    17
+```
+
+Ultra Low:
+
+```text
+GOLD#       0
+BTCUSD#     3
+SILVER#     0
+CADJPY#    10
+```
+
+Lower Ultra Low spread reduced the direct quote-side flip mechanism where it existed.
+
+Exact Standard/Ultra scenario overlap:
+
+```text
+GOLD      common 48
+BTCUSD    common126
+SILVER    common 43
+CADJPY    common112
+```
+
+Across 329 common scenarios:
+
+```text
+SL_FIRST -> PLUS_1R = 7
+PLUS_1R -> SL_FIRST = 0
+```
 
 Interpretation:
-- executable exit-side quote friction is a real causal loss mechanism;
-- it is large in CADJPY and material in BTC;
-- it is absent in SILVER25 despite SILVER's high D154L cost scale;
-- therefore D154L cost-scale remains a supported cross-market viability relation, but post-Fill quote-side disadvantage is only one component.
+- execution friction is causal;
+- execution friction is only a partial cause;
+- Ultra Low does not rescue high-friction markets enough to solve Entry survival.
 
-No strategy change.
+## Strategic pivot
 
-Next phase is D154N: measure pending-placement -> opposite-quote first touch -> executable-quote Fill delay/depth. This tests whether spread makes actual Entry occur later/deeper after the structural price has already been reached on the non-entry quote.
+The highest-value question is no longer:
 
-If D154N does not explain the residual SILVER/CADJPY weakness, stop extending the execution-cost hypothesis and return to underlying market-regime / path-quality research.
+> How can the same strategy be forced to trade every high-friction market well?
+
+The active question is:
+
+> Does the current V2 strategy reproduce GOLD-like performance across a broader set of markets whose execution scale is naturally GOLD-like?
+
+If yes, a compatible market universe may be more valuable than increasingly complex rescue logic for CADJPY/SILVER-like environments.
+
+## D154O Stage A — outcome-blind one-week raw screen
+
+The user will provide a broad list of Ultra Low tradable symbols in the next session.
+
+Frozen raw-screen window:
+
+```text
+2026-08-17 00:00
+through
+2026-08-23 23:59
+broker/server time
+```
+
+Collect the same week for every symbol.
+
+Preferred minimum data:
+- M1 OHLC;
+- spread in points;
+- symbol point/digits;
+- tick volume if available.
+
+Do not require a strategy trade.
+
+Do not inspect one-year win rate or P/L.
+
+Raw screen must clearly distinguish proxies from exact D154K metrics.
+
+Primary raw proxy:
+
+```text
+median spread_price / median valid M1 true range
+```
+
+Secondary raw proxy:
+- spread / generic all-M1-FVG width;
+- spread / close price in bps;
+- daily stability / quantiles;
+- data-quality diagnostics.
+
+GOLD# from the same week is the reference.
+
+Report every market relative to GOLD#.
+
+No combined weighted `GoldLikeScore`.
+
+## D154O shortlist freeze
+
+After Stage-A raw metrics are computed:
+
+1. inspect only execution-scale/data-quality results;
+2. define and save the `Gold-like shortlist manifest`;
+3. define and save a small non-Gold-like negative-control cohort;
+4. freeze both before any one-year strategy outcome is produced.
+
+The shortlist rule may use the observed **execution-metric distribution** because outcomes are still hidden. The final rule and rationale must be saved before Stage B.
+
+Do not add/drop markets after their one-year outcome is known.
+
+## D154O Stage B — 2025 strategy confirmation
+
+Run:
+
+```text
+XM Ultra Low
+Every tick based on real ticks
+2025-01-01 .. 2025-12-31
+```
+
+for:
+- all frozen Gold-like candidates;
+- frozen negative controls.
+
+Use current strategy semantics and:
+- V3E mode 9;
+- EM OFF;
+- D151 ON;
+- D154K ON;
+- D154M ON.
+
+Report:
+- Fill count;
+- Fill->+1R survival;
+- LONG/SHORT survival;
+- exact D154K spread/reactionTR;
+- exact D154K spread/1R;
+- exact D154K spread/selected-FVG;
+- D154M shadow survival and flip rate;
+- realized V3E WR, average winner R, expectancy R as separate strategy-level evidence.
+
+Tiny samples are `INSUFFICIENT_STRATEGY_SAMPLE`, not success.
+
+## D154O interpretation
+
+### If Gold-like markets generally reproduce good survival
+
+Prioritize future strategy research on the compatible universe.
+
+Do not spend primary research effort forcing very high-friction markets to work.
+
+### If Gold-like markets are mixed/poor
+
+Cost scale is helpful/necessary but insufficient.
+
+Return to underlying market regime / path-quality research within the low-friction cohort.
+
+### If the broad universe breaks the relationship
+
+Do not build a market-eligibility architecture from D154K-L-M-UL.
+
+## Temporal confirmation
+
+A successful 2025 cross-market result is not yet permanent strategy authority.
+
+Before a production market-eligibility layer:
+- use an additional disjoint year where data exists;
+- keep the frozen selection logic;
+- confirm the relationship does not reverse.
+
+## D154N disposition
+
+D154N pending->opposite quote touch->executable quote touch->Fill delay/depth is:
+
+```text
+DEFERRED
+not rejected
+not deleted
+```
+
+Resume only if D154O fails to produce a viable compatible market cohort or if later execution research specifically needs it.
+
+## Immediate next task
+
+The next session begins with the user supplying the broad Ultra Low symbol list.
+
+Then:
+
+```text
+1. build one-week M1+spread export/batch workflow
+2. collect fixed-week data for all supplied symbols
+3. run outcome-blind raw GOLD-relative screen
+4. freeze shortlist + negative-control manifest
+5. only then create one-year backtest batch
+```
+
+No 2025 strategy outcomes for new symbols should be generated before step 4.
+
+## Infrastructure note
+
+`mt5_batch_runner.py` uses the EX5 selected in the active MT5 AppData data directory.
+
+Whenever the EA is later modified:
+- synchronize the repo MQ5 to the exact runner-selected terminal source;
+- compile that exact source;
+- verify the runner EX5 SHA changed.
+
+D154O Stage A should preferably require no EA strategy modification.

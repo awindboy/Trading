@@ -1,7 +1,7 @@
 # V2 Backlog
 
-Last updated: 2026-08-23  
-Current phase: `D-154N PENDING-TO-FILL QUOTE-SIDE DELAY / DEPTH AUDIT`  
+Last updated: 2026-08-24  
+Current phase: `D-154O BROAD-MARKET GOLD-LIKE EXECUTION-SUITABILITY SCREEN`  
 2021: `KEEP UNTOUCHED`
 
 ## P0 — Foundation
@@ -9,7 +9,7 @@ Current phase: `D-154N PENDING-TO-FILL QUOTE-SIDE DELAY / DEPTH AUDIT`
 - [x] V1 frozen; V2 continuation-only.
 - [x] D151 exact Fill->+1R / SL-first causal platform.
 - [x] D153 real-tick batch automation.
-- [x] Entry, winner continuation, exit and exposure kept separate.
+- [x] Entry, continuation, exit, execution, market-universe and exposure questions kept separate.
 
 ## P0 — Entry-survival research completed
 
@@ -26,52 +26,74 @@ Current phase: `D-154N PENDING-TO-FILL QUOTE-SIDE DELAY / DEPTH AUDIT`
 - [x] D154H ordered HTF replay completed.
 - [x] D154I post-contact HTF BOS veto failed validation.
 - [x] D154J simple HTF exhaustion explanation rejected.
-- [x] D154K GOLD25/CADJPY25 cross-scale contrast completed.
+- [x] D154K cross-scale execution contrast completed.
 - [x] D154L cost-scale transfer validation completed.
+- [x] D154M post-Fill quote-side counterfactual completed.
+- [x] D154UL Ultra Low natural experiment completed.
 
-## P0 — D154K/L retained finding
+## P0 — retained execution findings
 
-- [x] 2025 market ordering: spread/reactionTR GOLD < BTC < SILVER < CADJPY.
-- [x] 2025 survival ordering: GOLD > BTC > SILVER > CADJPY.
-- [x] Cross-market cost-scale mechanism supported.
-- [x] Per-trade spread threshold not supported.
-- [x] Universal year/regime determinant not established.
+- [x] Relative execution friction is a supported cross-market mechanism.
+- [x] D154M establishes a direct causal post-Fill quote-side component.
+- [x] Ultra Low materially reduces spread/reactionTR, spread/R and spread/FVG.
+- [x] Ultra Low reduces D154M quote-side flips.
+- [x] Ultra Low does not solve SILVER#/CADJPY# Entry survival.
+- [x] Per-trade spread threshold remains unsupported.
+- [x] Strategy baseline remains unchanged.
 
-## P0 — D154M
+## P0 — D154O Stage A: broad market raw screen
 
-- [x] Apply `2.11R0L11`.
-- [x] Compile exact runner-selected terminal MQ5 with 0 errors.
-- [x] Verify runner EX5 SHA changed.
-- [x] GOLD/CADJPY Q1 D154M OFF/ON canonical parity PASS.
-- [x] Require D154M Fill count == pair outcome count.
-- [x] Require zero D154M integrity warnings.
-- [x] Run GOLD23/GOLD24/GOLD25/BTC25/SILVER25/CADJPY25.
-- [x] Report actual WR vs entry-side-quote shadow WR.
-- [x] Report `ACTUAL_SL_TO_SHADOW_PLUS_1R` by market/direction.
-- [x] Reject any `ACTUAL_PLUS_1R_TO_SHADOW_SL` as instrumentation integrity failure.
-- [ ] Do not fit a spread threshold from D154M.
+- [ ] User provides broad XM Ultra Low symbol list.
+- [ ] Confirm exact symbol suffixes/names.
+- [ ] Build automated fixed-week M1+spread+symbol-metadata export workflow.
+- [ ] Freeze screen window `2026-08-17 .. 2026-08-23`.
+- [ ] Include GOLD# same-week reference data.
+- [ ] Collect every supplied symbol before ranking.
+- [ ] Calculate raw spread/M1-TR proxy.
+- [ ] Calculate generic all-M1-FVG spread/width proxy.
+- [ ] Calculate spread bps.
+- [ ] Record day-level distributions and data quality.
+- [ ] Mark inadequate datasets `INSUFFICIENT_DATA`.
+- [ ] Do not inspect/run one-year performance.
+- [ ] Produce full-universe screen table.
 
-## P1 — after D154M
+## P0 — D154O shortlist freeze
 
-If friction flips scale monotonically with D154L:
-- preregister a separate execution-design hypothesis before strategy changes.
+- [ ] Define Gold-like shortlist from Stage-A metrics only.
+- [ ] Do not use strategy outcome to choose threshold/rank.
+- [ ] Save shortlist manifest with exact selection rationale.
+- [ ] Freeze 2-4 non-Gold-like negative controls if practical.
+- [ ] Prefer some asset-class-matched controls where practical.
+- [ ] Freeze all Stage-B symbols before any one-year result.
 
-If flips are small:
-- retain cost-scale as environment viability correlation but return to non-cost market-regime causes for Entry survival.
+## P0 — D154O Stage B: 2025 strategy confirmation
+
+- [ ] Run Ultra Low 2025 Every-tick-real-ticks for frozen Gold-like candidates.
+- [ ] Run frozen negative controls.
+- [ ] D151/D154K/D154M enabled; no new Entry gate.
+- [ ] Report Fill count and censoring.
+- [ ] Report Fill->+1R survival overall and LONG/SHORT.
+- [ ] Report exact spread/reactionTR, spread/R, spread/selected-FVG.
+- [ ] Report D154M actual/shadow survival and quote flips.
+- [ ] Report realized V3E WR, avg winner R and expectancy separately.
+- [ ] Mark tiny strategy populations `INSUFFICIENT_STRATEGY_SAMPLE`.
+- [ ] Do not add/drop markets after outcome is known.
+
+## P1 — temporal confirmation if D154O succeeds
+
+- [ ] Freeze the supported market-selection logic.
+- [ ] Use an additional disjoint year where available.
+- [ ] Reject permanent market eligibility if the relationship reverses.
+- [ ] Only after temporal confirmation consider a production market-eligibility layer.
+
+## P2 — D154N deferred
+
+- [ ] Pending->opposite quote->executable quote->Fill audit remains documented.
+- [ ] Do not implement while D154O is active.
+- [ ] Resume only if D154O fails to produce a robust compatible market cohort or later evidence specifically requires it.
 
 ## P1 — winner continuation / exit
 
-- [ ] Keep M30 +1R maturity separate from Entry research.
+- [ ] Keep M30 +1R maturity separate from Entry/market eligibility.
 - [ ] Keep V3E provisional until broad strategy-level validation.
-- [ ] Revisit exposure only after Entry mechanism is better understood.
-
-
-## P0 — D154N pending-to-Fill quote-side delay/depth
-
-- [ ] Shadow-only instrumentation.
-- [ ] Freeze pending Entry/FVG/Root/SL at accepted pending placement.
-- [ ] Record first opposite-quote Entry touch and first executable-quote Entry touch.
-- [ ] Measure touch->Fill delay/depth and normalize by FVG/risk.
-- [ ] GOLD/CADJPY Q1 OFF/ON parity before evidence.
-- [ ] Compare GOLD25/BTC25/SILVER25/CADJPY25 with LONG/SHORT preserved.
-- [ ] Do not fit pending offsets or spread thresholds.
+- [ ] Revisit exposure only after the compatible market universe is better understood.

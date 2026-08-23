@@ -1,9 +1,10 @@
 # V2 Research State
 
-Last updated: 2026-08-23  
-Phase: `D-154N PENDING-TO-FILL QUOTE-SIDE DELAY / DEPTH AUDIT`  
-Current tested base: `2.10R0L10 / D154K`  
-Target build: `2.11R0L11 / D154M`  
+Last updated: 2026-08-24  
+Phase: `D-154O BROAD-MARKET GOLD-LIKE EXECUTION-SUITABILITY SCREEN`  
+Current tested EA: `2.11R0L11 / D154M`  
+Execution environment: `XM Ultra Low`  
+D154N: `DEFERRED`  
 Authority: `docs/ea/v2/AGENTS_V2.md`  
 2021: `KEEP UNTOUCHED`
 
@@ -13,83 +14,107 @@ Build a robust continuation strategy with:
 - realized WR >=50% as a baseline condition;
 - average winner meaningfully >1R;
 - positive cost-adjusted expectancy;
-- persistence across periods and markets.
+- persistence across periods and compatible markets.
 
-No threshold stack is justified merely because it raises in-sample WR.
+Do not require one strategy to work on every tradable symbol if a causal market-compatibility condition exists.
 
 ## Axis A — Fill -> +1R Entry survival
 
-Status: **PRIMARY BOTTLENECK / EXECUTION-TRANSFER MECHANISM UNDER CAUSAL TEST**
+Status:
 
-2025:
 ```text
-GOLD25    56.6%
-BTC25     47.2%
-SILVER25  39.1%
-CADJPY25  26.5%
+PRIMARY BOTTLENECK
++
+MARKET EXECUTION-SUITABILITY HYPOTHESIS UNDER BROAD VALIDATION
 ```
 
-D154A-J removed many M1/HTF timing and geometry explanations.
+Ultra Low 2025:
 
-D154K/L currently support one cross-market mechanism:
 ```text
-higher broker spread relative to causal M1 reaction scale
--> lower cross-market Fill->+1R survival
+GOLD#      58.2%
+BTCUSD#    48.8%
+SILVER#    38.3%
+CADJPY#    30.1%
 ```
 
-This is not yet a per-trade Entry gate.
+D154A-J eliminated several universal timing/HTF geometry gates.
 
-D154M now asks whether actual quote-side barrier mechanics directly flip SL-first outcomes.
+D154K/L/M/UL support:
+
+```text
+lower execution friction relative to local strategy geometry
+-> better probability that Entry edge survives across markets
+```
+
+This remains a market/environment relation, not a per-trade spread gate.
+
+## D154O question
+
+Does the relation generalize to a much broader Ultra Low symbol universe?
+
+Two stages:
+
+```text
+Stage A:
+fixed one-week chart-only / outcome-blind raw screen
+
+Stage B:
+frozen shortlist + controls
+-> 2025 real-tick strategy confirmation
+```
+
+## Stage-A governance
+
+Frozen week:
+
+```text
+2026-08-17 .. 2026-08-23
+```
+
+Do not use one-year strategy outcomes during screening.
+
+Raw chart metrics are proxies and must not be mislabeled as exact D154K:
+- raw spread / M1 TR;
+- raw spread / generic M1 FVG;
+- spread bps;
+- distribution/data quality.
+
+GOLD# same-week data is the reference.
+
+No weighted score.
+
+## Stage-B governance
+
+Freeze shortlist/control manifest before outcomes.
+
+Then run exact:
+- D151;
+- D154K;
+- D154M;
+- current V3E reference.
+
+Report sample size and direction.
+
+Do not promote a tiny-sample high WR market.
+
+## Temporal validation
+
+If 2025 broad-market results support the hypothesis, use another disjoint year before permanent market eligibility authority.
 
 ## Axis B — +1R -> +2R winner continuation
 
-Keep separate.
+Separate problem.
 
-Lower M30 protected-to-external progress at +1R remains the strongest descriptive continuation relation. It is not Entry authority.
+Lower M30 protected-to-external progress at +1R remains the strongest descriptive continuation relationship. It is not an Entry or market screen variable.
 
-## Axis C — post+1R / post+2R profit preservation
+## Axis C — exit architecture
 
-V3E `BANK_2R_LOCK_ONE` remains provisional research reference only.
+V3E `BANK_2R_LOCK_ONE` remains the provisional post+1R reference.
 
-## D154M governance
+Do not use D154O to optimize exit rules.
 
-Population:
-```text
-actual filled EXTERNAL_CONTINUATION
-```
+## D154N
 
-Actual outcome:
-```text
-D151 executable-side Fill->+1R / original-SL race
-```
+Pre-Fill pending quote-delay/depth audit remains scientifically valid but is deferred.
 
-Shadow:
-```text
-LONG ASK vs same +1R / SL
-SHORT BID vs same +1R / SL
-```
-
-No fill/barrier modification. No zero-spread synthetic price.
-
-Primary result:
-```text
-count and rate of ACTUAL_SL_TO_SHADOW_PLUS_1R
-```
-
-Report by market and direction.
-
-Do not:
-- optimize a spread threshold;
-- exclude a symbol from the same sample;
-- widen SL;
-- change Entry/FVG;
-- infer cost is the only temporal regime variable.
-
-
-## D154M result
-
-Post-Fill quote-side friction is causal but partial. CADJPY25 had 17/83 actual SL-first trades flip to entry-side-quote +1R, BTC25 had 7/67, while SILVER25 had 0/28. D154L cost-scale remains a market-level viability relation, but cannot be equated with this one barrier mechanism.
-
-## D154N governance
-
-Test pending-placement -> opposite-quote first Entry touch -> executable-quote Entry touch / actual Fill delay and depth. No pending offset, spread threshold, direction exception or strategy change.
+Resume only after D154O interpretation if still strategically useful.
