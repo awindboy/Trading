@@ -1,7 +1,7 @@
 # V2 Research State
 
 Last updated: 2026-08-24  
-Phase: `D-154O BROAD-MARKET GOLD-LIKE EXECUTION-SUITABILITY SCREEN`  
+Phase: `D-154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION`  
 Current tested EA: `2.11R0L11 / D154M`  
 Execution environment: `XM Ultra Low`  
 D154N: `DEFERRED`  
@@ -63,12 +63,45 @@ frozen shortlist + controls
 -> 2025 real-tick strategy confirmation
 ```
 
+## Stage-A candidate universe — frozen before outcomes
+
+Universe ID:
+
+```text
+D154O_STAGE_A_UL32_20260824
+```
+
+Primary universe:
+
+```text
+Forex       15
+Crypto       8
+Spot Metals  9
+TOTAL       32
+```
+
+Reference:
+
+```text
+GOLD#
+```
+
+The initially considered US Stocks cohort (`Nvidia`, `Nasdaq`, `Apple`, `Google`) was excluded before Stage-A outcomes because `Stocks/US` has no Ultra Low classification. This is an execution-environment compatibility exclusion, not a performance-based selection.
+
+Authority/manifest:
+
+```text
+docs/ea/v2/D154O_STAGE_A_UNIVERSE_MANIFEST.md
+config/d154o_stage_a_universe.json
+```
+
 ## Stage-A governance
 
 Frozen week:
 
 ```text
 2026-08-17 .. 2026-08-23
+broker/server time
 ```
 
 Do not use one-year strategy outcomes during screening.
@@ -82,6 +115,8 @@ Raw chart metrics are proxies and must not be mislabeled as exact D154K:
 GOLD# same-week data is the reference.
 
 No weighted score.
+
+Stage-A collection infrastructure is standalone and does not modify the strategy EA. `mt5/scripts/D154OStageAExporter.mq5` exports broker/server-time M1 bars and stored M1 spread from the frozen 32-symbol universe; `tools/summarize_d154o_stage_a.py` computes the outcome-blind proxies only after a complete 32/32 export. Local MetaEditor compile/run validation is still required before evidence use.
 
 ## Stage-B governance
 
@@ -118,3 +153,15 @@ Do not use D154O to optimize exit rules.
 Pre-Fill pending quote-delay/depth audit remains scientifically valid but is deferred.
 
 Resume only after D154O interpretation if still strategically useful.
+
+
+## D154O Stage A result / Stage B active
+
+Stage-A shortlist and negative controls are frozen in:
+
+`docs/ea/v2/D154O_STAGE_A_RESULTS_AND_STAGE_B_FREEZE.md`
+
+Stage B now tests whether the frozen raw low-friction cohort actually reproduces
+better Fill->+1R survival and exact D154K/M geometry in 2025.
+
+No Stage-B market may be added or dropped after its outcome is known.

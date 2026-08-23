@@ -1,7 +1,7 @@
 # V2 Backlog
 
 Last updated: 2026-08-24  
-Current phase: `D-154O BROAD-MARKET GOLD-LIKE EXECUTION-SUITABILITY SCREEN`  
+Current phase: `D-154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION`  
 2021: `KEEP UNTOUCHED`
 
 ## P0 — Foundation
@@ -43,28 +43,33 @@ Current phase: `D-154O BROAD-MARKET GOLD-LIKE EXECUTION-SUITABILITY SCREEN`
 
 ## P0 — D154O Stage A: broad market raw screen
 
-- [ ] User provides broad XM Ultra Low symbol list.
-- [ ] Confirm exact symbol suffixes/names.
-- [ ] Build automated fixed-week M1+spread+symbol-metadata export workflow.
-- [ ] Freeze screen window `2026-08-17 .. 2026-08-23`.
+- [x] User provides broad XM Ultra Low symbol list.
+- [x] Confirm exact symbol suffixes/names for the primary universe.
+- [x] Exclude the initially considered US Stocks cohort before outcomes because `Stocks/US` has no Ultra Low classification.
+- [x] Freeze primary Stage-A universe: 32 symbols = 15 Forex + 8 Crypto + 9 Spot Metals.
+- [x] Save candidate-universe manifest as `D154O_STAGE_A_UNIVERSE_MANIFEST.md` and `config/d154o_stage_a_universe.json`.
+- [x] Prepare standalone automated fixed-week M1+spread+symbol-metadata export workflow; no EA strategy modification.
+- [ ] Compile/install `D154OStageAExporter.mq5` in the exact active XM MT5 terminal with 0 errors.
+- [ ] Freeze screen window `2026-08-17 .. 2026-08-23` in broker/server time.
 - [ ] Include GOLD# same-week reference data.
-- [ ] Collect every supplied symbol before ranking.
+- [ ] Collect all 32 supplied symbols before interpreting/ranking.
+- [ ] Require exporter completion status 32/32 and Ultra Low broker path confirmation.
 - [ ] Calculate raw spread/M1-TR proxy.
 - [ ] Calculate generic all-M1-FVG spread/width proxy.
 - [ ] Calculate spread bps.
 - [ ] Record day-level distributions and data quality.
 - [ ] Mark inadequate datasets `INSUFFICIENT_DATA`.
-- [ ] Do not inspect/run one-year performance.
-- [ ] Produce full-universe screen table.
+- [ ] Do not inspect/run new-symbol one-year performance.
+- [ ] Produce full-universe screen table and result ZIP.
 
 ## P0 — D154O shortlist freeze
 
-- [ ] Define Gold-like shortlist from Stage-A metrics only.
-- [ ] Do not use strategy outcome to choose threshold/rank.
-- [ ] Save shortlist manifest with exact selection rationale.
-- [ ] Freeze 2-4 non-Gold-like negative controls if practical.
-- [ ] Prefer some asset-class-matched controls where practical.
-- [ ] Freeze all Stage-B symbols before any one-year result.
+- [x] Define Gold-like shortlist from Stage-A metrics only.
+- [x] Do not use strategy outcome to choose threshold/rank.
+- [x] Save shortlist manifest with exact selection rationale.
+- [x] Freeze 2-4 non-Gold-like negative controls if practical.
+- [x] Prefer some asset-class-matched controls where practical.
+- [x] Freeze all Stage-B symbols before any one-year result.
 
 ## P0 — D154O Stage B: 2025 strategy confirmation
 
@@ -97,3 +102,14 @@ Current phase: `D-154O BROAD-MARKET GOLD-LIKE EXECUTION-SUITABILITY SCREEN`
 - [ ] Keep M30 +1R maturity separate from Entry/market eligibility.
 - [ ] Keep V3E provisional until broad strategy-level validation.
 - [ ] Revisit exposure only after the compatible market universe is better understood.
+
+
+## P0 — D154O Stage B execution package
+
+- [x] Stage-A result accepted with minor crypto-tail truncation note.
+- [x] Frozen Stage-B manifest created before new outcomes.
+- [x] Frozen cohort = 1 reference + 7 Gold-like + 4 controls.
+- [x] Stage-B batch/summary tool prepared.
+- [ ] Run `python tools\run_d154o_stage_b_2025.py`.
+- [ ] Upload and interpret `D154O_STAGE_B_2025_RESULT.zip`.
+- [ ] Do not modify cohort after results.

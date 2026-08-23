@@ -1,0 +1,188 @@
+{
+  "freeze_id": "D154O_STAGE_B_FREEZE_20260824",
+  "base_git_head": "0b317facba97f4edc305d0d4c82fbe5bd10a9739",
+  "source_stage_a_universe": "D154O_STAGE_A_UL32_20260824",
+  "source_stage_a_result_zip": "D154O_STAGE_A_UL32_20260824_014525.zip",
+  "selection_time_status": "FROZEN_BEFORE_NEW_2025_OUTCOMES",
+  "environment": "XM Ultra Low",
+  "stage_b_period": {
+    "from": "2025.01.01",
+    "to": "2025.12.31",
+    "model": "Every tick based on real ticks"
+  },
+  "selection_rule": {
+    "quality_status": "OK",
+    "raw_spread_over_m1_tr_max": 0.714286,
+    "median_spread_over_raw_fvg_width_max": 2.0,
+    "rule_note": "Two raw dimensions kept separate; no weighted GoldLikeScore. Cut at the common top-8 Stage-A block ending at USDJPY#."
+  },
+  "reference": "GOLD#",
+  "gold_like_candidates": [
+    "XAUJPY#",
+    "XAUCNH#",
+    "BTCUSD#",
+    "XAUEUR#",
+    "GAUCNH#",
+    "GAUUSD#",
+    "USDJPY#"
+  ],
+  "negative_controls": [
+    "GBPUSD#",
+    "SILVER#",
+    "EURUSD#",
+    "ETHUSD#"
+  ],
+  "all_stage_b_symbols": [
+    "GOLD#",
+    "XAUJPY#",
+    "XAUCNH#",
+    "BTCUSD#",
+    "XAUEUR#",
+    "GAUCNH#",
+    "GAUUSD#",
+    "USDJPY#",
+    "GBPUSD#",
+    "SILVER#",
+    "EURUSD#",
+    "ETHUSD#"
+  ],
+  "interpretation_tags": {
+    "GOLD_FAMILY_CORRELATED_REPLICATION": [
+      "GOLD#",
+      "XAUJPY#",
+      "XAUCNH#",
+      "XAUEUR#",
+      "GAUCNH#",
+      "GAUUSD#"
+    ],
+    "INDEPENDENT_LOW_FRICTION_FOCUS": [
+      "BTCUSD#",
+      "USDJPY#"
+    ],
+    "BOUNDARY_FX_CONTROLS": [
+      "GBPUSD#",
+      "EURUSD#"
+    ],
+    "ASSET_CLASS_CONTROLS": [
+      "SILVER#",
+      "ETHUSD#"
+    ]
+  },
+  "stage_a_metrics": {
+    "GOLD#": {
+      "asset_class": "METALS",
+      "raw_spread_over_m1_tr": 0.159509202454,
+      "spread_over_generic_m1_fvg": 0.440677966102,
+      "spread_bps": 0.59486645518,
+      "raw_spread_over_m1_tr_vs_gold": 1.0,
+      "spread_over_generic_m1_fvg_vs_gold": 1.0,
+      "quality_status": "OK"
+    },
+    "XAUJPY#": {
+      "asset_class": "METALS",
+      "raw_spread_over_m1_tr": 0.291828793774,
+      "spread_over_generic_m1_fvg": 0.893487394958,
+      "spread_bps": 1.06862571886,
+      "raw_spread_over_m1_tr_vs_gold": 1.82954205328,
+      "spread_over_generic_m1_fvg_vs_gold": 2.02752908856,
+      "quality_status": "OK"
+    },
+    "XAUCNH#": {
+      "asset_class": "METALS",
+      "raw_spread_over_m1_tr": 0.41095890411,
+      "spread_over_generic_m1_fvg": 1.21293800539,
+      "spread_bps": 1.51545766822,
+      "raw_spread_over_m1_tr_vs_gold": 2.57639620653,
+      "spread_over_generic_m1_fvg_vs_gold": 2.752436243,
+      "quality_status": "OK"
+    },
+    "BTCUSD#": {
+      "asset_class": "CRYPTO",
+      "raw_spread_over_m1_tr": 0.429799426934,
+      "spread_over_generic_m1_fvg": 1.20967741935,
+      "spread_bps": 2.15159106573,
+      "raw_spread_over_m1_tr_vs_gold": 2.69451179193,
+      "spread_over_generic_m1_fvg_vs_gold": 2.74503722084,
+      "quality_status": "OK"
+    },
+    "XAUEUR#": {
+      "asset_class": "METALS",
+      "raw_spread_over_m1_tr": 0.432835820896,
+      "spread_over_generic_m1_fvg": 1.25265957447,
+      "spread_bps": 1.50347778159,
+      "raw_spread_over_m1_tr_vs_gold": 2.71354764638,
+      "spread_over_generic_m1_fvg_vs_gold": 2.84257364976,
+      "quality_status": "OK"
+    },
+    "GAUCNH#": {
+      "asset_class": "METALS",
+      "raw_spread_over_m1_tr": 0.571428571429,
+      "spread_over_generic_m1_fvg": 1.62019230769,
+      "spread_bps": 2.04444626173,
+      "raw_spread_over_m1_tr_vs_gold": 3.58241758242,
+      "spread_over_generic_m1_fvg_vs_gold": 3.67659023669,
+      "quality_status": "OK"
+    },
+    "GAUUSD#": {
+      "asset_class": "METALS",
+      "raw_spread_over_m1_tr": 0.622641509434,
+      "spread_over_generic_m1_fvg": 1.73684210526,
+      "spread_bps": 2.33161170893,
+      "raw_spread_over_m1_tr_vs_gold": 3.90348330914,
+      "spread_over_generic_m1_fvg_vs_gold": 3.94129554656,
+      "quality_status": "OK"
+    },
+    "USDJPY#": {
+      "asset_class": "FOREX",
+      "raw_spread_over_m1_tr": 0.714285714285,
+      "spread_over_generic_m1_fvg": 1.99999999999,
+      "spread_bps": 0.631352989456,
+      "raw_spread_over_m1_tr_vs_gold": 4.47802197802,
+      "spread_over_generic_m1_fvg_vs_gold": 4.53846153844,
+      "quality_status": "OK"
+    },
+    "GBPUSD#": {
+      "asset_class": "FOREX",
+      "raw_spread_over_m1_tr": 1.0,
+      "spread_over_generic_m1_fvg": 2.59999999999,
+      "spread_bps": 0.813549293691,
+      "raw_spread_over_m1_tr_vs_gold": 6.26923076923,
+      "spread_over_generic_m1_fvg_vs_gold": 5.89999999999,
+      "quality_status": "OK"
+    },
+    "SILVER#": {
+      "asset_class": "METALS",
+      "raw_spread_over_m1_tr": 1.02173913043,
+      "spread_over_generic_m1_fvg": 2.76470588235,
+      "spread_bps": 7.14437722312,
+      "raw_spread_over_m1_tr_vs_gold": 6.40551839465,
+      "spread_over_generic_m1_fvg_vs_gold": 6.27375565611,
+      "quality_status": "OK"
+    },
+    "EURUSD#": {
+      "asset_class": "FOREX",
+      "raw_spread_over_m1_tr": 1.11111111111,
+      "spread_over_generic_m1_fvg": 2.50000000001,
+      "spread_bps": 0.862314279062,
+      "raw_spread_over_m1_tr_vs_gold": 6.96581196582,
+      "spread_over_generic_m1_fvg_vs_gold": 5.6730769231,
+      "quality_status": "OK"
+    },
+    "ETHUSD#": {
+      "asset_class": "CRYPTO",
+      "raw_spread_over_m1_tr": 1.15151515152,
+      "spread_over_generic_m1_fvg": 4.04255319149,
+      "spread_bps": 8.3823406142,
+      "raw_spread_over_m1_tr_vs_gold": 7.21911421912,
+      "spread_over_generic_m1_fvg_vs_gold": 9.17348608838,
+      "quality_status": "OK"
+    }
+  },
+  "governance": [
+    "Do not add or drop Stage-B symbols after any new 2025 result is known.",
+    "Stage-A raw metrics are proxies, not exact D154K variables.",
+    "No per-trade spread gate, symbol veto, Entry/SL/TP/sizing/SP/EM change is authorized.",
+    "Gold-family variants are correlated replications, not independent market confirmations.",
+    "Tiny Fill populations are INSUFFICIENT_STRATEGY_SAMPLE, not success."
+  ]
+}

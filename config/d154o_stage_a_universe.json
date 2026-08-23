@@ -1,0 +1,56 @@
+{
+  "universe_id": "D154O_STAGE_A_UL32_20260824",
+  "research_phase": "D154O_STAGE_A_OUTCOME_BLIND_SCREEN",
+  "environment": "XM Ultra Low",
+  "screen_window_server_time": {
+    "from": "2026-08-17 00:00:00",
+    "to": "2026-08-23 23:59:59"
+  },
+  "reference_symbol": "GOLD#",
+  "symbols": [
+    {"symbol": "CADCHF#", "asset_class": "FOREX"},
+    {"symbol": "CADJPY#", "asset_class": "FOREX"},
+    {"symbol": "CHFJPY#", "asset_class": "FOREX"},
+    {"symbol": "EURCAD#", "asset_class": "FOREX"},
+    {"symbol": "EURCHF#", "asset_class": "FOREX"},
+    {"symbol": "EURGBP#", "asset_class": "FOREX"},
+    {"symbol": "EURJPY#", "asset_class": "FOREX"},
+    {"symbol": "EURUSD#", "asset_class": "FOREX"},
+    {"symbol": "GBPCAD#", "asset_class": "FOREX"},
+    {"symbol": "GBPCHF#", "asset_class": "FOREX"},
+    {"symbol": "GBPJPY#", "asset_class": "FOREX"},
+    {"symbol": "GBPUSD#", "asset_class": "FOREX"},
+    {"symbol": "USDCAD#", "asset_class": "FOREX"},
+    {"symbol": "USDCHF#", "asset_class": "FOREX"},
+    {"symbol": "USDJPY#", "asset_class": "FOREX"},
+
+    {"symbol": "ADAUSD#", "asset_class": "CRYPTO"},
+    {"symbol": "BCHUSD#", "asset_class": "CRYPTO"},
+    {"symbol": "BTCUSD#", "asset_class": "CRYPTO"},
+    {"symbol": "DOGEUSD#", "asset_class": "CRYPTO"},
+    {"symbol": "ETHUSD#", "asset_class": "CRYPTO"},
+    {"symbol": "SOLUSD#", "asset_class": "CRYPTO"},
+    {"symbol": "XLMUSD#", "asset_class": "CRYPTO"},
+    {"symbol": "XRPUSD#", "asset_class": "CRYPTO"},
+
+    {"symbol": "GOLD#", "asset_class": "METALS", "reference": true},
+    {"symbol": "SILVER#", "asset_class": "METALS"},
+    {"symbol": "XAUEUR#", "asset_class": "METALS"},
+    {"symbol": "XPDUSD#", "asset_class": "METALS"},
+    {"symbol": "XPTUSD#", "asset_class": "METALS"},
+    {"symbol": "GAUCNH#", "asset_class": "METALS"},
+    {"symbol": "GAUUSD#", "asset_class": "METALS"},
+    {"symbol": "XAUCNH#", "asset_class": "METALS"},
+    {"symbol": "XAUJPY#", "asset_class": "METALS"}
+  ],
+  "excluded": [
+    {
+      "group": "Stocks/US",
+      "symbols": ["Nvidia", "Nasdaq", "Apple", "Google"],
+      "reason": "Excluded before Stage-A outcomes because this broker category has no Ultra Low classification; environment mismatch with the D154O primary hypothesis."
+    }
+  ],
+  "selection_status": "CANDIDATE_UNIVERSE_FROZEN_BEFORE_STAGE_A_OUTCOMES",
+  "shortlist_status": "NOT_YET_DEFINED",
+  "negative_controls_status": "NOT_YET_FROZEN"
+}

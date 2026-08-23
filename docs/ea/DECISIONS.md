@@ -6418,3 +6418,30 @@ Decision:
 - Stage B uses 2025 Every-tick-real-ticks with the unchanged strategy plus D151/D154K/D154M to test exact Entry survival and execution geometry.
 - Tiny Fill populations are insufficient evidence, not successful markets.
 - A positive 2025 broad-market relation still requires an additional disjoint-year confirmation before any production market-eligibility authority.
+
+
+
+## D-154O ??Stage A complete and Stage-B cohort frozen outcome-blind
+
+Status: `ACTIVE VALIDATION / NO STRATEGY AUTHORITY`  
+Date: `2026-08-24`
+
+Decision:
+- D154O Stage A completed on the 32-symbol XM Ultra Low universe using raw chart-only execution proxies.
+- The minor crypto tail truncation (~4h15m on Sunday) is accepted with an explicit data-quality note because sensitivity checks did not change shortlist membership.
+- No weighted GoldLikeScore is used.
+- Before generating any new 2025 outcomes, the Stage-B cohort is frozen as:
+  - reference: `GOLD#`;
+  - Gold-like: `XAUJPY#`, `XAUCNH#`, `BTCUSD#`, `XAUEUR#`, `GAUCNH#`, `GAUUSD#`, `USDJPY#`;
+  - negative controls: `GBPUSD#`, `SILVER#`, `EURUSD#`, `ETHUSD#`.
+- Frozen selection rule:
+  - `quality_status = OK`;
+  - raw `spread / M1 TR <= 0.714286`;
+  - raw `spread / generic M1 FVG <= 2.000000`.
+- GOLD-denominated variants are correlated replications, not independent market confirmations.
+- `USDJPY#` versus `GBPUSD#` / `EURUSD#` is a primary independent boundary comparison.
+- Stage B uses 2025 Every-tick-real-ticks with V3E mode 9, EM OFF, D151 ON, D154K ON, D154M ON.
+- No market may be added or dropped after its Stage-B outcome is known.
+- No Entry gate, per-trade spread threshold, symbol veto, SL/TP/sizing/SP/EM change is authorized.
+- D154N remains deferred.
+

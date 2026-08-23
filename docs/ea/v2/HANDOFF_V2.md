@@ -1,10 +1,10 @@
 # V2 Development Handoff
 
 Last updated: 2026-08-24  
-Git HEAD before this local phase update: `110bd7d274ae4480c779cdcdc5c9c539e86611da`  
+Git HEAD before this local phase update: `0b317facba97f4edc305d0d4c82fbe5bd10a9739`  
 Current tested EA: `2.11R0L11 / V2_D154M_EXECUTION_FRICTION_COUNTERFACTUAL`  
 Current execution environment: **XM Ultra Low**  
-Current phase: **D154O BROAD-MARKET GOLD-LIKE EXECUTION-SUITABILITY SCREEN — ACTIVE**  
+Current phase: **D154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION — ACTIVE**  
 D154N: **DEFERRED / NOT REJECTED**  
 V1: **FROZEN HISTORICAL CONTROL**  
 2021: **KEEP UNTOUCHED**
@@ -21,8 +21,9 @@ GitHub is the Single Source of Truth. This handoff is intended to be committed b
 6. Read `docs/ea/v2/RESEARCH_SYNTHESIS_D154A_D154UL.md`.
 7. Read `docs/ea/v2/D154UL_ULTRA_LOW_EXECUTION_ENVIRONMENT_RESULTS.md`.
 8. Read `docs/ea/v2/D154O_BROAD_MARKET_GOLD_LIKE_SCREEN.md`.
-9. Then inspect `RESEARCH_STATE_V2.md`, `BACKLOG_V2.md`, and current code.
-10. Do **not** start D154N unless D154O is explicitly closed or deprioritized.
+9. Read `docs/ea/v2/D154O_STAGE_A_UNIVERSE_MANIFEST.md`.
+10. Then inspect `RESEARCH_STATE_V2.md`, `BACKLOG_V2.md`, and current code.
+11. Do **not** start D154N unless D154O is explicitly closed or deprioritized.
 
 ## Strategy authority
 
@@ -146,7 +147,22 @@ If yes, a compatible market universe may be more valuable than increasingly comp
 
 ## D154O Stage A — outcome-blind one-week raw screen
 
-The user will provide a broad list of Ultra Low tradable symbols in the next session.
+The broad primary Stage-A universe is now frozen before new-symbol outcomes:
+
+```text
+Universe ID: D154O_STAGE_A_UL32_20260824
+Forex:       15
+Crypto:       8
+Spot Metals:  9
+TOTAL:       32
+Reference:   GOLD#
+```
+
+Exact symbol list and exclusion rationale:
+
+`docs/ea/v2/D154O_STAGE_A_UNIVERSE_MANIFEST.md`
+
+The initially considered US Stocks cohort (`Nvidia`, `Nasdaq`, `Apple`, `Google`) is excluded because the broker's `Stocks/US` category has no Ultra Low classification. The exclusion was made before Stage-A/new-symbol 2025 outcomes and is an execution-environment compatibility decision, not a performance screen.
 
 Frozen raw-screen window:
 
@@ -188,6 +204,29 @@ GOLD# from the same week is the reference.
 Report every market relative to GOLD#.
 
 No combined weighted `GoldLikeScore`.
+
+### Stage-A infrastructure prepared
+
+Standalone research collection is prepared without modifying the strategy EA:
+
+```text
+mt5/scripts/D154OStageAExporter.mq5
+config/d154o_stage_a_universe.json
+tools/install_d154o_stage_a_exporter.py
+tools/summarize_d154o_stage_a.py
+```
+
+The exporter:
+- runs as an MT5 Script, not the V2 strategy EA;
+- uses the fixed server-time window;
+- exports all 32 M1 datasets to MT5 Common Files;
+- records M1 OHLC, stored spread points, point/digits and tick volume;
+- records broker `SYMBOL_PATH` so Ultra Low classification can be checked;
+- writes an explicit `EXPORT_COMPLETE` only for 32/32 success.
+
+The summarizer is fail-closed on incomplete universe/path/time-window mismatches and produces only chart proxies/data quality. It does not read or generate strategy outcomes.
+
+Local MetaEditor compile and actual MT5 export have **not** yet been validated and remain the next task.
 
 ## D154O shortlist freeze
 
@@ -276,27 +315,66 @@ Resume only if D154O fails to produce a viable compatible market cohort or if la
 
 ## Immediate next task
 
-The next session begins with the user supplying the broad Ultra Low symbol list.
-
-Then:
-
 ```text
-1. build one-week M1+spread export/batch workflow
-2. collect fixed-week data for all supplied symbols
-3. run outcome-blind raw GOLD-relative screen
-4. freeze shortlist + negative-control manifest
-5. only then create one-year backtest batch
+1. apply the D154O Stage-A infrastructure package to Git HEAD 0b317fac...
+2. run tools/install_d154o_stage_a_exporter.py
+3. require MetaEditor compile = 0 errors in the exact active XM terminal
+4. run D154OStageAExporter once in MT5
+5. require EXPORT_COMPLETE = 32/32
+6. run tools/summarize_d154o_stage_a.py
+7. inspect the complete outcome-blind GOLD-relative screen
+8. freeze Gold-like shortlist + negative controls
+9. only then create one-year backtest batch
 ```
 
-No 2025 strategy outcomes for new symbols should be generated before step 4.
+No 2025 strategy outcomes for new symbols should be generated before step 8.
 
 ## Infrastructure note
 
 `mt5_batch_runner.py` uses the EX5 selected in the active MT5 AppData data directory.
 
-Whenever the EA is later modified:
+Whenever the strategy EA is later modified:
 - synchronize the repo MQ5 to the exact runner-selected terminal source;
 - compile that exact source;
 - verify the runner EX5 SHA changed.
 
-D154O Stage A should preferably require no EA strategy modification.
+D154O Stage A does not modify `MentorDeterministicV2EA.mq5`. Its standalone exporter has its own terminal source/EX5 and compile-state record.
+
+
+## D154O Stage A completion / Stage B freeze — 2026-08-24
+
+Stage A is complete. Read `D154O_STAGE_A_RESULTS_AND_STAGE_B_FREEZE.md` before
+running or interpreting any new 2025 symbol result.
+
+Frozen Stage-B cohort:
+
+```text
+REFERENCE
+GOLD#
+
+GOLD_LIKE
+XAUJPY#
+XAUCNH#
+BTCUSD#
+XAUEUR#
+GAUCNH#
+GAUUSD#
+USDJPY#
+
+NEGATIVE_CONTROL
+GBPUSD#
+SILVER#
+EURUSD#
+ETHUSD#
+```
+
+Immediate next task:
+
+```text
+python tools\run_d154o_stage_b_2025.py
+```
+
+The script is fail-closed to Git HEAD `0b317facba97f4edc305d0d4c82fbe5bd10a9739` and the frozen 12-symbol
+manifest. Upload `D154O_STAGE_B_2025_RESULT.zip` after completion.
+
+Do not run D154N and do not alter the shortlist after seeing Stage-B outcomes.
