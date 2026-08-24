@@ -6468,3 +6468,43 @@ Decision:
 - Next priority is D154P low-friction pre-Fill regime/path-quality discovery using existing ledgers first, followed by a disjoint-year validation for any frozen hypothesis.
 - D154N remains deferred.
 
+
+
+## D-154P R2 ??Root escape band becomes primary pre-Fill validation hypothesis
+
+Status: `2025 DISCOVERY FROZEN / 2024 VALIDATION PENDING / NO STRATEGY AUTHORITY`  
+Date: `2026-08-24`
+
+Decision:
+- The prior 13:00-15:00 Fill result is reclassified as an execution-time/retest regime, not a setup-authorization variable. FVG/PENDING authorization in 13:00-15:00 was only 52.8% survival, while actual Fill in the window was 82.1%.
+- The strongest actionable pre-Fill discovery is `ROOT_ESCAPE_BAND`: directional planned-entry distance from the causal Root edge, divided by Root width, satisfies `0 < g <= 0.5`.
+- In the four complete-history low-friction markets, ROOT_ESCAPE_BAND produced 42/62 = 67.7% Fill->+1R, 59.7% realized WR, +0.360R/trade expectancy, 1.225R average winner and PF 1.97.
+- The relation was positive in GOLD#, BTCUSD#, XAUEUR#, USDJPY#, both directions, all four quarters, all Root source timeframes, H1/M30 active maps, and merged/non-merged executions.
+- Leave-one-market-out natural-band selection chose the same `0-.5W` band every time; held-out survival was 80.0%, 62.5%, 75.0%, 65.0%.
+- A market+direction-stratified five-band permutation scan gave approximate adjusted p ~= 0.009. This remains discovery, not strategy evidence.
+- The same band did not improve the valid high-friction controls (40.6% vs 39.8%), supporting a two-axis model: market execution suitability x trade-level causal geometry.
+- `Root/FVG gap <=1W` is demoted to secondary because its direction was not preserved in every primary market.
+- `reaction_range_over_tr` remains a threshold-free continuous descriptor; no cutoff is authorized.
+- If ROOT_ESCAPE_BAND validates in 2024, the next shadow audit should compare the currently selected widest eligible FVG with a Root-proximal eligible FVG counterfactual rather than immediately converting the band into a hard reject.
+- No Entry/SL/TP/sizing/SP/EM strategy change is authorized by 2025 discovery.
+- 2021 remains untouched.
+
+
+
+## D-155 ??Pause filter mining; audit mentor fidelity and opportunity loss first
+
+Status: `ACTIVE SHADOW-ONLY FIDELITY AUDIT / NO STRATEGY AUTHORITY`  
+Date: `2026-08-24`
+
+Decision:
+- D154P-style outcome-conditioned Entry-filter mining is paused.
+- GOLD annual Fill frequency is structurally stable (~52-55/year in 2024/2025), but the engine creates hundreds of Root-contact and Sweep scenarios before only ~42-46% of accepted Sweeps reach the current M1 CHOCH stage.
+- The mentor-video digest says the three-opposite-colour-candle wave rule is an experiential recognition aid rather than a universal core law, while the deterministic contract promoted it into the global wave detector. This is a fidelity discrepancy requiring audit rather than another profitability threshold.
+- D155 Stage A uses FULL_AUDIT logging only and must reproduce baseline strategy counts exactly.
+- Primary populations are `Root contact -> no accepted Sweep` and `accepted Sweep -> no current CHOCH`.
+- Same-contact-bar sweep detections are upper-bound diagnostics only; no OHLC-based ordering inference is allowed.
+- M1 INITIAL_BOS/BOS and M5 structure events after Sweep are diagnostics only and receive no order authority.
+- No Entry/Root/Sweep/CHOCH/FVG/SL/TP/sizing/SP/EM change is authorized.
+- If Stage A shows a material source-supported discrepancy, the next step is one shadow counterfactual with OFF/ON non-interference before any profitability test.
+- 2021 remains untouched.
+

@@ -400,3 +400,39 @@ Key routing:
 Immediate next task:
 `python tools\summarize_d154o_stage_b_raw.py <raw_stage_b_zip>`
 for reproducibility if desired, then perform the D154P systematic discovery table from the existing valid ledgers.
+
+## D154P R2 discovery freeze
+
+Read `D154P_R2_ENTRY_SURVIVAL_DISCOVERY.md`.
+
+Primary 2024 validation:
+`ROOT_ESCAPE_BAND = 0 < directional planned-entry Root gap / Root width <= 0.5`.
+
+The prior 13:00-15:00 result is retained only as a descriptive execution-time regime
+until a session-restricted virtual-pending audit exists.
+
+Immediate command after closing MT5:
+
+`python tools\run_d154p_r2_2024_validation.py`
+
+Do not retune any 2025-frozen definition after viewing 2024. 2021 stays untouched.
+
+## D155 Mentor Fidelity / Opportunity Frequency Audit
+
+D154P filter mining is paused. Read
+`D155_MENTOR_FIDELITY_OPPORTUNITY_AUDIT.md`.
+
+Current question:
+why does the deterministic engine reduce hundreds of Root-contact/Sweep scenarios
+to ~52-55 GOLD fills per year, and which restrictions are mentor-source rules versus
+our operational formalizations?
+
+Stage A is logging-only FULL_AUDIT on GOLD# 2024/2025.
+It must reproduce existing strategy counts exactly.
+
+Immediate command after closing MT5:
+
+`python tools\run_d155_mentor_fidelity_opportunity_audit.py`
+
+Do not run the previously prepared D154P R3 2023 session validation while D155 is active.
+2021 remains untouched.
