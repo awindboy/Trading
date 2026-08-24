@@ -1,4 +1,9 @@
-﻿# EA Development Handoff
+﻿> **V3 ACTIVE ROUTING ??2026-08-24**  
+> Current active research phase is `V3-001 RAW DATA LAB BOOTSTRAP`.  
+> Read `docs/ea/v3/AGENTS_V3.md`, `docs/ea/v3/HANDOFF_V3.md` and `docs/ea/v3/V3_RAW_DATA_LAB_PROTOCOL.md` before new strategy design.  
+> V2 is paused/preserved; do not continue D154P/D155 mining unless explicitly reopened. 2021 remains untouched.
+
+# EA Development Handoff
 
 > **V2 ACTIVE ROUTING ??2026-08-24 / D-154P**  
 > Current V2 phase is `D-154P LOW-FRICTION PRE-FILL PATH-QUALITY DISCOVERY`. Read `docs/ea/v2/HANDOFF_V2.md`, `D154O_STAGE_B_2025_RESULTS.md`, and `D154P_LOW_FRICTION_PATH_QUALITY_RESEARCH.md` before new design work. D154O Outcome B supports execution suitability but rejects low friction as sufficient for GOLD-like Entry survival. Baseline semantics remain unchanged.
@@ -554,4 +559,5 @@ next primary research = Entry survival
 Do not perform additional same-sample SP threshold tuning before the Entry-survival causal study.
 
 D-153 batch automation is validated end-to-end and should be reused for subsequent GOLD25/BTC25 research matrices.
+
 

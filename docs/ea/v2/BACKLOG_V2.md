@@ -140,3 +140,29 @@ Current phase: `D-154P LOW-FRICTION PRE-FILL PATH-QUALITY DISCOVERY`
 - [ ] Validate frozen D154P hypotheses on a disjoint year, preferably 2024.
 - [ ] Keep 2021 untouched.
 - [ ] No Entry change until validation.
+
+## P0 ??D154P R2 2024 validation
+
+- [x] Reclassify 13:00-15:00 as execution-time/retest regime, not authorization-time filter.
+- [x] Freeze ROOT_ESCAPE_BAND 0 < g <= 0.5 as primary pre-Fill geometry hypothesis.
+- [x] Check leave-one-market-out, direction, quarter, source-TF and merge robustness.
+- [x] Confirm high-friction controls do not receive the same geometry benefit.
+- [ ] Run unchanged 2024 GOLD#/BTCUSD#/XAUEUR#/USDJPY# validation.
+- [ ] Do not tune Root band or session window on 2024.
+- [ ] If ROOT_ESCAPE validates, build shadow widest-FVG vs Root-proximal-FVG selector audit.
+- [ ] If session effect validates, build session-restricted virtual-pending shadow audit.
+- [ ] Keep 2021 untouched.
+
+## P0 ??D155 mentor fidelity / opportunity audit
+
+- [x] Pause additional outcome-conditioned Entry-filter mining.
+- [x] Quantify GOLD 2024/2025 funnel and identify Sweep->CHOCH as primary post-contact choke point.
+- [x] Identify source tension around hard three-candle wave formalization.
+- [ ] Run FULL_AUDIT GOLD# 2024 and 2025 with exact strategy-count parity.
+- [ ] Measure same-contact-bar compatible sweep-detector upper bound.
+- [ ] Measure M1 INITIAL_BOS/BOS and M5 structure activity in Sweep->no-CHOCH cases.
+- [ ] Select the largest mentor-source-supported fidelity discrepancy.
+- [ ] Build only one shadow counterfactual at a time.
+- [ ] Verify OFF/ON non-interference before profitability analysis.
+- [ ] Census INTERNAL_ROTATION only after trigger-stage fidelity is understood.
+- [ ] Keep 2021 untouched.

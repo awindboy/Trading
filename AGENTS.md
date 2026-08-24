@@ -1,64 +1,64 @@
-# 스승님식 Deterministic EA V1 전략 실행 계약
+﻿> **V3 ACTIVE RAW-DATA RESEARCH ROUTING**  
+> V1 remains a frozen historical deterministic control. V2 is paused/preserved as the continuation/SP/Entry research control.  
+> Active research now uses `docs/ea/v3/AGENTS_V3.md` and `docs/ea/v3/HANDOFF_V3.md`.  
+> V3 may redesign the strategy layer from raw market data; it does not silently rewrite V1/V2 history or strategy authority.
+
+# ?ㅼ듅?섏떇 Deterministic EA V1 ?꾨왂 ?ㅽ뻾 怨꾩빟
 
 > **D-150 V2 ACTIVE DEVELOPMENT ROUTING**  
 > `MentorDeterministicV1EA.mq5` and the V1 contract below are frozen historical controls.  
 > Active V2 development uses `mt5/experts/MentorDeterministicV2EA.mq5` and `docs/ea/v2/AGENTS_V2.md`.  
 > For V2 only, `docs/ea/v2/AGENTS_V2.md` overrides V1-specific scenario-scope statements below. V1 history is not rewritten.
 
-- 상태: `FROZEN / CURRENT V1 STRATEGY AUTHORITY`
-- 제정일: `2026-08-01`
-- 최근 개정: `2026-08-18` (`FVG-origin OB baseline; same-entry Root merge; hedging-account same-direction add-on execution`)
-- 구현 성능 기준: `2026-08-19` (`D-135 performance-only working-set optimization; D-134 strategy semantics unchanged`)
-- 적용 범위: deterministic EA, MT5 Strategy Tester, current V1 수동/블라인드 리플레이 검증
+- ?곹깭: `FROZEN / CURRENT V1 STRATEGY AUTHORITY`
+- ?쒖젙?? `2026-08-01`
+- 理쒓렐 媛쒖젙: `2026-08-18` (`FVG-origin OB baseline; same-entry Root merge; hedging-account same-direction add-on execution`)
+- 援ы쁽 ?깅뒫 湲곗?: `2026-08-19` (`D-135 performance-only working-set optimization; D-134 strategy semantics unchanged`)
+- ?곸슜 踰붿쐞: deterministic EA, MT5 Strategy Tester, current V1 ?섎룞/釉붾씪?몃뱶 由ы뵆?덉씠 寃利?
+## 1. 臾몄꽌??吏??
+??臾몄꽌??current deterministic Mentor EA V1??理쒖긽???꾨왂 authority??
+?섎룞 李⑦듃 遺꾩꽍怨?釉붾씪?몃뱶 由ы뵆?덉씠??current V1??寃利앺븷 ????怨꾩빟???곕Ⅸ??
 
-## 1. 문서의 지위
+- ?꾨왂 洹쇨굅?????대뜑???뺣━???ㅼ듅?섏쓽 21媛??곸긽?쇰줈 ?쒗븳?쒕떎.
+- ?쇰컲 ICT/SMC 吏?? 湲곗〈 EA, V32, ?먯닔 紐⑤뜽, ??꽕怨?寃곌낵??嫄곕옒瑜??덇??????녿떎.
+- 怨쇨굅 臾몄꽌??湲곗〈 愿?됯낵 異⑸룎?섎㈃ ??臾몄꽌??**鍮꾨ℓ留??먯튃怨??먯씤 ?곗꽑?쒖쐞**瑜??곕Ⅸ??
+- 紐⑦샇??遺遺꾩쓣 ?꾩쓽??ICT 媛쒕뀗?쇰줈 梨꾩슦吏 ?딅뒗?? ?ㅻ챸?????놁쑝硫?`鍮꾨ℓ留???
+- 寃곌낵媛 ?섏씡?댁뼱????怨꾩빟???꾨컲??嫄곕옒???ㅼ듅?섏떇 ?깃낵???ы븿?섏? ?딅뒗??
 
-이 문서는 current deterministic Mentor EA V1의 최상위 전략 authority다.
-수동 차트 분석과 블라인드 리플레이도 current V1을 검증할 때 이 계약을 따른다.
-
-- 전략 근거는 이 폴더에 정리된 스승님의 21개 영상으로 제한한다.
-- 일반 ICT/SMC 지식, 기존 EA, V32, 점수 모델, 역설계 결과는 거래를 허가할 수 없다.
-- 과거 문서나 기존 관행과 충돌하면 이 문서의 **비매매 원칙과 원인 우선순위**를 따른다.
-- 모호한 부분을 임의의 ICT 개념으로 채우지 않는다. 설명할 수 없으면 `비매매`다.
-- 결과가 수익이어도 이 계약을 위반한 거래는 스승님식 성과에 포함하지 않는다.
-
-스승님식 최초 진입의 기본 순서는 다음과 같다.
+?ㅼ듅?섏떇 理쒖큹 吏꾩엯??湲곕낯 ?쒖꽌???ㅼ쓬怨?媛숇떎.
 
 ```text
-목적 유동성
--> H1/M30 시장 지도
--> 스윙 근처의 사전 형성·미소진 HTF root OB
--> 가격의 HTF root OB 실제 접촉
--> 해당 Root 반응 맥락의 유효한 유동성 sweep
--> M1의 의미 있는 몸통 CHoCH
--> 같은 sweep-to-CHoCH causal leg의 fresh FVG
--> valid FVG 중 가장 넓은 FVG 선택
--> 선택된 FVG의 첫 retest
--> LONG은 FVG 상단 / SHORT은 FVG 하단 진입
--> FVG distal 바깥으로 FVG 폭의 20%를 둔 SL
--> 처음 동결한 목적 유동성 TP
+紐⑹쟻 ?좊룞??-> H1/M30 ?쒖옣 吏??-> ?ㅼ쐷 洹쇱쿂???ъ쟾 ?뺤꽦쨌誘몄냼吏?HTF root OB
+-> 媛寃⑹쓽 HTF root OB ?ㅼ젣 ?묒큺
+-> ?대떦 Root 諛섏쓳 留λ씫???좏슚???좊룞??sweep
+-> M1???섎? ?덈뒗 紐명넻 CHoCH
+-> 媛숈? sweep-to-CHoCH causal leg??fresh FVG
+-> valid FVG 以?媛???볦? FVG ?좏깮
+-> ?좏깮??FVG??泥?retest
+-> LONG? FVG ?곷떒 / SHORT? FVG ?섎떒 吏꾩엯
+-> FVG distal 諛붽묑?쇰줈 FVG ??쓽 20%瑜???SL
+-> 泥섏쓬 ?숆껐??紐⑹쟻 ?좊룞??TP
 ```
 
-이 순서에서 **필수 단계**가 없으면 뒷 단계는 아무리 선명해도 거래 근거가 아니다.
-Post-contact child OB는 위 필수 체인에 포함되지 않는다. 발견되면 causal context/audit 정보로만 기록하며, child 부재·다중성·무효화 자체는 `NO_TRADE` 사유가 아니다.
+???쒖꽌?먯꽌 **?꾩닔 ?④퀎**媛 ?놁쑝硫????④퀎???꾨Т由??좊챸?대룄 嫄곕옒 洹쇨굅媛 ?꾨땲??
+Post-contact child OB?????꾩닔 泥댁씤???ы븿?섏? ?딅뒗?? 諛쒓껄?섎㈃ causal context/audit ?뺣낫濡쒕쭔 湲곕줉?섎ŉ, child 遺??룸떎以묒꽦쨌臾댄슚???먯껜??`NO_TRADE` ?ъ쑀媛 ?꾨땲??
 
-`DELIVERY_FVG_REPLACEMENT`, `DELIVERY_FVG_ADDON`, OB-only first entry 등
-비활성 execution variant의 상세 계약은 Git history와 research 문서에만 보존한다.
-Current V1 주문 권한에는 사용하지 않는다.
+`DELIVERY_FVG_REPLACEMENT`, `DELIVERY_FVG_ADDON`, OB-only first entry ??鍮꾪솢??execution variant???곸꽭 怨꾩빟? Git history? research 臾몄꽌?먮쭔 蹂댁〈?쒕떎.
+Current V1 二쇰Ц 沅뚰븳?먮뒗 ?ъ슜?섏? ?딅뒗??
 
-## 2. 시간봉의 고정 역할
+## 2. ?쒓컙遊됱쓽 怨좎젙 ??븷
 
-| 역할 | 시간봉 | 권한 |
+| ??븷 | ?쒓컙遊?| 沅뚰븳 |
 | --- | --- | --- |
-| Long-horizon liquidity index | H4 | 오래된 ACTIVE external-swing liquidity만 압축 보존한다. |
-| Active map | H1, M30 | 방향, external/internal structure, dealing range, reversal permission의 authority다. |
-| Root/source candidate | H1, M30, M15 | current map과 causal displacement를 설명하는 Root 후보를 만들 수 있다. |
-| Optional child audit / context | M30, M15, M5 | HTF Root 실제 접촉 이후 새로 형성되는 lower-TF OB를 causal audit/context로 기록할 수 있다. 거래 허가, source 교체, Entry/SL/TP 권한은 없다. |
-| Trigger | M1 | source reaction의 sweep, meaningful CHoCH, execution FVG를 확인한다. |
+| Long-horizon liquidity index | H4 | ?ㅻ옒??ACTIVE external-swing liquidity留??뺤텞 蹂댁〈?쒕떎. |
+| Active map | H1, M30 | 諛⑺뼢, external/internal structure, dealing range, reversal permission??authority?? |
+| Root/source candidate | H1, M30, M15 | current map怨?causal displacement瑜??ㅻ챸?섎뒗 Root ?꾨낫瑜?留뚮뱾 ???덈떎. |
+| Optional child audit / context | M30, M15, M5 | HTF Root ?ㅼ젣 ?묒큺 ?댄썑 ?덈줈 ?뺤꽦?섎뒗 lower-TF OB瑜?causal audit/context濡?湲곕줉?????덈떎. 嫄곕옒 ?덇?, source 援먯껜, Entry/SL/TP 沅뚰븳? ?녿떎. |
+| Trigger | M1 | source reaction??sweep, meaningful CHoCH, execution FVG瑜??뺤씤?쒕떎. |
 
-H4는 `LONG_HORIZON_LIQUIDITY_INDEX` 전용 frame이다.
+H4??`LONG_HORIZON_LIQUIDITY_INDEX` ?꾩슜 frame?대떎.
 
-H4는 다음 권한을 갖지 않는다.
+H4???ㅼ쓬 沅뚰븳??媛뽰? ?딅뒗??
 
 ```text
 scenario direction
@@ -68,36 +68,32 @@ Root/source
 entry
 ```
 
-H1/M30이 active trading map authority다.
+H1/M30??active trading map authority??
 
-M15는 active map authority는 아니지만
-current H1/M30 causal context 안에서 Root candidate가 될 수 있다.
+M15??active map authority???꾨땲吏留?current H1/M30 causal context ?덉뿉??Root candidate媛 ?????덈떎.
 
-M1은 시나리오를 만드는 시간봉이 아니라
-이미 존재하는 시나리오의 실행 반응을 확인하는 시간봉이다.
+M1? ?쒕굹由ъ삤瑜?留뚮뱶???쒓컙遊됱씠 ?꾨땲???대? 議댁옱?섎뒗 ?쒕굹由ъ삤???ㅽ뻾 諛섏쓳???뺤씤?섎뒗 ?쒓컙遊됱씠??
 
-## 3. 목적지와 시장 지도
+## 3. 紐⑹쟻吏? ?쒖옣 吏??
+### 3.1 紐⑹쟻 ?좊룞?깆쓣 癒쇱? ?뺥븳??
+吏꾩엯 諛⑺뼢???앷컖?섍린 ?꾩뿉
+?꾩옱 scenario scope媛 ?ㅻ챸?????덈뒗
+ordered objective family瑜?癒쇱? ?뺥븳??
 
-### 3.1 목적 유동성을 먼저 정한다
-
-진입 방향을 생각하기 전에
-현재 scenario scope가 설명할 수 있는
-ordered objective family를 먼저 정한다.
-
-V1 first-position active scenario scope는 두 개다.
+V1 first-position active scenario scope????媛쒕떎.
 
 ```text
 EXTERNAL_CONTINUATION
 EXTERNAL_REVERSAL
 ```
 
-`INTERNAL_ROTATION`은 현재 V1 first-position 주문 권한을 갖지 않는
-research / historical classification으로만 유지한다.
+`INTERNAL_ROTATION`? ?꾩옱 V1 first-position 二쇰Ц 沅뚰븳??媛뽰? ?딅뒗
+research / historical classification?쇰줈留??좎??쒕떎.
 
-PLAN 단계에서는 Entry와 SL geometry를 알기 전에
-현재 causally-known 상태인 objective candidate를 freeze한다.
+PLAN ?④퀎?먯꽌??Entry? SL geometry瑜??뚭린 ?꾩뿉
+?꾩옱 causally-known ?곹깭??objective candidate瑜?freeze?쒕떎.
 
-Candidate는 반드시:
+Candidate??諛섎뱶??
 
 ```text
 causally-known
@@ -106,79 +102,72 @@ trade direction ahead
 scenario scope compatible
 ```
 
-이어야 한다.
+?댁뼱???쒕떎.
 
-Objective family는 별도의:
+Objective family??蹂꾨룄??
 
 ```text
 CURRENT_STRUCTURE
 HISTORICAL_H1_FALLBACK
 ```
 
-tier로 나누지 않는다.
+tier濡??섎늻吏 ?딅뒗??
 
-또한 historical candidate를 임의로 최대 2개까지만 두는
-candidate-count cap을 사용하지 않는다.
+?먰븳 historical candidate瑜??꾩쓽濡?理쒕? 2媛쒓퉴吏留??먮뒗
+candidate-count cap???ъ슜?섏? ?딅뒗??
 
-PLAN 시점에 현재 인과적으로 알고 있는
-scope-compatible candidate 전체를
-trade direction으로 가까운 순서대로 하나의 family에 freeze한다.
+PLAN ?쒖젏???꾩옱 ?멸낵?곸쑝濡??뚭퀬 ?덈뒗
+scope-compatible candidate ?꾩껜瑜?trade direction?쇰줈 媛源뚯슫 ?쒖꽌?濡??섎굹??family??freeze?쒕떎.
 
 #### EXTERNAL_CONTINUATION
 
-H1이 mature directional owner이면:
+H1??mature directional owner?대㈃:
 
 ```text
-현재 H1/M30 owner와 호환되는
+?꾩옱 H1/M30 owner? ?명솚?섎뒗
 trade-direction external liquidity
 ```
 
-를 objective family로 사용한다.
+瑜?objective family濡??ъ슜?쒕떎.
 
-Entry와 final external objective 사이의
-internal liquidity는 최종 TP가 아니라
-`INTERMEDIATE_DELIVERY`로 기록할 수 있다.
+Entry? final external objective ?ъ씠??internal liquidity??理쒖쥌 TP媛 ?꾨땲??`INTERMEDIATE_DELIVERY`濡?湲곕줉?????덈떎.
 
-H1이 NEUTRAL / TRANSITION이고
-M30이 temporary primary directional map이면:
+H1??NEUTRAL / TRANSITION?닿퀬
+M30??temporary primary directional map?대㈃:
 
 ```text
-현재 M30 external liquidity
+?꾩옱 M30 external liquidity
 ```
 
-만 사용한다.
+留??ъ슜?쒕떎.
 
-Old H1 dealing range 또는 old H1 objective를
-자동 상속하지 않는다.
+Old H1 dealing range ?먮뒗 old H1 objective瑜??먮룞 ?곸냽?섏? ?딅뒗??
 
 #### EXTERNAL_REVERSAL
 
-Old H1 owner가 아직 active한 early reversal에서는:
+Old H1 owner媛 ?꾩쭅 active??early reversal?먯꽌??
 
 ```text
-reversal direction의
-mature opposite M30 external liquidity
+reversal direction??mature opposite M30 external liquidity
 ```
 
-를 current objective family로 사용한다.
+瑜?current objective family濡??ъ슜?쒕떎.
 
-Old H1 continuation objective나
-old H1 historical liquidity를
-반대 방향 TP 확장에 사용하지 않는다.
+Old H1 continuation objective??old H1 historical liquidity瑜?諛섎? 諛⑺뼢 TP ?뺤옣???ъ슜?섏? ?딅뒗??
 
-이후 old H1 owner가 invalidated되고
-새 opposite mature H1 owner가 확정되면:
+?댄썑 old H1 owner媛 invalidated?섍퀬
+??opposite mature H1 owner媛 ?뺤젙?섎㈃:
 
 ```text
-new H1/M30 owner와 호환되는
+new H1/M30 owner? ?명솚?섎뒗
 new-direction external liquidity
 ```
 
-를 새 scenario의 objective family로 사용한다.
+瑜???scenario??objective family濡??ъ슜?쒕떎.
 
 #### Objective family freeze
 
-PLAN 시점에 다음을 freeze한다.
+PLAN ?쒖젏???ㅼ쓬??freeze?쒕떎.
 
 ```text
 scenario_scope
@@ -190,41 +179,39 @@ candidate order
 candidate availability
 ```
 
-Entry와 hard SL이 확정된 뒤에는:
+Entry? hard SL???뺤젙???ㅼ뿉??
 
 ```text
-새 liquidity candidate 추가
-candidate 순서 변경
-더 큰 R candidate 삽입
-hindsight target 탐색
+??liquidity candidate 異붽?
+candidate ?쒖꽌 蹂寃?????R candidate ?쎌엯
+hindsight target ?먯깋
 ```
 
-을 금지한다.
+??湲덉??쒕떎.
 
 #### Final TP selection
 
-Selected FVG Entry와 normalized strategy SL이 확정되면
-freeze된 objective family를
-trade direction으로 가까운 순서대로 검사한다.
+Selected FVG Entry? normalized strategy SL???뺤젙?섎㈃
+freeze??objective family瑜?trade direction?쇰줈 媛源뚯슫 ?쒖꽌?濡?寃?ы븳??
 
-각 candidate는:
+媛?candidate??
 
-1. 이미 consumed이면 건너뛴다.
-2. current scope와 호환되지 않으면 건너뛴다.
-3. reward가 0 이하이면 건너뛴다.
-4. planned R `< 1`이면 final TP 자격에서는 제외한다.
-5. planned R `< 1`인 valid liquidity는 필요하면 `INTERMEDIATE_DELIVERY`로 기록한다.
-6. planned R `>= 1`인 최초 candidate를 final TP로 선택한다.
+1. ?대? consumed?대㈃ 嫄대꼫?대떎.
+2. current scope? ?명솚?섏? ?딆쑝硫?嫄대꼫?대떎.
+3. reward媛 0 ?댄븯?대㈃ 嫄대꼫?대떎.
+4. planned R `< 1`?대㈃ final TP ?먭꺽?먯꽌???쒖쇅?쒕떎.
+5. planned R `< 1`??valid liquidity???꾩슂?섎㈃ `INTERMEDIATE_DELIVERY`濡?湲곕줉?쒕떎.
+6. planned R `>= 1`??理쒖큹 candidate瑜?final TP濡??좏깮?쒕떎.
 
-`planned R >= 1`은:
+`planned R >= 1`?:
 
 ```text
 objective-candidate eligibility
 ```
 
-조건이다.
+議곌굔?대떎.
 
-다음이 아니다.
+?ㅼ쓬???꾨땲??
 
 ```text
 trade-wide immediate rejection filter
@@ -232,54 +219,50 @@ max-R optimizer
 farthest-target selector
 ```
 
-같은 family 안에서는
-R이 더 크다는 이유로
-더 먼 liquidity를 선택하지 않는다.
+媛숈? family ?덉뿉?쒕뒗
+R?????щ떎???댁쑀濡???癒?liquidity瑜??좏깮?섏? ?딅뒗??
 
-Frozen family 전체를 검사한 뒤에도
-planned R `>= 1`인 candidate가 없으면:
+Frozen family ?꾩껜瑜?寃?ы븳 ?ㅼ뿉??planned R `>= 1`??candidate媛 ?놁쑝硫?
 
 ```text
 NO_TRADE
 reason = NO_R_ELIGIBLE_OBJECTIVE
 ```
 
-다.
+??
 
 #### Final TP freeze
 
-Final TP는:
+Final TP??
 
 ```text
 objective family freeze
-→ meaningful CHoCH
-→ selected FVG
-→ Entry
-→ normalized strategy SL
-→ objective eligibility evaluation
-→ final TP freeze
-→ pending order submission
+??meaningful CHoCH
+??selected FVG
+??Entry
+??normalized strategy SL
+??objective eligibility evaluation
+??final TP freeze
+??pending order submission
 ```
 
-순서로 정한다.
+?쒖꽌濡??뺥븳??
 
-Final TP가 freeze된 뒤
-pending fill 전에 해당 objective가 먼저 delivered되면:
+Final TP媛 freeze????pending fill ?꾩뿉 ?대떦 objective媛 癒쇱? delivered?섎㈃:
 
 ```text
 CANCELED_OBJECTIVE_DELIVERED
 ```
 
-로 scenario와 pending order를 취소한다.
+濡?scenario? pending order瑜?痍⑥냼?쒕떎.
 
-같은 scenario 안에서
-다음 objective candidate로 자동 rollover하지 않는다.
+媛숈? scenario ?덉뿉???ㅼ쓬 objective candidate濡??먮룞 rollover?섏? ?딅뒗??
 
-TP는 selected structural liquidity의 actual price를 사용한다.
+TP??selected structural liquidity??actual price瑜??ъ슜?쒕떎.
 
-Swing liquidity는 actual wick high / low를 사용한다.
+Swing liquidity??actual wick high / low瑜??ъ슜?쒕떎.
 
-V1 baseline은:
+V1 baseline?:
 
 ```text
 max-R TP extension
@@ -288,27 +271,26 @@ spread-based TP extension
 1-tick outward TP extension
 ```
 
-을 사용하지 않는다.
+???ъ슜?섏? ?딅뒗??
 
-LONG TP는 Bid-side,
-SHORT TP는 Ask-side execution semantics를 따른다.
+LONG TP??Bid-side,
+SHORT TP??Ask-side execution semantics瑜??곕Ⅸ??
 
 #### Long-horizon H4 liquidity extension
 
-Current H1/M30 objective authority가 항상 우선한다.
+Current H1/M30 objective authority媛 ??긽 ?곗꽑?쒕떎.
 
-PLAN 시점에:
+PLAN ?쒖젏??
 
 ```text
 plan_reference_price
 =
-objective family freeze 시각까지 available한
-가장 최근 closed M1 candle의 close
+objective family freeze ?쒓컖源뚯? available??媛??理쒓렐 closed M1 candle??close
 ```
 
-를 기록한다.
+瑜?湲곕줉?쒕떎.
 
-먼저 current H1/M30의:
+癒쇱? current H1/M30??
 
 ```text
 causally-known
@@ -317,27 +299,27 @@ direction-ahead
 scope-compatible
 ```
 
-primary candidate를 수집한다.
+primary candidate瑜??섏쭛?쒕떎.
 
-Primary candidate가 하나 이상이면:
+Primary candidate媛 ?섎굹 ?댁긽?대㈃:
 
 LONG:
 ```text
 primary_directional_horizon
 =
-가장 높은 primary candidate price
+媛???믪? primary candidate price
 ```
 
 SHORT:
 ```text
 primary_directional_horizon
 =
-가장 낮은 primary candidate price
+媛????? primary candidate price
 ```
 
-다.
+??
 
-Primary candidate가 없으면:
+Primary candidate媛 ?놁쑝硫?
 
 ```text
 primary_directional_horizon
@@ -345,10 +327,9 @@ primary_directional_horizon
 plan_reference_price
 ```
 
-다.
+??
 
-그 뒤 다음 H4 liquidity만
-동일 frozen ordered family의 바깥쪽 extension candidate로 추가할 수 있다.
+洹????ㅼ쓬 H4 liquidity留??숈씪 frozen ordered family??諛붽묑履?extension candidate濡?異붽??????덈떎.
 
 ```text
 family = EXTERNAL_SWING
@@ -368,7 +349,7 @@ SHORT:
 H4 price < primary_directional_horizon
 ```
 
-H4 extension은 다음 scope에서만 허용한다.
+H4 extension? ?ㅼ쓬 scope?먯꽌留??덉슜?쒕떎.
 
 ```text
 EXTERNAL_CONTINUATION
@@ -377,7 +358,7 @@ EXTERNAL_REVERSAL
 only after a new mature opposite H1 owner exists
 ```
 
-다음 early reversal에는 H4 extension을 사용하지 않는다.
+?ㅼ쓬 early reversal?먮뒗 H4 extension???ъ슜?섏? ?딅뒗??
 
 ```text
 old H1 owner still active
@@ -387,242 +368,227 @@ reversal permission OPEN
 opposite M30-led early EXTERNAL_REVERSAL
 ```
 
-이 경우 objective authority는
-기존 규칙대로 opposite mature M30 external liquidity에 한정한다.
+??寃쎌슦 objective authority??湲곗〈 洹쒖튃?濡?opposite mature M30 external liquidity???쒖젙?쒕떎.
 
-H4 candidate는 current H1/M30 horizon 안쪽 target을 대체하거나
-더 큰 R을 만들기 위해 삽입되지 않는다.
+H4 candidate??current H1/M30 horizon ?덉そ target???泥댄븯嫄곕굹
+????R??留뚮뱾湲??꾪빐 ?쎌엯?섏? ?딅뒗??
 
-PLAN freeze 후 Entry/SL이 알려지면
-기존 nearest-first / `planned R >= 1` eligibility 규칙만 적용한다.
+PLAN freeze ??Entry/SL???뚮젮吏硫?湲곗〈 nearest-first / `planned R >= 1` eligibility 洹쒖튃留??곸슜?쒕떎.
 
-H4는 active direction/source/entry authority가 아니다.
+H4??active direction/source/entry authority媛 ?꾨땲??
 
-### 3.2 외부와 내부를 혼동하지 않는다
+### 3.2 ?몃?? ?대?瑜??쇰룞?섏? ?딅뒗??
+- H1/M30 protected swing怨?dealing range瑜?癒쇱? ?쒖떆?쒕떎.
+- 洹?踰붿쐞 ?덉쓽 M15/M5 ??먭낵 怨좎젏? ?곗꽑 ?대? 援ъ“濡?痍④툒?쒕떎.
+- ?대? ???sweep留뚯쑝濡?H1 ?몃? 諛섏쟾???좎뼵?섏? ?딅뒗??
+- ?몃? 援ъ“媛 ?⑥븘 ?덈뒗??M1 CHoCH媛 諛쒖깮?대룄 洹멸쾬? ?곗꽑 ?대? 諛섏쓳?대떎.
 
-- H1/M30 protected swing과 dealing range를 먼저 표시한다.
-- 그 범위 안의 M15/M5 저점과 고점은 우선 내부 구조로 취급한다.
-- 내부 저점 sweep만으로 H1 외부 반전을 선언하지 않는다.
-- 외부 구조가 남아 있는데 M1 CHoCH가 발생해도 그것은 우선 내부 반응이다.
+`?대? ?좊룞??-> M1 CHoCH`瑜?`?몃? 諛섏쟾`?쇰줈 ?밴꺽?섎뒗 寃껋? 湲덉??쒕떎.
 
-`내부 유동성 -> M1 CHoCH`를 `외부 반전`으로 승격하는 것은 금지한다.
+### 3.2.1 H1/M30 異붿꽭??causal protected swing?쇰줈 ?먯젙?쒕떎
 
-### 3.2.1 H1/M30 추세는 causal protected swing으로 판정한다
+3-candle wave??異붿꽭 ?먯껜媛 ?꾨땲??swing ?꾨낫瑜??뺤젙?섎뒗 detector??
 
-3-candle wave는 추세 자체가 아니라 swing 후보를 확정하는 detector다.
+?뺤젙??紐⑤뱺 wave瑜??몃? 援ъ“濡??밴꺽?섏? ?딅뒗??
 
-확정된 모든 wave를 외부 구조로 승격하지 않는다.
-
-각 map timeframe은 먼저:
+媛?map timeframe? 癒쇱?:
 
 trend = NEUTRAL
 
-에서 시작하며, 상승/하락의 양쪽 confirmed swing이 모두 존재하는 two-sided range가 만들어지기 전에는 directional external trend를 선언하지 않는다.
+?먯꽌 ?쒖옉?섎ŉ, ?곸듅/?섎씫???묒そ confirmed swing??紐⑤몢 議댁옱?섎뒗 two-sided range媛 留뚮뱾?댁?湲??꾩뿉??directional external trend瑜??좎뼵?섏? ?딅뒗??
 
 Bullish initial structure:
 
 confirmed swing high + confirmed swing low
-→ swing high를 body close로 상향 돌파
-→ bullish external state
-→ 반대편 confirmed swing low가 최초 protected low
+??swing high瑜?body close濡??곹뼢 ?뚰뙆
+??bullish external state
+??諛섎???confirmed swing low媛 理쒖큹 protected low
 
 Bearish initial structure:
 
 confirmed swing high + confirmed swing low
-→ swing low를 body close로 하향 돌파
-→ bearish external state
-→ 반대편 confirmed swing high가 최초 protected high
+??swing low瑜?body close濡??섑뼢 ?뚰뙆
+??bearish external state
+??諛섎???confirmed swing high媛 理쒖큹 protected high
 
-Wick-only breach는 trend initialization 또는 trend reversal이 아니다.
+Wick-only breach??trend initialization ?먮뒗 trend reversal???꾨땲??
 
-Protected swing은 단순 latest opposite swing이 아니다.
+Protected swing? ?⑥닚 latest opposite swing???꾨땲??
 
-Bullish continuation BOS가 발생할 때:
+Bullish continuation BOS媛 諛쒖깮????
 
-1. 돌파 대상이었던 기존 external high의 발생 이후부터 BOS close까지를 correction window로 잡는다.
-2. 그 window 안에서 BOS close 시점까지 이미 confirmed / available인 swing low만 후보로 사용한다.
-3. 후보 중 가장 낮은 confirmed swing low를 해당 BOS를 만든 `causal correction low`로 본다.
-4. 그 causal correction low만 새 protected low로 승격할 수 있다.
-5. 해당 후보가 없으면 기존 protected low를 유지한다.
+1. ?뚰뙆 ??곸씠?덈뜕 湲곗〈 external high??諛쒖깮 ?댄썑遺??BOS close源뚯?瑜?correction window濡??〓뒗??
+2. 洹?window ?덉뿉??BOS close ?쒖젏源뚯? ?대? confirmed / available??swing low留??꾨낫濡??ъ슜?쒕떎.
+3. ?꾨낫 以?媛????? confirmed swing low瑜??대떦 BOS瑜?留뚮뱺 `causal correction low`濡?蹂몃떎.
+4. 洹?causal correction low留???protected low濡??밴꺽?????덈떎.
+5. ?대떦 ?꾨낫媛 ?놁쑝硫?湲곗〈 protected low瑜??좎??쒕떎.
 
-Bearish continuation BOS는 대칭적으로:
+Bearish continuation BOS???移?쟻?쇰줈:
 
-1. 기존 external low 이후부터 BOS close까지의 correction window를 사용한다.
-2. 이미 confirmed / available인 swing high만 후보로 사용한다.
-3. 후보 중 가장 높은 confirmed swing high를 `causal correction high`로 본다.
-4. 그 swing만 새 protected high로 승격할 수 있다.
-5. 후보가 없으면 기존 protected high를 유지한다.
+1. 湲곗〈 external low ?댄썑遺??BOS close源뚯???correction window瑜??ъ슜?쒕떎.
+2. ?대? confirmed / available??swing high留??꾨낫濡??ъ슜?쒕떎.
+3. ?꾨낫 以?媛???믪? confirmed swing high瑜?`causal correction high`濡?蹂몃떎.
+4. 洹?swing留???protected high濡??밴꺽?????덈떎.
+5. ?꾨낫媛 ?놁쑝硫?湲곗〈 protected high瑜??좎??쒕떎.
 
-즉:
+利?
 
-최근 swing
-≠ 자동 protected swing
+理쒓렐 swing
+???먮룞 protected swing
 
-이며:
+?대ŉ:
 
-external BOS를 실제로 만든 correction extreme
+external BOS瑜??ㅼ젣濡?留뚮뱺 correction extreme
 = protected swing candidate
 
-다.
+??
 
-BOS 시점에 아직 confirmed되지 않은 과거 swing을
-나중에 확인됐다는 이유로 과거 protected swing으로 소급 승격하지 않는다.
+BOS ?쒖젏???꾩쭅 confirmed?섏? ?딆? 怨쇨굅 swing???섏쨷???뺤씤?먮떎???댁쑀濡?怨쇨굅 protected swing?쇰줈 ?뚭툒 ?밴꺽?섏? ?딅뒗??
 
-Bullish external trend는:
+Bullish external trend??
 
 close < current protected low
 
-가 발생할 때만 외부 상승 구조가 무효화된다.
+媛 諛쒖깮???뚮쭔 ?몃? ?곸듅 援ъ“媛 臾댄슚?붾맂??
 
-Bearish external trend는:
+Bearish external trend??
 
 close > current protected high
 
-가 발생할 때만 외부 하락 구조가 무효화된다.
+媛 諛쒖깮???뚮쭔 ?몃? ?섎씫 援ъ“媛 臾댄슚?붾맂??
 
-Protected swing을 wick으로만 관통하고 종가가 다시 구조 안에서 마감되면
-external trend는 뒤집히지 않으며 liquidity sweep 후보로만 본다.
+Protected swing??wick?쇰줈留?愿?듯븯怨?醫낃?媛 ?ㅼ떆 援ъ“ ?덉뿉??留덇컧?섎㈃
+external trend???ㅼ쭛?덉? ?딆쑝硫?liquidity sweep ?꾨낫濡쒕쭔 蹂몃떎.
 
-Protected swing body-break가 발생하면 기존 external trend는 즉시 invalidated된다.
+Protected swing body-break媛 諛쒖깮?섎㈃ 湲곗〈 external trend??利됱떆 invalidated?쒕떎.
 
-다만 반대편 mature external structure의 protected boundary가 아직 완성되지 않았다면
-곧바로 완성된 반대 trend를 만들어내지 않고 `TRANSITION` 상태로 둔다.
+?ㅻ쭔 諛섎???mature external structure??protected boundary媛 ?꾩쭅 ?꾩꽦?섏? ?딆븯?ㅻ㈃
+怨㏓컮濡??꾩꽦??諛섎? trend瑜?留뚮뱾?대궡吏 ?딄퀬 `TRANSITION` ?곹깭濡??붾떎.
 
-새 반대 external trend는
-다시 valid two-sided structure와 body-close directional confirmation이 확보된 뒤
-mature directional state로 승격한다.
+??諛섎? external trend???ㅼ떆 valid two-sided structure? body-close directional confirmation???뺣낫????mature directional state濡??밴꺽?쒕떎.
 
-현재 protected swing / directional external extreme / BOS에 의해 승격된 causal correction swing이 아닌
-나머지 confirmed waves는 기본적으로 INTERNAL로 유지한다.
+?꾩옱 protected swing / directional external extreme / BOS???섑빐 ?밴꺽??causal correction swing???꾨땶
+?섎㉧吏 confirmed waves??湲곕낯?곸쑝濡?INTERNAL濡??좎??쒕떎.
 
-External / internal 판정에는:
+External / internal ?먯젙?먮뒗:
 
 ATR threshold
 minimum point distance
 minimum retracement percentage
 minimum bar count
 
-같은 추가 크기 threshold를 사용하지 않는다.
+媛숈? 異붽? ?ш린 threshold瑜??ъ슜?섏? ?딅뒗??
 
-Wave의 크기가 아니라
-현재 external structure 안에서 맡는 causal role로 external 여부를 결정한다.
+Wave???ш린媛 ?꾨땲???꾩옱 external structure ?덉뿉??留〓뒗 causal role濡?external ?щ?瑜?寃곗젙?쒕떎.
 
-### 3.2.2 HTF trend-follow bias와 reversal permission
+### 3.2.2 HTF trend-follow bias? reversal permission
 
-H1과 M30의 structure state는 독립적으로 유지하지만
-매매 방향 authority는 동등하게 취급하지 않는다.
+H1怨?M30??structure state???낅┰?곸쑝濡??좎??섏?留?留ㅻℓ 諛⑺뼢 authority???숇벑?섍쾶 痍④툒?섏? ?딅뒗??
 
-기본 원칙:
+湲곕낯 ?먯튃:
 
 ```text
-현재 mature HTF trend 우선
+?꾩옱 mature HTF trend ?곗꽑
 ```
 
-이다.
+?대떎.
 
-H1이 mature BULLISH / BEARISH이면
-H1이 highest active directional owner다.
+H1??mature BULLISH / BEARISH?대㈃
+H1??highest active directional owner??
 
-H1 trend가 유효하고
-현재 H1 directional external extreme과
-아직 interaction하지 않았다면:
+H1 trend媛 ?좏슚?섍퀬
+?꾩옱 H1 directional external extreme怨??꾩쭅 interaction?섏? ?딆븯?ㅻ㈃:
 
 ```text
 trade direction = H1 direction
 ```
 
-만 first-position planning authority를 가진다.
+留?first-position planning authority瑜?媛吏꾨떎.
 
-예:
+??
 
 ```text
 H1 BULLISH
 M30 BEARISH
-H1 reversal reference high 미도달
-```
+H1 reversal reference high 誘몃룄??```
 
-이면 M30 bearish는:
+?대㈃ M30 bearish??
 
 ```text
-H1 bullish trend 내부 correction context
+H1 bullish trend ?대? correction context
 ```
 
-이며 그 사실만으로 SHORT lane을 만들지 않는다.
+?대ŉ 洹??ъ떎留뚯쑝濡?SHORT lane??留뚮뱾吏 ?딅뒗??
 
 #### Reversal reference extreme
 
 Mature bullish H1:
 
 ```text
-현재 H1 owner flow의
-가장 높은 valid structural external high
-→ reversal-reference buy-side liquidity
+?꾩옱 H1 owner flow??媛???믪? valid structural external high
+??reversal-reference buy-side liquidity
 ```
 
 Mature bearish H1:
 
 ```text
-현재 H1 owner flow의
-가장 낮은 valid structural external low
-→ reversal-reference sell-side liquidity
+?꾩옱 H1 owner flow??媛????? valid structural external low
+??reversal-reference sell-side liquidity
 ```
 
-Protected swing과 reversal reference는 역할이 다르다.
+Protected swing怨?reversal reference????븷???ㅻⅤ??
 
 ```text
 Protected swing
-→ current H1 trend invalidation boundary
+??current H1 trend invalidation boundary
 
 Reversal reference extreme
-→ opposite-direction reversal hypothesis permission boundary
+??opposite-direction reversal hypothesis permission boundary
 ```
 
 #### Reference availability
 
-Reference는 causal하게 available된 이후에만 사용할 수 있다.
+Reference??causal?섍쾶 available???댄썑?먮쭔 ?ъ슜?????덈떎.
 
-새 reference가 current bar close에서 처음 available됐다면
-그 bar의 더 이른 intrabar movement를
-새 reference interaction으로 소급 사용하지 않는다.
+??reference媛 current bar close?먯꽌 泥섏쓬 available?먮떎硫?洹?bar?????대Ⅸ intrabar movement瑜???reference interaction?쇰줈 ?뚭툒 ?ъ슜?섏? ?딅뒗??
 
 #### Reference event precedence
 
-동일 closed H1 bar에서
-reference 관련 조건이 겹치면
-다음 순서로 하나만 판정한다.
+?숈씪 closed H1 bar?먯꽌
+reference 愿??議곌굔??寃뱀튂硫??ㅼ쓬 ?쒖꽌濡??섎굹留??먯젙?쒕떎.
 
 Bullish H1 reference high:
 
 ```text
 1. close > reference_high
-   → CONTINUATION_BODY_BREAK
+   ??CONTINUATION_BODY_BREAK
 
 2. high > reference_high
    AND close <= reference_high
-   → SWEEP_REJECTION
+   ??SWEEP_REJECTION
 
 3. high >= reference_high
-   → TOUCH
+   ??TOUCH
 ```
 
 Bearish H1 reference low:
 
 ```text
 1. close < reference_low
-   → CONTINUATION_BODY_BREAK
+   ??CONTINUATION_BODY_BREAK
 
 2. low < reference_low
    AND close >= reference_low
-   → SWEEP_REJECTION
+   ??SWEEP_REJECTION
 
 3. low <= reference_low
-   → TOUCH
+   ??TOUCH
 ```
 
-Continuation body-break가 성립한 bar에서
-reversal permission을 잠깐 OPEN했다가
-같은 close에서 다시 CLOSED하는
-transient state를 만들지 않는다.
+Continuation body-break媛 ?깅┰??bar?먯꽌
+reversal permission???좉퉸 OPEN?덈떎媛
+媛숈? close?먯꽌 ?ㅼ떆 CLOSED?섎뒗
+transient state瑜?留뚮뱾吏 ?딅뒗??
 
 #### TOUCH
 
@@ -630,21 +596,20 @@ Bullish H1:
 
 ```text
 high >= reversal_reference_high
-→ OPEN_FOR_SHORT
+??OPEN_FOR_SHORT
 ```
 
 Bearish H1:
 
 ```text
 low <= reversal_reference_low
-→ OPEN_FOR_LONG
+??OPEN_FOR_LONG
 ```
 
-단,
-위 precedence에서 continuation body-break 또는 sweep/rejection이
-먼저 성립하지 않은 경우에만 TOUCH로 분류한다.
+??
+??precedence?먯꽌 continuation body-break ?먮뒗 sweep/rejection??癒쇱? ?깅┰?섏? ?딆? 寃쎌슦?먮쭔 TOUCH濡?遺꾨쪟?쒕떎.
 
-TOUCH는:
+TOUCH??
 
 ```text
 H1 trend reversal
@@ -652,10 +617,9 @@ entry signal
 automatic counter-trend order
 ```
 
-가 아니다.
+媛 ?꾨땲??
 
-단지 opposite LTF structure를
-potential external-reversal evidence로 평가할 permission을 연다.
+?⑥? opposite LTF structure瑜?potential external-reversal evidence濡??됯???permission???곕떎.
 
 #### SWEEP / REJECTION
 
@@ -665,8 +629,8 @@ Bullish:
 high > reference_high
 AND
 close <= reference_high
-→ SWEEP_REJECTION
-→ OPEN_FOR_SHORT
+??SWEEP_REJECTION
+??OPEN_FOR_SHORT
 ```
 
 Bearish:
@@ -675,27 +639,26 @@ Bearish:
 low < reference_low
 AND
 close >= reference_low
-→ SWEEP_REJECTION
-→ OPEN_FOR_LONG
+??SWEEP_REJECTION
+??OPEN_FOR_LONG
 ```
 
-Sweep/rejection은 reversal/liquidity context evidence지만
-자동 order 또는 score를 만들지 않는다.
+Sweep/rejection? reversal/liquidity context evidence吏留??먮룞 order ?먮뒗 score瑜?留뚮뱾吏 ?딅뒗??
 
-Actual reversal order에는 여전히:
+Actual reversal order?먮뒗 ?ъ쟾??
 
 ```text
 reversal permission OPEN
-→ valid opposite map/context
-→ pre-existing eligible opposite HTF Root
-→ qualifying HTF Root contact
-→ valid mature sweep under corrected Root-contact timing
-→ meaningful M1 CHoCH
-→ causal displacement FVG
-→ first retest
+??valid opposite map/context
+??pre-existing eligible opposite HTF Root
+??qualifying HTF Root contact
+??valid mature sweep under corrected Root-contact timing
+??meaningful M1 CHoCH
+??causal displacement FVG
+??first retest
 ```
 
-전체 chain이 필요하다.
+?꾩껜 chain???꾩슂?섎떎.
 
 #### CONTINUATION BODY BREAK
 
@@ -711,7 +674,7 @@ Bearish:
 close < reference_low
 ```
 
-이면 current trend 방향의 continuation BOS evidence다.
+?대㈃ current trend 諛⑺뼢??continuation BOS evidence??
 
 Result:
 
@@ -721,33 +684,31 @@ old reversal watch terminated
 normal BOS / protected-swing lifecycle
 ```
 
-새 directional external extreme이 causal하게 available되면
-그 extreme을 다음 reversal reference로 사용한다.
+??directional external extreme??causal?섍쾶 available?섎㈃
+洹?extreme???ㅼ쓬 reversal reference濡??ъ슜?쒕떎.
 
 #### Opposite M30 before permission
 
-H1 mature trend가 유지되고
-reversal permission이 CLOSED라면
-opposite M30/LTF trend는:
+H1 mature trend媛 ?좎??섍퀬
+reversal permission??CLOSED?쇰㈃
+opposite M30/LTF trend??
 
 ```text
 HTF_INTERNAL_CORRECTION_CONTEXT
 ```
 
-다.
+??
 
-독립적인 opposite first-position order scope가 아니다.
+?낅┰?곸씤 opposite first-position order scope媛 ?꾨땲??
 
-`INTERNAL_ROTATION`은 current V1 first-position scenario scope로 사용하지 않는다.
+`INTERNAL_ROTATION`? current V1 first-position scenario scope濡??ъ슜?섏? ?딅뒗??
 
 #### Opposite LTF after permission
 
-HTF reversal-reference interaction으로
-reversal permission이 OPEN된 뒤에는
-opposite M30/LTF structure를
-external-reversal hypothesis evidence로 평가할 수 있다.
+HTF reversal-reference interaction?쇰줈
+reversal permission??OPEN???ㅼ뿉??opposite M30/LTF structure瑜?external-reversal hypothesis evidence濡??됯??????덈떎.
 
-단순 opposite M30 trend 하나만으로 order를 허가하지 않는다.
+?⑥닚 opposite M30 trend ?섎굹留뚯쑝濡?order瑜??덇??섏? ?딅뒗??
 
 Required:
 
@@ -758,17 +719,17 @@ Required:
 4. complete base execution chain
 ```
 
-H1 trend_state는 protected swing body-break 전까지
-기존 BULLISH / BEARISH를 유지할 수 있다.
+H1 trend_state??protected swing body-break ?꾧퉴吏
+湲곗〈 BULLISH / BEARISH瑜??좎??????덈떎.
 
-즉:
+利?
 
 ```text
 trade hypothesis may reverse
 before H1 trend label flips
 ```
 
-이다.
+?대떎.
 
 #### H1 owner invalidation
 
@@ -776,99 +737,96 @@ H1 protected swing body-break:
 
 ```text
 old H1 trend invalidated
-→ H1 TRANSITION
+??H1 TRANSITION
 ```
 
-이미 valid하게 freeze된 early EXTERNAL_REVERSAL scenario를
-사후에 다른 scope로 다시 쓰지 않는다.
+?대? valid?섍쾶 freeze??early EXTERNAL_REVERSAL scenario瑜??ы썑???ㅻⅨ scope濡??ㅼ떆 ?곗? ?딅뒗??
 
-새 owner 아래의 새 해석은
-새 scenario_id로 만든다.
+??owner ?꾨옒?????댁꽍?
+??scenario_id濡?留뚮뱺??
 
 #### H1 NEUTRAL / TRANSITION
 
-H1에 mature directional owner가 없고
-M30이 mature directional이면:
+H1??mature directional owner媛 ?녾퀬
+M30??mature directional?대㈃:
 
 ```text
 highest_active_map = M30
 scenario_scope = EXTERNAL_CONTINUATION
 ```
 
-relative to M30로 처리한다.
+relative to M30濡?泥섎━?쒕떎.
 
-M30 dealing range와
-M30 external objective family를 사용한다.
+M30 dealing range?
+M30 external objective family瑜??ъ슜?쒕떎.
 
 Old H1 dealing range,
 old H1 reversal reference,
-old H1 objective family를
-자동 상속하지 않는다.
+old H1 objective family瑜??먮룞 ?곸냽?섏? ?딅뒗??
 
-M1은 HTF reversal permission 또는 map owner를
-생성하거나 덮어쓰지 않는다.
+M1? HTF reversal permission ?먮뒗 map owner瑜??앹꽦?섍굅????뼱?곗? ?딅뒗??
 
-### 3.3 dealing range와 premium/discount는 context로 기록한다
+### 3.3 dealing range? premium/discount??context濡?湲곕줉?쒕떎
 
-- H1/M30의 현재 external protected extreme과 directional extreme으로 active dealing range를 정하고 EQ 50%를 표시한다.
-- Source/context의 현재 위치가 premium / discount 중 어디인지 기록한다.
-- Premium/discount는 시장 위치를 설명하는 reference/context 정보이며, 그 자체로 scenario 또는 주문 권한을 만들지 않는다.
-- `EXTERNAL_CONTINUATION` source/context가 통상적인 directional half와 반대쪽에 있더라도 그 사실 하나만으로 Root, source, scenario 또는 거래를 거부하지 않는다.
-- Premium/discount는 standalone veto가 아니다. 다른 필수 causal chain이 유효하면 PD 위치만으로 `NO_TRADE`를 만들지 않는다.
-- H1 mature trend와 반대인 M30/LTF structure는 reversal permission이 CLOSED인 동안 correction context로만 사용한다.
-- `INTERNAL_ROTATION`은 current V1 first-position order scope가 아니다.
-- HTF reversal-reference interaction으로 permission이 OPEN된 뒤에만 opposite LTF structure를 `EXTERNAL_REVERSAL` hypothesis로 평가한다.
-- 실제 주문에는 사전 형성 HTF Root, qualifying Root contact, valid sweep, M1 CHoCH, causal FVG 등 필수 chain이 필요하다.
-- Post-contact causal child는 **optional audit/context observation**이다. child가 없거나 여러 개이거나 무효화돼도 Root 기반 setup을 거부하지 않으며, child는 Root를 strategy source로 대체하지 않는다.
+- H1/M30???꾩옱 external protected extreme怨?directional extreme?쇰줈 active dealing range瑜??뺥븯怨?EQ 50%瑜??쒖떆?쒕떎.
+- Source/context???꾩옱 ?꾩튂媛 premium / discount 以??대뵒?몄? 湲곕줉?쒕떎.
+- Premium/discount???쒖옣 ?꾩튂瑜??ㅻ챸?섎뒗 reference/context ?뺣낫?대ŉ, 洹??먯껜濡?scenario ?먮뒗 二쇰Ц 沅뚰븳??留뚮뱾吏 ?딅뒗??
+- `EXTERNAL_CONTINUATION` source/context媛 ?듭긽?곸씤 directional half? 諛섎?履쎌뿉 ?덈뜑?쇰룄 洹??ъ떎 ?섎굹留뚯쑝濡?Root, source, scenario ?먮뒗 嫄곕옒瑜?嫄곕??섏? ?딅뒗??
+- Premium/discount??standalone veto媛 ?꾨땲?? ?ㅻⅨ ?꾩닔 causal chain???좏슚?섎㈃ PD ?꾩튂留뚯쑝濡?`NO_TRADE`瑜?留뚮뱾吏 ?딅뒗??
+- H1 mature trend? 諛섎???M30/LTF structure??reversal permission??CLOSED???숈븞 correction context濡쒕쭔 ?ъ슜?쒕떎.
+- `INTERNAL_ROTATION`? current V1 first-position order scope媛 ?꾨땲??
+- HTF reversal-reference interaction?쇰줈 permission??OPEN???ㅼ뿉留?opposite LTF structure瑜?`EXTERNAL_REVERSAL` hypothesis濡??됯??쒕떎.
+- ?ㅼ젣 二쇰Ц?먮뒗 ?ъ쟾 ?뺤꽦 HTF Root, qualifying Root contact, valid sweep, M1 CHoCH, causal FVG ???꾩닔 chain???꾩슂?섎떎.
+- Post-contact causal child??**optional audit/context observation**?대떎. child媛 ?녾굅???щ윭 媛쒖씠嫄곕굹 臾댄슚?붾뤌??Root 湲곕컲 setup??嫄곕??섏? ?딆쑝硫? child??Root瑜?strategy source濡??泥댄븯吏 ?딅뒗??
 
 ## 4. HTF root OB
 
-최초 포지션의 Root는 사전에 존재하는 `H1`, `M30`, 또는 `M15` causal OB여야 한다.
+理쒖큹 ?ъ??섏쓽 Root???ъ쟾??議댁옱?섎뒗 `H1`, `M30`, ?먮뒗 `M15` causal OB?ъ빞 ?쒕떎.
 
-Root는 다음을 모두 설명해야 한다.
+Root???ㅼ쓬??紐⑤몢 ?ㅻ챸?댁빞 ?쒕떎.
 
-1. 의미 있는 external/protected 또는 structurally meaningful internal swing의 origin context에 있다.
-2. 다음 baseline OB recognizer 중 최소 하나를 만족한다.
-   - `LAST_OPPOSITE_OB`: 해당 origin window 안에서 directional leg 시작 전 마지막 opposite candle
-   - `FVG_ORIGIN_OB`: 같은 causal directional leg 안의 direction-compatible 3-candle FVG를 구성하는 Candle1
-3. 그 candle이 속한 same causal directional leg가 의미 있는 structure level을 body close로 전달했다.
-4. 현재 scenario direction/objective와 causal하게 연결된다.
-5. 가격이 첫 반응을 관찰할 HTF Root로 채택되기 전까지 미소진 상태다.
-6. `strategy_state = ACTIVE`다.
+1. ?섎? ?덈뒗 external/protected ?먮뒗 structurally meaningful internal swing??origin context???덈떎.
+2. ?ㅼ쓬 baseline OB recognizer 以?理쒖냼 ?섎굹瑜?留뚯”?쒕떎.
+   - `LAST_OPPOSITE_OB`: ?대떦 origin window ?덉뿉??directional leg ?쒖옉 ??留덉?留?opposite candle
+   - `FVG_ORIGIN_OB`: 媛숈? causal directional leg ?덉쓽 direction-compatible 3-candle FVG瑜?援ъ꽦?섎뒗 Candle1
+3. 洹?candle???랁븳 same causal directional leg媛 ?섎? ?덈뒗 structure level??body close濡??꾨떖?덈떎.
+4. ?꾩옱 scenario direction/objective? causal?섍쾶 ?곌껐?쒕떎.
+5. 媛寃⑹씠 泥?諛섏쓳??愿李고븷 HTF Root濡?梨꾪깮?섍린 ?꾧퉴吏 誘몄냼吏??곹깭??
+6. `strategy_state = ACTIVE`??
 
-두 recognizer는 current baseline에서 항상 동시에 활성이다. 같은 physical candle을 둘 다 인식하면 Root를 두 개 만들지 않고 recognition reason만 merge한다.
+??recognizer??current baseline?먯꽌 ??긽 ?숈떆???쒖꽦?대떎. 媛숈? physical candle???????몄떇?섎㈃ Root瑜???媛?留뚮뱾吏 ?딄퀬 recognition reason留?merge?쒕떎.
 
-여기서 `미소진`은 **HTF Root를 사전에 watchlist에 둘 수 있는 자격**을 뜻한다.
-단순 touch 횟수, age, 임의 mitigation percentage를 새 소진 규칙으로 만들지 않는다.
-Touch/partial mitigation과 body-close invalidation의 기존 구분은 유지하되,
-이미 과거 반응이 끝난 zone을 새로운 first-reaction Root처럼 재선언하지 않는다.
+?ш린??`誘몄냼吏?? **HTF Root瑜??ъ쟾??watchlist???????덈뒗 ?먭꺽**???삵븳??
+?⑥닚 touch ?잛닔, age, ?꾩쓽 mitigation percentage瑜????뚯쭊 洹쒖튃?쇰줈 留뚮뱾吏 ?딅뒗??
+Touch/partial mitigation怨?body-close invalidation??湲곗〈 援щ텇? ?좎??섎릺,
+?대? 怨쇨굅 諛섏쓳???앸궃 zone???덈줈??first-reaction Root泥섎읆 ?ъ꽑?명븯吏 ?딅뒗??
 
-Root strategy state는:
+Root strategy state??
 
 ```text
 ACTIVE
 INVALIDATED
 ```
 
-두 개만 사용한다.
+??媛쒕쭔 ?ъ슜?쒕떎.
 
 Bullish Root:
 
 ```text
 Root-own-timeframe close < Root.bottom
-→ INVALIDATED
+??INVALIDATED
 ```
 
 Bearish Root:
 
 ```text
 Root-own-timeframe close > Root.top
-→ INVALIDATED
+??INVALIDATED
 ```
 
-Owner/causal structure invalidation도 Root를 invalidated한다.
+Owner/causal structure invalidation??Root瑜?invalidated?쒕떎.
 
-다음은 Root invalidation이 아니다.
+?ㅼ쓬? Root invalidation???꾨땲??
 
 ```text
 touch
@@ -878,71 +836,70 @@ N touches
 age
 ```
 
-따라서 `fully consumed`, `fresh/mitigated/consumed` 같은 별도 Root strategy state를 사용하지 않는다.
+?곕씪??`fully consumed`, `fresh/mitigated/consumed` 媛숈? 蹂꾨룄 Root strategy state瑜??ъ슜?섏? ?딅뒗??
 
-다음은 Root가 아니다.
+?ㅼ쓬? Root媛 ?꾨땲??
 
-- 화면에서 가장 가까운 반대색 캔들
-- M1 반응을 보고 사후 선택한 HTF 캔들
-- structure delivery를 만들지 않은 임의 candle
-- causal FVG의 Candle1도 아니고 structure-delivery origin도 아닌 단순 FVG overlap candle
-- HTF FVG 자체
-- 이미 `INVALIDATED`된 Root
+- ?붾㈃?먯꽌 媛??媛源뚯슫 諛섎???罹붾뱾
+- M1 諛섏쓳??蹂닿퀬 ?ы썑 ?좏깮??HTF 罹붾뱾
+- structure delivery瑜?留뚮뱾吏 ?딆? ?꾩쓽 candle
+- causal FVG??Candle1???꾨땲怨?structure-delivery origin???꾨땶 ?⑥닚 FVG overlap candle
+- HTF FVG ?먯껜
+- ?대? `INVALIDATED`??Root
 
-HTF FVG는 delivery inefficiency evidence일 수 있지만
-standalone Root/source authority를 갖지 않는다.
+HTF FVG??delivery inefficiency evidence?????덉?留?standalone Root/source authority瑜?媛뽰? ?딅뒗??
 
 ## 5. optional post-contact LTF child audit
 
-HTF Root OB는 current V1 baseline의 **유일한 OB source authority**다.
+HTF Root OB??current V1 baseline??**?좎씪??OB source authority**??
 
-가격이 Root에 실제로 접촉한 뒤 M30/M15/M5에서 새 lower-TF OB가 보일 수 있다.
-이 OB는 post-contact 반응을 설명하는 보조 구조로 기록할 수 있지만,
-current V1 baseline의 필수 단계가 아니다.
+媛寃⑹씠 Root???ㅼ젣濡??묒큺????M30/M15/M5?먯꽌 ??lower-TF OB媛 蹂댁씪 ???덈떎.
+??OB??post-contact 諛섏쓳???ㅻ챸?섎뒗 蹂댁“ 援ъ“濡?湲곕줉?????덉?留?
+current V1 baseline???꾩닔 ?④퀎媛 ?꾨땲??
 
 Required temporal rule for an observed child:
 
 ```text
 pre-existing / unconsumed HTF Root frozen
-→ price actually contacts that HTF Root
-→ lower-timeframe reaction occurs after that contact
-→ optional LTF child OB forms and becomes causally knowable
+??price actually contacts that HTF Root
+??lower-timeframe reaction occurs after that contact
+??optional LTF child OB forms and becomes causally knowable
 ```
 
-따라서 다음 lower-TF OB는 current setup의 optional child로도 소급 사용하지 않는다.
+?곕씪???ㅼ쓬 lower-TF OB??current setup??optional child濡쒕룄 ?뚭툒 ?ъ슜?섏? ?딅뒗??
 
 ```text
-Root contact 전에 이미 존재한 lower-TF OB
-Root를 처음 만든 과거 displacement를 단순 분해한 lower-TF OB
-가격만 겹치는 unrelated lower-TF OB
-M1 반응을 본 뒤 과거 HTF Root를 사후 선택하는 경우
+Root contact ?꾩뿉 ?대? 議댁옱??lower-TF OB
+Root瑜?泥섏쓬 留뚮뱺 怨쇨굅 displacement瑜??⑥닚 遺꾪빐??lower-TF OB
+媛寃⑸쭔 寃뱀튂??unrelated lower-TF OB
+M1 諛섏쓳??蹂???怨쇨굅 HTF Root瑜??ы썑 ?좏깮?섎뒗 寃쎌슦
 ```
 
-Optional child를 기록하려면 최소한:
+Optional child瑜?湲곕줉?섎젮硫?理쒖냼??
 
-1. 부모 HTF Root의 실제 contact 이후 형성되어야 한다.
-2. 해당 Root contact 이후의 lower-TF reaction과 인과적으로 연결되어야 한다.
-3. child라고 주장하는 방향의 lower-TF structure delivery로 확인 가능해야 한다.
-4. `available_at > qualifying_root_contact_at`이어야 한다.
-5. containment 또는 같은 post-contact reaction의 event-defined adjacency로 가격 관계를 설명할 수 있어야 한다.
+1. 遺紐?HTF Root???ㅼ젣 contact ?댄썑 ?뺤꽦?섏뼱???쒕떎.
+2. ?대떦 Root contact ?댄썑??lower-TF reaction怨??멸낵?곸쑝濡??곌껐?섏뼱???쒕떎.
+3. child?쇨퀬 二쇱옣?섎뒗 諛⑺뼢??lower-TF structure delivery濡??뺤씤 媛?ν빐???쒕떎.
+4. `available_at > qualifying_root_contact_at`?댁뼱???쒕떎.
+5. containment ?먮뒗 媛숈? post-contact reaction??event-defined adjacency濡?媛寃?愿怨꾨? ?ㅻ챸?????덉뼱???쒕떎.
 
-하지만 이 조건들은 **child를 기록하기 위한 조건**이지 거래를 허가하기 위한 조건이 아니다.
+?섏?留???議곌굔?ㅼ? **child瑜?湲곕줉?섍린 ?꾪븳 議곌굔**?댁? 嫄곕옒瑜??덇??섍린 ?꾪븳 議곌굔???꾨땲??
 
 ```text
 Root contact + no child
-→ Root setup continues
+??Root setup continues
 
 Root contact + one child
-→ child recorded as audit/context only
-→ Root remains strategy source
+??child recorded as audit/context only
+??Root remains strategy source
 
 Root contact + multiple valid children
-→ all may be logged as audit observations
-→ no arbitrary "best child" selection
-→ Root remains strategy source
+??all may be logged as audit observations
+??no arbitrary "best child" selection
+??Root remains strategy source
 ```
 
-Child는 다음 권한을 갖지 않는다.
+Child???ㅼ쓬 沅뚰븳??媛뽰? ?딅뒗??
 
 ```text
 scenario authorization
@@ -955,8 +912,8 @@ pending cancellation
 Root invalidation
 ```
 
-Current V1 최초 포지션의 actual Entry와 SL은 child geometry와 무관하게
-제7~8장의 M1 CHoCH displacement FVG 규칙이 담당한다.
+Current V1 理쒖큹 ?ъ??섏쓽 actual Entry? SL? child geometry? 臾닿??섍쾶
+??~8?μ쓽 M1 CHoCH displacement FVG 洹쒖튃???대떦?쒕떎.
 
 ```text
 LONG Entry = selected bullish FVG.top
@@ -966,38 +923,38 @@ SHORT Entry = selected bearish FVG.bottom
 SHORT SL    = selected FVG.top + 0.20 * FVG.width
 ```
 
-따라서 child가 더 좁아 보여도 이를 이유로 FVG Entry/SL을 변경하지 않는다.
+?곕씪??child媛 ??醫곸븘 蹂댁뿬???대? ?댁쑀濡?FVG Entry/SL??蹂寃쏀븯吏 ?딅뒗??
 
-Optional child가 나중에 invalidated되어도 parent Root가 ACTIVE이면
-Root setup에는 영향이 없다. Child invalidation은 audit fact일 뿐이다.
+Optional child媛 ?섏쨷??invalidated?섏뼱??parent Root媛 ACTIVE?대㈃
+Root setup?먮뒗 ?곹뼢???녿떎. Child invalidation? audit fact??肉먯씠??
 
-Root 자체의 validity는 기존 규칙을 그대로 따른다.
+Root ?먯껜??validity??湲곗〈 洹쒖튃??洹몃?濡??곕Ⅸ??
 
 Bullish Root:
 
 ```text
 Root-own-timeframe close < Root.bottom
-→ PRICE_INVALIDATED
+??PRICE_INVALIDATED
 ```
 
 Bearish Root:
 
 ```text
 Root-own-timeframe close > Root.top
-→ PRICE_INVALIDATED
+??PRICE_INVALIDATED
 ```
 
-Strict inequality를 사용한다.
+Strict inequality瑜??ъ슜?쒕떎.
 
 ```text
 close == distal
-→ invalidation 아님
+??invalidation ?꾨떂
 ```
 
-Wick-only distal penetration 후 Root-own-timeframe close가 Root 안으로 회복되면
-Root는 invalidated되지 않는다.
+Wick-only distal penetration ??Root-own-timeframe close媛 Root ?덉쑝濡??뚮났?섎㈃
+Root??invalidated?섏? ?딅뒗??
 
-즉 current baseline에서 핵심 관계는:
+利?current baseline?먯꽌 ?듭떖 愿怨꾨뒗:
 
 ```text
 Root = strategy source authority
@@ -1005,183 +962,172 @@ optional child = audit/context only
 M1 FVG = actual Entry + SL geometry
 ```
 
-이다.
+?대떎.
 
-## 6. M1 trigger 허용 조건
+## 6. M1 trigger ?덉슜 議곌굔
 
-다음 항목이 시간순으로 완료되기 전에는 M1 trigger를 찾지 않는다.
+?ㅼ쓬 ??ぉ???쒓컙?쒖쑝濡??꾨즺?섍린 ?꾩뿉??M1 trigger瑜?李얠? ?딅뒗??
 
-- 목적 유동성 동결
-- map 방향과 scenario scope 동결
-- 사전 형성·미소진 HTF root OB 동결
-- 가격의 HTF root OB 실제 접촉
-- Root validity 유지
-- 해당 Root reaction에 귀속 가능한 valid liquidity sweep
+- 紐⑹쟻 ?좊룞???숆껐
+- map 諛⑺뼢怨?scenario scope ?숆껐
+- ?ъ쟾 ?뺤꽦쨌誘몄냼吏?HTF root OB ?숆껐
+- 媛寃⑹쓽 HTF root OB ?ㅼ젣 ?묒큺
+- Root validity ?좎?
+- ?대떦 Root reaction??洹??媛?ν븳 valid liquidity sweep
 
-HTF Root 접촉 전의 M1 sweep/CHoCH는 현재 setup에 소급 연결하지 않는다.
-Root contact 이전 historical lower-TF OB도 current optional child였던 것처럼 소급 기록하지 않는다.
+HTF Root ?묒큺 ?꾩쓽 M1 sweep/CHoCH???꾩옱 setup???뚭툒 ?곌껐?섏? ?딅뒗??
+Root contact ?댁쟾 historical lower-TF OB??current optional child???寃껋쿂???뚭툒 湲곕줉?섏? ?딅뒗??
 
-Root contact 이후의 기본 trigger chain은 다음과 같다.
+Root contact ?댄썑??湲곕낯 trigger chain? ?ㅼ쓬怨?媛숇떎.
 
 ```text
 post-contact Root context established
--> Root reaction 맥락의 유효한 유동성 관통
--> 가격 회복
--> 진행 중 M1 추세의 의미 있는 live swing을 몸통 종가로 돌파
--> 같은 sweep-to-CHoCH causal leg의 fresh same-direction FVG 확인
--> valid FVG 중 가장 넓은 FVG 선택
--> 선택된 FVG의 이후 첫 retest
+-> Root reaction 留λ씫???좏슚???좊룞??愿??-> 媛寃??뚮났
+-> 吏꾪뻾 以?M1 異붿꽭???섎? ?덈뒗 live swing??紐명넻 醫낃?濡??뚰뙆
+-> 媛숈? sweep-to-CHoCH causal leg??fresh same-direction FVG ?뺤씤
+-> valid FVG 以?媛???볦? FVG ?좏깮
+-> ?좏깮??FVG???댄썑 泥?retest
 ```
 
-Optional child 관찰 여부는 이 trigger chain의 시작 조건이 아니다.
+Optional child 愿李??щ?????trigger chain???쒖옉 議곌굔???꾨땲??
 
-### sweep 대상 유동성의 성숙도
+### sweep ????좊룞?깆쓽 ?깆닕??
+- sweep ???怨좎??먯? **理쒖쥌 sweep excursion???쒖옉?섍린 ?꾩뿉 ?대? 議댁옱**?댁빞 ?쒕떎.
+- 洹?怨좎??먯뿉??理쒖냼 ??踰덉쓽 ?꾧껐??諛섏쓳???섏? live swing ?먮뒗 ?ㅼ젣 stop pool濡??뺤씤?쇱빞 ?쒕떎.
+- ?꾩옱 reaction leg媛 諛⑷툑 留뚮뱺 怨좎??먯쓣 媛숈? leg ?덉뿉??利됱떆 `BSL/SSL sweep ?꾨즺`濡??좎뼵?섏? ?딅뒗??
+- reaction 以??앷릿 怨좎??먯? 媛寃⑹씠 異⑸텇???댄깉??援ъ“媛 ?뺤젙???? 蹂꾨룄???꾩냽 ?묎렐??洹멸쾬??愿?듯븯怨??뚮났???뚮쭔 sweep 洹쇨굅媛 ?????덈떎.
+- ?섎굹??吏꾪뻾 以?wick??怨좎젏??留뚮뱾怨??ㅼ떆 諛?몃떎???댁쑀留뚯쑝濡?`final sweep`?대씪 遺瑜댁? ?딅뒗??
 
-- sweep 대상 고저점은 **최종 sweep excursion이 시작되기 전에 이미 존재**해야 한다.
-- 그 고저점에서 최소 한 번의 완결된 반응이 나와 live swing 또는 실제 stop pool로 확인돼야 한다.
-- 현재 reaction leg가 방금 만든 고저점을 같은 leg 안에서 즉시 `BSL/SSL sweep 완료`로 선언하지 않는다.
-- reaction 중 생긴 고저점은 가격이 충분히 이탈해 구조가 확정된 뒤, 별도의 후속 접근이 그것을 관통하고 회복할 때만 sweep 근거가 될 수 있다.
-- 하나의 진행 중 wick이 고점을 만들고 다시 밀렸다는 이유만으로 `final sweep`이라 부르지 않는다.
+### M1 detector / scenario sequence separation ??D-127
 
-### M1 detector / scenario sequence separation — D-127
+Current V1? M1??`sweep`怨?`CHoCH`瑜?**scenario ?대???蹂듯빀 ?먭꺽?쒗뿕?쇰줈 ?ъ젙?섑븯吏 ?딅뒗??**
 
-Current V1은 M1의 `sweep`과 `CHoCH`를 **scenario 내부의 복합 자격시험으로 재정의하지 않는다.**
-
-세 층을 분리한다.
+??痢듭쓣 遺꾨━?쒕떎.
 
 ```text
 DETECT
-→ M1_SWEEP_DETECTED
-→ M1_CHOCH_DETECTED
+??M1_SWEEP_DETECTED
+??M1_CHOCH_DETECTED
 
 SEQUENCE
-→ preplanned Root
-→ Root contact
-→ direction-compatible detected M1 sweep
-→ later same-direction detected M1 CHoCH
+??preplanned Root
+??Root contact
+??direction-compatible detected M1 sweep
+??later same-direction detected M1 CHoCH
 
 EXECUTE
-→ causal FVG
-→ widest valid FVG
-→ first retest
-→ Entry / SL / TP
+??causal FVG
+??widest valid FVG
+??first retest
+??Entry / SL / TP
 ```
 
 #### M1 sweep detector
 
-M1 sweep 자체의 판정은 liquidity detector가 이미 만든 causally-known liquidity에 대해
-기존 물리 sweep geometry만 사용한다.
+M1 sweep ?먯껜???먯젙? liquidity detector媛 ?대? 留뚮뱺 causally-known liquidity?????湲곗〈 臾쇰━ sweep geometry留??ъ슜?쒕떎.
 
 ```text
 HIGH-side: high > pool.top AND close <= pool.top
 LOW-side:  low  < pool.bottom AND close >= pool.bottom
 ```
 
-M1 bar가 시작될 때 이미 알고 있는 active liquidity만 사용할 수 있다는 causal rule은
-look-ahead 방지를 위한 detector 원칙이지 strategy quality filter가 아니다.
+M1 bar媛 ?쒖옉?????대? ?뚭퀬 ?덈뒗 active liquidity留??ъ슜?????덈떎??causal rule?
+look-ahead 諛⑹?瑜??꾪븳 detector ?먯튃?댁? strategy quality filter媛 ?꾨땲??
 
-Sweep detector에는 다음을 추가하지 않는다.
+Sweep detector?먮뒗 ?ㅼ쓬??異붽??섏? ?딅뒗??
 
 ```text
-Root-zone 재교차 필수
-scenario ownership 필터
-child 존재 여부
+Root-zone ?ш탳李??꾩닔
+scenario ownership ?꾪꽣
+child 議댁옱 ?щ?
 ATR / point distance
 N-bar age
 quality score
-특정 liquidity family를 strategy 때문에 재선별
-```
+?뱀젙 liquidity family瑜?strategy ?뚮Ц???ъ꽑蹂?```
 
-Root contact 이전에 발생한 sweep은 detector event로는 유효할 수 있지만, 현재 scenario의
-순서상 sweep 단계로 소급 사용할 수 없다. Closed-bar V1에서 Root-contact bar 자체도
-`contact -> sweep` intrabar 순서를 증명할 수 없으므로 현재 scenario 단계에는 사용하지 않는다.
+Root contact ?댁쟾??諛쒖깮??sweep? detector event濡쒕뒗 ?좏슚?????덉?留? ?꾩옱 scenario???쒖꽌??sweep ?④퀎濡??뚭툒 ?ъ슜?????녿떎. Closed-bar V1?먯꽌 Root-contact bar ?먯껜??`contact -> sweep` intrabar ?쒖꽌瑜?利앸챸?????놁쑝誘濡??꾩옱 scenario ?④퀎?먮뒗 ?ъ슜?섏? ?딅뒗??
 
 #### M1 CHoCH detector
 
-CHoCH는 기존 M1 structure detector가 독립적으로 판정한다.
-Current structure engine에서 CHoCH detector event는 directional state의 protected swing을
-반대 방향 **몸통 종가**로 돌파한 `STRUCTURE_PROTECTED_BREAK`이다.
+CHoCH??湲곗〈 M1 structure detector媛 ?낅┰?곸쑝濡??먯젙?쒕떎.
+Current structure engine?먯꽌 CHoCH detector event??directional state??protected swing??諛섎? 諛⑺뼢 **紐명넻 醫낃?**濡??뚰뙆??`STRUCTURE_PROTECTED_BREAK`?대떎.
 
 ```text
 M1 structure detector
-→ STRUCTURE_PROTECTED_BREAK
-→ M1_CHOCH_DETECTED
+??STRUCTURE_PROTECTED_BREAK
+??M1_CHOCH_DETECTED
 ```
 
-Scenario는 이 event를 다시 다음 조건으로 재심사하지 않는다.
+Scenario????event瑜??ㅼ떆 ?ㅼ쓬 議곌굔?쇰줈 ?ъ떖?ы븯吏 ?딅뒗??
 
 ```text
-sweep 시점의 opposite M1 trend 재확인
-sweep 시점 protected swing 별도 freeze
-latest/nearest pivot 재선택
-M5 추가 confirmation
+sweep ?쒖젏??opposite M1 trend ?ы솗??sweep ?쒖젏 protected swing 蹂꾨룄 freeze
+latest/nearest pivot ?ъ꽑??M5 異붽? confirmation
 child confirmation
 CHoCH strength / ATR / body-size score
 ```
 
-`INITIAL_BOS`는 현재 structure detector가 CHoCH로 분류하지 않으므로 CHoCH detector event가 아니다.
-이 구분 자체를 바꾸려면 strategy filter를 완화하는 것이 아니라 **structure detector 정의를 별도 재감사**한다.
+`INITIAL_BOS`???꾩옱 structure detector媛 CHoCH濡?遺꾨쪟?섏? ?딆쑝誘濡?CHoCH detector event媛 ?꾨땲??
+??援щ텇 ?먯껜瑜?諛붽씀?ㅻ㈃ strategy filter瑜??꾪솕?섎뒗 寃껋씠 ?꾨땲??**structure detector ?뺤쓽瑜?蹂꾨룄 ?ш컧??*?쒕떎.
 
 #### Scenario sequence
 
-Scenario layer가 검사하는 것은 구조의 품질을 다시 평가하는 것이 아니라 **시간순서와 방향**뿐이다.
+Scenario layer媛 寃?ы븯??寃껋? 援ъ“???덉쭏???ㅼ떆 ?됯??섎뒗 寃껋씠 ?꾨땲??**?쒓컙?쒖꽌? 諛⑺뼢**肉먯씠??
 
 ```text
 LONG scenario
 Root contact
-→ 이후 LOW-side M1_SWEEP_DETECTED
-→ 그보다 뒤의 bullish M1_CHOCH_DETECTED
-→ WAITING_FVG
+???댄썑 LOW-side M1_SWEEP_DETECTED
+??洹몃낫???ㅼ쓽 bullish M1_CHOCH_DETECTED
+??WAITING_FVG
 
 SHORT scenario
 Root contact
-→ 이후 HIGH-side M1_SWEEP_DETECTED
-→ 그보다 뒤의 bearish M1_CHOCH_DETECTED
-→ WAITING_FVG
+???댄썑 HIGH-side M1_SWEEP_DETECTED
+??洹몃낫???ㅼ쓽 bearish M1_CHOCH_DETECTED
+??WAITING_FVG
 ```
 
-첫 direction-compatible sweep이 sweep 단계를 만족하면 이후 sweep이 기존 단계를
-`replace`하거나 새로운 protected reference를 만들지 않는다. CHoCH가 나오기 전 추가 sweep은
-detector ledger에는 남지만 동일 scenario에서 별도의 중첩 trigger filter를 만들지 않는다.
+泥?direction-compatible sweep??sweep ?④퀎瑜?留뚯”?섎㈃ ?댄썑 sweep??湲곗〈 ?④퀎瑜?`replace`?섍굅???덈줈??protected reference瑜?留뚮뱾吏 ?딅뒗?? CHoCH媛 ?섏삤湲???異붽? sweep?
+detector ledger?먮뒗 ?⑥?留??숈씪 scenario?먯꽌 蹂꾨룄??以묒꺽 trigger filter瑜?留뚮뱾吏 ?딅뒗??
 
-Optional child는 detector와 sequence 어느 쪽에도 거래 권한이 없다.
+Optional child??detector? sequence ?대뒓 履쎌뿉??嫄곕옒 沅뚰븳???녿떎.
 
-### 의미 있는 CHoCH
+### ?섎? ?덈뒗 CHoCH
 
-Current V1에서 `의미 있는 CHoCH`라는 말은 별도의 초강력 CHoCH 유형을 뜻하지 않는다.
+Current V1?먯꽌 `?섎? ?덈뒗 CHoCH`?쇰뒗 留먯? 蹂꾨룄??珥덇컯??CHoCH ?좏삎???삵븯吏 ?딅뒗??
 
 ```text
-일반 M1 CHoCH detector event
+?쇰컲 M1 CHoCH detector event
 +
-이미 Root contact -> Sweep 순서를 통과한 scenario
-= scenario에서 의미 있는 M1 CHoCH
+?대? Root contact -> Sweep ?쒖꽌瑜??듦낵??scenario
+= scenario?먯꽌 ?섎? ?덈뒗 M1 CHoCH
 ```
 
-즉 의미는 **구조 자체에 추가 필터가 붙어서 생기는 것이 아니라, 올바른 scenario 순서 안에서 발생했다는 것**에서 나온다.
-M1 CHoCH만으로 H1/M30 direction을 뒤집거나 새 HTF scenario를 만들 수 없다는 기존 authority는 유지한다.
+利??섎???**援ъ“ ?먯껜??異붽? ?꾪꽣媛 遺숈뼱???앷린??寃껋씠 ?꾨땲?? ?щ컮瑜?scenario ?쒖꽌 ?덉뿉??諛쒖깮?덈떎??寃?*?먯꽌 ?섏삩??
+M1 CHoCH留뚯쑝濡?H1/M30 direction???ㅼ쭛嫄곕굹 ??HTF scenario瑜?留뚮뱾 ???녿떎??湲곗〈 authority???좎??쒕떎.
 
-## 7. FVG의 제한된 역할
+## 7. FVG???쒗븳????븷
 
-FVG를 보았다는 이유로 최초 시나리오를 만들지 않는다.
+FVG瑜?蹂댁븯?ㅻ뒗 ?댁쑀濡?理쒖큹 ?쒕굹由ъ삤瑜?留뚮뱾吏 ?딅뒗??
 
-### 최초 포지션 기본형
-
-- HTF Root는 필수 source/context authority다. Post-contact LTF child는 선택적 audit/context observation이다.
-- 의미 있는 M1 CHoCH 자체는 protected/live swing의 몸통 종가 돌파로 성립한다.
-- 다만 최초 포지션을 실제로 허가하려면 scenario sweep에서 CHoCH까지 이어지는 동일 causal leg 안에 fresh same-direction 3-candle FVG가 최소 하나 있어야 한다.
-- CHoCH가 있어도 causal FVG가 없으면 structure event만 기록하고 `NO ENTRY`다.
-- valid FVG가 여러 개면 `width = top - bottom`이 가장 큰 FVG를 선택한다.
-- symbol tick 기준으로 최대 폭이 정확히 같은 FVG가 둘 이상이면 임의 선택하지 않고 `NO TRADE`다.
-- `INITIAL_CHOCH_FVG`의 3개 구성 M1 candle은 실제 시간상 연속된 M1 bar여야 한다.
+### 理쒖큹 ?ъ???湲곕낯??
+- HTF Root???꾩닔 source/context authority?? Post-contact LTF child???좏깮??audit/context observation?대떎.
+- ?섎? ?덈뒗 M1 CHoCH ?먯껜??protected/live swing??紐명넻 醫낃? ?뚰뙆濡??깅┰?쒕떎.
+- ?ㅻ쭔 理쒖큹 ?ъ??섏쓣 ?ㅼ젣濡??덇??섎젮硫?scenario sweep?먯꽌 CHoCH源뚯? ?댁뼱吏???숈씪 causal leg ?덉뿉 fresh same-direction 3-candle FVG媛 理쒖냼 ?섎굹 ?덉뼱???쒕떎.
+- CHoCH媛 ?덉뼱??causal FVG媛 ?놁쑝硫?structure event留?湲곕줉?섍퀬 `NO ENTRY`??
+- valid FVG媛 ?щ윭 媛쒕㈃ `width = top - bottom`??媛????FVG瑜??좏깮?쒕떎.
+- symbol tick 湲곗??쇰줈 理쒕? ??씠 ?뺥솗??媛숈? FVG媛 ???댁긽?대㈃ ?꾩쓽 ?좏깮?섏? ?딄퀬 `NO TRADE`??
+- `INITIAL_CHOCH_FVG`??3媛?援ъ꽦 M1 candle? ?ㅼ젣 ?쒓컙???곗냽??M1 bar?ъ빞 ?쒕떎.
 - Required: `Candle2.open_time = Candle1.open_time + 60 seconds` AND `Candle3.open_time = Candle2.open_time + 60 seconds`.
-- session close, weekend, trading halt 또는 missing-M1 interval을 사이에 둔 3-candle pattern은 current V1 execution FVG가 아니다.
-- 즉 시장이 닫힌 동안 생긴 가격 공백 자체를 CHoCH displacement FVG로 해석하지 않는다.
-- 이 continuity rule은 execution FVG에만 적용한다. Session boundary 자체가 market structure, Root, source, sweep scenario를 자동 reset하지 않는다.
-- selected FVG와 meaningful CHoCH가 모두 확정된 이후 가격이 그 FVG에 처음 닿는 것을 first retest로 사용한다.
-- first retest의 가격 교차는 `bar.high >= FVG.bottom AND bar.low <= FVG.top`으로 판정하며, authorization 이전에 이미 지나간 touch를 사후 retest로 복원하지 않는다.
-- CHoCH FVG가 선명하더라도 누락된 HTF Root를 대신할 수 없다. Optional child observation의 부재는 이 금지 조건에 포함되지 않는다.
+- session close, weekend, trading halt ?먮뒗 missing-M1 interval???ъ씠????3-candle pattern? current V1 execution FVG媛 ?꾨땲??
+- 利??쒖옣???ロ엺 ?숈븞 ?앷릿 媛寃?怨듬갚 ?먯껜瑜?CHoCH displacement FVG濡??댁꽍?섏? ?딅뒗??
+- ??continuity rule? execution FVG?먮쭔 ?곸슜?쒕떎. Session boundary ?먯껜媛 market structure, Root, source, sweep scenario瑜??먮룞 reset?섏? ?딅뒗??
+- selected FVG? meaningful CHoCH媛 紐⑤몢 ?뺤젙???댄썑 媛寃⑹씠 洹?FVG??泥섏쓬 ?용뒗 寃껋쓣 first retest濡??ъ슜?쒕떎.
+- first retest??媛寃?援먯감??`bar.high >= FVG.bottom AND bar.low <= FVG.top`?쇰줈 ?먯젙?섎ŉ, authorization ?댁쟾???대? 吏?섍컙 touch瑜??ы썑 retest濡?蹂듭썝?섏? ?딅뒗??
+- CHoCH FVG媛 ?좊챸?섎뜑?쇰룄 ?꾨씫??HTF Root瑜???좏븷 ???녿떎. Optional child observation??遺?щ뒗 ??湲덉? 議곌굔???ы븿?섏? ?딅뒗??
 
-3-candle FVG는 다음처럼 정의한다.
+3-candle FVG???ㅼ쓬泥섎읆 ?뺤쓽?쒕떎.
 
 ```text
 Bullish:
@@ -1195,18 +1141,14 @@ bottom = Candle3.high
 top = Candle1.low
 ```
 
-### 별도 연구형
+### 蹂꾨룄 ?곌뎄??
+?ㅼ쓬? 湲곕낯 ?ㅼ듅?섏떇 理쒖큹 吏꾩엯???욎? ?딅뒗??
 
-다음은 기본 스승님식 최초 진입에 섞지 않는다.
+- causal execution OB留뚯쓣 理쒖큹 entry zone?쇰줈 ?곕뒗 蹂??- HTF FVG瑜?source濡??곕뒗 蹂??- ?숆껐??HTF owner쨌objective쨌OB lineage ?놁씠 delivery FVG留?異붽꺽?섎뒗 蹂??- FVG inversion 吏꾩엯
 
-- causal execution OB만을 최초 entry zone으로 쓰는 변형
-- HTF FVG를 source로 쓰는 변형
-- 동결된 HTF owner·objective·OB lineage 없이 delivery FVG만 추격하는 변형
-- FVG inversion 진입
+### 鍮꾪솢??research execution variants
 
-### 비활성 research execution variants
-
-다음 protocol은 current V1 first-position 주문 권한이 없다.
+?ㅼ쓬 protocol? current V1 first-position 二쇰Ц 沅뚰븳???녿떎.
 
 ```text
 DELIVERY_FVG_REPLACEMENT
@@ -1216,10 +1158,10 @@ FVG inversion entry
 mandatory additional-BOS entry
 ```
 
-이들의 과거 상세 계약은
-Git history 및 legacy research 문서에 보존한다.
+?대뱾??怨쇨굅 ?곸꽭 怨꾩빟?
+Git history 諛?legacy research 臾몄꽌??蹂댁〈?쒕떎.
 
-Current V1 engine은 이 variant들의:
+Current V1 engine? ??variant?ㅼ쓽:
 
 ```text
 candidate
@@ -1229,26 +1171,26 @@ position
 risk slot
 ```
 
-을 생성하지 않는다.
+???앹꽦?섏? ?딅뒗??
 
-별도 재감사와 독립 protocol 승격 전까지
-current baseline execution path에 포함하지 않는다.
+蹂꾨룄 ?ш컧?ъ? ?낅┰ protocol ?밴꺽 ?꾧퉴吏
+current baseline execution path???ы븿?섏? ?딅뒗??
 
 ## 8. Entry, SL, TP
 
 ### Entry
 
-- 최초 진입 execution model은 `INITIAL_CHOCH_FVG`다.
-- LONG은 selected bullish FVG의 상단(`top`)에 Buy Limit을 둔다.
-- SHORT은 selected bearish FVG의 하단(`bottom`)에 Sell Limit을 둔다.
-- selected FVG와 meaningful CHoCH가 모두 확정된 이후 첫 retest만 사용하며, 이미 지나간 접촉에 사후 진입하지 않는다.
-- CHoCH가 있어도 같은 sweep-to-CHoCH causal leg에 valid fresh FVG가 없으면 최초 포지션은 만들지 않는다.
-- selected FVG first retest 없이 가격이 출발하면 시장가로 추격하지 않는다.
-- `DELIVERY_FVG_REPLACEMENT`는 제7장에 기존 기록을 보존하지만 현재 V1에서는 재감사 전 주문 권한이 없다.
+- 理쒖큹 吏꾩엯 execution model? `INITIAL_CHOCH_FVG`??
+- LONG? selected bullish FVG???곷떒(`top`)??Buy Limit???붾떎.
+- SHORT? selected bearish FVG???섎떒(`bottom`)??Sell Limit???붾떎.
+- selected FVG? meaningful CHoCH媛 紐⑤몢 ?뺤젙???댄썑 泥?retest留??ъ슜?섎ŉ, ?대? 吏?섍컙 ?묒큺???ы썑 吏꾩엯?섏? ?딅뒗??
+- CHoCH媛 ?덉뼱??媛숈? sweep-to-CHoCH causal leg??valid fresh FVG媛 ?놁쑝硫?理쒖큹 ?ъ??섏? 留뚮뱾吏 ?딅뒗??
+- selected FVG first retest ?놁씠 媛寃⑹씠 異쒕컻?섎㈃ ?쒖옣媛濡?異붽꺽?섏? ?딅뒗??
+- `DELIVERY_FVG_REPLACEMENT`?????μ뿉 湲곗〈 湲곕줉??蹂댁〈?섏?留??꾩옱 V1?먯꽌???ш컧????二쇰Ц 沅뚰븳???녿떎.
 
-### 체결 전 pending order 생명주기
+### 泥닿껐 ??pending order ?앸챸二쇨린
 
-V1 first-position strategy state는 현재 trigger pipeline을 명시적으로 구분한다.
+V1 first-position strategy state???꾩옱 trigger pipeline??紐낆떆?곸쑝濡?援щ텇?쒕떎.
 
 ```text
 PLANNED
@@ -1261,22 +1203,22 @@ CANCELED
 NO_TRADE
 ```
 
-각 state는 새로운 품질 필터가 아니라 **직렬 sequence의 진행 위치**만 나타낸다.
-Optional child observation은 state를 만들거나 바꾸지 않는다.
+媛?state???덈줈???덉쭏 ?꾪꽣媛 ?꾨땲??**吏곷젹 sequence??吏꾪뻾 ?꾩튂**留??섑??몃떎.
+Optional child observation? state瑜?留뚮뱾嫄곕굹 諛붽씀吏 ?딅뒗??
 
-Scenario CHoCH가 accepted되어 `WAITING_FVG`에 들어가면 다음 execution 단계에서:
+Scenario CHoCH媛 accepted?섏뼱 `WAITING_FVG`???ㅼ뼱媛硫??ㅼ쓬 execution ?④퀎?먯꽌:
 
 ```text
 eligible fresh FVG snapshot
-→ widest FVG freeze
-→ Entry 계산
-→ SL 계산
-→ frozen objective family에서 Final TP 선택
-→ execution preflight
-→ pending 즉시 제출
+??widest FVG freeze
+??Entry 怨꾩궛
+??SL 怨꾩궛
+??frozen objective family?먯꽌 Final TP ?좏깮
+??execution preflight
+??pending 利됱떆 ?쒖텧
 ```
 
-한다.
+?쒕떎.
 
 LONG:
 
@@ -1290,15 +1232,15 @@ SHORT:
 SELL LIMIT at bearish FVG.bottom
 ```
 
-Pending order는:
+Pending order??
 
 ```text
 ORDER_TIME_GTC
 ```
 
-를 사용한다.
+瑜??ъ슜?쒕떎.
 
-다음은 time-only cancellation authority가 아니다.
+?ㅼ쓬? time-only cancellation authority媛 ?꾨땲??
 
 ```text
 N bars
@@ -1309,7 +1251,7 @@ next trading day
 periodic H1/M15 re-approval missing
 ```
 
-Fill 전 strategy cancellation authority는 세 종류뿐이다.
+Fill ??strategy cancellation authority????醫낅쪟肉먯씠??
 
 ```text
 1. final objective validity
@@ -1317,27 +1259,27 @@ Fill 전 strategy cancellation authority는 세 종류뿐이다.
 3. scenario-direction authority
 ```
 
-구체적으로:
+援ъ껜?곸쑝濡?
 
 ```text
 final objective delivered before fill
-→ CANCELED
+??CANCELED
 
 required HTF Root invalidated
-→ CANCELED
+??CANCELED
 
 optional child invalidated while HTF Root remains ACTIVE
-→ audit only
-→ scenario remains unchanged
+??audit only
+??scenario remains unchanged
 
 continuation owner invalidated
-→ CANCELED
+??CANCELED
 
 early-reversal permission terminated by current-trend continuation body-break
-→ CANCELED
+??CANCELED
 ```
 
-Selected FVG가 정상 pending으로 등록된 뒤:
+Selected FVG媛 ?뺤긽 pending?쇰줈 ?깅줉????
 
 ```text
 50% mitigation
@@ -1347,39 +1289,33 @@ full traversal
 body-close-through-FVG
 ```
 
-를 별도 strategy cancellation condition으로 사용하지 않는다.
+瑜?蹂꾨룄 strategy cancellation condition?쇰줈 ?ъ슜?섏? ?딅뒗??
 
-Entry가 FVG near-side boundary 자체이므로
-정상적인 가격 진행에서는
-deeper FVG traversal보다 pending activation/fill이 먼저 발생한다.
+Entry媛 FVG near-side boundary ?먯껜?대?濡??뺤긽?곸씤 媛寃?吏꾪뻾?먯꽌??deeper FVG traversal蹂대떎 pending activation/fill??癒쇱? 諛쒖깮?쒕떎.
 
 Broker rejection, StopsLevel, FreezeLevel,
-server cancellation failure는
-strategy invalidation이 아니라
-execution result로 별도 기록한다.
+server cancellation failure??strategy invalidation???꾨땲??execution result濡?蹂꾨룄 湲곕줉?쒕떎.
 
-Current build 1.50의 자동 주문 제출은 Strategy Tester에서만 허용한다. `MQL_TESTER=false` 환경에서는 detector/scenario audit는 가능하지만 live trade request는 hard-block한다.
+Current build 1.50???먮룞 二쇰Ц ?쒖텧? Strategy Tester?먯꽌留??덉슜?쒕떎. `MQL_TESTER=false` ?섍꼍?먯꽌??detector/scenario audit??媛?ν븯吏留?live trade request??hard-block?쒕떎.
 
-Pending이 fill된 뒤에는
-처음 freeze한 SL / TP가 실험 결과를 결정한다.
+Pending??fill???ㅼ뿉??泥섏쓬 freeze??SL / TP媛 ?ㅽ뿕 寃곌낵瑜?寃곗젙?쒕떎.
 
-Fill 후 source / owner / M1 state 변화로
-포지션을 임의 종료하지 않는다.
+Fill ??source / owner / M1 state 蹂?붾줈
+?ъ??섏쓣 ?꾩쓽 醫낅즺?섏? ?딅뒗??
 
-부분체결로 position이 생긴 뒤 동일 first-position order의 residual pending이 남아 있으면
-이를 새로운 전략 진입기회로 보지 않는다. 이미 체결된 position은 frozen SL/TP로 유지하고,
-잔량 pending은 1회 취소 요청한다. residual cancellation 실패 또는 잔량이 계속 남는 경우:
+遺遺꾩껜寃곕줈 position???앷릿 ???숈씪 first-position order??residual pending???⑥븘 ?덉쑝硫??대? ?덈줈???꾨왂 吏꾩엯湲고쉶濡?蹂댁? ?딅뒗?? ?대? 泥닿껐??position? frozen SL/TP濡??좎??섍퀬,
+?붾웾 pending? 1??痍⑥냼 ?붿껌?쒕떎. residual cancellation ?ㅽ뙣 ?먮뒗 ?붾웾??怨꾩냽 ?⑤뒗 寃쎌슦:
 
 ```text
 EXECUTION_DIVERGENCE
 reason = PARTIAL_FILL_WITH_RESIDUAL_PENDING
 ```
 
-로 기록하고 symbol+magic exposure lock을 유지한다. 임의 재주문이나 잔량 재생성은 하지 않는다.
+濡?湲곕줉?섍퀬 symbol+magic exposure lock???좎??쒕떎. ?꾩쓽 ?ъ＜臾몄씠???붾웾 ?ъ깮?깆? ?섏? ?딅뒗??
 
 ### Session / market-gap handling
 
-Session close, daily pause, weekend 또는 scheduled market closure 자체는:
+Session close, daily pause, weekend ?먮뒗 scheduled market closure ?먯껜??
 
 ```text
 scenario cancellation
@@ -1389,18 +1325,15 @@ source reset
 sweep reset
 ```
 
-권한이 아니다.
+沅뚰븳???꾨땲??
 
-따라서 causal validity가 살아 있다면
-scenario state는 그대로 유지한다.
+?곕씪??causal validity媛 ?댁븘 ?덈떎硫?scenario state??洹몃?濡??좎??쒕떎.
 
-V1은 session close 직전이라는 이유만으로
-pending을 미리 취소하지 않는다.
+V1? session close 吏곸쟾?대씪???댁쑀留뚯쑝濡?pending??誘몃━ 痍⑥냼?섏? ?딅뒗??
 
-단, 이 규칙을 실제 server pending으로 구현하려면
-symbol이 persistent GTC를 지원해야 한다.
+?? ??洹쒖튃???ㅼ젣 server pending?쇰줈 援ы쁽?섎젮硫?symbol??persistent GTC瑜?吏?먰빐???쒕떎.
 
-Order submission preflight에서 반드시 확인한다.
+Order submission preflight?먯꽌 諛섎뱶???뺤씤?쒕떎.
 
 ```text
 SYMBOL_EXPIRATION_MODE supports SYMBOL_EXPIRATION_GTC
@@ -1410,61 +1343,58 @@ AND
 SYMBOL_ORDER_GTC_MODE == SYMBOL_ORDERS_GTC
 ```
 
-둘 중 하나라도 만족하지 않으면:
+??以??섎굹?쇰룄 留뚯”?섏? ?딆쑝硫?
 
 ```text
 strategy signal = VALID
 execution = EXECUTION_INFEASIBLE
-→ NO ORDER
+??NO ORDER
 ```
 
-다.
+??
 
-Broker의 daily order deletion을
-EA가 다음 session에 재생성하는 방식으로
-baseline strategy를 우회 구현하지 않는다.
+Broker??daily order deletion??EA媛 ?ㅼ쓬 session???ъ깮?깊븯??諛⑹떇?쇰줈
+baseline strategy瑜??고쉶 援ы쁽?섏? ?딅뒗??
 
-CHoCH/FVG decision cycle 시점에
-현재 symbol의 trading session에서 주문 제출이 허용되지 않으면:
+CHoCH/FVG decision cycle ?쒖젏???꾩옱 symbol??trading session?먯꽌 二쇰Ц ?쒖텧???덉슜?섏? ?딆쑝硫?
 
 ```text
 EXECUTION_INFEASIBLE
-→ NO ORDER
+??NO ORDER
 ```
 
-로 처리한다.
+濡?泥섎━?쒕떎.
 
-같은 execution chain을 저장해 두었다가
-다음 session open에 늦게 제출하지 않는다.
+媛숈? execution chain????ν빐 ?먯뿀?ㅺ?
+?ㅼ쓬 session open????쾶 ?쒖텧?섏? ?딅뒗??
 
-Runtime catch-up에서도 동일하다. 주문 제출 시점의 current M1 open이 CHoCH bar 직후의 M1 slot이 아니면 old signal로 간주해 제출하지 않는다. 임의 N초/N분 timeout은 사용하지 않는다.
+Runtime catch-up?먯꽌???숈씪?섎떎. 二쇰Ц ?쒖텧 ?쒖젏??current M1 open??CHoCH bar 吏곹썑??M1 slot???꾨땲硫?old signal濡?媛꾩＜???쒖텧?섏? ?딅뒗?? ?꾩쓽 N珥?N遺?timeout? ?ъ슜?섏? ?딅뒗??
 
-No-quote interval에는
-가격이 어떤 경로로 움직였는지 추정하지 않는다.
+No-quote interval?먮뒗
+媛寃⑹씠 ?대뼡 寃쎈줈濡??吏곸??붿? 異붿젙?섏? ?딅뒗??
 
-다만 session reopen 뒤 들어오는
-첫 실제 broker quote와 이후 실제 tick은
-정상 market information으로 처리한다.
+?ㅻ쭔 session reopen ???ㅼ뼱?ㅻ뒗
+泥??ㅼ젣 broker quote? ?댄썑 ?ㅼ젣 tick?
+?뺤긽 market information?쇰줈 泥섎━?쒕떎.
 
-이미 server에 accepted된 GTC pending이
-reopen gap으로 activation되면:
+?대? server??accepted??GTC pending??reopen gap?쇰줈 activation?섎㈃:
 
 ```text
 requested strategy entry
-≠ necessarily actual fill price
+??necessarily actual fill price
 ```
 
-일 수 있다.
+?????덈떎.
 
-Actual fill은 broker / MT5의:
+Actual fill? broker / MT5??
 
 ```text
 DEAL_PRICE
 ```
 
-를 사용한다.
+瑜??ъ슜?쒕떎.
 
-Limit order가 gap으로 strategy entry보다 유리한 가격에 fill되어도:
+Limit order媛 gap?쇰줈 strategy entry蹂대떎 ?좊━??媛寃⑹뿉 fill?섏뼱??
 
 ```text
 selected FVG
@@ -1475,19 +1405,18 @@ lot size
 planned R authorization
 ```
 
-을 사후 재계산하지 않는다.
+???ы썑 ?ш퀎?고븯吏 ?딅뒗??
 
-Strategy geometry와 actual execution result를 둘 다 기록한다.
+Strategy geometry? actual execution result瑜?????湲곕줉?쒕떎.
 
-Gap fill 또는 gap SL/TP execution은
-정상적인 market execution event이며
-그 사실만으로 `EXECUTION_DIVERGENCE`로 분류하지 않는다.
+Gap fill ?먮뒗 gap SL/TP execution?
+?뺤긽?곸씤 market execution event?대ŉ
+洹??ъ떎留뚯쑝濡?`EXECUTION_DIVERGENCE`濡?遺꾨쪟?섏? ?딅뒗??
 
-Open position이 session gap을 넘어가고
-reopen 첫 quote가 SL 또는 TP trigger를 이미 넘어선 경우에도
-requested SL/TP 가격으로 임의 체결을 재구성하지 않는다.
+Open position??session gap???섏뼱媛怨?reopen 泥?quote媛 SL ?먮뒗 TP trigger瑜??대? ?섏뼱??寃쎌슦?먮룄
+requested SL/TP 媛寃⑹쑝濡??꾩쓽 泥닿껐???ш뎄?깊븯吏 ?딅뒗??
 
-MT5 history의:
+MT5 history??
 
 ```text
 DEAL_REASON_SL
@@ -1495,15 +1424,13 @@ DEAL_REASON_TP
 DEAL_PRICE
 ```
 
-를 actual execution source of truth로 사용한다.
+瑜?actual execution source of truth濡??ъ슜?쒕떎.
 
-Session gap을 이유로
-killzone / day-of-week / session-time strategy filter를 새로 추가하지 않는다.
+Session gap???댁쑀濡?killzone / day-of-week / session-time strategy filter瑜??덈줈 異붽??섏? ?딅뒗??
 
 ### Hierarchical bootstrap / historical compression
 
-EA startup은 과거 모든 structure / OB / FVG / CHoCH를
-현재까지 영구 보존하지 않는다.
+EA startup? 怨쇨굅 紐⑤뱺 structure / OB / FVG / CHoCH瑜??꾩옱源뚯? ?곴뎄 蹂댁〈?섏? ?딅뒗??
 
 Bootstrap order:
 
@@ -1521,27 +1448,25 @@ Bootstrap order:
 H4:
 
 ```text
-→ same causal structure detector를 streaming replay
-→ ACTIVE H4 EXTERNAL_SWING liquidity만 장기 보존
+??same causal structure detector瑜?streaming replay
+??ACTIVE H4 EXTERNAL_SWING liquidity留??κ린 蹂댁〈
 ```
 
 H1/M30/M15 root-discovery stream:
 
 ```text
 H1/M30
-→ active map authority
+??active map authority
 
 M15
-→ map authority 없음
-→ current H1/M30 causal context 아래 Root detector 역할만 가능
-```
+??map authority ?놁쓬
+??current H1/M30 causal context ?꾨옒 Root detector ??븷留?媛??```
 
-Historical M15 object tree 전체를 보존하지 않는다.
+Historical M15 object tree ?꾩껜瑜?蹂댁〈?섏? ?딅뒗??
 
-Current scenario와 관계가 끝난 historical object는
-다음 active working-set에서 제거할 수 있다.
+Current scenario? 愿怨꾧? ?앸궃 historical object???ㅼ쓬 active working-set?먯꽌 ?쒓굅?????덈떎.
 
-다만 아래 중 하나가 reference하면 RAM에서 제거할 수 없다.
+?ㅻ쭔 ?꾨옒 以??섎굹媛 reference?섎㈃ RAM?먯꽌 ?쒓굅?????녿떎.
 
 ```text
 current neutral-range construction
@@ -1554,27 +1479,26 @@ active CHoCH reference
 H4 ACTIVE liquidity index
 ```
 
-Consumed / invalidated / unreferenced object는:
+Consumed / invalidated / unreferenced object??
 
 ```text
-append-only audit storage에 기록
-→ in-memory working set에서 eviction 가능
-```
+append-only audit storage??湲곕줉
+??in-memory working set?먯꽌 eviction 媛??```
 
-이다.
+?대떎.
 
-Audit log 자체를 전부 RAM에 보존할 필요는 없다.
+Audit log ?먯껜瑜??꾨? RAM??蹂댁〈???꾩슂???녿떎.
 
-Bootstrap 완료 뒤:
+Bootstrap ?꾨즺 ??
 
 ```text
 execution_epoch_start
 ```
 
-를 freeze한다.
+瑜?freeze?쒕떎.
 
-다음 first-position runtime causal event는 모두
-`execution_epoch_start` 이후 새 event여야 한다.
+?ㅼ쓬 first-position runtime causal event??紐⑤몢
+`execution_epoch_start` ?댄썑 ??event?ъ빞 ?쒕떎.
 
 ```text
 qualifying HTF Root contact
@@ -1584,45 +1508,45 @@ meaningful M1 CHoCH
 execution FVG
 ```
 
-Pre-start CHoCH/FVG/pending hypothesis는 runtime order authority가 아니다.
+Pre-start CHoCH/FVG/pending hypothesis??runtime order authority媛 ?꾨땲??
 
-Startup 첫 observable price가 이미 감시 중인 HTF Root 내부라면:
+Startup 泥?observable price媛 ?대? 媛먯떆 以묒씤 HTF Root ?대??쇰㈃:
 
 ```text
 STARTED_INSIDE_ROOT
 ```
 
-에 해당하는 시작 상태만 기록하고,
-pre-start 가격 경로를 사용해 qualifying Root contact나 post-contact child를 소급 생성하지 않는다.
+???대떦?섎뒗 ?쒖옉 ?곹깭留?湲곕줉?섍퀬,
+pre-start 媛寃?寃쎈줈瑜??ъ슜??qualifying Root contact??post-contact child瑜??뚭툒 ?앹꽦?섏? ?딅뒗??
 
-새 runtime contact가 필요하면:
+??runtime contact媛 ?꾩슂?섎㈃:
 
 ```text
 exit Root
-→ later re-entry
-→ new qualifying Root contact
-→ optional post-contact child audit
+??later re-entry
+??new qualifying Root contact
+??optional post-contact child audit
 ```
 
-순서를 지킨다.
+?쒖꽌瑜?吏?⑤떎.
 
 ### Closed-bar multi-timeframe processing order
 
-동일 timestamp에 여러 timeframe candle이 close되면:
+?숈씪 timestamp???щ윭 timeframe candle??close?섎㈃:
 
 ```text
 H4
-→ H1
-→ M30
-→ M15
-→ M5
-→ M1
-→ scenario/order authorization
+??H1
+??M30
+??M15
+??M5
+??M1
+??scenario/order authorization
 ```
 
-순서로 처리한다.
+?쒖꽌濡?泥섎━?쒕떎.
 
-각 timeframe close 내부에서는:
+媛?timeframe close ?대??먯꽌??
 
 ```text
 1. pre-existing object invalidation / consumption update
@@ -1631,39 +1555,38 @@ H4
 4. dependent authorization
 ```
 
-순서를 사용한다.
+?쒖꽌瑜??ъ슜?쒕떎.
 
-이 순서는 look-ahead를 추가하는 것이 아니라
-동일 available timestamp의 deterministic tie-breaker다.
+???쒖꽌??look-ahead瑜?異붽??섎뒗 寃껋씠 ?꾨땲???숈씪 available timestamp??deterministic tie-breaker??
 
 ### First-position concurrency / exposure
 
-Current V1은 risk-slot arbitration이나 symbol당 단일 포지션 제한을 사용하지 않는다.
+Current V1? risk-slot arbitration?대굹 symbol???⑥씪 ?ъ????쒗븳???ъ슜?섏? ?딅뒗??
 
-Current execution baseline은 **hedging account**를 요구한다. 이유는 서로 다른 same-direction scenario가 각자의 Entry / SL / TP / lifecycle을 독립적으로 유지해야 하기 때문이다.
+Current execution baseline? **hedging account**瑜??붽뎄?쒕떎. ?댁쑀???쒕줈 ?ㅻⅨ same-direction scenario媛 媛곸옄??Entry / SL / TP / lifecycle???낅┰?곸쑝濡??좎??댁빞 ?섍린 ?뚮Ц?대떎.
 
 ```text
 ACCOUNT_MARGIN_MODE_RETAIL_HEDGING
-→ required for automated order submission
+??required for automated order submission
 ```
 
-Netting account에서는 detector/scenario audit는 가능하지만 current multi-scenario execution geometry를 하나의 net position으로 합쳐 해석하지 않는다.
+Netting account?먯꽌??detector/scenario audit??媛?ν븯吏留?current multi-scenario execution geometry瑜??섎굹??net position?쇰줈 ?⑹퀜 ?댁꽍?섏? ?딅뒗??
 
-같은 방향의 새 causal scenario는 기존 pending 또는 filled position이 존재해도 새 주문을 제출할 수 있다.
+媛숈? 諛⑺뼢????causal scenario??湲곗〈 pending ?먮뒗 filled position??議댁옱?대룄 ??二쇰Ц???쒖텧?????덈떎.
 
 ```text
 existing LONG pending/position
 +
 new independent LONG scenario
-→ allowed
+??allowed
 
 existing SHORT pending/position
 +
 new independent SHORT scenario
-→ allowed
+??allowed
 ```
 
-이것은 기존 position에 물타기하거나 SL/TP를 합치는 것이 아니다. 서로 다른 Entry의 scenario는 각각 독립적으로 다음을 보존한다.
+?닿쾬? 湲곗〈 position??臾쇳?湲고븯嫄곕굹 SL/TP瑜??⑹튂??寃껋씠 ?꾨땲?? ?쒕줈 ?ㅻⅨ Entry??scenario??媛곴컖 ?낅┰?곸쑝濡??ㅼ쓬??蹂댁〈?쒕떎.
 
 ```text
 scenario_id
@@ -1677,25 +1600,25 @@ broker position identifier
 fill / cancel / close lifecycle
 ```
 
-반대로 accepted exposure와 **반대 방향**의 새 주문은 허용하지 않는다.
+諛섎?濡?accepted exposure? **諛섎? 諛⑺뼢**????二쇰Ц? ?덉슜?섏? ?딅뒗??
 
 ```text
 existing LONG pending/position
 +
 new SHORT scenario
-→ NO_TRADE
-→ OPPOSITE_DIRECTION_EXPOSURE_CONFLICT
+??NO_TRADE
+??OPPOSITE_DIRECTION_EXPOSURE_CONFLICT
 
 existing SHORT pending/position
 +
 new LONG scenario
-→ NO_TRADE
-→ OPPOSITE_DIRECTION_EXPOSURE_CONFLICT
+??NO_TRADE
+??OPPOSITE_DIRECTION_EXPOSURE_CONFLICT
 ```
 
-반대 방향 signal이 나중에 기존 exposure 종료 후 살아나는 delayed submission은 금지한다. 새 주문에는 새 causal execution chain이 필요하다.
+諛섎? 諛⑺뼢 signal???섏쨷??湲곗〈 exposure 醫낅즺 ???댁븘?섎뒗 delayed submission? 湲덉??쒕떎. ??二쇰Ц?먮뒗 ??causal execution chain???꾩슂?섎떎.
 
-동일 processing epoch에 LONG과 SHORT가 모두 새로 완성되고 그 전에 accepted exposure가 없다면 array/order 순서로 한쪽을 먼저 선택하지 않는다.
+?숈씪 processing epoch??LONG怨?SHORT媛 紐⑤몢 ?덈줈 ?꾩꽦?섍퀬 洹??꾩뿉 accepted exposure媛 ?녿떎硫?array/order ?쒖꽌濡??쒖そ??癒쇱? ?좏깮?섏? ?딅뒗??
 
 ```text
 new LONG opportunity
@@ -1703,35 +1626,35 @@ new LONG opportunity
 new SHORT opportunity
 +
 no pre-existing managed exposure
-→ NO_TRADE
-→ AMBIGUOUS_SIMULTANEOUS_OPPOSITE_DIRECTION_AUTHORIZATION
+??NO_TRADE
+??AMBIGUOUS_SIMULTANEOUS_OPPOSITE_DIRECTION_AUTHORIZATION
 ```
 
-이미 한 방향 exposure가 존재한 상태에서 동일 epoch에 양방향 signal이 함께 나오면 기존 exposure와 같은 방향의 add-on만 허용하고 반대 방향은 `OPPOSITE_DIRECTION_EXPOSURE_CONFLICT`로 차단한다.
+?대? ??諛⑺뼢 exposure媛 議댁옱???곹깭?먯꽌 ?숈씪 epoch???묐갑??signal???④퍡 ?섏삤硫?湲곗〈 exposure? 媛숈? 諛⑺뼢??add-on留??덉슜?섍퀬 諛섎? 諛⑺뼢? `OPPOSITE_DIRECTION_EXPOSURE_CONFLICT`濡?李⑤떒?쒕떎.
 
-Current baseline은 여러 Root branch가 **같은 방향 + 같은 selected FVG + 같은 Entry tick**에 수렴하면 서로 다른 거래로 보지 않는다. 그것들은 하나의 scenario를 지지하는 contributor Roots다.
+Current baseline? ?щ윭 Root branch媛 **媛숈? 諛⑺뼢 + 媛숈? selected FVG + 媛숈? Entry tick**???섎졃?섎㈃ ?쒕줈 ?ㅻⅨ 嫄곕옒濡?蹂댁? ?딅뒗?? 洹멸쾬?ㅼ? ?섎굹??scenario瑜?吏吏?섎뒗 contributor Roots??
 
 ```text
 same direction
 + same selected_fvg_id
 + same Entry tick
-→ ONE SCENARIO
-→ freeze N contributor Roots
-→ one merged SL / one TP / one pending order
+??ONE SCENARIO
+??freeze N contributor Roots
+??one merged SL / one TP / one pending order
 ```
 
-Root별 SL 또는 TP가 사전에 같을 필요는 없다. 먼저 contributor scenario를 merge한 뒤 selected SL model에 따라 전체 invalidation을 보존하는 바깥쪽 stop을 하나 정하고, 그 merged SL로 TP eligibility를 다시 계산한다.
+Root蹂?SL ?먮뒗 TP媛 ?ъ쟾??媛숈쓣 ?꾩슂???녿떎. 癒쇱? contributor scenario瑜?merge????selected SL model???곕씪 ?꾩껜 invalidation??蹂댁〈?섎뒗 諛붽묑履?stop???섎굹 ?뺥븯怨? 洹?merged SL濡?TP eligibility瑜??ㅼ떆 怨꾩궛?쒕떎.
 
-반대로 같은 방향이라도 **selected FVG 또는 Entry tick이 다르면 독립적인 add-on scenario**다.
+諛섎?濡?媛숈? 諛⑺뼢?대씪??**selected FVG ?먮뒗 Entry tick???ㅻⅤ硫??낅┰?곸씤 add-on scenario**??
 
 ```text
 same direction
 + different FVG or Entry
-→ independent scenario
-→ independent pending/position allowed
+??independent scenario
+??independent pending/position allowed
 ```
 
-한 scenario의 fill 뒤 원래 주문 ticket에 residual pending volume이 남는 경우에만 partial-fill residual로 취소한다. 다른 same-direction scenario의 pending order는 절대 residual로 간주하거나 취소하지 않는다.
+??scenario??fill ???먮옒 二쇰Ц ticket??residual pending volume???⑤뒗 寃쎌슦?먮쭔 partial-fill residual濡?痍⑥냼?쒕떎. ?ㅻⅨ same-direction scenario??pending order???덈? residual濡?媛꾩＜?섍굅??痍⑥냼?섏? ?딅뒗??
 
 ### SL
 
@@ -1754,8 +1677,8 @@ SHORT:
 SL = FVG.top + buffer
 ```
 
-Strategy SL은 `SYMBOL_TRADE_TICK_SIZE`에 맞춰
-risk를 줄이지 않는 방향으로만 normalize한다.
+Strategy SL? `SYMBOL_TRADE_TICK_SIZE`??留욎떠
+risk瑜?以꾩씠吏 ?딅뒗 諛⑺뼢?쇰줈留?normalize?쒕떎.
 
 Broker:
 
@@ -1767,29 +1690,29 @@ trade mode
 margin
 ```
 
-제약은 strategy geometry를 바꾸지 않는다.
+?쒖빟? strategy geometry瑜?諛붽씀吏 ?딅뒗??
 
-Frozen geometry가 실행 불가능하면:
+Frozen geometry媛 ?ㅽ뻾 遺덇??ν븯硫?
 
 ```text
 EXECUTION_INFEASIBLE
-→ NO ORDER
+??NO ORDER
 ```
 
-다.
+??
 
 ### V1 parity volume
 
-Strategy correctness / parity baseline은:
+Strategy correctness / parity baseline?:
 
 ```text
 sizing_mode = MINIMUM_VOLUME_PARITY
 order_volume = SYMBOL_VOLUME_MIN
 ```
 
-을 사용한다.
+???ъ슜?쒕떎.
 
-Volume은:
+Volume?:
 
 ```text
 SYMBOL_VOLUME_MIN
@@ -1797,97 +1720,93 @@ SYMBOL_VOLUME_MAX
 SYMBOL_VOLUME_STEP
 ```
 
-를 검증한다.
+瑜?寃利앺븳??
 
-Minimum volume 자체가 margin/request constraint를 통과하지 못하면:
+Minimum volume ?먯껜媛 margin/request constraint瑜??듦낵?섏? 紐삵븯硫?
 
 ```text
 EXECUTION_INFEASIBLE
-→ NO ORDER
+??NO ORDER
 ```
 
-다.
+??
 
-V1 parity 단계에서는 arbitrary risk-percent parameter를 추가하지 않는다.
+V1 parity ?④퀎?먯꽌??arbitrary risk-percent parameter瑜?異붽??섏? ?딅뒗??
 
-성과의 전략 비교 단위는 우선 R이다.
+?깃낵???꾨왂 鍮꾧탳 ?⑥쐞???곗꽑 R?대떎.
 
-Account-risk-percent sizing은
-implementation parity 완료 뒤 별도 execution/risk policy로 검토한다.
+Account-risk-percent sizing?
+implementation parity ?꾨즺 ??蹂꾨룄 execution/risk policy濡?寃?좏븳??
 
 ### TP
 
-- Objective family는 PLAN 단계에서 Entry/SL geometry를 알기 전에 freeze한다.
-- Active V1 first-position scope는 `EXTERNAL_CONTINUATION`과 `EXTERNAL_REVERSAL` 두 개다.
-- Candidate는 causally-known, unconsumed, direction-ahead, scope-compatible liquidity만 포함한다.
-- 별도의 current/historical fallback tier를 만들지 않는다.
-- Candidate 수에 arbitrary maximum cap을 두지 않는다.
-- Candidate order는 trade direction으로 가까운 순서로 freeze한다.
-- Entry와 normalized strategy SL이 확정되면 가까운 순서대로 planned R을 계산한다.
-- planned R `<1` candidate는 final TP 자격에서 제외하고 필요하면 `INTERMEDIATE_DELIVERY`로 기록한다.
-- planned R `>=1`인 최초 candidate를 final TP로 선택한다.
-- 더 큰 R을 만들기 위해 candidate를 추가하거나 순서를 변경하거나 더 먼 TP를 선택하지 않는다.
-- Frozen family 전체에 R-eligible candidate가 없으면 `NO_TRADE / NO_R_ELIGIBLE_OBJECTIVE`다.
-- Final TP freeze 후 fill 전에 objective가 delivered되면 scenario와 pending을 취소한다.
-- 같은 scenario에서 next objective로 rollover하지 않는다.
-- V1 TP는 selected structural liquidity의 actual price를 사용한다.
-- LONG TP는 Bid-side, SHORT TP는 Ask-side execution semantics를 따른다.
+- Objective family??PLAN ?④퀎?먯꽌 Entry/SL geometry瑜??뚭린 ?꾩뿉 freeze?쒕떎.
+- Active V1 first-position scope??`EXTERNAL_CONTINUATION`怨?`EXTERNAL_REVERSAL` ??媛쒕떎.
+- Candidate??causally-known, unconsumed, direction-ahead, scope-compatible liquidity留??ы븿?쒕떎.
+- 蹂꾨룄??current/historical fallback tier瑜?留뚮뱾吏 ?딅뒗??
+- Candidate ?섏뿉 arbitrary maximum cap???먯? ?딅뒗??
+- Candidate order??trade direction?쇰줈 媛源뚯슫 ?쒖꽌濡?freeze?쒕떎.
+- Entry? normalized strategy SL???뺤젙?섎㈃ 媛源뚯슫 ?쒖꽌?濡?planned R??怨꾩궛?쒕떎.
+- planned R `<1` candidate??final TP ?먭꺽?먯꽌 ?쒖쇅?섍퀬 ?꾩슂?섎㈃ `INTERMEDIATE_DELIVERY`濡?湲곕줉?쒕떎.
+- planned R `>=1`??理쒖큹 candidate瑜?final TP濡??좏깮?쒕떎.
+- ????R??留뚮뱾湲??꾪빐 candidate瑜?異붽??섍굅???쒖꽌瑜?蹂寃쏀븯嫄곕굹 ??癒?TP瑜??좏깮?섏? ?딅뒗??
+- Frozen family ?꾩껜??R-eligible candidate媛 ?놁쑝硫?`NO_TRADE / NO_R_ELIGIBLE_OBJECTIVE`??
+- Final TP freeze ??fill ?꾩뿉 objective媛 delivered?섎㈃ scenario? pending??痍⑥냼?쒕떎.
+- 媛숈? scenario?먯꽌 next objective濡?rollover?섏? ?딅뒗??
+- V1 TP??selected structural liquidity??actual price瑜??ъ슜?쒕떎.
+- LONG TP??Bid-side, SHORT TP??Ask-side execution semantics瑜??곕Ⅸ??
 
-### 체결 후
+### 泥닿껐 ??
+- 理쒖큹 SL ?먮뒗 TP媛 寃곌낵瑜??먯젙?쒕떎.
+- 怨듯룷, ?섏씡 蹂댄샇 ?뺢뎄, 以묎컙 M1 諛섎? ?좏샇濡??꾩쓽 泥?궛?섏? ?딅뒗??
+- ?쒓컙 留뚮즺, 蹂몄젅 ?대룞, 遺遺??듭젅? 蹂꾨룄 ?뱀씤 ?꾧퉴吏 ?ъ슜?섏? ?딅뒗??
 
-- 최초 SL 또는 TP가 결과를 판정한다.
-- 공포, 수익 보호 욕구, 중간 M1 반대 신호로 임의 청산하지 않는다.
-- 시간 만료, 본절 이동, 부분 익절은 별도 승인 전까지 사용하지 않는다.
+## 9. 利됱떆 鍮꾨ℓ留?議곌굔
 
-## 9. 즉시 비매매 조건
+?ㅼ쓬 以??섎굹?쇰룄 ?대떦?섎㈃ current V1 first-position order瑜?留뚮뱾吏 ?딅뒗??
 
-다음 중 하나라도 해당하면 current V1 first-position order를 만들지 않는다.
+1. ?꾩옱 directional map ?먮뒗 trade-direction authority瑜?寃곗젙?????녿떎.
+2. Active dealing range瑜?deterministic?섍쾶 寃곗젙?????녿떎.
+3. Scenario scope? ordered objective family瑜?寃곗젙?????녿떎.
+4. Frozen objective family ?꾩껜??planned R `>=1`??valid candidate媛 ?녿떎.
+5. ?ъ쟾???뺤꽦?섏뼱 ?덇퀬 ?꾩옱 setup??泥?諛섏쓳??蹂????덈뒗 誘몄냼吏?HTF Root OB媛 ?녿떎.
+6. 媛寃⑹씠 洹?HTF Root???ㅼ젣濡?contact?섏? ?딆븯??
+7. Root contact ?댄썑 direction-compatible M1 sweep detector event媛 ?녿떎.
+8. 洹?sweep ?댄썑 scenario 諛⑺뼢??M1 CHoCH detector event媛 ?녿떎.
+9. Scenario CHoCH???덉?留?媛숈? sweep-to-CHoCH causal leg??fresh valid FVG媛 ?녿떎.
+10. Widest valid FVG瑜?deterministic?섍쾶 ?섎굹 ?좏깮?????녿떎.
+11. Selected FVG??Entry / SL / TP geometry媛 怨꾩궛?섏? ?딅뒗??
+12. Frozen strategy geometry媛 broker execution preflight瑜??듦낵?섏? 紐삵븳??
 
-1. 현재 directional map 또는 trade-direction authority를 결정할 수 없다.
-2. Active dealing range를 deterministic하게 결정할 수 없다.
-3. Scenario scope와 ordered objective family를 결정할 수 없다.
-4. Frozen objective family 전체에 planned R `>=1`인 valid candidate가 없다.
-5. 사전에 형성되어 있고 현재 setup의 첫 반응을 볼 수 있는 미소진 HTF Root OB가 없다.
-6. 가격이 그 HTF Root에 실제로 contact하지 않았다.
-7. Root contact 이후 direction-compatible M1 sweep detector event가 없다.
-8. 그 sweep 이후 scenario 방향의 M1 CHoCH detector event가 없다.
-9. Scenario CHoCH는 있지만 같은 sweep-to-CHoCH causal leg에 fresh valid FVG가 없다.
-10. Widest valid FVG를 deterministic하게 하나 선택할 수 없다.
-11. Selected FVG의 Entry / SL / TP geometry가 계산되지 않는다.
-12. Frozen strategy geometry가 broker execution preflight를 통과하지 못한다.
-
-다음은 **단독 비매매 사유가 아니다.**
+?ㅼ쓬? **?⑤룆 鍮꾨ℓ留??ъ쑀媛 ?꾨땲??**
 
 ```text
-post-contact child가 없음
-first/deeper child가 ambiguous함
-optional child가 invalidated됐지만 parent Root가 여전히 ACTIVE임
-```
+post-contact child媛 ?놁쓬
+first/deeper child媛 ambiguous??optional child媛 invalidated?먯?留?parent Root媛 ?ъ쟾??ACTIVE??```
 
-이 경우에도 strategy source는 처음부터 끝까지 HTF Root다.
-Pre-contact historical OB를 child인 것처럼 소급 사용하지 않는 규칙은 그대로 유지한다.
+??寃쎌슦?먮룄 strategy source??泥섏쓬遺???앷퉴吏 HTF Root??
+Pre-contact historical OB瑜?child??寃껋쿂???뚭툒 ?ъ슜?섏? ?딅뒗 洹쒖튃? 洹몃?濡??좎??쒕떎.
 
-비활성 research variant의 조건 충족 여부는
-current V1 no-trade branch에 포함하지 않는다.
+鍮꾪솢??research variant??議곌굔 異⑹” ?щ???current V1 no-trade branch???ы븿?섏? ?딅뒗??
 
-## 10. 블라인드 재생 규율
+## 10. 釉붾씪?몃뱶 ?ъ깮 洹쒖쑉
 
-1. H1/M30에서 current map, scenario scope, ordered objective family와 사전 형성·미소진 HTF Root context를 먼저 결정한다.
-2. 가격이 HTF Root에 실제로 도달하기 전에는 M1 trigger를 사후 탐색하지 않는다.
-3. HTF Root contact 이후 M30/M15/M5 child가 보이면 optional audit/context로만 기록한다.
-4. Child 유무와 관계없이 Root contact 이후 해당 setup의 eligible sweep과 M1 CHoCH를 판단한다.
-5. PLAN에서 objective candidate family와 order를 먼저 freeze한다. Final TP 하나는 Entry/SL이 알려진 뒤 frozen family에서 선택한다.
-6. 지나간 entry/retest를 사후 주문으로 복원하지 않는다.
-7. 주문 전에 causal IDs, Entry, SL, TP, volume과 execution preflight를 기록한다.
-8. 결과를 본 뒤 Root/liquidity/CHoCH/FVG/SL/TP를 다시 그리지 않는다.
-9. 미래 데이터가 노출된 replay session은 protocol result에서 제외한다.
-10. `PLANNED / WAITING_SWEEP / WAITING_CHOCH` 상태에서 가격이 source와 멀리 있고 causal invalidation도 없다면 동일 분석을 불필요하게 반복하지 않는다.
-11. 사전에 선언된 structural/objective/source event에서만 replay를 정지한다.
-12. 비활성 Delivery-FVG/OB-only/add-on variant는 current V1 blind-replay 판단에 사용하지 않는다.
+1. H1/M30?먯꽌 current map, scenario scope, ordered objective family? ?ъ쟾 ?뺤꽦쨌誘몄냼吏?HTF Root context瑜?癒쇱? 寃곗젙?쒕떎.
+2. 媛寃⑹씠 HTF Root???ㅼ젣濡??꾨떖?섍린 ?꾩뿉??M1 trigger瑜??ы썑 ?먯깋?섏? ?딅뒗??
+3. HTF Root contact ?댄썑 M30/M15/M5 child媛 蹂댁씠硫?optional audit/context濡쒕쭔 湲곕줉?쒕떎.
+4. Child ?좊Т? 愿怨꾩뾾??Root contact ?댄썑 ?대떦 setup??eligible sweep怨?M1 CHoCH瑜??먮떒?쒕떎.
+5. PLAN?먯꽌 objective candidate family? order瑜?癒쇱? freeze?쒕떎. Final TP ?섎굹??Entry/SL???뚮젮吏???frozen family?먯꽌 ?좏깮?쒕떎.
+6. 吏?섍컙 entry/retest瑜??ы썑 二쇰Ц?쇰줈 蹂듭썝?섏? ?딅뒗??
+7. 二쇰Ц ?꾩뿉 causal IDs, Entry, SL, TP, volume怨?execution preflight瑜?湲곕줉?쒕떎.
+8. 寃곌낵瑜?蹂???Root/liquidity/CHoCH/FVG/SL/TP瑜??ㅼ떆 洹몃━吏 ?딅뒗??
+9. 誘몃옒 ?곗씠?곌? ?몄텧??replay session? protocol result?먯꽌 ?쒖쇅?쒕떎.
+10. `PLANNED / WAITING_SWEEP / WAITING_CHOCH` ?곹깭?먯꽌 媛寃⑹씠 source? 硫由??덇퀬 causal invalidation???녿떎硫??숈씪 遺꾩꽍??遺덊븘?뷀븯寃?諛섎났?섏? ?딅뒗??
+11. ?ъ쟾???좎뼵??structural/objective/source event?먯꽌留?replay瑜??뺤??쒕떎.
+12. 鍮꾪솢??Delivery-FVG/OB-only/add-on variant??current V1 blind-replay ?먮떒???ъ슜?섏? ?딅뒗??
 
-## 11. 주문 전 필수 증거
+## 11. 二쇰Ц ???꾩닔 利앷굅
 
-주문 전에 최소 다음을 deterministic ledger에 기록한다.
+二쇰Ц ?꾩뿉 理쒖냼 ?ㅼ쓬??deterministic ledger??湲곕줉?쒕떎.
 
 ```text
 scenario_id
@@ -1943,131 +1862,123 @@ order-send retcode / broker ticket
 strategy terminal reason if no order
 ```
 
-Historical inactive variant state는 current V1 필수 증거가 아니다.
+Historical inactive variant state??current V1 ?꾩닔 利앷굅媛 ?꾨땲??
 
-## 12. 성과 분류
+## 12. ?깃낵 遺꾨쪟
 
 ### Strategy-valid trade
 
-주문 전에 current V1의 필수 causal chain과
-Entry / SL / TP geometry가 모두 freeze된 거래다.
+二쇰Ц ?꾩뿉 current V1???꾩닔 causal chain怨?Entry / SL / TP geometry媛 紐⑤몢 freeze??嫄곕옒??
 
 ### Protocol violation
 
-다음은 PnL과 무관하게
-current V1 strategy performance에서 제외한다.
+?ㅼ쓬? PnL怨?臾닿??섍쾶
+current V1 strategy performance?먯꽌 ?쒖쇅?쒕떎.
 
-- Root 누락
-- HTF Root contact 이전 child/trigger를 current setup에 소급 연결
-- immature liquidity sweep 사용
+- Root ?꾨씫
+- HTF Root contact ?댁쟾 child/trigger瑜?current setup???뚭툒 ?곌껐
+- immature liquidity sweep ?ъ슜
 - arbitrary micro pivot CHoCH
-- causal FVG 없는 CHoCH entry
-- widest-FVG rule 위반
+- causal FVG ?녿뒗 CHoCH entry
+- widest-FVG rule ?꾨컲
 - wrong FVG boundary entry
-- 20% FVG SL rule 위반
-- premium/discount를 standalone authorization 또는 veto로 사용
+- 20% FVG SL rule ?꾨컲
+- premium/discount瑜?standalone authorization ?먮뒗 veto濡??ъ슜
 - wrong scenario direction authority
 - objective-family hindsight modification
 - farther-R target optimization
 - post-selection TP rollover
-- fill 전 objective delivery를 무시
-- invalidated Root/owner를 사용해 pending 유지
+- fill ??objective delivery瑜?臾댁떆
+- invalidated Root/owner瑜??ъ슜??pending ?좎?
 
 ### Execution divergence
 
-Strategy가 이미 CANCELED 상태인데
-broker cancellation failure 등으로
-실제 order가 fill된 경우:
+Strategy媛 ?대? CANCELED ?곹깭?몃뜲
+broker cancellation failure ?깆쑝濡??ㅼ젣 order媛 fill??寃쎌슦:
 
 ```text
 EXECUTION_DIVERGENCE
 ```
 
-로 기록한다.
+濡?湲곕줉?쒕떎.
 
-이것은 strategy-valid trade도
-strategy protocol violation trade도 아니며
-execution infrastructure failure로 별도 집계한다.
+?닿쾬? strategy-valid trade??strategy protocol violation trade???꾨땲硫?execution infrastructure failure濡?蹂꾨룄 吏묎퀎?쒕떎.
 
-## 13. 최근 실패의 재발 방지
+## 13. 理쒓렐 ?ㅽ뙣???щ컻 諛⑹?
 
-다음 실패 유형은 current V1 regression에서 반드시 차단한다.
+?ㅼ쓬 ?ㅽ뙣 ?좏삎? current V1 regression?먯꽌 諛섎뱶??李⑤떒?쒕떎.
 
-- internal swing을 external liquidity로 잘못 승격
-- HTF Root 없이 M1 trigger로 빈칸을 채움
-- HTF FVG를 standalone source로 사용
-- HTF Root contact 이전에 존재한 child를 current post-contact child observation으로 사용
-- pre-contact/unrelated lower-TF OB를 post-contact child audit로 잘못 기록
-- HTF Root contact 이전 M1 trigger-first 판단
-- reaction 중 방금 생긴 high/low를 same setup의 mature liquidity로 사용
-- premium/discount를 standalone gate로 사용
-- M1 micro CHoCH를 HTF direction authority처럼 사용
-- widest-FVG rule 위반
-- selected FVG 20% SL geometry 변경
-- frozen objective family를 Entry/SL 확인 뒤 변경
-- fill 전에 objective가 delivered됐는데 pending 유지
-- required Root가 body-close invalidated됐는데 pending 유지
-- reversal permission이 continuation body-break로 종료됐는데 early-reversal pending 유지
+- internal swing??external liquidity濡??섎せ ?밴꺽
+- HTF Root ?놁씠 M1 trigger濡?鍮덉뭏??梨꾩?
+- HTF FVG瑜?standalone source濡??ъ슜
+- HTF Root contact ?댁쟾??議댁옱??child瑜?current post-contact child observation?쇰줈 ?ъ슜
+- pre-contact/unrelated lower-TF OB瑜?post-contact child audit濡??섎せ 湲곕줉
+- HTF Root contact ?댁쟾 M1 trigger-first ?먮떒
+- reaction 以?諛⑷툑 ?앷릿 high/low瑜?same setup??mature liquidity濡??ъ슜
+- premium/discount瑜?standalone gate濡??ъ슜
+- M1 micro CHoCH瑜?HTF direction authority泥섎읆 ?ъ슜
+- widest-FVG rule ?꾨컲
+- selected FVG 20% SL geometry 蹂寃?- frozen objective family瑜?Entry/SL ?뺤씤 ??蹂寃?- fill ?꾩뿉 objective媛 delivered?먮뒗??pending ?좎?
+- required Root媛 body-close invalidated?먮뒗??pending ?좎?
+- reversal permission??continuation body-break濡?醫낅즺?먮뒗??early-reversal pending ?좎?
 
-단순 시간 경과,
-periodic re-approval timestamp 누락,
-비활성 Delivery-FVG protocol 상태는
-current V1 regression reason으로 사용하지 않는다.
+?⑥닚 ?쒓컙 寃쎄낵,
+periodic re-approval timestamp ?꾨씫,
+鍮꾪솢??Delivery-FVG protocol ?곹깭??current V1 regression reason?쇰줈 ?ъ슜?섏? ?딅뒗??
 
-## 14. 주문 직전 최종 선언
+## 14. 二쇰Ц 吏곸쟾 理쒖쥌 ?좎뼵
 
-주문 전에 다음 질문에 모두 답할 수 있어야 한다.
+二쇰Ц ?꾩뿉 ?ㅼ쓬 吏덈Ц??紐⑤몢 ?듯븷 ???덉뼱???쒕떎.
 
 ```text
-현재 scenario_scope는 ________ 이다.
-현재 trade-direction authority는 ________ 이다.
-reversal permission이 필요한 경우 그 origin event는 ________ 이다.
+?꾩옱 scenario_scope??________ ?대떎.
+?꾩옱 trade-direction authority??________ ?대떎.
+reversal permission???꾩슂??寃쎌슦 洹?origin event??________ ?대떎.
 
-active dealing range는 ________ ~ ________ 이다.
-EQ는 ________ 이다.
-현재 위치는 premium / discount 중 ________ 이다.
+active dealing range??________ ~ ________ ?대떎.
+EQ??________ ?대떎.
+?꾩옱 ?꾩튂??premium / discount 以?________ ?대떎.
 
-PLAN에서 freeze한 ordered objective family는 ________ 이다.
-candidate 순서는 ________ 이다.
-Final TP는 ________ 이다.
-Final TP planned R은 ________ R이다.
-이 candidate가 가장 가까운 R-eligible candidate인 이유는 ________ 이다.
+PLAN?먯꽌 freeze??ordered objective family??________ ?대떎.
+candidate ?쒖꽌??________ ?대떎.
+Final TP??________ ?대떎.
+Final TP planned R? ________ R?대떎.
+??candidate媛 媛??媛源뚯슫 R-eligible candidate???댁쑀??________ ?대떎.
 
-Root는 ________ TF의 ________ 영역이다.
-Root가 사전 형성·미소진 상태였던 근거는 ________ 이다.
-가격은 ________ 시각에 HTF Root를 실제 contact했다.
-Root invalidation boundary는 ________ 이다.
-Optional child observation은 ________ 이다. (없으면 N/A)
-Child가 있다면 Root contact 이후 causal audit 조건을 만족한 근거는 ________ 이다.
+Root??________ TF??________ ?곸뿭?대떎.
+Root媛 ?ъ쟾 ?뺤꽦쨌誘몄냼吏??곹깭???洹쇨굅??________ ?대떎.
+媛寃⑹? ________ ?쒓컖??HTF Root瑜??ㅼ젣 contact?덈떎.
+Root invalidation boundary??________ ?대떎.
+Optional child observation? ________ ?대떎. (?놁쑝硫?N/A)
+Child媛 ?덈떎硫?Root contact ?댄썑 causal audit 議곌굔??留뚯”??洹쇨굅??________ ?대떎.
 
-Post-contact trigger context가 준비된 시각은 ________ 이다.
-Scenario Sweep 단계를 만족시킨 M1_SWEEP_DETECTED는 ________ 시각의 ________ event다.
-Scenario CHoCH 단계를 만족시킨 M1_CHOCH_DETECTED는 ________ 시각의 ________ event다.
+Post-contact trigger context媛 以鍮꾨맂 ?쒓컖? ________ ?대떎.
+Scenario Sweep ?④퀎瑜?留뚯”?쒗궓 M1_SWEEP_DETECTED??________ ?쒓컖??________ event??
+Scenario CHoCH ?④퀎瑜?留뚯”?쒗궓 M1_CHOCH_DETECTED??________ ?쒓컖??________ event??
 
-Eligible causal FVG는 ________ 이다.
-Selected widest FVG는 ________ 이다.
+Eligible causal FVG??________ ?대떎.
+Selected widest FVG??________ ?대떎.
 
-Entry는 ________ 이다.
-FVG width는 ________ 이다.
-Raw SL은 ________ 이다.
-Normalized strategy SL은 ________ 이다.
-TP는 ________ 이다.
+Entry??________ ?대떎.
+FVG width??________ ?대떎.
+Raw SL? ________ ?대떎.
+Normalized strategy SL? ________ ?대떎.
+TP??________ ?대떎.
 
-Order submission 시 Bid / Ask / spread는 ________ 이다.
-StopsLevel / FreezeLevel은 ________ 이다.
-Execution preflight 결과는 ________ 이다.
+Order submission ??Bid / Ask / spread??________ ?대떎.
+StopsLevel / FreezeLevel? ________ ?대떎.
+Execution preflight 寃곌낵??________ ?대떎.
 ```
 
-한 항목이라도 current V1 authority 기준으로 결정할 수 없으면
-주문하지 않는다.
+????ぉ?대씪??current V1 authority 湲곗??쇰줈 寃곗젙?????놁쑝硫?二쇰Ц?섏? ?딅뒗??
 
-## 15. 한 문장 원칙
+## 15. ??臾몄옣 ?먯튃
 
-> M1 trigger로 거래의 원인을 찾지 않는다. 먼저 사전 형성·미소진 HTF Root OB를 준비하고 실제 Root contact를 기다린다. 이후 Root 반응의 valid sweep과 M1 전환을 확인하고, 실제 Entry와 SL은 CHoCH displacement M1 FVG가 담당한다. Post-contact child는 있어도 되는 audit/context 정보일 뿐 거래 권한이 아니다.
+> M1 trigger濡?嫄곕옒???먯씤??李얠? ?딅뒗?? 癒쇱? ?ъ쟾 ?뺤꽦쨌誘몄냼吏?HTF Root OB瑜?以鍮꾪븯怨??ㅼ젣 Root contact瑜?湲곕떎由곕떎. ?댄썑 Root 諛섏쓳??valid sweep怨?M1 ?꾪솚???뺤씤?섍퀬, ?ㅼ젣 Entry? SL? CHoCH displacement M1 FVG媛 ?대떦?쒕떎. Post-contact child???덉뼱???섎뒗 audit/context ?뺣낫??肉?嫄곕옒 沅뚰븳???꾨땲??
 
 ## 16. Legacy regression records
 
-과거 regression 사례의 구체적인:
+怨쇨굅 regression ?щ???援ъ껜?곸씤:
 
 ```text
 execution-OB Entry
@@ -2077,14 +1988,13 @@ periodic H1/M15 pending re-approval
 legacy objective price
 ```
 
-는 current V1 strategy authority가 아니다.
+??current V1 strategy authority媛 ?꾨땲??
 
-Historical evidence는 Git history와 research 문서에 보존한다.
+Historical evidence??Git history? research 臾몄꽌??蹂댁〈?쒕떎.
 
-새 V1 regression fixture는
-현재 `AGENTS.md`와 `docs/ea/EA_SPEC.md`의 frozen contract로 다시 생성한다.
+??V1 regression fixture???꾩옱 `AGENTS.md`? `docs/ea/EA_SPEC.md`??frozen contract濡??ㅼ떆 ?앹꽦?쒕떎.
 
-최소 regression class:
+理쒖냼 regression class:
 
 ```text
 wrong external/internal classification
@@ -2107,26 +2017,25 @@ owner/direction authority revoked before fill
 Ground Truth V2,
 Gemini replay,
 API latency,
-AI risk-slot orchestration은
-current deterministic EA V1 strategy authority가 아니다.
+AI risk-slot orchestration?
+current deterministic EA V1 strategy authority媛 ?꾨땲??
 
-현재 상태:
+?꾩옱 ?곹깭:
 
 ```text
 BLOCKED
 OUT_OF_BASELINE_PATH
 ```
 
-EA V1은 AI runtime 없이
-MT5 Strategy Tester와 향후 live MT5 환경에서
-독립 실행되어야 한다.
+EA V1? AI runtime ?놁씠
+MT5 Strategy Tester? ?ν썑 live MT5 ?섍꼍?먯꽌
+?낅┰ ?ㅽ뻾?섏뼱???쒕떎.
 
-Historical Ground Truth / Gemini execution contracts는
-Git history 및 관련 research documents에 보존한다.
+Historical Ground Truth / Gemini execution contracts??Git history 諛?愿??research documents??蹂댁〈?쒕떎.
 
 ---
 
-## D-132 historical experimental execution contract — 2026-08-17
+## D-132 historical experimental execution contract ??2026-08-17
 
 Status: `SL VARIANTS RETAINED / FVG-OB EXPERIMENT + STRICT EXECUTION-IDENTITY MERGE SUPERSEDED BY D-133`
 
@@ -2170,9 +2079,9 @@ If all six fields match:
 
 ```text
 N Root/scenario branches
-→ one frozen execution opportunity
-→ one broker pending order
-→ N frozen contributors
+??one frozen execution opportunity
+??one broker pending order
+??N frozen contributors
 ```
 
 One scenario may act as the MT5 implementation ledger holder, but this is **not** a Root ranking, score, nearest-Root choice, or strategic preference.
@@ -2218,7 +2127,7 @@ Default input remains `V1_SL_FVG_DISTAL_20` until comparative real-tick validati
 
 ---
 
-## D-133 current baseline authority — FVG-origin OB + same-entry multi-Root scenario — 2026-08-18
+## D-133 current baseline authority ??FVG-origin OB + same-entry multi-Root scenario ??2026-08-18
 
 Status: `CURRENT V1 AUTHORITY / IMPLEMENTATION BUILD 1.70 PREPARED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING`
 
@@ -2258,9 +2167,9 @@ Root ID, Root timeframe, Root geometry, candidate SL, or candidate TP are **not*
 
 ```text
 N Roots
-→ same FVG / Entry
-→ one scenario
-→ N frozen contributor Roots
+??same FVG / Entry
+??one scenario
+??N frozen contributor Roots
 ```
 
 The implementation-master row is ledger-only and has no strategic preference.
@@ -2272,8 +2181,8 @@ Each contributor first computes the candidate stop implied by the currently sele
 For one merged scenario, use the **outermost contributor invalidation**:
 
 ```text
-LONG  → lowest normalized contributor SL
-SHORT → highest normalized contributor SL
+LONG  ??lowest normalized contributor SL
+SHORT ??highest normalized contributor SL
 ```
 
 Therefore under `V1_SL_ROOT_OB_DISTAL_20`, the stop is outside the deepest contributing Root invalidation. One shallower Root can fail without declaring the entire merged scenario invalid while another contributor still supports it.
@@ -2290,10 +2199,10 @@ To avoid arbitrarily borrowing one Root's target or creating hindsight candidate
 
 ```text
 intersection of contributor pre-frozen objective prices
-→ direction-ahead
-→ still live
-→ nearest price with reward_ticks >= risk_ticks
-→ Final TP
+??direction-ahead
+??still live
+??nearest price with reward_ticks >= risk_ticks
+??Final TP
 ```
 
 No union of post-hoc targets is allowed. If there is no common R-eligible objective:
@@ -2332,19 +2241,19 @@ Only different execution opportunities remain ambiguous:
 ```text
 same epoch
 + different selected FVG or Entry
-→ AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
-→ NO_TRADE
+??AMBIGUOUS_SIMULTANEOUS_AUTHORIZATION
+??NO_TRADE
 ```
 
 Different Root IDs alone are no longer ambiguity.
 
 ---
 
-## D-134 current execution authority — hedging same-direction add-on scenarios — 2026-08-18
+## D-134 current execution authority ??hedging same-direction add-on scenarios ??2026-08-18
 
 Status: `CURRENT V1 EXECUTION AUTHORITY / BUILD 1.80 PREPARED / LOCAL COMPILE + REAL-TICK VALIDATION PENDING`
 
-D-133 real-tick validation showed that the remaining `EXPOSURE_ALREADY_ACCEPTED` events were not failed strategy chains. They were complete same-direction Root → Sweep → CHoCH → FVG opportunities blocked only because another pending or filled exposure already existed.
+D-133 real-tick validation showed that the remaining `EXPOSURE_ALREADY_ACCEPTED` events were not failed strategy chains. They were complete same-direction Root ??Sweep ??CHoCH ??FVG opportunities blocked only because another pending or filled exposure already existed.
 
 The user confirmed that the trading account is a **hedging account** and approved same-direction re-entry/add-on execution.
 
@@ -2354,10 +2263,10 @@ A new fully causal scenario with a different Entry remains an independent trade 
 
 ```text
 existing LONG exposure + new LONG scenario
-→ submit new LONG order
+??submit new LONG order
 
 existing SHORT exposure + new SHORT scenario
-→ submit new SHORT order
+??submit new SHORT order
 ```
 
 Each scenario keeps independent:
@@ -2382,8 +2291,8 @@ D-133 remains active:
 same direction
 + same selected_fvg_id
 + same Entry tick
-→ one scenario
-→ contributor Root merge
+??one scenario
+??contributor Root merge
 ```
 
 Different Entry/FVG in the same direction is not a contributor merge. It is an independent add-on scenario.
@@ -2402,7 +2311,7 @@ If LONG and SHORT opportunities are first authorized in the same processing epoc
 
 ```text
 AMBIGUOUS_SIMULTANEOUS_OPPOSITE_DIRECTION_AUTHORIZATION
-→ all opposite-direction epoch opportunities NO_TRADE
+??all opposite-direction epoch opportunities NO_TRADE
 ```
 
 No array-order, score, Root ranking, or RR priority selects one side.
@@ -2462,7 +2371,7 @@ D-134 removes only that execution-policy rejection. It does not relax Root, Swee
 
 ---
 
-## D-135 implementation-only performance contract — 2026-08-19
+## D-135 implementation-only performance contract ??2026-08-19
 
 Status: `NON-SEMANTIC IMPLEMENTATION AUTHORITY / D-134 STRATEGY RULES UNCHANGED`
 
@@ -2492,22 +2401,22 @@ append-only audit ledgers
 + bounded active working-set indices for runtime hot paths
 
 liquidity-consumption event
-→ update affected frozen objective candidates immediately
-→ no whole-objective-ledger polling every M1
+??update affected frozen objective candidates immediately
+??no whole-objective-ledger polling every M1
 
 active pending/filled scenario only
-→ broker reconciliation
-→ terminal scenario removed from active execution working set
+??broker reconciliation
+??terminal scenario removed from active execution working set
 
 live original pending order
-→ no repeated entry-history scan on ordinary ticks
+??no repeated entry-history scan on ordinary ticks
 
 live exact hedging position
-→ no repeated exit-history scan on ordinary ticks
+??no repeated exit-history scan on ordinary ticks
 
 CSV audit rows
-→ buffered flush permitted
-→ row content / causal timestamps remain authoritative
+??buffered flush permitted
+??row content / causal timestamps remain authoritative
 ```
 
 A direct active-liquidity `strategy_consumed` marker may cache the existing strategy-consumption overlay for O(1) membership checks. It is only a cache of existing D-127/D-128 consumption authority and cannot create or remove liquidity consumption by itself.
@@ -2526,3 +2435,4 @@ execution divergence
 ```
 
 Diagnostic log ordering for `OBJECTIVE_CANDIDATE_CONSUMED` may move to the exact causal consumption event because polling is removed; its `available_at` and downstream strategy result must remain equivalent. Any strategy/output parity mismatch invalidates the performance optimization until corrected.
+
