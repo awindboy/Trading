@@ -132,3 +132,46 @@ Every major V3 experiment gets its own immutable result document.
 Phase changes update this HANDOFF.
 
 Important V3 architectural decisions append to root `docs/ea/DECISIONS.md`.
+
+## V3-002 / V3-003 routing update ??2026-08-25
+
+The first GOLD-only offline discovery cycle is now synthesized in:
+
+```text
+V3_002_GOLD_OFFLINE_RESEARCH_SYNTHESIS.md
+```
+
+The main result is a **fundamental research pivot**, not a promoted Entry rule.
+
+Key conclusions:
+- sweep alone has almost no alpha;
+- local structure acceptance matters more than sweep alone;
+- FVG may remain a displacement footprint, but mandatory FVG-retest Entry is not supported;
+- event geometry without direction/state context has no stable directional edge;
+- fixed momentum-horizon direction and trade-level ML classification did not generalize;
+- selective continuation when HTF context and reaction agree remains promising but sparse and temporally unstable;
+- bad quarters represent different failure mechanisms;
+- broad SL widening is not authorized;
+- winner continuation remains a separate useful research problem.
+
+Active next phase:
+
+```text
+V3-003 GOLD AUCTION-STATE RECONSTRUCTION
+```
+
+Read:
+1. `V3_002_GOLD_OFFLINE_RESEARCH_SYNTHESIS.md`
+2. `V3_003_GOLD_AUCTION_STATE_RECONSTRUCTION_PLAN.md`
+3. `V3_RESEARCH_GOVERNANCE_ADDENDUM.md`
+
+Current scope is **GOLD FIRST**.
+
+The previously prepared cross-market exporter is deferred. Do not pivot the active research
+line to other markets before GOLD has either:
+- a coherent candidate architecture; or
+- a documented structural ceiling followed by explicit user approval.
+
+2022 remains the validation vault.
+2021 remains untouched.
+

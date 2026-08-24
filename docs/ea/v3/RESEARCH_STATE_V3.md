@@ -95,3 +95,35 @@ No current finding authorizes:
 - live AI/ML inference;
 - 2022/2021 inspection for discovery;
 - replacement of the V2 EA.
+
+## V3-002 conclusion / V3-003 active state ??2026-08-25
+
+Current research classification:
+
+```text
+raw-data laboratory                    ACTIVE
+sweep-only Entry edge                  REJECTED
+mandatory FVG-retest Entry             REJECTED / DEMOTED
+FVG as displacement footprint          PROMISING CONTEXT ONLY
+fixed-horizon direction model          REJECTED
+trade-level winner/loser ML mining     STRUCTURAL_CEILING_SUSPECTED
+forced reversal on HTF conflict        REJECTED
+selective continuation                 PROMISING / NOT VALIDATED
+broad SL widening                      REJECTED
+auction-state reconstruction           ACTIVE NEXT PHASE
+cross-market expansion                 DEFERRED
+```
+
+The active question is no longer:
+
+```text
+Which sweep/FVG parameter makes the best trade?
+```
+
+It is:
+
+```text
+Which GOLD auction state is active,
+and which strategy module belongs to that state?
+```
+

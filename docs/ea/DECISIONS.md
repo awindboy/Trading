@@ -6539,3 +6539,40 @@ Decision:
   authorizes black-box live inference.
 - MT5 Strategy Tester remains the final execution validation authority.
 
+
+## D-158 ??Stop micro-optimization loops; adopt V3 research-escalation governance
+
+Status: `ACTIVE / 2026-08-25`
+
+Decision:
+- V3 will not defend a strategy merely because substantial research time was invested in it.
+- If natural variants of a component repeatedly fail, research escalates from component
+  (`L1`) to architecture (`L2`) to fundamental assumption (`L3`).
+- Complex mentor/ICT-inspired mechanisms must be compared against simpler causal controls.
+- Failed and negative experiments are permanent evidence and should prevent the same
+  threshold-mining loop from restarting.
+- Trade-level ML winner/loser mining is paused after poor leave-one-year-out generalization.
+- 2022 remains closed and 2021 untouched.
+
+## D-159 ??GOLD-first auction-state pivot
+
+Status: `ACTIVE / 2026-08-25`
+
+Decision:
+- Keep GOLD# as the active V3 research market.
+- Do not pivot the active line to cross-market validation merely because the current GOLD
+  Entry family is incomplete.
+- The current pattern-centric question is replaced by an auction-state question:
+  `COMPRESSION / EXPANSION / RELOAD / EXHAUSTION`.
+- Strategy modules may differ by state:
+  continuation for EXPANSION/RELOAD, breakout for COMPRESSION, reversal only for genuine
+  EXHAUSTION/FAILED-AUCTION states.
+- Sweep alone has no demonstrated Entry alpha.
+- Mandatory FVG retracement Entry is demoted/rejected based on direct trigger-close vs
+  midpoint-retest falsification.
+- FVG may remain as a displacement/context footprint pending further evidence.
+- HTF/reaction conflict does not automatically authorize reversal; `NO TRADE` is currently
+  more defensible than forced mirror trading.
+- Cross-market exporter/investigation is deferred until GOLD has either a coherent candidate
+  architecture or a documented structural ceiling followed by explicit approval.
+

@@ -1,0 +1,6 @@
+﻿Applied: 2026-08-25
+Git HEAD at apply time: 212192735eeadfa2f8751fac22491773bf375610
+Package: V3_GOLD_RESEARCH_SYNTHESIS_AND_AUCTION_STATE_PIVOT_APPLY
+No EA source modified.
+2022 validation vault remains closed.
+2021 remains untouched.

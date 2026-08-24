@@ -74,3 +74,52 @@ Status: `ACTIVE`
 - [ ] Require exact real-tick execution integrity.
 - [ ] Compare against V2 control.
 - [ ] Only then implement/branch a V3 EA.
+
+## V3-003 ??GOLD auction-state reconstruction
+
+### P0 ??state engine
+
+- [ ] Build trailing-only normalized state descriptors.
+- [ ] Build causal compression/expansion/reload/exhaustion state representation.
+- [ ] Preserve state-transition history without look-ahead.
+- [ ] Compare strong/weak-period state composition without creating quarter vetoes.
+- [ ] Add naive-control harness to every strategy module.
+
+### P0 ??continuation module
+
+- [ ] Re-express the current selective continuation family as an EXPANSION/RELOAD module.
+- [ ] Remove mandatory FVG-retest Entry authority from the active hypothesis.
+- [ ] Preserve FVG only as a displacement/context candidate until independently justified.
+- [ ] Compare trigger-close / simple pullback execution under the same state.
+- [ ] Measure full MFE/MAE path, not only +1R survival.
+
+### P0 ??exhaustion reversal
+
+- [ ] Define objective-delivery / near-delivery state causally.
+- [ ] Detect failed continuation / opposite acceptance.
+- [ ] Build reversal only inside an exhaustion/failed-auction state.
+- [ ] Compare against forced-mirror reversal control.
+
+### P1 ??compression breakout
+
+- [ ] Build causal compression state.
+- [ ] Require destination-compatible expansion / acceptance.
+- [ ] Compare against generic range-breakout control.
+
+### P1 ??portfolio
+
+- [ ] Evaluate modules independently.
+- [ ] Verify opportunity populations are physically deduplicated.
+- [ ] Combine only after each module has standalone evidence.
+- [ ] Evaluate WR, avg winner, expectancy, DD, streaks and state dependence.
+
+### Governance
+
+- [x] Stop trade-level ML winner/loser mining after cross-year failure.
+- [x] Stop fixed momentum-horizon search after leave-year-out instability.
+- [x] Demote mandatory FVG-retest Entry after direct falsification.
+- [x] Adopt L1 -> L2 -> L3 escalation rule.
+- [x] Keep GOLD as the active V3 market.
+- [ ] Do not open 2022.
+- [ ] Keep 2021 untouched.
+

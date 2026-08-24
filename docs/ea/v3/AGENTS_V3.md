@@ -297,3 +297,37 @@ Immediate task:
 - quantify opportunity density before optimizing profitability.
 
 Do not open 2022 or 2021 for V3 discovery.
+
+## V3 research escalation rule ??2026-08-25
+
+V3 must not remain trapped in low-level optimization.
+
+When several natural variants of one component fail to improve cross-period robustness:
+
+```text
+L1 component failure
+-> question L2 architecture
+
+L2 architecture failure
+-> question L3 fundamental assumption
+```
+
+Examples:
+
+```text
+FVG depth variants all unstable
+-> ask whether FVG retracement Entry is needed at all
+
+multiple direction horizons fail
+-> ask whether fixed direction classification is the wrong problem
+
+multiple Entry filters fail
+-> ask whether the same setup is being traded in different auction states
+```
+
+Every complex strategy concept should be compared with a simple causal control.
+
+Negative results are project authority for avoiding repeated dead-end research.
+
+Current V3 market scope is GOLD-first.
+
