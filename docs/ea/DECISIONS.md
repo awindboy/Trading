@@ -6445,3 +6445,26 @@ Decision:
 - No Entry gate, per-trade spread threshold, symbol veto, SL/TP/sizing/SP/EM change is authorized.
 - D154N remains deferred.
 
+
+
+## D-154O ??Broad low-friction screen validates execution suitability but not sufficiency
+
+Status: `COMPLETE / OUTCOME B / NO STRATEGY AUTHORITY`  
+Date: `2026-08-24`
+
+Decision:
+- The frozen 2025 Stage-B panel validates the Stage-A raw screen as a useful market-level proxy for exact D154K execution scale.
+- Stage-A raw spread/M1-TR vs exact Stage-B spread/reactionTR has Spearman rank correlation about +0.888; raw generic-FVG friction vs exact selected-FVG friction is about +0.874.
+- Exact spread/reactionTR cleanly separates the frozen low-friction block from the controls.
+- Sufficient-sample Gold-like candidates were BTCUSD# 48.8%, XAUEUR# 48.3%, USDJPY# 47.9% Fill->+1R survival, below GOLD# 58.2% and mostly below the project's >=50% baseline condition.
+- Valid controls were EURUSD# 42.1%, SILVER# 38.3%, ETHUSD# 38.0% (one ETH right-censored Fill).
+- Descriptively, sufficient-sample Gold-like candidates pooled at 48.4% versus 39.9% for the three valid controls, but this does not authorize pooling markets as independent replicas or creating a production market filter.
+- XAUJPY#, XAUCNH#, GAUCNH#, GAUUSD# each had <20 fills and remain insufficient strategy samples.
+- GBPUSD# remains a frozen control but its Stage-B run is execution-invalid: a pending cancel was rejected while the market was closed, the broker order survived, and it later filled with `execution_status=EXECUTION_DIVERGENCE`. Do not use its WR/P&L as canonical evidence and do not replace it after outcome visibility.
+- D154M again confirms quote-side friction is causal but partial; SILVER# and ETHUSD# remain poor despite zero quote-side rescue flips.
+- D154O is classified as contract Outcome B: execution scale is helpful / plausibly necessary for compatibility, but insufficient to reproduce GOLD-like survival.
+- Do not build a production market-eligibility layer from D154O alone.
+- No per-trade spread threshold, Entry, SL, TP, sizing, SP, or EM change is authorized.
+- Next priority is D154P low-friction pre-Fill regime/path-quality discovery using existing ledgers first, followed by a disjoint-year validation for any frozen hypothesis.
+- D154N remains deferred.
+

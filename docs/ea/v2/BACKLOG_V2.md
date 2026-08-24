@@ -1,17 +1,17 @@
-# V2 Backlog
+﻿# V2 Backlog
 
 Last updated: 2026-08-24  
-Current phase: `D-154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION`  
+Current phase: `D-154P LOW-FRICTION PRE-FILL PATH-QUALITY DISCOVERY`  
 2021: `KEEP UNTOUCHED`
 
-## P0 — Foundation
+## P0 ??Foundation
 
 - [x] V1 frozen; V2 continuation-only.
 - [x] D151 exact Fill->+1R / SL-first causal platform.
 - [x] D153 real-tick batch automation.
 - [x] Entry, continuation, exit, execution, market-universe and exposure questions kept separate.
 
-## P0 — Entry-survival research completed
+## P0 ??Entry-survival research completed
 
 - [x] D148 failure taxonomy.
 - [x] D149 EM not a general Entry solution.
@@ -31,7 +31,7 @@ Current phase: `D-154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION`
 - [x] D154M post-Fill quote-side counterfactual completed.
 - [x] D154UL Ultra Low natural experiment completed.
 
-## P0 — retained execution findings
+## P0 ??retained execution findings
 
 - [x] Relative execution friction is a supported cross-market mechanism.
 - [x] D154M establishes a direct causal post-Fill quote-side component.
@@ -41,7 +41,7 @@ Current phase: `D-154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION`
 - [x] Per-trade spread threshold remains unsupported.
 - [x] Strategy baseline remains unchanged.
 
-## P0 — D154O Stage A: broad market raw screen
+## P0 ??D154O Stage A: broad market raw screen
 
 - [x] User provides broad XM Ultra Low symbol list.
 - [x] Confirm exact symbol suffixes/names for the primary universe.
@@ -62,7 +62,7 @@ Current phase: `D-154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION`
 - [ ] Do not inspect/run new-symbol one-year performance.
 - [ ] Produce full-universe screen table and result ZIP.
 
-## P0 — D154O shortlist freeze
+## P0 ??D154O shortlist freeze
 
 - [x] Define Gold-like shortlist from Stage-A metrics only.
 - [x] Do not use strategy outcome to choose threshold/rank.
@@ -71,7 +71,7 @@ Current phase: `D-154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION`
 - [x] Prefer some asset-class-matched controls where practical.
 - [x] Freeze all Stage-B symbols before any one-year result.
 
-## P0 — D154O Stage B: 2025 strategy confirmation
+## P0 ??D154O Stage B: 2025 strategy confirmation
 
 - [ ] Run Ultra Low 2025 Every-tick-real-ticks for frozen Gold-like candidates.
 - [ ] Run frozen negative controls.
@@ -84,27 +84,27 @@ Current phase: `D-154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION`
 - [ ] Mark tiny strategy populations `INSUFFICIENT_STRATEGY_SAMPLE`.
 - [ ] Do not add/drop markets after outcome is known.
 
-## P1 — temporal confirmation if D154O succeeds
+## P1 ??temporal confirmation if D154O succeeds
 
 - [ ] Freeze the supported market-selection logic.
 - [ ] Use an additional disjoint year where available.
 - [ ] Reject permanent market eligibility if the relationship reverses.
 - [ ] Only after temporal confirmation consider a production market-eligibility layer.
 
-## P2 — D154N deferred
+## P2 ??D154N deferred
 
 - [ ] Pending->opposite quote->executable quote->Fill audit remains documented.
 - [ ] Do not implement while D154O is active.
 - [ ] Resume only if D154O fails to produce a robust compatible market cohort or later evidence specifically requires it.
 
-## P1 — winner continuation / exit
+## P1 ??winner continuation / exit
 
 - [ ] Keep M30 +1R maturity separate from Entry/market eligibility.
 - [ ] Keep V3E provisional until broad strategy-level validation.
 - [ ] Revisit exposure only after the compatible market universe is better understood.
 
 
-## P0 — D154O Stage B execution package
+## P0 ??D154O Stage B execution package
 
 - [x] Stage-A result accepted with minor crypto-tail truncation note.
 - [x] Frozen Stage-B manifest created before new outcomes.
@@ -113,3 +113,30 @@ Current phase: `D-154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION`
 - [ ] Run `python tools\run_d154o_stage_b_2025.py`.
 - [ ] Upload and interpret `D154O_STAGE_B_2025_RESULT.zip`.
 - [ ] Do not modify cohort after results.
+
+
+## P0 ??D154O closeout
+
+- [x] Run frozen 12-symbol Stage-B batch.
+- [x] Verify D151/K/M populations for all symbols.
+- [x] Mark GBPUSD# `EXECUTION_INVALID`; do not replace frozen control.
+- [x] Report Fill->+1R and direction splits.
+- [x] Report exact D154K and D154M evidence.
+- [x] Mark <20-fill markets insufficient.
+- [x] Classify D154O as Outcome B.
+- [x] Do not create production market eligibility.
+- [ ] Exact V3E cost-adjusted economics require a complete partial-deal ledger and remain separate from D154O Entry research.
+
+## P0 ??D154P low-friction path-quality discovery
+
+- [ ] Build a systematic discovery table from existing 2025 D151/D154K/D154M ledgers.
+- [ ] Restrict primary discovery to GOLD#, BTCUSD#, XAUEUR#, USDJPY#.
+- [ ] Keep small Gold-family samples descriptive only.
+- [ ] Keep GBPUSD# excluded from causal outcome analysis because of execution divergence.
+- [ ] Preserve market and LONG/SHORT strata.
+- [ ] Use threshold-free effect sizes; do not fit a 2025 cutoff.
+- [ ] Freeze only causally interpretable candidate relationships.
+- [ ] If timing matters, replace wall-clock/session-gap-contaminated seconds with shadow-only active-bar instrumentation.
+- [ ] Validate frozen D154P hypotheses on a disjoint year, preferably 2024.
+- [ ] Keep 2021 untouched.
+- [ ] No Entry change until validation.

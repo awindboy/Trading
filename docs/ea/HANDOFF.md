@@ -1,7 +1,7 @@
-# EA Development Handoff
+﻿# EA Development Handoff
 
-> **V2 ACTIVE ROUTING — 2026-08-24 / D-154O**  
-> Current V2 phase is `D-154O BROAD-MARKET GOLD-LIKE EXECUTION-SUITABILITY SCREEN`; D154N is deferred. Read `docs/ea/v2/HANDOFF_V2.md`, `RESEARCH_SYNTHESIS_D154A_D154UL.md`, and `D154O_BROAD_MARKET_GOLD_LIKE_SCREEN.md` first.  
+> **V2 ACTIVE ROUTING ??2026-08-24 / D-154P**  
+> Current V2 phase is `D-154P LOW-FRICTION PRE-FILL PATH-QUALITY DISCOVERY`. Read `docs/ea/v2/HANDOFF_V2.md`, `D154O_STAGE_B_2025_RESULTS.md`, and `D154P_LOW_FRICTION_PATH_QUALITY_RESEARCH.md` before new design work. D154O Outcome B supports execution suitability but rejects low friction as sufficient for GOLD-like Entry survival. Baseline semantics remain unchanged.
 > Ultra Low confirmed lower friction but did not solve high-friction markets. The next priority is outcome-blind screening of a broad Ultra Low symbol universe for GOLD-like execution scale. Baseline strategy semantics remain unchanged.
 
 Last updated: 2026-08-22
@@ -124,7 +124,7 @@ Detailed evidence is frozen in:
 
 Entry survival and winner continuation are now treated as separate research problems.
 
-### A. Entry survival — still unsolved
+### A. Entry survival ??still unsolved
 
 2025 continuation Fill -> +1R:
 
@@ -139,7 +139,7 @@ total = 132 / 321 = 41.1%
 
 Therefore the current Entry architecture is not broadly >=50% to +1R.
 
-### B. Winner continuation — first generalizing structure found
+### B. Winner continuation ??first generalizing structure found
 
 Among trades that already reached +1R, `M30 protected -> current directional external range progress` at the first +1R moment is the strongest surviving relationship.
 
@@ -226,7 +226,7 @@ M30 maturity @ +1R
 != Entry authorization filter
 ```
 
-## 7. Next phase — D-146
+## 7. Next phase ??D-146
 
 Next task is NOT a strategy variant.
 
@@ -282,7 +282,7 @@ Required validation order:
 
 `2021` stays untouched.
 
-## 9. Parallel but separate research problem — Entry survival
+## 9. Parallel but separate research problem ??Entry survival
 
 After or in parallel with D-146 measurement design, the project still needs a separate causal study of:
 
@@ -334,7 +334,7 @@ The first concrete validation task is:
 
 After parity, run GOLD 2025 full-year Audit ON and validate D-146 terminal uniqueness, causal M30 event ordering, original-+1R-external tracking, and runtime before broader reruns.
 
-## D-147 EXIT ARCHITECTURE RESEARCH V1 — IMPLEMENTED / LOCAL COMPILE + BASELINE PARITY PENDING
+## D-147 EXIT ARCHITECTURE RESEARCH V1 ??IMPLEMENTED / LOCAL COMPILE + BASELINE PARITY PENDING
 
 D-147 is a controlled post-fill research variant. It does not change PLAN, Root/Sweep/CHoCH/FVG authorization, Entry, initial normalized SL, position sizing, structural objective selection, or initial structural TP.
 
@@ -373,7 +373,7 @@ Required validation order:
 
 Use `InpEnableEdgeAudit=false` for the D-147 performance comparison so the D-146 counterfactual tracker does not complicate the exit-variant ledger. 2021 remains untouched.
 
-## D-148 ENTRY SURVIVAL FAILURE TAXONOMY — IMPLEMENTED / LOCAL COMPILE + AUDIT PARITY PENDING
+## D-148 ENTRY SURVIVAL FAILURE TAXONOMY ??IMPLEMENTED / LOCAL COMPILE + AUDIT PARITY PENDING
 
 D-147 established that post-+1R profit giveback and pre-+1R Entry survival are different problems. GOLD 2025 mechanical partial exits improved realized win-rate / drawdown behavior but did not change the 21 continuation trades that hit the original SL before +1R.
 
@@ -422,7 +422,7 @@ Validation order:
 
 No pooled threshold optimization. 2021 remains untouched.
 
-## D-149 SP + EM RESEARCH V1 — IMPLEMENTED / LOCAL VALIDATION PENDING
+## D-149 SP + EM RESEARCH V1 ??IMPLEMENTED / LOCAL VALIDATION PENDING
 
 Build: `1.95R1L11 / SP_EM_RESEARCH_V1`.
 
@@ -463,7 +463,7 @@ D148 audit remains available only for `ORIGINAL + EM_OFF`. Do not enable D148 au
 
 2021 remains untouched.
 
-## D-149 V1 result -> V2 revision — 2026-08-21
+## D-149 V1 result -> V2 revision ??2026-08-21
 
 The GOLD 2025 A/B/C/D research ledgers are now locally validated for the three supplied research variants. Detailed evidence and the pre-registered V2 fix are frozen in:
 
@@ -513,7 +513,7 @@ EM V2:
 
 V2 is research only. ORIGINAL + EM_OFF remains baseline authority. 2021 remains untouched.
 
-## D-150 active routing — V2
+## D-150 active routing ??V2
 
 The active development line is now V2. Read `docs/ea/v2/HANDOFF_V2.md` after root `AGENTS.md`. V1/D149 documents remain historical evidence and controls; do not add new reversal strategy work to V1.
 
@@ -525,7 +525,7 @@ Active work now resumes from `docs/ea/v2/HANDOFF_V2.md` and `docs/ea/v2/D151_V2_
 
 Active V2 work is D-152 SP architecture research. Read `docs/ea/v2/HANDOFF_V2.md` then `docs/ea/v2/D152_SP_ARCHITECTURE_RESEARCH.md`.
 
-## D-152 completed SP V3 matrix — current routing
+## D-152 completed SP V3 matrix ??current routing
 
 The D-153 automated GOLD25/BTCUSD25 real-tick batch is complete and clean.
 
@@ -554,3 +554,4 @@ next primary research = Entry survival
 Do not perform additional same-sample SP threshold tuning before the Entry-survival causal study.
 
 D-153 batch automation is validated end-to-end and should be reused for subsequent GOLD25/BTC25 research matrices.
+

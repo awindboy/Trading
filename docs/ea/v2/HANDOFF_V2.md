@@ -1,10 +1,10 @@
-# V2 Development Handoff
+﻿# V2 Development Handoff
 
 Last updated: 2026-08-24  
 Git HEAD before this local phase update: `0b317facba97f4edc305d0d4c82fbe5bd10a9739`  
 Current tested EA: `2.11R0L11 / V2_D154M_EXECUTION_FRICTION_COUNTERFACTUAL`  
 Current execution environment: **XM Ultra Low**  
-Current phase: **D154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION — ACTIVE**  
+Current phase: **D154P LOW-FRICTION PRE-FILL PATH-QUALITY DISCOVERY ??ACTIVE**  
 D154N: **DEFERRED / NOT REJECTED**  
 V1: **FROZEN HISTORICAL CONTROL**  
 2021: **KEEP UNTOUCHED**
@@ -145,7 +145,7 @@ The active question is:
 
 If yes, a compatible market universe may be more valuable than increasingly complex rescue logic for CADJPY/SILVER-like environments.
 
-## D154O Stage A — outcome-blind one-week raw screen
+## D154O Stage A ??outcome-blind one-week raw screen
 
 The broad primary Stage-A universe is now frozen before new-symbol outcomes:
 
@@ -241,7 +241,7 @@ The shortlist rule may use the observed **execution-metric distribution** becaus
 
 Do not add/drop markets after their one-year outcome is known.
 
-## D154O Stage B — 2025 strategy confirmation
+## D154O Stage B ??2025 strategy confirmation
 
 Run:
 
@@ -341,7 +341,7 @@ Whenever the strategy EA is later modified:
 D154O Stage A does not modify `MentorDeterministicV2EA.mq5`. Its standalone exporter has its own terminal source/EX5 and compile-state record.
 
 
-## D154O Stage A completion / Stage B freeze — 2026-08-24
+## D154O Stage A completion / Stage B freeze ??2026-08-24
 
 Stage A is complete. Read `D154O_STAGE_A_RESULTS_AND_STAGE_B_FREEZE.md` before
 running or interpreting any new 2025 symbol result.
@@ -378,3 +378,25 @@ The script is fail-closed to Git HEAD `0b317facba97f4edc305d0d4c82fbe5bd10a9739`
 manifest. Upload `D154O_STAGE_B_2025_RESULT.zip` after completion.
 
 Do not run D154N and do not alter the shortlist after seeing Stage-B outcomes.
+
+
+## D154O Stage B result / D154P routing ??2026-08-24
+
+D154O Stage B is complete and classified as **Outcome B**.
+
+Read:
+1. `D154O_STAGE_B_2025_RESULTS.md`
+2. `D154P_LOW_FRICTION_PATH_QUALITY_RESEARCH.md`
+
+Key routing:
+- Stage-A execution screen survived as a market-level proxy.
+- Low friction improved survival relative to valid controls but did not generally reproduce GOLD# or satisfy the >=50% baseline condition.
+- GBPUSD# Stage-B outcome is execution-invalid and must not be used as profitability evidence.
+- No production market-eligibility layer or per-trade spread gate is authorized.
+- D154P uses existing 2025 ledgers for discovery only, then freezes any hypothesis before disjoint-year validation.
+- D154N remains deferred.
+- 2021 remains untouched.
+
+Immediate next task:
+`python tools\summarize_d154o_stage_b_raw.py <raw_stage_b_zip>`
+for reproducibility if desired, then perform the D154P systematic discovery table from the existing valid ledgers.

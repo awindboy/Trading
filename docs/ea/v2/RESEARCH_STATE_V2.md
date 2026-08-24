@@ -1,7 +1,7 @@
-# V2 Research State
+﻿# V2 Research State
 
 Last updated: 2026-08-24  
-Phase: `D-154O STAGE B 2025 FROZEN-COHORT STRATEGY CONFIRMATION`  
+Phase: `D-154P LOW-FRICTION PRE-FILL PATH-QUALITY DISCOVERY`  
 Current tested EA: `2.11R0L11 / D154M`  
 Execution environment: `XM Ultra Low`  
 D154N: `DEFERRED`  
@@ -18,7 +18,7 @@ Build a robust continuation strategy with:
 
 Do not require one strategy to work on every tradable symbol if a causal market-compatibility condition exists.
 
-## Axis A — Fill -> +1R Entry survival
+## Axis A ??Fill -> +1R Entry survival
 
 Status:
 
@@ -63,7 +63,7 @@ frozen shortlist + controls
 -> 2025 real-tick strategy confirmation
 ```
 
-## Stage-A candidate universe — frozen before outcomes
+## Stage-A candidate universe ??frozen before outcomes
 
 Universe ID:
 
@@ -136,13 +136,13 @@ Do not promote a tiny-sample high WR market.
 
 If 2025 broad-market results support the hypothesis, use another disjoint year before permanent market eligibility authority.
 
-## Axis B — +1R -> +2R winner continuation
+## Axis B ??+1R -> +2R winner continuation
 
 Separate problem.
 
 Lower M30 protected-to-external progress at +1R remains the strongest descriptive continuation relationship. It is not an Entry or market screen variable.
 
-## Axis C — exit architecture
+## Axis C ??exit architecture
 
 V3E `BANK_2R_LOCK_ONE` remains the provisional post+1R reference.
 
@@ -165,3 +165,16 @@ Stage B now tests whether the frozen raw low-friction cohort actually reproduces
 better Fill->+1R survival and exact D154K/M geometry in 2025.
 
 No Stage-B market may be added or dropped after its outcome is known.
+
+
+## D154O final state
+
+`
+Stage-A execution proxy: SUPPORTED
+Low-friction survival advantage: SUPPORTED DESCRIPTIVELY
+Low friction as sufficient GOLD-like condition: REJECTED
+Production market-eligibility authority: NOT GRANTED
+D154O contract outcome: B
+`
+
+Current Entry-survival research moves to D154P inside the low-friction cohort.
