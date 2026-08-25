@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import sys
 
-EXPECTED_HEAD = "785768f3bcefd4abf8cd4cff4009ae2f7bf57482"
+EXPECTED_HEAD = "8d2971c369df5564d41fa4fe2499ed894f5dedb6"
 ROOT = Path(__file__).resolve().parent
 PAYLOAD = ROOT / "payload"
 
