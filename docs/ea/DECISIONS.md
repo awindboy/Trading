@@ -6576,3 +6576,20 @@ Decision:
 - Cross-market exporter/investigation is deferred until GOLD has either a coherent candidate
   architecture or a documented structural ceiling followed by explicit approval.
 
+
+
+## D-160 — Freeze the V3 reload state × local-acceptance interaction as Candidate A
+
+Status: `ACTIVE RESEARCH DECISION / 2026-08-26`
+
+Decision:
+- V3-003C establishes `V3_RELOAD_CANDIDATE_A` as the first fully reproducible reload-continuation development benchmark in the current GOLD V3 line.
+- Candidate A is **not** production strategy authority and does not modify V1/V2 or any EA source.
+- The relevant observation is an interaction: active higher delivery state **and** decisive local structure acceptance. Neither component receives independent Entry authority.
+- Higher delivery state is represented by either the already-frozen M30 recent4/prior4 structural expansion ratio `> 1.0` or explicit same-direction M30+H1 BOS-owner agreement at the sweep.
+- Decisive local acceptance is defined geometrically: the M5 trigger close accepts beyond the actually broken M5 structure level by more distance than the source liquidity was penetrated during the sweep.
+- Do not add FVG hard gates, objective-room vetoes, quarter/session gates, direction vetoes, generic SL widening, or forced reversal from this result.
+- The exact historical V3-002 `38/46/43` selective-continuation implementation was not committed and is not falsely claimed as reproduced; Candidate A is independently reproducible from raw data.
+- New correction-completion / acceptance-persistence ideas are separate variants and may not rewrite Candidate A after seeing their results.
+- 2022 remains the independent validation vault. When intentionally opened, Candidate A must be run without threshold movement; failure means reject/demote rather than retune.
+- 2021 remains untouched.

@@ -1,8 +1,8 @@
 # V3 Development Handoff
 
-Last updated: `2026-08-24`
+Last updated: `2026-08-26`
 Repository base before V3 bootstrap: `0e7b1d5b39de1126394e88f85abf87cde167fc84`
-Current phase: `V3-001 RAW DATA LAB BOOTSTRAP`
+Current phase: `V3-003 GOLD AUCTION-STATE RECONSTRUCTION`
 V1: `FROZEN`
 V2: `PAUSED / PRESERVED CONTROL`
 2021: `KEEP UNTOUCHED`
@@ -175,3 +175,63 @@ line to other markets before GOLD has either:
 2022 remains the validation vault.
 2021 remains untouched.
 
+
+
+## V3-003C routing update — 2026-08-26
+
+Read:
+
+```text
+V3_003C_RELOAD_STATE_ACCEPTANCE_RESULTS.md
+```
+
+V3-003C produced the first fully reproducible reload-continuation development candidate in
+this V3 line.
+
+Reference interaction:
+
+```text
+active higher delivery state
++
+intermediate persistent-liquidity reaction
++
+decisive local M5 acceptance
+```
+
+where decisive acceptance means:
+
+```text
+acceptance beyond the actually broken M5 structure level
+>
+source-liquidity penetration beyond the swept level
+```
+
+Reference M15-k2 Level-A results:
+
+```text
+2023 40 / 60.0%
+2024 29 / 65.5%
+2025 27 / 63.0%
+```
+
+Exact mirrors are materially weaker in all three years.
+
+Important authority boundary:
+- delivery state alone is not promoted;
+- local acceptance alone is not promoted;
+- the observed development edge is the interaction;
+- no production Entry/SL/TP/EA change is authorized;
+- no quarter/session/direction/objective-room veto is authorized;
+- forced reversal remains unapproved.
+
+Freeze the exact reference as:
+
+```text
+V3_RELOAD_CANDIDATE_A
+```
+
+for future comparison. New correction-completion ideas must be separate variants and must
+not rewrite Candidate A.
+
+2022 remains closed until independent validation is intentionally run under the frozen
+candidate. 2021 remains untouched.

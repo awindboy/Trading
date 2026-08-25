@@ -1,0 +1,6 @@
+Applied: 2026-08-26
+Required base HEAD: 0795653fd86756cdd91718720f59ae921e5cf617
+Package: V3_003C_RELOAD_STATE_ACCEPTANCE_APPLY
+No EA source modified.
+2022 validation vault remains closed.
+2021 remains untouched.

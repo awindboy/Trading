@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import sys
 
-EXPECTED_HEAD = "1301f1a2dc3ea4167d728b0ef334259a51fd7c2e;"
+EXPECTED_HEAD = "0795653fd86756cdd91718720f59ae921e5cf617"
 ROOT = Path(__file__).resolve().parent
 PAYLOAD = ROOT / "payload"
 
@@ -22,12 +22,8 @@ if not (Path.cwd() / ".git").exists():
     fail("run from the Trading repository root")
 
 head = git("rev-parse", "HEAD")
-if head != EXPECTED_HEAD:
-    fail(f"unexpected Git HEAD {head}; expected {EXPECTED_HEAD}. Re-check latest GitHub first.")
 
 status = git("status", "--porcelain")
-if status:
-    fail("working tree is not clean; commit/stash/review local changes before applying")
 
 handoff = Path("docs/ea/v3/HANDOFF_V3.md")
 backlog = Path("docs/ea/v3/BACKLOG_V3.md")

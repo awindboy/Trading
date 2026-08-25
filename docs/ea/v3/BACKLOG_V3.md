@@ -123,3 +123,26 @@ Status: `ACTIVE`
 - [ ] Do not open 2022.
 - [ ] Keep 2021 untouched.
 
+
+
+## V3-003C — reload state × local acceptance
+
+- [x] Reconstruct a reproducible intermediate-liquidity M5-acceptance control from raw GOLD.
+- [x] Reuse the frozen structural-expansion meaning `recent4/prior4 > 1.0` without P/L retuning.
+- [x] Add explicit M30/H1 BOS-owner delivery agreement as an alternative delivery-state fact.
+- [x] Show that delivery state alone is incomplete.
+- [x] Define natural local acceptance dominance: broken-structure acceptance distance > sweep penetration distance.
+- [x] Show that local acceptance alone is not an edge.
+- [x] Demonstrate the state × acceptance interaction on 2023/2024/2025.
+- [x] Compare exact mirror direction.
+- [x] Check long/short breadth and quarter composition without creating calendar gates.
+- [x] Separate local-trigger invalidation from dynamic delivery-state loss.
+- [x] Check zero-spread counterfactual; friction does not explain the interaction.
+- [x] Check natural M15/M30 source-scale sensitivity; do not optimize `k` from P/L.
+- [x] Keep objective-room context non-authoritative.
+- [x] Freeze `V3_RELOAD_CANDIDATE_A` as a development benchmark.
+- [ ] Do not modify Candidate A while testing correction-completion / acceptance-persistence variants.
+- [ ] Prepare independent 2022 validation contract; open 2022 only under frozen definitions.
+- [ ] Reject rather than retune if 2022 reverses the relationship.
+- [ ] If independent validation survives, promote to exact-tick replay before MT5 implementation.
+- [ ] Keep 2021 untouched.
