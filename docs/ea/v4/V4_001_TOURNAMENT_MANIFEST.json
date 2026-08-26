@@ -1,0 +1,29 @@
+{
+  "status": "PRE-REGISTERED BEFORE CLAIM-GRADE R1/R2 OUTCOMES",
+  "date": "2026-08-27",
+  "expected_repo_head_before_apply": "99f909fe2105a0a6809b7c67f99ca4d8ab2f310c",
+  "claim_grade": {
+    "R0": "frozen 344-feature causal linear control",
+    "R1": "V4_001_CausalPatchPolicy supervised",
+    "R2": "V4_001_MarketJEPA self-supervised plus frozen linear probe"
+  },
+  "transfer_diagnostics": {
+    "R3": {
+      "name": "Kronos-mini zero-shot",
+      "repo_commit": "67b630e67f6a18c9e9be918d9b4337c960db1e9a",
+      "model": "NeoQuasar/Kronos-mini",
+      "model_safetensors_sha256_public": "a7d5f37e2e9fbd9891f7d7d4f72574512dd1f704fee14223e0a8cd0fbf54197c",
+      "authority": "TRANSFER_DIAGNOSTIC_ONLY"
+    },
+    "R4": {
+      "name": "MOMENT-1-small frozen embedding probe",
+      "repo_commit": "38f7310ad594100747ca2a8357e9c7ca7d323e0e",
+      "model": "AutonLab/MOMENT-1-small",
+      "model_safetensors_sha256_public": "785e6c6f57ffa7cac7e2a1fff6369618d49f2f441563ddea76c866231e5aa877",
+      "authority": "TRANSFER_DIAGNOSTIC_ONLY"
+    }
+  },
+  "selection_rule": "R1/R2 PASS gate first; then higher median strict-LOMO delta vs R0; tie -> higher pooled temporal-2025 AUC",
+  "external_validation_vault": "CLOSED",
+  "gold_2021": "UNTOUCHED"
+}

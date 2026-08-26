@@ -6677,3 +6677,44 @@ Decision:
 
 Reason:
 At the intended research scale the price path is exogenous to our action, so near-term counterfactual action rewards are observable from historical data. A representation-first predictive controller separates information failure from sequential-policy failure and is a cleaner falsifiable baseline than immediate offline RL.
+
+## D-165 — Freeze leakage-safe V4-001A Stage-A execution before neural outcome
+
+Status: `ACTIVE DEVELOPMENT GOVERNANCE / 2026-08-27`
+
+Decision:
+- Keep the frozen `V4_001_CausalPatchPolicy` architecture and input/target definitions unchanged for R1.
+- The bootstrap low-level trainer may not provide Stage-A authority because its original path used the outer evaluation set for epoch-by-epoch checkpoint selection.
+- Official Stage-A checkpoint selection uses only an inner chronological validation split inside the training allocation: first 80% fit, last 20% inner-validation, with a fixed seven-day purge around the split boundary.
+- Outer evaluation is scored only after each seed checkpoint is frozen by inner-validation loss.
+- Preserve seeds `17/29/43`; do not choose a favorable seed. Primary probabilities are the arithmetic ensemble across all three seeds.
+- FIT sampling is target-market balanced so BTC's larger 24/7 observation count does not become implicit market authority. Evaluation keeps natural frequency.
+- Primary temporal evidence is train 2023-2024 -> outer 2025; train 2023 -> outer 2024 is required secondary temporal breadth.
+- Primary leave-one-market-out evidence is strengthened to a time-isolated domain test: train on the other three markets in 2023-2024, with the held-out market excluded from both training targets and contexts, then evaluate that held-out target in 2025.
+- Same-calendar LOMO is not used for the promotion gate because correlated markets can share the exact future event interval.
+- Primary AUC uncertainty uses a 1000-repetition calendar-week block bootstrap rather than IID samples.
+- Freeze the 344-feature causal pooled logistic control and strict-LOMO AUC values before claim-grade neural results.
+- `V4-001B` and `V4-002` remain locked until the exact Stage-A verdict passes.
+- The external-market validation vault and GOLD# 2021 remain unopened.
+
+Reason:
+Learned models add enough flexibility that outer-set checkpoint leakage and contemporaneous cross-market dependence must be removed before a positive neural result can be treated as evidence.
+
+## D-166 — Freeze V4-001 Representation Tournament and require current external research before major V4 architecture decisions
+
+Status: `ACTIVE RESEARCH GOVERNANCE / 2026-08-27`
+
+Decision:
+- Replace the one-model V4-001 framing with the pre-registered `V4-001 Representation Tournament`.
+- Keep R0 as the frozen causal linear control.
+- R1 is the frozen supervised `V4_001_CausalPatchPolicy`.
+- Add R2 `V4_001_MarketJEPA`, a project-native self-supervised predictive-latent pretraining objective using the same causal information set, followed by a frozen linear probe.
+- R1 and R2 are the only current claim-grade contenders and use the same temporal/strict-LOMO Stage-A gate.
+- If both pass, select by higher median strict-LOMO AUC improvement over R0; pooled 2025 AUC is the tie-breaker. This selector is frozen before R1/R2 claim-grade outcomes.
+- Add Kronos-mini (R3) and MOMENT-1-small (R4) only as external transfer diagnostics. Their pretraining corpora are not proven pristine relative to the local 2023-2025 evaluation period, so they cannot by themselves unlock V4-001B, external validation or RL.
+- Before opening any new major V4 representation family, foundation model, RL algorithm or agent architecture, perform a current web/literature/maintained-open-source review and record it in `docs/ea/v4/V4_LITERATURE_LEDGER.md`.
+- Internal model knowledge alone is not sufficient authority for a major V4 architecture decision when current external research can materially change the design.
+- Do not open the V4 external-market validation vault or GOLD# 2021 during the tournament.
+
+Reason:
+V4 exists to escape a closed loop of hand-authored assumptions. That objective is defeated if the research line simply replaces technical-analysis rules with one assistant-designed neural architecture. The tournament separates supervised-from-scratch, self-supervised financial dynamics and external pretrained priors while preserving contamination-aware OOS governance.

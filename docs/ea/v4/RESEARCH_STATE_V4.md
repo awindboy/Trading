@@ -1,7 +1,7 @@
 # V4 Research State
 
 Status: `ACTIVE`
-Phase: `V4-001A CAUSAL PATCH REPRESENTATION BASELINE`
+Phase: `V4-001 REPRESENTATION TOURNAMENT / CLAIM-GRADE CUDA RUN NEXT`
 Date: `2026-08-27`
 
 ## Current research question
@@ -20,8 +20,8 @@ V3 raw-event deterministic line         PAUSED / NEGATIVE AUTHORITY
 V3 Candidate B                          FAILED INDEPENDENT VALIDATION
 V4 AI-native research                   ACTIVE
 
-V4-001 causal dataset                   PREPARED BY CODE / BUILD NEXT
-V4-001 learned representation           ACTIVE NEXT
+V4-001 causal dataset                   PREPARED / HASHED / 301345 DECISIONS
+V4-001 learned representation           R1/R2 CLAIM-GRADE TOURNAMENT NEXT
 V4-001 cost-aware controller            LOCKED UNTIL REPRESENTATION TEST
 V4-002 sequential RL                    DEFERRED
 external-market V4 validation           CLOSED
@@ -80,3 +80,20 @@ No current result authorizes:
 - external validation-data inspection;
 - leverage/risk sizing;
 - RL training as a rescue for absent predictive information.
+
+## V4-001 Representation Tournament state — 2026-08-27
+
+```text
+four-market causal dataset              PREPARED / HASHED
+R0 causal linear control                COMPLETE / FROZEN
+R1 supervised CausalPatchPolicy         OFFICIAL CUDA RUN PENDING
+R2 MarketJEPA + linear probe            OFFICIAL CUDA RUN PENDING
+R3 Kronos-mini                          OPTIONAL TRANSFER DIAGNOSTIC
+R4 MOMENT-1-small                       OPTIONAL TRANSFER DIAGNOSTIC
+V4-001B controller                      LOCKED
+V4-002 RL                               LOCKED
+external-market validation vault        CLOSED
+GOLD# 2021                              UNTOUCHED
+```
+
+External pretrained-model results do not have clean OOS authority unless their pretraining temporal/domain provenance can be audited against our evaluation period.

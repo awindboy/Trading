@@ -27,8 +27,11 @@ On every V4 session:
 6. read `RESEARCH_STATE_V4.md`;
 7. read `V4_001_AI_NATIVE_RESEARCH_CONTRACT.md`;
 8. read `V4_001_BASE_MODEL_SPEC.md`;
-9. read `BACKLOG_V4.md`;
-10. inspect the exact current V4 code/config/model manifest before changing architecture.
+9. read `V4_001_REPRESENTATION_TOURNAMENT.md`;
+10. read `V4_001A_STAGE_A_EXECUTION_PROTOCOL.md`;
+11. read `V4_LITERATURE_LEDGER.md`;
+12. read `BACKLOG_V4.md`;
+13. inspect the exact current V4 code/config/model manifest before changing architecture.
 
 If chat memory conflicts with GitHub, GitHub wins.
 
@@ -212,7 +215,34 @@ strategy standard.
 ## 7. Current phase
 
 ```text
-V4-001A CAUSAL PATCH REPRESENTATION BASELINE
+V4-001 REPRESENTATION TOURNAMENT / CLAIM-GRADE CUDA RUN NEXT
 ```
 
 No model has trading authority. No MT5 EA modification is authorized.
+
+## V4-001 Representation Tournament authority — 2026-08-27
+
+Read before current model work:
+
+```text
+V4_001_REPRESENTATION_TOURNAMENT.md
+V4_001A_STAGE_A_EXECUTION_PROTOCOL.md
+V4_LITERATURE_LEDGER.md
+```
+
+Current claim-grade tracks:
+
+```text
+R0 causal linear control                    FROZEN
+R1 V4_001_CausalPatchPolicy supervised      CLAIM-GRADE CONTENDER
+R2 V4_001_MarketJEPA + linear probe         CLAIM-GRADE CONTENDER
+```
+
+External-pretrained tracks:
+
+```text
+R3 Kronos-mini                              TRANSFER DIAGNOSTIC ONLY
+R4 MOMENT-1-small                           TRANSFER DIAGNOSTIC ONLY
+```
+
+R3/R4 may never override a failed R1/R2 Stage-A gate. Before opening a new major V4 representation, foundation-model, RL or agent architecture, update `V4_LITERATURE_LEDGER.md` from current web/literature/maintained-open-source evidence first.

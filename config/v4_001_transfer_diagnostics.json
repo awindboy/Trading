@@ -1,0 +1,21 @@
+{
+  "authority": "NON_PRISTINE_TRANSFER_DIAGNOSTIC_ONLY",
+  "kronos": {
+    "repo_commit": "67b630e67f6a18c9e9be918d9b4337c960db1e9a",
+    "model": "NeoQuasar/Kronos-mini",
+    "tokenizer": "NeoQuasar/Kronos-Tokenizer-2k",
+    "timeframe_minutes": 15,
+    "lookback_bars": 256,
+    "max_decisions_per_symbol": 2000,
+    "sample_count": 3,
+    "temperature": 1.0,
+    "top_p": 0.9,
+    "year": 2025
+  },
+  "moment": {
+    "repo_commit": "38f7310ad594100747ca2a8357e9c7ca7d323e0e",
+    "model": "AutonLab/MOMENT-1-small",
+    "history_m1": 256,
+    "max_samples_per_symbol_year": 10000
+  }
+}

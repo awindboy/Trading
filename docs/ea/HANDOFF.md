@@ -1,8 +1,8 @@
-﻿> **V4 ACTIVE ROUTING — 2026-08-27 / V4-001A REPRESENTATION BASELINE**  
-> `V3_DUAL_RELOAD_CANDIDATE_B` remains frozen failed validation; do not rescue it.  
-> Active strategy research moves to `docs/ea/v4/`.  
-> Current task: prove learned causal representation skill before any RL or EA change.  
-> V4 external-market validation vault remains closed; GOLD# 2021 remains untouched.
+﻿> **V4 ACTIVE ROUTING — 2026-08-27 / V4-001 REPRESENTATION TOURNAMENT**  
+> Claim-grade R0/R1/R2 research uses the frozen development panel; R1/R2 must follow leakage-safe Stage-A execution.  
+> Kronos/MOMENT are transfer diagnostics only because external pretraining provenance is not pristine V4 validation evidence.  
+> New major V4 model/RL/agent choices require a current literature/open-source review recorded in `docs/ea/v4/V4_LITERATURE_LEDGER.md`.  
+> V4-001B and RL remain locked; external-market validation vault remains closed; GOLD# 2021 remains untouched.
 
 > **V3 ACTIVE ROUTING — 2026-08-27 / V3-003G VALIDATION FAIL**  
 > `V3_DUAL_RELOAD_CANDIDATE_B` failed the frozen GOLD# 2022 Level-A validation.  

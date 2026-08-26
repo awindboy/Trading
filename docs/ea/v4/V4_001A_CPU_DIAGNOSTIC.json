@@ -1,0 +1,13 @@
+{
+  "status": "DIAGNOSTIC_NON_AUTHORITY",
+  "purpose": "end-to-end leakage-safe runner smoke only",
+  "fold": "TEMPORAL_2025_PRIMARY",
+  "seeds": [17],
+  "max_epochs": 1,
+  "fit_n": 800,
+  "inner_val_n": 200,
+  "outer_n": 200,
+  "outer_auc15": 0.4462,
+  "weekly_block_auc95": [0.3774172276, 0.5097580758],
+  "prohibition": "Do not use this tiny diagnostic for architecture selection, Stage-A verdict, or economic inference."
+}

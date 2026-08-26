@@ -1,0 +1,47 @@
+{
+  "status": "FROZEN_BEFORE_OFFICIAL_NEURAL_STAGE_A",
+  "feature_dim": 344,
+  "estimator": {
+    "type": "SGDClassifier_logistic",
+    "alpha": 0.0001,
+    "passes": 3,
+    "average": true,
+    "seed": 17,
+    "training_scaler": "StandardScaler fit on training only"
+  },
+  "folds": {
+    "TEMPORAL_2024": {
+      "n_train": 100357,
+      "n_eval": 100813,
+      "auc15": 0.516508994755167
+    },
+    "TEMPORAL_2025_PRIMARY": {
+      "n_train": 201170,
+      "n_eval": 100175,
+      "auc15": 0.5115347751088964
+    },
+    "LOMO_FUTURE_2025_GOLD#": {
+      "n_train": 159099,
+      "n_eval": 20944,
+      "auc15": 0.5097969644143469
+    },
+    "LOMO_FUTURE_2025_BTCUSD#": {
+      "n_train": 131882,
+      "n_eval": 34553,
+      "auc15": 0.5026543919593831
+    },
+    "LOMO_FUTURE_2025_XAUEUR#": {
+      "n_train": 159190,
+      "n_eval": 20913,
+      "auc15": 0.5106438502882269
+    },
+    "LOMO_FUTURE_2025_USDJPY#": {
+      "n_train": 153339,
+      "n_eval": 23765,
+      "auc15": 0.5072127119502017
+    }
+  },
+  "same_period_lomo_primary_authority": false,
+  "external_validation_vault_opened": false,
+  "gold_2021_touched": false
+}

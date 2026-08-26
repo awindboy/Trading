@@ -1,0 +1,200 @@
+{
+  "status": "V4-001A DEVELOPMENT DATA PREPARED / NO VALIDATION VAULT OPENED",
+  "prepared_on": "2026-08-27",
+  "config_sha256": "c8ff07771fc185861766e4672c043a69841242b8f372ef8db6648510a5b7cc91",
+  "symbols": {
+    "GOLD#": {
+      "point": 0.01,
+      "rows_m1": 1058802,
+      "first": "2023-01-03 01:00:00",
+      "last": "2025-12-30 23:58:00",
+      "streams": {
+        "M1": {
+          "rows": 1058802,
+          "valid": 1058740,
+          "feature_dim": 14
+        },
+        "M5": {
+          "rows": 211976,
+          "valid": 211914,
+          "feature_dim": 14
+        },
+        "M30": {
+          "rows": 35333,
+          "valid": 35271,
+          "feature_dim": 14
+        },
+        "H4": {
+          "rows": 4624,
+          "valid": 4562,
+          "feature_dim": 14
+        }
+      },
+      "decisions": {
+        "rows": 63015,
+        "first": "2023-01-03 02:15:00",
+        "last": "2025-12-30 19:45:00"
+      },
+      "decision_count_by_year": {
+        "2023": 21015,
+        "2024": 21056,
+        "2025": 20944
+      }
+    },
+    "BTCUSD#": {
+      "point": 0.01,
+      "rows_m1": 1571009,
+      "first": "2023-01-01 00:00:00",
+      "last": "2025-12-31 00:00:00",
+      "streams": {
+        "M1": {
+          "rows": 1571009,
+          "valid": 1570947,
+          "feature_dim": 14
+        },
+        "M5": {
+          "rows": 314380,
+          "valid": 314318,
+          "feature_dim": 14
+        },
+        "M30": {
+          "rows": 52558,
+          "valid": 52496,
+          "feature_dim": 14
+        },
+        "H4": {
+          "rows": 6571,
+          "valid": 6509,
+          "feature_dim": 14
+        }
+      },
+      "decisions": {
+        "rows": 103841,
+        "first": "2023-01-01 01:15:00",
+        "last": "2025-12-30 20:00:00"
+      },
+      "decision_count_by_year": {
+        "2023": 34583,
+        "2024": 34705,
+        "2025": 34553
+      }
+    },
+    "XAUEUR#": {
+      "point": 0.01,
+      "rows_m1": 1058885,
+      "first": "2023-01-03 01:01:00",
+      "last": "2025-12-30 23:58:00",
+      "streams": {
+        "M1": {
+          "rows": 1058885,
+          "valid": 1058823,
+          "feature_dim": 14
+        },
+        "M5": {
+          "rows": 212050,
+          "valid": 211988,
+          "feature_dim": 14
+        },
+        "M30": {
+          "rows": 35352,
+          "valid": 35290,
+          "feature_dim": 14
+        },
+        "H4": {
+          "rows": 4630,
+          "valid": 4568,
+          "feature_dim": 14
+        }
+      },
+      "decisions": {
+        "rows": 62893,
+        "first": "2023-01-03 02:15:00",
+        "last": "2025-12-30 19:45:00"
+      },
+      "decision_count_by_year": {
+        "2023": 20875,
+        "2024": 21105,
+        "2025": 20913
+      }
+    },
+    "USDJPY#": {
+      "point": 0.001,
+      "rows_m1": 1113194,
+      "first": "2023-01-02 09:01:00",
+      "last": "2025-12-31 00:00:00",
+      "streams": {
+        "M1": {
+          "rows": 1113194,
+          "valid": 1113132,
+          "feature_dim": 14
+        },
+        "M5": {
+          "rows": 223219,
+          "valid": 223157,
+          "feature_dim": 14
+        },
+        "M30": {
+          "rows": 37209,
+          "valid": 37147,
+          "feature_dim": 14
+        },
+        "H4": {
+          "rows": 4665,
+          "valid": 4603,
+          "feature_dim": 14
+        }
+      },
+      "decisions": {
+        "rows": 71596,
+        "first": "2023-01-02 10:15:00",
+        "last": "2025-12-30 20:00:00"
+      },
+      "decision_count_by_year": {
+        "2023": 23884,
+        "2024": 23947,
+        "2025": 23765
+      }
+    }
+  },
+  "raw_files": [
+    {
+      "symbol": "GOLD#",
+      "filename": "GOLD#_M1_202301030100_202312292357.csv",
+      "size": 21626717,
+      "sha256": "d4991ae1ddefd3fcf049efbf9525270a01c692a53e2c963c558199f829d5ed2f"
+    },
+    {
+      "symbol": "GOLD#",
+      "filename": "GOLD#_M1_202401020100_202412302358.csv",
+      "size": 21754952,
+      "sha256": "21518cf93f059b0f44743419320cfd1aa0939b1de7dd8f7cccf0b581a6785160"
+    },
+    {
+      "symbol": "GOLD#",
+      "filename": "GOLD#_M1_202501020800_202512302358.csv",
+      "size": 21728511,
+      "sha256": "d8d5f2ecc6e6fb6882209a4bf21e5cd37fbe6e50eea7e09421b0cd7a8b3e7605"
+    },
+    {
+      "symbol": "BTCUSD#",
+      "filename": "BTCUSD#_M1_202301010000_202512310000.csv",
+      "size": 106851302,
+      "sha256": "d477f7063da7e91e959dc4126a4d49b7e8665316012428cb822ab6e97133c9fe"
+    },
+    {
+      "symbol": "XAUEUR#",
+      "filename": "XAUEUR#_M1_202301030101_202512302358.csv",
+      "size": 64827963,
+      "sha256": "906a46f0aaead4f8c97c3d569aa143424e3a4fe03431bdc015926092974fef95"
+    },
+    {
+      "symbol": "USDJPY#",
+      "filename": "USDJPY#_M1_202301020901_202512310000.csv",
+      "size": 67638344,
+      "sha256": "e86e92724330db492046331f593808f43cc99459a12c0b05a365f02f35450909"
+    }
+  ],
+  "total_decisions": 301345,
+  "external_validation_vault_opened": false,
+  "gold_2021_touched": false
+}

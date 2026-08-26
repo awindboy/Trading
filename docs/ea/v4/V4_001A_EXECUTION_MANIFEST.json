@@ -1,0 +1,29 @@
+{
+  "status": "FROZEN_BEFORE_OFFICIAL_NEURAL_OUTCOME",
+  "expected_repo_head_before_apply": "99f909fe2105a0a6809b7c67f99ca4d8ab2f310c",
+  "base_model": "V4_001_CausalPatchPolicy",
+  "base_parameter_count": 383820,
+  "sha256": {
+    "config/v4_001_baseline.json": "c8ff07771fc185861766e4672c043a69841242b8f372ef8db6648510a5b7cc91",
+    "scripts/v4_001_common.py": "c5cf677d0013bc0e7665ffe721d961095b5c001ea5021b956c036393b2293457",
+    "scripts/v4_001_model.py": "cd1e4bff9622be6a6a7c5a6c067cbec28c5653ebb1cdc8e1bba3d44c4affa55f",
+    "scripts/v4_001_stage_a.py": "c92eeae441d3982fb532e0d7dc6c20476c72a8e45d1778607310a84fd600d70a",
+    "scripts/v4_001_stage_a_verdict.py": "b56a1a81cb4e43714efe56a641ed73b2e579717401de0a11fc78ca060e28497d",
+    "scripts/v4_001_linear_baseline.py": "a7f499dfa6652fba183f8fb2c09cc3a2cf4b0bc6529df341c315a3da968ab8e0",
+    "scripts/v4_001_collect_stage_a_results.py": "00cf79d054cc30116f68d0a83f55e8eb2060b97ae6a930383904f882f30ad17a",
+    "docs/ea/v4/V4_001A_STAGE_A_EXECUTION_PROTOCOL.md": "a1347a926e5ccf554d8f3c5ffcd01d89743fa95e3e780a297a476b6fa2405d74"
+  },
+  "frozen_protocol": {
+    "inner_validation_fraction": 0.2,
+    "purge_days": 7,
+    "seeds": [17,29,43],
+    "seed_aggregation": "arithmetic_mean_probability",
+    "effective_batch_size": 256,
+    "weekly_block_bootstrap_reps": 1000,
+    "primary_temporal": "train 2023-2024 -> outer 2025",
+    "secondary_temporal": "train 2023 -> outer 2024",
+    "primary_lomo": "other 3 markets 2023-2024 -> held-out market 2025",
+    "outer_data_for_checkpoint_selection": false,
+    "stage_a_controller_allowed": false
+  }
+}

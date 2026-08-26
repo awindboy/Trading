@@ -13,16 +13,16 @@ Status: `ACTIVE`
 
 ## V4-001A — causal dataset
 
-- [ ] Build per-symbol M1 stores from MT5 exports.
-- [ ] Infer/verify symbol point precision from explicit config, never from P/L.
-- [ ] Build completed-bar M5/M30/H4 streams causally.
-- [ ] Store `available_at = bar_open + timeframe` and window only on `available_at <= decision_time`.
-- [ ] Build causal EWM volatility and tick-volume normalization.
-- [ ] Preserve spread as an explicit input and cost field.
-- [ ] Preserve market staleness/missingness explicitly.
-- [ ] Build 15-minute decision samples and 15/60/240-minute labels.
-- [ ] Hash prepared artifacts and write a data manifest.
-- [ ] Add parity checks for row ordering, duplicates, OHLC validity, decisions and future-label availability.
+- [x] Build per-symbol M1 stores from MT5 exports.
+- [x] Infer/verify symbol point precision from explicit config, never from P/L.
+- [x] Build completed-bar M5/M30/H4 streams causally.
+- [x] Store `available_at = bar_open + timeframe` and window only on `available_at <= decision_time`.
+- [x] Build causal EWM volatility and tick-volume normalization.
+- [x] Preserve spread as an explicit input and cost field.
+- [x] Preserve market staleness/missingness explicitly.
+- [x] Build 15-minute decision samples and 15/60/240-minute labels.
+- [x] Hash prepared artifacts and write a data manifest.
+- [x] Add parity checks for row ordering, duplicates, OHLC validity, decisions and future-label availability.
 
 ## V4-001A — baseline controls
 
@@ -30,7 +30,7 @@ Status: `ACTIVE`
 - [ ] Always-LONG / always-SHORT diagnostics.
 - [ ] 60-minute momentum sign control.
 - [ ] 60-minute mean-reversion sign control.
-- [ ] Causal linear/logistic raw-feature baseline.
+- [x] Causal linear/logistic raw-feature baseline.
 - [ ] Record turnover and spread burden for every economic control.
 
 ## V4-001A — learned representation
@@ -99,3 +99,37 @@ Do not choose PPO/SAC/Decision Transformer in advance. Algorithm selection follo
 - [ ] MT5 Strategy Tester parity;
 - [ ] deployment/inference architecture;
 - [ ] live sizing only after all prior gates.
+
+## V4-001 Representation Tournament
+
+### Research expansion / literature
+- [x] Perform current web/open-source review before expanding the first neural design.
+- [x] Add `V4_LITERATURE_LEDGER.md`.
+- [x] Record current Kronos, Fin-JEPA and MOMENT references and provenance caveats.
+- [x] Freeze external-pretrained models as diagnostic-only unless provenance becomes pristine.
+
+### R1 supervised claim-grade
+- [x] Freeze leakage-safe outer evaluation and strict future-isolated LOMO.
+- [x] Freeze seeds 17/29/43 and automatic Stage-A gate.
+- [ ] Run all six R1 folds on CUDA.
+- [ ] Apply unchanged Stage-A verdict.
+
+### R2 self-supervised claim-grade
+- [x] Implement `V4_001_MarketJEPA` without changing the base causal information set.
+- [x] Freeze 15m future-latent prediction inside the training allocation.
+- [x] Freeze encoder before a linear direction probe.
+- [x] Exclude held-out LOMO market from self-supervised pretraining context and targets.
+- [x] Use the same R0 comparison and Stage-A gate as R1.
+- [ ] Run all six R2 folds on CUDA.
+- [ ] Apply unchanged Stage-A verdict.
+
+### Tournament selection
+- [x] Freeze PASS-first selector before R1/R2 outcomes.
+- [x] Tie-break by median strict-LOMO delta vs R0, then pooled 2025 AUC.
+- [ ] Generate `V4_001_TOURNAMENT_SUMMARY.json`.
+- [ ] Keep V4-001B/RL locked if neither claim-grade contender passes.
+
+### Transfer diagnostics
+- [x] Add pinned Kronos-mini diagnostic runner.
+- [x] Add MOMENT-1-small embedding diagnostic runner.
+- [ ] Run only if useful after/beside claim-grade tournament; do not use as validation rescue.

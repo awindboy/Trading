@@ -1,0 +1,26 @@
+{
+  "model_name": "V4_001_MarketJEPA",
+  "base_config": "config/v4_001_baseline.json",
+  "pretrain_horizon_minutes": 15,
+  "latent_dim": 128,
+  "predictor_hidden": 256,
+  "loss_weights": {
+    "latent_prediction": 1.0,
+    "variance": 1.0,
+    "covariance": 0.04
+  },
+  "optimizer": {
+    "lr": 0.0003,
+    "weight_decay": 0.0001,
+    "grad_clip": 1.0
+  },
+  "training": {
+    "pretrain_max_epochs": 12,
+    "pretrain_patience": 3,
+    "probe_max_epochs": 20,
+    "probe_patience": 4,
+    "seeds": [17, 29, 43],
+    "effective_batch_size": 128
+  },
+  "research_note": "Fin-JEPA-inspired predictive latent pretraining on the already-frozen causal multi-resolution information set. This is an original project implementation, not a byte-for-byte reproduction of the external Fin-JEPA repository."
+}

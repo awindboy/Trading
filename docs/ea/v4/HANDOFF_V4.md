@@ -1,7 +1,7 @@
 # V4 Development Handoff
 
 Last updated: `2026-08-27`
-Current phase: `V4-001A CAUSAL PATCH REPRESENTATION BASELINE`
+Current phase: `V4-001 REPRESENTATION TOURNAMENT / R1+R2 CLAIM-GRADE CUDA RUN NEXT`
 V1: `FROZEN CONTROL`
 V2: `PAUSED / PRESERVED`
 V3: `PAUSED / NEGATIVE + MECHANISM AUTHORITY`
@@ -101,15 +101,13 @@ so full-information action rewards are available and a simple predictive control
 
 ## Immediate task order
 
-1. apply the V4 bootstrap pack and commit the authority change;
-2. create a local V4 Python environment with PyTorch;
-3. build the prepared causal dataset from the four development markets;
-4. run data-parity/smoke tests;
-5. train simple linear/raw baselines;
-6. train `V4_001_CausalPatchPolicy` Stage A with fixed config;
-7. run walk-forward and leave-one-market-out diagnostics;
-8. decide PASS / FAIL / REDESIGN-IN-DEVELOPMENT under the frozen contract;
-9. do **not** open the external-market validation vault yet.
+1. apply and commit the Representation Tournament pack;
+2. verify CUDA-enabled PyTorch locally;
+3. prepare/reproduce the four-market causal store;
+4. run R1 and R2 through `tools/run_claim_grade_tournament.ps1`;
+5. upload R1/R2 lightweight result bundles plus `V4_001_TOURNAMENT_SUMMARY.json`;
+6. keep R3/R4 diagnostic-only;
+7. open V4-001B only after a claim-grade PASS and a new freeze decision.
 
 ## Hard stop rules
 
@@ -120,3 +118,33 @@ so full-information action rewards are available and a simple predictive control
 - Do not add RSI/MACD/ICT labels merely because training stagnates.
 - Do not select a model from one lucky seed.
 - Do not modify an MT5 EA from V4-001 development results.
+
+## V4-001 Representation Tournament update — 2026-08-27
+
+The first V4 task is no longer a single supervised-Transformer bet.
+
+Claim-grade comparison:
+
+```text
+R0 frozen linear
+R1 supervised CausalPatchPolicy
+R2 self-supervised MarketJEPA -> frozen linear probe
+```
+
+Both R1/R2 use the same 2023/2024 temporal and strict future-isolated 2025 LOMO rules. R2 self-supervised pretraining is confined to the training allocation; a held-out LOMO market is excluded from R2 pretraining context as well as labels.
+
+Current external transfer diagnostics:
+
+```text
+R3 Kronos-mini zero-shot K-line forecast
+R4 MOMENT-1-small frozen embedding probe
+```
+
+These are not pristine OOS evidence and cannot promote a candidate by themselves.
+
+Next concrete action:
+1. verify CUDA-enabled PyTorch locally;
+2. prepare/reproduce the frozen four-market causal store if needed;
+3. run R1 and R2 official 3-seed Stage-A through `tools/run_claim_grade_tournament.ps1`;
+4. upload both lightweight result bundles plus `V4_001_TOURNAMENT_SUMMARY.json`;
+5. run R3/R4 only as optional transfer diagnostics, never as rescue gates.
