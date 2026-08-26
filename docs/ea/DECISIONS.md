@@ -6619,3 +6619,24 @@ Reason:
 The k>=2 natural geometry neighborhood remains economically positive, the exact k2/50 reference meets the
 project's discovery target under the pre-specified exposure contract, and additional 2023-2025 tuning now
 creates more overfit risk than expected research value. Independent validation is the correct next stage.
+
+## D-162 — Candidate B fails GOLD# 2022 independent validation
+
+Status: `ACTIVE RESEARCH DECISION / 2026-08-27`
+
+Decision:
+- The pre-registered `V3_DUAL_RELOAD_CANDIDATE_B` GOLD# 2022 Level-A validation is classified `FAIL`.
+- Frozen result: 24 accepted trades, 25.0% positive, +1.458R average positive, -0.385R/trade expectancy.
+- Only the average-positive criterion passes; the >=50% positive-rate and >0R expectancy criteria fail.
+- 2022 is now consumed independent validation data and may not be used to retune Candidate B.
+- Candidate B becomes a frozen failed-validation artifact and is not eligible for exact-tick, MT5, EA or live promotion.
+- The H3/BOTH shadow receives independent negative-winner evidence (5 BOTH fills, 0 TP5) but is not retrofitted into Candidate B.
+- Stronger 2022 H/L mirrors are diagnostics only; no forced-reversal strategy is authorized from validation outcomes.
+- 2023-2025 remain Candidate-B discovery history and may not be reopened for threshold rescue.
+- 2021 remains untouched.
+- Any next architecture cycle must first freeze a genuinely new discovery allocation and a new validation plan.
+
+Reason:
+The failure is broad rather than an exposure-policy edge case: Candidate-A survival weakens, H2 expectancy turns
+negative, Module-L checkpoint precision collapses, mirrors outperform the original direction, H->L recovery weakens,
+and the combined candidate fails two of three pre-registered primary criteria.

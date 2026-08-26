@@ -286,24 +286,30 @@ MT5 remains the final execution authority.
 ## 11. Current phase
 
 ```text
-V3-003F DUAL RELOAD DISCOVERY FREEZE COMPLETE
-NEXT: ONE-TIME 2022 LEVEL-A VALIDATION
+V3-003G CANDIDATE-B 2022 INDEPENDENT VALIDATION — FAIL
+NEXT: DEFINE A NEW DISCOVERY ALLOCATION / ARCHITECTURE RESEARCH PROTOCOL
 ```
 
-Frozen validation candidate:
+Validation result:
 
 ```text
 V3_DUAL_RELOAD_CANDIDATE_B
+24 accepted trades
+positive 25.0%
+avg positive +1.458R
+EV -0.385R/trade
+classification FAIL
 ```
 
 Authority:
-- read `V3_003F_DUAL_RELOAD_DISCOVERY_FREEZE.md`;
-- read `V3_003F_VALIDATION_CONTRACT.md` before opening 2022;
-- do not add new 2023-2025 filters/thresholds to Candidate B;
-- H3/BOTH exclusion remains shadow-only and is not part of Candidate B;
-- 2022 remains the validation vault until the frozen run is intentionally started;
+- read `V3_003G_CANDIDATE_B_2022_VALIDATION_RESULTS.md`;
+- Candidate B is a frozen failed-validation artifact;
+- do not retune Candidate B using 2022 or reopen 2023-2025 for threshold rescue;
+- H3/BOTH exclusion remains a shadow diagnostic and was not retrofitted into the failed validation;
+- 2022 is consumed validation data;
 - 2021 remains untouched;
-- no production EA change is authorized.
+- before new strategy discovery, pre-register a new market/time allocation without outcome peeking;
+- no exact-tick, MT5 or EA promotion is authorized.
 
 ## V3 research escalation rule ??2026-08-25
 

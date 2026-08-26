@@ -389,3 +389,35 @@ H3: H2 + exclude BOTH branch (SHADOW ONLY)
 - [ ] Commission/slippage/swap sensitivity.
 - [ ] MT5 Strategy Tester reproduction.
 - [ ] Execution parity and only then EA implementation consideration.
+
+## V3-003G — Candidate B 2022 validation failed
+
+### Independent validation — COMPLETE
+
+- [x] Open the pre-registered GOLD# 2022 validation vault exactly once.
+- [x] Validate input coverage/duplicates/OHLC/spread.
+- [x] Run frozen `V3_DUAL_RELOAD_CANDIDATE_B` without retuning.
+- [x] Primary positive-rate criterion FAILED: 25.0% < 50%.
+- [x] Average-positive criterion PASSED: +1.458R > 1R.
+- [x] Expectancy criterion FAILED: -0.385R < 0R.
+- [x] Classify Candidate B as FAIL, not INCONCLUSIVE.
+- [x] Record H2, L, H3-shadow, mirror, exposure and H->L diagnostics.
+- [x] Mark 2022 as consumed validation.
+- [x] Keep 2021 untouched.
+- [x] Do not promote Candidate B to exact tick or MT5.
+
+### Explicit no-rescue rules
+
+- [x] Do not insert H3/BOTH exclusion into the failed 2022 result.
+- [x] Do not reverse H because the 2022 mirror was stronger.
+- [x] Do not create OWNER_ONLY / direction / session / calendar gates from 2022.
+- [x] Do not expand L through mentor-wave/generic sources because primary L failed.
+- [x] Do not reopen 2023-2025 to refit Candidate B.
+- [x] Do not inspect 2021 to rescue Candidate B.
+
+### Next research protocol — NOT YET FROZEN
+
+- [ ] Select a genuinely new discovery allocation before viewing strategy outcomes.
+- [ ] Decide whether the next cycle is cross-market GOLD-like suitability research, a later GOLD period, or a new auction-state architecture.
+- [ ] Write the new discovery/validation split before strategy selection.
+- [ ] Preserve V3-003G as negative authority so failed Candidate-B rules are not silently recycled.

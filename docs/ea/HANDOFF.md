@@ -1,8 +1,9 @@
-﻿> **V3 ACTIVE ROUTING — 2026-08-27 / V3-003F DISCOVERY FREEZE**  
-> Current active line is `V3-003F DUAL RELOAD DISCOVERY FREEZE COMPLETE / 2022 VALIDATION NEXT`.  
-> Read `docs/ea/v3/V3_003F_DUAL_RELOAD_DISCOVERY_FREEZE.md` and `V3_003F_VALIDATION_CONTRACT.md` before new strategy work.  
-> `V3_DUAL_RELOAD_CANDIDATE_B` is frozen for one-time 2022 Level-A validation; do not retune it on 2023-2025 or 2022.  
-> H3/BOTH remains shadow-only. 2022 is still CLOSED until validation is intentionally run; 2021 remains untouched.
+﻿> **V3 ACTIVE ROUTING — 2026-08-27 / V3-003G VALIDATION FAIL**  
+> `V3_DUAL_RELOAD_CANDIDATE_B` failed the frozen GOLD# 2022 Level-A validation.  
+> Read `docs/ea/v3/V3_003G_CANDIDATE_B_2022_VALIDATION_RESULTS.md` before new V3 strategy work.  
+> 2022 is now CONSUMED validation and must not be used to retune Candidate B.  
+> Candidate B is not eligible for exact-tick/MT5 promotion. 2021 remains untouched.  
+> Next architecture work requires a newly pre-registered discovery allocation.
 
 # EA Development Handoff
 

@@ -1,0 +1,106 @@
+{
+  "status": "FAIL",
+  "candidate": "V3_DUAL_RELOAD_CANDIDATE_B",
+  "repository_head_before_validation": "551f6a16a54e4b234d9e1d7acaf2943dff1fd888",
+  "input": {
+    "filename": "GOLD#_M1_202201030100_202212302357.csv",
+    "sha256": "837efd61ff2240ea7b6a1af80517f7d979c7a11f7699560fa0cb0cc6166912d7",
+    "rows": 354439,
+    "start": "2022-01-03 01:00:00",
+    "end": "2022-12-30 23:57:00",
+    "duplicate_timestamps": 0,
+    "ohlc_geometry_errors": 0,
+    "negative_spread_rows": 0,
+    "spread_median_points": 18.0,
+    "spread_p90_points": 25.0,
+    "spread_p99_points": 36.0,
+    "spread_max_points": 200.0
+  },
+  "candidate_A_2022": {
+    "n": 39,
+    "win1": 17,
+    "wr1": 0.4358974358974359,
+    "costless_wr1": 0.4358974358974359,
+    "long_n": 14,
+    "short_n": 25
+  },
+  "module_H2": {
+    "n": 20,
+    "tp5": 1,
+    "sl": 16,
+    "be": 3,
+    "primary_ev": -0.55,
+    "harvest_positive_rate": 0.2,
+    "harvest_avg_positive": 1.6875,
+    "harvest_ev": -0.4625,
+    "exact_mirror_tp5": 6,
+    "direction": [
+      {
+        "dir": -1,
+        "n": 12,
+        "original_tp5": 1,
+        "mirror_tp5": 4,
+        "primary_ev": -0.5,
+        "harvest_ev": -0.5416666666666666
+      },
+      {
+        "dir": 1,
+        "n": 8,
+        "original_tp5": 0,
+        "mirror_tp5": 2,
+        "primary_ev": -0.625,
+        "harvest_ev": -0.34375
+      }
+    ],
+    "H3_shadow_BOTH": {
+      "both_n": 5,
+      "both_tp5": 0,
+      "both_sl": 4,
+      "both_be": 1
+    }
+  },
+  "module_L": {
+    "n": 5,
+    "checkpoint_hits": 2,
+    "checkpoint_rate": 0.4,
+    "full1_hits": 2,
+    "full1_rate": 0.4,
+    "res2_hits": 1,
+    "res2_rate": 0.2,
+    "mean_R": -0.2,
+    "mirror_checkpoint_hits": 3,
+    "mirror_checkpoint_rate": 0.6
+  },
+  "frozen_candidate_B": {
+    "n": 24,
+    "positive_n": 6,
+    "positive_rate": 0.25,
+    "avg_positive": 1.4583333333333333,
+    "ev": -0.3854166666666667,
+    "total": -9.25,
+    "max_neg_streak": 8,
+    "max_seq_dd": 10.25,
+    "positive_rate_exact_95ci": [
+      0.09773040947453301,
+      0.46711280242266934
+    ],
+    "opposite_direction_blocked_n": 1,
+    "max_concurrent_accepted_positions": 2,
+    "max_nominal_concurrent_module_risk_units": 2,
+    "accepted_same_direction_overlap_pairs": 1,
+    "h_to_l_linked_lifecycle_n": 4,
+    "h_to_l_net_positive_n": 1
+  },
+  "primary_contract": {
+    "positive_rate_gte_0_50": false,
+    "avg_positive_gt_1R": true,
+    "expectancy_gt_0R": false,
+    "classification": "FAIL"
+  },
+  "governance": {
+    "2022": "CONSUMED VALIDATION / DO NOT RETUNE",
+    "2021": "UNTOUCHED",
+    "H3_BOTH_exclusion": "SHADOW ONLY; NOT RETROFITTED",
+    "next": "NEW DISCOVERY ALLOCATION REQUIRED BEFORE ARCHITECTURE RESEARCH"
+  }
+}

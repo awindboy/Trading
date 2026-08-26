@@ -1,0 +1,7 @@
+V3-003G validation result pack
+Date: 2026-08-27
+Expected base HEAD: 551f6a16a54e4b234d9e1d7acaf2943dff1fd888
+Result: V3_DUAL_RELOAD_CANDIDATE_B GOLD# 2022 Level-A validation = FAIL
+2022: CONSUMED VALIDATION / NO RETUNE
+2021: UNTOUCHED
+No EA change.

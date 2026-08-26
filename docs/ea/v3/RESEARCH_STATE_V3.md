@@ -1,7 +1,7 @@
 # V3 Research State
 
 Status: `ACTIVE`
-Phase: `V3-003F DUAL RELOAD DISCOVERY FREEZE COMPLETE / 2022 VALIDATION NEXT`
+Phase: `V3-003G CANDIDATE-B 2022 VALIDATION FAIL / NEW DISCOVERY ALLOCATION NEXT`
 Date: `2026-08-27`
 
 ## Problem statement
@@ -261,3 +261,34 @@ These are Level-A spread-model discovery results only. Full commission/slippage/
 and live sizing authority do not exist yet.
 
 Research stop rule: do not add another Candidate-B threshold/filter/exception from 2023-2025 before 2022 validation.
+
+## V3-003G current state — Candidate B 2022 validation failed
+
+```text
+V3_RELOAD_CANDIDATE_A                  HISTORICAL FROZEN BENCHMARK
+V3_DUAL_RELOAD_CANDIDATE_B             FROZEN FAILED-VALIDATION ARTIFACT
+Candidate-B 2022 Level-A validation    FAIL
+Module H2 2022 standalone health       FAIL / NEGATIVE EV
+Module L 2022 precision relationship   FAIL / MIRROR STRONGER
+H3 BOTH exclusion                      SHADOW SUPPORTED / NOT RETROFITTED
+2022                                   CONSUMED VALIDATION / NO RETUNE
+2023-2025                              DISCOVERY HISTORY / NO CANDIDATE-B RESCUE
+2021                                   UNTOUCHED
+exact tick / MT5 promotion             NOT AUTHORIZED
+new architecture discovery             REQUIRES NEW PRE-REGISTERED ALLOCATION
+```
+
+Primary frozen validation result:
+
+```text
+24 accepted
+positive 25.0%
+avg positive +1.458R
+EV -0.385R
+```
+
+The failure begins upstream: Candidate-A 2022 +1R survival is only 43.59%, and both H and L
+directional/mirror diagnostics weaken or reverse.
+
+Do not interpret surviving local facts such as direct-transfer selectivity or negative BOTH observations as
+permission to repair the failed candidate on validation data.

@@ -2,7 +2,7 @@
 
 Last updated: `2026-08-27`
 Repository base before V3 bootstrap: `0e7b1d5b39de1126394e88f85abf87cde167fc84`
-Current phase: `V3-003F DUAL RELOAD DISCOVERY FREEZE COMPLETE / 2022 VALIDATION NEXT`
+Current phase: `V3-003G CANDIDATE-B 2022 VALIDATION FAIL / NEW DISCOVERY ALLOCATION NEXT`
 V1: `FROZEN`
 V2: `PAUSED / PRESERVED CONTROL`
 2021: `KEEP UNTOUCHED`
@@ -415,3 +415,41 @@ Important corrections/final decisions:
 
 Next strategy-research action is the frozen one-time 2022 Level-A validation. Do not retune on failure.
 2021 remains untouched. No EA change is authorized.
+
+## V3-003G routing update — 2026-08-27
+
+Read first:
+
+```text
+V3_003G_CANDIDATE_B_2022_VALIDATION_RESULTS.md
+```
+
+The pre-committed `V3_003F_VALIDATION_CONTRACT.md` has now been executed on GOLD# 2022.
+
+Frozen Candidate-B result:
+
+```text
+24 accepted trades
+6 positive = 25.0%
+avg positive +1.458R
+EV -0.385R/trade
+total -9.25R
+classification FAIL
+```
+
+Module diagnostics:
+- Candidate A +1R survival: 17/39 = 43.59%;
+- H2: 20 fills / 1 TP5 / 16 SL / 3 BE; primary EV -0.55R;
+- H exact mirror +5R: 6/20 versus original 1/20;
+- L: 5 trades / checkpoint 2/5 / residual2 1/5 / mean -0.20R;
+- L exact-mirror checkpoint: 3/5;
+- H3 shadow BOTH: 5 fills / 0 TP5, recorded as shadow support only;
+- linked H->L lifecycles: 4, only 1 net-positive.
+
+Do not use H3, mirrors, OWNER_ONLY, sessions, directions, or any new threshold to repair Candidate B on 2022.
+
+2022 is now consumed independent validation. Candidate B is not eligible for exact-tick/MT5 promotion.
+2021 remains untouched.
+
+The next research step is not a Candidate-B tweak. Before new architecture work, define a new discovery allocation
+outcome-blind (for example a frozen GOLD-like cross-market universe or a later independent GOLD period).
