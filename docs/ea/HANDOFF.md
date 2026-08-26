@@ -1,8 +1,8 @@
-﻿> **V3 ACTIVE ROUTING — 2026-08-26**  
-> Current active research phase is `V3-003D DUAL RELOAD MODULE RESEARCH`.  
-> Read `docs/ea/v3/AGENTS_V3.md`, `docs/ea/v3/HANDOFF_V3.md`, `docs/ea/v3/RESEARCH_STATE_V3.md`, and `docs/ea/v3/V3_003D_DUAL_RELOAD_MODULE_RESEARCH_SYNTHESIS.md` before new strategy design.  
-> Preserve `V3_RELOAD_CANDIDATE_A` as the common benchmark; continue Module L (low-R/high-WR deep requalification) and Module H (high-R/low-WR structural-pullback 5R) independently.  
-> Do not start other auction-state modules yet. 2022 remains closed; 2021 remains untouched.
+﻿> **V3 ACTIVE ROUTING — 2026-08-26 / V3-003E EMERGENCY HANDOFF**  
+> Current active research phase is `V3-003D DUAL RELOAD MODULE RESEARCH`; latest continuation record is `docs/ea/v3/V3_003E_DUAL_RELOAD_MODULE_ADVANCES_AND_EMERGENCY_HANDOFF.md`.  
+> Read `docs/ea/v3/AGENTS_V3.md`, `docs/ea/v3/HANDOFF_V3.md`, `docs/ea/v3/RESEARCH_STATE_V3.md`, `V3_003D_DUAL_RELOAD_MODULE_RESEARCH_SYNTHESIS.md`, then `V3_003E_DUAL_RELOAD_MODULE_ADVANCES_AND_EMERGENCY_HANDOFF.md` before any new strategy work.  
+> First task in the next session is to commit/reproduce the missing Candidate-A -> Module-L -> Module-H replay and ledgers. Do not tune before that.  
+> Continue Module L and Module H only. Other auction-state modules remain deferred. 2022 CLOSED; 2021 untouched.
 
 # EA Development Handoff
 

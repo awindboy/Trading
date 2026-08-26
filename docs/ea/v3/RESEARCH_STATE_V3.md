@@ -164,3 +164,27 @@ scenario/context invalidation
 
 The next mandatory work is to reproduce Module L/H current-session discovery evidence in
 committed scripts and immutable ledgers before further strategy tuning.
+## V3-003E emergency state update — 2026-08-26
+
+```text
+Candidate A raw replay                    REPRODUCED LOCALLY / GITHUB SCRIPT GAP FOUND
+Module L deep requalification             REPRODUCED
+Module L checkpoint 50% + residual 2R      CURRENT PRIMARY PAYOFF CONTROL
+Module L generic-pivot expansion           REJECTED
+Module L mentor-wave expansion             SMALL / EXPLORATORY
+Module H 50% pullback 3R-BE 5R             REPRODUCED
+Module H direct M1 ownership transfer      STRONG H-SPECIFIC DISCOVERY
+Module H BOTH exclusion                    PROMISING / NOT FROZEN / 2025 CAVEAT
+Module H +3R BE                            PRIMARY PROTECTION CONTROL
+Module H +3R 25% harvest                   SECONDARY POSITIVE-FREQUENCY CONTROL
+H -> later L recovery                      REPRODUCED EPISODE PHENOMENON
+combined H/L economics                     DESCRIPTIVE ONLY / NO PORTFOLIO AUTHORITY
+swept-liquidity body-close H invalidation  PENDING / NOT COMPLETED
+H +2R 50% protection experiment            PENDING / NOT COMPLETED
+other auction-state modules                DEFERRED
+2022                                       CLOSED
+2021                                       UNTOUCHED
+```
+
+Immediate priority is a committed reproducibility pack, then the two pending H experiments,
+then H remaining-loss taxonomy and L semantic sample expansion.

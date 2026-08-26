@@ -287,3 +287,47 @@ Important routing boundaries:
 The next session's first concrete task is **reproducibility**, not another strategy idea:
 commit dedicated Module-L / Module-H replay scripts and physical event ledgers, then continue
 their separate failure-taxonomy and non-overfit improvement work.
+## V3-003E emergency continuation — 2026-08-26
+
+Read immediately after `V3_003D_DUAL_RELOAD_MODULE_RESEARCH_SYNTHESIS.md`:
+
+```text
+V3_003E_DUAL_RELOAD_MODULE_ADVANCES_AND_EMERGENCY_HANDOFF.md
+```
+
+This document captures the research completed after V3-003D before the session hit its
+conversation-length limit.
+
+Critical new routing:
+
+```text
+Module L primary payoff:
+checkpoint=min(1R,0.5D1)
+-> 50% realize
+-> residual BE
+-> residual 2R
+
+Module H stronger eligibility:
+clean M1
+-> direct M1 ownership transfer
+-> 50% pullback research candidate
+-> +3R BE
+-> +5R
+
+Module H BOTH branch:
+shadow exclusion candidate only; NOT frozen
+
+H failure -> later L deep requalification:
+reproducible episode-recovery phenomenon; NOT hindsight routing
+```
+
+Most important operational issue: the prior synthesis referenced a Candidate-A replay script
+that is not present in the current GitHub HEAD. The next session must commit the complete
+Candidate-A -> Module-L -> Module-H replay/ledger chain **before additional tuning**.
+
+Two H experiments were started but not completed at the session boundary:
+1. original swept-liquidity body-close failure/invalidation after H fill;
+2. +2R 50%-fraction loss-magnitude/protection variant.
+Do not assume outcomes for either; resume them explicitly.
+
+2022 remains CLOSED. 2021 remains untouched. Other market-state modules remain deferred.

@@ -1,0 +1,9 @@
+{
+  "expected_head": "02e5fa578579883f6fdd2ed5936e9d17ff8cb05a",
+  "new_doc": "docs/ea/v3/V3_003E_DUAL_RELOAD_MODULE_ADVANCES_AND_EMERGENCY_HANDOFF.md",
+  "docs_only": true,
+  "ea_modified": false,
+  "2022_opened": false,
+  "2021_touched": false,
+  "purpose": "Emergency session handoff preserving dual-module research results and next steps"
+}

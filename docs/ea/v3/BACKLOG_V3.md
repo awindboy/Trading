@@ -247,3 +247,60 @@ Candidate A
 - [ ] Cross-market expansion.
 - [ ] Open 2022 validation vault.
 - [ ] Touch 2021.
+## V3-003E — emergency continuation backlog
+
+### MUST DO FIRST — repair reproducibility authority
+
+- [ ] Commit common Candidate-A replay engine; prior documented path is missing from GitHub.
+- [ ] Commit Module-L downstream replay + physical dedupe ledger.
+- [ ] Commit Module-H downstream replay + pending/fill ledger.
+- [ ] Reproduce `40/29/27` Candidate-A population exactly.
+- [ ] Reproduce Module-L `11 trades / 11 checkpoint / 10 +1R / mirror 1 checkpoint`.
+- [ ] Reproduce Module-H `48 / 14 TP5 / 31 SL / 3 BE` reference before downstream gates.
+- [ ] Reproduce direct-transfer and BOTH-branch classifications without P/L retuning.
+- [ ] Commit episode IDs linking H failure to later L requalification.
+
+### Module L active
+
+- [ ] Research control: checkpoint=min(1R,0.5D1) -> 50% realize -> residual BE -> residual 2R.
+- [ ] Reproduce 11/11 positive and 7/11 residual-2R on primary physical ledger.
+- [ ] Keep exact mirror in same report.
+- [ ] Study scenario/context lifetime during long virtual-failure -> L-entry waits.
+- [ ] Expand sample only through independent meaningful liquidity semantics.
+- [ ] Keep generic M15 pivots and k=1.0-only additions rejected.
+- [ ] Keep mentor-wave union exploratory until enough unique evidence exists.
+
+### Module H active
+
+- [ ] Keep broken-level H0 as simple control.
+- [ ] Keep 50% pullback H1 as geometry research candidate, not frozen threshold.
+- [ ] Reproduce direct M1 ownership-transfer elimination of non-direct +5R failures across source/pullback panel.
+- [ ] Keep BOTH exclusion shadow-only until caveat is resolved; do not claim 2025 validation where BOTH observations are absent.
+- [ ] Continue remaining 5R-loss taxonomy with no year-specific veto.
+- [ ] PENDING: test body-close back through original swept liquidity as stronger post-fill H invalidation.
+- [ ] PENDING: test +2R existing-50%-fraction protection variant; do not assume it improves H.
+- [ ] Preserve +3R->BE as primary protection unless new test beats it without losing TP5 winners.
+- [ ] Keep +3R 25% harvest as separate positive-frequency robustness control.
+
+### H/L episode interaction
+
+- [ ] Reproduce the 5 H-loss -> later-L-recovery episodes.
+- [ ] Keep H authorization independent; do not hindsight-skip H because L later appeared.
+- [ ] Build deterministic cumulative-risk episode ledger.
+- [ ] Reproduce standalone L non-overlap with H exposure.
+- [ ] Report standalone H, standalone L and combined descriptive performance separately.
+- [ ] Do not promote combined H/L portfolio before exact ordering/exposure rules exist.
+
+### Still forbidden/deferred
+
+- [x] No generic M1 early trigger.
+- [x] No delayed-recovery equivalence.
+- [x] No generic-pivot Module-L sample expansion.
+- [x] No broad SL widening.
+- [x] No +1R/+2R BE for H primary 5R runner.
+- [x] No proof-first H Entry after original Candidate-A +1R.
+- [x] No static HTF gate mining to explain 2023 only.
+- [x] No fixed-10R objective promotion.
+- [ ] Do not open 2022.
+- [ ] Do not touch 2021.
+- [ ] Do not begin other auction-state modules until L/H current work is mature or ceiling documented.
