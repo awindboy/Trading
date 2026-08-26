@@ -1,8 +1,8 @@
 # V3 Development Handoff
 
-Last updated: `2026-08-26`
+Last updated: `2026-08-27`
 Repository base before V3 bootstrap: `0e7b1d5b39de1126394e88f85abf87cde167fc84`
-Current phase: `V3-003D DUAL RELOAD MODULE RESEARCH`
+Current phase: `V3-003F DUAL RELOAD DISCOVERY FREEZE COMPLETE / 2022 VALIDATION NEXT`
 V1: `FROZEN`
 V2: `PAUSED / PRESERVED CONTROL`
 2021: `KEEP UNTOUCHED`
@@ -381,3 +381,37 @@ Resume those two experiments first after parity verification. Do not assume eith
 
 Other market-state modules remain deferred. 2022 remains CLOSED. 2021 remains untouched.
 No production EA change is authorized.
+
+## V3-003F routing update — 2026-08-27
+
+Read first:
+
+```text
+V3_003F_DUAL_RELOAD_DISCOVERY_FREEZE.md
+V3_003F_VALIDATION_CONTRACT.md
+```
+
+The 2023-2025 dual-reload discovery cycle is intentionally stopped.
+
+Frozen Level-A validation candidate:
+
+```text
+V3_DUAL_RELOAD_CANDIDATE_B
+```
+
+Candidate B uses:
+- Candidate-A M15 adaptive k=2 substrate;
+- Module H2 direct-transfer with 50% pullback;
+- H +3R 25% harvest, residual BE, final +5R;
+- primary Module L protected-runner architecture;
+- same-direction coexistence allowed / opposite-direction coexistence blocked.
+
+Important corrections/final decisions:
+- the two interrupted H experiments are complete and rejected as primary improvements;
+- H3/BOTH remains shadow-only because no 2025 BOTH observation exists even in the mentor-wave cross-check;
+- previous standalone-L/non-overlap wording was too strong: H/L and H/H active exposure overlaps exist;
+- exposure ordering is now explicit for validation;
+- do not mine another 2023-2025 gate or payoff tweak before 2022 validation.
+
+Next strategy-research action is the frozen one-time 2022 Level-A validation. Do not retune on failure.
+2021 remains untouched. No EA change is authorized.

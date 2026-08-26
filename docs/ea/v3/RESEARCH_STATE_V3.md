@@ -1,8 +1,8 @@
 # V3 Research State
 
 Status: `ACTIVE`
-Phase: `V3-003D DUAL RELOAD MODULE RESEARCH`
-Date: `2026-08-26`
+Phase: `V3-003F DUAL RELOAD DISCOVERY FREEZE COMPLETE / 2022 VALIDATION NEXT`
+Date: `2026-08-27`
 
 ## Problem statement
 
@@ -228,3 +228,36 @@ Immediate priority:
 4. expand L only through meaningful liquidity semantics
 5. formalize deterministic H/L episode risk/exposure
 ```
+
+## V3-003F current state — discovery freeze complete
+
+```text
+V3_RELOAD_CANDIDATE_A                  FROZEN COMMON BENCHMARK
+V3_DUAL_RELOAD_CANDIDATE_B             FROZEN FOR 2022 LEVEL-A VALIDATION
+Module H2 direct-transfer              FROZEN INTO CANDIDATE B
+H 50% pullback                         FROZEN REFERENCE GEOMETRY
+H +3R 25% harvest                      FROZEN CANDIDATE-B MANAGEMENT
+H3 BOTH exclusion                      SHADOW ONLY / NOT FROZEN
+H swept-liquidity body-close exit      REJECTED AS MATERIAL IMPROVEMENT
+H +2R 50% protection                   REJECTED AS PRIMARY CONTROL
+Module L primary                       FROZEN INTO CANDIDATE B / SPARSE
+Module L mentor-wave expansion         EXPLORATORY / NOT FROZEN
+opposite-direction exposure block      FROZEN VALIDATION EXECUTION CONTRACT
+combined production portfolio          NOT AUTHORIZED
+2022                                   CLOSED UNTIL INTENTIONAL VALIDATION RUN
+2021                                   UNTOUCHED
+```
+
+Discovery reference for Candidate B under the frozen exposure contract:
+
+```text
+53 accepted trades
+positive 52.83%
+avg positive +2.775R
+EV +0.994R/trade
+```
+
+These are Level-A spread-model discovery results only. Full commission/slippage/swap, exact tick, MT5 parity,
+and live sizing authority do not exist yet.
+
+Research stop rule: do not add another Candidate-B threshold/filter/exception from 2023-2025 before 2022 validation.

@@ -6593,3 +6593,29 @@ Decision:
 - New correction-completion / acceptance-persistence ideas are separate variants and may not rewrite Candidate A after seeing their results.
 - 2022 remains the independent validation vault. When intentionally opened, Candidate A must be run without threshold movement; failure means reject/demote rather than retune.
 - 2021 remains untouched.
+
+## D-161 — Freeze V3_DUAL_RELOAD_CANDIDATE_B and stop 2023-2025 dual-reload tuning
+
+Status: `ACTIVE RESEARCH DECISION / 2026-08-27`
+
+Decision:
+- Freeze `V3_DUAL_RELOAD_CANDIDATE_B` for a one-time GOLD# 2022 Level-A validation.
+- Candidate B uses Candidate-A M15 adaptive k=2, H2 direct-transfer with 50% accepted-leg pullback,
+  H +3R 25% harvest / residual BE / +5R, primary Module-L protected runner, and the existing
+  execution-compatible same-direction coexistence / opposite-direction block rule.
+- H3/BOTH exclusion remains shadow-only and is not part of Candidate B because no 2025 BOTH observation
+  exists in either adaptive-k2 or mentor-wave H samples.
+- Reject swept-liquidity body-close H exit as economically immaterial and reject +2R 50% H protection as
+  the primary control because it materially reduces expectancy.
+- Keep mentor-wave Module-L additions exploratory; only two physical additions are unique to the primary source.
+- Correct the prior assumption that standalone L never overlaps H exposure; H/L and H/H overlaps exist and
+  therefore combined portfolio statistics require explicit exposure semantics.
+- Stop further 2023-2025 threshold/filter/payoff mining for Candidate B. 2022 is validation only and may not
+  rescue or retune the frozen candidate.
+- 2021 remains untouched.
+- No production EA Entry/SL/TP/sizing change is authorized by this decision.
+
+Reason:
+The k>=2 natural geometry neighborhood remains economically positive, the exact k2/50 reference meets the
+project's discovery target under the pre-specified exposure contract, and additional 2023-2025 tuning now
+creates more overfit risk than expected research value. Independent validation is the correct next stage.

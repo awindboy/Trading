@@ -348,3 +348,44 @@ H3: H2 + exclude BOTH branch (SHADOW ONLY)
 - [ ] Do not start failed-auction/reversal module yet.
 - [ ] Do not open 2022.
 - [ ] Do not touch 2021.
+
+## V3-003F — dual reload discovery freeze / validation next
+
+> This section supersedes remaining V3-003E discovery-improvement items for Candidate B.
+
+### Discovery closeout — COMPLETE
+
+- [x] Re-run V3-003E parity from raw GOLD 2023-2025.
+- [x] Finish original swept-liquidity M1/M5 body-close H invalidation; reject as immaterial.
+- [x] Finish +2R 50%-fraction H protection; reject as primary control.
+- [x] Complete natural k x pullback robustness surface without selecting the best point.
+- [x] Confirm k=1.5-only low-prominence dilution.
+- [x] Cross-check H direct/BOTH/EXP_ONLY/OWNER_ONLY using mentor-wave liquidity semantic.
+- [x] Keep H3/BOTH shadow-only because 2025 BOTH evidence is absent.
+- [x] Re-run L residual +2/+3/+4/+5 continuation; preserve +2R residual.
+- [x] Re-run mentor-wave L physical union; keep exploratory due only two unique additions.
+- [x] Audit H/L and H/H active exposure overlap; correct stale non-overlap assumption.
+- [x] Freeze same-direction coexistence / opposite-direction block exposure contract.
+- [x] Freeze `V3_DUAL_RELOAD_CANDIDATE_B`.
+- [x] Write pre-validation contract before opening 2022.
+
+### Research stop rule
+
+- [x] Stop adding 2023-2025 Candidate-B gates, thresholds, direction/session vetoes, or payoff tweaks.
+- [x] Keep H3/BOTH outside primary Candidate B.
+- [x] Keep mentor-wave L outside primary Candidate B.
+
+### Next — one-time 2022 Level-A validation
+
+- [ ] Verify 2022 GOLD# M1 data identity/coverage without using outcomes to redesign rules.
+- [ ] Run frozen Candidate B exactly once.
+- [ ] Report PASS / FAIL / INCONCLUSIVE under `V3_003F_VALIDATION_CONTRACT.md`.
+- [ ] Do not retune failed thresholds on 2022.
+- [ ] Keep 2021 untouched.
+
+### After a 2022 PASS only
+
+- [ ] Exact-tick replay and same-bar ordering.
+- [ ] Commission/slippage/swap sensitivity.
+- [ ] MT5 Strategy Tester reproduction.
+- [ ] Execution parity and only then EA implementation consideration.

@@ -1,0 +1,61 @@
+{
+  "base_head": "fa8b4f447fa4990d3a26afd745d8743fe228d63a",
+  "market": "GOLD#",
+  "discovery_years": [
+    2023,
+    2024,
+    2025
+  ],
+  "validation_2022": "CLOSED",
+  "2021": "UNTOUCHED",
+  "freeze_candidate": "V3_DUAL_RELOAD_CANDIDATE_B",
+  "H2_reference": {
+    "n": 44,
+    "tp5": 14,
+    "sl": 27,
+    "be": 3,
+    "primary_ev_R": 0.9772727272727273,
+    "harvest_positive_rate": 0.38636363636363635,
+    "harvest_ev_R": 0.8693181818181818
+  },
+  "L_reference": {
+    "n": 11,
+    "positive": 11,
+    "residual2": 7,
+    "mean_R": 1.1306920559698836
+  },
+  "exposure_contract": {
+    "policy": "same-direction coexistence allowed; opposite-direction coexistence blocked",
+    "selection_reason": "existing execution compatibility / causal exposure control; not selected from P/L",
+    "reference_n": 53,
+    "positive_rate": 0.5283018867924528,
+    "avg_positive_R": 2.77455759341674,
+    "expectancy_R": 0.9941058984088438,
+    "total_R": 52.68761261566872,
+    "max_observed_concurrent_positions": 3
+  },
+  "H3_shadow": {
+    "adaptive_both_n": 4,
+    "adaptive_both_tp5": 0,
+    "mentor_both_n": 6,
+    "mentor_both_tp5": 0,
+    "cross_semantic_physical_unique_n": 8,
+    "cross_semantic_physical_tp5": 0,
+    "2025_both_observations": 0,
+    "status": "SHADOW_ONLY_NOT_FROZEN"
+  },
+  "interrupted_H": {
+    "M1_body_ev_R": 0.9835747303015399,
+    "M5_body_ev_R": 0.9826718378779745,
+    "plus2_half_ev_R": 0.6704545454545454,
+    "plus2_half_positive_rate": 0.45454545454545453
+  },
+  "mentor_L_union": {
+    "unique_additions": 2,
+    "unique_positive": 1,
+    "union_n": 13,
+    "union_positive": 12,
+    "union_mean_R": 0.9182778935129784,
+    "status": "EXPLORATORY_NOT_PRIMARY"
+  }
+}

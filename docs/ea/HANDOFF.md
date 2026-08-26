@@ -1,8 +1,8 @@
-﻿> **V3 ACTIVE ROUTING — 2026-08-26 / V3-003E**  
-> Current active line is `V3-003D DUAL RELOAD MODULE RESEARCH`; the latest result/continuation authority is `docs/ea/v3/V3_003E_DUAL_RELOAD_REPRO_AND_IMPROVEMENT_RESULTS.md`.  
-> Read V3-003D, then V3-003E before any new strategy work. Verify `scripts/v3_003e_dual_module_repro.py` parity first.  
-> Continue Module L and Module H only. First unfinished work: H swept-liquidity body-close invalidation and H +2R 50% protection experiment.  
-> Other auction-state modules remain deferred. 2022 CLOSED; 2021 untouched.
+﻿> **V3 ACTIVE ROUTING — 2026-08-27 / V3-003F DISCOVERY FREEZE**  
+> Current active line is `V3-003F DUAL RELOAD DISCOVERY FREEZE COMPLETE / 2022 VALIDATION NEXT`.  
+> Read `docs/ea/v3/V3_003F_DUAL_RELOAD_DISCOVERY_FREEZE.md` and `V3_003F_VALIDATION_CONTRACT.md` before new strategy work.  
+> `V3_DUAL_RELOAD_CANDIDATE_B` is frozen for one-time 2022 Level-A validation; do not retune it on 2023-2025 or 2022.  
+> H3/BOTH remains shadow-only. 2022 is still CLOSED until validation is intentionally run; 2021 remains untouched.
 
 # EA Development Handoff
 

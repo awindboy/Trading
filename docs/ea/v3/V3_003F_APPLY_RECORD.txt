@@ -1,0 +1,6 @@
+V3-003F DUAL RELOAD DISCOVERY FREEZE PACK
+Expected base HEAD: fa8b4f447fa4990d3a26afd745d8743fe228d63a
+Created: 2026-08-27
+Purpose: close V3 dual-reload 2023-2025 discovery, freeze Candidate B, prepare one-time 2022 validation contract.
+2022 data: not opened by this pack.
+2021 data: untouched.

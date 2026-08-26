@@ -286,17 +286,24 @@ MT5 remains the final execution authority.
 ## 11. Current phase
 
 ```text
-V3-001 RAW DATA LAB BOOTSTRAP
+V3-003F DUAL RELOAD DISCOVERY FREEZE COMPLETE
+NEXT: ONE-TIME 2022 LEVEL-A VALIDATION
 ```
 
-Immediate task:
-- ingest GOLD# 2023-2025 M1 history;
-- validate timestamps, gaps, spread and data coverage;
-- construct causal higher timeframes;
-- build the common event/opportunity universe;
-- quantify opportunity density before optimizing profitability.
+Frozen validation candidate:
 
-Do not open 2022 or 2021 for V3 discovery.
+```text
+V3_DUAL_RELOAD_CANDIDATE_B
+```
+
+Authority:
+- read `V3_003F_DUAL_RELOAD_DISCOVERY_FREEZE.md`;
+- read `V3_003F_VALIDATION_CONTRACT.md` before opening 2022;
+- do not add new 2023-2025 filters/thresholds to Candidate B;
+- H3/BOTH exclusion remains shadow-only and is not part of Candidate B;
+- 2022 remains the validation vault until the frozen run is intentionally started;
+- 2021 remains untouched;
+- no production EA change is authorized.
 
 ## V3 research escalation rule ??2026-08-25
 
