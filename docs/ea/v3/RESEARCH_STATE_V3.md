@@ -1,7 +1,7 @@
 # V3 Research State
 
-Status: `ACTIVE`
-Phase: `V3-003G CANDIDATE-B 2022 VALIDATION FAIL / NEW DISCOVERY ALLOCATION NEXT`
+Status: `PAUSED / PRESERVED NEGATIVE AUTHORITY`
+Phase: `V3-003G VALIDATION FAIL / V4 ACTIVE`
 Date: `2026-08-27`
 
 ## Problem statement
@@ -292,3 +292,7 @@ directional/mirror diagnostics weaken or reverse.
 
 Do not interpret surviving local facts such as direct-transfer selectivity or negative BOTH observations as
 permission to repair the failed candidate on validation data.
+
+## V4 disposition
+
+V3 is no longer the active architecture-development line. Candidate B remains failed validation and no V3 threshold rescue is authorized. Active AI-native research is governed by `docs/ea/v4/`.

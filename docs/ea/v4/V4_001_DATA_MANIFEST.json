@@ -1,0 +1,61 @@
+{
+  "status": "DEVELOPMENT_INPUT_IDENTITY / NOT REPO-STORED RAW DATA",
+  "date": "2026-08-27",
+  "development_role": "OPEN V4 development laboratory",
+  "inputs": [
+    {
+      "symbol": "GOLD#",
+      "period": "2023",
+      "point": 0.01,
+      "sha256": "d4991ae1ddefd3fcf049efbf9525270a01c692a53e2c963c558199f829d5ed2f",
+      "rows": 353036
+    },
+    {
+      "symbol": "GOLD#",
+      "period": "2024",
+      "point": 0.01,
+      "sha256": "21518cf93f059b0f44743419320cfd1aa0939b1de7dd8f7cccf0b581a6785160",
+      "rows": 353837
+    },
+    {
+      "symbol": "GOLD#",
+      "period": "2025",
+      "point": 0.01,
+      "sha256": "d8d5f2ecc6e6fb6882209a4bf21e5cd37fbe6e50eea7e09421b0cd7a8b3e7605",
+      "rows": 351929
+    },
+    {
+      "symbol": "BTCUSD#",
+      "period": "2023-2025",
+      "point": 0.01,
+      "sha256": "d477f7063da7e91e959dc4126a4d49b7e8665316012428cb822ab6e97133c9fe",
+      "rows": 1571009
+    },
+    {
+      "symbol": "XAUEUR#",
+      "period": "2023-2025",
+      "point": 0.01,
+      "sha256": "906a46f0aaead4f8c97c3d569aa143424e3a4fe03431bdc015926092974fef95",
+      "rows": 1058885
+    },
+    {
+      "symbol": "USDJPY#",
+      "period": "2023-2025",
+      "point": 0.001,
+      "sha256": "e86e92724330db492046331f593808f43cc99459a12c0b05a365f02f35450909",
+      "rows": 1113194
+    }
+  ],
+  "source_zip": {
+    "name": "GoldLike.zip",
+    "sha256": "846ec595b732184350adaec12f6cdbcc7e06bfda39c9f65979930b1719160fbb"
+  },
+  "validation_vault": [
+    "XAUJPY# 2023-2025",
+    "XAUCNH# 2023-2025",
+    "GAUCNH# 2023-2025",
+    "GAUUSD# 2023-2025"
+  ],
+  "final_temporal_confirmation": "GOLD# 2021 untouched",
+  "consumed_not_pristine": "GOLD# 2022"
+}

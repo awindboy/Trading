@@ -1,4 +1,10 @@
-﻿> **V3 ACTIVE ROUTING — 2026-08-27 / V3-003G VALIDATION FAIL**  
+﻿> **V4 ACTIVE ROUTING — 2026-08-27 / V4-001A REPRESENTATION BASELINE**  
+> `V3_DUAL_RELOAD_CANDIDATE_B` remains frozen failed validation; do not rescue it.  
+> Active strategy research moves to `docs/ea/v4/`.  
+> Current task: prove learned causal representation skill before any RL or EA change.  
+> V4 external-market validation vault remains closed; GOLD# 2021 remains untouched.
+
+> **V3 ACTIVE ROUTING — 2026-08-27 / V3-003G VALIDATION FAIL**  
 > `V3_DUAL_RELOAD_CANDIDATE_B` failed the frozen GOLD# 2022 Level-A validation.  
 > Read `docs/ea/v3/V3_003G_CANDIDATE_B_2022_VALIDATION_RESULTS.md` before new V3 strategy work.  
 > 2022 is now CONSUMED validation and must not be used to retune Candidate B.  

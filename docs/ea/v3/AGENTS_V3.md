@@ -1,3 +1,7 @@
+> **V3 PAUSED ROUTING — 2026-08-27**  
+> V3-003G failed independent validation. Active strategy research is now V4.  
+> Preserve V3 as historical negative/mechanism authority; do not reopen Candidate-B tuning.
+
 # V3 Research Authority — Raw-Market-Data Strategy Laboratory
 
 Status: `ACTIVE RESEARCH LINE`

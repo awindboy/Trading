@@ -6640,3 +6640,40 @@ Reason:
 The failure is broad rather than an exposure-policy edge case: Candidate-A survival weakens, H2 expectancy turns
 negative, Module-L checkpoint precision collapses, mirrors outperform the original direction, H->L recovery weakens,
 and the combined candidate fails two of three pre-registered primary criteria.
+
+## D-163 — Open V4 AI-native representation and policy research line
+
+Status: `ACTIVE RESEARCH DECISION / 2026-08-27`
+
+Decision:
+- Open V4 as the active strategy-research line after V3 Candidate B failed independent GOLD# 2022 validation.
+- Preserve V1 as frozen deterministic control, V2 as paused execution/continuation research control, and V3 as paused negative/mechanism authority.
+- Stop treating another hand-authored chart-state threshold as the default next step.
+- V4 first asks whether causal raw multi-resolution and multi-market data support a learned latent state with stable out-of-sample information.
+- AI-native research does not relax causality, cost realism, validation separation or MT5 final authority.
+- The open V4 development lab is GOLD#/BTCUSD#/XAUEUR#/USDJPY# 2023-2025. These data are development only.
+- Freeze the still-unopened V2 outcome-blind GOLD-like markets XAUJPY#/XAUCNH#/GAUCNH#/GAUUSD# 2023-2025 as the prospective V4 cross-market validation vault.
+- GOLD# 2021 remains untouched final temporal confirmation.
+- GOLD# 2022 is consumed V3 validation and is not pristine V4 validation.
+- No V4 model receives production or EA authority from this decision.
+
+Reason:
+V3's failure is not adequately explained by one missing filter: the frozen candidate failed independent time validation and its directional substructure weakened/reversed in additional development markets. The next efficient test is whether learned representation can extract transferable information before more human strategy ontology is added.
+
+## D-164 — Freeze V4-001 CausalPatchPolicy as the first AI-native base model
+
+Status: `ACTIVE DEVELOPMENT FREEZE / 2026-08-27`
+
+Decision:
+- Freeze `V4_001_CausalPatchPolicy` as the first V4 development baseline.
+- The base input is completed causal M1/M5/M30/H4 OHLC geometry, tick volume, spread, causal volatility scale, timing and market availability/staleness.
+- Do not feed Candidate-A/H/L/sweep/FVG/BOS strategy labels into the base model.
+- Use symbol-agnostic local encoders with no learned symbol ID, then fuse target and context markets through a compact Transformer.
+- Predict 15m/60m/240m return distributions before any trading-policy promotion.
+- V4-001A must pass a leave-market-out representation-skill gate before V4-001B is opened.
+- V4-001B, if opened, uses a deterministic one-step learned predictive controller with actions {-1,0,+1} and recorded spread transition cost. No hand-tuned confidence threshold is allowed in the first controller.
+- PPO/SAC/other RL algorithms are explicitly deferred. RL may not be used to rescue absent representation skill.
+- External-market validation data remain closed until the exact V4 candidate/checkpoint-selection protocol is frozen.
+
+Reason:
+At the intended research scale the price path is exogenous to our action, so near-term counterfactual action rewards are observable from historical data. A representation-first predictive controller separates information failure from sequential-policy failure and is a cleaner falsifiable baseline than immediate offline RL.

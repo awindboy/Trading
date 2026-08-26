@@ -1,6 +1,6 @@
 # V3 Backlog
 
-Status: `ACTIVE`
+Status: `PAUSED / V4 ACTIVE`
 
 ## P0 — V3-001 raw-data bootstrap
 
@@ -421,3 +421,11 @@ H3: H2 + exclude BOTH branch (SHADOW ONLY)
 - [ ] Decide whether the next cycle is cross-market GOLD-like suitability research, a later GOLD period, or a new auction-state architecture.
 - [ ] Write the new discovery/validation split before strategy selection.
 - [ ] Preserve V3-003G as negative authority so failed Candidate-B rules are not silently recycled.
+
+## V4 transition — V3 backlog disposition
+
+- [x] Preserve V3-003G as negative authority.
+- [x] Stop Candidate-B rescue/tuning.
+- [x] Open V4 as the new active research line.
+- [ ] Do not reopen V3 items unless a future decision explicitly allocates a V3 mechanism question.
+- [ ] Keep GOLD# 2021 untouched.

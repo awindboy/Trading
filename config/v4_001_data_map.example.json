@@ -1,0 +1,22 @@
+{
+  "GOLD#": {
+    "point": 0.01,
+    "files": [
+      "PATH/TO/GOLD#_M1_2023.csv",
+      "PATH/TO/GOLD#_M1_2024.csv",
+      "PATH/TO/GOLD#_M1_2025.csv"
+    ]
+  },
+  "BTCUSD#": {
+    "point": 0.01,
+    "files": ["PATH/TO/BTCUSD#_M1_2023_2025.csv"]
+  },
+  "XAUEUR#": {
+    "point": 0.01,
+    "files": ["PATH/TO/XAUEUR#_M1_2023_2025.csv"]
+  },
+  "USDJPY#": {
+    "point": 0.001,
+    "files": ["PATH/TO/USDJPY#_M1_2023_2025.csv"]
+  }
+}

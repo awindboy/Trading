@@ -1,0 +1,100 @@
+{
+  "status": "V4-001 BOOTSTRAP IMPLEMENTATION MANIFEST",
+  "date": "2026-08-27",
+  "expected_git_head": "0db9247b5e61dccf94393056aa6de47e00ca3e40",
+  "model": "V4_001_CausalPatchPolicy",
+  "trainable_parameters_smoke_config": 383820,
+  "smoke_status": "syntax + random forward/backward + small real-MT5 prepare/train/evaluate PASS in build environment",
+  "files": [
+    {
+      "path": "README_APPLY.md",
+      "size": 1916,
+      "sha256": "3142650889b892342cbd9f818da7fd1cdff00aff666476e2874a3c1ee81eb33a"
+    },
+    {
+      "path": "apply_v4_001_bootstrap.py",
+      "size": 9713,
+      "sha256": "944c99bd3642dbc7c46375410b4cc5513a3ba46e7f4aa4bc1241ed109c2e93cc"
+    },
+    {
+      "path": "config/v4_001_baseline.json",
+      "size": 1421,
+      "sha256": "c8ff07771fc185861766e4672c043a69841242b8f372ef8db6648510a5b7cc91"
+    },
+    {
+      "path": "config/v4_001_data_map.example.json",
+      "size": 433,
+      "sha256": "25dc1ad21e4362ecb7cf506598e06f71544bf7c560f35a3e80b48a7e0f43b384"
+    },
+    {
+      "path": "docs/ea/v4/AGENTS_V4.md",
+      "size": 6337,
+      "sha256": "85abdb6a5d07148046488535f8793676ba38aa063b5e96ef8a4459dac7e9fa5e"
+    },
+    {
+      "path": "docs/ea/v4/BACKLOG_V4.md",
+      "size": 4196,
+      "sha256": "666b9fe946382e1275bee605c5f5db52075eecea15c1c4255496f0442a0afb97"
+    },
+    {
+      "path": "docs/ea/v4/HANDOFF_V4.md",
+      "size": 3335,
+      "sha256": "c5f32cb023ce2e3f59adaf6dbe5352ab39ae7acd5deb487c958cfdf5a12693dd"
+    },
+    {
+      "path": "docs/ea/v4/RESEARCH_STATE_V4.md",
+      "size": 2321,
+      "sha256": "2550907c000299992d2064092543e1cc912a73b6d9637b6c92f4bcec44494f4e"
+    },
+    {
+      "path": "docs/ea/v4/V4_001_AI_NATIVE_RESEARCH_CONTRACT.md",
+      "size": 6938,
+      "sha256": "e618b5a4a351f59c546ac7b60a6769e7cb79e3def94003f506730b8f9e73c4ee"
+    },
+    {
+      "path": "docs/ea/v4/V4_001_BASE_MODEL_SPEC.md",
+      "size": 4455,
+      "sha256": "fc5fe44a2ba63ca0eff492a54bd1e28d3ece263278f1012f8364c41be8e0b2dc"
+    },
+    {
+      "path": "docs/ea/v4/V4_001_DATA_MANIFEST.json",
+      "size": 1680,
+      "sha256": "09ef14a72cd1441d8e4d7044e32bb259b46455d9674c3f1f7a0d6d4776e1c2af"
+    },
+    {
+      "path": "requirements-v4.txt",
+      "size": 52,
+      "sha256": "4b81dd11830b0507364b93981a4cda398013a56679168053ed213fc1b095203d"
+    },
+    {
+      "path": "scripts/v4_001_common.py",
+      "size": 11778,
+      "sha256": "c5cf677d0013bc0e7665ffe721d961095b5c001ea5021b956c036393b2293457"
+    },
+    {
+      "path": "scripts/v4_001_evaluate.py",
+      "size": 3362,
+      "sha256": "fba02494d817a12e54f55b82c7b81b8b5d46cf5ce3d84c66e5d4b792c2e25a0d"
+    },
+    {
+      "path": "scripts/v4_001_model.py",
+      "size": 4613,
+      "sha256": "cd1e4bff9622be6a6a7c5a6c067cbec28c5653ebb1cdc8e1bba3d44c4affa55f"
+    },
+    {
+      "path": "scripts/v4_001_prepare_dataset.py",
+      "size": 1535,
+      "sha256": "3f93ac964c0beaa3c95d0c6caab9c988c2321bbc3110f9c331ff94d68a7d5896"
+    },
+    {
+      "path": "scripts/v4_001_smoke_test.py",
+      "size": 908,
+      "sha256": "2391df7a6ea9437594e3d2ce101a981cda98f50a04b1300ac26985a922982950"
+    },
+    {
+      "path": "scripts/v4_001_train.py",
+      "size": 4000,
+      "sha256": "967e7498d3cb443b42a0bb22193e0b88c06b550e1225f301e828a5ad09421481"
+    }
+  ]
+}

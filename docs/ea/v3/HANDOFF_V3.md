@@ -2,7 +2,7 @@
 
 Last updated: `2026-08-27`
 Repository base before V3 bootstrap: `0e7b1d5b39de1126394e88f85abf87cde167fc84`
-Current phase: `V3-003G CANDIDATE-B 2022 VALIDATION FAIL / NEW DISCOVERY ALLOCATION NEXT`
+Current phase: `V3-003G VALIDATION FAIL / PAUSED AFTER V4 OPEN`
 V1: `FROZEN`
 V2: `PAUSED / PRESERVED CONTROL`
 2021: `KEEP UNTOUCHED`
@@ -453,3 +453,17 @@ Do not use H3, mirrors, OWNER_ONLY, sessions, directions, or any new threshold t
 
 The next research step is not a Candidate-B tweak. Before new architecture work, define a new discovery allocation
 outcome-blind (for example a frozen GOLD-like cross-market universe or a later independent GOLD period).
+
+## V4 routing update — 2026-08-27
+
+V3 is paused as an active strategy-design line. Its negative results, Candidate-A/B artifacts, causal replay code and execution lessons remain authority and must not be rewritten.
+
+Active research moved to:
+
+```text
+docs/ea/v4/AGENTS_V4.md
+docs/ea/v4/HANDOFF_V4.md
+docs/ea/v4/V4_001_AI_NATIVE_RESEARCH_CONTRACT.md
+```
+
+Do not use V4 as permission to retune Candidate B or inspect GOLD# 2021.

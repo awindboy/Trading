@@ -1,4 +1,10 @@
-﻿> **V3 ACTIVE RAW-DATA RESEARCH ROUTING**  
+﻿> **V4 ACTIVE AI-NATIVE RESEARCH ROUTING — 2026-08-27**  
+> Active strategy research now uses `docs/ea/v4/AGENTS_V4.md` and `docs/ea/v4/HANDOFF_V4.md`.  
+> V3 is paused after V3-003G independent-validation failure and remains negative/mechanism authority.  
+> V1 remains frozen; V2 remains paused/preserved. No V4 production authority exists.  
+> Read `V4_001_AI_NATIVE_RESEARCH_CONTRACT.md` and `V4_001_BASE_MODEL_SPEC.md` before V4 model work.
+
+> **V3 ACTIVE RAW-DATA RESEARCH ROUTING**  
 > V1 remains a frozen historical deterministic control. V2 is paused/preserved as the continuation/SP/Entry research control.  
 > Active research now uses `docs/ea/v3/AGENTS_V3.md` and `docs/ea/v3/HANDOFF_V3.md`.  
 > V3 may redesign the strategy layer from raw market data; it does not silently rewrite V1/V2 history or strategy authority.

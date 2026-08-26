@@ -1,0 +1,89 @@
+{
+  "model_name": "V4_001_CausalPatchPolicy",
+  "decision_minutes": 15,
+  "horizons_minutes": [
+    15,
+    60,
+    240
+  ],
+  "timeframes": {
+    "M1": {
+      "rule": "1min",
+      "history": 256,
+      "patch": 8
+    },
+    "M5": {
+      "rule": "5min",
+      "history": 192,
+      "patch": 6
+    },
+    "M30": {
+      "rule": "30min",
+      "history": 96,
+      "patch": 4
+    },
+    "H4": {
+      "rule": "4h",
+      "history": 42,
+      "patch": 3
+    }
+  },
+  "feature_names": [
+    "ret_z",
+    "body_z",
+    "range_z",
+    "upper_wick_z",
+    "lower_wick_z",
+    "close_location",
+    "tickvol_z",
+    "spread_return",
+    "spread_over_vol",
+    "log_gap",
+    "tod_sin",
+    "tod_cos",
+    "dow_sin",
+    "dow_cos"
+  ],
+  "d_model": 64,
+  "nhead": 4,
+  "local_layers": 2,
+  "fusion_layers": 2,
+  "dim_feedforward": 128,
+  "dropout": 0.1,
+  "latent_dim": 128,
+  "loss_weights": {
+    "gaussian_nll": 1.0,
+    "direction_bce": 0.5,
+    "abs_smooth_l1": 0.25
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "lr": 0.0003,
+    "weight_decay": 0.0001,
+    "grad_clip": 1.0
+  },
+  "training": {
+    "batch_size": 256,
+    "max_epochs": 30,
+    "early_stop_patience": 5,
+    "seeds": [
+      17,
+      29,
+      43
+    ]
+  },
+  "symbols": {
+    "GOLD#": {
+      "point": 0.01
+    },
+    "BTCUSD#": {
+      "point": 0.01
+    },
+    "XAUEUR#": {
+      "point": 0.01
+    },
+    "USDJPY#": {
+      "point": 0.001
+    }
+  }
+}
