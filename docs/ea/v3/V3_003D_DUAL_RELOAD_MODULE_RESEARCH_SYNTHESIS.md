@@ -48,7 +48,7 @@ There are two different evidence levels in this document.
 
 ```text
 V3_003C_RELOAD_STATE_ACCEPTANCE_RESULTS.md
-research/ea/v3/v3_003c_reload_state_acceptance_probe.py
+scripts/v3_003c_reload_state_acceptance_probe.py
 ```
 
 Reference Level-A population:
@@ -1031,3 +1031,9 @@ One-line continuation rule:
 > asymmetry) independently, do not repeat the failed relaxation/exit branches, and do not
 > open other market-state modules or 2022 until these two reload branches are properly
 > frozen.
+
+
+> **V3-003E continuation note:** later replay parity, ledgers and updated Module L/H findings are recorded in `V3_003E_DUAL_RELOAD_REPRO_AND_IMPROVEMENT_RESULTS.md`.
+
+
+> **V3-003E continuation note:** later replay parity, ledgers and updated Module L/H findings are recorded in `V3_003E_DUAL_RELOAD_REPRO_AND_IMPROVEMENT_RESULTS.md`.

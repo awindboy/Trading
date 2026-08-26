@@ -188,3 +188,129 @@ other auction-state modules                DEFERRED
 
 Immediate priority is a committed reproducibility pack, then the two pending H experiments,
 then H remaining-loss taxonomy and L semantic sample expansion.
+## V3-003E current state — replay restored, dual-module improvement active
+
+Current classification:
+
+```text
+V3_RELOAD_CANDIDATE_A                  FROZEN DEVELOPMENT BENCHMARK
+Candidate-A integrated replay          REPRODUCED / COMMITTED
+Module L deep requalification          REPRODUCED / VERY SMALL SAMPLE
+Module L protected-runner payoff       CURRENT PRIMARY L PAYOFF CONTROL
+Module L generic-pivot expansion       REJECTED
+Module L mentor-wave expansion         EXPLORATORY / SMALL
+Module H k2-50% base                    REPRODUCED
+Module H direct ownership transfer     STRONG H-SPECIFIC DISCOVERY
+Module H BOTH exclusion                PROMISING SHADOW / NOT FROZEN
+Module H +3R -> BE                     PRIMARY H PROTECTION CONTROL
+Module H +3R 25% harvest               SECONDARY POSITIVE-FREQUENCY CONTROL
+H -> later L requalification           REPRODUCED EPISODE PHENOMENON
+combined H/L economics                 DESCRIPTIVE ONLY
+H swept-liquidity body-close exit      PENDING / STARTED NOT COMPLETED
+H +2R 50% protection                   PENDING / STARTED NOT COMPLETED
+true deterministic destination         UNSOLVED
+other auction-state modules            DEFERRED BY USER
+2022                                   CLOSED
+2021                                   UNTOUCHED
+```
+
+Current reproduced Level-A headline:
+
+```text
+L:
+11/11 positive under checkpoint-50%-residual2R
+mean +1.131R
+7/11 residual +2R
+
+H direct+notBOTH shadow:
+40 trades
+14 TP5
+23 SL
+3 BE
++47R
++1.175R/trade
+
+descriptive H + L combined:
+46 episodes
+positive 52.17%
+avg positive +3.249R
+EV +1.292R
+max negative streak 5
+max DD ~7R
+```
+
+These are discovery results only. No 2022 validation, exact-tick authority or EA promotion
+exists.
+
+Immediate priority:
+
+```text
+1. verify V3-003E parity on session start
+2. finish the two interrupted H experiments
+3. continue H remaining-loss taxonomy without sacrificing +5R winners
+4. expand L only through meaningful liquidity semantics
+5. formalize deterministic H/L episode risk/exposure
+```
+## V3-003E current state — replay restored, dual-module improvement active
+
+Current classification:
+
+```text
+V3_RELOAD_CANDIDATE_A                  FROZEN DEVELOPMENT BENCHMARK
+Candidate-A integrated replay          REPRODUCED / COMMITTED
+Module L deep requalification          REPRODUCED / VERY SMALL SAMPLE
+Module L protected-runner payoff       CURRENT PRIMARY L PAYOFF CONTROL
+Module L generic-pivot expansion       REJECTED
+Module L mentor-wave expansion         EXPLORATORY / SMALL
+Module H k2-50% base                    REPRODUCED
+Module H direct ownership transfer     STRONG H-SPECIFIC DISCOVERY
+Module H BOTH exclusion                PROMISING SHADOW / NOT FROZEN
+Module H +3R -> BE                     PRIMARY H PROTECTION CONTROL
+Module H +3R 25% harvest               SECONDARY POSITIVE-FREQUENCY CONTROL
+H -> later L requalification           REPRODUCED EPISODE PHENOMENON
+combined H/L economics                 DESCRIPTIVE ONLY
+H swept-liquidity body-close exit      PENDING / STARTED NOT COMPLETED
+H +2R 50% protection                   PENDING / STARTED NOT COMPLETED
+true deterministic destination         UNSOLVED
+other auction-state modules            DEFERRED BY USER
+2022                                   CLOSED
+2021                                   UNTOUCHED
+```
+
+Current reproduced Level-A headline:
+
+```text
+L:
+11/11 positive under checkpoint-50%-residual2R
+mean +1.131R
+7/11 residual +2R
+
+H direct+notBOTH shadow:
+40 trades
+14 TP5
+23 SL
+3 BE
++47R
++1.175R/trade
+
+descriptive H + L combined:
+46 episodes
+positive 52.17%
+avg positive +3.249R
+EV +1.292R
+max negative streak 5
+max DD ~7R
+```
+
+These are discovery results only. No 2022 validation, exact-tick authority or EA promotion
+exists.
+
+Immediate priority:
+
+```text
+1. verify V3-003E parity on session start
+2. finish the two interrupted H experiments
+3. continue H remaining-loss taxonomy without sacrificing +5R winners
+4. expand L only through meaningful liquidity semantics
+5. formalize deterministic H/L episode risk/exposure
+```

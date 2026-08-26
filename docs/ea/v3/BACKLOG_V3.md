@@ -304,3 +304,203 @@ Candidate A
 - [ ] Do not open 2022.
 - [ ] Do not touch 2021.
 - [ ] Do not begin other auction-state modules until L/H current work is mature or ceiling documented.
+## V3-003E — replay-complete dual-module improvement backlog
+
+> This section supersedes the unchecked `V3-003D reproducibility first` items above.
+> The integrated replay and physical ledgers are now included in the V3-003E package.
+
+### Reproducibility — COMPLETE / VERIFY ON START
+
+- [x] Candidate-A parity reproduced from raw GOLD 2023-2025.
+- [x] Module-L physical deep-requalification ledger reproduced.
+- [x] Module-H natural pullback panel reproduced.
+- [x] Exact-mirror fields reproduced.
+- [x] Direct-transfer eligibility fields reproduced.
+- [x] BOTH-branch fields reproduced.
+- [x] H-to-L recovery links reproduced.
+- [x] Descriptive combined episode ledgers reproduced.
+- [x] Add integrated `scripts/v3_003e_dual_module_repro.py`.
+- [x] Commit immutable V3-003E CSV ledgers.
+- [ ] On every resumed session, run parity before new tuning.
+
+### Module L — ACTIVE
+
+Primary:
+
+```text
+virtual Candidate-A failure
+-> context alive
+-> deeper meaningful intermediate M15 liquidity
+-> atomic same-bar recovery
+-> fresh M5 re-acceptance
+-> REAL Entry
+-> checkpoint=min(1R,0.5D1)
+-> 50% realize
+-> residual BE
+-> residual +2R
+```
+
+- [x] Reproduce 11 physical trades / 11 positive.
+- [x] Reproduce 7 residual +2R hits.
+- [x] Reproduce exact-mirror checkpoint 1/11.
+- [x] Reject generic-pivot sample expansion.
+- [x] Reject k=1.0-only low-prominence expansion.
+- [ ] Study context/scenario lifetime during long virtual-failure -> L-entry waits.
+- [ ] Expand sample only through independent meaningful liquidity semantics.
+- [ ] Keep mentor-wave source exploratory until enough unique physical evidence exists.
+- [ ] Do not increase full TP to 1.5R/2R merely to raise payoff; it weakened high-WR behavior.
+- [ ] Preserve the protected-runner design unless a causal alternative improves it.
+
+### Module H — ACTIVE
+
+Current hierarchy:
+
+```text
+H0: clean M1 + broken-level retest
+H1: clean M1 + 50% accepted-leg pullback
+H2: H1 + direct M1 ownership transfer
+H3: H2 + exclude BOTH branch (SHADOW ONLY)
+```
+
+- [x] Reproduce H base 48 / 14 TP5 / 31 SL / 3 BE.
+- [x] Reproduce direct-transfer 44 / 14 TP5 / 27 SL / 3 BE.
+- [x] Reproduce non-direct TP5=0 across natural source/pullback panel.
+- [x] Reproduce direct+BOTH TP5=0 across natural source/pullback panel.
+- [ ] Do NOT freeze BOTH exclusion until independent evidence resolves the 2025 caveat.
+- [x] Preserve +3R->BE as primary protection.
+- [x] Keep +3R 25% harvest as secondary positive-frequency variant.
+- [x] Reject +1R/+2R BE as primary H runner protection.
+- [x] Reject proof-first Entry after original Candidate-A +1R.
+- [x] Reject M1-owner-at-fill / pending-flip / extra-M1-rejection gates.
+- [x] Reject source-age hard cutoff and correction-start source gate.
+- [x] Reject simple opposite-owner veto and directionally-retuned M30-expansion gate.
+- [ ] PENDING FIRST: test body-close back through original swept liquidity as strong H invalidation.
+- [ ] PENDING SECOND: test +2R existing-50%-fraction protection vs current +3R controls.
+- [ ] Continue cross-year remaining-loss taxonomy from H2; H3 stays shadow.
+- [ ] Reduce 2023 loss streak without a 2023-specific veto and without deleting TP5 winners.
+
+### H / L episode interaction — ACTIVE P1
+
+- [x] Reproduce five H-loss -> later-L recovery links.
+- [x] Reproduce four of five as net-positive under current L payoff.
+- [x] Reproduce standalone L non-overlap with H exposure in current sample.
+- [x] Produce descriptive combined base and harvest ledgers.
+- [ ] Define deterministic cumulative episode risk budget.
+- [ ] Define position/exposure ordering for possible H then L.
+- [ ] Keep standalone H, standalone L and combined descriptive results separately visible.
+- [ ] Do not hindsight-skip H merely because L later appeared.
+- [ ] Do not promote combined portfolio before execution/order semantics are explicit.
+
+### Still deferred / forbidden
+
+- [x] No generic M1 early trigger.
+- [x] No delayed-recovery equivalence.
+- [x] No generic-pivot Module-L expansion.
+- [x] No broad SL widening.
+- [x] No static HTF threshold mining.
+- [x] No quarter/direction vetoes.
+- [x] No fixed 10R objective promotion.
+- [ ] Do not start compression-breakout module yet.
+- [ ] Do not start failed-auction/reversal module yet.
+- [ ] Do not open 2022.
+- [ ] Do not touch 2021.
+## V3-003E — replay-complete dual-module improvement backlog
+
+> This section supersedes the unchecked `V3-003D reproducibility first` items above.
+> The integrated replay and physical ledgers are now included in the V3-003E package.
+
+### Reproducibility — COMPLETE / VERIFY ON START
+
+- [x] Candidate-A parity reproduced from raw GOLD 2023-2025.
+- [x] Module-L physical deep-requalification ledger reproduced.
+- [x] Module-H natural pullback panel reproduced.
+- [x] Exact-mirror fields reproduced.
+- [x] Direct-transfer eligibility fields reproduced.
+- [x] BOTH-branch fields reproduced.
+- [x] H-to-L recovery links reproduced.
+- [x] Descriptive combined episode ledgers reproduced.
+- [x] Add integrated `scripts/v3_003e_dual_module_repro.py`.
+- [x] Commit immutable V3-003E CSV ledgers.
+- [ ] On every resumed session, run parity before new tuning.
+
+### Module L — ACTIVE
+
+Primary:
+
+```text
+virtual Candidate-A failure
+-> context alive
+-> deeper meaningful intermediate M15 liquidity
+-> atomic same-bar recovery
+-> fresh M5 re-acceptance
+-> REAL Entry
+-> checkpoint=min(1R,0.5D1)
+-> 50% realize
+-> residual BE
+-> residual +2R
+```
+
+- [x] Reproduce 11 physical trades / 11 positive.
+- [x] Reproduce 7 residual +2R hits.
+- [x] Reproduce exact-mirror checkpoint 1/11.
+- [x] Reject generic-pivot sample expansion.
+- [x] Reject k=1.0-only low-prominence expansion.
+- [ ] Study context/scenario lifetime during long virtual-failure -> L-entry waits.
+- [ ] Expand sample only through independent meaningful liquidity semantics.
+- [ ] Keep mentor-wave source exploratory until enough unique physical evidence exists.
+- [ ] Do not increase full TP to 1.5R/2R merely to raise payoff; it weakened high-WR behavior.
+- [ ] Preserve the protected-runner design unless a causal alternative improves it.
+
+### Module H — ACTIVE
+
+Current hierarchy:
+
+```text
+H0: clean M1 + broken-level retest
+H1: clean M1 + 50% accepted-leg pullback
+H2: H1 + direct M1 ownership transfer
+H3: H2 + exclude BOTH branch (SHADOW ONLY)
+```
+
+- [x] Reproduce H base 48 / 14 TP5 / 31 SL / 3 BE.
+- [x] Reproduce direct-transfer 44 / 14 TP5 / 27 SL / 3 BE.
+- [x] Reproduce non-direct TP5=0 across natural source/pullback panel.
+- [x] Reproduce direct+BOTH TP5=0 across natural source/pullback panel.
+- [ ] Do NOT freeze BOTH exclusion until independent evidence resolves the 2025 caveat.
+- [x] Preserve +3R->BE as primary protection.
+- [x] Keep +3R 25% harvest as secondary positive-frequency variant.
+- [x] Reject +1R/+2R BE as primary H runner protection.
+- [x] Reject proof-first Entry after original Candidate-A +1R.
+- [x] Reject M1-owner-at-fill / pending-flip / extra-M1-rejection gates.
+- [x] Reject source-age hard cutoff and correction-start source gate.
+- [x] Reject simple opposite-owner veto and directionally-retuned M30-expansion gate.
+- [ ] PENDING FIRST: test body-close back through original swept liquidity as strong H invalidation.
+- [ ] PENDING SECOND: test +2R existing-50%-fraction protection vs current +3R controls.
+- [ ] Continue cross-year remaining-loss taxonomy from H2; H3 stays shadow.
+- [ ] Reduce 2023 loss streak without a 2023-specific veto and without deleting TP5 winners.
+
+### H / L episode interaction — ACTIVE P1
+
+- [x] Reproduce five H-loss -> later-L recovery links.
+- [x] Reproduce four of five as net-positive under current L payoff.
+- [x] Reproduce standalone L non-overlap with H exposure in current sample.
+- [x] Produce descriptive combined base and harvest ledgers.
+- [ ] Define deterministic cumulative episode risk budget.
+- [ ] Define position/exposure ordering for possible H then L.
+- [ ] Keep standalone H, standalone L and combined descriptive results separately visible.
+- [ ] Do not hindsight-skip H merely because L later appeared.
+- [ ] Do not promote combined portfolio before execution/order semantics are explicit.
+
+### Still deferred / forbidden
+
+- [x] No generic M1 early trigger.
+- [x] No delayed-recovery equivalence.
+- [x] No generic-pivot Module-L expansion.
+- [x] No broad SL widening.
+- [x] No static HTF threshold mining.
+- [x] No quarter/direction vetoes.
+- [x] No fixed 10R objective promotion.
+- [ ] Do not start compression-breakout module yet.
+- [ ] Do not start failed-auction/reversal module yet.
+- [ ] Do not open 2022.
+- [ ] Do not touch 2021.

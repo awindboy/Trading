@@ -331,3 +331,189 @@ Two H experiments were started but not completed at the session boundary:
 Do not assume outcomes for either; resume them explicitly.
 
 2022 remains CLOSED. 2021 remains untouched. Other market-state modules remain deferred.
+## V3-003E routing update — 2026-08-26
+
+Read immediately after V3-003D:
+
+```text
+V3_003E_DUAL_RELOAD_REPRO_AND_IMPROVEMENT_RESULTS.md
+```
+
+V3-003E supersedes the stale V3-003D statement that Module L/H replay parity is still the
+next research task.
+
+The integrated replay is now committed as:
+
+```text
+scripts/v3_003e_dual_module_repro.py
+```
+
+with immutable discovery ledgers under:
+
+```text
+docs/ea/v3/ledgers/
+```
+
+Required startup parity:
+
+```text
+Candidate A:
+2023 40
+2024 29
+2025 27
+
+Module L:
+11 physical trades
+11 checkpoint hits
+10 full +1R hits
+1 exact-mirror checkpoint
+7 residual +2R hits under current payoff
+
+Module H base k2 / 50%:
+48 fills
+14 TP5
+31 SL
+3 BE
+
+Module H direct-transfer:
+44 fills
+14 TP5
+27 SL
+3 BE
+
+Module H direct-transfer + not-BOTH shadow:
+40 fills
+14 TP5
+23 SL
+3 BE
+
+H -> L recovery links:
+5
+4 net-positive after current L payoff
+```
+
+Current Module-L primary payoff:
+
+```text
+checkpoint=min(1R,0.5 D1 ATR)
+-> realize 50%
+-> residual BE
+-> residual +2R
+```
+
+Current Module-H research hierarchy:
+
+```text
+H0 broken-level retest
+H1 50% accepted-leg pullback
+H2 direct M1 ownership-transfer eligibility
+H3 direct + BOTH-exclusion SHADOW ONLY
+```
+
+`direct transfer` has stronger evidence than `BOTH exclusion`.
+Do not freeze BOTH exclusion yet because the reference H-fill sample does not provide a
+meaningful independent 2025 BOTH test.
+
+The previous session ended with **two H experiments started but unfinished**:
+
+1. body-close back through the original swept-liquidity level as a stronger post-fill H
+   invalidation;
+2. +2R existing-50%-fraction protection before +3R-BE / +5R.
+
+Resume those two experiments first after parity verification. Do not assume either result.
+
+Other market-state modules remain deferred. 2022 remains CLOSED. 2021 remains untouched.
+No production EA change is authorized.
+## V3-003E routing update — 2026-08-26
+
+Read immediately after V3-003D:
+
+```text
+V3_003E_DUAL_RELOAD_REPRO_AND_IMPROVEMENT_RESULTS.md
+```
+
+V3-003E supersedes the stale V3-003D statement that Module L/H replay parity is still the
+next research task.
+
+The integrated replay is now committed as:
+
+```text
+scripts/v3_003e_dual_module_repro.py
+```
+
+with immutable discovery ledgers under:
+
+```text
+docs/ea/v3/ledgers/
+```
+
+Required startup parity:
+
+```text
+Candidate A:
+2023 40
+2024 29
+2025 27
+
+Module L:
+11 physical trades
+11 checkpoint hits
+10 full +1R hits
+1 exact-mirror checkpoint
+7 residual +2R hits under current payoff
+
+Module H base k2 / 50%:
+48 fills
+14 TP5
+31 SL
+3 BE
+
+Module H direct-transfer:
+44 fills
+14 TP5
+27 SL
+3 BE
+
+Module H direct-transfer + not-BOTH shadow:
+40 fills
+14 TP5
+23 SL
+3 BE
+
+H -> L recovery links:
+5
+4 net-positive after current L payoff
+```
+
+Current Module-L primary payoff:
+
+```text
+checkpoint=min(1R,0.5 D1 ATR)
+-> realize 50%
+-> residual BE
+-> residual +2R
+```
+
+Current Module-H research hierarchy:
+
+```text
+H0 broken-level retest
+H1 50% accepted-leg pullback
+H2 direct M1 ownership-transfer eligibility
+H3 direct + BOTH-exclusion SHADOW ONLY
+```
+
+`direct transfer` has stronger evidence than `BOTH exclusion`.
+Do not freeze BOTH exclusion yet because the reference H-fill sample does not provide a
+meaningful independent 2025 BOTH test.
+
+The previous session ended with **two H experiments started but unfinished**:
+
+1. body-close back through the original swept-liquidity level as a stronger post-fill H
+   invalidation;
+2. +2R existing-50%-fraction protection before +3R-BE / +5R.
+
+Resume those two experiments first after parity verification. Do not assume either result.
+
+Other market-state modules remain deferred. 2022 remains CLOSED. 2021 remains untouched.
+No production EA change is authorized.

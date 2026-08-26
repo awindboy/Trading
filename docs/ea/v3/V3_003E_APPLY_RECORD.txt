@@ -1,0 +1,6 @@
+Applied: 2026-08-26
+Required base HEAD: f65344ead62912707f6f490c86cdafcfccb20e64
+Package: V3_003E_DUAL_RELOAD_REPRO_AND_IMPROVEMENT_UPDATE
+Adds replay scripts and immutable ledgers.
+No EA/MQL5 source modified.
+2022 remains closed. 2021 untouched.

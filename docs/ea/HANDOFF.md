@@ -1,8 +1,8 @@
-﻿> **V3 ACTIVE ROUTING — 2026-08-26 / V3-003E EMERGENCY HANDOFF**  
-> Current active research phase is `V3-003D DUAL RELOAD MODULE RESEARCH`; latest continuation record is `docs/ea/v3/V3_003E_DUAL_RELOAD_MODULE_ADVANCES_AND_EMERGENCY_HANDOFF.md`.  
-> Read `docs/ea/v3/AGENTS_V3.md`, `docs/ea/v3/HANDOFF_V3.md`, `docs/ea/v3/RESEARCH_STATE_V3.md`, `V3_003D_DUAL_RELOAD_MODULE_RESEARCH_SYNTHESIS.md`, then `V3_003E_DUAL_RELOAD_MODULE_ADVANCES_AND_EMERGENCY_HANDOFF.md` before any new strategy work.  
-> First task in the next session is to commit/reproduce the missing Candidate-A -> Module-L -> Module-H replay and ledgers. Do not tune before that.  
-> Continue Module L and Module H only. Other auction-state modules remain deferred. 2022 CLOSED; 2021 untouched.
+﻿> **V3 ACTIVE ROUTING — 2026-08-26 / V3-003E**  
+> Current active line is `V3-003D DUAL RELOAD MODULE RESEARCH`; the latest result/continuation authority is `docs/ea/v3/V3_003E_DUAL_RELOAD_REPRO_AND_IMPROVEMENT_RESULTS.md`.  
+> Read V3-003D, then V3-003E before any new strategy work. Verify `scripts/v3_003e_dual_module_repro.py` parity first.  
+> Continue Module L and Module H only. First unfinished work: H swept-liquidity body-close invalidation and H +2R 50% protection experiment.  
+> Other auction-state modules remain deferred. 2022 CLOSED; 2021 untouched.
 
 # EA Development Handoff
 
