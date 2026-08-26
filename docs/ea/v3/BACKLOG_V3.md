@@ -146,3 +146,104 @@ Status: `ACTIVE`
 - [ ] Reject rather than retune if 2022 reverses the relationship.
 - [ ] If independent validation survives, promote to exact-tick replay before MT5 implementation.
 - [ ] Keep 2021 untouched.
+## V3-003D — dual reload module research (ACTIVE P0)
+
+### P0 — reproducibility first
+
+- [ ] Commit a dedicated Module-L replay script from raw 2023-2025 GOLD M1.
+- [ ] Commit a dedicated Module-H replay script from the same raw data.
+- [ ] Commit physically deduplicated event ledgers for both modules.
+- [ ] Reproduce Candidate-A identity exactly before downstream Module-L/H logic.
+- [ ] Reproduce exact mirrors with identical event time and risk.
+- [ ] Reproduce natural source-scale / physical-dedupe sensitivity.
+- [ ] Record $ / R / M30ATR / D1ATR / time metrics in the same ledger.
+- [ ] Do not add a new filter until these current-session results reproduce.
+
+### P0 — Module L: low-R / high-WR
+
+Primary research architecture:
+
+```text
+Candidate A virtual failure
+-> higher context remains alive
+-> correction forms deeper intermediate liquidity
+-> atomic same-bar sweep/recovery
+-> fresh same-direction M5 re-acceptance
+-> first real Module-L Entry
+```
+
+- [ ] Reproduce the physically deduplicated deep-requalification population.
+- [ ] Keep `min(1R, 0.5 D1 ATR)` and full 1R as explicit checkpoint controls.
+- [ ] Keep clean-M1 0.5R / 0.75R only as naive high-WR controls.
+- [ ] Reproduce delayed-recovery negative control.
+- [ ] Reproduce generic deeper-correction + first-M5-transition negative control.
+- [ ] Reproduce exact mirror checkpoint.
+- [ ] Test M15 adaptive intermediate source and M15 mentor-wave source independently.
+- [ ] Do not add k=1.0-only low-prominence events merely to increase count.
+- [ ] Build a failure taxonomy for any Module-L real loss.
+- [ ] Expand sample only through semantically independent source evidence, not threshold mining.
+- [ ] Keep the initial Candidate-A failure virtual in the primary Module-L design.
+
+### P0 — Module H: high-R / low-WR
+
+Primary research controls:
+
+```text
+H0:
+Candidate A
+-> clean M1 ownership path
+-> first broken-M5-level retest
+-> same sweep-extreme SL
+-> 5R
+
+H1 discovery candidate:
+Candidate A
+-> clean M1 ownership path
+-> first 50% acceptance-leg pullback
+-> same sweep-extreme SL
+-> +3R then BE
+-> final 5R
+```
+
+- [ ] Reproduce H0 and H1 with dedicated pending/fill semantics.
+- [ ] Keep H0 as the simple control; do not freeze 50% from discovery P/L.
+- [ ] Re-run natural 25/50/75/100% pullback variants without threshold optimization.
+- [ ] Reproduce 5R exact-mirror advantage.
+- [ ] Reproduce actual winner $ / D1ATR / holding-time distribution.
+- [ ] Reproduce +3R-BE non-interference with existing +5R winners.
+- [ ] Keep +3R 25% harvest as a separate secondary positive-frequency control.
+- [ ] Build cross-year failure taxonomy for the 5R losers.
+- [ ] Investigate the 2023 loss streak without a 2023-specific veto.
+- [ ] Do not lower TP simply to improve H win rate.
+- [ ] Keep 10R as a deferred extension until thesis lifetime and holding-cost semantics exist.
+
+### P1 — Module L / H episode interaction
+
+- [ ] Build one episode ledger linking H eligibility/fill/failure to later L requalification.
+- [ ] Track cumulative episode risk separately from per-trade R.
+- [ ] Test whether H-failure -> L-recovery is repeatable without double-counting exposure.
+- [ ] Do not combine standalone P/L until exposure / ordering is deterministic.
+
+### Explicit do-not-repeat list
+
+- [x] Do not replace M5 correction-completion with first M1 transition.
+- [x] Do not equate delayed recovery with atomic same-bar rejection.
+- [x] Do not restore mandatory FVG-midpoint/retest Entry.
+- [x] Do not globally widen SL because higher context survives.
+- [x] Do not use generic M1/M5 structural trailing for the final runner.
+- [x] Do not use +1R or +2R BE for Module-H 5R runner.
+- [x] Do not treat fast +1R as strategic-scale proof.
+- [x] Do not treat fixed 10R as a solved structural objective.
+- [x] Do not optimize low-R TP fractions from discovery P/L.
+- [x] Do not add low-prominence-only source events simply for more trades.
+- [x] Do not create quarter / direction vetoes.
+- [x] Do not reopen static HTF-state filter mining without new causal evidence.
+
+### Deferred until current dual-module work is complete
+
+- [ ] Compression-breakout module research.
+- [ ] Failed-auction / exhaustion reversal module research.
+- [ ] Other market-state portfolio expansion.
+- [ ] Cross-market expansion.
+- [ ] Open 2022 validation vault.
+- [ ] Touch 2021.

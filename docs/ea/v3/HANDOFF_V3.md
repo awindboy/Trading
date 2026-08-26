@@ -2,7 +2,7 @@
 
 Last updated: `2026-08-26`
 Repository base before V3 bootstrap: `0e7b1d5b39de1126394e88f85abf87cde167fc84`
-Current phase: `V3-003 GOLD AUCTION-STATE RECONSTRUCTION`
+Current phase: `V3-003D DUAL RELOAD MODULE RESEARCH`
 V1: `FROZEN`
 V2: `PAUSED / PRESERVED CONTROL`
 2021: `KEEP UNTOUCHED`
@@ -235,3 +235,55 @@ not rewrite Candidate A.
 
 2022 remains closed until independent validation is intentionally run under the frozen
 candidate. 2021 remains untouched.
+## V3-003D routing update — 2026-08-26
+
+Read first:
+
+```text
+V3_003D_DUAL_RELOAD_MODULE_RESEARCH_SYNTHESIS.md
+```
+
+Current active research is no longer "find one final reload rule".
+
+The reload line is now split into two **parallel research modules**:
+
+```text
+MODULE L — LOW-R / HIGH-WR
+    virtual Candidate-A failure
+    -> higher context survives
+    -> deeper intermediate liquidity
+    -> atomic same-bar sweep/recovery
+    -> fresh M5 re-acceptance
+    -> real high-precision Entry
+
+MODULE H — HIGH-R / LOW-WR
+    Candidate A
+    -> clean M1 ownership path
+    -> post-trigger structural pullback
+    -> same sweep-extreme SL
+    -> 5R asymmetric payoff research
+```
+
+Important routing boundaries:
+
+- `V3_RELOAD_CANDIDATE_A` remains the frozen common development benchmark.
+- Module L and Module H are **research candidates only**.
+- Current-session Module L/H numbers are discovery evidence until dedicated scripts and
+  immutable ledgers are committed and reproduce them.
+- Do not collapse Module L and Module H into one score/filter.
+- Do not reuse Module-L variables as Module-H gates or vice versa without independent
+  stage-specific validation.
+- Do not loosen M5 correction-completion merely to increase trade count.
+- Do not treat delayed recovery as equivalent to atomic same-bar rejection.
+- Do not restore mandatory FVG-retest Entry.
+- Do not widen SL merely because higher context survives after a stop.
+- Do not treat fixed 10R as a proven mentor objective.
+- Do not start compression-breakout / failed-auction-reversal modules yet; the user wants
+  the two current reload modules researched more deeply first.
+- 2022 remains closed.
+- 2021 remains untouched.
+- No production EA change is authorized.
+
+The next session's first concrete task is **reproducibility**, not another strategy idea:
+commit dedicated Module-L / Module-H replay scripts and physical event ledgers, then continue
+their separate failure-taxonomy and non-overfit improvement work.

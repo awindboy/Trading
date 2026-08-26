@@ -1,8 +1,8 @@
 # V3 Research State
 
 Status: `ACTIVE`
-Phase: `V3-001 RAW DATA LAB BOOTSTRAP`
-Date: `2026-08-24`
+Phase: `V3-003D DUAL RELOAD MODULE RESEARCH`
+Date: `2026-08-26`
 
 ## Problem statement
 
@@ -126,4 +126,41 @@ It is:
 Which GOLD auction state is active,
 and which strategy module belongs to that state?
 ```
+## V3-003D current state — dual reload modules (2026-08-26)
 
+Current classification:
+
+```text
+V3_RELOAD_CANDIDATE_A                     FROZEN DEVELOPMENT BENCHMARK
+Candidate A as strategic-destination rule DEMOTED / LOCAL-TIMING BENCHMARK
+R-only research objective                 DEMOTED
+Module L deep reload requalification      PROMISING / SMALL SAMPLE / REPRODUCIBILITY NEXT
+Module H structural-pullback 5R            PROMISING / REPRODUCIBILITY NEXT
+Module H 10R extension                     DEFERRED
+atomic same-bar recovery                   SUPPORTED VS DELAYED NEGATIVE CONTROL
+generic M1 early trigger                   REJECTED
+delayed-recovery equivalence               REJECTED
+broad SL widening                          REJECTED
+M1/M5 structural runner trailing           REJECTED
++1R/+2R BE for Module H                    REJECTED
++3R BE for Module H                        PROMISING CONTROL
+true deterministic destination hierarchy   UNSOLVED
+other auction-state modules                DEFERRED BY CURRENT USER ROUTING
+2022 validation                            CLOSED
+2021                                       UNTOUCHED
+```
+
+Research must now report both economic and physical market scale:
+
+```text
+R
+absolute GOLD dollars
+M30 ATR units
+D1 ATR units
+time / holding period
+spread/risk
+scenario/context invalidation
+```
+
+The next mandatory work is to reproduce Module L/H current-session discovery evidence in
+committed scripts and immutable ledgers before further strategy tuning.
