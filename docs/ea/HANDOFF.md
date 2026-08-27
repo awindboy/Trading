@@ -1,4 +1,10 @@
-﻿> **V4 ACTIVE ROUTING — 2026-08-27 / V4-001 REPRESENTATION TOURNAMENT**  
+> **V5 ACTIVE ROUTING — 2026-08-27 / SUCCESS-FIRST MARKET MECHANISM RESEARCH**  
+> Current phase: `V5-001 BOUNDARY INTERACTION EVENT-LEDGER DESIGN`.  
+> Start from successful-trader observations, translate patterns into falsifiable market mechanisms, then use statistics for validation.  
+> First empirical object: state-conditioned boundary resolution (`acceptance / rejection / unresolved`).  
+> No new Entry/SL/TP/sizing authority exists. V4 is paused/preserved; external validation vault and GOLD# 2021 remain closed.
+
+> **V4 ACTIVE ROUTING — 2026-08-27 / V4-001 REPRESENTATION TOURNAMENT**  
 > Claim-grade R0/R1/R2 research uses the frozen development panel; R1/R2 must follow leakage-safe Stage-A execution.  
 > Kronos/MOMENT are transfer diagnostics only because external pretraining provenance is not pristine V4 validation evidence.  
 > New major V4 model/RL/agent choices require a current literature/open-source review recorded in `docs/ea/v4/V4_LITERATURE_LEDGER.md`.  

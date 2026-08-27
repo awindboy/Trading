@@ -6718,3 +6718,70 @@ Decision:
 
 Reason:
 V4 exists to escape a closed loop of hand-authored assumptions. That objective is defeated if the research line simply replaces technical-analysis rules with one assistant-designed neural architecture. The tournament separates supervised-from-scratch, self-supervised financial dynamics and external pretrained priors while preserving contamination-aware OOS governance.
+
+---
+
+## D-167 — Open V5 Success-First Market Mechanism research
+
+Status: `ACTIVE / FROZEN ROUTING`
+Date: `2026-08-27`
+
+Decision:
+
+Open V5 as the active strategy-research line.
+
+V5 changes discovery order from signal/model-first to:
+
+```text
+verified successful trader
+-> observation
+-> pattern
+-> market concept
+-> falsifiable mechanism
+-> causal observables
+-> statistical validation
+-> strategy
+```
+
+V4 Representation Tournament is `PAUSED / PRESERVED`, not failed or erased.
+No V4 external validation data and no GOLD# 2021 data are opened by this decision.
+
+Reason:
+
+The project had repeatedly converted technical concepts into Boolean filters before sufficiently modeling what the
+patterns represented. Current successful-trader and microstructure research supports testing market-state and
+boundary-interaction mechanisms before another arbitrary next-return model.
+
+No production or EA authority is created.
+
+---
+
+## D-168 — V5-001 first empirical object is state-conditioned boundary resolution
+
+Status: `PRE-REGISTERED DISCOVERY`
+Date: `2026-08-27`
+
+Decision:
+
+The first V5 empirical study is not a new Entry rule.
+
+Build a shadow-only event ledger around causally pre-existing market boundaries and record the continuous interaction
+and post-event path before defining success/failure thresholds.
+
+Primary research object:
+
+```text
+pre-state
++ approach
++ boundary interaction
+-> acceptance / continuation
+OR rejection / failure
+OR unresolved balance
+```
+
+Initial discovery may use already-open 2023-2025 development markets. Any reference family explored in that population
+is discovery only.
+
+Tick volume is an activity proxy and must not be called true order flow/absorption.
+
+No V5 trade candidate may be promoted until a semantic state definition and independent validation contract are frozen.

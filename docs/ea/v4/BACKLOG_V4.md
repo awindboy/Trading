@@ -1,6 +1,6 @@
 # V4 Backlog
 
-Status: `ACTIVE`
+Status: `PAUSED / PRESERVED — V5 ACTIVE`
 
 ## V4-000 — bootstrap / governance
 
@@ -133,3 +133,8 @@ Do not choose PPO/SAC/Decision Transformer in advance. Algorithm selection follo
 - [x] Add pinned Kronos-mini diagnostic runner.
 - [x] Add MOMENT-1-small embedding diagnostic runner.
 - [ ] Run only if useful after/beside claim-grade tournament; do not use as validation rescue.
+
+
+## V5 transition — 2026-08-27
+Do not discard this backlog. Resume only through an explicit V5/V4 decision after semantic-state evidence is available
+or if the success-first line is closed.

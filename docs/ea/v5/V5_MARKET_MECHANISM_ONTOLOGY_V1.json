@@ -1,0 +1,57 @@
+{
+  "version": "V5 ontology v1",
+  "date": "2026-08-27",
+  "active_question": "state-conditioned boundary resolution",
+  "mechanisms": [
+    {
+      "id": "M-01",
+      "name": "BALANCE_CONTRACTION",
+      "status": "hypothesis_plus_stylized_volatility_state"
+    },
+    {
+      "id": "M-02",
+      "name": "DIRECTIONAL_EXPANSION_TREND_PERSISTENCE",
+      "status": "strong_empirical_support"
+    },
+    {
+      "id": "M-03",
+      "name": "REFERENCE_BOUNDARY_LIQUIDITY_CONCENTRATION",
+      "status": "microstructure_support"
+    },
+    {
+      "id": "M-04",
+      "name": "BREAKOUT_ACCEPTANCE",
+      "status": "primary_v5_001_object"
+    },
+    {
+      "id": "M-05",
+      "name": "BREAKOUT_REJECTION_FAILED_PRICE_DISCOVERY",
+      "status": "primary_v5_001_object"
+    },
+    {
+      "id": "M-06",
+      "name": "EFFORT_RESULT_PRICE_IMPACT_EFFICIENCY",
+      "status": "true_orderflow_supported_chart_proxy_limited"
+    },
+    {
+      "id": "M-07",
+      "name": "EXHAUSTION_SHORTENING_THRUST",
+      "status": "practitioner_hypothesis"
+    },
+    {
+      "id": "M-08",
+      "name": "PULLBACK_RELOAD_REACCUMULATION",
+      "status": "later"
+    },
+    {
+      "id": "M-09",
+      "name": "REGIME_CONDITIONAL_MEAN_REVERSION_VS_MOMENTUM",
+      "status": "later"
+    },
+    {
+      "id": "M-10",
+      "name": "PAYOFF_CONVEXITY_TRADE_LIFECYCLE",
+      "status": "system_level"
+    }
+  ]
+}

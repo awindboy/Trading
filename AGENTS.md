@@ -1,4 +1,10 @@
-﻿> **V4 ACTIVE AI-NATIVE RESEARCH ROUTING — 2026-08-27**  
+> **V5 ACTIVE SUCCESS-FIRST MECHANISM ROUTING — 2026-08-27**  
+> Active strategy research uses `docs/ea/v5/AGENTS_V5.md` and `docs/ea/v5/HANDOFF_V5.md`.  
+> V5 begins from verified successful-trader practice -> market concept -> falsifiable mechanism -> statistics -> strategy.  
+> Current phase is V5-001 boundary-interaction event-ledger design; no V5 trade rule or EA change is authorized.  
+> V4 Representation Tournament is paused/preserved, not rejected; its CUDA code/data remain available for later semantic-state research.
+
+> **V4 ACTIVE AI-NATIVE RESEARCH ROUTING — 2026-08-27**  
 > Active strategy research now uses `docs/ea/v4/AGENTS_V4.md` and `docs/ea/v4/HANDOFF_V4.md`.  
 > V3 is paused after V3-003G independent-validation failure and remains negative/mechanism authority.  
 > V1 remains frozen; V2 remains paused/preserved. No V4 production authority exists.  

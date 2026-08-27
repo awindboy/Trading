@@ -1,6 +1,6 @@
 # V4 AI-Native Trading Research Contract
 
-Status: `ACTIVE RESEARCH AUTHORITY`
+Status: `PAUSED / PRESERVED RESEARCH AUTHORITY`
 Date: `2026-08-27`
 Parent negative authority: `V3-003G Candidate B 2022 independent validation FAIL`
 Production authority: `NONE`
@@ -246,3 +246,9 @@ R4 MOMENT-1-small                           TRANSFER DIAGNOSTIC ONLY
 ```
 
 R3/R4 may never override a failed R1/R2 Stage-A gate. Before opening a new major V4 representation, foundation-model, RL or agent architecture, update `V4_LITERATURE_LEDGER.md` from current web/literature/maintained-open-source evidence first.
+
+
+## V5 disposition — 2026-08-27
+V4 is paused after the success-first mechanism pivot. It is not invalidated.
+Do not run R1/R2 as the active priority unless V5 explicitly re-opens the tournament.
+Prepared data, code, frozen protocols and negative/positive findings remain preserved.

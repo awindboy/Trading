@@ -1,7 +1,7 @@
 # V4 Development Handoff
 
 Last updated: `2026-08-27`
-Current phase: `V4-001 REPRESENTATION TOURNAMENT / R1+R2 CLAIM-GRADE CUDA RUN NEXT`
+Current phase: `PAUSED / PRESERVED — V5 SUCCESS-FIRST ACTIVE`
 V1: `FROZEN CONTROL`
 V2: `PAUSED / PRESERVED`
 V3: `PAUSED / NEGATIVE + MECHANISM AUTHORITY`
@@ -148,3 +148,9 @@ Next concrete action:
 3. run R1 and R2 official 3-seed Stage-A through `tools/run_claim_grade_tournament.ps1`;
 4. upload both lightweight result bundles plus `V4_001_TOURNAMENT_SUMMARY.json`;
 5. run R3/R4 only as optional transfer diagnostics, never as rescue gates.
+
+
+## V5 routing — 2026-08-27
+The R1/R2 CUDA tournament remains frozen and reproducible but is no longer the immediate task.
+Active research moved to `docs/ea/v5/` to test whether successful-trader market concepts can produce a better
+semantic problem formulation than generic next-return prediction.

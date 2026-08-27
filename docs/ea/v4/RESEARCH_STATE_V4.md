@@ -1,7 +1,7 @@
 # V4 Research State
 
-Status: `ACTIVE`
-Phase: `V4-001 REPRESENTATION TOURNAMENT / CLAIM-GRADE CUDA RUN NEXT`
+Status: `PAUSED / PRESERVED`
+Phase: `PAUSED — V5 SUCCESS-FIRST MECHANISM RESEARCH ACTIVE`
 Date: `2026-08-27`
 
 ## Current research question
@@ -97,3 +97,7 @@ GOLD# 2021                              UNTOUCHED
 ```
 
 External pretrained-model results do not have clean OOS authority unless their pretraining temporal/domain provenance can be audited against our evaluation period.
+
+
+## V5 disposition — 2026-08-27
+V4 remains a preserved representation-learning control. No V4 validation data were opened by this transition.
