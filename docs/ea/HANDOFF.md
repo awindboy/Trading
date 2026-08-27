@@ -1,5 +1,5 @@
 > **V5 ACTIVE ROUTING — 2026-08-27 / SUCCESS-FIRST MARKET MECHANISM RESEARCH**  
-> Current phase: `V5-001 BOUNDARY INTERACTION EVENT-LEDGER DESIGN`.  
+> Current phase: `V5-001A PREVIOUS-DAY PROXY INSUFFICIENT / V5-002 BALANCE-BOUNDARY PREREGISTERED`.  
 > Start from successful-trader observations, translate patterns into falsifiable market mechanisms, then use statistics for validation.  
 > First empirical object: state-conditioned boundary resolution (`acceptance / rejection / unresolved`).  
 > No new Entry/SL/TP/sizing authority exists. V4 is paused/preserved; external validation vault and GOLD# 2021 remain closed.

@@ -116,3 +116,42 @@ Last pass: `2026-08-27`
   https://ojs.victoria.ac.nz/nzref/article/view/1735
 - V5 use: low/high volatility states persist.
 - Critical caveat: volatility clustering alone does NOT prove `contraction -> imminent expansion`.
+## V5-001A adversarial/source addendum — 2026-08-27
+
+### A-007 Lo, Mamaysky, Wang — Foundations of Technical Analysis
+- Journal of Finance 2000 / NBER WP 7613.
+- https://www.nber.org/papers/w7613
+- Several chart-pattern classes carried incremental distributional information in historical U.S. equities.
+- V5 lesson: pattern information can exist, but shape recognition alone does not identify economic mechanism or
+  guarantee tradable expectancy.
+
+### A-008 Kavajecz & Odders-White — Technical Analysis and Liquidity Provision
+- Review of Financial Studies 17(4), 2004.
+- DOI: 10.1093/rfs/hhg057
+- Reported support/resistance levels coinciding with limit-order-book depth peaks.
+- V5 lesson: some technical levels can correspond to liquidity structure, but this does not make every convenient
+  prior high/low such a level.
+
+### A-009 Marshall, Cahan & Cahan — Does intraday technical analysis in the U.S. equity market have value?
+- Journal of Empirical Finance 15(2), 2008.
+- DOI: 10.1016/j.jempfin.2006.05.003
+- 7,846 popular intraday technical rules showed no profitability after data-snooping correction.
+- V5 lesson: success-first mechanism work still requires harsh negative controls.
+
+### A-010 Bajgrowicz & Scaillet — Technical trading revisited
+- Journal of Financial Economics 106(3), 2012.
+- DOI: 10.1016/j.jfineco.2012.06.001
+- Historical technical-rule discoveries did not persist ex ante and low transaction costs erased performance.
+- V5 lesson: apparent rule discovery and exploitable persistent edge are different questions.
+
+### S-013 Crabel — Accumulation: Where Trends Are Born
+- 2026-02-17.
+- https://tobycrabel.substack.com/p/accumulation-where-trends-are-born
+- Key V5 correction: a trading range is a range first; accumulation/distribution labels are known only later.
+  Character inside the range is the research object.
+
+### S-014 Crabel — Mark-Up: The Anatomy of a Trend
+- 2026-02-19.
+- https://tobycrabel.substack.com/p/mark-up-the-anatomy-of-a-trend
+- Key V5 correction: breakout is described as release from contraction into expansion; later pullback/channel/range
+  stages have different character.

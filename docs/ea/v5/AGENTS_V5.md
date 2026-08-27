@@ -216,6 +216,20 @@ Any eventual production candidate still targets:
 
 However, V5 corpus/mechanism discovery is **not allowed to exclude successful traders merely because their own win rate is below 50%**. Discovery evidence and final project requirements are separate.
 
+
+### 3.11 Mandatory recursive falsification
+
+Before promoting any V5 interpretation, read `V5_RECURSIVE_FALSIFICATION_PROTOCOL.md`.
+
+Every major result must explicitly test:
+- the opposite thesis;
+- a simpler confounder explanation;
+- a placebo/negative control;
+- recurrence of prior V1-V4 failures;
+- whether confirmation consumed payoff geometry.
+
+A result that fails a frozen adversarial control is recorded and downgraded; it is not rescued with another threshold.
+
 ## 4. V4 disposition
 
 V4 is not declared false.

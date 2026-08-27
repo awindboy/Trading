@@ -1,7 +1,7 @@
 # V5 Development Handoff
 
 Last updated: `2026-08-27`
-Current phase: `V5-001 BOUNDARY INTERACTION EVENT-LEDGER DESIGN`
+Current phase: `V5-001A PREVIOUS-DAY PROXY INSUFFICIENT / V5-002 BALANCE-BOUNDARY PREREGISTERED`
 Production authority: `NONE`
 
 ## Why V5 opened
@@ -114,3 +114,15 @@ GOLD# 2022 remains consumed V3 validation, not pristine.
 - no best-boundary / best-horizon selection followed by calling the same data validation;
 - no AI/RL rescue before the semantic state question is defined;
 - no EA modification in V5-001.
+
+
+## V5-001A result — 2026-08-27
+Read `V5_001A_PREVIOUS_DAY_BOUNDARY_RESULTS.md`.
+
+The unmatched previous-day extreme result was selection-confounded. After causal pre-state matching, PDH/PDL did not
+show stable directional resolution versus internal Q75/Q25 controls.
+
+Classification: `OBSERVABLE PROXY INSUFFICIENT`.
+
+Do not rescue previous-day high/low with filters. V5-002 returns to the trader corpus and tests whether the continuous
+character of a *formed range itself* conditions its later breakout.

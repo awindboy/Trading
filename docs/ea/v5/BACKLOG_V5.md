@@ -12,7 +12,34 @@ Status: `ACTIVE`
 - [x] Record practitioner + academic source ledger.
 - [x] Separate discovery trader win rates from final project >=50% WR target.
 
-## V5-001A — boundary interaction event ledger
+## V5-001A — previous-day boundary interaction event ledger
+
+- [x] Freeze previous-day extreme + internal placebo definitions before full interpretation.
+- [x] Build 7,488-event / 99-column full-path ledger.
+- [x] Verify causal pre-event fields and horizon coverage.
+- [x] Run pooled descriptive analysis.
+- [x] Run same-day paired placebo.
+- [x] Run causal pre-state nearest-neighbor adversarial control.
+- [x] Regress result against successful-trader corpus.
+- [x] Classify `OBSERVABLE PROXY INSUFFICIENT`.
+- [x] Do not promote/rescue PDH/PDL.
+
+## V5-002 — balance-generated boundary research
+
+- [x] Pre-register 60m / 240m / 1440m scales.
+- [x] Define trailing range causally; current bar excluded.
+- [x] Define episode de-duplication without P/L cooldown.
+- [x] Keep balance descriptors continuous; no threshold.
+- [x] Pre-register permutation / volatility / geometry falsification controls.
+- [ ] Build full V5-002 event ledger.
+- [ ] Run data/censoring census before mechanism interpretation.
+- [ ] Analyze Q1 resolution direction.
+- [ ] Analyze Q2 interaction intensity if Q1 fails.
+- [ ] Analyze Q3 early-state incremental information.
+- [ ] Report every market/year/direction/scale.
+- [ ] Freeze or close the mechanism before any strategy design.
+
+## Archived original V5-001A checklist
 
 - [ ] Freeze exact reference-family definitions before reading their outcome differences.
 - [ ] Implement shadow-only event-ledger builder.

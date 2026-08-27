@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-27",
+  "status": "OBSERVABLE PROXY INSUFFICIENT",
+  "source_head": "ca21cad65ca4bea50c00e0cb9f7f322165f8aa48",
+  "ledger": {
+    "rows": 7488,
+    "columns": 99,
+    "sha256": "1625c49e9d97b229e8f842735fff3d3dd0cf51fa5a459d1394eafa4a5111dc19"
+  },
+  "counts": {
+    "BTCUSD#": 2410,
+    "USDJPY#": 1706,
+    "XAUEUR#": 1688,
+    "GOLD#": 1684
+  },
+  "reference_counts": {
+    "PD_PLACEBO_Q75": 2260,
+    "PD_PLACEBO_Q25": 2007,
+    "PD_EXTREME_HIGH": 1781,
+    "PD_EXTREME_LOW": 1440
+  },
+  "key_results": {
+    "unmatched_mean_res60_extreme": 0.025805,
+    "unmatched_mean_res60_placebo": 0.006944,
+    "same_day_paired_ext_minus_placebo_res15": -0.006793,
+    "same_day_paired_ext_minus_placebo_res60": -0.029708,
+    "same_day_paired_ext_minus_placebo_res240": -0.09987,
+    "prestate_matched_res60_diff": -0.002706,
+    "prestate_matched_delta60_diff": -9.04e-05,
+    "prestate_matched_absres60_diff": 0.012294,
+    "pca_explained": [
+      0.462081,
+      0.217511,
+      0.09532
+    ]
+  },
+  "authority": "NO_STRATEGY_AUTHORITY"
+}

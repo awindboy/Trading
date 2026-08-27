@@ -1,7 +1,7 @@
 # V5 Research State
 
 Status: `ACTIVE`
-Phase: `V5-001 BOUNDARY INTERACTION EVENT-LEDGER DESIGN`
+Phase: `V5-001A CLOSED / V5-002 BALANCE-GENERATED BOUNDARY PREREGISTERED`
 Date: `2026-08-27`
 
 ## Central research question
@@ -79,3 +79,10 @@ Closed:
 
 Consumed:
 - GOLD# 2022.
+
+
+## V5-001A frozen result
+`previous broker-day high/low` is not promoted as a privileged boundary.
+The pooled apparent continuation advantage did not survive same-day placebo and causal pre-state controls.
+
+Next: V5-002, with all outcomes unopened under its new frozen design.

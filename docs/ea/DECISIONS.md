@@ -6785,3 +6785,68 @@ is discovery only.
 Tick volume is an activity proxy and must not be called true order flow/absorption.
 
 No V5 trade candidate may be promoted until a semantic state definition and independent validation contract are frozen.
+---
+
+## D-169 — Mandatory recursive falsification checkpoints in V5
+
+Status: `ACTIVE / FROZEN GOVERNANCE`
+Date: `2026-08-27`
+
+Every major V5 interpretation must explicitly revisit:
+- the opposite thesis;
+- simpler confounders;
+- placebo/negative controls;
+- prior V1-V4 recurrence;
+- causal timing;
+- payoff consumed by confirmation;
+- a kill condition.
+
+Read `docs/ea/v5/V5_RECURSIVE_FALSIFICATION_PROTOCOL.md`.
+
+The purpose is to prevent a plausible first explanation from becoming self-reinforcing project truth.
+
+---
+
+## D-170 — Previous-day extreme is not promoted as a meaningful V5 boundary
+
+Status: `FROZEN NEGATIVE / PROXY-INSUFFICIENT RESULT`
+Date: `2026-08-27`
+
+V5-001A built 7,488 first-interaction events across GOLD#, BTCUSD#, XAUEUR# and USDJPY# 2023-2025.
+
+The unmatched pooled result initially made PDH/PDL look more continuation-friendly than internal Q75/Q25 placebo levels.
+Same-day paired and causal pre-state matched controls removed that interpretation.
+
+Frozen classification:
+
+```text
+OBSERVABLE PROXY INSUFFICIENT
+```
+
+Do not rescue PDH/PDL with direction/session/threshold filters.
+No Entry/SL/TP/sizing authority is created.
+
+---
+
+## D-171 — Pre-register V5-002 balance-generated boundary discovery
+
+Status: `PRE-REGISTERED / OUTCOMES UNOPENED UNDER THIS DESIGN`
+Date: `2026-08-27`
+
+V5-002 tests rolling pre-break ranges at all of:
+
+```text
+60m / 240m / 1440m
+```
+
+The range character remains continuous:
+directional efficiency, non-overlapping contraction ratio, realized-volatility ratio, midpoint-crossing density,
+boundary age, activity ratio and spread state.
+
+No `balance threshold` is selected in V5-002A.
+All scales/markets/years/directions must be reported.
+
+Primary question:
+does pre-break range character explain later resolution direction after adversarial controls, or only interaction intensity?
+
+No strategy authority.
