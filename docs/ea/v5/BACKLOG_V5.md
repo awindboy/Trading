@@ -22,6 +22,8 @@ Current phase: `V5-034A EXTERNAL VALIDATION`
 - [x] Stop development rescue/filter mining.
 - [x] Freeze V5-034A candidate and external validation gate.
 - [x] Add exact reproducible external validation runner.
+- [x] Complete development-data replay parity audit before opening external outcomes.
+- [x] Freeze two-phase raw SHA-256 preflight + deterministic weekly-block bootstrap/gate implementation.
 - [x] Write next-session operating protocol.
 
 ## Immediate — data acquisition / validation

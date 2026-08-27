@@ -172,3 +172,28 @@ Do not:
 - use GOLD# 2022 to repair the candidate.
 
 Next authority is `V5_034A_EXTERNAL_VALIDATION_CONTRACT.md`.
+
+## Pre-validation replay parity correction — 2026-08-27
+
+Before external data were opened, the original V5-034 replay was rerun on the exact development bundles and reproduced
+the figures above. A timing audit found one BTCUSD# trade where the code checked same-M1 BE high/low before an adverse
+240m exit that the written contract executes at that M1 open.
+
+Contract-correct ordering changes only that trade by `+0.046164R`. Canonical parity self-test becomes:
+
+```text
+N                    406
+WR                   53.9408867%
+avg positive net R   +1.196798R
+EV                   +0.148163R/trade
+total net R          +60.154367R
+avg recorded cost     0.095477R/trade
+```
+
+The headline rounded development classification remains `DEVELOPMENT PASS / VALIDATION REQUIRED`. No filter, market,
+timeframe, Entry, stop, partial fraction or runner condition was changed.
+
+The deterministic pre-validation bootstrap is now frozen at 100,000 symbol x ISO-week resamples with seed 5034; on
+the corrected development ledger its pooled EV 95% interval is `[-0.020302R, +0.336264R]`. It still crosses zero.
+
+Read `V5_034A_PREVALIDATION_PARITY_AUDIT.md` before external replay.

@@ -48,6 +48,26 @@ using the exact candidate freeze.
 
 No development recalibration.
 
+### 4.1 Raw identity preflight
+
+Before any outcome computation, run the replay with `--preflight-only` and persist `V5_034_INPUT_AUDIT.json`.
+The audit records raw-file SHA-256, file order, point size, coverage and structural integrity. The full replay requires
+that saved audit through `--expected-audit` and fails closed if a raw hash, path/order or point changes.
+
+The PowerShell runner performs this two-phase sequence automatically.
+
+### 4.2 Completed-bar exit ordering
+
+For a runner already active when an adverse completed 240m signal becomes available at timestamp `T`:
+
+```text
+first:  execute the adverse exit at the next available M1 open at/after T
+then:   intrabar high/low observations in that M1 bar would matter only if the position still existed
+```
+
+Therefore the open-time adverse exit has priority over a same-M1 intrabar BE touch. This is execution-order parity,
+not a new exit rule.
+
 ## 5. Level-A validation gate
 
 All must pass:
@@ -90,7 +110,19 @@ Weekly symbol-week block-bootstrap 95% interval for pooled EV must have:
 lower bound > 0
 ```
 
-If A-D pass but E fails narrowly, classification is `INCONCLUSIVE`, not PASS and not permission to retune.
+Operational definition frozen before external outcomes:
+
+```text
+cluster       = symbol x ISO calendar week of fill_ts
+resampling    = observed clusters with replacement; preserve all trades inside sampled blocks
+replications  = 100000
+RNG seed      = 5034
+interval      = empirical 2.5% / 97.5% quantiles
+```
+
+If A-D pass but E fails, the automated Level-A classification is `INCONCLUSIVE_UNCERTAINTY`, not PASS and not
+permission to retune. This conservative operationalization removes an undefined post-result judgement about how
+"narrow" the failure was.
 
 ### F. Sample adequacy
 
