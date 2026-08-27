@@ -1,0 +1,26 @@
+{
+  "XAUJPY#": {
+    "point": "FILL_FROM_MT5_SYMBOL_SPEC",
+    "files": [
+      "C:\\\\PATH\\\\XAUJPY#_M1_2023_2025.csv"
+    ]
+  },
+  "XAUCNH#": {
+    "point": "FILL_FROM_MT5_SYMBOL_SPEC",
+    "files": [
+      "C:\\\\PATH\\\\XAUCNH#_M1_2023_2025.csv"
+    ]
+  },
+  "GAUCNH#": {
+    "point": "FILL_FROM_MT5_SYMBOL_SPEC",
+    "files": [
+      "C:\\\\PATH\\\\GAUCNH#_M1_2023_2025.csv"
+    ]
+  },
+  "GAUUSD#": {
+    "point": "FILL_FROM_MT5_SYMBOL_SPEC",
+    "files": [
+      "C:\\\\PATH\\\\GAUUSD#_M1_2023_2025.csv"
+    ]
+  }
+}

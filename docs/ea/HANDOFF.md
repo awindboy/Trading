@@ -1,8 +1,8 @@
 > **V5 ACTIVE ROUTING — 2026-08-27 / SUCCESS-FIRST MARKET MECHANISM RESEARCH**  
-> Current phase: `V5-001A PREVIOUS-DAY PROXY INSUFFICIENT / V5-002 BALANCE-BOUNDARY PREREGISTERED`.  
+> Current phase: `V5-034A FIRST CROSS 240M EXTERNAL VALIDATION / CANDIDATE FROZEN`.  
 > Start from successful-trader observations, translate patterns into falsifiable market mechanisms, then use statistics for validation.  
-> First empirical object: state-conditioned boundary resolution (`acceptance / rejection / unresolved`).  
-> No new Entry/SL/TP/sizing authority exists. V4 is paused/preserved; external validation vault and GOLD# 2021 remain closed.
+> Frozen candidate: 240m First Cross + causal price pivot + structural stop + 50% at +1R + BE EMA20/slow runner.  
+> Development PASS only; external validation vault may be opened only under V5-034A. GOLD# 2021 remains closed; no EA/production authority exists.
 
 > **V4 ACTIVE ROUTING — 2026-08-27 / V4-001 REPRESENTATION TOURNAMENT**  
 > Claim-grade R0/R1/R2 research uses the frozen development panel; R1/R2 must follow leakage-safe Stage-A execution.  

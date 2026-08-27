@@ -1,86 +1,63 @@
 # V5 Backlog
 
 Status: `ACTIVE`
+Current phase: `V5-034A EXTERNAL VALIDATION`
 
-## V5-000 — governance / corpus
+## Completed research
 
-- [x] Open success-first mechanism research line.
-- [x] Preserve V1-V4 history.
-- [x] Freeze corpus inclusion/evidence rules.
-- [x] Build Trader Corpus V1.
-- [x] Build Market Mechanism Ontology V1.
-- [x] Record practitioner + academic source ledger.
-- [x] Separate discovery trader win rates from final project >=50% WR target.
+- [x] V5 success-first governance / trader corpus / mechanism ontology.
+- [x] V5-001A previous-day boundary adversarial test.
+- [x] V5-002 balance-generated boundary study.
+- [x] V5-003 cross-scale trendability test.
+- [x] V5-004 through V5-025 success-first setup/mechanism cycle.
+- [x] V5-026 First Cross broad reproduction.
+- [x] V5-027 causal price-pivot confirmation.
+- [x] V5-027B 240m/480m higher-timeframe bridge discovery.
+- [x] V5-028A exact M1 replay.
+- [x] V5-029A 1R-half + structural runner.
+- [x] V5-030A 1R-half + EMA20/slow runner.
+- [x] Freeze V5-030A as first V5 development PASS.
+- [x] V5-031A daily context negative follow-up.
+- [x] V5-032A volatility-adequacy negative follow-up.
+- [x] Stop development rescue/filter mining.
+- [x] Freeze V5-034A candidate and external validation gate.
+- [x] Add exact reproducible external validation runner.
+- [x] Write next-session operating protocol.
 
-## V5-001A — previous-day boundary interaction event ledger
+## Immediate — data acquisition / validation
 
-- [x] Freeze previous-day extreme + internal placebo definitions before full interpretation.
-- [x] Build 7,488-event / 99-column full-path ledger.
-- [x] Verify causal pre-event fields and horizon coverage.
-- [x] Run pooled descriptive analysis.
-- [x] Run same-day paired placebo.
-- [x] Run causal pre-state nearest-neighbor adversarial control.
-- [x] Regress result against successful-trader corpus.
-- [x] Classify `OBSERVABLE PROXY INSUFFICIENT`.
-- [x] Do not promote/rescue PDH/PDL.
+- [ ] Export/find `XAUJPY#` M1 2023-2025 from the same broker/feed family.
+- [ ] Export/find `XAUCNH#` M1 2023-2025.
+- [ ] Export/find `GAUCNH#` M1 2023-2025.
+- [ ] Export/find `GAUUSD#` M1 2023-2025.
+- [ ] Verify timestamps, ordering, OHLC, spread, point size and coverage.
+- [ ] Record SHA-256 identities before outcome analysis.
+- [ ] Create `config/v5_034_external_data_map.local.json`.
+- [ ] Run frozen `scripts/v5_034_first_cross_validation.py`.
+- [ ] Apply all V5-034A validation gates without retuning.
+- [ ] Write immutable PASS / FAIL / INCONCLUSIVE result.
+- [ ] Keep GOLD# 2021 closed until an explicit external-validation PASS decision.
 
-## V5-002 — balance-generated boundary research
+## If external PASS
 
-- [x] Pre-register 60m / 240m / 1440m scales.
-- [x] Define trailing range causally; current bar excluded.
-- [x] Define episode de-duplication without P/L cooldown.
-- [x] Keep balance descriptors continuous; no threshold.
-- [x] Pre-register permutation / volatility / geometry falsification controls.
-- [ ] Build full V5-002 event ledger.
-- [ ] Run data/censoring census before mechanism interpretation.
-- [ ] Analyze Q1 resolution direction.
-- [ ] Analyze Q2 interaction intensity if Q1 fails.
-- [ ] Analyze Q3 early-state incremental information.
-- [ ] Report every market/year/direction/scale.
-- [ ] Freeze or close the mechanism before any strategy design.
+- [ ] Freeze candidate/result hash.
+- [ ] Pre-register GOLD# 2021 final temporal confirmation.
+- [ ] Run GOLD# 2021 unchanged.
+- [ ] If temporal confirmation survives, implement isolated MT5 research EA.
+- [ ] Verify Python/MT5 signal/fill/exit parity.
+- [ ] Run Every Tick Based on Real Ticks.
+- [ ] Add commission/slippage/full execution-cost accounting.
+- [ ] Only then research portfolio/exposure.
 
-## Archived original V5-001A checklist
+## If external FAIL
 
-- [ ] Freeze exact reference-family definitions before reading their outcome differences.
-- [ ] Implement shadow-only event-ledger builder.
-- [ ] Verify all reference timestamps are causal.
-- [ ] Record full post-event path before discrete success/failure labels.
-- [ ] Preserve right-censored events.
-- [ ] Record previous-day/session high/low interactions.
-- [ ] Decide whether confirmed swing references can be added without importing V3 semantic authority.
-- [ ] Add continuous approach metrics.
-- [ ] Add continuous penetration/dwell/re-entry metrics.
-- [ ] Add spread and tick-volume activity proxies.
-- [ ] Explicitly name activity-only measure `EFFORT_RESULT_PROXY`.
-- [ ] Record market/year/direction/reference counts.
-- [ ] Run OFF/ON non-interference if EA instrumentation is ever used.
+- [ ] Record failure before opening a new discovery idea.
+- [ ] Do not rescue V5-030A with a filter.
+- [ ] Return to success-first trader corpus.
+- [ ] Require a genuinely different mechanism and new preregistration.
 
-## V5-001B — mechanism analysis
+## Deferred
 
-- [ ] Cluster/describe interaction paths without P/L optimization.
-- [ ] Test whether prior state changes transition distributions.
-- [ ] Test approach character vs acceptance/rejection.
-- [ ] Test repeated boundary interaction vs resolution.
-- [ ] Test activity/price-progress proxy.
-- [ ] Report bootstrap uncertainty.
-- [ ] Check market/year stability.
-- [ ] Identify whether MT5 data are insufficient for order-flow claims.
-
-## V5-001C — semantic state freeze
-
-Only after V5-001A/B:
-
-- [ ] pre-register continuous -> discrete semantic state definition;
-- [ ] freeze candidate inputs;
-- [ ] freeze validation allocation;
-- [ ] no retune on validation reversal.
-
-## Later
-
-- [ ] effort/result with true order-flow/depth data if justified;
-- [ ] trend/pullback state research;
-- [ ] volatility contraction/expansion research;
-- [ ] regime-conditioned momentum vs mean reversion;
-- [ ] AI representation over semantic states if V5 primitives add information;
-- [ ] exit/lifecycle architecture;
-- [ ] full cost/exact tick/MT5 only after mechanism candidate survives.
+- [ ] true order-flow/depth research if price-only observables prove insufficient;
+- [ ] V4 representation learning over semantic states only after a validated mechanism exists;
+- [ ] RL only after a sequential control problem remains after simpler policy baselines.

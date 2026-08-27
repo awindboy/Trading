@@ -52,10 +52,13 @@ On every V5 session:
 7. read `V5_000_SUCCESS_FIRST_RESEARCH_CONTRACT.md`;
 8. read `V5_SUCCESS_FIRST_TRADER_CORPUS_V1.md`;
 9. read `V5_MARKET_MECHANISM_ONTOLOGY_V1.md`;
-10. read `V5_001_BOUNDARY_INTERACTION_RESEARCH_CONTRACT.md`;
-11. read `V5_SOURCE_LEDGER.md`;
-12. read `BACKLOG_V5.md`;
-13. inspect relevant V1-V4 evidence only after the current V5 question is clear.
+10. read `V5_030A_FIRST_CROSS_240M_DEVELOPMENT_RESULTS.md`;
+11. read `V5_034A_FIRST_CROSS_240M_VALIDATION_CANDIDATE_FREEZE.md`;
+12. read `V5_034A_EXTERNAL_VALIDATION_CONTRACT.md`;
+13. read `V5_NEXT_SESSION_OPERATING_PROTOCOL.md`;
+14. read `V5_SOURCE_LEDGER.md`;
+15. read `BACKLOG_V5.md`;
+16. inspect older V5/V1-V4 evidence only after the current validation question is clear.
 
 GitHub wins over chat memory.
 
@@ -246,10 +249,15 @@ If V5 produces useful causal semantic states, V4 methods may later be used as:
 ## 5. Current active question
 
 ```text
-V5-001:
-When price interacts with a pre-existing market boundary,
-what causal context and interaction behavior distinguish
-acceptance/continuation from rejection/failure?
+Does the exact frozen V5_FIRST_CROSS_240M_HALF_EMA_RUNNER
+generalize to the frozen external market panel?
 ```
 
-This is an event-understanding question, not yet an Entry rule.
+Current authority:
+- V5-030A = development PASS;
+- V5-034A = frozen validation candidate;
+- development retuning is closed;
+- GOLD# 2021 remains untouched;
+- production authority remains NONE.
+
+Read `V5_034A_EXTERNAL_VALIDATION_CONTRACT.md` before any new empirical work.

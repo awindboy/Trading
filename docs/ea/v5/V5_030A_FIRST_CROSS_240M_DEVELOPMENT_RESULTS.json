@@ -1,0 +1,108 @@
+{
+  "candidate": "V5_030A_FIRST_CROSS_240M_HALF_EMA_RUNNER",
+  "status": "DEVELOPMENT_PASS_VALIDATION_REQUIRED",
+  "date": "2026-08-27",
+  "development_data": [
+    "GOLD# 2023-2025",
+    "BTCUSD# 2023-2025",
+    "XAUEUR# 2023-2025",
+    "USDJPY# 2023-2025"
+  ],
+  "pooled": {
+    "n": 406,
+    "wr": 0.5394088669950738,
+    "avg_positive_net_r": 1.1965872526514612,
+    "ev_net_r": 0.14804976007823398,
+    "total_net_r": 60.10820259176299,
+    "avg_recorded_spread_cost_r": 0.09547738907476655
+  },
+  "years": {
+    "2023": {
+      "n": 138,
+      "wr": 0.5507246376811594,
+      "avg_positive_net_r": 1.3789881595624447,
+      "ev_net_r": 0.27058925287760477
+    },
+    "2024": {
+      "n": 131,
+      "wr": 0.5648854961832062,
+      "avg_positive_net_r": 1.047582405654489,
+      "ev_net_r": 0.11584839671169352
+    },
+    "2025": {
+      "n": 137,
+      "wr": 0.5036496350364964,
+      "avg_positive_net_r": 1.1554842055868408,
+      "ev_net_r": 0.0554069031052678
+    }
+  },
+  "markets": {
+    "BTCUSD#": {
+      "n": 136,
+      "wr": 0.5441176470588235,
+      "avg_positive_net_r": 1.2758241234635432,
+      "ev_net_r": 0.17416326241896993
+    },
+    "GOLD#": {
+      "n": 93,
+      "wr": 0.6129032258064516,
+      "avg_positive_net_r": 0.9506899644098527,
+      "ev_net_r": 0.18334922238021675
+    },
+    "XAUEUR#": {
+      "n": 86,
+      "wr": 0.5116279069767442,
+      "avg_positive_net_r": 1.6164454840287505,
+      "ev_net_r": 0.30711594352477856
+    },
+    "USDJPY#": {
+      "n": 91,
+      "wr": 0.4835164835164835,
+      "avg_positive_net_r": 0.9620157710395724,
+      "ev_net_r": -0.07737857056821999
+    }
+  },
+  "leave_one_market_out_ev": {
+    "exclude_BTCUSD#": 0.13489629223252994,
+    "exclude_GOLD#": 0.1375614214389867,
+    "exclude_XAUEUR#": 0.10530072327697515,
+    "exclude_USDJPY#": 0.2131735000427651
+  },
+  "leave_one_year_out_ev": {
+    "exclude_2023": 0.08495106602482663,
+    "exclude_2024": 0.16338931862738595,
+    "exclude_2025": 0.19523218165926137
+  },
+  "market_year_direction_breadth": {
+    "groups": 24,
+    "positive_ev_groups": 15,
+    "wr_ge_50_groups": 16
+  },
+  "weekly_block_bootstrap_95": {
+    "clusters": 347,
+    "ev_r": [
+      -0.01845898087262553,
+      0.14564733446345532,
+      0.33616513216913607
+    ],
+    "wr": [
+      0.4913151364764268,
+      0.5392405063291139,
+      0.5889724310776943
+    ],
+    "avg_positive_net_r": [
+      0.9638724099862729,
+      1.1896920595106355,
+      1.477421048099247
+    ]
+  },
+  "GOLD2022_consumed_diagnostic": {
+    "n": 34,
+    "wr": 0.5,
+    "avg_positive_net_r": 1.0286813830860715,
+    "ev_net_r": -0.011112803545961624,
+    "authority": "SUPPORTIVE_DIAGNOSTIC_ONLY_NOT_PRISTINE"
+  },
+  "cost_scope": "Level-A recorded round-trip spread proxy only; commission/slippage/exact-tick execution still required",
+  "production_authority": "NONE"
+}

@@ -1,7 +1,7 @@
 > **V5 ACTIVE SUCCESS-FIRST MECHANISM ROUTING — 2026-08-27**  
 > Active strategy research uses `docs/ea/v5/AGENTS_V5.md` and `docs/ea/v5/HANDOFF_V5.md`.  
 > V5 begins from verified successful-trader practice -> market concept -> falsifiable mechanism -> statistics -> strategy.  
-> V5-001A previous-day boundary proxy is frozen `OBSERVABLE PROXY INSUFFICIENT`; V5-002 balance-generated boundary research is pre-registered. No V5 trade rule or EA change is authorized.  
+> V5-030A First Cross 240m is the first `DEVELOPMENT PASS` and is frozen as V5-034A for external validation. Do not retune it; no production authority exists.  
 > V4 Representation Tournament is paused/preserved, not rejected; its CUDA code/data remain available for later semantic-state research.
 
 > **V4 ACTIVE AI-NATIVE RESEARCH ROUTING — 2026-08-27**  

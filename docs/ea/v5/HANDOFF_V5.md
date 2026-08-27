@@ -1,128 +1,145 @@
 # V5 Development Handoff
 
 Last updated: `2026-08-27`
-Current phase: `V5-001A PREVIOUS-DAY PROXY INSUFFICIENT / V5-002 BALANCE-BOUNDARY PREREGISTERED`
+Current phase: `V5-034A FIRST CROSS 240M EXTERNAL VALIDATION`
+Current candidate: `V5_FIRST_CROSS_240M_HALF_EMA_RUNNER`
+Candidate status: `DEVELOPMENT PASS / FROZEN FOR VALIDATION`
 Production authority: `NONE`
 
-## Why V5 opened
+## Startup — mandatory
 
-V1-V3 repeatedly showed that a human-authored chart ontology can create strong discovery performance and then fail temporal/cross-market validation.
+Read in order:
 
-V4 responded by withholding the old ontology and asking a neural model to learn predictive representation from broad causal sequences. That research remains useful, but it still asks a hard generic question:
+1. latest GitHub HEAD;
+2. root `AGENTS.md`;
+3. root `docs/ea/HANDOFF.md`;
+4. `AGENTS_V5.md`;
+5. this file;
+6. `RESEARCH_STATE_V5.md`;
+7. `V5_030A_FIRST_CROSS_240M_DEVELOPMENT_RESULTS.md`;
+8. `V5_034A_FIRST_CROSS_240M_VALIDATION_CANDIDATE_FREEZE.md`;
+9. `V5_034A_EXTERNAL_VALIDATION_CONTRACT.md`;
+10. `V5_RECURSIVE_FALSIFICATION_PROTOCOL.md`;
+11. `V5_NEXT_SESSION_OPERATING_PROTOCOL.md`;
+12. `BACKLOG_V5.md`.
 
-```text
-What will the next return be?
-```
+GitHub wins over chat memory.
 
-The user then reframed the research target:
+## What happened after V5-001A
 
-```text
-Do not ask only why technical analysis fails.
-Ask what technically oriented traders who survived and made money were actually doing differently.
-```
+The first boundary proxy failed under adversarial controls.
 
-A literature/practitioner pass found a recurring distinction:
-
-```text
-novice:
-pattern / indicator = signal
-
-experienced successful trader:
-pattern = visible expression of market state;
-context + interaction + invalidation + payoff architecture determine meaning
-```
-
-## Corpus v1
-
-Initial high-value sources:
-
-- Toby Crabel — observation -> pattern -> concept -> principle -> statistics -> strategy; contraction/expansion; breakout success/failure; wave character.
-- Linda Bradford Raschke — principles of price behavior; context-dependent setup modeling; explicit distinction between mean-reversion environments and explosive momentum.
-- Peter Brandt — classical chart patterns as balance/distribution possibilities; proper diagnosis; breakout completion; asymmetric payoff.
-- Richard Dennis / William Eckhardt / Turtles — trend emergence, volatility-normalized sizing, complete system architecture, exit/risk importance.
-- Ed Seykota — price/trend evidence over narrative; trailing stops/risk control.
-- Tom Basso — entry can be weak/random while lifecycle, exits, diversification and sizing dominate system behavior.
-
-Evidence quality is recorded in `V5_SUCCESS_FIRST_TRADER_CORPUS_V1.md`.
-
-## Strongest cross-source convergence
-
-The most promising common object is not an indicator.
-
-It is:
+The project then ran a long success-first sequence rather than rescuing that proxy:
 
 ```text
-STATE-CONDITIONED BOUNDARY RESOLUTION
+balance/breakout
+failed breakout/retest
+Holy Grail
+Turtle Soup
+Anti
+Momentum Pinball
+80-20
+failed Holy Grail forecast
+First Cross
 ```
 
-A market approaches a known boundary while in some state, interacts with it, then either:
+Read:
+- `V5_002_TO_V5_025_SUCCESS_FIRST_SYNTHESIS.md`
+- `V5_026_TO_V5_033_FIRST_CROSS_SYNTHESIS.md`
+
+The important result is not that every successful-trader setup worked mechanically. Most did not.
+
+The important result is that the research eventually found one **development candidate** whose Entry, loss truncation and
+winner lifecycle jointly satisfy the project's central development economics.
+
+## Current candidate
 
 ```text
-ACCEPTS beyond the boundary
--> directional expansion / continuation
-
-REJECTS the new price area
--> failed breakout / return to prior range
-
-REMAINS UNRESOLVED
--> two-sided balance / noise / censoring
+240m First Cross
++ first causal 3-bar higher-low/lower-high pivot
++ stop-entry beyond completed confirmation bar
++ structural pivot stop
++ 50% realized at +1R
++ runner stop -> BE
++ runner exit on adverse completed 240m EMA20 close or slow-line zero reversal
 ```
 
-Why this is attractive:
-- Brandt's rectangles/H&S are completed by boundary resolution.
-- Raschke explicitly studies price behavior at pre-defined levels and opening/range context.
-- Crabel treats breakout success/failure as a foundational market problem.
-- Turtles wait for price to demonstrate a breakout rather than predict it.
-- Carol Osler's actual FX order data provides a microstructure explanation for reversal near support/resistance and acceleration after a break.
-- order-flow research shows price impact depends on imbalance and market depth.
+No later context filter is included.
 
-## Immediate task order
-
-1. apply/push this V5 bootstrap;
-2. do not open V4 validation data or GOLD 2021;
-3. freeze V5-001 event-ledger schema before outcome analysis;
-4. build shadow-only event ledger on already-open development data;
-5. record full interaction/post-event path, not a hand-tuned win/loss label;
-6. analyze whether context variables form stable transition families;
-7. only then pre-register a candidate conditional state model;
-8. reserve independent validation for the model, not for exploratory storytelling.
-
-## V5-001 first data scope
-
-Open development data already outcome-exposed in prior work may be used for discovery:
+## Development result
 
 ```text
-GOLD#    2023-2025
-BTCUSD#  2023-2025
-XAUEUR#  2023-2025
-USDJPY#  2023-2025
+N                    406
+WR                   53.94%
+avg positive net R   +1.197R
+spread-adjusted EV   +0.148R/trade
 ```
 
-They are not pristine V5 validation.
+Pooled EV is positive in 2023, 2024 and 2025.
 
-Do not open:
-- XAUJPY# / XAUCNH# / GAUCNH# / GAUUSD# 2023-2025 yet;
-- GOLD# 2021.
+Market EV:
+- BTCUSD# positive;
+- GOLD# positive;
+- XAUEUR# positive;
+- USDJPY# negative.
 
-GOLD# 2022 remains consumed V3 validation, not pristine.
+Every leave-one-market-out and leave-one-year-out pooled EV remains positive.
+
+However weekly-block uncertainty still crosses zero and GOLD# 2022 consumed diagnostic is roughly flat.
+
+Therefore:
+
+```text
+DEVELOPMENT PASS
+!=
+VALIDATION PASS
+```
+
+## Frozen negative follow-ups
+
+Do not add:
+- daily 3/10 alignment (`V5-031A`, 2025 reversed);
+- ATR volatility adequacy (`V5-032A`, frozen gate failed);
+- an USDJPY veto;
+- another Holy Grail runner (`V5-033A` closed before validation).
+
+These are not missing tweaks.
+
+## Immediate next task
+
+External validation only:
+
+```text
+XAUJPY#  2023-2025
+XAUCNH#  2023-2025
+GAUCNH#  2023-2025
+GAUUSD#  2023-2025
+```
+
+Use the same broker/feed family and recorded spread.
+
+Run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\run_v5_034_external_validation.ps1 `
+  -Python python `
+  -DataMap .\config\v5_034_external_data_map.local.json `
+  -OutDir .\v5_034_external_results
+```
+
+At handoff time these raw validation CSVs were not found in the active session/File Library.
 
 ## Hard stops
 
-- no V5 trade rule from corpus anecdotes alone;
-- no claim that tick volume == true order flow;
-- no rebranding a V3 failed module as V5 success;
-- no best-boundary / best-horizon selection followed by calling the same data validation;
-- no AI/RL rescue before the semantic state question is defined;
-- no EA modification in V5-001.
+- do not inspect GOLD# 2021;
+- do not retune V5-030A;
+- do not remove a negative validation market;
+- do not change timeframe;
+- do not add commission/slippage assumptions chosen to save a result;
+- do not restart AI/RL as a rescue;
+- do not modify the MT5 production EA.
 
+If V5-034A fails, record failure first. A new success-first discovery phase requires a genuinely new mechanism and
+new preregistration.
 
-## V5-001A result — 2026-08-27
-Read `V5_001A_PREVIOUS_DAY_BOUNDARY_RESULTS.md`.
-
-The unmatched previous-day extreme result was selection-confounded. After causal pre-state matching, PDH/PDL did not
-show stable directional resolution versus internal Q75/Q25 controls.
-
-Classification: `OBSERVABLE PROXY INSUFFICIENT`.
-
-Do not rescue previous-day high/low with filters. V5-002 returns to the trader corpus and tests whether the continuous
-character of a *formed range itself* conditions its later breakout.
+If V5-034A passes, freeze the result before opening GOLD# 2021 or writing an MT5 research EA.
