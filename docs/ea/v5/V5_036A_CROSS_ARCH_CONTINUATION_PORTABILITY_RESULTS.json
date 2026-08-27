@@ -1,0 +1,193 @@
+{
+  "freeze_sha256": "d80c5d80caf391d570e58c579a6db41524c69e3b38a049f775e59f585795043d",
+  "valid_n": 122,
+  "total_plus1_n": 223,
+  "valid_rate": 0.547085201793722,
+  "pooled": {
+    "n": 122,
+    "runner_n": 59,
+    "exhaust_n": 63,
+    "runner_median": 1.007361059992649,
+    "exhaust_median": 0.9649350649350672,
+    "median_gap_runner_minus_exhaust": 0.04242599505758182,
+    "runner_mean": 0.941491298203564,
+    "exhaust_mean": 0.9074604383430245,
+    "comparable": true,
+    "inherited_sign": false,
+    "progress_q": {
+      "0": 0.3224643899090377,
+      "0.1": 0.5480778678781916,
+      "0.25": 0.7831769703853304,
+      "0.5": 0.9927504826319824,
+      "0.75": 1.0631172544755192,
+      "0.9": 1.1518414787412348,
+      "1": 1.6061320754716997
+    }
+  },
+  "by_market": {
+    "BTCUSD#": {
+      "n": 38,
+      "runner_n": 18,
+      "exhaust_n": 20,
+      "runner_median": 0.9411665697523798,
+      "exhaust_median": 0.9669038086370891,
+      "median_gap_runner_minus_exhaust": -0.025737238884709357,
+      "runner_mean": 0.8303641780395423,
+      "exhaust_mean": 0.9124731662012733,
+      "comparable": true,
+      "inherited_sign": true
+    },
+    "GOLD#": {
+      "n": 35,
+      "runner_n": 13,
+      "exhaust_n": 22,
+      "runner_median": 1.0000000000000124,
+      "exhaust_median": 1.003933974522229,
+      "median_gap_runner_minus_exhaust": -0.0039339745222166655,
+      "runner_mean": 0.969950685581423,
+      "exhaust_mean": 0.9514889540534522,
+      "comparable": true,
+      "inherited_sign": true
+    },
+    "USDJPY#": {
+      "n": 25,
+      "runner_n": 12,
+      "exhaust_n": 13,
+      "runner_median": 1.01699101693518,
+      "exhaust_median": 0.964539007092207,
+      "median_gap_runner_minus_exhaust": 0.052452009842972935,
+      "runner_mean": 0.9102984533042244,
+      "exhaust_mean": 0.8914623960952031,
+      "comparable": true,
+      "inherited_sign": false
+    },
+    "XAUEUR#": {
+      "n": 24,
+      "runner_n": 16,
+      "exhaust_n": 8,
+      "runner_median": 1.0588545216102356,
+      "exhaust_median": 0.6976490465905855,
+      "median_gap_runner_minus_exhaust": 0.36120547501965017,
+      "runner_mean": 1.0667806898180827,
+      "exhaust_mean": 0.7998470191464364,
+      "comparable": true,
+      "inherited_sign": false
+    }
+  },
+  "by_year": {
+    "2023": {
+      "n": 40,
+      "runner_n": 23,
+      "exhaust_n": 17,
+      "runner_median": 0.8594405594405516,
+      "exhaust_median": 0.9944067294352176,
+      "median_gap_runner_minus_exhaust": -0.13496616999466593,
+      "runner_mean": 0.860831337605326,
+      "exhaust_mean": 1.009330803642346,
+      "comparable": true,
+      "inherited_sign": true
+    },
+    "2024": {
+      "n": 41,
+      "runner_n": 16,
+      "exhaust_n": 25,
+      "runner_median": 1.0331276395209243,
+      "exhaust_median": 0.9661089880487322,
+      "median_gap_runner_minus_exhaust": 0.0670186514721921,
+      "runner_mean": 1.0248598735571854,
+      "exhaust_mean": 0.8813667121698946,
+      "comparable": true,
+      "inherited_sign": false
+    },
+    "2025": {
+      "n": 41,
+      "runner_n": 20,
+      "exhaust_n": 21,
+      "runner_median": 1.0085962434796159,
+      "exhaust_median": 0.9185738139672032,
+      "median_gap_runner_minus_exhaust": 0.09002242951241268,
+      "runner_mean": 0.9675553926086409,
+      "exhaust_mean": 0.8560579118782521,
+      "comparable": true,
+      "inherited_sign": false
+    }
+  },
+  "by_direction": {
+    "SHORT": {
+      "n": 51,
+      "runner_n": 25,
+      "exhaust_n": 26,
+      "runner_median": 1.023012552301246,
+      "exhaust_median": 0.9364042851618811,
+      "median_gap_runner_minus_exhaust": 0.08660826713936498,
+      "runner_mean": 0.8757059026769518,
+      "exhaust_mean": 0.8814237842984436,
+      "comparable": true,
+      "inherited_sign": false
+    },
+    "LONG": {
+      "n": 71,
+      "runner_n": 34,
+      "exhaust_n": 37,
+      "runner_median": 1.0038633119374727,
+      "exhaust_median": 0.9649350649350672,
+      "median_gap_runner_minus_exhaust": 0.03892824700240549,
+      "runner_mean": 0.9898629125613672,
+      "exhaust_mean": 0.9257564655094865,
+      "comparable": true,
+      "inherited_sign": false
+    }
+  },
+  "breadth": {
+    "comparable_cells": 9,
+    "supporting_cells": 3,
+    "cells": [
+      [
+        "by_market",
+        "BTCUSD#",
+        true
+      ],
+      [
+        "by_market",
+        "GOLD#",
+        true
+      ],
+      [
+        "by_market",
+        "USDJPY#",
+        false
+      ],
+      [
+        "by_market",
+        "XAUEUR#",
+        false
+      ],
+      [
+        "by_year",
+        "2023",
+        true
+      ],
+      [
+        "by_year",
+        "2024",
+        false
+      ],
+      [
+        "by_year",
+        "2025",
+        false
+      ],
+      [
+        "by_direction",
+        "SHORT",
+        false
+      ],
+      [
+        "by_direction",
+        "LONG",
+        false
+      ]
+    ],
+    "strong_transfer": false
+  }
+}

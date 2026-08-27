@@ -49,16 +49,17 @@ On every V5 session:
 4. read this file;
 5. read `HANDOFF_V5.md`;
 6. read `RESEARCH_STATE_V5.md`;
-7. read `V5_000_SUCCESS_FIRST_RESEARCH_CONTRACT.md`;
-8. read `V5_SUCCESS_FIRST_TRADER_CORPUS_V1.md`;
-9. read `V5_MARKET_MECHANISM_ONTOLOGY_V1.md`;
-10. read `V5_030A_FIRST_CROSS_240M_DEVELOPMENT_RESULTS.md`;
-11. read `V5_034A_FIRST_CROSS_240M_VALIDATION_CANDIDATE_FREEZE.md`;
-12. read `V5_034A_EXTERNAL_VALIDATION_CONTRACT.md`;
-13. read `V5_NEXT_SESSION_OPERATING_PROTOCOL.md`;
-14. read `V5_SOURCE_LEDGER.md`;
-15. read `BACKLOG_V5.md`;
-16. inspect older V5/V1-V4 evidence only after the current validation question is clear.
+7. read `DECISIONS_V5_APPEND_D180_D182.md`;
+8. read `DECISIONS_V5_APPEND_D183_D184.md`;
+9. read `V5_036A_CROSS_ARCH_CONTINUATION_PORTABILITY_RESULTS.md`;
+10. read `V5_037A_SOURCE_REVIEW_AND_LINEAGE_SCREEN.md`;
+11. read `V5_037A_GOLD_REAL_YIELD_DIRECTIONAL_DELIVERY_CONTRACT.md`;
+12. read `V5_000_SUCCESS_FIRST_RESEARCH_CONTRACT.md`;
+13. read `V5_SUCCESS_FIRST_TRADER_CORPUS_V1.md`;
+14. read `V5_MARKET_MECHANISM_ONTOLOGY_V1.md`;
+15. read `V5_SOURCE_LEDGER.md`;
+16. read `BACKLOG_V5.md`;
+17. inspect older V5/V1-V4 evidence only after the current question is clear.
 
 GitHub wins over chat memory.
 
@@ -207,15 +208,17 @@ The project still forbids:
 - threshold proliferation;
 - small-N promotion.
 
-### 3.10 Final strategy objective remains unchanged
+### 3.10 Final strategy objective — D-180
 
-Any eventual production candidate still targets:
-- realized win rate >= 50%;
-- average winner meaningfully > 1R;
+Any eventual production candidate must target:
+- realized positive-trade rate >= 50%;
+- average positive NET R >= 2.0R;
 - positive full-cost expectancy;
 - acceptable drawdown / loss streak;
 - robustness across independent periods and markets;
 - execution parity.
+
+`2R` is an evaluation criterion, not authorization to force every trade to a fixed 2R TP.
 
 However, V5 corpus/mechanism discovery is **not allowed to exclude successful traders merely because their own win rate is below 50%**. Discovery evidence and final project requirements are separate.
 
@@ -249,15 +252,17 @@ If V5 produces useful causal semantic states, V4 methods may later be used as:
 ## 5. Current active question
 
 ```text
-Does the exact frozen V5_FIRST_CROSS_240M_HALF_EMA_RUNNER
-generalize to the frozen external market panel?
+Does a causally available change in US 10-year TIPS real yield
+condition the next complete GOLD broker-day directional delivery
+in the inverse economic direction?
 ```
 
 Current authority:
-- V5-030A = development PASS;
-- V5-034A = frozen validation candidate;
-- development retuning is closed;
+- V5-030A = historical old-gate PASS / new-gate FINAL ECONOMICS FAIL;
+- V5-036A = portable M30 observable / cross-architecture transfer FAIL;
+- First Cross payoff-rescue = CLOSED;
+- V5-037A = preregistered external-state mechanism audit;
 - GOLD# 2021 remains untouched;
 - production authority remains NONE.
 
-Read `V5_034A_EXTERNAL_VALIDATION_CONTRACT.md` before any new empirical work.
+Read `V5_037A_GOLD_REAL_YIELD_DIRECTIONAL_DELIVERY_CONTRACT.md` before new empirical work. Point-in-time DFII10 release history must be qualified before Stage 1.

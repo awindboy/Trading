@@ -367,3 +367,26 @@ liquidity run
 ```
 
 Therefore V5-001 begins with the boundary interaction itself.
+
+## V5-037A corpus addendum — T-007 Larry Williams
+
+Evidence grade: `B+ for real-money competition result / C+ for method-to-result attribution`.
+
+### Success evidence
+- Official World Cup Trading Championships historical standings list Larry Williams as the 1987 futures champion with an 11,376% net return.
+- The organizer describes the competition as real-money trading.
+- This does not establish that any one public setup caused the result, and the extreme return is not a safe risk template for this project.
+
+### Public method themes
+Wiley / Williams material emphasizes:
+- volatility expansion / breakout as an attempt to identify the start of a short-term trend;
+- trend persistence over more than the immediate bar;
+- intermarket relationships as information beyond single-chart technical analysis;
+- exits/holding period as major determinants of captured payoff.
+
+### V5 lineage decision
+The basic volatility-breakout family is **not** selected as the next candidate because V5 already consumed balance/breakout/acceptance research. Choosing another range multiplier would repeat the same lineage.
+
+Williams is retained as evidence for:
+- payoff/lifecycle importance;
+- external/intermarket state as a potentially different information source.

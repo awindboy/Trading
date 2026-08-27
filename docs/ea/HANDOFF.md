@@ -1,8 +1,8 @@
-> **V5 ACTIVE ROUTING — 2026-08-27 / PAYOFF-FIRST CONTINUATION MECHANISM RESEARCH**  
-> Current phase: `V5-036A CROSS-ARCHITECTURE CONTINUATION-STATE PORTABILITY`.  
-> Final economics are now WR >=50%, average positive NET R >=2R, cost-adjusted EV >0; 2R is a result criterion, not a fixed TP.  
-> V5-030A is preserved as an old-gate development PASS but is a new-gate FINAL ECONOMICS FAIL; V5-034A is not a promotion path.  
-> Next: determine whether V3 D-145 M30 +1R continuation maturity is Entry-independent and portable before any First Cross rescue. GOLD# 2021 remains closed; no EA/production authority exists.
+> **V5 ACTIVE ROUTING — 2026-08-27 / PAYOFF-FIRST EXTERNAL-STATE DISCOVERY**  
+> Current phase: `V5-037A GOLD REAL-YIELD DIRECTIONAL-DELIVERY MECHANISM AUDIT`.  
+> Final economics remain WR >=50%, average positive NET R >=2R, cost-adjusted EV >0; 2R is a result criterion, not a fixed TP.  
+> V5-036A: exact D-145 M30 state is portable as a measurement, but the inherited continuation relation fails First Cross transfer; First Cross payoff-rescue is CLOSED.  
+> Next: qualify point-in-time DFII10 release history and run the preregistered GOLD# 2023 mechanism test only. GOLD# 2021 remains closed; no EA/production authority exists.
 
 > **V4 ACTIVE ROUTING — 2026-08-27 / V4-001 REPRESENTATION TOURNAMENT**  
 > Claim-grade R0/R1/R2 research uses the frozen development panel; R1/R2 must follow leakage-safe Stage-A execution.  

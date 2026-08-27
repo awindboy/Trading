@@ -1,7 +1,7 @@
 # V5 Development Handoff
 
 Last updated: `2026-08-27`
-Current phase: `V5-036A CROSS-ARCHITECTURE CONTINUATION-STATE PORTABILITY`
+Current phase: `V5-037A GOLD REAL-YIELD DIRECTIONAL-DELIVERY MECHANISM AUDIT`
 Current promoted candidate: `NONE`
 Production authority: `NONE`
 
@@ -16,30 +16,30 @@ Read in order:
 5. this file;
 6. `RESEARCH_STATE_V5.md`;
 7. `DECISIONS_V5_APPEND_D180_D182.md`;
-8. `V5_035A_PAYOFF_CAPACITY_AUDIT_RESULTS.md`;
-9. `V5_035B_STRUCTURAL_LOCK_AVAILABILITY_RESULTS.md`;
-10. `V5_035C_POST1_CONTINUATION_STATE_RESULTS.md`;
-11. `V5_036A_CROSS_ARCH_CONTINUATION_PORTABILITY_CONTRACT.md`;
-12. `docs/ea/D145_RUNNER_GENERALIZATION_RESULTS.md`;
-13. `docs/ea/D146_CONTINUATION_STATE_AUDIT.md`;
-14. `V5_026_TO_V5_033_FIRST_CROSS_SYNTHESIS.md`;
+8. `DECISIONS_V5_APPEND_D183_D184.md`;
+9. `V5_036A_CROSS_ARCH_CONTINUATION_PORTABILITY_RESULTS.md`;
+10. `V5_037A_SOURCE_REVIEW_AND_LINEAGE_SCREEN.md`;
+11. `V5_037A_GOLD_REAL_YIELD_DIRECTIONAL_DELIVERY_CONTRACT.md`;
+12. `V5_035A_PAYOFF_CAPACITY_AUDIT_RESULTS.md`;
+13. `V5_026_TO_V5_033_FIRST_CROSS_SYNTHESIS.md`;
+14. `V5_SOURCE_LEDGER.md`;
 15. `BACKLOG_V5.md`.
 
 GitHub wins over chat memory.
 
-## New final economics
+## Final economics — D-180
 
 ```text
-WR >= 50%
-average positive NET R >= 2R
-cost-adjusted EV > 0
+realized positive-trade rate >= 50%
+average positive NET R       >= 2R
+cost-adjusted EV             > 0
 ```
 
 The 2R requirement is a result criterion, not a fixed TP authorization.
 
-## First Cross reclassification
+## First Cross final disposition
 
-V5-030A:
+V5-030A remains preserved history:
 
 ```text
 WR 53.94%
@@ -47,73 +47,85 @@ avg positive net R 1.197R
 EV +0.148R
 ```
 
-It remains an important old-gate development PASS but is a new-gate FINAL ECONOMICS FAIL.
+Classification:
 
-Do not continue V5-034A external promotion work.
+```text
+OLD-GATE DEVELOPMENT PASS
+NEW-GATE FINAL ECONOMICS FAIL
+PAYOFF-RESCUE CLOSED
+```
 
-## What V5-035 established
+Do not continue V5-034A promotion validation and do not retune First Cross.
 
-### V5-035A
+## V5-036A completed result
 
-- raw structural-regime >=2R MFE: 28.85%;
-- among clear +1R survivors, 45.29% reached >=2R before current runner end;
-- current positive trades realize >=2R net only 10.96%.
+Stage 0:
+- exact D-145/D-146 M30 protected->external progress is portable as a causal measurement;
+- it is derived from global M30 price-structure state, not Root/FVG/scenario identity.
 
-The current partial-fraction family cannot solve the new target:
-- best avg positive at WR >=50% ~= 1.515R;
-- best WR while avg positive >=2R ~= 39.66%.
+Stage 1:
+- inherited prediction was `runner progress < exhaust progress`;
+- pooled First Cross result reversed: runner median `1.0074`, exhaust `0.9649`;
+- 2/4 markets support;
+- only 2023 supports, while 2024 and 2025 reverse;
+- LONG and SHORT both reverse;
+- 3/9 comparable cells support.
 
-### V5-035B
+Classification:
 
-A new favorable 240m pivot stop was available in only 25% of current partial-BE trades before BE.
-Median maximum available lock in those cases was ~0.765R.
+```text
+PORTABLE OBSERVABLE
+BUT
+CROSS-ARCHITECTURE EDGE TRANSFER FAIL
+```
 
-### V5-035C
+Do not create a progress threshold, market veto, direction veto or management rule from V5-036A.
 
-At +1R:
-- slow regime alive was strong pooled but nearly absent as a discriminator for SHORT;
-- fast alignment and EMA20 side were weak/unstable.
+## Why V5-037A exists
 
-No rule is authorized.
+V5-036A ended the First Cross rescue branch.
 
-## Why V5-036A exists
+The next branch must be materially different from already-consumed chart-only setup families.
 
-D-145 found that among +1R survivors, lower M30 protected->external maturity was associated with +2R continuation in:
-- 6/6 market-year aggregates;
-- 11/11 comparable market-year x direction cells.
+V5-037A tests an external economic state before constructing any Entry:
 
-V3's Entry survival was weak; First Cross survival is better.
+```text
+causally known US 10y TIPS real-yield change
+-> next complete GOLD broker-day directional delivery
+```
 
-Do NOT combine strategies.
-
-First determine whether the D-145 state is genuinely Entry-independent and portable.
+This is not a claim that the H.15 publication causes the move. `DFII10` is used only as a slow, point-in-time external-state measurement.
 
 ## Immediate next task
 
-Read the exact D-145/D-146 implementation and answer:
+Only:
 
 ```text
-Can one_r_m30_range_progress be defined for First Cross
-without importing Root/FVG scenario-specific state?
+Acquire/verify point-in-time DFII10 release history,
+freeze release-date identity,
+and run V5-037A Stage 1 on GOLD# 2023 only.
 ```
 
-If NO:
-- classify NONPORTABLE;
-- close First Cross payoff-rescue work;
-- return to payoff-first success-first discovery.
+Before outcomes:
+- use ALFRED release-dated/vintage data or defensible H.15 release archive;
+- do not treat FRED observation date as same-day availability;
+- do not open GOLD 2024/2025;
+- do not add USD or a second macro variable.
 
-If YES:
-- freeze exact causal definition;
-- run shadow-only transfer falsification;
-- no threshold;
-- no management change.
+If Stage 1 fails any frozen sign/order gate:
+- close V5-037A;
+- do not rescue it with magnitude/session/month/direction filters.
+
+If Stage 1 passes:
+- freeze the mechanism;
+- then validate unchanged on GOLD# 2024 and 2025 before any Entry research.
 
 ## Hard stops
 
+- do not reopen First Cross payoff rescue;
 - do not reopen V5-034A promotion validation;
-- do not tune First Cross partial fraction;
-- do not add a direction veto;
-- do not turn slow-alive into a rule;
-- do not approximate D-145 M30 state if scenario-specific;
+- do not tune partial/BE/EMA/slow exits;
+- do not import V3 rules as V5 authority;
+- do not use same-day H.15/H.10 data before actual publication;
 - do not inspect GOLD# 2021;
 - do not modify production EA.

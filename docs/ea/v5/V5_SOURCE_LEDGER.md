@@ -186,3 +186,40 @@ Last pass: `2026-08-27`
   First Cross buy is described as the first pullback/higher low after the slow line crosses above zero; sell mirrored.
 - Trust role:
   secondary corroboration only; S-015 is preferred for semantics.
+
+## V5-037A source addendum — 2026-08-27
+
+### S-018 — Larry Williams / volatility, intermarket and lifecycle lineage
+- Official competition evidence: https://www.worldcupchampionships.com/world-cup-trading-championship-historical-standings
+- Wiley book chapter: https://onlinelibrary.wiley.com/doi/10.1002/9781119200789.ch4
+- Wiley intermarket chapter: https://onlinelibrary.wiley.com/doi/10.1002/9781119200789.ch9
+- Evidence: official historical standings list Williams as 1987 futures champion at 11,376% net; public method material emphasizes volatility expansion, trend persistence, intermarket relationships and exits.
+- V5 use: success/payoff/intermarket source.
+- Lineage caveat: the basic volatility-breakout branch overlaps V5-002/V5-004 and is not reopened by changing a range multiple.
+
+### A-011 — Smales & Yang (2015), gold futures and macro announcements
+- DOI: https://doi.org/10.1016/j.irfa.2015.01.017
+- Evidence: gold futures return/volatility/activity respond rapidly to macro news; much reaction is complete within about 90 seconds; response magnitude depends on belief dispersion; good US economic news is typically negative for gold.
+- V5 use: gold is information-sensitive, but simple delayed continuation after a scheduled timestamp is not automatically implied.
+
+### A-012 — Sobti, Sehgal & Ilango (2021), round-the-clock gold price discovery
+- DOI: https://doi.org/10.1016/j.irfa.2021.101893
+- Evidence: US macro surprises materially affect gold price discovery; effects are asymmetric and state-dependent with sign reversals in extreme states.
+- V5 use: supports external-state research and mandatory opposite/state-dependent falsification.
+
+### A-013 — Federal Reserve H.15 / DFII10 / ALFRED
+- H.15: https://www.federalreserve.gov/releases/h15/
+- FRED DFII10: https://fred.stlouisfed.org/series/DFII10
+- ALFRED H.15: https://alfred.stlouisfed.org/release?rid=18
+- Evidence: DFII10 is a daily 10-year inflation-indexed Treasury market yield; H.15 is posted Monday-Friday at 4:15pm ET; recent release tables carry the prior business day's latest observation. ALFRED exposes release/vintage history.
+- V5 use: point-in-time external real-yield state. Observation date is not assumed to equal tradable availability date.
+
+### I-001 — World Gold Council simple real-yield / dollar model caveat
+- URL: https://www.gold.org/goldhub/research/qaurum-vs-us-real-rates-and-dollar-model
+- Evidence: 10-year TIPS real yield and a broad USD index can explain a material share of gold variation, but relationships change across regimes and can move in the same direction at times.
+- V5 use: economic rationale plus explicit adversarial caveat; industry research, not independent proof of a tradeable edge.
+
+### F-001 — Federal Reserve H.10 availability constraint
+- URL: https://www.federalreserve.gov/releases/h10/
+- Evidence: daily bilateral FX rates and USD indexes for the previous business week are released Monday at 4:15pm ET.
+- V5 use: same-day daily H.10 observation labels are forbidden for causal day-by-day research; V5-037A excludes H.10 from its first test.

@@ -1,7 +1,8 @@
-> **V5 ACTIVE SUCCESS-FIRST MECHANISM ROUTING — 2026-08-27**  
+> **V5 ACTIVE PAYOFF-FIRST EXTERNAL-STATE ROUTING — 2026-08-27**  
 > Active strategy research uses `docs/ea/v5/AGENTS_V5.md` and `docs/ea/v5/HANDOFF_V5.md`.  
-> V5 begins from verified successful-trader practice -> market concept -> falsifiable mechanism -> statistics -> strategy.  
-> V5-030A First Cross 240m is the first `DEVELOPMENT PASS` and is frozen as V5-034A for external validation. Do not retune it; no production authority exists.  
+> Final economics are WR >=50%, average positive NET R >=2R, cost-adjusted EV >0; 2R is a result criterion, not a fixed TP.  
+> V5-036A found the D-145 M30 observable portable but its First Cross continuation relation failed transfer; First Cross payoff-rescue is CLOSED.  
+> Current phase is `V5-037A GOLD REAL-YIELD DIRECTIONAL-DELIVERY MECHANISM AUDIT`: qualify point-in-time DFII10, then test GOLD# 2023 only. No production authority exists.  
 > V4 Representation Tournament is paused/preserved, not rejected; its CUDA code/data remain available for later semantic-state research.
 
 > **V4 ACTIVE AI-NATIVE RESEARCH ROUTING — 2026-08-27**  
