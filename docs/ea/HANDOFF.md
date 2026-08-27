@@ -1,8 +1,8 @@
-> **V5 ACTIVE ROUTING — 2026-08-27 / SUCCESS-FIRST MARKET MECHANISM RESEARCH**  
-> Current phase: `V5-034A FIRST CROSS 240M EXTERNAL VALIDATION / CANDIDATE FROZEN`.  
-> Start from successful-trader observations, translate patterns into falsifiable market mechanisms, then use statistics for validation.  
-> Frozen candidate: 240m First Cross + causal price pivot + structural stop + 50% at +1R + BE EMA20/slow runner.  
-> Development PASS only; external validation vault may be opened only under V5-034A. GOLD# 2021 remains closed; no EA/production authority exists.
+> **V5 ACTIVE ROUTING — 2026-08-27 / PAYOFF-FIRST CONTINUATION MECHANISM RESEARCH**  
+> Current phase: `V5-036A CROSS-ARCHITECTURE CONTINUATION-STATE PORTABILITY`.  
+> Final economics are now WR >=50%, average positive NET R >=2R, cost-adjusted EV >0; 2R is a result criterion, not a fixed TP.  
+> V5-030A is preserved as an old-gate development PASS but is a new-gate FINAL ECONOMICS FAIL; V5-034A is not a promotion path.  
+> Next: determine whether V3 D-145 M30 +1R continuation maturity is Entry-independent and portable before any First Cross rescue. GOLD# 2021 remains closed; no EA/production authority exists.
 
 > **V4 ACTIVE ROUTING — 2026-08-27 / V4-001 REPRESENTATION TOURNAMENT**  
 > Claim-grade R0/R1/R2 research uses the frozen development panel; R1/R2 must follow leakage-safe Stage-A execution.  

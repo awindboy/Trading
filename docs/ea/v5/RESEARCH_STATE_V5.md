@@ -1,92 +1,90 @@
 # V5 Research State
 
 Status: `ACTIVE`
-Phase: `V5-034A EXTERNAL VALIDATION`
+Phase: `V5-036A CROSS-ARCHITECTURE CONTINUATION-STATE PORTABILITY`
 Date: `2026-08-27`
+Production authority: `NONE`
 
 ## Current classification
 
 ```text
 V1 deterministic EA                         FROZEN CONTROL
 V2 continuation/SP research                 PAUSED / PRESERVED
-V3 raw-event deterministic research         PAUSED / NEGATIVE AUTHORITY
+V3 raw-event deterministic research         PAUSED / NEGATIVE STRATEGY AUTHORITY
 V4 AI-native representation tournament      PAUSED / PRESERVED
 V5 success-first mechanism research         ACTIVE
 
-V5-001 previous-day boundary                PROXY INSUFFICIENT
-V5-002 balance -> breakout direction        NOT SUPPORTED
-V5-003 cross-scale trendability             FAILED
-V5-004 through V5-025 setup families        NO PROMOTED CANDIDATE
-V5-026/027 First Cross discovery            240m DISCOVERY CANDIDATE FOUND
-V5-028 exact M1 First Cross                  WR FAILED / POSITIVE EV
-V5-029 structural half-runner                ECONOMICS FAILED
-V5-030A half + EMA/slow runner               DEVELOPMENT PASS
-V5-031 daily context                         REJECTED
-V5-032 volatility adequacy                  REJECTED
-V5-033 source-correct HG runner              ADMINISTRATIVELY CLOSED
-V5-034A First Cross external validation      FROZEN / DATA UNOPENED
-GOLD# 2021                                   UNTOUCHED
-production authority                        NONE
+V5-030A First Cross                         HISTORICAL OLD-GATE DEVELOPMENT PASS
+                                            / NEW-GATE FINAL ECONOMICS FAIL
+V5-034A external validation                 NOT FORMALLY RUN / NOT A PROMOTION PATH
+V5-035A payoff-capacity audit               COMPLETED
+V5-035B structural-lock audit               COMPLETED / NEGATIVE AS SIMPLE RESCUE
+V5-035C post-1R state falsification          COMPLETED / NO RULE PROMOTION
+V5-036A M30 continuation portability        ACTIVE NEXT STAGE
+GOLD# 2021                                  UNTOUCHED
 ```
 
-## Current candidate
-
-`V5_FIRST_CROSS_240M_HALF_EMA_RUNNER`
-
-Development point estimate:
+## Final economic objective
 
 ```text
-N 406
-WR 53.94%
-avg positive net +1.197R
-EV +0.148R
+realized positive-trade rate >= 50%
+average positive NET R       >= 2.0R
+cost-adjusted expectancy     > 0
 ```
 
-Read exact rules/results in:
-- `V5_030A_FIRST_CROSS_240M_DEVELOPMENT_RESULTS.md`
-- `V5_034A_FIRST_CROSS_240M_VALIDATION_CANDIDATE_FREEZE.md`
+`2R` is a result criterion, not a fixed TP.
 
-## Evidence strength
+## Why V5-030A is no longer promotable
 
-Positive:
-- joint WR/payoff/EV target reached in development;
-- all three pooled development years positive;
-- 3/4 development markets positive;
-- leave-one-market/year pooled EV positive;
-- candidate came from a success-first source chain rather than one-year threshold mining.
+```text
+N                    406
+WR                   53.94%
+avg positive net R   1.197R
+EV                   +0.148R
+```
 
-Unresolved:
-- weekly-block EV CI crosses zero;
-- USDJPY development is negative;
-- GOLD# 2022 consumed diagnostic is approximately flat;
-- current cost is spread proxy, not full execution cost;
-- no pristine external validation has been run.
+The entire current partial-fraction family cannot satisfy the new joint objective:
+maximum average positive at WR >=50% is about `1.515R`.
 
-## Data governance
+## V5-035 findings
 
-Development consumed:
-- GOLD# / BTCUSD# / XAUEUR# / USDJPY# 2023-2025.
+Real continuation excursion exists:
 
-Consumed diagnostic:
-- GOLD# 2022.
+```text
+raw structural-regime >=2R MFE    28.85%
+clear +1R population              223
+post-1R >=2R continuation         45.29%
+```
 
-Frozen external validation, still unopened:
-- XAUJPY# / XAUCNH# / GAUCNH# / GAUUSD# 2023-2025.
+But current realized positive trades >=2R net are only `10.96%`.
 
-Final temporal confirmation:
-- GOLD# 2021 untouched.
+Same-240m profitable pivot locks existed before current exit in only `25%` of the partial-BE population, with median
+maximum lock ~`0.765R`.
+
+At +1R:
+- slow-alive pooled relationship is interesting but direction-unstable;
+- fast and EMA20 state are weak/unstable.
+
+No rule is promoted.
+
+## External validation status
+
+The exact V5-034A 2023-2025 external contract was not formally run.
+Provided Ultra Low symbol histories begin only around September 2025, so the exact preregistered window is not available
+for those broker symbols.
+
+Do not classify V5-034A as PASS or formal FAIL.
+
+Because V5-030A fails the new economic gate before validation, do not seek substitute validation markets for promotion.
 
 ## Current question
-
-Not:
-
-```text
-How can V5-030A be improved?
-```
 
 Only:
 
 ```text
-Does the exact frozen V5-030A candidate generalize
-to the frozen external market panel?
+Does the V3 D-145 M30 +1R continuation-state relationship
+represent an Entry-independent market mechanism that can be
+defined causally and transferred to First Cross?
 ```
+
+First determine portability before computing transfer outcomes.

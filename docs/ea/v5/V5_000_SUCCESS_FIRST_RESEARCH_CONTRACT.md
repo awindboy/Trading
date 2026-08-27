@@ -87,3 +87,16 @@ state-conditioned resolution of market boundaries is primary.
 This conclusion authorizes V5-001 event-ledger research only.
 
 It does not authorize an Entry rule.
+
+## 7. Economic-target supersession — D-180
+
+The original >=50% realized-WR statement remains historical, but the final payoff gate is superseded by
+`DECISIONS_V5_APPEND_D180_D182.md`:
+
+```text
+realized positive-trade rate >= 50%
+average positive NET R       >= 2.0R
+cost-adjusted expectancy     > 0
+```
+
+This does not rewrite prior results. It changes what may be promoted from now on.

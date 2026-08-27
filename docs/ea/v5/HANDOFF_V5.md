@@ -1,9 +1,8 @@
 # V5 Development Handoff
 
 Last updated: `2026-08-27`
-Current phase: `V5-034A FIRST CROSS 240M EXTERNAL VALIDATION`
-Current candidate: `V5_FIRST_CROSS_240M_HALF_EMA_RUNNER`
-Candidate status: `DEVELOPMENT PASS / FROZEN FOR VALIDATION`
+Current phase: `V5-036A CROSS-ARCHITECTURE CONTINUATION-STATE PORTABILITY`
+Current promoted candidate: `NONE`
 Production authority: `NONE`
 
 ## Startup — mandatory
@@ -16,139 +15,105 @@ Read in order:
 4. `AGENTS_V5.md`;
 5. this file;
 6. `RESEARCH_STATE_V5.md`;
-7. `V5_030A_FIRST_CROSS_240M_DEVELOPMENT_RESULTS.md`;
-8. `V5_034A_FIRST_CROSS_240M_VALIDATION_CANDIDATE_FREEZE.md`;
-9. `V5_034A_EXTERNAL_VALIDATION_CONTRACT.md`;
-10. `V5_034A_PREVALIDATION_PARITY_AUDIT.md`;
-11. `DECISIONS_V5_APPEND_D178.md`;
-12. `DECISIONS_V5_APPEND_D179.md`;
-13. `V5_RECURSIVE_FALSIFICATION_PROTOCOL.md`;
-14. `V5_NEXT_SESSION_OPERATING_PROTOCOL.md`;
+7. `DECISIONS_V5_APPEND_D180_D182.md`;
+8. `V5_035A_PAYOFF_CAPACITY_AUDIT_RESULTS.md`;
+9. `V5_035B_STRUCTURAL_LOCK_AVAILABILITY_RESULTS.md`;
+10. `V5_035C_POST1_CONTINUATION_STATE_RESULTS.md`;
+11. `V5_036A_CROSS_ARCH_CONTINUATION_PORTABILITY_CONTRACT.md`;
+12. `docs/ea/D145_RUNNER_GENERALIZATION_RESULTS.md`;
+13. `docs/ea/D146_CONTINUATION_STATE_AUDIT.md`;
+14. `V5_026_TO_V5_033_FIRST_CROSS_SYNTHESIS.md`;
 15. `BACKLOG_V5.md`.
 
 GitHub wins over chat memory.
 
-## What happened after V5-001A
-
-The first boundary proxy failed under adversarial controls.
-
-The project then ran a long success-first sequence rather than rescuing that proxy:
+## New final economics
 
 ```text
-balance/breakout
-failed breakout/retest
-Holy Grail
-Turtle Soup
-Anti
-Momentum Pinball
-80-20
-failed Holy Grail forecast
-First Cross
+WR >= 50%
+average positive NET R >= 2R
+cost-adjusted EV > 0
 ```
 
-Read:
-- `V5_002_TO_V5_025_SUCCESS_FIRST_SYNTHESIS.md`
-- `V5_026_TO_V5_033_FIRST_CROSS_SYNTHESIS.md`
+The 2R requirement is a result criterion, not a fixed TP authorization.
 
-The important result is not that every successful-trader setup worked mechanically. Most did not.
+## First Cross reclassification
 
-The important result is that the research eventually found one **development candidate** whose Entry, loss truncation and
-winner lifecycle jointly satisfy the project's central development economics.
-
-## Current candidate
+V5-030A:
 
 ```text
-240m First Cross
-+ first causal 3-bar higher-low/lower-high pivot
-+ stop-entry beyond completed confirmation bar
-+ structural pivot stop
-+ 50% realized at +1R
-+ runner stop -> BE
-+ runner exit on adverse completed 240m EMA20 close or slow-line zero reversal
+WR 53.94%
+avg positive net R 1.197R
+EV +0.148R
 ```
 
-No later context filter is included.
+It remains an important old-gate development PASS but is a new-gate FINAL ECONOMICS FAIL.
 
-## Development result
+Do not continue V5-034A external promotion work.
 
-```text
-N                    406
-WR                   53.94%
-avg positive net R   +1.197R
-spread-adjusted EV   +0.148R/trade
-```
+## What V5-035 established
 
-Pooled EV is positive in 2023, 2024 and 2025.
+### V5-035A
 
-Market EV:
-- BTCUSD# positive;
-- GOLD# positive;
-- XAUEUR# positive;
-- USDJPY# negative.
+- raw structural-regime >=2R MFE: 28.85%;
+- among clear +1R survivors, 45.29% reached >=2R before current runner end;
+- current positive trades realize >=2R net only 10.96%.
 
-Every leave-one-market-out and leave-one-year-out pooled EV remains positive.
+The current partial-fraction family cannot solve the new target:
+- best avg positive at WR >=50% ~= 1.515R;
+- best WR while avg positive >=2R ~= 39.66%.
 
-However weekly-block uncertainty still crosses zero and GOLD# 2022 consumed diagnostic is roughly flat.
+### V5-035B
 
-Therefore:
+A new favorable 240m pivot stop was available in only 25% of current partial-BE trades before BE.
+Median maximum available lock in those cases was ~0.765R.
 
-```text
-DEVELOPMENT PASS
-!=
-VALIDATION PASS
-```
+### V5-035C
 
-## Frozen negative follow-ups
+At +1R:
+- slow regime alive was strong pooled but nearly absent as a discriminator for SHORT;
+- fast alignment and EMA20 side were weak/unstable.
 
-Do not add:
-- daily 3/10 alignment (`V5-031A`, 2025 reversed);
-- ATR volatility adequacy (`V5-032A`, frozen gate failed);
-- an USDJPY veto;
-- another Holy Grail runner (`V5-033A` closed before validation).
+No rule is authorized.
 
-These are not missing tweaks.
+## Why V5-036A exists
+
+D-145 found that among +1R survivors, lower M30 protected->external maturity was associated with +2R continuation in:
+- 6/6 market-year aggregates;
+- 11/11 comparable market-year x direction cells.
+
+V3's Entry survival was weak; First Cross survival is better.
+
+Do NOT combine strategies.
+
+First determine whether the D-145 state is genuinely Entry-independent and portable.
 
 ## Immediate next task
 
-External validation only:
+Read the exact D-145/D-146 implementation and answer:
 
 ```text
-XAUJPY#  2023-2025
-XAUCNH#  2023-2025
-GAUCNH#  2023-2025
-GAUUSD#  2023-2025
+Can one_r_m30_range_progress be defined for First Cross
+without importing Root/FVG scenario-specific state?
 ```
 
-Use the same broker/feed family and recorded spread.
+If NO:
+- classify NONPORTABLE;
+- close First Cross payoff-rescue work;
+- return to payoff-first success-first discovery.
 
-Run:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\run_v5_034_external_validation.ps1 `
-  -Python python `
-  -DataMap .\config\v5_034_external_data_map.local.json `
-  -OutDir .\v5_034_external_results
-```
-
-At handoff time these raw validation CSVs were not found in the active session/File Library.
-
-Pre-validation replay parity/reproducibility hardening is complete. The original development result was reproduced;
-one same-M1 adverse-exit/BE ordering case was corrected without changing candidate classification. The external runner
-now freezes raw SHA-256 identities before outcomes and applies the deterministic A-F gate. The replay also
-fails closed unless the data map is exactly the four frozen validation markets with exactly 2023-2025 and full
-12-month coverage in each year. Read `V5_034A_PREVALIDATION_PARITY_AUDIT.md` and `DECISIONS_V5_APPEND_D179.md`.
+If YES:
+- freeze exact causal definition;
+- run shadow-only transfer falsification;
+- no threshold;
+- no management change.
 
 ## Hard stops
 
+- do not reopen V5-034A promotion validation;
+- do not tune First Cross partial fraction;
+- do not add a direction veto;
+- do not turn slow-alive into a rule;
+- do not approximate D-145 M30 state if scenario-specific;
 - do not inspect GOLD# 2021;
-- do not retune V5-030A;
-- do not remove a negative validation market;
-- do not change timeframe;
-- do not add commission/slippage assumptions chosen to save a result;
-- do not restart AI/RL as a rescue;
-- do not modify the MT5 production EA.
-
-If V5-034A fails, record failure first. A new success-first discovery phase requires a genuinely new mechanism and
-new preregistration.
-
-If V5-034A passes, freeze the result before opening GOLD# 2021 or writing an MT5 research EA.
+- do not modify production EA.
