@@ -21,9 +21,10 @@ Read in order:
 9. `V5_034A_EXTERNAL_VALIDATION_CONTRACT.md`;
 10. `V5_034A_PREVALIDATION_PARITY_AUDIT.md`;
 11. `DECISIONS_V5_APPEND_D178.md`;
-12. `V5_RECURSIVE_FALSIFICATION_PROTOCOL.md`;
-13. `V5_NEXT_SESSION_OPERATING_PROTOCOL.md`;
-14. `BACKLOG_V5.md`.
+12. `DECISIONS_V5_APPEND_D179.md`;
+13. `V5_RECURSIVE_FALSIFICATION_PROTOCOL.md`;
+14. `V5_NEXT_SESSION_OPERATING_PROTOCOL.md`;
+15. `BACKLOG_V5.md`.
 
 GitHub wins over chat memory.
 
@@ -133,8 +134,9 @@ At handoff time these raw validation CSVs were not found in the active session/F
 
 Pre-validation replay parity/reproducibility hardening is complete. The original development result was reproduced;
 one same-M1 adverse-exit/BE ordering case was corrected without changing candidate classification. The external runner
-now freezes raw SHA-256 identities before outcomes and applies the deterministic A-F gate. Read
-`V5_034A_PREVALIDATION_PARITY_AUDIT.md`.
+now freezes raw SHA-256 identities before outcomes and applies the deterministic A-F gate. The replay also
+fails closed unless the data map is exactly the four frozen validation markets with exactly 2023-2025 and full
+12-month coverage in each year. Read `V5_034A_PREVALIDATION_PARITY_AUDIT.md` and `DECISIONS_V5_APPEND_D179.md`.
 
 ## Hard stops
 

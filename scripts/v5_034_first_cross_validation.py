@@ -8,6 +8,8 @@ import pandas as pd
 RULE = '240min'
 CANDIDATE = 'V5_FIRST_CROSS_240M_HALF_EMA_RUNNER'
 REQUIRED_YEARS = (2023, 2024, 2025)
+REQUIRED_MONTHS = tuple(range(1, 13))
+VALIDATION_MARKETS = ('XAUJPY#', 'XAUCNH#', 'GAUCNH#', 'GAUUSD#')
 BOOTSTRAP_REPS = 100_000
 BOOTSTRAP_SEED = 5034
 
@@ -33,16 +35,21 @@ def _read_one(path: Path) -> pd.DataFrame:
     return q
 
 def audit_and_load_m1(paths: list[Path], point: float) -> tuple[pd.DataFrame, dict]:
+    if not paths:
+        raise SystemExit('FAIL-CLOSED no input files supplied')
     if not (math.isfinite(point) and point>0):
         raise SystemExit(f'FAIL-CLOSED invalid point {point!r}')
     parts=[]; file_audits=[]
     for p in paths:
         if not p.exists(): raise SystemExit(f'FAIL-CLOSED missing {p}')
         q=_read_one(p)
+        if q.empty: raise SystemExit(f'FAIL-CLOSED empty input file {p}')
         vals=q[['open','high','low','close','spread_points']].to_numpy(float)
         if not np.isfinite(vals).all(): raise SystemExit(f'FAIL-CLOSED non-finite numeric value in {p}')
         if q.index.has_duplicates: raise SystemExit(f'FAIL-CLOSED duplicate timestamp in {p}')
         if not q.index.is_monotonic_increasing: raise SystemExit(f'FAIL-CLOSED unsorted timestamp in {p}')
+        if bool(((q.index.second != 0) | (q.index.microsecond != 0)).any()):
+            raise SystemExit(f'FAIL-CLOSED non-M1-aligned timestamp in {p}')
         bad_ohlc=(q.high < q[['open','close','low']].max(axis=1)) | (q.low > q[['open','close','high']].min(axis=1))
         if bool(bad_ohlc.any()): raise SystemExit(f'FAIL-CLOSED invalid OHLC geometry in {p}')
         if bool((q.spread_points<0).any()): raise SystemExit(f'FAIL-CLOSED negative spread in {p}')
@@ -61,12 +68,22 @@ def audit_and_load_m1(paths: list[Path], point: float) -> tuple[pd.DataFrame, di
     if q.index.has_duplicates: raise SystemExit('FAIL-CLOSED duplicate timestamp across input files')
     if not q.index.is_monotonic_increasing: raise SystemExit('FAIL-CLOSED input file order is not chronological')
     present=sorted(set(int(x) for x in q.index.year))
-    missing=[y for y in REQUIRED_YEARS if y not in present]
-    if missing: raise SystemExit(f'FAIL-CLOSED missing required years {missing}')
+    expected_years=list(REQUIRED_YEARS)
+    if present != expected_years:
+        missing=[y for y in REQUIRED_YEARS if y not in present]
+        extra=[y for y in present if y not in REQUIRED_YEARS]
+        raise SystemExit(f'FAIL-CLOSED validation years must be exactly {expected_years}; missing={missing} extra={extra}')
+    months_by_year={}
+    for y in REQUIRED_YEARS:
+        counts=q.loc[q.index.year==y].groupby(q.loc[q.index.year==y].index.month).size()
+        months_by_year[str(y)]={str(m):int(counts.get(m,0)) for m in REQUIRED_MONTHS}
+        missing_months=[m for m in REQUIRED_MONTHS if counts.get(m,0)==0]
+        if missing_months:
+            raise SystemExit(f'FAIL-CLOSED missing calendar months for {y}: {missing_months}')
     audit={
         'point':float(point), 'files':file_audits, 'rows_total':int(len(q)),
         'first_ts':q.index[0].isoformat(), 'last_ts':q.index[-1].isoformat(),
-        'present_years':present,
+        'present_years':present, 'rows_by_year_month':months_by_year,
     }
     return q,audit
 
@@ -200,15 +217,35 @@ def evaluate_gates(summary:dict)->dict:
     else: verdict='FAIL'
     return {'A_pooled_economics':A,'B_market_breadth':B,'C_temporal_breadth':C,'D_concentration':D,'E_uncertainty':E,'F_market_sample_status':market_status,'positive_adequate_markets':int(positive_adequate),'verdict':verdict}
 
+def validate_data_map(dm:dict)->None:
+    actual=set(dm)
+    expected=set(VALIDATION_MARKETS)
+    if actual != expected:
+        missing=sorted(expected-actual); extra=sorted(actual-expected)
+        raise SystemExit(f'FAIL-CLOSED validation market panel mismatch; missing={missing} extra={extra}')
+    for sym in VALIDATION_MARKETS:
+        spec=dm[sym]
+        if 'point' not in spec or 'files' not in spec:
+            raise SystemExit(f'FAIL-CLOSED incomplete data-map spec for {sym}')
+        paths=[Path(x) for x in spec['files']]
+        if not paths:
+            raise SystemExit(f'FAIL-CLOSED no input files for {sym}')
+        stem=sym.replace('#','').lower()
+        for path in paths:
+            if stem not in path.name.lower():
+                raise SystemExit(f'FAIL-CLOSED filename does not identify {sym}: {path.name}')
+
 def build_preflight(dm:dict)->dict:
-    audit={'candidate':CANDIDATE,'required_years':list(REQUIRED_YEARS),'markets':{}}
+    validate_data_map(dm)
+    audit={'candidate':CANDIDATE,'required_years':list(REQUIRED_YEARS),'validation_markets':list(VALIDATION_MARKETS),'markets':{}}
     for sym,spec in dm.items():
         point=float(spec['point']);paths=[Path(x) for x in spec['files']]
         _,a=audit_and_load_m1(paths,point);audit['markets'][sym]=a
     return audit
 
 def verify_expected_hashes(dm:dict, expected:dict)->None:
-    if expected.get('candidate')!=CANDIDATE or expected.get('required_years')!=list(REQUIRED_YEARS):
+    validate_data_map(dm)
+    if expected.get('candidate')!=CANDIDATE or expected.get('required_years')!=list(REQUIRED_YEARS) or expected.get('validation_markets')!=list(VALIDATION_MARKETS):
         raise SystemExit('FAIL-CLOSED expected audit contract mismatch')
     if set(expected.get('markets',{}))!=set(dm):
         raise SystemExit('FAIL-CLOSED expected audit market set mismatch')
@@ -224,7 +261,7 @@ def verify_expected_hashes(dm:dict, expected:dict)->None:
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--data-map',type=Path,required=True);ap.add_argument('--out-dir',type=Path,required=True);ap.add_argument('--preflight-only',action='store_true');ap.add_argument('--expected-audit',type=Path)
-    args=ap.parse_args();dm=json.loads(args.data_map.read_text(encoding='utf-8'));args.out_dir.mkdir(parents=True,exist_ok=True)
+    args=ap.parse_args();dm=json.loads(args.data_map.read_text(encoding='utf-8'));validate_data_map(dm);args.out_dir.mkdir(parents=True,exist_ok=True)
     audit_path=args.out_dir/'V5_034_INPUT_AUDIT.json'
     if args.preflight_only:
         audit=build_preflight(dm);audit_text=json.dumps(audit,indent=2,sort_keys=True);audit_path.write_text(audit_text,encoding='utf-8')

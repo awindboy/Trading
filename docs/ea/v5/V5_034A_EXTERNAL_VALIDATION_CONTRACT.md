@@ -56,7 +56,25 @@ that saved audit through `--expected-audit` and fails closed if a raw hash, path
 
 The PowerShell runner performs this two-phase sequence automatically.
 
-### 4.2 Completed-bar exit ordering
+### 4.2 Frozen validation-population preflight
+
+Before raw outcomes are computed, the canonical replay must reject any data map that is not exactly:
+
+```text
+XAUJPY#
+XAUCNH#
+GAUCNH#
+GAUUSD#
+```
+
+For each market, loaded rows must belong exactly to calendar years `2023`, `2024`, and `2025`; no earlier or later
+calendar year may enter pooled validation. Every required year must contain observations in all 12 calendar months.
+Timestamps must be minute-aligned, strictly increasing and unique. Configured raw filenames must contain the canonical
+symbol stem to reduce accidental file-to-symbol swaps.
+
+These checks define the already frozen validation population; they do not add a strategy filter.
+
+### 4.3 Completed-bar exit ordering
 
 For a runner already active when an adverse completed 240m signal becomes available at timestamp `T`:
 

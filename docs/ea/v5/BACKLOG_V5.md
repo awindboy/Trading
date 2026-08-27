@@ -24,6 +24,8 @@ Current phase: `V5-034A EXTERNAL VALIDATION`
 - [x] Add exact reproducible external validation runner.
 - [x] Complete development-data replay parity audit before opening external outcomes.
 - [x] Freeze two-phase raw SHA-256 preflight + deterministic weekly-block bootstrap/gate implementation.
+- [x] Lock the exact four-market / exact-2023-2025 validation population in code.
+- [x] Require all 12 calendar months per validation year and canonical symbol filenames.
 - [x] Write next-session operating protocol.
 
 ## Immediate — data acquisition / validation

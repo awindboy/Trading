@@ -180,3 +180,27 @@ FROZEN / EXTERNAL DATA UNOPENED
 ```
 
 Next empirical action remains acquisition/export of the exact four external 2023-2025 M1 datasets from the same broker/feed family.
+
+## Validation-population lock addendum
+
+A second pre-outcome audit after the parity-hardening push found that the script still accepted arbitrary data-map
+market keys and allowed extra calendar years so long as 2023/2024/2025 were also present. That was a validation-governance
+risk because a wrong population could be executed without altering the frozen strategy.
+
+Before external outcomes, the replay was therefore hardened again to require:
+
+```text
+exact market set     XAUJPY#, XAUCNH#, GAUCNH#, GAUUSD#
+exact calendar years 2023, 2024, 2025 only
+calendar coverage    all 12 months present in every required year
+M1 timestamp shape   minute-aligned, sorted, unique
+mapping guard        configured filename contains canonical symbol stem
+```
+
+Preflight-only tests confirmed:
+- the exact four-market / 2023-2025 shape passes;
+- a missing/substituted market fails closed;
+- a 2026 contamination row fails closed;
+- a missing calendar month fails closed.
+
+No external-market outcome calculation and no GOLD# 2021 inspection occurred during these tests.
