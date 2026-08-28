@@ -1,0 +1,38 @@
+{
+  "generated_from_head": "03d0e893d74e23779a9188e9e91fd0659837dc03",
+  "expected_git_blobs": {
+    "HEAD": "03d0e893d74e23779a9188e9e91fd0659837dc03",
+    "AGENTS.md": "5096c764164e694c3a22fb86cd3012a4374fc094",
+    "docs/ea/HANDOFF.md": "e9d4afea71f715b1bce583832791023b109080a0",
+    "docs/ea/v6/AGENTS_V6.md": "bf8f23d2d4c3654970859acd0f40b43fd090cc55",
+    "docs/ea/v6/BACKLOG_V6.md": "61bd96dc6e2b4f8a0b18f5c57a6d6396cf97573f",
+    "docs/ea/v6/DECISIONS_V6.md": "8b0917238b283d3537fe9256bfedfa9e4255c4a5",
+    "docs/ea/v6/HANDOFF_V6.md": "589e7fa0c9b94bcc334df2dfecc54dfe4c22887f",
+    "docs/ea/v6/RESEARCH_STATE_V6.md": "4dbf9c870b19e97623740c020691526a46c7724e",
+    "docs/ea/v6/V6_000_RESEARCH_CONTRACT.md": "43d9e0d725f65fbf16e130b8c20a6e794e2aa4cb",
+    "docs/ea/v6/V6_001A_CONTEXT_INFORMATION_AUDIT.md": "2d1c70baebfb3779368c5356e2d29884a36c10cc",
+    "docs/ea/v6/V6_FAILURE_MAP_V3_V4_V5.md": "ae35c231739ea6c1bcfe947a229ba186f40134d8",
+    "docs/ea/v6/V6_NEXT_SESSION_OPERATING_PROTOCOL.md": "46655e68d7c632d880d5a729aba6f74e18b921af"
+  },
+  "replacement_files": [
+    "docs/ea/v6/AGENTS_V6.md",
+    "docs/ea/v6/BACKLOG_V6.md",
+    "docs/ea/v6/DECISIONS_V6.md",
+    "docs/ea/v6/HANDOFF_V6.md",
+    "docs/ea/v6/RESEARCH_STATE_V6.md",
+    "docs/ea/v6/V6_000A_V3_V5_LINEAGE_AND_FAILURE_SYNTHESIS.md",
+    "docs/ea/v6/V6_000_RESEARCH_CONTRACT.md",
+    "docs/ea/v6/V6_001A_CONTEXT_INFORMATION_AUDIT.md",
+    "docs/ea/v6/V6_001_CONTEXT_MEASUREMENT_REGISTRY.md",
+    "docs/ea/v6/V6_FAILURE_MAP_V3_V4_V5.md",
+    "docs/ea/v6/V6_NEXT_SESSION_OPERATING_PROTOCOL.md"
+  ],
+  "new_files_must_be_absent": [
+    "docs/ea/v6/V6_000A_V3_V5_LINEAGE_AND_FAILURE_SYNTHESIS.md",
+    "docs/ea/v6/V6_001_CONTEXT_MEASUREMENT_REGISTRY.md"
+  ],
+  "root_routing_files_patched": [
+    "AGENTS.md",
+    "docs/ea/HANDOFF.md"
+  ]
+}
