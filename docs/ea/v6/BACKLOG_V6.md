@@ -1,86 +1,102 @@
 # V6 Backlog
 
 Status: `ACTIVE`  
-Current phase: `V6-001B INTERPRETABLE INDICATOR ATLAS / STATE-TRANSITION RESEARCH`
+Current phase: `V6-002 PRECISION-PRESERVING STATE-ROUTED ARCHITECTURE RESEARCH`
 
 ## Completed foundation
 
 - [x] Close V5 without strategy promotion.
-- [x] Preserve V3 broad event reconstruction as initial V6 anchor.
-- [x] Preserve V4 no-learning as model-complexity constraint.
-- [x] Reconstruct V3 research progression and frozen 2022 failure.
-- [x] Reconstruct V5 setup/payoff, First Cross, portability, and external-state failure classes.
-- [x] Document competing explanations instead of assuming one V3 failure cause.
-- [x] Reclassify V6-001A as one queued cross-market child rather than the definition/gate of V6.
-- [x] Carry recursive falsification into V6 governance.
+- [x] Preserve exact V3 broad-event and H/L replay authority.
+- [x] Carry V3 2022 collapse, V4 no-learning, and V5 payoff/portability constraints into V6.
+- [x] Correct active direction to interpretable indicator/state research; AI/ML inactive.
+- [x] Run initial fixed indicator atlas and state-transition/statistical/cross-market diagnostics.
+- [x] Correct methodology: indicator state must drive a new mechanism replay, not merely classify old V3 trades.
+- [x] Remove AUC from V6 promotion criteria.
+- [x] Reproduce V3 Candidate-B economics before V6 comparisons.
 
-## Immediate — V6-001B interpretable indicator atlas
+## Completed V6-001C architecture bridge
 
-- [x] Reproduce exact broad-event parity `84 / 86 / 67`.
-- [x] Reproduce four-way path labels for all 237 events.
-- [x] Run first fixed H1/H4 interpretable indicator atlas without AI/ML.
-- [x] Re-check pooled hints by year and direction; do not promote pooled-only relations.
-- [ ] Reproduce `scripts/v6_001b_indicator_atlas.py` after applying this pack.
-- [ ] Design the next state-transition indicator layer: strengthening/weakening, expansion/contraction, MTF agreement/disagreement, activity expansion/decay.
-- [ ] Freeze one specific follow-up hypothesis before any 2022 use.
-- [ ] Keep Entry survival, winner continuation, and loss recovery as separate targets.
+- [x] Freeze and run R1 continuation/correction router.
+- [x] Reject R1 after poor annual/directional breadth and large DD.
+- [x] Identify M5 DMI redundancy with the broad event.
+- [x] Recursively reverse H4 interpretation from strong-trend to less-mature-state H hypothesis.
+- [x] Freeze and run R2 maturity router.
+- [x] Preserve R2 as meaningful GOLD development benchmark: EV +0.622R, avg+ 2.924R.
+- [x] Reuse existing +2R/50% H payoff control as R2P without parameter search.
+- [x] Compare R2/R2P with V3 on consumed GOLD 2022.
+- [x] Record that R2/R2P remain positive on 2022 while V3 is negative.
+- [x] Decompose 2022: H remains positive; L reverses negative.
+- [x] Replay unmodified V3/R2/R2P on XAUEUR/USDJPY/BTCUSD 2023-2025.
+- [x] Reject universal broad ADX router interpretation.
+- [x] Elevate market suitability as a separate design problem.
 
-## Shelved — V6-001A
+## Immediate — V6-002 R3 H-MATURITY
 
-Status:
+- [ ] Read `V6_002_R3_PRECISION_PRESERVING_H_STATE_CONTRACT.md`.
+- [ ] Reproduce frozen V3 H-direct 44-trade development population.
+- [ ] Attach completed H4 ADX14 state at the frozen H decision time.
+- [ ] Run shadow audit only; do not alter H trades before shadow criterion is evaluated.
+- [ ] Decompose NOT_MATURE vs MATURE H by year and direction.
+- [ ] Compare against the simpler hypothesis that V3 H precision alone explains the result.
+- [ ] If the frozen criterion passes, construct exactly one R3 strategy variant.
+- [ ] Compare R3 vs V3 vs R2 across GOLD 2023-2025.
+- [ ] Then apply unchanged R3 to GOLD 2022 historical stress comparison.
+- [ ] Then apply unchanged R3 to XAUEUR/USDJPY/BTCUSD diagnostic panel.
+- [ ] Do not market-tune threshold or payoff after seeing those results.
 
-```text
-PREREGISTERED HISTORICAL CHILD / USER-DEPRIORITIZED / NOT ACTIVE
-```
+## Next — H remaining-capacity research
 
-If the parent registry ratifies it as the next child:
+Only if R3 supports the maturity idea:
 
-- [ ] verify exact broad parity 84 / 86 / 67;
-- [ ] recover/audit the late-V5 context probe;
-- [ ] record script/config/data identity before outcomes;
-- [ ] build exact GOLDx3 duplicate control;
-- [ ] run frozen chronology;
-- [ ] classify XAUEUR/USDJPY incremental information;
-- [ ] return result to parent registry.
+- [ ] determine whether ADX state is a proxy for unused directional capacity or merely a convenient correlate;
+- [ ] compare causal pre-entry structure-consumption measures with H outcomes;
+- [ ] use D-145 only as conceptual recurrence; do not migrate post-+1R variables directly into Entry/H authorization;
+- [ ] test one preregistered simpler alternative/control at a time.
 
-Failure closes that formulation only. Do not shop replacement cross-market combinations inside the child.
+## Next — L-specific state research
 
-## Later measurement families
+- [ ] treat L as its own correction-completion mechanism;
+- [ ] do not use `not H` or `ADX>=25` as automatic L authorization;
+- [ ] preserve virtual failure -> deeper liquidity -> atomic recovery -> fresh M5 re-acceptance semantics;
+- [ ] design state-transition measurements tied specifically to correction completion;
+- [ ] freeze before outcomes; no threshold tournament.
 
-Only after parent preregistration:
+## Market suitability
 
-- [ ] own-market endogenous-state child;
-- [ ] macro/rates context child;
-- [ ] positioning/fund-flow child;
-- [ ] execution/liquidity environment child;
-- [ ] scheduled-event/market-environment child.
+- [ ] define an outcome-blind structural/execution screen for candidate markets;
+- [ ] freeze shortlist before profitability is opened;
+- [ ] validate architecture only on the frozen shortlist;
+- [ ] do not require one strategy to work on every market;
+- [ ] do not select markets after observing P/L.
 
-These are families, not permission for broad variable screening.
+## External/source-of-move context
 
-## Representation/adaptation — locked
+Eligible later, only with explicit mechanism:
 
-- [ ] self-supervised representation learning;
-- [ ] non-stationary representation diagnostics;
-- [ ] causal adaptation/rolling update.
+- [ ] macro/rates;
+- [ ] USD/relative gold state;
+- [ ] positioning/fund flow;
+- [ ] scheduled-information environment;
+- [ ] execution/liquidity environment.
 
-Unlock only after a child establishes useful information and a separate diagnosis justifies complexity/adaptation.
+No unrelated variable tournament.
 
-## Strategy stages — locked
+## Final strategy/economics — locked until architecture stabilizes
 
-- [ ] Entry permission policy;
-- [ ] winner continuation policy;
-- [ ] exit architecture;
-- [ ] exact-M1 / MT5 strategy implementation;
-- [ ] independent market validation;
-- [ ] final independent period;
-- [ ] portfolio/exposure integration.
+- [ ] exact tick replay;
+- [ ] commission/slippage/swap sensitivity;
+- [ ] MT5 Strategy Tester reproduction;
+- [ ] EA implementation;
+- [ ] portfolio/exposure integration;
+- [ ] final independent period.
 
 ## Permanent restrictions
 
-- [ ] no GOLD# 2021;
-- [ ] no Candidate-B retuning on 2022;
-- [ ] no First Cross rescue;
+- [ ] no GOLD 2021 until explicit freeze;
+- [ ] no Candidate-B rescue on 2022;
+- [ ] no AUC-driven promotion;
 - [ ] no indicator/window/threshold tournament;
-- [ ] no generic V4 return-prediction rerun as default;
+- [ ] no market-specific threshold rescue;
+- [ ] no automatic H/L inverse routing;
 - [ ] no automatic cross-stage variable reuse;
-- [ ] no production EA change from information-stage evidence.
+- [ ] no production EA change from current Level-A research.

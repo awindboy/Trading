@@ -8,90 +8,45 @@ V5 is closed. The V3-generalization research mandate is named V6.
 
 ## V6-D002 — GOLD remains primary
 
-GOLD remains the primary discovery/research market. Market expansion is a later generalization stage, not a reason to abandon accumulated GOLD research.
+GOLD remains the primary discovery/research market. Market expansion is a later generalization and market-suitability stage.
 
 ## V6-D003 — V3 validation collapse is a design constraint
 
-Any V6 result that succeeds only in one period and reverses in another is a generalization failure even if pooled performance is attractive.
+Any V6 architecture must explicitly confront the fact that V3 Candidate B looked strong in 2023-2025 and collapsed in GOLD 2022.
 
 ## V6-D004 — V4 no-learning is a design constraint
 
-V6 must establish stable information before escalating model complexity.
+Do not escalate model complexity when the information/mechanism question is unresolved.
 
-```text
-newer model != new hypothesis
-```
+## V6-D005 — Exact causal event/replay lineage is preserved
 
-## V6-D005 — Event-conditioned initial formulation
+V6 may redesign strategy architecture but must preserve/reproduce the exact V3 raw-data event and H/L controls before making economic comparisons.
 
-Initial research conditions on the exact V3-003C broad event population rather than predicting every market timestamp.
+## V6-D006 — Matched/simple controls are mandatory when relevant
 
-V3's later Candidate-A/B gates are not population filters.
-
-## V6-D006 — Matched capacity/control is mandatory when relevant
-
-A context/model claim must have a control capable of explaining away dimensionality/capacity or other obvious confounding.
-
-For V6-001A the frozen control is exact `GOLDx3`.
+A state/mechanism claim must be compared with the simpler existing mechanism or obvious confounder before promotion.
 
 ## V6-D007 — Adaptation remains locked
 
-Online/test-time adaptation is not a rescue for weak static information. It becomes eligible only after useful causal information is established and residual instability is explicitly diagnosed.
+Online/test-time adaptation is not a rescue for weak static information.
 
 ## V6-D008 — 2022 and 2021 handling
 
-GOLD 2022 is consumed V3 validation and may only falsify a frozen V6 formulation.
+GOLD 2022 is consumed. It may be used as harsh historical comparison/falsification after a V6 formulation is frozen, but it is not pristine V6 validation. GOLD 2021 remains untouched.
 
-GOLD# 2021 remains untouched.
+## V6-D009 — V6 mandate is causal market-state generalization
 
-## V6-D009 — Correct V6 mandate: context-measurement program
-
-V6 is NOT defined by V6-001A or by cross-market context alone.
-
-V6's mandate is:
-
-> use preregistered causal indicator/context measurements to determine why the same V3 event changes meaning across environments, while controlling V3 multiplicity, V4 no-learning, and V5 research-direction failures.
-
-This decision supersedes any earlier V6 routing sentence that described `finish V6-001A` as the entire generation's only active scientific question.
+V6 uses interpretable causal measurements to determine why the same local event/mechanism changes meaning across environments.
 
 ## V6-D010 — Indicator means measurement, not trading rule
 
-An indicator is eligible only as a measurement of a named latent state.
-
-Examples may come from:
-
-```text
-own-market structure/volatility/activity
-cross-market relative state
-macro/rates
-positioning/flow
-execution/liquidity
-scheduled market environment
-```
-
-No family has authority merely because it is traditional, popular, macro, or machine-learned.
+An indicator is eligible only as a measurement of a named market state.
 
 ## V6-D011 — No indicator tournament
 
-Do not screen many indicators/windows/thresholds and select the best outcome.
-
-Every child must freeze:
-
-- mechanism/state hypothesis;
-- causal availability;
-- transform;
-- target stage;
-- controls;
-- chronology;
-- uncertainty;
-- kill condition;
-- follow-up budget.
-
-A failed child is consumed and closed under its formulation.
+Do not screen many indicators/windows/thresholds, select the best outcome, and call the survivor context.
 
 ## V6-D012 — Competing explanations remain open
-
-V6 does not assume one cause for V3 failure.
 
 Keep separate:
 
@@ -101,100 +56,191 @@ covariate shift
 hidden/omitted context
 concept shift
 event-formulation insufficiency
+market suitability
 execution environment
 ```
 
-Experiments should discriminate among these where possible.
-
 ## V6-D013 — Portable observable is not portable meaning
 
-V5-036 is a permanent warning:
+A stable computation across markets/architectures does not imply stable predictive or economic meaning.
 
-```text
-same computation across architectures
-does not imply
-same predictive relationship across architectures/environments
-```
+## V6-D014 — External-state interpretation boundary
 
-No indicator may be promoted solely because its definition is stable.
-
-## V6-D014 — V5 external-state interpretation boundary
-
-V5 does not authorize the claim `external indicators failed`.
-
-Correct statuses:
-
-- real yield: one specific direct 2023 hypothesis falsified;
-- source-faithful COT: insufficient qualifying population, outcome unopened;
-- GLD flow: prepared/not run.
-
-V6 may use external data only as part of a preregistered context hypothesis tied to the V3 problem, not as unrelated standalone variable hunting.
+One failed rates/cross-market formulation does not close all external context. External variables require a mechanism-linked preregistered child.
 
 ## V6-D015 — Stage-specific variables cannot migrate automatically
 
-Entry-survival, winner-continuation, exit, execution, market-suitability, and portfolio variables are different research objects.
+Entry/event meaning, H destination, L correction completion, continuation, exit, execution, market suitability and portfolio are distinct stages.
 
-A variable discovered for one stage has no automatic rule authority in another.
+## V6-D016 — V6-001A is historical/shelved
 
-## V6-D016 — V6-001A is a queued child, not a generation gate
+The earlier same-capacity cross-market child remains historical and is not the V6 gate.
 
-V6-001A remains preregistered as a cross-market same-capacity falsifier.
+## V6-D017 — Recursive falsification is permanent
 
-Pass:
-- supports the exact XAUEUR/USDJPY incremental-information claim only.
+Every favorable interpretation must face its opposite thesis, simpler explanation, prior recurrence, control and environment decomposition.
 
-Fail:
-- closes the exact XAUEUR/USDJPY formulation only.
+## V6-D018 — User intent correction: no active AI/ML
 
-Neither outcome decides the full V6 indicator/context program.
+V6 active research is causal, human-interpretable market-state and strategy-mechanism research. AI/ML is inactive unless explicitly reopened.
 
-## V6-D017 — Recursive falsification is permanent V6 governance
+## V6-D019 — Initial indicator atlas has no strategy authority
 
-Before major interpretation answer:
+The first standard H1/H4 atlas was exploratory only. Standalone standard indicators did not justify a filter.
 
-```text
-current thesis
-opposite thesis
-simpler alternative
-prior-project recurrence
-placebo/control
-causal boundary
-geometry/economics
-kill condition
-```
+## V6-D020 — AUC is not a V6 promotion criterion
 
-A positive-looking result must survive environment decomposition and controls before being classified as supported.
-
-## V6-D018 — User intent correction: indicator-first, no active AI/ML
-
-The user explicitly corrected V6 direction on 2026-08-28:
-
-> the goal is to break V3's limitation through diverse indicators; AI is not an active interest or expected solution.
-
-Decision:
-
-- V6 active research uses causal, human-interpretable technical/market-state indicators.
-- AI/ML classifiers, representation learning, convolution probes, and model-capacity comparisons are inactive unless the user explicitly reopens them.
-- V6-001A is shelved; it is preserved only as historical preregistration.
-- no result may be summarized as `AI failed`; AI is simply outside the active research mandate.
-
-## V6-D019 — First indicator atlas is exploratory, not a filter search
-
-The first fixed H1/H4 atlas tested conventional trend, momentum, volatility, location, and tick-volume/activity indicators on the exact V3-003C broad event.
-
-Recursive falsification showed:
-
-- simple direction-adjusted H1 indicator levels reverse across years;
-- participation/location proxies also fail stability;
-- pooled H4 strength/width hints weaken after direction decomposition;
-- H4 ADX(14) is the only initial six-cell Entry-survival relation with the same rank-probability sign, but its effect is extremely weak (`~0.518..0.577`) and has no filter authority.
+The user explicitly corrected the research direction after the project drifted toward AUC/ranking diagnostics.
 
 Decision:
 
 ```text
-NO INDICATOR PROMOTION
-NEXT = STATE-TRANSITION MEASUREMENT RESEARCH
+indicator -> old V3 winner/loser AUC
 ```
 
-Do not optimize an ADX threshold from this exploratory clue.
+is not the active V6 objective.
 
+AUC/rank diagnostics may be secondary descriptive tools only. They may not select indicators, thresholds, timeframes, markets or strategies.
+
+## V6-D021 — State must be tested through actual strategy replay
+
+The active V6 chain is:
+
+```text
+state measurement
+-> mechanism hypothesis
+-> raw-data strategy replay
+-> V3 vs V6 economic comparison
+```
+
+A state construct is not useful merely because it correlates with old V3 outcomes.
+
+## V6-D022 — Final target and research value are separate classifications
+
+Final strategy goals remain WR>=50%, avg positive NET R>=2R and positive cost-adjusted EV.
+
+However:
+
+```text
+WR < 50%
+```
+
+alone does not classify a development hypothesis as a failure. Evaluate the full economic/risk vector.
+
+This decision reclassifies R2/R2P as meaningful development benchmarks despite not yet meeting the final WR target.
+
+## V6-D023 — R2 and R2P benchmark status
+
+R2 GOLD 2023-2025:
+
+```text
+75 trades / WR 41.33% / avg+ 2.924R / EV +0.622R
+```
+
+R2P:
+
+```text
+75 trades / WR 44.0% / avg+ 2.300R / EV +0.452R
+```
+
+Decision:
+
+```text
+R2  = PRIMARY V6 ECONOMIC RESEARCH BENCHMARK
+R2P = PAYOFF / POSITIVE-FREQUENCY ALTERNATE
+```
+
+Neither has production authority.
+
+## V6-D024 — GOLD 2022 shows period-robustness improvement, not pristine validation
+
+Unchanged R2 on consumed GOLD 2022 produced:
+
+```text
+40 trades / WR 35.0% / avg+ 2.428R / EV +0.200R
+```
+
+while frozen V3 produced `EV -0.385R`.
+
+This is meaningful historical evidence that R2 did not collapse like V3, but 2022 is consumed and R2 profit was concentrated in Q4. Do not call it pristine validation.
+
+## V6-D025 — H survives better than the inverse L routing
+
+R2 H remained positive from development into 2022:
+
+```text
++0.704R -> +0.538R EV
+```
+
+R2 L reversed:
+
+```text
++0.293R -> -0.429R EV
+```
+
+Decision:
+
+- preserve H maturity as an active hypothesis;
+- reject `ADX>=25 -> L` as general L authority;
+- L requires a separate correction-completion state hypothesis.
+
+## V6-D026 — Broad ADX routing is not universal across markets
+
+Unmodified R2 was negative on XAUEUR and BTCUSD and almost breakeven on USDJPY. BTCUSD is the strongest warning because V3 remained weakly positive while R2 deteriorated substantially.
+
+Decision:
+
+```text
+GOLD period robustness != universal market architecture
+```
+
+Do not market-tune ADX or payoff after this result.
+
+## V6-D027 — Preserve precision, use state to select meaning
+
+The active V6-002 architecture principle is:
+
+> preserve useful V3 local reaction/requalification precision, then use market state to modify destination or authorization.
+
+Do not replace Candidate-A/H direct-transfer/L atomic requalification wholesale with a broad state gate unless a separately frozen experiment justifies it.
+
+## V6-D028 — Market suitability is a separate design problem
+
+A strategy does not need to work on every market. Strategy-compatible market selection is legitimate, but selection must be outcome-blind:
+
+```text
+structural/execution screen
+-> freeze shortlist
+-> open outcomes
+```
+
+Do not select profitable markets after testing them.
+
+## V6-D029 — R3 is the first V6-002 child
+
+R3 tests H4 maturity only inside the preserved V3 H precision substrate.
+
+First R3 audit must not change:
+
+- Candidate-A semantics;
+- H direct-transfer;
+- H pullback geometry;
+- H payoff;
+- L semantics;
+- market-specific thresholds.
+
+Only if the frozen shadow criterion passes may one controlled R3 strategy variant be constructed.
+
+## V6-D030 — Architecture comparisons must expose cross-market damage
+
+For R3 and later architecture changes, report together:
+
+```text
+GOLD 2023-2025
+GOLD 2022 historical stress comparison
+XAUEUR 2023-2025
+USDJPY 2023-2025
+BTCUSD 2023-2025
+```
+
+This panel is consumed diagnostic evidence, not final validation. Its role is to prevent a GOLD-only improvement from hiding destruction of known independent markets.

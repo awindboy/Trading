@@ -1,0 +1,125 @@
+{
+  "v3_payoff_parity": {
+    "n": 44,
+    "positive": 20,
+    "positive_rate": 0.45454545454545453,
+    "avg_positive_R": 2.675,
+    "EV_R": 0.6704545454545454
+  },
+  "pre": {
+    "H": 62,
+    "L": 16
+  },
+  "blocked": 3,
+  "pooled": {
+    "accepted_n": 75,
+    "resolved_n": 75,
+    "censored_n": 0,
+    "positive": 33,
+    "negative": 42,
+    "positive_rate": 0.44,
+    "avg_positive_R": 2.299837459858508,
+    "expectancy_R": 0.45192848233774335,
+    "total_R": 33.89463617533075,
+    "max_negative_streak": 6,
+    "max_drawdown_R": 8.5
+  },
+  "annual": {
+    "2023": {
+      "accepted_n": 27,
+      "resolved_n": 27,
+      "censored_n": 0,
+      "positive": 12,
+      "negative": 15,
+      "positive_rate": 0.4444444444444444,
+      "avg_positive_R": 2.0416666666666665,
+      "expectancy_R": 0.35185185185185186,
+      "total_R": 9.5,
+      "max_negative_streak": 5,
+      "max_drawdown_R": 5.5
+    },
+    "2024": {
+      "accepted_n": 28,
+      "resolved_n": 28,
+      "censored_n": 0,
+      "positive": 13,
+      "negative": 15,
+      "positive_rate": 0.4642857142857143,
+      "avg_positive_R": 2.423076923076923,
+      "expectancy_R": 0.5892857142857143,
+      "total_R": 16.5,
+      "max_negative_streak": 6,
+      "max_drawdown_R": 6.0
+    },
+    "2025": {
+      "accepted_n": 20,
+      "resolved_n": 20,
+      "censored_n": 0,
+      "positive": 8,
+      "negative": 12,
+      "positive_rate": 0.4,
+      "avg_positive_R": 2.4868295219163445,
+      "expectancy_R": 0.3947318087665378,
+      "total_R": 7.894636175330756,
+      "max_negative_streak": 5,
+      "max_drawdown_R": 5.0
+    }
+  },
+  "direction": {
+    "-1": {
+      "accepted_n": 35,
+      "resolved_n": 35,
+      "censored_n": 0,
+      "positive": 13,
+      "negative": 22,
+      "positive_rate": 0.37142857142857144,
+      "avg_positive_R": 1.9615384615384615,
+      "expectancy_R": 0.1,
+      "total_R": 3.5,
+      "max_negative_streak": 4,
+      "max_drawdown_R": 5.5
+    },
+    "1": {
+      "accepted_n": 40,
+      "resolved_n": 40,
+      "censored_n": 0,
+      "positive": 20,
+      "negative": 20,
+      "positive_rate": 0.5,
+      "avg_positive_R": 2.5197318087665375,
+      "expectancy_R": 0.759865904383269,
+      "total_R": 30.394636175330756,
+      "max_negative_streak": 4,
+      "max_drawdown_R": 4.0
+    }
+  },
+  "module": {
+    "H": {
+      "accepted_n": 60,
+      "resolved_n": 60,
+      "censored_n": 0,
+      "positive": 24,
+      "negative": 36,
+      "positive_rate": 0.4,
+      "avg_positive_R": 2.7291666666666665,
+      "expectancy_R": 0.49166666666666664,
+      "total_R": 29.5,
+      "max_negative_streak": 9,
+      "max_drawdown_R": 9.0
+    },
+    "L": {
+      "accepted_n": 15,
+      "resolved_n": 15,
+      "censored_n": 0,
+      "positive": 9,
+      "negative": 6,
+      "positive_rate": 0.6,
+      "avg_positive_R": 1.1549595750367507,
+      "expectancy_R": 0.2929757450220504,
+      "total_R": 4.394636175330756,
+      "max_negative_streak": 3,
+      "max_drawdown_R": 3.0
+    }
+  },
+  "PASS": false
+}

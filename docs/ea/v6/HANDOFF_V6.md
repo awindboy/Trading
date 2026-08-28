@@ -1,8 +1,9 @@
 # V6 Development Handoff
 
 Last updated: `2026-08-28`  
-Current phase: `V6-001B INTERPRETABLE INDICATOR ATLAS / STATE-TRANSITION RESEARCH`  
+Current phase: `V6-002 PRECISION-PRESERVING STATE-ROUTED ARCHITECTURE RESEARCH`  
 Current promoted candidate: `NONE`  
+Current research benchmarks: `R2 primary / R2P alternate`  
 Production authority: `NONE`
 
 ## Mandatory startup
@@ -13,172 +14,228 @@ Production authority: `NONE`
 4. Read `AGENTS_V6.md`.
 5. Read this file.
 6. Read `RESEARCH_STATE_V6.md`.
-7. Read `V6_000A_V3_V5_LINEAGE_AND_FAILURE_SYNTHESIS.md`.
-8. Read `V6_000_RESEARCH_CONTRACT.md`.
-9. Read `V6_FAILURE_MAP_V3_V4_V5.md`.
-10. Read `V6_001_CONTEXT_MEASUREMENT_REGISTRY.md`.
-11. Read `DECISIONS_V6.md`.
-12. Read `BACKLOG_V6.md`.
-13. Read the active child contract only after the parent registry activates one.
-14. Inspect exact code/data before any empirical execution.
+7. Read `V6_001C_STATE_ROUTED_MECHANISM_RESULTS.md`.
+8. Read `V6_002_R3_PRECISION_PRESERVING_H_STATE_CONTRACT.md`.
+9. Read `DECISIONS_V6.md` and `BACKLOG_V6.md`.
+10. Inspect exact code/data before execution.
 
 GitHub wins over chat memory.
 
-## Why V6 exists
+## Current user-level direction
 
-User-level intended direction:
-
-> use diverse causal, interpretable technical/market-state indicators to understand and overcome the generalization limitation exposed by V3. AI/ML is not the active research route.
-
-Do NOT reinterpret this as:
-
-- abandon GOLD;
-- add one more V3 chart threshold;
-- enumerate macro/COT/ETF variables until one works;
-- test every standard technical indicator;
-- rerun V4 with a bigger model;
-- treat one cross-market pair as the entire V6 program.
-
-## Critical V3 understanding
-
-V3's failure was not just final Candidate-B PnL.
-
-Before 2022:
-- quarter-level relationships already moved materially;
-- exact mirrors were sometimes competitive;
-- weak periods contained different failure mechanisms.
-
-Frozen 2022:
-- Candidate B = 24 accepted / 25% positive / EV -0.385R;
-- Candidate-A +1R survival = 17/39;
-- zero spread did not fix survival;
-- H original +5R = 1/20 vs mirror = 6/20;
-- L and H->L relationships also weakened/reversed.
-
-Therefore V6 must discriminate:
+V6 research must follow:
 
 ```text
-selection/multiplicity
-covariate shift
-hidden context
-concept shift
-event insufficiency
-execution
+indicator/state measurement
+-> verify that it meaningfully describes market state
+-> apply that state to strategy mechanism selection
+-> replay raw market data and generate new trades
+-> compare V3 vs V6 economics
 ```
 
-Do not declare one cause in advance.
-
-## Critical V5 understanding
-
-V5 must not be summarized as `results were bad`.
-
-It established different failure classes:
-
-1. many success-first setups had a hit-rate/payoff frontier;
-2. First Cross had positive development EV but failed final avg-positive-R economics;
-3. the consumed partial/BE/runner family was mathematically incapable of meeting the joint target;
-4. the exact V3 M30 measurement ported, but its predictive meaning did not;
-5. one real-yield direct hypothesis failed;
-6. source-faithful COT was underpopulated;
-7. GLD flow was unrun;
-8. unrelated external-variable hunting moved away from the intended V3-generalization problem.
-
-Permanent V6 lesson:
+Do NOT revert to:
 
 ```text
-indicator = measurement of a stated missing-context hypothesis
-indicator != standalone trading rule
-portable measurement != portable meaning
+match indicator values to old V3 trade outcomes
+-> rank by AUC/score
+-> select the best filter
 ```
 
-## Exact current task
+AI/ML is not an active route unless the user explicitly reopens it.
 
-Active child:
+## Completed V6-001B/001C chain
+
+### Indicator/state exploration
+
+The initial conventional H1/H4 atlas did not reveal a standalone universal filter. Broader exploratory work then examined multiple timeframes/settings/combinations. The useful result was not a winning score but interpretable state coordinates.
+
+Important constructs:
 
 ```text
-V6-001B INTERPRETABLE INDICATOR ATLAS / STATE-TRANSITION RESEARCH
+M5 DMI5  = local directional pressure
+H4 ADX14 = intermediate maturity/strength state
+D1 ATR14 = background movement scale
 ```
 
-Current task:
+### R1
+
+`ADX>=25 + DMI aligned -> H`, `ADX>=25 + DMI opposed -> L`, weak ADX -> no trade.
+
+Result:
 
 ```text
-reproduce exact V3 broad event parity
--> attach causal completed-bar indicators
--> report all fixed indicator families, not only favorable ones
--> separate Entry survival / winner continuation / loss recovery
--> decompose every apparent relation by year and direction
--> focus next on state-transition measurements rather than standalone oscillator levels
--> freeze any specific follow-up before using GOLD 2022
+41 trades
+WR 29.27%
+avg+ 2.604R
+EV +0.055R
+DD 16.5R
+2023/2024 negative
+SHORT EV -0.638R
 ```
 
-AI/ML classification, representation learning, convolution probes, and model-capacity comparisons are not active V6 work unless the user explicitly reopens them.
+R1 is closed.
 
-## V6-001A preserved but scoped
+M5 DMI was redundant with the broad-event M5 transition in about 90% of events.
 
-Existing child:
+### R2
+
+Recursive falsification reversed the H4 interpretation:
 
 ```text
-V6-001A
-GOLD + XAUEUR + USDJPY
-vs
-same-capacity GOLDx3
+ADX<25 -> H
+ADX>=25 -> L
 ```
 
-Status:
+GOLD 2023-2025:
 
 ```text
-SHELVED / PRE-REGISTERED HISTORICAL CHILD / USER-DEPRIORITIZED
+75 trades
+WR 41.33%
+avg+ 2.924R
+EV +0.622R
+2023/24/25 all positive
+LONG/SHORT both positive
+DD 10R
 ```
 
-It remains scientifically valid as a capacity-confound cleanup of V5-041 scratch.
-
-It is not the definition of V6 and not a fatal gate for unrelated preregistered context families.
-
-If eventually activated:
+Classification:
 
 ```text
-pass -> supports exact cross-market formulation only
-fail -> closes exact cross-market formulation only
+MEANINGFUL DEVELOPMENT BENCHMARK
+FINAL WR TARGET NOT YET MET
+NO PRODUCTION AUTHORITY
 ```
 
-Do not market-shop a replacement inside that child.
+### R2P
 
-## Initial event anchor
-
-Use exact V3-003C broad control unless a separate future event-reformulation phase is preregistered.
-
-Expected parity:
+Existing H +2R/50% protection reused without tuning:
 
 ```text
-2023 84
-2024 86
-2025 67
+75 trades
+WR 44.0%
+avg+ 2.300R
+EV +0.452R
+DD 8.5R
 ```
 
-Do not apply DELIVERY_ACTIVE / STRONG_ACCEPTANCE / Candidate A / H/L / Candidate B as population gates.
+R2P is an alternate payoff benchmark.
 
-## Research governance
+## GOLD 2022 historical comparison
 
-Before each child outcome:
+2022 is consumed; this is not pristine V6 validation.
 
-- state thesis and opposite thesis;
-- state simpler alternative;
-- state exact causal boundary;
-- state placebo/matched control;
-- state stage-specific target;
-- state kill condition;
-- freeze allowed follow-up budget.
+```text
+V3:
+24 trades / WR 25.0% / avg+ 1.458R / EV -0.385R / total -9.25R / DD 10.25R
 
-After a positive result:
+R2:
+40 trades / WR 35.0% / avg+ 2.428R / EV +0.200R / total +7.987R / DD 6.75R
 
-- decompose by chronological environment/direction;
-- check placebo and simple explanations;
-- distinguish direction information from volatility/intensity;
-- test whether the conclusion survives removal of the strongest environment.
+R2P:
+40 trades / WR 37.5% / avg+ 1.966R / EV +0.112R / total +4.487R / DD 7.5R
+```
 
-## Validation/data restrictions
+R2 did not collapse like V3, but its 2022 profit was concentrated in Q4.
 
-- 2023/2024/2025 are consumed research environments for the initial broad event.
-- GOLD 2022 is consumed V3 validation and may only later falsify a frozen V6 formulation.
-- GOLD# 2021 remains untouched.
-- no production EA modification from V6 information-stage research.
+Module decomposition:
+
+```text
+R2 H: 2023-25 EV +0.704R -> 2022 EV +0.538R
+R2 L: 2023-25 EV +0.293R -> 2022 EV -0.429R
+```
+
+H is the surviving clue. The simple inverse `ADX>=25 -> L` relation is not supported.
+
+## Cross-market comparison
+
+Same unmodified rules were replayed on full 2023-2025 XAUEUR/USDJPY/BTCUSD data.
+
+```text
+XAUEUR:
+V3 -0.247R
+R2 -0.353R
+R2P -0.284R
+
+USDJPY:
+V3 -0.135R
+R2 -0.017R
+R2P -0.108R
+
+BTCUSD:
+V3 +0.090R
+R2 -0.334R
+R2P -0.310R
+```
+
+Therefore R2 improves GOLD period robustness but is not a universal market architecture.
+
+BTC is especially important: V3 local precision remained weakly positive while broad R2 routing destroyed it. This motivates the active V6-002 principle:
+
+> preserve V3 local precision and use state to change destination/authorization instead of replacing precision wholesale.
+
+## Exact next task — R3
+
+Read `V6_002_R3_PRECISION_PRESERVING_H_STATE_CONTRACT.md`.
+
+R3 asks:
+
+> Among H opportunities that already satisfy the V3 precision substrate, does H4 maturity distinguish when the H large-payoff destination remains healthy?
+
+Do not change Candidate-A, direct-transfer, pullback geometry, H payoff, or L semantics in the first R3 shadow audit.
+
+R3 first uses development data only. Only after the frozen shadow criterion is evaluated may a controlled strategy variant be constructed.
+
+## Required R3 comparison panel
+
+If R3 strategy construction is authorized, run the same frozen rule on:
+
+```text
+GOLD 2023-2025
+GOLD 2022 consumed historical stress comparison
+XAUEUR 2023-2025
+USDJPY 2023-2025
+BTCUSD 2023-2025
+```
+
+No market-specific threshold or payoff rescue.
+
+## Evaluation rule
+
+Always report jointly:
+
+```text
+N
+WR
+avg positive R
+avg negative R
+EV/trade
+total R
+DD
+loss streak
+year split
+direction split
+H/L contribution
+winner concentration
+```
+
+The final goal remains WR>=50%, avg positive NET R>=2R and positive cost-adjusted EV, but a research candidate is not discarded solely because WR has not yet reached 50%.
+
+## Research after R3
+
+Priority:
+
+1. H maturity / remaining-capacity mechanism;
+2. L-specific correction-completion state — not inverse H;
+3. outcome-blind market-suitability screen and frozen market universe;
+4. mechanism-linked external/source-of-move context if internal state is insufficient;
+5. exact execution/economics only after architecture stabilizes.
+
+## Hard restrictions
+
+- no AUC-driven promotion;
+- no old-trade classification as the main V6 task;
+- no parameter rescue on consumed outcomes;
+- no market-specific threshold tuning;
+- no automatic H variable -> L variable reuse;
+- no production EA change yet;
+- no GOLD 2021.
