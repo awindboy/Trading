@@ -1,0 +1,21 @@
+V6-003A overlay apply record
+
+Expected repository HEAD before application:
+982839b0a1ea166fc534272f2024a72cedfb8326
+
+Overlay type:
+repo-relative complete replacements/additions
+no enclosing package folder
+no executable apply script
+
+Fail closed:
+- If current HEAD is not the expected HEAD, inspect upstream changes before overwriting.
+- Do not apply this ZIP blindly to a different repository state.
+
+Primary state after application:
+- MENV-004 remains research benchmark.
+- V6-003A first atlas is closed.
+- P1 H1 DMI is closed.
+- P2 H1 DISP24 x MENV HIGH_HIGH is external-validation candidate only.
+- No routing strategy or production EA change.
+- GOLD 2021 remains untouched.

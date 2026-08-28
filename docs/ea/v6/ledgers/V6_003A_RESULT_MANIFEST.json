@@ -1,0 +1,97 @@
+{
+  "experiment": "V6-003A",
+  "date": "2026-08-29",
+  "expected_base_head": "982839b0a1ea166fc534272f2024a72cedfb8326",
+  "production_authority": "NONE",
+  "consumed_panel": [
+    "GOLD 2022-2025",
+    "BTCUSD 2023-2025",
+    "USDJPY 2023-2025",
+    "XAUEUR 2023-2025"
+  ],
+  "untouched": [
+    "GOLD 2021"
+  ],
+  "raw_input_sha256": {
+    "GOLD#(9).zip": "bbf052ed28e47961c42c0894bd7b1ecdb953500883ea97bf90ca85f9d895cc39",
+    "GoldLike(4).zip": "846ec595b732184350adaec12f6cdbcc7e06bfda39c9f65979930b1719160fbb",
+    "GoldLike2(2).zip": "4d97e03d27880089237092f7596f392208095069cad71ddc6dcade91f2c395b3"
+  },
+  "parity": {
+    "direct_raw": 628,
+    "d1_valid": 620,
+    "state_valid": 540,
+    "high_high": 163,
+    "fills": 151,
+    "exposure_blocked": 7,
+    "accepted": 144,
+    "accepted_total_R": 71.25,
+    "accepted_EV_R": 0.4947916666666667
+  },
+  "atlas": {
+    "P1": {
+      "aligned": 202,
+      "opposed": 418,
+      "neutral": 0
+    },
+    "P2": {
+      "aligned": 220,
+      "opposed": 400,
+      "neutral": 0
+    },
+    "S1": {
+      "aligned": 223,
+      "opposed": 397,
+      "neutral": 0
+    },
+    "S2": {
+      "aligned": 166,
+      "opposed": 454,
+      "neutral": 0
+    },
+    "S3": {
+      "aligned": 119,
+      "opposed": 350,
+      "neutral": 151
+    },
+    "P1_P2_direction_agreement": 0.8451612903225807
+  },
+  "raw_path": {
+    "opportunities": 620,
+    "fills": 586,
+    "hit1": 273,
+    "hit3": 138,
+    "hit5": 94
+  },
+  "p2_high_high": {
+    "aligned_fills": 53,
+    "opposed_fills": 98,
+    "aligned_hit1": 0.5849056603773585,
+    "opposed_hit1": 0.5,
+    "aligned_hit3": 0.41509433962264153,
+    "opposed_hit3": 0.2857142857142857,
+    "aligned_hit5": 0.3584905660377358,
+    "opposed_hit5": 0.19387755102040816
+  },
+  "decision": {
+    "P1": "CLOSED",
+    "P2_STANDALONE": "NOT_PROMOTED",
+    "P2_X_HIGH_HIGH": "EXTERNAL_VALIDATION_CANDIDATE_ONLY",
+    "ROUTING_ARCHITECTURE": "NOT_FROZEN",
+    "OPPOSED_INVERSION": "REJECTED"
+  },
+  "artifact_sha256": {
+    "V6_003A_COUNTERPRIOR_FAILURE_DIAG.csv": "bcac8b3124f253c735f68d201318efe8bec51bfce9c3fdca18c6bd5be11fb73b",
+    "V6_003A_COUNTERPRIOR_SUMMARY.csv": "75e7695327e551915c2c65f2f3cfb20a566bf25e381ab8a014cd06d24291d103",
+    "V6_003A_DIRECTIONAL_PRIOR_OUTCOME_LEDGER.csv": "d0e61ac70263ccbf89b19f2d25aa3531ab6f19ec93b3914ff65dbaf4ca44058f",
+    "V6_003A_MENV_ACCEPTED_PRIOR_SUMMARY.csv": "8a442751ea7b852329f110f39ca87a90fb9e5ed959bb6dc4b23ea7c42ed674dc",
+    "V6_003A_P2_HH_BY_DIRECTION.csv": "131420fbc491f2de207fc348b0d6950ae5e4c309be46f95b3bdd6d0cce41fc9b",
+    "V6_003A_P2_HH_BY_ENV.csv": "06defa0d70cb393b67ec6c26d971e568293bbcf52653d183b1a217172cb62c16",
+    "V6_003A_P2_HH_BY_MARKET.csv": "ed0eb4b0496b9bb56a609fd124de366306886fb5c8aec385c6bad05134423012",
+    "V6_003A_P2_HH_FALSIFICATION_STATS.csv": "18c43c8bbe2cfc2c39f5767c76300fac4482b45442ea594ca97932818e9a6dfb",
+    "V6_003A_P2_HH_POOLED.csv": "6f980c66f0e83046cc2e04267d39d1812128a9a72120fc059333b3e088a71c33",
+    "V6_003A_PRIOR_ATLAS_620.csv": "d28297dd9f6a8f861d999d43c03dc8600a52262efe9400670cc2e484c97c3318",
+    "V6_003A_PRIOR_BY_ENV.csv": "8bb008c36360e052709a30ed3749ea0af7ebe89fbd5cc920da9419598927d31d",
+    "V6_003A_PRIOR_POOLED_SUMMARY.csv": "932f88c0e685dfad0cdc13de506877ca60592831e330a6782899a008c0f57fa3"
+  }
+}

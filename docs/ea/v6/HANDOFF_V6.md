@@ -1,12 +1,13 @@
 # V6 Development Handoff
 
-Last updated: `2026-08-29`
-Base GitHub HEAD before this update: `ced2bb276ce6471162bcc49af3522eaa3d038694`
-Current phase: `V6-003 MULTI-ENVIRONMENT DIRECTIONAL-PRIOR RESEARCH`
-Current production authority: `NONE`
-Current promoted production candidate: `NONE`
-Current research benchmark: `MENV-004 PRETRADE SCALE x ACCEPTANCE H`
-Untouched final-period reserve: `GOLD 2021`
+Last updated: `2026-08-29`  
+Expected base GitHub HEAD for this overlay: `982839b0a1ea166fc534272f2024a72cedfb8326`  
+Current phase: `V6-003 DIRECTIONAL-PRIOR EXTERNAL-VALIDATION PREP`  
+Current production authority: `NONE`  
+Current promoted production candidate: `NONE`  
+Current research benchmark: `MENV-004 PRETRADE SCALE x ACCEPTANCE H`  
+Current directional validation candidate: `P2 H1 DISP24 x MENV HIGH_HIGH`  
+Untouched reserve: `GOLD 2021`
 
 ## 1. Mandatory startup
 
@@ -21,20 +22,16 @@ Read in order:
 7. `RESEARCH_STATE_V6.md`;
 8. `V6_002_MULTI_ENVIRONMENT_RESEARCH_RESULTS.md`;
 9. `V6_003A_DIRECTIONAL_PRIOR_RESEARCH_CONTRACT.md`;
-10. `DECISIONS_V6.md`;
-11. `BACKLOG_V6.md`.
+10. `V6_003A_DIRECTIONAL_PRIOR_ATLAS_FREEZE.md`;
+11. `V6_003A_DIRECTIONAL_PRIOR_RESULTS.md`;
+12. `DECISIONS_V6.md`;
+13. `BACKLOG_V6.md`.
 
 GitHub wins over chat memory.
 
-## 2. Why the phase changed
+## 2. Permanent research frame
 
-V3 and early V6 research were too anchored to GOLD 2023-2025.
-
-The user explicitly changed the research policy:
-
-> GOLD 2022 and multiple markets/years must participate in discovery so that a rule is not designed around one favorable environment.
-
-The consumed research panel is now 13 market-year environments:
+Consumed research panel:
 
 ```text
 GOLD 2022-2025
@@ -43,441 +40,288 @@ USDJPY 2023-2025
 BTCUSD 2023-2025
 ```
 
-This is development/falsification, not pristine final validation.
+GOLD 2021 remains untouched.
 
-## 3. V6 chain completed before multi-environment reset
+V3 remains deterministic substrate/control, not universal truth. No outcome-driven market selection, threshold rescue, H/L inversion, or cross-stage variable migration.
 
-### R1
+## 3. Current benchmark
 
-`ADX>=25 + M5 DMI aligned -> H`, opposed -> L.
-
-GOLD 2023-2025:
+MENV-004:
 
 ```text
-41 trades
-WR 29.27%
-avg+ 2.604R
-EV +0.055R
-DD 16.5R
-```
-
-Rejected. M5 DMI direction was about 90% redundant with the broad event direction.
-
-### R2
-
-`ADX<25 -> H`, `ADX>=25 -> L`.
-
-GOLD 2023-2025:
-
-```text
-75 trades
-WR 41.33%
-avg+ 2.924R
-EV +0.622R
-DD 10R
-```
-
-Meaningful GOLD benchmark, not universal architecture.
-
-GOLD 2022 stayed positive overall (`EV +0.200R`) but was Q4 concentrated; L reversed negative.
-
-Cross-market R2:
-- XAUEUR negative;
-- USDJPY near breakeven;
-- BTCUSD strongly negative.
-
-### R2P
-
-Existing +2R/50% H protection control:
-
-```text
-75 trades
-WR 44.0%
-avg+ 2.300R
-EV +0.452R
-DD 8.5R
-```
-
-## 4. R3/R4 precision-preserving H research
-
-R3 shadow on exact V3 H-direct 44-fill development population:
-
-```text
-NOT_MATURE ADX<25:
-22 trades
-WR 59.09%
-avg+ 3.923R
-EV +1.909R
-
-MATURE ADX>=25:
-22 trades
-WR 18.18%
-EV -0.170R
-```
-
-R3 GOLD 2023-2025 strategy:
-
-```text
-31 trades
-WR 77.42%
-avg+ 2.643R
-EV +1.821R
-total +56.438R
-DD 1R
-```
-
-But unchanged R3 remained negative or weak on GOLD 2022 / XAUEUR / USDJPY / BTCUSD. H-state portability analysis showed the ADX relation reversed on XAUEUR and BTCUSD.
-
-R4 allowed high-ADX H only when H4 DMI direction aligned with H:
-
-```text
-36 trades
-WR 69.44%
-avg+ 2.718R
-EV +1.582R
-total +56.938R
-DD 2R
-```
-
-Development remained strong, but 2022 worsened and cross-market portability was not solved.
-
-Conclusion:
-- R3/R4 are consumed evidence of GOLD-specific specialization;
-- ADX level/direction is not a universal H-state solution.
-
-## 5. Candidate-A / V3 precision regression
-
-Within comparable low-ADX/direct H opportunity:
-- Candidate-A precision strongly helped GOLD 2023-2025;
-- it reversed on GOLD 2022;
-- it did not create robust edge on XAUEUR/BTC.
-
-The `delivery_state = M30 expansion >1 OR owner alignment` internals were decomposed.
-
-The `EXP_ONLY` branch was particularly unstable:
-
-```text
-GOLD23-25  +1.625R EV
-GOLD22     -0.500R
-XAUEUR     -0.526R
-USDJPY     +0.088R
-BTCUSD     -0.370R
-```
-
-Do not simply delete EXP_ONLY after seeing outcomes. The lesson is that V3 "precision" is not a universally invariant quality scale.
-
-## 6. Multi-environment reset and environment fingerprint
-
-The project stopped treating GOLD 2022 as an anomalous external validation year and moved all consumed data into one research panel.
-
-Outcome-blind environment fingerprints showed GOLD 2022 overlaps GOLD 2023-2025 on many simple volatility/trend/process features. Broad-event density was notably higher in 2022.
-
-Working interpretation:
-- simple visible regime shift is insufficient;
-- concept shift / event-meaning change remains plausible.
-
-Simple 24h room did not generalize.
-Path efficiency weakened against simpler displacement/momentum controls.
-
-## 7. MENV-004 — current benchmark
-
-Causal event-relative dimensions:
-
-```text
-structural_scale = planned sweep-extreme risk / D1 ATR
-acceptance_scale = M5 acceptance margin / D1 ATR
-```
-
-Past expanding median is computed from earlier same-market broad-direct opportunities only.
-
-Valid after 20 prior opportunities.
-
-```text
-HIGH_HIGH = scale > past median(scale)
-            AND
-            acceptance > past median(acceptance)
-```
-
-Pre-trade population:
-- 620 broad-direct opportunities;
-- 540 causal-state-valid;
-- 163 HIGH_HIGH parents;
-- 151 filled;
-- 144 accepted after opposite-direction exposure control.
-
-Exposure-adjusted economics:
-
-```text
-N 144
+620 broad-direct causal-valid
+540 state-valid
+163 HIGH_HIGH parents
+151 fills
+144 exposure accepted
+48 positive
 WR 33.33%
-avg winner +3.484R
-EV +0.495R
+avg positive +3.484R
+EV +0.494792R
 total +71.25R
-DD 15.25R
-loss streak 10
 12/13 market-years positive
 ```
 
-Market EV:
+MENV-004 state:
 
 ```text
-BTCUSD +0.673R
-GOLD   +0.493R
-XAUEUR +0.539R
-USDJPY +0.090R
+scale      = planned H risk / causal completed D1 ATR14
+acceptance = M5 acceptance margin / same D1 ATR14
+
+HIGH_HIGH =
+    scale > earlier same-market median(scale)
+AND acceptance > earlier same-market median(acceptance)
 ```
 
-Directions:
+History warmup remains 20.
+
+## 4. Critical V6-003A implementation correction
+
+Directional-prior work re-established the benchmark from raw M1 before interpreting outcomes.
+
+Correct D1 rule:
 
 ```text
-LONG 84 trades / EV +0.607R
-SHORT 60 trades / EV +0.338R
+calendar D1 resample
+-> ATR14
+-> each D1 ATR becomes available at next calendar-day boundary
 ```
 
-This is the strongest current V6 cross-environment H benchmark.
+Do not add a separate rule that removes the first observed D1 bar merely because its raw history begins away from midnight.
 
-## 8. MENV-004 stage facts
-
-For the same 144 accepted entries:
+Correct pending H fill rule:
 
 ```text
-+1R reached: 77 / 144 = 53.47%
-+2R reached: 55 / 144 = 38.19%
-+3R reached: 48 / 144 = 33.33%
-+5R reached: 35 / 144 = 24.31%
-
-P(+2R | +1R) = 71.43%
-P(+3R | +1R) = 62.34%
-P(+5R | +1R) = 45.45%
+first eligible M1 index =
+searchsorted(trigger_time, side="right")
 ```
 
-Interpretation:
-- Entry -> +1R survival already exceeds 50% in this research population;
-- realized WR remains 33% because current lifecycle gives many +1R survivors back;
-- exit research must preserve the large-winner tail rather than force every trade out at +1R.
+The pending order cannot fill on the trigger timestamp M1.
 
-Oracle diagnostic only, not a strategy:
-if +1R survivors that fail before +3R could be harvested at +1R while +3R/+5R runners remained unchanged, the same 144 entries could theoretically support roughly:
+With these rules, every 13-environment MENV result row matches authority exactly.
+
+## 5. V6-003A frozen atlas
+
+Before the local event finalizes direction, at `sweep_time`:
 
 ```text
-WR 53.47%
-avg winner about 2.55R
-EV about +0.90R
+P1 H1 DMI14 direction
+P2 H1 24-bar signed displacement
+S1 H1 BOS owner
+S2 M30 BOS owner
+S3 H1/M30 concordant owner
 ```
 
-This proves feasibility, not causal implementability.
-
-## 9. Exit/continuation falsification after MENV-004
-
-Mechanical +1R partial/BE controls:
+Counts over 620:
 
 ```text
-25% partial:
-WR 53.47%
-avg winner 1.468R
-EV +0.319R
-
-50% partial:
-WR 53.47%
-avg winner 1.312R
-EV +0.236R
+P1 202 aligned / 418 opposed
+P2 220 aligned / 400 opposed
+S1 223 aligned / 397 opposed
+S2 166 aligned / 454 opposed
+S3 119 aligned / 350 opposed / 151 neutral
 ```
 
-They solve WR by damaging payoff; not final candidates.
+P1/P2 absolute direction agreement = 84.52%.
 
-MENV-005 M5 structural hard lock:
+## 6. V6-003A result
+
+### P1 closed
+
+P1 broad raw-path aligned/opposed:
 
 ```text
-N 144
-WR 42.36%
-avg winner 2.030R
-EV +0.284R
++1R 46.88% / 46.45%
++3R 24.48% / 23.10%
++5R 16.15% / 15.99%
 ```
 
-Closed/degraded: too many genuine TP5 runners cut early.
+When P1 and P2 disagree, simple displacement wins clearly.
 
-MENV-006 completed-close M5 protected-break exit:
+Do not try P1 ADX gates, magnitudes or nearby H1 windows to rescue it.
+
+### P2 broad not promoted
+
+P2 broad:
 
 ```text
-N 144
-WR 40.97%
-avg winner 2.091R
-EV +0.278R
+ALIGNED 210 fills:
++1 49.05% / +3 26.67% / +5 18.57%
+
+OPPOSED 376:
++1 45.21% / +3 21.81% / +5 14.63%
 ```
 
-Closed/degraded.
+Broad recurrence is too weak and the effect is SHORT-concentrated.
 
-MENV-007 to MENV-010 shadow studies showed:
-- first correction is common in both failures and genuine runners;
-- first opposite/local break is not sufficiently pure;
-- first M5 close acceptance does not stably separate continuation;
-- losing the +1R milestone after correction still occurs in many eventual +3R/+5R winners.
+### P2 x HIGH_HIGH retained for external validation
 
-Do not equate clean path with runner quality.
-
-MENV-011 one-time +0.5R lock after +1R:
+Within 151 HIGH_HIGH fills:
 
 ```text
-N 144
-WR 53.47%
-avg winner 1.104R
-EV +0.125R
+P2 ALIGNED N53:
++1 58.49%
++3 41.51%
++5 35.85%
+
+P2 OPPOSED N98:
++1 50.00%
++3 28.57%
++5 19.39%
 ```
 
-Closed. It preserves full position size but still destroys too much large-winner payoff. No 0.4R/0.6R rescue.
++5R aligned-minus-opposed:
+- BTCUSD +26.15pp
+- GOLD +20.11pp
+- USDJPY +18.05pp
+- XAUEUR -2.75pp
 
-## 10. Trade-count expansion falsification
+This is best interpreted as a possible **cross-scale continuation-capacity** interaction.
 
-MENV-012 replaced the HH AND with a natural compensation product:
+It is not validated.
+
+## 7. Why no strategy was frozen
+
+The exact accepted MENV split is:
 
 ```text
-(scale / past median scale)
-x
-(acceptance / past median acceptance)
-> 1
+P2 aligned: N51 / WR 41.18% / avg+ 3.786R / EV +0.971R
+P2 opposed: N93 / WR 29.03% / avg+ 3.250R / EV +0.234R
 ```
 
-Same exposure rule:
+An aligned-only strategy would collapse 144 -> 51 and still miss the 50% WR target.
+
+The required complementary OPPOSED mechanism was tested rather than assumed. After local structural failure, prior-direction 24h endpoint is positive only 45.6% in HIGH_HIGH P2-opposed cases. Automatic inversion is closed.
+
+Therefore V6-D032 is respected: no disguised veto is promoted.
+
+## 8. Statistical / falsification status
+
+For P2 aligned-minus-opposed inside HIGH_HIGH:
 
 ```text
-239 trades
-WR 27.20%
-avg winner 3.288R
-EV +0.166R
-total +39.75R
-DD 29.5R
++5R observed delta +16.46pp
+13-environment cluster bootstrap 95% approximately +0.18pp to +33.16pp
+market-year x direction stratified permutation one-sided p approximately 0.061
 ```
 
-Trade count increased 66%, but quality and breadth degraded; USDJPY became negative.
+This is suggestive but not independent proof.
 
-Conclusion:
-- more trades cannot be manufactured by simply relaxing HH;
-- scale and acceptance appear to need independent confirmation for the large-payoff H role.
+Continuous scale/acceptance is somewhat stronger in aligned events, so residual MENV-strength confounding remains plausible.
 
-## 11. Non-H reaction study
 
-MENV-013 examined causal-valid non-H broad-direct events.
+## 9. V6-003B/C — actual direction-first indicator research
 
-Trigger-close was frequently revisited:
+The earlier V6-003A pass was not sufficient because it mostly classified an already-directed event as aligned/opposed.
+
+V6-003B corrected the architecture:
 
 ```text
-359 fills
-311 checkpoint hits
-86.63% checkpoint frequency
+completed HTF prior -> LONG / SHORT / NEUTRAL
+-> later local sweep/M5 structure confirms prior-direction timing
+-> structural Entry/SL
 ```
 
-But trigger-close payoff under the H sweep-extreme risk geometry was tiny, with market medians around only a few hundredths of R.
+The pre-direct local universe contains 1391 geometry-valid reactions: 620 direct-transfer and 771 non-direct.
 
-Interpretation:
-- non-H is not necessarily directionally wrong;
-- the local reaction is often real;
-- the known H risk/destination geometry cannot monetize it economically.
+### Broad recovery test failed
 
-MENV-014 then used the local M5 broken level as SL and trigger close as TP.
+Using a prior to own direction did **not** make `m1_direct_transfer` disposable.
 
-It failed strongly:
-- GOLD22 19 fills / WR 15.8% / EV about -0.692R;
-- GOLD23-25 73 / 15.1% / -0.732R;
-- XAUEUR 62 / 11.3% / -0.802R;
-- USDJPY 60 / 5.0% / -0.869R;
-- BTCUSD 121 / 5.8% / -0.845R.
+Broad accepted EV:
+- H1 DMI: -0.128R
+- H1/H4 DMI: -0.106R
+- H1/H4 MACD: -0.020R
+- H1 DISP24: -0.027R
+- H1/M30 structure: -0.018R
 
-Same-M1 fill/invalidation ambiguity was common and conservatively counted against the strategy.
+Do not remove direct local-transfer quality to manufacture N.
 
-Do not widen the M5 stop by an optimized multiplier to rescue this consumed result.
+### Direct-confirmation direction priors
 
-## 12. L-specific research
-
-The project also tested a broad L/correction-completion population of roughly 301 candidates.
-
-Overall +1R survival was around the low-40% range and varied strongly by environment.
-
-Tested L ideas included:
-- parent-relative scale/acceptance;
-- parent-liquidity reclaim;
-- M1 clean/direct transfer;
-- higher-TF alignment;
-- M1 renegotiation;
-- M30 process persistence.
-
-They did not generalize.
-
-L10 `M30 VR12 > 1` improved pooled numbers but failed environment recurrence:
+Unconditional direct event control:
 
 ```text
-persistent +1R about 46.4% / EV about -0.083R
-nonpersistent +1R about 37.1% / EV about -0.223R
-
-environment +1R improvement: 3/7
-environment EV improvement: 2/7
+560 accepted / EV -0.055R
 ```
 
-L10 closed. Do not tune q/window.
-
-## 13. Extra-market breadth attempt
-
-Available 2025-09-17 to 2025-12-30 raw M1:
+Direction-first direct:
 
 ```text
-GAUCNH broad-direct 13
-XAUCNH broad-direct 11
-GAUUSD broad-direct 8
-XAUJPY broad-direct 7
+MACD H1/H4: 146 accepted / EV +0.110R
+DISP24:      209 accepted / EV +0.133R
+RSI14 H1/H4:117 accepted / EV +0.150R
 ```
 
-No market reaches the frozen 20-prior-opportunity baseline needed by MENV-004. Do not lower the history requirement. Acquire longer history if these markets are used later.
+So a causal prior can separate direction before local confirmation.
 
-## 14. New active research question — direction authority
+But named indicators do not survive simpler controls.
 
-Previous indicator work mostly did:
+RSI14 H1/H4 and same-period DISP14 H1/H4 agree 99.18%; DISP14 direct is stronger:
 
 ```text
-local/V3 event already picks direction
--> indicator agrees or disagrees
+90 accepted
+WR 30.0%
+avg+ 3.25R
+EV +0.275R
+total +24.75R
 ```
 
-This may be structurally too late.
+Only 8/13 market-years are positive and several cells are tiny. This is a clue, not authority.
 
-The active V6-003 question is now:
+Read `V6_003BC_DIRECTION_FIRST_INDICATOR_RESULTS.md` before further direction work.
 
-> Can completed higher/intermediate-timeframe indicators and market state form a causal LONG/SHORT/NEUTRAL directional prior before the local liquidity/ownership event finalizes direction, with price structure then used primarily for timing and risk?
+## 10. Current conclusion
 
-Conceptual target:
+Closed as independent direction edges on this consumed panel:
+- H1/H4 DMI;
+- H1/H4 MACD;
+- H1/H4 Aroon25;
+- H1/H4 Vortex14;
+- H1/H4 RSI14.
 
-```text
-directional prior/state -> WHERE / WHICH DIRECTION
-liquidity/structure     -> WHEN / ENTRY GEOMETRY
-scale x acceptance      -> DESTINATION AUTHORITY
-```
+Reason: none provides convincing recurrent information beyond simpler signed price displacement.
 
-This is not authorization to buy/sell from indicators alone.
+Do not rescue with nearby windows, RSI 70/30, ADX gates or indicator voting.
 
-## 15. Exact next task
+The surviving architectural clue is **multi-horizon directional persistence**, not a named conventional indicator.
 
-Read `V6_003A_DIRECTIONAL_PRIOR_RESEARCH_CONTRACT.md`.
+## 11. Exact next task
 
-Do not continue MENV exit tuning first.
+Do not return to exit tuning and do not run another conventional-indicator tournament.
 
-The next work is:
+Next child must preregister a directional-state mechanism explaining continuation versus reversal of multi-horizon persistence before outcomes.
 
-1. current web/literature review of directional/regime evidence;
-2. freeze a minimal interpretable pre-event directional-prior atlas before outcomes;
-3. compute priors before local direction finalization on all 13 research environments;
-4. compare `ALIGNED / OPPOSED / NEUTRAL` relative to local events;
-5. compare against simpler displacement/momentum and existing H1/M30 structure direction;
-6. if a prior has recurrent meaning, construct one raw-replay direction-routing architecture;
-7. report trade count and trade density, not only EV;
-8. do not use directional state only as another veto unless economically and architecturally justified.
+Requirements:
+1. preserve direction-first causal timestamp at sweep time;
+2. retain direct local structure as timing/geometry unless separately disproved;
+3. do not tune DISP14/24 windows;
+4. explicitly model why prior persistence should continue or fail under local counter-move / volatility regime;
+5. use the same 13 consumed environments for falsification only;
+6. seek additional outcome-blind data before promotion;
+7. keep GOLD 2021 untouched.
 
-## 16. Hard restrictions
+No production authority exists.
+
+## 12. New reproducibility files
+
+- `V6_003B_DIRECTION_FIRST_FREEZE_PRE_OUTCOME.md`
+- `V6_003C_CONVENTIONAL_DIRECTION_ATLAS_FREEZE.md`
+- `V6_003C_RSI_SIMPLER_CONTROL_FREEZE.md`
+- `V6_003BC_DIRECTION_FIRST_INDICATOR_RESULTS.md`
+- `scripts/v6_003b_direction_first.py`
+- `scripts/v6_003c_attach_and_test.py`
+- `scripts/v6_003c_rsi_control.py`
+- corresponding V6-003B/C ledgers under `docs/ea/v6/ledgers/`.
+
+## 13. Hard restrictions
 
 - no GOLD 2021;
-- no AUC-driven promotion;
-- no indicator/window/threshold tournament;
-- no market-specific threshold rescue;
-- no automatic H variable -> L variable;
-- no cross-stage migration without a new contract;
-- no production EA change yet;
-- no forcing every +1R survivor into a 1R winner;
-- no lowering MENV-004 20-history requirement to include short datasets;
-- no trade-count collapse hidden behind pooled EV.
+- no conventional indicator period/threshold rescue;
+- no RSI 70/30 rescue on consumed data;
+- no displacement-window tournament;
+- no dropping direct-transfer merely to increase N;
+- no indicator-only Entry;
+- no automatic opposed inversion;
+- no production EA change;
+- no exit tuning in this phase.

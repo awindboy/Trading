@@ -1,6 +1,6 @@
 # V6 Decisions
 
-Date initialized: `2026-08-28`
+Date initialized: `2026-08-28`  
 Last updated: `2026-08-29`
 
 ## V6-D001 — Clean generation boundary
@@ -110,3 +110,36 @@ Do not repeat PowerShell `git -C` Unicode-path handling, Windows Store Python ab
 
 ## V6-D036 — GOLD 2021 stays closed through V6-003 discovery
 Directional-prior discovery uses consumed research data. Do not spend GOLD21 on formulation.
+
+## V6-D037 — Exact V3/MENV causal parity is mandatory before prior interpretation
+V6-003A re-established exact `620 -> 540 -> 163 -> 151 -> 144` parity. D1 ATR uses the committed calendar-D1/next-day-availability rule; no extra first-day deletion. Pending H limits may fill only from the first M1 strictly after `trigger_time`.
+
+## V6-D038 — H1 DMI14 is closed as an independent directional prior
+P1 is nearly flat across the 620-event raw path and loses to the simpler H1 DISP24 control when the two disagree. Do not rescue P1 with ADX/magnitude/nearby-period tuning.
+
+## V6-D039 — P2 x MENV HIGH_HIGH is an external-validation hypothesis, not strategy authority
+Simple H1 DISP24 alignment is weak/asymmetric over the broad panel but shows stronger +3R/+5R continuation inside the pre-existing MENV HIGH_HIGH state. This is named `cross-scale continuation capacity` and remains consumed-panel evidence only.
+
+## V6-D040 — No aligned-only veto and no OPPOSED inversion
+Do not replace MENV-004 N=144 with the 51 accepted P2-aligned trades as a strategy. Do not route P2-opposed local failures automatically into the P2 direction; the fixed-clock counter-prior diagnostic did not support that mechanism.
+
+## V6-D041 — New evidence must precede any V6-003 routing architecture
+The first atlas closes without a strategy freeze. Acquire longer/outcome-blind environments, preserve the 20-prior MENV warmup, freeze the P2 x HIGH_HIGH validation contract before outcomes, and only then reconsider routing.
+
+## V6-D042 — Direction-first architecture must actually give the prior first authority
+V6-003B corrected the earlier alignment-only interpretation. The prior is sampled at the atomic sweep time from completed HTF bars and declares LONG/SHORT/NEUTRAL before the later M5 transition. Local structure confirms timing/geometry rather than creating the prior retrospectively.
+
+## V6-D043 — A directional prior does not replace direct local-transfer information
+On 1391 broad geometry-valid reactions, removing `m1_direct_transfer` and allowing an indicator prior to supply direction increased N but produced negative H economics across DMI, MACD, DISP24 and structure controls. Recovered non-direct events were generally weaker. Do not drop direct-transfer to manufacture opportunity count.
+
+## V6-D044 — Conventional trend indicators can separate direction but do not show independent edge
+With direct local confirmation retained, MACD H1/H4, Vortex H1/H4 and RSI H1/H4 aligned populations improved over the negative unconditional direct control. However the simpler displacement controls matched or exceeded them. Do not promote a named indicator merely because aligned events are better than opposed events.
+
+## V6-D045 — RSI14 directional separation is explained by simple multi-horizon displacement
+RSI14 H1/H4 consensus and same-period DISP14 H1/H4 consensus agree 99.18% on jointly available direct events. DISP14 produced higher direct EV (+0.275R vs +0.150R). RSI is closed as an independent directional edge; no 70/30 or period rescue.
+
+## V6-D046 — Conventional indicator-direction atlas is closed without strategy authority
+DMI, MACD, Aroon, Vortex and RSI have now been tested as causal pre-event direction priors under frozen conventional definitions. None survives the required simpler-price-control test strongly enough for promotion. No further conventional indicator tournament is allowed on the consumed panel.
+
+## V6-D047 — Multi-horizon directional persistence is a research clue, not a strategy
+The surviving signal class is simple cross-horizon signed price persistence. DISP14 direction-first direct produced 90 accepted trades, EV +0.275R and positive EV in 8/13 environments, but N is thin and recurrence/statistical evidence is insufficient. Do not tune the displacement window or promote an aligned-only strategy.

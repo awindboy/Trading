@@ -1,8 +1,9 @@
 # V6 Backlog
 
-Status: `ACTIVE`
-Current phase: `V6-003 MULTI-ENVIRONMENT DIRECTIONAL-PRIOR RESEARCH`
-Current benchmark: `MENV-004`
+Status: `ACTIVE`  
+Current phase: `V6-003 DIRECTIONAL-PRIOR EXTERNAL-VALIDATION PREP`  
+Current benchmark: `MENV-004`  
+Directional validation candidate: `P2 H1 DISP24 x MENV HIGH_HIGH`  
 Production authority: `NONE`
 
 ## Completed — methodological foundation
@@ -25,115 +26,87 @@ Production authority: `NONE`
 ## Completed — R3/R4
 
 - [x] Reproduce 44-trade V3 H-direct control.
-- [x] Run R3 shadow.
-- [x] Build one R3 strategy after the frozen criterion passed.
+- [x] Run R3 shadow and strategy.
 - [x] Stress R3 on GOLD22 and cross-market panel.
 - [x] Run R4 directional-strength refinement.
 - [x] Close universal ADX H-state thesis after portability failure.
 
-## Completed — regression into V3 precision
-
-- [x] Compare Candidate-A PASS/FAIL across environments.
-- [x] Decompose delivery-state branches.
-- [x] Identify EXP_ONLY instability.
-- [x] Reject V3 precision as an invariant quality scale.
-
-## Completed — multi-environment reset
+## Completed — multi-environment reset / MENV
 
 - [x] Treat GOLD22-25 + XAUEUR/USDJPY/BTC23-25 as one consumed research panel.
-- [x] Build environment fingerprints.
-- [x] Reject simple structural-room explanation.
-- [x] Compare path efficiency with simpler momentum/displacement controls.
-
-## Completed — MENV-004
-
-- [x] Discover scale x acceptance interaction.
-- [x] Replace full-year medians with causal expanding history.
-- [x] Replace fill-history baseline with pre-trade opportunity-history baseline.
+- [x] Reject simple structural-room and generic fingerprint explanations.
+- [x] Establish MENV-004 causal scale x acceptance benchmark.
 - [x] Preserve 20 prior opportunities as warmup.
-- [x] Replay with opposite-direction exposure semantics.
-- [x] Record 144 accepted trades, +0.495R EV, 12/13 positive environments.
-- [x] Stress payoff, clock horizons, ATR-normalized excursion and random-selection nulls.
-- [x] Record +1R/+2R/+3R/+5R stage counts.
+- [x] Reproduce 620 -> 540 -> 163 -> 151 -> 144.
+- [x] Stress payoff, fixed clocks, ATR excursions, concentration and nulls.
+- [x] Close simple exit/profit-lock family.
+- [x] Reject MENV-012 state dilution.
+- [x] Close MENV-013/014 local non-H monetization attempts.
+- [x] Keep L separate and close L10 without tuning.
 
-## Completed — exit/continuation falsification
+## Completed — V6-003A first directional-prior atlas
 
-- [x] +1R partial/BE controls.
-- [x] MENV-005 M5 structural hard lock.
-- [x] MENV-006 protected-break close.
-- [x] MENV-007 stage correction race.
-- [x] MENV-008 local range resolution.
-- [x] MENV-009 first M5 close retention.
-- [x] MENV-010 post-correction +1R retention.
-- [x] MENV-011 one-time +0.5R lock.
-- [x] Close simple clean-path/profit-lock family without parameter rescue.
+- [x] Read `V6_003A_DIRECTIONAL_PRIOR_RESEARCH_CONTRACT.md`.
+- [x] Review current trend/momentum/regime literature.
+- [x] Freeze exact pre-event causal observation time.
+- [x] Freeze P1 H1 DMI14 direction.
+- [x] Freeze P2 H1 24-bar signed displacement.
+- [x] Freeze H1/M30 structural controls S1/S2/S3.
+- [x] Re-audit exact MENV parity before outcomes.
+- [x] Correct the false “drop first partial D1 bar” scratch assumption.
+- [x] Correct pending fill to start strictly after `trigger_time`.
+- [x] Compute ALIGNED/OPPOSED/NEUTRAL counts across all 13 environments.
+- [x] Report broad +1R/+3R/+5R and fixed-clock MFE/MAE.
+- [x] Decompose market-year and LONG/SHORT.
+- [x] Compare P1 against simpler P2 and structural controls.
+- [x] Close P1 DMI as independent prior.
+- [x] Identify P2 x pre-existing HIGH_HIGH interaction.
+- [x] Run cluster bootstrap / stratified permutation falsification.
+- [x] Test and reject automatic P2-opposed inversion after local failure.
+- [x] Evaluate routing gate and **decline** to freeze a consumed-panel strategy because N would collapse 144 -> 51 and no complementary mechanism exists.
 
-## Completed — trade-count and non-H tests
 
-- [x] Make trade count an explicit constraint.
-- [x] MENV-012 joint compensation; reject state dilution despite N increase.
-- [x] Test short XAUJPY/XAUCNH/GAUCNH/GAUUSD histories; mark insufficient warmup.
-- [x] MENV-013 non-H trigger checkpoint.
-- [x] MENV-014 local M5 geometry; close after severe failure.
+## Completed — V6-003 direction-first indicator authority
 
-## Completed — L-specific branch
+- [x] Correct causal architecture so prior declares direction before local M5 direction finalization.
+- [x] Expand to 1391 broad geometry-valid reactions and remove direct-transfer only as a frozen falsification test.
+- [x] Show that prior direction cannot safely replace direct local-transfer quality.
+- [x] Test H1 DMI, H1/H4 DMI, H1/H4 MACD as direction-first priors.
+- [x] Test Aroon25, Vortex14, RSI14 H1/H4 consensus under frozen conventional definitions.
+- [x] Compare against H1 DISP24 and H1/M30 structure controls.
+- [x] Falsify RSI14 against same-period H1/H4 DISP14 simpler control.
+- [x] Close conventional indicator-direction atlas without strategy authority.
 
-- [x] Keep L separate from H.
-- [x] Build broad L candidate population.
-- [x] Test parent-relative geometry, liquidity reclaim, M1 path and HTF state.
-- [x] Test L10 M30 VR12 persistence.
-- [x] Close L10 without q/window tuning.
+## Immediate — next directional mechanism contract
 
-## Immediate — V6-003A Directional Prior
+- [ ] Write pre-outcome V6-003D contract for multi-horizon directional persistence mechanism.
+- [ ] Define continuation vs reversal/correction meaning without changing DISP14/24 windows.
+- [ ] Freeze causal state dimensions before opening new outcome slices.
+- [ ] Preserve direct local transfer as timing/quality control.
+- [ ] Test whether local counter-move followed by prior-direction reassertion has causal meaning.
+- [ ] Track total N and recovered N; no high-score subset disguised as architecture.
+- [ ] Use all 13 consumed environments for falsification, not final validation.
+- [ ] Acquire longer outcome-blind market histories in parallel for later validation.
+- [ ] Preserve GOLD 2021 untouched.
 
-- [ ] Read `V6_003A_DIRECTIONAL_PRIOR_RESEARCH_CONTRACT.md`.
-- [ ] Perform current web/literature review of directional/regime evidence.
-- [ ] Freeze a small interpretable directional-prior atlas before outcomes.
-- [ ] Freeze exact pre-event causal observation time.
-- [ ] Include existing deterministic H1/M30 map direction as control.
-- [ ] Include a simple displacement/momentum control.
-- [ ] Compute prior availability and ALIGNED/OPPOSED/NEUTRAL counts across all 13 environments.
-- [ ] Report opportunity/trade density before any strategy filtering.
-- [ ] Test path meaning (+1R/+3R/+5R and ATR-normalized excursions).
-- [ ] Decompose market-year and direction.
-- [ ] If recurrent, freeze exactly one raw-replay direction-routing architecture.
-- [ ] Prefer routing/mechanism change to a simple veto.
-- [ ] Compare combined architecture N against MENV-004 N=144.
+## Later — data breadth / validation
 
-## Later — data breadth
-
-- [ ] Acquire longer XAUJPY/XAUCNH/GAUCNH/GAUUSD histories without changing MENV-004 warmup.
-- [ ] Consider additional outcome-blind markets.
-- [ ] Freeze a future validation shortlist before opening P/L.
-- [ ] Preserve untouched data for final validation.
-
-## Later — continuation/exit
-
-Resume only with enough survivor N or a clearly new mechanism:
-- [ ] distinguish normal runner correction from true delivery exhaustion;
-- [ ] preserve large-winner tail;
-- [ ] no nearby stop/partial threshold search.
-
-## Later — L
-
-- [ ] new L mechanism only if conceptually distinct from consumed L1-L10 ideas;
-- [ ] no H variable inversion.
-
-## Locked until architecture stabilizes
-
-- [ ] exact tick / real tick replay;
-- [ ] commission/slippage/swap;
-- [ ] MT5 Strategy Tester reproduction;
-- [ ] EA implementation;
-- [ ] portfolio/exposure;
-- [ ] final independent validation.
+- [ ] Acquire longer XAUJPY history without changing the MENV 20-prior warmup.
+- [ ] Acquire longer XAUCNH history.
+- [ ] Acquire longer GAUCNH history.
+- [ ] Acquire longer GAUUSD history.
+- [ ] Consider additional outcome-blind markets under a frozen universe rule.
+- [ ] Freeze validation universe before opening P/L.
 
 ## Permanent restrictions
 
-- [ ] no GOLD 2021 during current discovery;
+- [ ] no GOLD 2021 during current formulation;
 - [ ] no AUC-driven promotion;
-- [ ] no parameter rescue on consumed outcomes;
+- [ ] no DMI/MACD/RSI/Aroon/Vortex rescue;
+- [ ] no RSI 70/30 post-hoc branch;
+- [ ] no displacement-window tournament;
 - [ ] no market-specific threshold tuning;
-- [ ] no automatic H/L inversion;
+- [ ] no automatic H/L or aligned/opposed inversion;
+- [ ] no dropping direct-transfer merely to increase N;
 - [ ] no hidden trade-count collapse;
 - [ ] no production claim from offline M1 replay.

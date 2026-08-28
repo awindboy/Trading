@@ -1,0 +1,195 @@
+{
+  "expected_base_head": "982839b0a1ea166fc534272f2024a72cedfb8326",
+  "files": [
+    {
+      "path": "docs/ea/v6/BACKLOG_V6.md",
+      "sha256": "b18dfb0ea5785021725deb2fee0857523f368d738347cf5e21f87b244ee1c7f6",
+      "bytes": 5229
+    },
+    {
+      "path": "docs/ea/v6/DECISIONS_V6.md",
+      "sha256": "f7db1428a6b4814d0a2836424343ce737d8292a51ede1d73db0f45f360bb47e7",
+      "bytes": 10483
+    },
+    {
+      "path": "docs/ea/v6/HANDOFF_V6.md",
+      "sha256": "f37db6dfe76f824bb2837ed78f682d4188608df12ef2b7c512effc1eea24cb52",
+      "bytes": 8328
+    },
+    {
+      "path": "docs/ea/v6/RESEARCH_STATE_V6.md",
+      "sha256": "820d0370f5971e2711d7b29ecfcc180b5a3a0537abec4e912f33c5fa4c5355a5",
+      "bytes": 8145
+    },
+    {
+      "path": "docs/ea/v6/V6_003A_APPLY_RECORD.txt",
+      "sha256": "bc0e6c9ba80921fd65fdd75050f40a6de468240ae6978109556b433c6d45ad17",
+      "bytes": 678
+    },
+    {
+      "path": "docs/ea/v6/V6_003A_DIRECTIONAL_PRIOR_ATLAS_FREEZE.md",
+      "sha256": "fad7d22f52e250bf28f3851e6713b3381bad53a0abb384effbda736f1fb6a7c6",
+      "bytes": 3532
+    },
+    {
+      "path": "docs/ea/v6/V6_003A_DIRECTIONAL_PRIOR_RESULTS.md",
+      "sha256": "8eb5ba3fafecdcd10a8490336657a69c0f3b6c935c8dec8ea47595765dbf9858",
+      "bytes": 10433
+    },
+    {
+      "path": "docs/ea/v6/V6_003BC_APPLY_RECORD.txt",
+      "sha256": "94172a590e14ff656fac5a69777dcdf49dbf62d3fcd7f0f399b88fdcc2e226f5",
+      "bytes": 336
+    },
+    {
+      "path": "docs/ea/v6/V6_003BC_DIRECTION_FIRST_INDICATOR_RESULTS.md",
+      "sha256": "a202b5db15fc3549713773148ae3d52ea04865b74b7c4a674941c9bc90593059",
+      "bytes": 9134
+    },
+    {
+      "path": "docs/ea/v6/V6_003B_DIRECTION_FIRST_FREEZE_PRE_OUTCOME.md",
+      "sha256": "e65a0e2b3c968a1518502eb0c74985af23a8b20e7972c003f4960562ce11cf64",
+      "bytes": 2829
+    },
+    {
+      "path": "docs/ea/v6/V6_003C_CONVENTIONAL_DIRECTION_ATLAS_FREEZE.md",
+      "sha256": "fbb03abff3a7625aa9e8f6b784a727a3a456be58d91f7a9903f75585f6fceb46",
+      "bytes": 1295
+    },
+    {
+      "path": "docs/ea/v6/V6_003C_RSI_SIMPLER_CONTROL_FREEZE.md",
+      "sha256": "263d6f9769071d5a4fe47ed80753d6e31be7ea1baea6899efe1d952c302fd550",
+      "bytes": 617
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_COUNTERPRIOR_FAILURE_DIAG.csv",
+      "sha256": "bcac8b3124f253c735f68d201318efe8bec51bfce9c3fdca18c6bd5be11fb73b",
+      "bytes": 78535
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_COUNTERPRIOR_SUMMARY.csv",
+      "sha256": "75e7695327e551915c2c65f2f3cfb20a566bf25e381ab8a014cd06d24291d103",
+      "bytes": 1484
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_DIRECTIONAL_PRIOR_OUTCOME_LEDGER.csv",
+      "sha256": "d0e61ac70263ccbf89b19f2d25aa3531ab6f19ec93b3914ff65dbaf4ca44058f",
+      "bytes": 427845
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_MENV_ACCEPTED_PRIOR_SUMMARY.csv",
+      "sha256": "8a442751ea7b852329f110f39ca87a90fb9e5ed959bb6dc4b23ea7c42ed674dc",
+      "bytes": 818
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_P2_HH_BY_DIRECTION.csv",
+      "sha256": "131420fbc491f2de207fc348b0d6950ae5e4c309be46f95b3bdd6d0cce41fc9b",
+      "bytes": 268
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_P2_HH_BY_ENV.csv",
+      "sha256": "06defa0d70cb393b67ec6c26d971e568293bbcf52653d183b1a217172cb62c16",
+      "bytes": 1040
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_P2_HH_BY_MARKET.csv",
+      "sha256": "ed0eb4b0496b9bb56a609fd124de366306886fb5c8aec385c6bad05134423012",
+      "bytes": 490
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_P2_HH_FALSIFICATION_STATS.csv",
+      "sha256": "18c43c8bbe2cfc2c39f5767c76300fac4482b45442ea594ca97932818e9a6dfb",
+      "bytes": 883
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_P2_HH_POOLED.csv",
+      "sha256": "6f980c66f0e83046cc2e04267d39d1812128a9a72120fc059333b3e088a71c33",
+      "bytes": 625
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_PRIOR_ATLAS_620.csv",
+      "sha256": "d28297dd9f6a8f861d999d43c03dc8600a52262efe9400670cc2e484c97c3318",
+      "bytes": 320353
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_PRIOR_BY_ENV.csv",
+      "sha256": "8bb008c36360e052709a30ed3749ea0af7ebe89fbd5cc920da9419598927d31d",
+      "bytes": 16044
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_PRIOR_POOLED_SUMMARY.csv",
+      "sha256": "932f88c0e685dfad0cdc13de506877ca60592831e330a6782899a008c0f57fa3",
+      "bytes": 1523
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003A_RESULT_MANIFEST.json",
+      "sha256": "a6dc55f2cd5c1ec461a1b4610e8ce68ab7366089bdd3815a1a9f3eb947254490",
+      "bytes": 3287
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003B_AGREEMENT_DECOMP.csv",
+      "sha256": "7fb55c1b6a8d3da2a415c9a7a84271dd76c457d859285c470dd0e2981be8933d",
+      "bytes": 4975
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003B_DIRECTION_FIRST_BY_ENV.csv",
+      "sha256": "fb3d89b09affb426d7a8e90d01a14092b0064f3207f0309fe6ea02c1ef1132a8",
+      "bytes": 5617
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003B_DIRECTION_FIRST_ECONOMICS.csv",
+      "sha256": "254bc0cfc09e7ff7fd7ced7b57a0ce099e5ce6253c6161d8319062f6f55285f9",
+      "bytes": 611
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003B_DIRECTION_FIRST_LEDGER.csv",
+      "sha256": "9c7bb99d50fcfaf54c68b6dfac9ee9211a6b68ec6d445038732c6b28d78ed9d4",
+      "bytes": 556911
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003B_DIRECTION_FIRST_SUMMARY.csv",
+      "sha256": "2ad56dde7e94d8fdbbdcc64b749f0f65da8599db5f7d6cac5b825555cf2b47e8",
+      "bytes": 1474
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003C_CONVENTIONAL_DIRECTION_BY_ENV.csv",
+      "sha256": "9ac7ad05dd09fe96304bd7ba67e2cc585e2ef355c793822a3c02e49728580dba",
+      "bytes": 4375
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003C_CONVENTIONAL_DIRECTION_LEDGER.csv",
+      "sha256": "08a1c748ea5ae8ef0cb53039f69e6bbe02103bfb415f076dd9b3e5bbf60b9460",
+      "bytes": 655280
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003C_CONVENTIONAL_DIRECTION_SUMMARY.csv",
+      "sha256": "f6ee95ae40c34f78f2d332fd9c64aaf3e8e13eb85f9e38613af3c1c8bb3c9d87",
+      "bytes": 5039
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_003C_RSI_CONTROL_LEDGER.csv",
+      "sha256": "89d3d65755872a04f573ee039d0f31847772ae674acd81a59f4076630da09e01",
+      "bytes": 726608
+    },
+    {
+      "path": "docs/ea/v6/ledgers/V6_EXPERIMENT_REGISTER_20260829.csv",
+      "sha256": "155ee8314b19d64e681159f95a30bc0e85be140a1687990088a1e0b658bfd918",
+      "bytes": 3228
+    },
+    {
+      "path": "scripts/v6_003b_direction_first.py",
+      "sha256": "a63680f93076bd59590e2ac9eb7a9e617a1d0b3a1ac6fa939d8800b34f46ce6a",
+      "bytes": 11505
+    },
+    {
+      "path": "scripts/v6_003c_attach_and_test.py",
+      "sha256": "b5fa89c5b3746f51c06b24ff213e8ec384e964c3a4175f15a2e33f973e7bd49e",
+      "bytes": 6285
+    },
+    {
+      "path": "scripts/v6_003c_rsi_control.py",
+      "sha256": "6a00437996f13e4fdd38731a08ca66f0fae70f9e6f9b3e233d50d8059a2d7989",
+      "bytes": 3469
+    }
+  ]
+}
