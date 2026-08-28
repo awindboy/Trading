@@ -1,8 +1,8 @@
-> **V6 ACTIVE ROUTING — 2026-08-28 / EVENT-CONDITIONED GENERALIZATION RESEARCH**  
+> **V6 ACTIVE ROUTING — 2026-08-28 / CONTEXT-MEASUREMENT GENERALIZATION RESEARCH**  
 > Active research uses `docs/ea/v6/AGENTS_V6.md` and `docs/ea/v6/HANDOFF_V6.md`.  
 > Primary market remains GOLD#. Final economics remain WR >=50%, average positive NET R >=2R, cost-adjusted EV >0.  
-> V6 exists to solve V3's period/market generalization failure without repeating V4's no-learning pattern: meaningful causal event anchor + raw multi-TF state + controlled context/generalization tests.  
-> Current phase is `V6-001A SAME-CAPACITY CROSS-MARKET CONTEXT INFORMATION AUDIT`: compare real `GOLD+XAUEUR+USDJPY` against exact 30-channel `GOLDx3` placebo before any adaptation or strategy design. No production authority exists.  
+> V6 exists to solve V3's period/market generalization failure by testing preregistered causal indicator/context measurements while controlling V3 multiplicity, V4 no-learning, and V5 research-direction failures.  
+> Current phase is `V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY / PRE-OUTCOME DESIGN`. Read `V6_000A_V3_V5_LINEAGE_AND_FAILURE_SYNTHESIS.md` and `V6_001_CONTEXT_MEASUREMENT_REGISTRY.md`. `V6-001A` is a queued cross-market child, not the definition or fatal gate of V6. No production authority exists.  
 > GOLD 2022 is consumed falsification data; GOLD# 2021 remains untouched.
 
 > **V5 CLOSED ROUTING — 2026-08-28**  

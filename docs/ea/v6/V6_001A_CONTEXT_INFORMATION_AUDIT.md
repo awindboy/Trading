@@ -1,8 +1,26 @@
 # V6-001A — Same-Capacity Cross-Market Context Information Audit
 
-Status: `ACTIVE / PRE-REGISTERED FROM V5 HANDOFF`
-Date: `2026-08-28`
-Production authority: `NONE`
+Status: `QUEUED / PRE-REGISTERED CHILD / NOT CURRENT GENERATION GATE`  
+Date: `2026-08-28`  
+Production authority: `NONE`  
+Parent: `V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY`
+
+## 0. Scope correction
+
+This contract is preserved because late V5 produced a specific cross-market clue with an unresolved capacity confound.
+
+V6-001A is one `Family B — cross-market / relative state` child.
+
+It is NOT:
+
+- the definition of V6;
+- a required gate before every other indicator/context family;
+- proof of strategy if passed;
+- proof that all hidden/context hypotheses fail if rejected.
+
+A fail closes only the exact XAUEUR/USDJPY formulation below.
+
+No replacement-market shopping is allowed inside this child.
 
 ## 1. Question
 
@@ -14,9 +32,11 @@ V6-001A asks:
 
 > Does real synchronized cross-market context provide incremental information beyond a same-capacity input that contains no new market information?
 
+This is a capacity-confound cleanup of consumed hypothesis-generation evidence.
+
 ## 2. Population
 
-Exact V3-003C BROAD CONTROL.
+Exact V3-003C `BROAD CONTROL`.
 
 Required parity before outcome evaluation:
 
@@ -43,13 +63,14 @@ XAUEUR#
 USDJPY#
 ```
 
-BTCUSD# is excluded from V6-001A because the immediate hypothesis is decomposition of gold/currency state, not broad risk appetite.
+BTCUSD# is excluded from this child because the frozen hypothesis concerns gold/currency decomposition, not broad risk appetite.
 
 No new external data source is introduced.
 
 ## 4. Causal alignment
 
 For every GOLD event timestamp:
+
 - use only completed GOLD and context bars available no later than the event;
 - preserve alignment staleness information;
 - do not forward-fill future context;
@@ -59,9 +80,10 @@ Use the same M1/M5/M30/H4 event-history boundaries across all arms.
 
 ## 5. Arms
 
-### A — GOLD-only diagnostic
+### A — GOLD-only descriptive reference
 
 Existing GOLD raw context block.
+
 Approximate channel count: 10 per timeframe.
 
 ### B — GOLDx3 same-capacity placebo — PRIMARY CONTROL
@@ -72,12 +94,13 @@ Concatenate the exact GOLD block three times:
 [GOLD block, GOLD block, GOLD block]
 ```
 
-No noise injection.
-No transformed duplicate.
+No noise injection.  
+No transformed duplicate.  
 No independent random feature.
 
 Purpose:
-- match the 30-channel dimensionality of the real-context arm;
+
+- match the ~30-channel dimensionality of the real-context arm;
 - add zero new market information.
 
 ### C — real synchronized context — PRIMARY TEST
@@ -86,11 +109,11 @@ Purpose:
 [GOLD block, XAUEUR block, USDJPY block]
 ```
 
-Use exactly the same model family, random kernels/features, seeds, regularization search policy, timeframe aggregation, and evaluation splits as Arm B.
+Use exactly the same model family, random kernels/features, seeds, regularization-search policy, timeframe aggregation, and evaluation splits as Arm B.
 
-## 6. Outcomes
+## 6. Outcome
 
-Primary V6-001A outcome is the robust path-endpoint task inherited from late V5:
+Primary child outcome:
 
 ```text
 W_CONTINUE (+1 -> +2 before 0)
@@ -99,18 +122,23 @@ L_CONTINUE (-1 -> -2 before 0)
 ```
 
 Reason:
-- it removes the most obvious giveback/recovery ambiguity;
-- late V5 already showed that binary +1R-vs-SL alone mixed different path types;
+
+- removes the most obvious giveback/recovery ambiguity;
+- late V5 showed binary +1R-vs-SL mixes different path types;
 - this is a continuation-strength information audit, not an Entry filter.
 
 Secondary diagnostic:
-- ordinal path strength over `L_CONTINUE, L_RECOVER, W_GIVEBACK, W_CONTINUE`.
 
-Do not switch primary outcome after results.
+```text
+L_CONTINUE
+L_RECOVER
+W_GIVEBACK
+W_CONTINUE
+```
 
-## 7. Chronological folds
+Do not change the primary outcome after results.
 
-Frozen:
+## 7. Frozen chronology
 
 ```text
 F1 train 2023       -> eval 2024
@@ -121,26 +149,28 @@ No random CV as claim-grade evidence.
 
 ## 8. Model discipline
 
-Use the exact recovered/frozen late-V5 raw-convolution + Ridge diagnostic implementation if its code can be recovered and audited.
+Use the exact recovered/frozen late-V5 raw-convolution + Ridge diagnostic if it can be recovered and audited.
 
-Before execution, record:
+Before execution record:
+
 - exact script SHA;
-- input tensor SHA or source data identities;
+- input tensor SHA or source identities;
 - kernel count/features;
 - seeds;
 - Ridge alpha grid;
 - timeframe aggregation rule.
 
-If the prior implementation cannot be reproduced exactly, rebuild ONE fixed implementation before opening outcomes. Do not compare several implementations and pick the best.
+If the prior implementation cannot be exactly reproduced, rebuild ONE fixed implementation before opening outcomes.
 
-Individual timeframe results are diagnostic only.
-Do not promote M30 or another timeframe because it looks strongest in one year.
+Do not compare implementations and select the best.
+
+Individual timeframe results are diagnostic only. Do not select a best timeframe.
 
 ## 9. Primary falsification
 
-The real-context claim is supported only if Arm C beats Arm B in the same direction in BOTH chronological evaluation years.
+The exact cross-market claim is supported only if Arm C beats Arm B in the same direction in BOTH chronological evaluation years.
 
-Minimum directional condition:
+Minimum condition:
 
 ```text
 AUC_C_2024 > AUC_B_2024
@@ -148,41 +178,54 @@ AND
 AUC_C_2025 > AUC_B_2025
 ```
 
-Also report paired prediction uncertainty using calendar-month cluster resampling or another preregistered time-cluster method.
-
-Classification:
+Also report paired prediction uncertainty using calendar-month cluster resampling or another frozen time-cluster method.
 
 ### `CONTEXT_INFORMATION_SUPPORTED`
 
 Requires:
+
 - real context beats GOLDx3 in both years;
 - pooled/time-cluster evidence is directionally consistent;
-- no obvious alignment leakage;
-- improvement is not explained by a tiny number of events.
+- no alignment leakage;
+- result is not explained by a tiny number of events.
 
-This is information evidence only, not a strategy pass.
+Interpretation:
+
+```text
+XAUEUR/USDJPY formulation contains incremental information
+under this child design
+```
+
+This is not strategy authority.
 
 ### `CAPACITY_ARTIFACT_OR_NO_INCREMENTAL_CONTEXT`
 
-If GOLDx3 matches/exceeds real context in either chronological year, close the claim that XAUEUR/USDJPY adds stable incremental information under this formulation.
+If GOLDx3 matches/exceeds real context in either chronological year:
 
-Do not search alternative context-market combinations in the same phase.
+```text
+close XAUEUR/USDJPY incremental-information claim
+under this formulation
+```
+
+Do not search replacement context-market combinations inside V6-001A.
+
+This result does NOT close independently preregistered V6 measurement families.
 
 ### `INCONCLUSIVE_SMALL_SAMPLE`
 
-If point estimates improve in both years but uncertainty is too wide to distinguish C from B.
+If point estimates improve both years but uncertainty is too wide.
 
-Do not escalate model complexity merely to sharpen the result.
+Do not increase model complexity just to sharpen the result.
 
-## 10. Additional controls after primary classification
+## 10. Additional controls
 
-Only if the primary C>B direction holds in both years may the same frozen implementation run:
+Only if primary C>B holds in both years may the same frozen implementation run:
 
-- one-bar / one-period stale-context control;
-- within-day time-shift control;
-- direction/mirror diagnostics where mechanically meaningful.
+- one-bar/one-period stale context;
+- within-day time-shift context;
+- direction/mirror diagnostics where meaningful.
 
-Do not run these first and choose the most favorable control definition.
+Do not run several controls first and choose the favorable definition.
 
 ## 11. What V6-001A does NOT authorize
 
@@ -197,21 +240,23 @@ Do not run these first and choose the most favorable control definition.
 - no GOLD 2022 tuning;
 - no GOLD# 2021 inspection.
 
-## 12. Next-stage branching
+## 12. Return to parent registry
 
-If context information is supported:
-
-```text
-V6-001B
--> determine whether remaining chronological weakness is
-   hidden-context insufficiency vs genuine concept drift
--> only then consider conservative causal adaptation
-```
-
-If context information is not supported:
+After classification, freeze the result and return to:
 
 ```text
-close this hidden-context formulation
--> return to event/problem formulation
--> do not replace XAUEUR/USDJPY with a market shopping exercise
+V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY
 ```
+
+If supported:
+- mark Family B / exact XAUEUR+USDJPY formulation as information-supported;
+- only later may a separate child ask whether it explains residual chronology or conditions a stage-specific policy.
+
+If failed:
+- close the exact formulation;
+- do not market-shop inside the child;
+- continue only with independently preregistered parent-registry hypotheses.
+
+If inconclusive:
+- record small-sample uncertainty;
+- do not escalate complexity simply to force a decision.

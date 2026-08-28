@@ -1,85 +1,120 @@
 # V6 Research State
 
-Status: `ACTIVE`
-Date: `2026-08-28`
-Phase: `V6-001A SAME-CAPACITY CROSS-MARKET CONTEXT INFORMATION AUDIT`
-Production authority: `NONE`
-Promoted candidate: `NONE`
+Status: `ACTIVE`  
+Date: `2026-08-28`  
+Phase: `V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY / PRE-OUTCOME DESIGN`  
+Production authority: `NONE`  
+Promoted candidate: `NONE`  
 Primary market: `GOLD#`
 
 ## Generation boundary
 
 ```text
-V5  CLOSED
-V6  ACTIVE
+V5 CLOSED
+V6 ACTIVE
 ```
 
-V6 is not a continuation of the V5 external-state branch.
-It is a clean research generation focused on solving V3 generalization failure with modern, strictly controlled event-conditioned learning.
+V6 exists to solve the V3 period/market generalization limitation by measuring missing/unstable market context under strict causal and chronological controls.
 
-## Known starting evidence
+It is not:
+
+- a continuation of unrelated V5 standalone external-variable hunting;
+- a generic V4 model tournament;
+- a V3 threshold-repair exercise;
+- a single XAUEUR/USDJPY project.
+
+## Foundational authority
+
+Read:
+
+```text
+V6_000A_V3_V5_LINEAGE_AND_FAILURE_SYNTHESIS.md
+```
+
+before interpreting V6 failures.
+
+Key inherited facts:
 
 ### V3
 
-- GOLD 2023-2025 looked encouraging.
-- GOLD 2022 and other-market checks broke the apparent generality.
-- treat validation collapse as a first-class problem, not bad luck.
+- 2023-2025 Candidate B development looked strong.
+- frozen GOLD 2022 validation collapsed to 25% positive and negative EV.
+- Candidate-A +1R survival also collapsed.
+- exact mirrors sometimes became materially stronger.
+- failure therefore cannot be reduced to exit management or spread.
+- multiplicity/selection risk remains a plausible contributor.
+- V3 itself left `is price-only information sufficient?` unresolved.
 
 ### V4
 
-- raw/generic learning attempts did not produce useful learning in practice.
-- no automatic model escalation.
+- generic raw-sequence modern-learning attempts did not produce useful learned signal in practical project work.
+- no automatic complexity escalation.
 
-### Late V5 transition scratch
+### V5
 
-Exact broad event parity:
+- many setups hit a survival/payoff frontier;
+- First Cross had positive development EV but could not meet final joint economics within the consumed lifecycle family;
+- portable measurement did not imply portable predictive meaning;
+- external-state studies do not justify a blanket `external indicators fail` conclusion;
+- unrelated variable hunting drifted away from the intended problem.
 
-```text
-2023 84
-2024 86
-2025 67
-```
+## Competing V6 explanations
 
-GOLD-only static event-conditioned learnability was unstable:
-
-```text
-2024 weak/reversed
-2025 better
-pooled near chance
-```
-
-Refined path labels did not eliminate the chronological reversal.
-
-Real synchronized `XAUEUR# + USDJPY#` context improved the robust-endpoint diagnostic in both 2024 and 2025, but input dimensionality also tripled.
-
-Therefore current uncertainty is:
+No single cause is promoted:
 
 ```text
-real context information
-vs
-same-capacity artifact
+selection / multiplicity
+covariate shift
+hidden / omitted context
+concept shift
+event-formulation insufficiency
+execution environment
 ```
+
+Each experiment must state which explanation it can discriminate.
 
 ## Current active question
 
-Only:
+Only at the parent-program level:
+
+> Which causally meaningful measurement families can explain specific V3 failure modes without recreating V3 feature mining, V4 no-learning, or V5 unrelated variable hunting?
+
+Current work is pre-outcome design:
+
+1. freeze semantic indicator/context families;
+2. map each family to a specific V3 failure mode;
+3. classify consumed vs unconsumed evidence;
+4. qualify causal availability and sample density;
+5. freeze an outcome-blind child order and family budget;
+6. activate one child at a time.
+
+## V6-001A status
+
+`V6-001A SAME-CAPACITY CROSS-MARKET CONTEXT INFORMATION AUDIT` is:
 
 ```text
-Does [GOLD + XAUEUR + USDJPY]
-beat same-capacity [GOLD + GOLD + GOLD]
-under the exact same causal event-conditioned probe
-in both 2024 and 2025?
+QUEUED / PRE-REGISTERED CHILD
+NOT CURRENT GENERATION GATE
 ```
 
-Do not begin adaptation or strategy design before this classification is frozen.
+It is a valid cleanup/falsification of consumed V5-041 scratch.
+
+Pass:
+- supports incremental information from the exact XAUEUR/USDJPY formulation only.
+
+Fail:
+- closes that formulation only;
+- does not close the full V6 context/indicator program;
+- does not authorize replacement-market shopping inside the same child.
 
 ## Hard stops
 
-- no V3 Candidate-A/B filter resurrection;
-- no best-timeframe selection;
-- no model tournament;
-- no generic V4 next-return formulation;
-- no new external-variable hunting;
-- no context-market shopping after seeing V6-001A;
-- no production EA changes;
+- no Candidate-A/B threshold resurrection;
+- no indicator/window/threshold tournament;
+- no best-timeframe/model selection from the same outcomes;
+- no generic V4 next-return rerun as default;
+- no unrelated external-variable search until something works;
+- no assumption that a portable measurement has portable meaning;
+- no mixing Entry-survival and continuation variables;
+- no strategy/EA change from information-stage evidence;
 - no GOLD# 2021.

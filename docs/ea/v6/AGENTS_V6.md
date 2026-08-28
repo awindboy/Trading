@@ -1,11 +1,13 @@
-# V6 — Event-Conditioned Generalization Research Authority
+# V6 — Context-Measurement Generalization Research Authority
 
-Status: `ACTIVE RESEARCH AUTHORITY`
-Date: `2026-08-28`
-Production authority: `NONE`
-Primary market: `GOLD#`
+Status: `ACTIVE RESEARCH AUTHORITY`  
+Date: `2026-08-28`  
+Production authority: `NONE`  
+Primary market: `GOLD#`  
+Current phase: `V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY / PRE-OUTCOME DESIGN`
 
 Parent generations:
+
 - V1 `FROZEN deterministic control`
 - V2 `PAUSED / preserved`
 - V3 `PAUSED / negative strategy authority + important mechanism/event evidence`
@@ -14,29 +16,32 @@ Parent generations:
 
 ## 1. Mission
 
-V6 exists to solve the central limitation exposed by V3 and not solved by V4:
+V6 exists to solve the central limitation exposed by V3:
 
 ```text
-the same apparently meaningful GOLD event/state
-can have different outcome meaning across periods/regimes/markets
+the same apparently meaningful causal GOLD event/state
+can have different outcome meaning
+across periods, regimes, and markets
 ```
 
-V3 tried to solve this with hand-authored state variables and filters.
-V4 tried to replace the ontology with generic raw-sequence prediction but did not obtain meaningful learning.
+V3 attempted to solve this mainly with price-derived hand-authored states and filters. V4 attempted generic raw-sequence representation learning but did not obtain useful learned signal in practice. V5 showed that changing setups or payoff architecture also does not automatically solve the state/generalization problem.
 
-V6 therefore uses a middle abstraction:
+V6 therefore studies:
 
 ```text
 causally meaningful event anchor
-+ raw multi-resolution market state
-+ optional synchronized cross-market context
--> learned / statistical representation
--> stability and information tests
--> only later policy
++ explicitly hypothesized market-context measurements
++ strict chronological and matched controls
+-> stable information?
+-> stable conditional meaning?
+-> only later policy/economics
 ```
 
-V6 is NOT defined by a specific AI architecture.
-Its novelty is the research formulation and generalization discipline.
+The defining idea is NOT a specific AI architecture and NOT one specific cross-market pair.
+
+The defining idea is:
+
+> identify which causally observable market-state dimensions explain why the same V3 event succeeds, fails, continues, gives back, or recovers differently across environments.
 
 ## 2. Mandatory startup order
 
@@ -48,59 +53,86 @@ Every V6 session must:
 4. read this file;
 5. read `HANDOFF_V6.md`;
 6. read `RESEARCH_STATE_V6.md`;
-7. read `V6_000_RESEARCH_CONTRACT.md`;
-8. read `V6_FAILURE_MAP_V3_V4_V5.md`;
-9. read `V6_001A_CONTEXT_INFORMATION_AUDIT.md`;
-10. read `BACKLOG_V6.md`;
-11. read `../v5/V5_FINAL_SYNTHESIS.md`;
-12. read V3 D145/D146/D148 and V3-003G validation documents when working on event semantics or labels;
-13. read V4 model/spec/literature documents when reusing representation code;
-14. inspect exact current code and data before implementation.
+7. read `V6_000A_V3_V5_LINEAGE_AND_FAILURE_SYNTHESIS.md`;
+8. read `V6_000_RESEARCH_CONTRACT.md`;
+9. read `V6_FAILURE_MAP_V3_V4_V5.md`;
+10. read `V6_001_CONTEXT_MEASUREMENT_REGISTRY.md`;
+11. read the active child experiment contract, if one is activated;
+12. read `BACKLOG_V6.md`;
+13. inspect exact code/data used by the active child before execution.
+
+When event semantics, labels, or inherited observations are material, also read the exact referenced V3/V5 source documents listed in V6-000A.
 
 GitHub wins over chat memory.
 
-## 3. Non-negotiable problem facts
+## 3. Non-negotiable inherited facts
 
-### 3.1 V3 failure must be treated as real
+### 3.1 V3 validation collapse is real
 
-V3 produced encouraging GOLD 2023-2025 discovery relationships and a promising Candidate B, but GOLD 2022 validation and other-market checks broke the apparent edge.
-
-Therefore V6 must assume:
+V3 produced encouraging GOLD 2023-2025 discovery relationships and a frozen Candidate B, but GOLD 2022 validation collapsed:
 
 ```text
-period-specific relationship is the default risk
+24 accepted
+25.0% positive
+avg positive +1.458R
+EV -0.385R/trade
 ```
 
-A model or feature that works in 2023-2025 does not earn authority by pooled performance.
-Chronological sign stability is mandatory.
+The failure began upstream of exit management and included exact-mirror reversals.
 
-### 3.2 V4 no-learning must be treated as real
+Therefore:
 
-The practical V4 stopping reason was that multiple attempts did not produce useful learning.
+```text
+period-specific relationship is a default risk
+```
 
-Therefore V6 may NOT respond to failure by automatically trying:
+V6 must not retune V3 thresholds to rescue 2022.
+
+### 3.2 V3 failure cause is not uniquely known
+
+V6 must keep separate:
+
+```text
+selection/multiplicity overfit
+covariate shift
+hidden/omitted context
+concept shift
+event-formulation insufficiency
+execution environment
+```
+
+Do not silently assume `hidden context` is already proven. It is a working hypothesis to falsify.
+
+### 3.3 V4 no-learning is real
+
+V4's practical project result was no useful learned signal from generic raw-sequence learning attempts.
+
+Therefore V6 may NOT respond to weak information by automatically trying:
+
 - a bigger Transformer;
 - another pretrained foundation model;
 - JEPA because it is newer;
 - RL/agent policy learning;
-- broad hyperparameter search.
+- a broad hyperparameter tournament.
 
-A simpler information/learnability test must pass first.
+A model is a measurement/information tool, not a source of authority.
 
-### 3.3 V5 narrowed the problem
+### 3.4 V5 narrowed important failure modes
 
-V5 showed:
-- payoff architecture cannot always be repaired after Entry;
-- strong-looking state relationships may fail cross-architecture transfer;
-- point-in-time external macro state is not automatically useful;
-- late event-conditioned GOLD-only raw-path probes still showed chronological instability;
-- synchronized XAUEUR/USDJPY context produced the first small same-direction improvement across 2024 and 2025, but a same-capacity placebo was not completed.
+V5 established:
 
-V6 begins exactly there.
+- many setup families face a hit-rate/payoff frontier;
+- First Cross had positive development EV but failed the final average-positive-R target;
+- the consumed partial/BE/runner family cannot satisfy `WR>=50%` and `avg positive>=2R` simultaneously;
+- a measurement can be causally portable while its predictive meaning fails transfer;
+- one failed real-yield hypothesis does not invalidate macro context generally;
+- source-faithful COT was underpopulated, not price-outcome falsified;
+- GLD flow was prepared but untested;
+- unrelated standalone external-variable hunting is not the V6 mandate.
 
 ## 4. Final economic target
 
-Any eventual strategy must still target:
+Any eventual strategy must target:
 
 ```text
 realized positive-trade rate >= 50%
@@ -109,43 +141,29 @@ cost-adjusted expectancy     > 0
 ```
 
 Additionally:
+
 - multiple independent periods;
 - more than one structurally compatible market before final promotion;
-- acceptable drawdown/loss streak;
+- acceptable drawdown and loss streak;
 - no unacceptable winner concentration;
-- execution parity including spread/commission/slippage.
+- execution parity including spread, commission, and slippage.
 
-Do not force every winner to 2R merely to satisfy the metric.
+Do not force all winners to a fixed 2R TP merely to satisfy the metric.
 
-## 5. Separation of research stages
+## 5. Initial event anchor
 
-V6 separates at least these questions:
-
-```text
-A. event meaning / Entry survival
-B. winner continuation
-C. payoff capture / exit lifecycle
-D. execution
-E. market suitability
-F. portfolio / exposure
-```
-
-A feature/model discovered for A does not automatically become a rule for B or C.
-
-## 6. Event anchor policy
-
-The initial V6 event anchor is the exact V3-003C `BROAD CONTROL`, because it provides meaningful causal event semantics without applying the later hand-authored V3 selection gates.
+The initial V6 event anchor is the exact V3-003C `BROAD CONTROL`, not Candidate A/B.
 
 Expected parity:
 
 ```text
-2023 84 events
-2024 86 events
-2025 67 events
+2023 84
+2024 86
+2025 67
 total 237
 ```
 
-The initial anchor includes:
+It includes:
 
 ```text
 persistent M15 intermediate liquidity
@@ -158,112 +176,189 @@ persistent M15 intermediate liquidity
 ```
 
 Do NOT filter the V6 learning population by:
+
 - DELIVERY_ACTIVE;
 - STRONG_ACCEPTANCE;
 - Candidate A;
 - Module H/L;
 - Candidate B.
 
-Those are consumed V3 discoveries and may be reported only as descriptive references.
+Those are consumed V3 discoveries.
 
-V6 is allowed to later define a new event family, but only through a separate preregistered phase. Do not silently mutate the anchor after seeing model outcomes.
+A future new event family requires a separate preregistered phase. Do not mutate the anchor after seeing an indicator result.
 
-## 7. Causal input rules
+## 6. What `indicator` means in V6
+
+An indicator is a causally available measurement of a named market-state hypothesis.
+
+Eligible measurement families include:
+
+1. `OWN-MARKET ENDOGENOUS STATE`
+   - multi-timeframe structure/progress;
+   - volatility/range/compression-expansion;
+   - activity/tick-volume proxies;
+   - trend persistence and path geometry.
+
+2. `CROSS-MARKET / RELATIVE STATE`
+   - related gold crosses;
+   - currency decomposition;
+   - related risk/liquidity markets when mechanistically justified.
+
+3. `MACRO / RATES STATE`
+   - yields, real yields, inflation expectations, USD state, or similar data with point-in-time availability discipline.
+
+4. `POSITIONING / FLOW STATE`
+   - COT, ETF/fund holdings/flows, or other source-qualified slow state.
+
+5. `EXECUTION / LIQUIDITY ENVIRONMENT`
+   - spread, trading-session availability, broker/feed conditions, or other execution-state variables.
+
+6. `SCHEDULED EVENT / MARKET ENVIRONMENT`
+   - only when availability and economic role are explicit and causal.
+
+Standard technical indicators are allowed only as fixed transformations of a preregistered state hypothesis. `RSI/MACD/etc. because they are popular` is not a research hypothesis.
+
+## 7. No indicator tournament
+
+V6 may not:
+
+```text
+screen many indicators / windows / thresholds
+-> choose the best outcome
+-> call the survivor context
+```
+
+Before opening outcomes, every child experiment must freeze:
+
+- latent-state/mechanism hypothesis;
+- why the measurement should relate to the V3 failure mode;
+- exact source and causal availability;
+- transformation/window definitions;
+- target stage;
+- chronological folds;
+- matched/null controls;
+- uncertainty method;
+- minimum sample/coverage rule;
+- kill condition;
+- allowed follow-up budget.
+
+If a child fails, close that formulation. A genuinely different preregistered family may later open, but do not rescue the consumed child by threshold shopping.
+
+## 8. Stage separation
+
+V6 separates at least:
+
+```text
+A. Entry survival / event meaning
+B. winner continuation
+C. payoff capture / exit lifecycle
+D. execution
+E. market suitability
+F. portfolio / exposure
+```
+
+A variable discovered for A does not automatically become a rule for B/C.
+
+A continuation variable discovered after +1R does not automatically become an Entry filter.
+
+## 9. Causal input rules
 
 At event time `t`, every input must be available by `t`.
 
-Initial causal histories may reuse the V4 multi-resolution horizon:
+For bar-derived state:
+
+- use completed bars only;
+- no still-open higher-timeframe bar;
+- no future-normalized feature;
+- no outcome-derived normalization.
+
+For cross-market/external state:
+
+- use values actually available no later than `t`;
+- represent/audit staleness;
+- distinguish observation date from release/publication availability;
+- no future-forward-fill;
+- fail closed when required history is unavailable.
+
+## 10. Recursive falsification is mandatory
+
+Before every major interpretation write:
+
+1. current thesis;
+2. opposite thesis;
+3. simpler alternative;
+4. prior-project recurrence;
+5. placebo/negative control;
+6. causal boundary;
+7. geometry/economics consequence;
+8. kill condition.
+
+After a promising result ask:
+
+- does it survive year/direction/time decomposition?
+- does it survive an outcome-blind matched control?
+- can trend/volatility/activity/cost explain it?
+- is it direction information or only movement intensity?
+- would the conclusion survive removal of the most favorable environment?
+- is a tail mean being mistaken for a high-probability effect?
+
+Do not use `promising` as a classification.
+
+## 11. Model progression
+
+Use complexity only after the information question justifies it:
 
 ```text
-M1   256 completed bars
-M5   192 completed bars
-M30   96 completed bars
-H4    42 completed bars
-```
-
-No still-open higher-timeframe bar may be used.
-
-Cross-market context must use only bars available no later than the GOLD anchor time. Alignment staleness must be explicitly represented or audited.
-
-No future-normalized feature.
-No outcome-derived normalization.
-
-## 8. Model progression rule
-
-Models exist to test information, not to create authority by complexity.
-
-Use this order:
-
-```text
-simple linear / ridge / raw-convolution probe
+simple descriptive / linear / matched-control test
 -> stable chronological information?
-    no  -> stop or reformulate the information question
-    yes -> self-supervised representation may be justified
--> stable representation across environments?
-    no  -> study hidden context / concept drift
-    yes -> survival / continuation model
--> policy only after information is stable
+    no  -> close/reformulate the measurement question
+    yes -> fixed representation model if needed
+-> stable conditional meaning across environments?
+    no  -> diagnose covariate/hidden-context/concept/event issues
+    yes -> stage-specific prediction
+-> policy/economics only later
 ```
 
-Do not run a model tournament and select the winner from the same consumed outcomes.
+Do not run a model tournament on the same consumed outcomes.
 
-## 9. Non-stationarity rule
+## 12. Validation allocation
 
-V6 explicitly treats these as different hypotheses:
-
-```text
-covariate shift: P(X) changes
-concept shift:   P(Y|X) changes
-hidden context:  relevant state is omitted from X
-```
-
-Do not call every failure `regime change` without testing which class is plausible.
-
-Online/test-time adaptation is NOT the first response.
-It becomes eligible only after static hidden-context tests fail or remain insufficient, and it must use strictly past information/labels.
-
-## 10. Validation rules
-
-Primary chronology for the initial event population:
+Initial development chronology:
 
 ```text
 train 2023       -> evaluate 2024
 train 2023-2024  -> evaluate 2025
 ```
 
-Do not pool years first and cross-validate randomly.
+This is not pristine final validation; it is a controlled chronological research allocation.
 
-GOLD 2022 is already consumed by V3.
-It may later be used only as a harsh falsification/stress test after the V6 pipeline is frozen; it cannot promote the method.
+GOLD 2022 is consumed V3 falsification data. It may later be used only as a harsh falsifier after a V6 formulation is frozen and may not promote it.
 
-GOLD# 2021 remains closed.
+GOLD# 2021 remains untouched.
 
-Any final strategy must later use a genuinely independent period/market allocation.
+## 13. V6-001A scope correction
 
-## 11. Controls are first-class research objects
+`V6_001A_CONTEXT_INFORMATION_AUDIT.md` is preserved as one already-preregistered child experiment concerning the `XAUEUR + USDJPY` cross-market family.
 
-A model improvement is not accepted without a control capable of explaining it away.
+It is NOT:
 
-Examples:
-- same-capacity GOLDx3 context placebo;
-- stale cross-market context;
-- time-block/domain controls;
-- exact mirror stress where meaningful;
-- class-prior baseline;
-- consumed V3 hand-state reference, clearly labeled non-OOS.
+- the definition of V6;
+- a mandatory gate before all other indicator families;
+- proof of strategy if passed;
+- proof that hidden/context information is useless if failed.
 
-If a control explains the improvement, close the claim.
+A pass supports only stable incremental information from that specific context formulation.
 
-## 12. Documentation
+A fail closes only that specific formulation. It does not authorize shopping replacement cross-markets inside the same child, but it also does not close independently preregistered macro, positioning, flow, endogenous-state, or execution-context hypotheses.
 
-Material negative findings must be documented.
-Do not document every trivial failed hyperparameter.
+## 14. Current phase
 
-Update:
-- `RESEARCH_STATE_V6.md` when phase classification changes;
-- `HANDOFF_V6.md` when the next-session task changes;
-- `BACKLOG_V6.md` when stages close/open;
-- a phase result document for any material pass/fail;
-- decisions for any rule that constrains future research.
+Current phase:
 
-No production EA change is authorized by V6 startup.
+```text
+V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY / PRE-OUTCOME DESIGN
+```
+
+The immediate task is to freeze the parent registry and outcome-blind research order before activating any child experiment.
+
+No production EA change is authorized.

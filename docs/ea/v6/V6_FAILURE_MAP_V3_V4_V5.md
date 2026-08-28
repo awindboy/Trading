@@ -1,106 +1,214 @@
 # V6 Failure Map — What Must Not Be Repeated
 
-Status: `ACTIVE CONSTRAINT MAP`
+Status: `ACTIVE CONSTRAINT MAP — CORRECTED`  
 Date: `2026-08-28`
 
-## V3 — hand-authored state overgeneralization
+Read `V6_000A_V3_V5_LINEAGE_AND_FAILURE_SYNTHESIS.md` for the detailed lineage.
 
-### What worked in discovery
+## 1. V3 — meaningful discovery plus non-generalization
 
-- GOLD 2023-2025 produced encouraging event/state relationships.
-- Candidate B achieved an unusually attractive development profile under the then-frozen architecture.
-- Entry survival and winner continuation could be decomposed meaningfully.
-- D145 found a strong +1R survivor continuation relationship inside V3 populations.
+### What worked
+
+- raw-data causal event reconstruction;
+- matched controls and mirror tests;
+- exact V3-003C broad event parity;
+- meaningful discovery interaction between delivery state and local acceptance;
+- explicit separation of Entry survival and winner continuation;
+- frozen Candidate B before opening GOLD 2022.
 
 ### What failed
 
-- GOLD 2022 frozen validation broke Candidate B.
-- other-market Entry survival was materially weaker.
-- mirror relationships sometimes rivaled or exceeded the intended direction.
-- hand-crafted trade-level ML in early V3 did not generalize reliably.
-- D145 M30 continuation relation later failed transfer to First Cross in V5.
+- Candidate B collapsed in frozen GOLD 2022;
+- upstream +1R survival collapsed too;
+- exact mirrors materially outperformed intended direction in important 2022 diagnostics;
+- quarter relationships were already unstable during development;
+- hand-crafted feature mining did not produce a stable universal classifier;
+- later V5 transfer of a V3 M30 measurement preserved computation but not predictive meaning.
 
-### V6 lesson
+### What V6 must NOT conclude
 
-Do not assume a human-readable state has invariant meaning across time/markets.
-Do not fix a validation reversal by adding another threshold.
+Do not reduce V3 to one story:
 
-## V4 — generic AI no-learning
+```text
+not only exit failure
+not only cost failure
+not proven pure noise
+not proven hidden-context failure
+```
+
+### V6 constraint
+
+Treat these as competing hypotheses:
+
+```text
+selection/multiplicity
+covariate shift
+hidden/omitted context
+concept shift
+event-formulation insufficiency
+execution
+```
+
+Any experiment that cannot distinguish at least one of these is low priority.
+
+## 2. V4 — generic AI no-learning
 
 ### What V4 tried
 
 - causal multi-resolution raw sequences;
-- compact Transformer-style models;
-- generic 15m/60m/240m next-return targets;
-- representation / pretrained-model directions;
+- compact Transformer-style modeling;
+- generic future-return targets;
+- representation/self-supervised directions;
 - leakage-aware temporal splits.
 
 ### Practical result
 
-The user ran multiple learning attempts and did not obtain meaningful learning.
-Current GitHub documents may understate this by leaving some CUDA runs as pending; for V6 planning, the user's later correction is authoritative about the practical stop reason.
+Useful learned signal did not emerge in actual project work.
 
-### V6 lesson
+### V6 constraint
 
 Do not repeat:
 
 ```text
-all market times
+all timestamps
 -> generic next-return label
 -> bigger/newer model
 ```
 
-A modern model is not evidence of a learnable problem.
+A modern model is not evidence that the research object contains stable information.
 
-## V5 — mechanism/payoff search narrowed the target
+## 3. V5 — several different failures, not one
 
-### What V5 established
+### 3.1 Setup/payoff frontier
 
-- First Cross could raise hit rate and retain positive EV but not average positive >=2R.
-- partial-fraction tuning could not solve the joint objective.
-- structural-lock and source-native continuation states did not rescue the needed population.
-- D145 M30 state was measurable cross-architecture but its edge did not transfer.
-- real yield was carefully causal but empirically wrong-direction in 2023.
-- source-faithful Williams COT extremes were too sparse for the frozen 2023 test.
-
-### Late V5 transition back to AI
-
-Event-conditioned raw GOLD state was tested on the V3 broad population.
-The core result remained unstable chronologically:
+Across many success-first families:
 
 ```text
-2024 weak/reversed
-2025 better
-pooled near chance
+higher survival -> smaller winners
+larger winners -> lower hit rate
 ```
 
-Refining the label into robust path endpoints did not eliminate the reversal.
+Do not interpret this as `technical analysis is useless`.
 
-Cross-market context then produced a small same-direction improvement across 2024 and 2025, but capacity confounding remained unresolved.
+### 3.2 First Cross
 
-### V6 lesson
-
-The unresolved problem is not `find another setup`.
-It is:
+V5-030A development:
 
 ```text
-when does the same event mean something different,
-and is the missing state observable causally?
+WR 53.94%
+avg positive NET R 1.197R
+EV +0.148R
 ```
 
-## Do-not-repeat checklist
+It had development edge but failed the final economics.
 
-Before proposing a new V6 experiment, ask:
+The payoff audit showed the consumed partial/BE/runner family cannot reach both:
 
-- Is this just a new threshold on a consumed V3/V5 variable?
-- Is this just another generic return-prediction model like V4?
-- Am I selecting a timeframe/model after seeing outcomes?
-- Am I adding channels without a same-capacity placebo?
-- Am I calling a chronological reversal random noise without measuring uncertainty?
-- Am I mixing Entry survival and winner continuation?
-- Am I using a consumed validation year to tune?
-- Am I treating a tail-driven mean as representative performance?
-- Am I solving poor payoff by forcing a fixed TP?
-- Am I moving away from GOLD merely because another market/source looks easier?
+```text
+WR >= 50%
+avg positive >= 2R
+```
 
-If yes, stop and redesign the research question.
+Do not rescue the same family by partial-fraction tuning.
+
+### 3.3 Portable observable != portable edge
+
+V5-036 proved exact V3 M30 state could be reconstructed/ported, while the inherited continuation relationship reversed.
+
+Never promote an indicator because its formula is stable.
+
+### 3.4 External-state interpretation
+
+- real yield: one specific 2023 direct hypothesis failed;
+- COT: source-faithful population insufficient, price outcome unopened;
+- GLD flow: prepared, not run.
+
+Do not write `external indicators failed`.
+
+The prohibited behavior is:
+
+```text
+unrelated variable
+-> standalone predictor
+-> fail
+-> next unrelated variable
+```
+
+The allowed V6 behavior is:
+
+```text
+known V3 failure mode
+-> hypothesized missing state
+-> causal indicator/context measurement
+-> matched chronological falsification
+```
+
+## 4. Late V5 cross-market scratch
+
+The late V5 event-conditioned work found:
+
+```text
+GOLD-only chronological learning unstable
+refined path labels did not remove instability
+XAUEUR/USDJPY context improved scratch diagnostics in both 2024 and 2025
+same-capacity control missing
+```
+
+Correct interpretation:
+
+```text
+candidate clue with capacity confound
+```
+
+Incorrect interpretations:
+
+```text
+proven context edge
+proven strategy
+mandatory definition of V6
+only context family worth testing
+```
+
+## 5. Permanent do-not-repeat checklist
+
+Before proposing a V6 child, ask:
+
+- Is this a new threshold on a consumed V3/V5 variable?
+- Is this an indicator leaderboard?
+- Is the indicator's latent-state meaning stated?
+- Is the target stage explicit?
+- Am I reusing a continuation variable as an Entry filter?
+- Is this another generic V4 return-prediction task?
+- Am I selecting a timeframe/model/window after outcomes?
+- Is there a matched/null control?
+- Can a simpler trend/volatility/activity/cost explanation explain it?
+- Did I distinguish observation time from causal availability?
+- Does the sample have enough events at the indicator update frequency?
+- Is a tail mean being mistaken for common behavior?
+- Would the conclusion survive removing the strongest environment?
+- Is the kill condition written before results?
+- If it fails, will I close the formulation rather than add an exception?
+
+If any answer is unacceptable, redesign before outcome inspection.
+
+## 6. Scope of V6-001A
+
+V6-001A is one family-B child.
+
+Its fail condition closes:
+
+```text
+XAUEUR/USDJPY incremental information
+under the frozen V6-001A formulation
+```
+
+It does NOT close:
+
+```text
+all hidden-context hypotheses
+all indicator research
+all macro/flow/endogenous/execution context
+V6 itself
+```
+
+Its pass is information evidence only and does not authorize trading policy.

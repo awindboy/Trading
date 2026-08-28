@@ -1,8 +1,8 @@
-> **V6 ACTIVE ROUTING — 2026-08-28 / EVENT-CONDITIONED GENERALIZATION**  
-> Current phase: `V6-001A SAME-CAPACITY CROSS-MARKET CONTEXT INFORMATION AUDIT`.  
-> V6 keeps GOLD# as the primary discovery market and treats V3 validation collapse plus V4 no-learning as explicit design constraints.  
-> Immediate task: exact broad-event parity -> recover/freeze the late-V5 context probe -> compare real `GOLD+XAUEUR+USDJPY` against same-dimensional `GOLDx3` placebo in 2024 and 2025.  
-> No best-TF/model selection, no adaptation, no strategy/EA change before the context-information claim is classified. GOLD 2022 is consumed falsification data; GOLD# 2021 remains closed.
+> **V6 ACTIVE ROUTING — 2026-08-28 / CONTEXT-MEASUREMENT GENERALIZATION**  
+> Current phase: `V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY / PRE-OUTCOME DESIGN`.  
+> V6 keeps GOLD# as the primary research market and treats V3 validation collapse, V3 multiplicity risk, V4 no-learning, and V5 payoff/transfer/research-direction failures as explicit design constraints.  
+> Immediate task: read the V3/V5 lineage synthesis -> finalize the semantic indicator/context registry -> map families to V3 failure modes -> qualify causal data/sample density -> freeze outcome-blind child order and family budget -> activate one child. `V6-001A` remains a queued preregistered cross-market child and must not be treated as the entire V6 mandate.  
+> No indicator/window/threshold tournament, no adaptation rescue, and no strategy/EA change from information-stage evidence. GOLD 2022 is consumed falsification data; GOLD# 2021 remains closed.
 
 > **V5 CLOSED ROUTING — 2026-08-28**  
 > V5 is historical. Read `docs/ea/v5/V5_FINAL_SYNTHESIS.md`; active research has moved to `docs/ea/v6/`.

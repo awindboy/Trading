@@ -1,34 +1,34 @@
-# V6-000 — Event-Conditioned Generalization Research Contract
+# V6-000 — Context-Measurement Generalization Research Contract
 
-Status: `FROZEN STARTUP CONTRACT`
-Date: `2026-08-28`
-Production authority: `NONE`
+Status: `FROZEN GENERATION CONTRACT — CORRECTED`  
+Date: `2026-08-28`  
+Production authority: `NONE`  
 Primary market: `GOLD#`
 
 ## 1. Research thesis
 
-V6 does not assume that V3 failed because one more chart filter was missing.
-It also does not assume that V4 failed because the neural network was not large enough.
+V6 does not assume V3 failed because one more chart filter was missing.
 
-The working thesis is:
+V6 also does not assume V3 failed because hidden context is definitely the answer.
 
-> A meaningful GOLD event may require a richer latent market context to determine whether it represents true directional delivery, temporary reaction, giveback, or stop-sensitive recovery. The relevant context may be distributed across timescales and related markets, and its meaning may drift over time.
+The scientific problem is:
 
-This thesis is falsifiable.
+> A causally meaningful GOLD event can show different outcome meaning across periods. V6 must distinguish selection/multiplicity, covariate shift, omitted context, concept shift, event-formulation insufficiency, and execution effects by using preregistered causal measurements and matched controls.
 
-If no stable information can be extracted under strict chronology and controls, V6 must accept that the chosen event formulation may not contain enough predictive information.
+A richer context may help. That claim must be falsified family by family.
 
 ## 2. Initial research object
 
-Use exact V3-003C BROAD CONTROL as an event anchor, not as a strategy authority.
+Use exact V3-003C `BROAD CONTROL` as the initial event anchor, not as strategy authority.
 
 Why:
-- it is broad enough to avoid baking Candidate-A discovery filters into sample selection;
-- it is causal;
-- it has near-balanced +1R survival across 2023-2025;
-- it provides a meaningful event-conditioned population, unlike V4 generic all-time return prediction.
 
-Expected pre-context parity:
+- broad enough to avoid baking Candidate-A discovery filters into selection;
+- causal;
+- near-balanced +1R survival across 2023-2025;
+- meaningful event semantics unlike generic all-time next-return prediction.
+
+Expected parity:
 
 ```text
 2023 84
@@ -36,13 +36,51 @@ Expected pre-context parity:
 2025 67
 ```
 
-Any mismatch must be resolved before model outcomes are inspected.
+Any mismatch must be resolved before child outcomes are inspected.
 
-## 3. Outcome hierarchy
+## 3. Competing failure hypotheses
 
-Do not force all research into one binary label.
+V6 begins with no single promoted explanation.
 
-### Stage-A Entry survival
+### H1 — selection / multiplicity
+
+V3's final relationship may have been selected from too many development hypotheses.
+
+### H2 — covariate shift
+
+```text
+P(X) changes
+```
+
+The frequency/distribution of observed market state changes.
+
+### H3 — hidden / omitted context
+
+Relevant state is missing from X.
+
+### H4 — concept shift
+
+```text
+P(Y|X) changes
+```
+
+Similar observed state has different outcome meaning.
+
+### H5 — event-formulation insufficiency
+
+The current broad event may mix different causal event classes.
+
+### H6 — execution environment
+
+Execution/cost changes may affect realized economics, but this cannot be used as a blanket explanation for V3's 2022 direction/mirror reversal.
+
+Every major V6 interpretation must say which hypothesis it supports, weakens, or leaves unresolved.
+
+## 4. Outcome hierarchy
+
+Do not force all research into one label.
+
+### Stage A — Entry survival
 
 ```text
 +1R before original structural SL
@@ -50,9 +88,9 @@ vs
 SL before +1R
 ```
 
-This remains useful as a diagnostic but late-V5 evidence showed it mixes different path types.
+Use for event/directional survival questions.
 
-### Stage-B symmetric path taxonomy
+### Stage B — symmetric path taxonomy
 
 After the first +/-1R boundary:
 
@@ -63,7 +101,7 @@ L_RECOVER:  -1 -> 0 before -2
 L_CONTINUE: -1 -> -2 before 0
 ```
 
-Known V5 scratch counts:
+Known late-V5 scratch counts:
 
 ```text
                  2023  2024  2025  total
@@ -73,69 +111,136 @@ L_RECOVER          22    18    19    59
 L_CONTINUE         19    22    13    54
 ```
 
-Ambiguous same-M1 ordering must be excluded or separately classified, never guessed.
-Right censoring must remain censoring.
+Ambiguous same-M1 ordering must be excluded or separately classified. Right censoring remains censoring.
 
-### Stage-C survival / competing-risk modeling
+### Stage C — survival / competing-risk modeling
 
-Only after stable information is established may V6 model time-to-first-hit / competing events directly.
-Do not start here merely because the method is modern.
+Only after stable information exists may V6 model time-to-event directly.
 
-## 4. Representation policy
+### Stage D — strategy economics
+
+Only after stage-specific information is stable may a trading policy be defined and tested.
+
+## 5. Indicator/context family contract
+
+Before an indicator family becomes an active child, preregister:
+
+1. `STATE HYPOTHESIS`
+   - what latent market condition is being measured?
+
+2. `V3 FAILURE LINK`
+   - direction premise failure?
+   - delivery weakness?
+   - stop-sensitive recovery?
+   - winner exhaustion?
+   - execution degradation?
+
+3. `MEASUREMENT`
+   - exact source;
+   - exact formula/transform;
+   - update frequency;
+   - causal availability;
+   - missing/stale handling.
+
+4. `TARGET STAGE`
+   - Entry survival, continuation, execution, etc.
+
+5. `CONTROLS`
+   - simple/null baseline;
+   - same-capacity control when model dimensionality changes;
+   - stale/time-shift/mirror controls when appropriate.
+
+6. `ENVIRONMENTS`
+   - chronological folds;
+   - year/direction/time-block diagnostics.
+
+7. `UNCERTAINTY`
+   - preregistered resampling/interval method appropriate to time clustering.
+
+8. `KILL CONDITION`
+   - result that closes the formulation without a threshold rescue.
+
+9. `FOLLOW-UP BUDGET`
+   - what is allowed if the primary result passes;
+   - what is prohibited if it fails.
+
+## 6. Context families
+
+Parent registry may include:
+
+```text
+A. own-market endogenous state
+B. cross-market / relative state
+C. macro / rates state
+D. positioning / fund-flow state
+E. execution / liquidity environment
+F. scheduled-event / market-environment state
+```
+
+This list is a semantic registry, not permission to screen all available variables.
+
+## 7. Representation policy
 
 V6 may use:
+
 - normalized raw OHLC path;
 - range/body/wick geometry;
+- volatility/trend/activity transforms;
 - tick-volume/activity proxy with correct semantics;
-- spread / execution state;
-- cross-market synchronized raw state;
-- learned self-supervised embeddings, if Stage-0 information supports escalation.
+- spread/execution state;
+- synchronized cross-market state;
+- source-qualified macro/positioning/flow state;
+- learned representations only after information-stage justification.
 
-V6 must not silently reintroduce V3 filters as model channels and then claim the model rediscovered them.
+V6 must not silently reintroduce V3 selection gates as model channels and claim rediscovery.
 
-## 5. Environment policy
+## 8. Chronological discipline
 
-Environment stability is part of the objective, not a post-hoc chart.
-
-Minimum environments:
-
-```text
-2024 evaluation
-2025 evaluation
-LONG / SHORT diagnostics
-calendar-time blocks
-```
-
-Later:
-- GOLD 2022 consumed falsifier;
-- independent structurally compatible markets;
-- execution environment changes separately.
-
-## 6. What counts as progress
-
-Progress is NOT:
-- higher pooled AUC after selecting a timeframe;
-- one strong year;
-- one lucky seed;
-- a more complex network;
-- a visually separated embedding;
-- post-hoc threshold discovery.
-
-Progress is:
+Initial chronological research folds:
 
 ```text
-same formulation
--> same direction of information gain
--> across chronological environments
--> beyond strong matched controls
--> with uncertainty compatible with real signal
+F1 train 2023       -> evaluate 2024
+F2 train 2023-2024  -> evaluate 2025
 ```
 
-## 7. Current unresolved hypothesis
+No random CV as claim-grade evidence for stability.
 
-Late V5 cross-market scratch suggested synchronized `XAUEUR# + USDJPY#` context improved robust path-endpoint discrimination in both chronological evaluation years.
+Do not select a best year, timeframe, model, threshold, transformation, or context composition from these outcomes.
 
-Recovered scratch values:
+## 9. Multiplicity discipline
+
+V3 selection risk is itself a V6 design constraint.
+
+Therefore:
+
+- test hypotheses by semantic family, not by indicator leaderboard;
+- freeze a small transformation set before outcomes;
+- do not search thresholds after a weak result;
+- record consumed hypotheses;
+- a new family must be substantively different and preregistered before its outcome is opened.
+
+## 10. Recursive falsification
+
+The V5 recursive falsification discipline is inherited and made permanent.
+
+Before interpretation:
+
+```text
+current thesis
+opposite thesis
+simpler alternative
+prior-project recurrence
+placebo/control
+causal boundary
+geometry/economics
+kill condition
+```
+
+A result cannot be called supported only because pooled AUC/WR improves.
+
+## 11. V6-001A status
+
+Late V5 cross-market scratch:
 
 ```text
                          GOLD only   +XAUEUR+USDJPY
@@ -145,13 +250,36 @@ Recovered scratch values:
 2025 ordinal rho          +0.084         +0.191
 ```
 
-However actual context had ~30 channels versus ~10 for GOLD-only.
+This is consumed hypothesis-generation evidence, not claim-grade proof.
 
-Therefore this is NOT yet evidence of cross-market information.
-The first V6 task is a same-capacity falsifier.
+`V6-001A` remains a valid preregistered child to distinguish real cross-market information from a same-capacity artifact.
 
-## 8. Adaptation lock
+However:
 
-No test-time adaptation, online updating, rolling refit, meta-learning, or regime-conditioned routing may be introduced before V6-001A is classified.
+```text
+V6-001A pass != V6 strategy pass
+V6-001A fail != all context/indicator hypotheses fail
+```
 
-If V6-001A supports genuine context information but 2024 remains weak, a later preregistered stage may test whether context is insufficient or whether causal adaptation is necessary.
+Its classification applies only to the stated XAUEUR/USDJPY formulation.
+
+## 12. Adaptation lock
+
+No test-time adaptation, online updating, rolling refit, meta-learning, or regime-conditioned routing may be used to rescue a weak static measurement result.
+
+Adaptation becomes eligible only after a preregistered stage shows:
+
+- useful causal information exists; and
+- remaining instability is consistent with concept drift rather than simply no signal.
+
+## 13. Final economic boundary
+
+The eventual strategy target remains:
+
+```text
+realized positive-trade rate >= 50%
+average positive NET R       >= 2.0R
+cost-adjusted expectancy     > 0
+```
+
+Information evidence is not strategy authority.
