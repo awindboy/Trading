@@ -1,8 +1,11 @@
-> **V5 ACTIVE ROUTING — 2026-08-27 / PAYOFF-FIRST EXTERNAL-STATE DISCOVERY**  
-> Current phase: `V5-037A GOLD REAL-YIELD DIRECTIONAL-DELIVERY MECHANISM AUDIT`.  
-> Final economics remain WR >=50%, average positive NET R >=2R, cost-adjusted EV >0; 2R is a result criterion, not a fixed TP.  
-> V5-036A: exact D-145 M30 state is portable as a measurement, but the inherited continuation relation fails First Cross transfer; First Cross payoff-rescue is CLOSED.  
-> Next: qualify point-in-time DFII10 release history and run the preregistered GOLD# 2023 mechanism test only. GOLD# 2021 remains closed; no EA/production authority exists.
+> **V6 ACTIVE ROUTING — 2026-08-28 / EVENT-CONDITIONED GENERALIZATION**  
+> Current phase: `V6-001A SAME-CAPACITY CROSS-MARKET CONTEXT INFORMATION AUDIT`.  
+> V6 keeps GOLD# as the primary discovery market and treats V3 validation collapse plus V4 no-learning as explicit design constraints.  
+> Immediate task: exact broad-event parity -> recover/freeze the late-V5 context probe -> compare real `GOLD+XAUEUR+USDJPY` against same-dimensional `GOLDx3` placebo in 2024 and 2025.  
+> No best-TF/model selection, no adaptation, no strategy/EA change before the context-information claim is classified. GOLD 2022 is consumed falsification data; GOLD# 2021 remains closed.
+
+> **V5 CLOSED ROUTING — 2026-08-28**  
+> V5 is historical. Read `docs/ea/v5/V5_FINAL_SYNTHESIS.md`; active research has moved to `docs/ea/v6/`.
 
 > **V4 ACTIVE ROUTING — 2026-08-27 / V4-001 REPRESENTATION TOURNAMENT**  
 > Claim-grade R0/R1/R2 research uses the frozen development panel; R1/R2 must follow leakage-safe Stage-A execution.  

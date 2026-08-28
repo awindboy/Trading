@@ -1,8 +1,11 @@
 # V5 — Success-First Market Mechanism Research Authority
 
-Status: `ACTIVE RESEARCH AUTHORITY`
+Status: `CLOSED / HISTORICAL RESEARCH AUTHORITY`
 Date: `2026-08-27`
 Production authority: `NONE`
+
+> V5 was closed on `2026-08-28`. This file preserves the V5 research contract for historical interpretation.  
+> Active work is routed to `docs/ea/v6/AGENTS_V6.md`. Read `V5_FINAL_SYNTHESIS.md` for final V5 disposition.
 Parent lines:
 - V1 `FROZEN deterministic control`
 - V2 `PAUSED / preserved`
