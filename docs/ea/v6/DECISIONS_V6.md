@@ -164,3 +164,37 @@ kill condition
 ```
 
 A positive-looking result must survive environment decomposition and controls before being classified as supported.
+
+## V6-D018 — User intent correction: indicator-first, no active AI/ML
+
+The user explicitly corrected V6 direction on 2026-08-28:
+
+> the goal is to break V3's limitation through diverse indicators; AI is not an active interest or expected solution.
+
+Decision:
+
+- V6 active research uses causal, human-interpretable technical/market-state indicators.
+- AI/ML classifiers, representation learning, convolution probes, and model-capacity comparisons are inactive unless the user explicitly reopens them.
+- V6-001A is shelved; it is preserved only as historical preregistration.
+- no result may be summarized as `AI failed`; AI is simply outside the active research mandate.
+
+## V6-D019 — First indicator atlas is exploratory, not a filter search
+
+The first fixed H1/H4 atlas tested conventional trend, momentum, volatility, location, and tick-volume/activity indicators on the exact V3-003C broad event.
+
+Recursive falsification showed:
+
+- simple direction-adjusted H1 indicator levels reverse across years;
+- participation/location proxies also fail stability;
+- pooled H4 strength/width hints weaken after direction decomposition;
+- H4 ADX(14) is the only initial six-cell Entry-survival relation with the same rank-probability sign, but its effect is extremely weak (`~0.518..0.577`) and has no filter authority.
+
+Decision:
+
+```text
+NO INDICATOR PROMOTION
+NEXT = STATE-TRANSITION MEASUREMENT RESEARCH
+```
+
+Do not optimize an ADX threshold from this exploratory clue.
+

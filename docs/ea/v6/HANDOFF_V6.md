@@ -1,7 +1,7 @@
 # V6 Development Handoff
 
 Last updated: `2026-08-28`  
-Current phase: `V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY / PRE-OUTCOME DESIGN`  
+Current phase: `V6-001B INTERPRETABLE INDICATOR ATLAS / STATE-TRANSITION RESEARCH`  
 Current promoted candidate: `NONE`  
 Production authority: `NONE`
 
@@ -28,7 +28,7 @@ GitHub wins over chat memory.
 
 User-level intended direction:
 
-> use research and modern tools, including diverse market indicators/context measurements, to solve the generalization limitation exposed by V3.
+> use diverse causal, interpretable technical/market-state indicators to understand and overcome the generalization limitation exposed by V3. AI/ML is not the active research route.
 
 Do NOT reinterpret this as:
 
@@ -93,29 +93,25 @@ portable measurement != portable meaning
 
 ## Exact current task
 
-Do NOT execute V6-001A automatically merely because the previous routing said so.
+Active child:
+
+```text
+V6-001B INTERPRETABLE INDICATOR ATLAS / STATE-TRANSITION RESEARCH
+```
 
 Current task:
 
 ```text
-finish V6-001 parent registry
--> map candidate measurement families to V3 failure modes
--> mark consumed/unconsumed evidence
--> qualify causal data availability and sample density
--> freeze outcome-blind research order + family budgets
--> activate one child experiment
+reproduce exact V3 broad event parity
+-> attach causal completed-bar indicators
+-> report all fixed indicator families, not only favorable ones
+-> separate Entry survival / winner continuation / loss recovery
+-> decompose every apparent relation by year and direction
+-> focus next on state-transition measurements rather than standalone oscillator levels
+-> freeze any specific follow-up before using GOLD 2022
 ```
 
-The registry families are:
-
-```text
-A own-market endogenous state
-B cross-market / relative state
-C macro / rates state
-D positioning / fund-flow state
-E execution / liquidity environment
-F scheduled-event / market-environment state
-```
+AI/ML classification, representation learning, convolution probes, and model-capacity comparisons are not active V6 work unless the user explicitly reopens them.
 
 ## V6-001A preserved but scoped
 
@@ -131,7 +127,7 @@ same-capacity GOLDx3
 Status:
 
 ```text
-QUEUED / PRE-REGISTERED CHILD
+SHELVED / PRE-REGISTERED HISTORICAL CHILD / USER-DEPRIORITIZED
 ```
 
 It remains scientifically valid as a capacity-confound cleanup of V5-041 scratch.

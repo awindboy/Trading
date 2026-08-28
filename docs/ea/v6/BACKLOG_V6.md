@@ -1,7 +1,7 @@
 # V6 Backlog
 
 Status: `ACTIVE`  
-Current phase: `V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY / PRE-OUTCOME DESIGN`
+Current phase: `V6-001B INTERPRETABLE INDICATOR ATLAS / STATE-TRANSITION RESEARCH`
 
 ## Completed foundation
 
@@ -14,24 +14,23 @@ Current phase: `V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY / PRE-OUTCOME DES
 - [x] Reclassify V6-001A as one queued cross-market child rather than the definition/gate of V6.
 - [x] Carry recursive falsification into V6 governance.
 
-## Immediate — V6-001 parent registry
+## Immediate — V6-001B interpretable indicator atlas
 
-- [ ] Review `V6_001_CONTEXT_MEASUREMENT_REGISTRY.md` against the exact available data/source inventory.
-- [ ] Map each proposed family to one or more explicit V3 failure modes.
-- [ ] Mark each candidate measurement as `CONSUMED`, `PARTIALLY CONSUMED`, or `UNCONSUMED`.
-- [ ] Qualify point-in-time/causal availability before price outcomes.
-- [ ] Qualify sample density/update frequency for slow indicators.
-- [ ] Define a family-level experiment budget to control multiplicity.
-- [ ] Freeze outcome-blind child priority using causal relevance, coverage, control quality, and auditability.
-- [ ] Activate exactly one child contract.
-- [ ] Do not inspect new outcome comparisons during the parent-registry freeze.
+- [x] Reproduce exact broad-event parity `84 / 86 / 67`.
+- [x] Reproduce four-way path labels for all 237 events.
+- [x] Run first fixed H1/H4 interpretable indicator atlas without AI/ML.
+- [x] Re-check pooled hints by year and direction; do not promote pooled-only relations.
+- [ ] Reproduce `scripts/v6_001b_indicator_atlas.py` after applying this pack.
+- [ ] Design the next state-transition indicator layer: strengthening/weakening, expansion/contraction, MTF agreement/disagreement, activity expansion/decay.
+- [ ] Freeze one specific follow-up hypothesis before any 2022 use.
+- [ ] Keep Entry survival, winner continuation, and loss recovery as separate targets.
 
-## Queued — V6-001A
+## Shelved — V6-001A
 
 Status:
 
 ```text
-PREREGISTERED CHILD / NOT AUTOMATICALLY ACTIVE
+PREREGISTERED HISTORICAL CHILD / USER-DEPRIORITIZED / NOT ACTIVE
 ```
 
 If the parent registry ratifies it as the next child:

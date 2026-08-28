@@ -2,7 +2,7 @@
 
 Status: `ACTIVE`  
 Date: `2026-08-28`  
-Phase: `V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY / PRE-OUTCOME DESIGN`  
+Phase: `V6-001B INTERPRETABLE INDICATOR ATLAS / STATE-TRANSITION RESEARCH`  
 Production authority: `NONE`  
 Promoted candidate: `NONE`  
 Primary market: `GOLD#`
@@ -75,26 +75,26 @@ Each experiment must state which explanation it can discriminate.
 
 ## Current active question
 
-Only at the parent-program level:
+> Which interpretable indicator/state measurements consistently distinguish the V3 event's Entry survival, winner continuation, and loss recovery across years and directions?
 
-> Which causally meaningful measurement families can explain specific V3 failure modes without recreating V3 feature mining, V4 no-learning, or V5 unrelated variable hunting?
+Current work:
 
-Current work is pre-outcome design:
+1. preserve exact V3-003C broad-event parity;
+2. use fixed conventional indicator definitions with completed-bar causality;
+3. report the complete atlas rather than select the best pooled result;
+4. reject relations that reverse by year or direction;
+5. distinguish absolute indicator level from state transition/change;
+6. freeze any specific follow-up before 2022 falsification.
 
-1. freeze semantic indicator/context families;
-2. map each family to a specific V3 failure mode;
-3. classify consumed vs unconsumed evidence;
-4. qualify causal availability and sample density;
-5. freeze an outcome-blind child order and family budget;
-6. activate one child at a time.
+AI/ML is not an active V6 research route.
 
 ## V6-001A status
 
 `V6-001A SAME-CAPACITY CROSS-MARKET CONTEXT INFORMATION AUDIT` is:
 
 ```text
-QUEUED / PRE-REGISTERED CHILD
-NOT CURRENT GENERATION GATE
+SHELVED / PRE-REGISTERED HISTORICAL CHILD
+NOT ACTIVE / NOT CURRENT GENERATION GATE
 ```
 
 It is a valid cleanup/falsification of consumed V5-041 scratch.

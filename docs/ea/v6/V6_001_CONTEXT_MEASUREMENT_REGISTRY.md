@@ -249,18 +249,23 @@ forbidden rescues
 
 ## 11. Current registry state
 
-Already prepared:
+Active direction after explicit user correction:
 
 ```text
-V6-001A
-family B — cross-market / relative state
-status = QUEUED / PREREGISTERED CHILD
+V6-001B
+family A — interpretable own-market technical/market-state indicators
+status = ACTIVE EXPLORATORY ATLAS / NO STRATEGY AUTHORITY
 ```
 
-Not yet frozen:
+The first atlas is documented in `V6_001B_INTERPRETABLE_INDICATOR_ATLAS.md`.
 
-- the outcome-blind order of subsequent families;
-- whether V6-001A remains the first empirical child after the registry review;
-- exact child contracts for families A/C/D/E/F.
+`V6-001A` remains preserved only as:
 
-The next task is to finish this parent registry and freeze the first child based on the criteria above before opening any new outcome.
+```text
+family B — cross-market / relative state
+status = SHELVED / PREREGISTERED HISTORICAL CHILD / NOT ACTIVE
+```
+
+AI/ML/model-capacity work is not an active V6 route unless the user explicitly reopens it.
+
+The next registry task is to define a state-transition indicator layer without optimizing thresholds or selecting the best pooled historical result.

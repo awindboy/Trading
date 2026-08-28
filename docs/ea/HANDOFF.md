@@ -1,8 +1,8 @@
-> **V6 ACTIVE ROUTING — 2026-08-28 / CONTEXT-MEASUREMENT GENERALIZATION**  
-> Current phase: `V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY / PRE-OUTCOME DESIGN`.  
-> V6 keeps GOLD# as the primary research market and treats V3 validation collapse, V3 multiplicity risk, V4 no-learning, and V5 payoff/transfer/research-direction failures as explicit design constraints.  
-> Immediate task: read the V3/V5 lineage synthesis -> finalize the semantic indicator/context registry -> map families to V3 failure modes -> qualify causal data/sample density -> freeze outcome-blind child order and family budget -> activate one child. `V6-001A` remains a queued preregistered cross-market child and must not be treated as the entire V6 mandate.  
-> No indicator/window/threshold tournament, no adaptation rescue, and no strategy/EA change from information-stage evidence. GOLD 2022 is consumed falsification data; GOLD# 2021 remains closed.
+> **V6 ACTIVE ROUTING — 2026-08-28 / INTERPRETABLE INDICATOR-FIRST GENERALIZATION**  
+> Current phase: `V6-001B INTERPRETABLE INDICATOR ATLAS / STATE-TRANSITION RESEARCH`.  
+> V6 keeps GOLD# and the exact V3-003C broad event as the anchor, and uses causal, human-interpretable technical/market-state indicators to explain why the V3 event changes meaning across periods.  
+> Immediate task: read `V6_001B_INTERPRETABLE_INDICATOR_ATLAS.md` -> reproduce the fixed indicator atlas -> separate Entry survival / winner continuation / loss recovery -> research state-transition measurements without threshold optimization -> freeze any follow-up before 2022. `V6-001A` is SHELVED and is not active.  
+> AI/ML/model-capacity experiments are not an active V6 route unless the user explicitly reopens them. No indicator/window/threshold tournament and no strategy/EA change from exploratory information-stage evidence. GOLD 2022 is consumed falsification data; GOLD# 2021 remains closed.
 
 > **V5 CLOSED ROUTING — 2026-08-28**  
 > V5 is historical. Read `docs/ea/v5/V5_FINAL_SYNTHESIS.md`; active research has moved to `docs/ea/v6/`.
