@@ -1,31 +1,32 @@
-# V6 — Precision-Preserving State-Routed Architecture Research Authority
+# V6 — Multi-Environment Directional-Prior Research Authority
 
-Status: `ACTIVE RESEARCH AUTHORITY`  
-Date: `2026-08-28`  
-Production authority: `NONE`  
-Primary market: `GOLD#`  
-Current phase: `V6-002 PRECISION-PRESERVING STATE-ROUTED ARCHITECTURE RESEARCH`
+Status: `ACTIVE RESEARCH AUTHORITY`
+Date: `2026-08-29`
+Production authority: `NONE`
+Current promoted production candidate: `NONE`
+Current research benchmark: `MENV-004 PRETRADE SCALE x ACCEPTANCE H`
+Current phase: `V6-003 MULTI-ENVIRONMENT DIRECTIONAL-PRIOR RESEARCH`
 
 ## 1. Mission
 
 V6 exists to solve the central limitation exposed by V3:
 
 ```text
-the same causal event or local reaction can have different strategic meaning
-across periods, regimes, and markets
+the same causal local event changes strategic meaning
+across periods, regimes, directions, and markets
 ```
 
-The active methodology is now:
+The current method is:
 
 ```text
 causal market-state measurement
--> state/mechanism hypothesis
--> actual strategy replay from raw data
--> compare economics with deterministic controls
--> recursively falsify
+-> named mechanism hypothesis
+-> raw-data replay
+-> full economics + trade-count comparison
+-> recursive falsification
 ```
 
-V6 is NOT an AI/ML program. It is NOT an indicator tournament. It is NOT a project that merely attaches indicators to old V3 winners and losers.
+V6 is not an AUC/ranking program and is not an indicator tournament.
 
 ## 2. Mandatory startup order
 
@@ -34,48 +35,20 @@ Every V6 session must:
 1. check latest GitHub HEAD;
 2. read root `AGENTS.md`;
 3. read root `docs/ea/HANDOFF.md`;
-4. read this file;
-5. read `HANDOFF_V6.md`;
-6. read `RESEARCH_STATE_V6.md`;
-7. read `V6_001C_STATE_ROUTED_MECHANISM_RESULTS.md`;
-8. read the current active child contract;
-9. read `DECISIONS_V6.md` and `BACKLOG_V6.md`;
-10. inspect exact code/data before any empirical execution.
+4. read `docs/ea/WORKFLOW_AND_ZIP_HANDOFF.md`;
+5. read this file;
+6. read `HANDOFF_V6.md`;
+7. read `RESEARCH_STATE_V6.md`;
+8. read `V6_002_MULTI_ENVIRONMENT_RESEARCH_RESULTS.md`;
+9. read the active `V6_003A_DIRECTIONAL_PRIOR_RESEARCH_CONTRACT.md`;
+10. read `DECISIONS_V6.md` and `BACKLOG_V6.md`;
+11. inspect exact code/data before empirical execution.
 
-When inherited V3/V5 semantics are material, read the exact source documents and scripts referenced by the active child.
+At base HEAD `ced2bb276ce6471162bcc49af3522eaa3d038694`, the large legacy root routing documents may still contain older V6 top blocks. Within the V6 generation, the newer dated V6 authority/handoff files above govern the active phase after this update. Do not rewrite the large legacy root files through an unsafe Unicode-path apply script merely to change routing text.
 
-GitHub wins over chat memory.
+## 3. Final economic target vs research classification
 
-## 3. Non-negotiable inherited facts
-
-### V3
-
-Frozen Candidate B looked strong on GOLD 2023-2025 but collapsed on GOLD 2022:
-
-```text
-24 accepted
-25.0% positive
-avg positive +1.458R
-EV -0.385R/trade
-```
-
-Failure began upstream of final payoff and included mirror reversals.
-
-### V4
-
-Generic raw-sequence modern-learning work did not produce a useful project signal. Do not escalate complexity by default.
-
-### V5
-
-The project repeatedly encountered a survival/payoff frontier. A portable observable did not imply portable predictive meaning. Stage-specific measurements must remain stage-specific.
-
-### V6-001C
-
-R2/R2P are the first economically meaningful V6 state-routed benchmarks, but they are not production candidates and do not solve universal market generalization.
-
-## 4. Final economic target vs research classification
-
-The eventual strategy target remains:
+Final promotion still requires:
 
 ```text
 realized positive-trade rate >= 50%
@@ -83,157 +56,239 @@ average positive NET R       >= 2.0R
 cost-adjusted expectancy     > 0
 ```
 
-Additionally require multiple independent periods, structurally compatible markets, acceptable drawdown/loss streak, and no unacceptable winner concentration.
+Also require:
+- acceptable DD/loss streak;
+- multiple independent periods;
+- structurally compatible markets;
+- acceptable winner concentration;
+- sufficient opportunity/trade count;
+- final execution evidence.
 
-Important distinction:
+A research candidate is not failed solely because WR < 50%.
 
-```text
-final target not yet met
-!=
-research result has no value
-```
+## 4. Trade-count authority
 
-Research candidates must be evaluated jointly using trade count, WR, average winner/loser R, EV, total R, drawdown, streaks, year/direction breadth, module contribution, winner concentration, and execution sensitivity.
+Trade count is now explicit authority.
 
-Do not classify a research candidate from WR alone.
+The current research panel is broader than the original GOLD 2023-2025 development panel; useful N should therefore grow over the research program, not collapse toward a tiny post-filter sample.
 
-## 5. AUC and old-trade classification boundary
-
-AUC is not a V6 promotion criterion.
-
-Do not use the following workflow as the main research path:
+Always report:
 
 ```text
-indicator score
--> compare against old V3 winner/loser labels
--> choose the best score/AUC
--> call it V6
+opportunity N
+state-valid N
+fill N
+accepted N after exposure
+N by market-year
+N by direction
+trade density
 ```
 
-Continuous-rank statistics may be used only as secondary descriptive diagnostics when explicitly justified. They cannot select a strategy, threshold, timeframe, or indicator family.
+MENV-004 has 144 accepted H trades on the current 13-environment panel. A new filter-only architecture that materially lowers this N is not preferred by default. Directional-prior research should first ask whether state can **route direction/mechanism/destination**, including recovering valid opportunities, rather than simply vetoing more trades.
 
-The active question is whether a market-state construct supports a mechanism that produces better new trades when replayed.
+## 5. Current consumed research panel
 
-## 6. Indicator/state rule
-
-An indicator is a causal measurement of a named market-state hypothesis, not a trading rule by itself.
-
-Eligible families include:
-
-- own-market structure/maturity/volatility/activity;
-- state transitions and multi-timeframe agreement/disagreement;
-- cross-market/relative state when mechanistically justified;
-- macro/rates, positioning/flow, execution/liquidity, scheduled environment when point-in-time availability is auditable.
-
-No indicator family has authority because it is popular or because it looked good on consumed outcomes.
-
-## 7. No indicator/window/threshold tournament
-
-Before opening a new child outcome, freeze:
-
-- mechanism/state hypothesis;
-- exact measurement and causal availability;
-- strategy stage where it is allowed to act;
-- raw-data replay semantics;
-- comparator;
-- chronological/market panel;
-- controls/placebos;
-- kill/degrade conditions;
-- allowed follow-up budget.
-
-A failed formulation is consumed. Do not rescue it by threshold shopping.
-
-## 8. Preserve precision; state selects meaning
-
-V6-001C established that replacing V3 local precision wholesale with a broad-event ADX router is not portable across markets.
-
-Therefore the active V6-002 principle is:
+Research/discovery panel:
 
 ```text
-preserve useful causal local reaction/requalification precision
-+
-use market state to change strategic destination/authorization
+GOLD    2022 / 2023 / 2024 / 2025
+XAUEUR  2023 / 2024 / 2025
+USDJPY  2023 / 2024 / 2025
+BTCUSD  2023 / 2024 / 2025
 ```
 
-Do not assume one state variable should replace Candidate A, H direct-transfer, or L atomic requalification semantics.
+This is 13 market-year environments.
 
-## 9. R2/R2P benchmark authority
+These environments are consumed research/diagnostic evidence. They may falsify and develop mechanism hypotheses but cannot serve as pristine final validation.
 
-R2 GOLD 2023-2025:
+`GOLD 2021` remains untouched.
+
+Short 2025-09-17 to 2025-12-30 data exists for XAUJPY/XAUCNH/GAUCNH/GAUUSD, but each market has fewer than 20 broad-direct opportunities under the frozen MENV-004 causal-history rule. Do not lower the 20-prior-history requirement to force those markets into the benchmark.
+
+## 6. Frozen V3 broad event substrate
+
+The working broad-direct H opportunity remains causally grounded in the V3-003C line:
 
 ```text
-75 trades
-WR 41.33%
-avg positive +2.924R
-EV +0.622R/trade
-2023/24/25 EV all positive
-LONG/SHORT EV both positive
+persistent intermediate liquidity
+-> atomic same-M1 sweep/recovery
+-> pre-sweep M5 owner is opposite the reaction direction
+-> sweep extreme remains intact
+-> first completed M5 owner transition back toward event direction
+-> trigger close
+-> 50% trigger/broken-level pullback Entry
+-> sweep-extreme structural SL
 ```
 
-R2 GOLD 2022 consumed historical comparison:
+This is currently a deterministic event/timing substrate, not immutable final direction authority.
+
+## 7. MENV-004 current benchmark
+
+At pre-trade opportunity time:
 
 ```text
-40 trades
-WR 35.0%
-avg positive +2.428R
-EV +0.200R/trade
+structural_scale = planned sweep-extreme risk / completed D1 ATR
+acceptance_scale = M5 acceptance margin / completed D1 ATR
 ```
 
-R2P is an alternate payoff benchmark, not a parameter-search starting point.
+For each market, use only earlier broad-direct opportunities to maintain expanding historical medians.
 
-R2/R2P have `RESEARCH BENCHMARK` authority only. No EA or production authority follows.
-
-## 10. Cross-market warning
-
-Unmodified R2 was negative on XAUEUR and BTCUSD, and nearly breakeven on USDJPY. BTCUSD was especially important because V3 remained weakly positive while R2 deteriorated strongly.
-
-Therefore:
+State becomes valid after 20 prior opportunities.
 
 ```text
-GOLD period robustness
-!=
-universal market robustness
+HIGH_SCALE  = structural_scale > past expanding median(structural_scale)
+HIGH_ACCEPT = acceptance_scale > past expanding median(acceptance_scale)
+
+MENV-004 H = HIGH_SCALE AND HIGH_ACCEPT
 ```
 
-Market suitability is a separate strategy-design problem. Do not demand that every market share one architecture, but do not select markets after seeing profitability. Future market universes must be outcome-blind screened and frozen before validation.
+No future fill/outcome is used in the baseline.
 
-## 11. Stage separation
+Current 13-environment exposure-adjusted benchmark:
+
+```text
+144 trades
+WR 33.33%
+avg positive +3.484R
+EV +0.495R/trade
+total +71.25R
+max DD 15.25R
+12 / 13 market-year environments positive
+LONG EV +0.607R
+SHORT EV +0.338R
+```
+
+Current H payoff representation:
+
+```text
+initial SL = sweep extreme
++3R -> realize 25%
+residual -> BE
++5R -> final
+
+TP5 = +4.5R
+BE  = +0.75R
+SL  = -1R
+```
+
+MENV-004 is a `RESEARCH BENCHMARK`, not production authority.
+
+## 8. What MENV-004 changed scientifically
+
+The strongest surviving interpretation is not `ATR works` or `large stop works`.
+
+The construct is event-relative:
+
+> A local liquidity/ownership reaction is more likely to become sustained directional delivery when both the structural event scale and the acceptance of that structure are large relative to that market's own causal historical background.
+
+This relation:
+- survived 13-environment causal replay better than ADX routing;
+- remained visible under fixed-clock ATR-normalized favorable-excursion checks;
+- was not reproduced by simple scale-only or acceptance-only logic;
+- was weakened when the AND relation was relaxed into a compensating product rule.
+
+## 9. Closed/degraded V6 routes
+
+Do not silently reopen without a genuinely new causal formulation:
+
+- standalone H1 directional oscillator/DMI veto;
+- R1 M5-DMI aligned/opposed router;
+- broad `ADX<25 -> H / ADX>=25 -> L` as a universal architecture;
+- R3/R4 ADX H-state specialization as a universal market rule;
+- simple 24h room as H authorization;
+- path efficiency when simpler displacement/momentum explains it;
+- MENV-005 M5 structural hard lock;
+- MENV-006 M5 protected-break exit;
+- simple first-correction / first-local-break / first-M5-close exhaustion rules;
+- MENV-011 one-time +0.5R lock;
+- MENV-012 product compensation between scale and acceptance;
+- non-H trigger-close as an economic TP;
+- MENV-014 broken-M5 local stop/trigger target module;
+- automatic H-state reuse for L;
+- L10 M30 VR12 persistence rule.
+
+## 10. Directional-prior research is now active
+
+The project is deliberately regressing to a higher architectural question.
+
+Prior V6 indicator work mostly asked:
+
+```text
+V3/local price structure already says LONG or SHORT
+-> does an indicator agree with that direction?
+```
+
+That was often redundant. In R1, M5 DMI aligned with the broad-event direction about 90% of the time because the event itself requires a recent M5 ownership transition.
+
+The new question is:
+
+> Can causally known higher/intermediate market state participate in the **direction decision itself**, before the local structure has final directional authority?
+
+Target architecture:
+
+```text
+directional market prior
+    = WHERE / WHICH DIRECTION
+
+liquidity + local structure
+    = WHEN / WHERE TO ENTER
+
+scale x acceptance
+    = HOW MUCH DESTINATION AUTHORITY
+```
+
+Do not convert this into a score tournament.
+
+## 11. Directional-prior research boundaries
+
+The first V6-003 child must:
+
+- freeze the prior observation time before outcome and before local direction is finalized;
+- use completed bars only;
+- distinguish prior `ALIGNED / OPPOSED / NEUTRAL` relative to the local event;
+- compare against the deterministic structure-only control;
+- test whether the prior has meaning across market-year and direction cells;
+- test simpler momentum/displacement explanations;
+- preserve opportunity/trade-count reporting;
+- avoid market-specific thresholds;
+- avoid selecting a prior because it best fits one market;
+- use raw replay before giving any prior strategy authority.
+
+If directional context only acts as another veto that shrinks 144 trades without broader architecture benefit, downgrade it.
+
+## 12. Stage separation
 
 Keep separate:
 
 ```text
-A. Entry/event meaning
-B. H destination / large-payoff authorization
-C. L correction-completion/requalification
-D. winner continuation
-E. payoff/exit lifecycle
-F. execution
-G. market suitability
-H. portfolio/exposure
+A. directional prior
+B. liquidity/event formation
+C. local Entry timing / geometry
+D. H destination authorization
+E. L correction-completion
+F. winner continuation
+G. exit lifecycle
+H. execution
+I. market suitability
+J. portfolio/exposure
 ```
 
-A variable found for one stage cannot automatically migrate into another.
+A finding at one stage cannot automatically migrate to another.
 
-## 12. Causal input rules
+## 13. Causal rules
 
-At decision time `t`, every state input must be available by `t`.
-
-For bar-derived measurements:
-
-- completed bars only;
-- no unfinished HTF bar;
+At decision time `t`:
+- only information available by `t`;
+- completed higher-timeframe bars only;
 - no future normalization;
-- no outcome-derived state.
+- no future fill;
+- no outcome-derived baseline;
+- no backfilled external structure;
+- missing state stays missing unless a preregistered fallback exists.
 
-For external/context data:
+## 14. Recursive falsification
 
-- use values actually public by `t`;
-- audit staleness and publication timing;
-- fail closed if required history is unavailable.
-
-## 13. Recursive falsification
-
-Before major interpretation state:
+Before promoting a major interpretation, state:
 
 ```text
 current thesis
@@ -242,67 +297,42 @@ simpler alternative
 prior-project recurrence
 placebo/control
 causal boundary
+trade-count consequence
 strategy/economic consequence
 kill/degrade condition
 ```
 
-After a favorable result ask:
+Then test environment/direction breadth and winner concentration.
 
-- does it survive years/directions?
-- does it survive a materially different market or clearly fail there?
-- can a simpler existing V3 mechanism explain the improvement?
-- does the state improve one module while damaging another?
-- is the result concentrated in one quarter, direction, or winner?
-- does the same construct preserve economics after costs?
+## 15. Market suitability
 
-## 14. Active child — R3 H-MATURITY
+A universal strategy across every market is not required.
 
-The first V6-002 child is a precision-preserving H-stage state audit.
-
-Core question:
-
-> Can V6 preserve frozen V3 local precision while using H4 maturity only to determine whether the H large-payoff destination remains healthy?
-
-Initial constraints:
+But market selection must be:
 
 ```text
-V3 Candidate-A / H direct-transfer semantics preserved
-H geometry/payoff unchanged for the first audit
-L not defined as inverse H
-H4 ADX14 threshold remains 25 for this consumed formulation
-no market-specific thresholds
-no payoff optimization
+outcome-blind structural/execution screen
+-> freeze shortlist
+-> open outcomes
 ```
 
-Read `V6_002_R3_PRECISION_PRESERVING_H_STATE_CONTRACT.md` before executing R3.
+Do not select markets because the strategy was profitable after testing.
 
-## 15. Required architecture comparison panel
+## 16. Execution boundary
 
-For R3 and later V6-002 architecture changes, report together:
+Current MENV results are offline M1 replay research, not final exact-tick evidence.
 
-```text
-GOLD 2023-2025
-GOLD 2022 — consumed historical stress comparison only
-XAUEUR 2023-2025
-USDJPY 2023-2025
-BTCUSD 2023-2025
-```
+Do not claim production readiness until:
+- exact-tick/real-tick parity;
+- commission/slippage/swap;
+- MT5 Strategy Tester;
+- EA implementation parity;
+- broker/execution-environment audit
 
-This panel is diagnostic, not pristine final validation. It prevents a GOLD-only improvement from silently destroying known independent markets.
+are complete.
 
-## 16. Validation allocation
+## 17. Packaging authority
 
-```text
-GOLD 2023-2025   = consumed research/development
-GOLD 2022        = consumed historical falsification/comparison
-GoldLike markets = consumed architecture-generalization diagnostics
-GOLD 2021        = UNTOUCHED
-```
+For ZIP/document handoffs, follow `docs/ea/WORKFLOW_AND_ZIP_HANDOFF.md`.
 
-Do not open GOLD 2021 until an architecture is deliberately frozen for that role.
-
-## 17. Execution boundary
-
-Current results are Level-A/offline M1 replay with recorded spread treatment. They are not final execution evidence.
-
-Exact tick, commission, slippage, swap, MT5 Strategy Tester parity, and EA implementation remain later gates after architecture stabilization.
+Default: script-free repo-relative overlay ZIP. Do not revive the failed PowerShell/Python/patch apply mechanisms by default.

@@ -1,102 +1,139 @@
 # V6 Backlog
 
-Status: `ACTIVE`  
-Current phase: `V6-002 PRECISION-PRESERVING STATE-ROUTED ARCHITECTURE RESEARCH`
+Status: `ACTIVE`
+Current phase: `V6-003 MULTI-ENVIRONMENT DIRECTIONAL-PRIOR RESEARCH`
+Current benchmark: `MENV-004`
+Production authority: `NONE`
 
-## Completed foundation
+## Completed — methodological foundation
 
-- [x] Close V5 without strategy promotion.
-- [x] Preserve exact V3 broad-event and H/L replay authority.
-- [x] Carry V3 2022 collapse, V4 no-learning, and V5 payoff/portability constraints into V6.
-- [x] Correct active direction to interpretable indicator/state research; AI/ML inactive.
-- [x] Run initial fixed indicator atlas and state-transition/statistical/cross-market diagnostics.
-- [x] Correct methodology: indicator state must drive a new mechanism replay, not merely classify old V3 trades.
-- [x] Remove AUC from V6 promotion criteria.
-- [x] Reproduce V3 Candidate-B economics before V6 comparisons.
+- [x] Preserve V3 deterministic control and exact raw-data replay lineage.
+- [x] Separate final WR target from research classification.
+- [x] Remove AUC as a V6 promotion criterion.
+- [x] Establish no indicator/window/threshold tournament.
+- [x] Establish recursive falsification and stage separation.
 
-## Completed V6-001C architecture bridge
+## Completed — R1/R2/R2P
 
-- [x] Freeze and run R1 continuation/correction router.
-- [x] Reject R1 after poor annual/directional breadth and large DD.
-- [x] Identify M5 DMI redundancy with the broad event.
-- [x] Recursively reverse H4 interpretation from strong-trend to less-mature-state H hypothesis.
-- [x] Freeze and run R2 maturity router.
-- [x] Preserve R2 as meaningful GOLD development benchmark: EV +0.622R, avg+ 2.924R.
-- [x] Reuse existing +2R/50% H payoff control as R2P without parameter search.
-- [x] Compare R2/R2P with V3 on consumed GOLD 2022.
-- [x] Record that R2/R2P remain positive on 2022 while V3 is negative.
-- [x] Decompose 2022: H remains positive; L reverses negative.
-- [x] Replay unmodified V3/R2/R2P on XAUEUR/USDJPY/BTCUSD 2023-2025.
-- [x] Reject universal broad ADX router interpretation.
-- [x] Elevate market suitability as a separate design problem.
+- [x] Run R1 DMI/ADX router.
+- [x] Reject R1 and identify M5 DMI redundancy.
+- [x] Run R2/R2P.
+- [x] Compare GOLD22.
+- [x] Run XAUEUR/USDJPY/BTC cross-market diagnostics.
+- [x] Reject universal broad ADX router.
 
-## Immediate — V6-002 R3 H-MATURITY
+## Completed — R3/R4
 
-- [ ] Read `V6_002_R3_PRECISION_PRESERVING_H_STATE_CONTRACT.md`.
-- [ ] Reproduce frozen V3 H-direct 44-trade development population.
-- [ ] Attach completed H4 ADX14 state at the frozen H decision time.
-- [ ] Run shadow audit only; do not alter H trades before shadow criterion is evaluated.
-- [ ] Decompose NOT_MATURE vs MATURE H by year and direction.
-- [ ] Compare against the simpler hypothesis that V3 H precision alone explains the result.
-- [ ] If the frozen criterion passes, construct exactly one R3 strategy variant.
-- [ ] Compare R3 vs V3 vs R2 across GOLD 2023-2025.
-- [ ] Then apply unchanged R3 to GOLD 2022 historical stress comparison.
-- [ ] Then apply unchanged R3 to XAUEUR/USDJPY/BTCUSD diagnostic panel.
-- [ ] Do not market-tune threshold or payoff after seeing those results.
+- [x] Reproduce 44-trade V3 H-direct control.
+- [x] Run R3 shadow.
+- [x] Build one R3 strategy after the frozen criterion passed.
+- [x] Stress R3 on GOLD22 and cross-market panel.
+- [x] Run R4 directional-strength refinement.
+- [x] Close universal ADX H-state thesis after portability failure.
 
-## Next — H remaining-capacity research
+## Completed — regression into V3 precision
 
-Only if R3 supports the maturity idea:
+- [x] Compare Candidate-A PASS/FAIL across environments.
+- [x] Decompose delivery-state branches.
+- [x] Identify EXP_ONLY instability.
+- [x] Reject V3 precision as an invariant quality scale.
 
-- [ ] determine whether ADX state is a proxy for unused directional capacity or merely a convenient correlate;
-- [ ] compare causal pre-entry structure-consumption measures with H outcomes;
-- [ ] use D-145 only as conceptual recurrence; do not migrate post-+1R variables directly into Entry/H authorization;
-- [ ] test one preregistered simpler alternative/control at a time.
+## Completed — multi-environment reset
 
-## Next — L-specific state research
+- [x] Treat GOLD22-25 + XAUEUR/USDJPY/BTC23-25 as one consumed research panel.
+- [x] Build environment fingerprints.
+- [x] Reject simple structural-room explanation.
+- [x] Compare path efficiency with simpler momentum/displacement controls.
 
-- [ ] treat L as its own correction-completion mechanism;
-- [ ] do not use `not H` or `ADX>=25` as automatic L authorization;
-- [ ] preserve virtual failure -> deeper liquidity -> atomic recovery -> fresh M5 re-acceptance semantics;
-- [ ] design state-transition measurements tied specifically to correction completion;
-- [ ] freeze before outcomes; no threshold tournament.
+## Completed — MENV-004
 
-## Market suitability
+- [x] Discover scale x acceptance interaction.
+- [x] Replace full-year medians with causal expanding history.
+- [x] Replace fill-history baseline with pre-trade opportunity-history baseline.
+- [x] Preserve 20 prior opportunities as warmup.
+- [x] Replay with opposite-direction exposure semantics.
+- [x] Record 144 accepted trades, +0.495R EV, 12/13 positive environments.
+- [x] Stress payoff, clock horizons, ATR-normalized excursion and random-selection nulls.
+- [x] Record +1R/+2R/+3R/+5R stage counts.
 
-- [ ] define an outcome-blind structural/execution screen for candidate markets;
-- [ ] freeze shortlist before profitability is opened;
-- [ ] validate architecture only on the frozen shortlist;
-- [ ] do not require one strategy to work on every market;
-- [ ] do not select markets after observing P/L.
+## Completed — exit/continuation falsification
 
-## External/source-of-move context
+- [x] +1R partial/BE controls.
+- [x] MENV-005 M5 structural hard lock.
+- [x] MENV-006 protected-break close.
+- [x] MENV-007 stage correction race.
+- [x] MENV-008 local range resolution.
+- [x] MENV-009 first M5 close retention.
+- [x] MENV-010 post-correction +1R retention.
+- [x] MENV-011 one-time +0.5R lock.
+- [x] Close simple clean-path/profit-lock family without parameter rescue.
 
-Eligible later, only with explicit mechanism:
+## Completed — trade-count and non-H tests
 
-- [ ] macro/rates;
-- [ ] USD/relative gold state;
-- [ ] positioning/fund flow;
-- [ ] scheduled-information environment;
-- [ ] execution/liquidity environment.
+- [x] Make trade count an explicit constraint.
+- [x] MENV-012 joint compensation; reject state dilution despite N increase.
+- [x] Test short XAUJPY/XAUCNH/GAUCNH/GAUUSD histories; mark insufficient warmup.
+- [x] MENV-013 non-H trigger checkpoint.
+- [x] MENV-014 local M5 geometry; close after severe failure.
 
-No unrelated variable tournament.
+## Completed — L-specific branch
 
-## Final strategy/economics — locked until architecture stabilizes
+- [x] Keep L separate from H.
+- [x] Build broad L candidate population.
+- [x] Test parent-relative geometry, liquidity reclaim, M1 path and HTF state.
+- [x] Test L10 M30 VR12 persistence.
+- [x] Close L10 without q/window tuning.
 
-- [ ] exact tick replay;
-- [ ] commission/slippage/swap sensitivity;
+## Immediate — V6-003A Directional Prior
+
+- [ ] Read `V6_003A_DIRECTIONAL_PRIOR_RESEARCH_CONTRACT.md`.
+- [ ] Perform current web/literature review of directional/regime evidence.
+- [ ] Freeze a small interpretable directional-prior atlas before outcomes.
+- [ ] Freeze exact pre-event causal observation time.
+- [ ] Include existing deterministic H1/M30 map direction as control.
+- [ ] Include a simple displacement/momentum control.
+- [ ] Compute prior availability and ALIGNED/OPPOSED/NEUTRAL counts across all 13 environments.
+- [ ] Report opportunity/trade density before any strategy filtering.
+- [ ] Test path meaning (+1R/+3R/+5R and ATR-normalized excursions).
+- [ ] Decompose market-year and direction.
+- [ ] If recurrent, freeze exactly one raw-replay direction-routing architecture.
+- [ ] Prefer routing/mechanism change to a simple veto.
+- [ ] Compare combined architecture N against MENV-004 N=144.
+
+## Later — data breadth
+
+- [ ] Acquire longer XAUJPY/XAUCNH/GAUCNH/GAUUSD histories without changing MENV-004 warmup.
+- [ ] Consider additional outcome-blind markets.
+- [ ] Freeze a future validation shortlist before opening P/L.
+- [ ] Preserve untouched data for final validation.
+
+## Later — continuation/exit
+
+Resume only with enough survivor N or a clearly new mechanism:
+- [ ] distinguish normal runner correction from true delivery exhaustion;
+- [ ] preserve large-winner tail;
+- [ ] no nearby stop/partial threshold search.
+
+## Later — L
+
+- [ ] new L mechanism only if conceptually distinct from consumed L1-L10 ideas;
+- [ ] no H variable inversion.
+
+## Locked until architecture stabilizes
+
+- [ ] exact tick / real tick replay;
+- [ ] commission/slippage/swap;
 - [ ] MT5 Strategy Tester reproduction;
 - [ ] EA implementation;
-- [ ] portfolio/exposure integration;
-- [ ] final independent period.
+- [ ] portfolio/exposure;
+- [ ] final independent validation.
 
 ## Permanent restrictions
 
-- [ ] no GOLD 2021 until explicit freeze;
-- [ ] no Candidate-B rescue on 2022;
+- [ ] no GOLD 2021 during current discovery;
 - [ ] no AUC-driven promotion;
-- [ ] no indicator/window/threshold tournament;
-- [ ] no market-specific threshold rescue;
-- [ ] no automatic H/L inverse routing;
-- [ ] no automatic cross-stage variable reuse;
-- [ ] no production EA change from current Level-A research.
+- [ ] no parameter rescue on consumed outcomes;
+- [ ] no market-specific threshold tuning;
+- [ ] no automatic H/L inversion;
+- [ ] no hidden trade-count collapse;
+- [ ] no production claim from offline M1 replay.

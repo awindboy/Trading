@@ -1,0 +1,21 @@
+experiment,scope,status,N,WR,avg_win_R,EV_R,finding
+R1,GOLD23-25,CLOSED,41.0,0.2927,2.604,0.055,M5 DMI mostly redundant with event direction; poor breadth/DD
+R2,GOLD23-25,HISTORICAL_BENCHMARK,75.0,0.4133,2.924,0.622,GOLD period robustness; broad ADX router not cross-market portable
+R2P,GOLD23-25,HISTORICAL_ALTERNATE,75.0,0.44,2.3,0.452,"Higher positive frequency/lower DD, lower payoff"
+R3,GOLD23-25,CLOSED_SPECIALIZATION,31.0,0.7741935483870968,2.643233858986197,1.8205681488925394,Strong development specialization; portability failed
+R4,GOLD23-25,CLOSED_SPECIALIZATION,36.0,0.6944444444444444,2.7175045046267483,1.5816003504352423,Directional high-ADX refinement did not solve portability
+MENV-004,13 environments,CURRENT_RESEARCH_BENCHMARK,144.0,0.3333333333333333,3.484375,0.4947916666666667,Pre-trade HIGH_SCALE AND HIGH_ACCEPT; 12/13 environments positive
+MENV-004-P25,13 environments,CLOSED_CONTROL,144.0,0.5347222222222222,1.4675324675324675,0.3194444444444444,WR target reached by sacrificing payoff
+MENV-004-P50,13 environments,CLOSED_CONTROL,144.0,0.5347222222222222,1.3116883116883118,0.2361111111111111,Further payoff sacrifice
+MENV-005,13 environments,CLOSED,144.0,0.4236111111111111,2.029925900472055,0.28351027728330114,M5 structural lock cuts too many genuine runners
+MENV-006,13 environments,CLOSED,144.0,0.4097222222222222,2.090631101370079,0.27788234240384474,Completed-close protected-break exit still damages runners
+MENV-007,13 environments,CLOSED_SHADOW,77.0,,,,Correction-first common in failures and eventual runners
+MENV-008,13 environments,CLOSED_SHADOW,,,,,Opposite-break-first relation partial; +5R winners remain
+MENV-009,13 environments,CLOSED_SHADOW,,,,,First M5 close acceptance not a stable +3R separator
+MENV-010,13 environments,CLOSED_SHADOW,77.0,,,,Post-correction +1R loss still includes later +3R/+5R runners
+MENV-011,13 environments,CLOSED,144.0,0.5347222222222222,1.103896103896104,0.125,One-time +0.5R lock reaches WR target but destroys payoff
+MENV-012,13 environments,CLOSED,239.0,0.2719665271966527,3.2884615384615383,0.16631799163179917,N +66% but EV/DD/breadth degrade; HH AND matters
+MENV-013,13 environments non-H,DIAGNOSTIC_ONLY,359.0,0.8662952646239555,,,Trigger-close local reaction frequent but reward tiny vs H risk
+MENV-014,13 environments non-H,CLOSED,335.0,,,,Local broken-M5 SL / trigger target severely negative across markets
+L10,L broad panel,CLOSED,,,,,VR12 persistence pooled improvement not recurrent
+V6-003A,13 environments,ACTIVE_PRE_OUTCOME,,,,,Directional prior participates before local structure finalizes direction

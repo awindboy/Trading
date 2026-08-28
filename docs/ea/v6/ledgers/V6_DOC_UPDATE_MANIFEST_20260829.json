@@ -1,0 +1,25 @@
+{
+  "package_name": "Trading_V6_003_DIRECTIONAL_PRIOR_DOC_UPDATE",
+  "date": "2026-08-29",
+  "repository": "awindboy/Trading",
+  "expected_base_head": "ced2bb276ce6471162bcc49af3522eaa3d038694",
+  "apply_mode": "SCRIPT_FREE_REPO_RELATIVE_OVERLAY_ZIP",
+  "zip_root_is_repo_root": true,
+  "no_enclosing_transport_folder": true,
+  "no_apply_script": true,
+  "payload_file_count_excluding_manifest": 12,
+  "sha256": {
+    "docs/ea/WORKFLOW_AND_ZIP_HANDOFF.md": "da6ec0739dd90af338e1c3bbd65119fa1ddf82bafb9e79751792690397f21b35",
+    "docs/ea/v6/AGENTS_V6.md": "54213dd4ee48ca4c8b036dd5d9f16a24ec7e7c455484c7bba5a0657e887ea1cd",
+    "docs/ea/v6/BACKLOG_V6.md": "42e04b3060d260f5ff054ec4f0545f8f7aaf10c0a3318feba7ae1eb6cf91af4f",
+    "docs/ea/v6/DECISIONS_V6.md": "182b0559a801151659f44dec9a139070126338cf6bea0e90f34e23d62d54b117",
+    "docs/ea/v6/HANDOFF_V6.md": "a86f6bbfaa9e56360d0552a8385ae0ebbf222fe439fbb36b8a99706838f7dddc",
+    "docs/ea/v6/RESEARCH_STATE_V6.md": "0b81e1156c8aeb3c3c355ca86e6a3f28d603426e32df5341eda16333a762db74",
+    "docs/ea/v6/V6_002_MULTI_ENVIRONMENT_RESEARCH_RESULTS.md": "e717fdc680f712f077791df59d61e2d8bb0a419e89e6b9a38c1db57110d32fb8",
+    "docs/ea/v6/V6_003A_DIRECTIONAL_PRIOR_RESEARCH_CONTRACT.md": "46e7c9870f27c884825b64c6e8a9f4054014fa64985497424060ee72ac5b7a1b",
+    "docs/ea/v6/V6_DOC_UPDATE_20260829_COVERAGE_CHECKLIST.md": "1fb0b83cdba85049338a72e40a6b9b59453174fd460cde57079049a46bc19bc9",
+    "docs/ea/v6/ledgers/V6_EXPERIMENT_REGISTER_20260829.csv": "bf3f84e6aefb8869ddbe801df7e0d922ae826499cbac4f7f899ea2e842659ec3",
+    "docs/ea/v6/ledgers/V6_MENV004_BY_ENV.csv": "670d1988fc9066762133b6a49b1278e8374ac0f80d2a06af34fe61c3d6fe9259",
+    "docs/ea/v6/ledgers/V6_MENV004_BY_MARKET.csv": "b918fe581e2d3dbd0a6fd980e300e489c5cd75df9343dfbea15c11cf06fa37c2"
+  }
+}
