@@ -1,0 +1,5 @@
+module,definition,n,wr,avg_positive_r,ev_r,net_r,median_risk_d1_atr,median_positive_hold_active_h,median_nonpositive_hold_active_h
+H,DIRECT+D24_aligned+MENV_HH,51,0.4118,3.786,0.971,49.50,0.284,41.1,3.9
+L1,DIRECT+D14_D24_local+not_H_authorized,76,0.579,0.80,0.147,11.15,0.157,2.19,1.53
+L2,ONE_RENEG+D24_aligned,126,0.579,0.83,0.129,16.30,0.189,1.82,1.85
+COMBINED,causal_H_priority,253,0.5455,1.269,0.304,76.96,,,

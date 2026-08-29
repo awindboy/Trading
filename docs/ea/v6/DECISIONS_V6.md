@@ -1,145 +1,116 @@
 # V6 Decisions
 
-Date initialized: `2026-08-28`  
-Last updated: `2026-08-29`
+Status: `ACTIVE DECISION LEDGER`
+Date: `2026-08-29`
 
-## V6-D001 — Clean generation boundary
-V5 is closed. V6 is the active deterministic/interpretable generalization research generation.
+Older V6 decision documents and result files remain historical evidence. The entries below record the active post-`8f9c6e3` research decisions from the role-conditioned phase.
 
-## V6-D002 — GitHub is authority
-Latest GitHub code/docs override chat memory. Active V6 scoped authority is `AGENTS_V6.md` + `HANDOFF_V6.md` + named current result/contract docs.
+## D048 — use active-market time for horizon research
 
-## V6-D003 — V3 collapse is a permanent constraint
-V3 Candidate B was strong on GOLD 2023-2025 and failed on GOLD 2022. Every V6 architecture must confront environment-dependent meaning.
+Wall-clock holding time is invalid across weekends/session closures. L/H horizon studies use active M1 bars.
 
-## V6-D004 — Preserve deterministic controls
-Baseline/control logic is never silently mixed with a research variant.
+## D049 — direction accuracy must be base-rate aware
 
-## V6-D005 — Actual strategy replay is required
-Indicator/state meaning is tested through causal raw-data replay, not by AUC ranking old V3 outcomes.
+Raw LONG/SHORT accuracy can be distorted by market endpoint drift. Compare against market-year directional base rate before claiming side failure.
 
-## V6-D006 — AUC is not a promotion criterion
-AUC/rank diagnostics can be descriptive only.
+## D050 — first-M1-flip use of `m1_direct_transfer` is look-ahead
 
-## V6-D007 — No indicator/window/threshold tournament
-A failed formulation is consumed. Do not rescue it by nearby windows/thresholds.
+`m1_direct_transfer` is only fully known at the later M5 trigger. Any first-M1-flip result conditioned on future absence of additional flips is invalid and discarded.
 
-## V6-D008 — Stage-specific variables do not migrate automatically
-Direction, Entry, H, L, continuation, exit, execution, market suitability and portfolio are separate stages.
+## D051 — physical horizon outranks chart-TF label
 
-## V6-D009 — Recursive falsification is permanent
-Every favorable thesis must face its opposite, simpler explanation, environment/direction decomposition, concentration and trade-count checks.
+Equal 24-bar lookbacks on M30/H1/H4 represent different physical durations. H evidence is interpreted as approximately 24 active-hour displacement, not “H1 is best.”
 
-## V6-D010 — Final target and research value are distinct
-Final WR>=50%, avg positive NET R>=2R and positive cost-adjusted EV remain mandatory, but WR alone does not classify research quality.
+## D052 — L and H require different horizon state
 
-## V6-D011 — R2/R2P are historical V6 benchmarks
-R2 and R2P were meaningful GOLD period-robustness benchmarks but not universal architecture and have no production authority.
+L short-horizon resumption requires shorter and longer persistence to be synchronized; H large destination can tolerate shorter-horizon disagreement when D24 direction and MENV destination are valid.
 
-## V6-D012 — L is not inverse H
-`H false -> L` has no authority. L requires an independent correction-completion mechanism.
+## D053 — H destination remains MENV HIGH_HIGH
 
-## V6-D013 — Market suitability is a separate design problem
-Compatible-market selection is legitimate only through outcome-blind screening and frozen validation shortlists.
+MENV direction ownership is rejected. MENV retains destination authority only. Non-HH, mixed-quadrant and stronger-HH score variants did not improve robust economics.
 
-## V6-D014 — GOLD 2022 is consumed; GOLD 2021 is untouched
-GOLD22 is now research/falsification data. GOLD21 remains reserved.
+## D054 — L1 research control
 
-## V6-D015 — R3/R4 are consumed specialization evidence
-R3/R4 were exceptionally strong on GOLD23-25 but did not survive cross-environment portability. No ADX threshold rescue.
+L1 is DIRECT + D14=D24=local, H-authorized parent excluded, market Entry, sweep-extreme SL, +1R or 4 active-hour cap.
 
-## V6-D016 — V3 precision is not assumed invariant
-Candidate-A and delivery-state meaning can reverse by environment. V3 remains a deterministic control/substrate, not unquestioned quality authority.
+## D055 — ONE_RENEG is a second causal M1 path family
 
-## V6-D017 — Research panel expands to 13 market-years
-Active discovery/falsification jointly uses GOLD22-25 and XAUEUR/USDJPY/BTC23-25.
+The exact `event -> opposite -> event` ownership sequence before M5 trigger is distinct from clean direct transfer. Multi-renegotiation and other noisy paths are not equivalent.
 
-## V6-D018 — MENV-004 becomes current research benchmark
-Pre-trade HIGH_SCALE AND HIGH_ACCEPTANCE, normalized by D1 ATR and past same-market expanding medians, is the strongest current H benchmark.
+## D056 — L2 research control
 
-## V6-D019 — Past-opportunity baseline is pre-trade
-MENV-004 baselines use earlier broad-direct opportunities, not only filled trades. This avoids execution-path dependence in the state definition.
+L2 is ONE_RENEG + D24 aligned, market Entry, sweep-extreme SL, +1R or 4 active-hour cap.
 
-## V6-D020 — MENV-004 history warmup stays 20
-Short-history extra markets do not justify lowering the 20-prior-opportunity requirement.
+## D057 — generalized ANY_ALIGN is density extension, not core authority
 
-## V6-D021 — Trade count is an independent promotion dimension
-Market/time expansion should normally increase usable N. A tiny filtered sample is not acceptable evidence merely because EV is high.
+Allowing D14-only alignment adds trades but produces thin/cost-sensitive economics. Core L2 retains D24 alignment.
 
-## V6-D022 — Trade-count increase cannot be manufactured by relaxing state
-MENV-012 increased N to 239 but degraded EV/breadth. More trades must come from more data, additional compatible markets, direction routing, or independent mechanisms—not state dilution.
+## D058 — causal H priority is decided at trigger authorization
 
-## V6-D023 — MENV-004 Entry survival is already >50% to +1R
-77/144 reached +1R. The realized-WR bottleneck is partly post-+1R lifecycle, but simple protection repeatedly destroys payoff.
+If a DIRECT parent is H-authorized, later H pending non-fill cannot be used to resurrect L. Future fill outcome is not available at the routing decision.
 
-## V6-D024 — Simple +1R protection is not the final solution
-Partial/BE, structural hard-lock, protected-break exit and +0.5R lock all raised positive frequency while reducing average winner/EV too far.
+## D059 — L lifecycle tuning family is closed on consumed data
 
-## V6-D025 — Clean-path assumptions are rejected
-Large runners frequently experience correction and local giveback. First-correction/first-break rules do not have sufficient purity.
+1R harvest, pure 4h hold, 50/50 partial, BE residual, +0.5R lock and midpoint routing form a real WR/payoff frontier. Do not search nearby fractions/hours to numerically hit targets.
 
-## V6-D026 — Non-H is not equivalent to no directional reaction
-MENV-013 showed frequent trigger-close revisits. Non-H often contains local directional response, but known risk/destination geometry does not monetize it.
+## D060 — H 4h impatience exit is rejected
 
-## V6-D027 — MENV-014 local broken-M5 stop is closed
-The local stop/trigger-target formulation failed strongly; do not rescue with a fitted stop multiplier.
+Requiring +1R within 4 active hours cuts slow-starting eventual TP5 winners and materially reduces H EV.
 
-## V6-D028 — L research remains separate and unresolved
-Broad L frequency is available, but tested state families including VR12 persistence did not generalize.
+## D061 — mature D24 does not replace local path quality
 
-## V6-D029 — Direction authority is reopened
-The project may allow indicators/market state to participate in LONG/SHORT/NEUTRAL direction formation before local price structure finalizes direction.
+Noisy M1 paths remain negative even when D24 is aligned and mature. Direction authority and local negotiation quality are separate stages.
 
-## V6-D030 — Indicators are direction context, not standalone Entry
-Even if a directional prior is useful, price structure remains required for timing/geometry unless a separately frozen future architecture proves otherwise.
+## D062 — mature D24 does not replace H destination state
 
-## V6-D031 — Directional-prior research must be pre-event
-Do not calculate an event-direction-adjusted feature and call it an independent prior. Freeze prior state before local direction finalization.
+D24 aligned+mature non-HH events do not support the H +3/+5 lifecycle. MENV HH remains necessary for large destination.
 
-## V6-D032 — Directional routing is preferred over another veto
-The first V6-003 architecture should test whether state changes mechanism/destination or recovers opportunities, not simply shrink MENV-004 N.
+## D063 — L2 D24 age is shadow only
 
-## V6-D033 — Web/literature review precedes the V6-003 indicator freeze
-Review current directional/regime evidence, then freeze a small interpretable atlas before opening outcomes. Literature guides mechanisms, not optimized parameter import.
+Consumed-panel mature L2 is much stronger than fresh L2, but market recurrence is imperfect and external N is too small. Do not promote an age gate or mature-runner lifecycle before independent validation.
 
-## V6-D034 — ZIP handoff standard is script-free overlay
-Default future handoff is a repo-relative overlay ZIP with no enclosing package folder and no automatic PowerShell/Python/patch launcher.
+## D064 — event source is not direction authority by definition
 
-## V6-D035 — Known Unicode-path apply failures are permanent workflow evidence
-Do not repeat PowerShell `git -C` Unicode-path handling, Windows Store Python absolute repo writes, or dynamically generated patch apply as the default mechanism.
+OB/FVG/high-low/liquidity labels are researcher-defined candidate locations. Event-source studies must separate location/movement state, body-close interaction, direction authority and execution pipeline.
 
-## V6-D036 — GOLD 2021 stays closed through V6-003 discovery
-Directional-prior discovery uses consumed research data. Do not spend GOLD21 on formulation.
+## D065 — chart-only direction research excludes spread
 
-## V6-D037 — Exact V3/MENV causal parity is mandatory before prior interpretation
-V6-003A re-established exact `620 -> 540 -> 163 -> 151 -> 144` parity. D1 ATR uses the committed calendar-D1/next-day-availability rule; no extra first-day deletion. Pending H limits may fill only from the first M1 strictly after `trigger_time`.
+Spread/slippage may not be embedded in directional labels. Execution belongs in monetization/execution stages. Earlier spread-contaminated FVG directional claims were discarded.
 
-## V6-D038 — H1 DMI14 is closed as an independent directional prior
-P1 is nearly flat across the 620-event raw path and loses to the simpler H1 DISP24 control when the two disagree. Do not rescue P1 with ADX/magnitude/nearby-period tuning.
+## D066 — FVG duplicate-weighting correction
 
-## V6-D039 — P2 x MENV HIGH_HIGH is an external-validation hypothesis, not strategy authority
-Simple H1 DISP24 alignment is weak/asymmetric over the broad panel but shows stronger +3R/+5R continuation inside the pre-existing MENV HIGH_HIGH state. This is named `cross-scale continuation capacity` and remains consumed-panel evidence only.
+Overlapping FVG zones can share touch/confirm times. Joins must include unique event/zone identity. Prior shallow-tree results affected by duplicated weighting were withdrawn.
 
-## V6-D040 — No aligned-only veto and no OPPOSED inversion
-Do not replace MENV-004 N=144 with the 51 accepted P2-aligned trades as a strategy. Do not route P2-opposed local failures automatically into the P2 direction; the fixed-clock counter-prior diagnostic did not support that mechanism.
+## D067 — FVG research closed
 
-## V6-D041 — New evidence must precede any V6-003 routing architecture
-The first atlas closes without a strategy freeze. Acquire longer/outcome-blind environments, preserve the 20-prior MENV warmup, freeze the P2 x HIGH_HIGH validation contract before outcomes, and only then reconsider routing.
+After correcting event identity and chart-only direction labels, M15 FVG is weak as an independent authority and H1 FVG's small tilt does not survive path/cost economics. No active FVG branch remains.
 
-## V6-D042 — Direction-first architecture must actually give the prior first authority
-V6-003B corrected the earlier alignment-only interpretation. The prior is sampled at the atomic sweep time from completed HTF bars and declares LONG/SHORT/NEUTRAL before the later M5 transition. Local structure confirms timing/geometry rather than creating the prior retrospectively.
+## D068 — alternative source proliferation is closed
 
-## V6-D043 — A directional prior does not replace direct local-transfer information
-On 1391 broad geometry-valid reactions, removing `m1_direct_transfer` and allowing an indicator prior to supply direction increased N but produced negative H economics across DMI, MACD, DISP24 and structure controls. Recovered non-direct events were generally weaker. Do not drop direct-transfer to manufacture opportunity count.
+M5 liquidity, previous-H4 range, PDH/PDL direct strategies, M15 confirmed pivots, opening range, breakout/retest, delayed failed-break, generic pullback and M15 BOS retest did not produce robust replacement modules. Do not rescue via threshold tuning.
 
-## V6-D044 — Conventional trend indicators can separate direction but do not show independent edge
-With direct local confirmation retained, MACD H1/H4, Vortex H1/H4 and RSI H1/H4 aligned populations improved over the negative unconditional direct control. However the simpler displacement controls matched or exceeded them. Do not promote a named indicator merely because aligned events are better than opposed events.
+## D069 — existing M5 BOS confirmation is quality, not needless delay
 
-## V6-D045 — RSI14 directional separation is explained by simple multi-horizon displacement
-RSI14 H1/H4 consensus and same-period DISP14 H1/H4 consensus agree 99.18% on jointly available direct events. DISP14 produced higher direct EV (+0.275R vs +0.150R). RSI is closed as an independent directional edge; no 70/30 or period rescue.
+A simpler sweep-candle displacement confirmation increased N but destroyed L economics. Do not weaken M5 BOS solely to increase trade count.
 
-## V6-D046 — Conventional indicator-direction atlas is closed without strategy authority
-DMI, MACD, Aroon, Vortex and RSI have now been tested as causal pre-event direction priors under frozen conventional definitions. None survives the required simpler-price-control test strongly enough for promotion. No further conventional indicator tournament is allowed on the consumed panel.
+## D070 — recovery->M5 conversion is a density descriptor
 
-## V6-D047 — Multi-horizon directional persistence is a research clue, not a strategy
-The surviving signal class is simple cross-horizon signed price persistence. DISP14 direction-first direct produced 90 accepted trades, EV +0.275R and positive EV in 8/13 environments, but N is thin and recurrence/statistical evidence is insufficient. Do not tune the displacement window or promote an aligned-only strategy.
+This conversion rate strongly explains market opportunity density but does not reliably predict EV/WR. It may be used in outcome-blind market-suitability screening for density only.
+
+## D071 — freeze current role-conditioned core
+
+The current consumed-panel comparison control is:
+
+```text
+H  = DIRECT + D24 aligned + MENV HH
+L1 = DIRECT + D14=D24=local, excluding H-authorized parent
+L2 = ONE_RENEG + D24 aligned
+```
+
+Combined: `253 trades / WR 54.55% / avg positive 1.269R / EV +0.304R / net +76.96R / 11 of 13 market-years positive`.
+
+This is a research freeze, not production authority.
+
+## D072 — stop same-panel micro-tuning by default
+
+Next claim-grade work should use new outcome-blind data and execution validation. GOLD2021 remains untouched.

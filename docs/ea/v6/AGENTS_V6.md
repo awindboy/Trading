@@ -1,54 +1,54 @@
-# V6 — Multi-Environment Directional-Prior Research Authority
+# V6 — Role-Conditioned Multi-Environment Research Authority
 
 Status: `ACTIVE RESEARCH AUTHORITY`
 Date: `2026-08-29`
 Production authority: `NONE`
 Current promoted production candidate: `NONE`
-Current research benchmark: `MENV-004 PRETRADE SCALE x ACCEPTANCE H`
-Current phase: `V6-003 MULTI-ENVIRONMENT DIRECTIONAL-PRIOR RESEARCH`
+Current phase: `V6-003D ROLE-CONDITIONED CORE FREEZE / EXTERNAL VALIDATION PREP`
+Current core: `H + L1 + L2 ROLE-CONDITIONED RESEARCH CONTROL`
+Untouched reserve: `GOLD 2021`
 
 ## 1. Mission
 
-V6 exists to solve the central limitation exposed by V3:
+V6 studies where a deterministic local liquidity/structure event has edge, where that edge disappears, and which role each causal state should own.
+
+The project must separate:
 
 ```text
-the same causal local event changes strategic meaning
-across periods, regimes, directions, and markets
+event/source meaning
+directional authority
+local negotiation quality
+Entry/execution
+L short-horizon monetization
+H large-destination authorization
+winner continuation
+exit lifecycle
+market suitability
+portfolio/exposure
 ```
 
-The current method is:
-
-```text
-causal market-state measurement
--> named mechanism hypothesis
--> raw-data replay
--> full economics + trade-count comparison
--> recursive falsification
-```
-
-V6 is not an AUC/ranking program and is not an indicator tournament.
+A variable discovered in one stage has no automatic authority in another.
 
 ## 2. Mandatory startup order
 
-Every V6 session must:
+Every resumed V6 session must:
 
 1. check latest GitHub HEAD;
 2. read root `AGENTS.md`;
-3. read root `docs/ea/HANDOFF.md`;
+3. read `docs/ea/HANDOFF.md`;
 4. read `docs/ea/WORKFLOW_AND_ZIP_HANDOFF.md`;
 5. read this file;
 6. read `HANDOFF_V6.md`;
 7. read `RESEARCH_STATE_V6.md`;
-8. read `V6_002_MULTI_ENVIRONMENT_RESEARCH_RESULTS.md`;
-9. read the active `V6_003A_DIRECTIONAL_PRIOR_RESEARCH_CONTRACT.md`;
-10. read `DECISIONS_V6.md` and `BACKLOG_V6.md`;
-11. inspect exact code/data before empirical execution.
+8. read `V6_003D_ROLE_CONDITIONED_CORE_FREEZE_RESULTS.md`;
+9. read `DECISIONS_V6.md` and `BACKLOG_V6.md`;
+10. inspect exact code/data before empirical execution or strategy changes.
 
-At base HEAD `ced2bb276ce6471162bcc49af3522eaa3d038694`, the large legacy root routing documents may still contain older V6 top blocks. Within the V6 generation, the newer dated V6 authority/handoff files above govern the active phase after this update. Do not rewrite the large legacy root files through an unsafe Unicode-path apply script merely to change routing text.
+If older root routing text conflicts with the newer dated V6 authority/handoff files, the newer V6 files govern the active V6 generation. Do not destroy legacy V1/V2/V3 authority merely to rewrite a routing banner.
 
-## 3. Final economic target vs research classification
+## 3. Final economic target
 
-Final promotion still requires:
+Final strategy promotion still requires:
 
 ```text
 realized positive-trade rate >= 50%
@@ -56,283 +56,236 @@ average positive NET R       >= 2.0R
 cost-adjusted expectancy     > 0
 ```
 
-Also require:
-- acceptable DD/loss streak;
-- multiple independent periods;
-- structurally compatible markets;
-- acceptable winner concentration;
-- sufficient opportunity/trade count;
-- final execution evidence.
+Also require acceptable DD/loss streak, sufficient density, independent periods/markets, controlled winner concentration, execution realism, and portfolio/exposure validation.
 
-A research candidate is not failed solely because WR < 50%.
+Current research core does not yet satisfy the average-positive target and is not production-ready.
 
-## 4. Trade-count authority
+## 4. Consumed research panel
 
-Trade count is now explicit authority.
-
-The current research panel is broader than the original GOLD 2023-2025 development panel; useful N should therefore grow over the research program, not collapse toward a tiny post-filter sample.
-
-Always report:
+Consumed discovery/falsification panel:
 
 ```text
-opportunity N
-state-valid N
-fill N
-accepted N after exposure
-N by market-year
-N by direction
-trade density
+GOLD    2022-2025
+BTCUSD  2023-2025
+USDJPY  2023-2025
+XAUEUR  2023-2025
 ```
 
-MENV-004 has 144 accepted H trades on the current 13-environment panel. A new filter-only architecture that materially lowers this N is not preferred by default. Directional-prior research should first ask whether state can **route direction/mechanism/destination**, including recovering valid opportunities, rather than simply vetoing more trades.
+These 13 market-years are not pristine validation.
 
-## 5. Current consumed research panel
-
-Research/discovery panel:
+Short 2025-09 to 2025-12 data exists for:
 
 ```text
-GOLD    2022 / 2023 / 2024 / 2025
-XAUEUR  2023 / 2024 / 2025
-USDJPY  2023 / 2024 / 2025
-BTCUSD  2023 / 2024 / 2025
+XAUJPY
+XAUCNH
+GAUCNH
+GAUUSD
 ```
 
-This is 13 market-year environments.
-
-These environments are consumed research/diagnostic evidence. They may falsify and develop mechanism hypotheses but cannot serve as pristine final validation.
+Those histories are too short for claim-grade validation. They may be used only as limited falsification / market-suitability diagnostics without relaxing warmup or rules.
 
 `GOLD 2021` remains untouched.
 
-Short 2025-09-17 to 2025-12-30 data exists for XAUJPY/XAUCNH/GAUCNH/GAUUSD, but each market has fewer than 20 broad-direct opportunities under the frozen MENV-004 causal-history rule. Do not lower the 20-prior-history requirement to force those markets into the benchmark.
+## 5. Causal substrate
 
-## 6. Frozen V3 broad event substrate
-
-The working broad-direct H opportunity remains causally grounded in the V3-003C line:
+The current M15 directional-change liquidity substrate remains:
 
 ```text
-persistent intermediate liquidity
--> atomic same-M1 sweep/recovery
--> pre-sweep M5 owner is opposite the reaction direction
+M15 adaptive DC liquidity (k=2)
+-> persistent until first consumption
+-> atomic same-M1 penetration + close recovery
+-> pre-sweep M5 owner opposite reaction direction
 -> sweep extreme remains intact
--> first completed M5 owner transition back toward event direction
--> trigger close
--> 50% trigger/broken-level pullback Entry
--> sweep-extreme structural SL
+-> first completed M5 BOS-owner transition toward reaction direction
 ```
 
-This is currently a deterministic event/timing substrate, not immutable final direction authority.
+The source is not assumed to be metaphysically special. It remains because alternative sources/triggers repeatedly failed when given independent causal tests. Do not claim that the word “liquidity event” itself creates edge.
 
-## 7. MENV-004 current benchmark
+## 6. Current frozen research control
 
-At pre-trade opportunity time:
+### H — large destination
 
 ```text
-structural_scale = planned sweep-extreme risk / completed D1 ATR
-acceptance_scale = M5 acceptance margin / completed D1 ATR
+M1 path = DIRECT
+D24 direction = local event direction
+MENV = HIGH_SCALE & HIGH_ACCEPTANCE
+-> 50% trigger/broken-M5 pullback Entry
+-> sweep-extreme SL
+-> +3R realize 25%
+-> residual BE
+-> +5R final
 ```
 
-For each market, use only earlier broad-direct opportunities to maintain expanding historical medians.
-
-State becomes valid after 20 prior opportunities.
+Official exposure-adjusted research result:
 
 ```text
-HIGH_SCALE  = structural_scale > past expanding median(structural_scale)
-HIGH_ACCEPT = acceptance_scale > past expanding median(acceptance_scale)
-
-MENV-004 H = HIGH_SCALE AND HIGH_ACCEPT
+N 51
+WR 41.18%
+avg positive +3.786R
+EV +0.971R
 ```
 
-No future fill/outcome is used in the baseline.
+H owns payoff, not hit-rate.
 
-Current 13-environment exposure-adjusted benchmark:
+### L1 — synchronized continuation
 
 ```text
-144 trades
-WR 33.33%
-avg positive +3.484R
-EV +0.495R/trade
-total +71.25R
-max DD 15.25R
-12 / 13 market-year environments positive
-LONG EV +0.607R
-SHORT EV +0.338R
+M1 path = DIRECT
+D14 = D24 = local direction
+H-authorized parent excluded
+-> market Entry
+-> sweep-extreme SL
+-> +1R or 4 active-hour cap
 ```
 
-Current H payoff representation:
+Current research result:
 
 ```text
-initial SL = sweep extreme
-+3R -> realize 25%
-residual -> BE
-+5R -> final
-
-TP5 = +4.5R
-BE  = +0.75R
-SL  = -1R
+N 76
+WR 57.9%
+EV +0.147R
 ```
 
-MENV-004 is a `RESEARCH BENCHMARK`, not production authority.
-
-## 8. What MENV-004 changed scientifically
-
-The strongest surviving interpretation is not `ATR works` or `large stop works`.
-
-The construct is event-relative:
-
-> A local liquidity/ownership reaction is more likely to become sustained directional delivery when both the structural event scale and the acceptance of that structure are large relative to that market's own causal historical background.
-
-This relation:
-- survived 13-environment causal replay better than ADX routing;
-- remained visible under fixed-clock ATR-normalized favorable-excursion checks;
-- was not reproduced by simple scale-only or acceptance-only logic;
-- was weakened when the AND relation was relaxed into a compensating product rule.
-
-## 9. Closed/degraded V6 routes
-
-Do not silently reopen without a genuinely new causal formulation:
-
-- standalone H1 directional oscillator/DMI veto;
-- R1 M5-DMI aligned/opposed router;
-- broad `ADX<25 -> H / ADX>=25 -> L` as a universal architecture;
-- R3/R4 ADX H-state specialization as a universal market rule;
-- simple 24h room as H authorization;
-- path efficiency when simpler displacement/momentum explains it;
-- MENV-005 M5 structural hard lock;
-- MENV-006 M5 protected-break exit;
-- simple first-correction / first-local-break / first-M5-close exhaustion rules;
-- MENV-011 one-time +0.5R lock;
-- MENV-012 product compensation between scale and acceptance;
-- non-H trigger-close as an economic TP;
-- MENV-014 broken-M5 local stop/trigger target module;
-- automatic H-state reuse for L;
-- L10 M30 VR12 persistence rule.
-
-## 10. Directional-prior research is now active
-
-The project is deliberately regressing to a higher architectural question.
-
-Prior V6 indicator work mostly asked:
+### L2 — negotiated resumption
 
 ```text
-V3/local price structure already says LONG or SHORT
--> does an indicator agree with that direction?
+M1 path = exactly ONE_RENEG
+(event -> opposite -> event)
+D24 = local direction
+-> market Entry
+-> sweep-extreme SL
+-> +1R or 4 active-hour cap
 ```
 
-That was often redundant. In R1, M5 DMI aligned with the broad-event direction about 90% of the time because the event itself requires a recent M5 ownership transition.
-
-The new question is:
-
-> Can causally known higher/intermediate market state participate in the **direction decision itself**, before the local structure has final directional authority?
-
-Target architecture:
+Current result:
 
 ```text
-directional market prior
-    = WHERE / WHICH DIRECTION
-
-liquidity + local structure
-    = WHEN / WHERE TO ENTER
-
-scale x acceptance
-    = HOW MUCH DESTINATION AUTHORITY
+N 126
+WR 57.9%
+EV +0.129R
 ```
 
-Do not convert this into a score tournament.
+## 7. Combined core
 
-## 11. Directional-prior research boundaries
+Causal routing: if a DIRECT parent is H-authorized at trigger time, H owns that parent. Do not use future H fill/non-fill information to resurrect L later.
 
-The first V6-003 child must:
-
-- freeze the prior observation time before outcome and before local direction is finalized;
-- use completed bars only;
-- distinguish prior `ALIGNED / OPPOSED / NEUTRAL` relative to the local event;
-- compare against the deterministic structure-only control;
-- test whether the prior has meaning across market-year and direction cells;
-- test simpler momentum/displacement explanations;
-- preserve opportunity/trade-count reporting;
-- avoid market-specific thresholds;
-- avoid selecting a prior because it best fits one market;
-- use raw replay before giving any prior strategy authority.
-
-If directional context only acts as another veto that shrinks 144 trades without broader architecture benefit, downgrade it.
-
-## 12. Stage separation
-
-Keep separate:
+Combined consumed-panel control:
 
 ```text
-A. directional prior
-B. liquidity/event formation
-C. local Entry timing / geometry
-D. H destination authorization
-E. L correction-completion
-F. winner continuation
-G. exit lifecycle
-H. execution
-I. market suitability
-J. portfolio/exposure
+N 253
+WR 54.55%
+avg positive +1.269R
+EV +0.304R
+net +76.96R
+max DD about 9.37R
+11/13 market-years positive
 ```
 
-A finding at one stage cannot automatically migrate to another.
+Research freeze means: use this as the comparison control; do not keep changing it on the same consumed outcomes unless a clearly new preregistered mechanism is being falsified.
 
-## 13. Causal rules
+## 8. L2 D24-age shadow hypothesis
 
-At decision time `t`:
-- only information available by `t`;
-- completed higher-timeframe bars only;
-- no future normalization;
-- no future fill;
-- no outcome-derived baseline;
-- no backfilled external structure;
-- missing state stays missing unless a preregistered fallback exists.
-
-## 14. Recursive falsification
-
-Before promoting a major interpretation, state:
+For L2 only, current consumed-panel shadow evidence:
 
 ```text
-current thesis
-opposite thesis
-simpler alternative
-prior-project recurrence
-placebo/control
-causal boundary
-trade-count consequence
-strategy/economic consequence
-kill/degrade condition
+D24 age < 24 completed H1 bars:
+N84 / WR 48.8% / EV about +0.003R
+
+D24 age >= 24 completed H1 bars:
+N42 / WR 76.2% / EV about +0.381R
 ```
 
-Then test environment/direction breadth and winner concentration.
+Continuous age also correlates positively with L2 outcome after several controls, but market recurrence is imperfect and external N is insufficient.
 
-## 15. Market suitability
+Authority: `SHADOW ONLY`.
 
-A universal strategy across every market is not required.
+Do not:
+- delete fresh trades by default;
+- promote mature-only L2;
+- promote the mature +1R->BE->+3R runner lifecycle;
+- tune the 24-bar boundary.
 
-But market selection must be:
+Validate unchanged on new data first.
+
+## 9. Market-suitability interpretation
+
+A universal all-market strategy is not required.
+
+Market selection must use outcome-blind descriptors before P/L is opened.
+
+The strongest current density descriptor is:
 
 ```text
-outcome-blind structural/execution screen
--> freeze shortlist
--> open outcomes
+recovery -> valid M5 BOS trigger conversion rate
 ```
 
-Do not select markets because the strategy was profitable after testing.
+It correlates strongly with annual opportunity count but not reliably with EV/WR.
 
-## 16. Execution boundary
+Therefore it may help identify markets where this architecture produces enough setups, but it is not a profitability gate.
 
-Current MENV results are offline M1 replay research, not final exact-tick evidence.
+## 10. Critical research corrections that must persist
 
-Do not claim production readiness until:
-- exact-tick/real-tick parity;
-- commission/slippage/swap;
-- MT5 Strategy Tester;
-- EA implementation parity;
-- broker/execution-environment audit
+- use stable event keys; do not row-index join differently sorted ledgers;
+- `m1_direct_transfer` is known only at the later M5 trigger, not at the first M1 flip;
+- use active-market time for holding/horizon analysis;
+- adjust raw directional accuracy for market base rate before claiming side asymmetry;
+- compare physical horizon, not equal bar-count across different TFs;
+- chart-only direction research must not contain spread/slippage;
+- execution costs belong in monetization/execution stages;
+- overlapping zone/event merges require unique event identity to prevent duplicate weighting;
+- do not use later H non-fill as causal permission to resurrect L;
+- right-censored outcomes remain censored.
 
-are complete.
+## 11. Closed or degraded routes
 
-## 17. Packaging authority
+Do not reopen by nearby parameter rescue:
 
-For ZIP/document handoffs, follow `docs/ea/WORKFLOW_AND_ZIP_HANDOFF.md`.
+```text
+conventional DMI/MACD/RSI/Aroon/Vortex direction atlas
+RSI 70/30 / ADX rescue
+displacement window tournament
+dropping direct local transfer for N
+M5-liquidity source
+automatic multi-scale k=1.5/2.5 union
+previous-H4 high/low source
+PDH/PDL direct strategy promotion
+M15 confirmed pivot source
+M15 FVG / H1 FVG active research
+opening-range source
+generic M5 or M15 pullback-resumption without liquidity quality
+accepted breakout / retest
+delayed failed-break fade
+M15 BOS retest
+simple directionless range breakout
+H non-HH +3R routing
+H super-HH scoring
+H 4h survival checkpoint
+L2 50% pullback Entry
+D48 rescue for fresh L2
+M1 timing gate after composition-adjusted falsification
+```
 
-Default: script-free repo-relative overlay ZIP. Do not revive the failed PowerShell/Python/patch apply mechanisms by default.
+## 12. Execution boundary
+
+Current results are offline M1 replay research, not exact-tick production evidence.
+
+Before production claims require:
+
+```text
+real-tick / exact-tick reproduction
+spread parity
+commission
+slippage
+swap / overnight financing
+MT5 Strategy Tester
+EA implementation parity
+broker/account/feed audit
+```
+
+H is particularly exposed to swap because winners often hold >24 active hours. L is more sensitive to spread/slippage because its gross EV is thinner.
+
+## 13. Packaging
+
+Follow `docs/ea/WORKFLOW_AND_ZIP_HANDOFF.md`.
+
+Default handoff: script-free repo-relative overlay ZIP with expected base HEAD and SHA-256 manifest.

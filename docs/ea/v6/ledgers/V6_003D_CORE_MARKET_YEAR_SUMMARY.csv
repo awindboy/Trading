@@ -1,0 +1,14 @@
+market,year,n,wr,ev_r,net_r,primary_failure_note
+BTCUSD,2023,37,0.541,0.117,4.33,thin_L_positive_core
+BTCUSD,2024,18,0.333,-0.188,-3.38,L_direction_path_failure
+BTCUSD,2025,34,0.706,0.672,22.86,strong_multi_module_year
+GOLD,2022,20,0.600,0.432,8.64,positive
+GOLD,2023,17,0.412,0.297,5.06,H_payoff_offsets_low_WR
+GOLD,2024,13,0.538,0.362,4.71,positive
+GOLD,2025,12,0.500,0.561,6.73,positive
+USDJPY,2023,14,0.714,0.542,7.59,positive
+USDJPY,2024,21,0.619,0.347,7.29,positive
+USDJPY,2025,9,0.556,0.270,2.43,low_density_positive
+XAUEUR,2023,16,0.438,0.149,2.39,positive
+XAUEUR,2024,18,0.667,0.648,11.66,strong
+XAUEUR,2025,24,0.375,-0.139,-3.33,H_destination_failure

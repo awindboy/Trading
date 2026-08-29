@@ -1,337 +1,185 @@
 # V6 Research State
 
-Status: `ACTIVE`  
-Date: `2026-08-29`  
-Phase: `V6-003 DIRECTIONAL-PRIOR EXTERNAL-VALIDATION PREP`  
-Production authority: `NONE`  
-Promoted production candidate: `NONE`  
-Current research benchmark: `MENV-004 PRETRADE SCALE x ACCEPTANCE H`  
-Directional validation candidate: `P2 H1 DISP24 x MENV HIGH_HIGH`  
-Base HEAD for this documentation update: `982839b0a1ea166fc534272f2024a72cedfb8326`
+Status: `ACTIVE / RESEARCH CORE FROZEN`
+Date: `2026-08-29`
+Phase: `V6-003D ROLE-CONDITIONED CORE FREEZE / EXTERNAL VALIDATION PREP`
+Production authority: `NONE`
+Base HEAD for this documentation update: `8f9c6e3e03906f2e8b4c146c3b3bb4741f6ad0e2`
+Untouched reserve: `GOLD 2021`
 
-## 1. Research allocation
-
-Consumed panel:
+## 1. Consumed panel
 
 ```text
-GOLD 2022-2025
-XAUEUR 2023-2025
-USDJPY 2023-2025
-BTCUSD 2023-2025
+GOLD    2022-2025
+BTCUSD  2023-2025
+USDJPY  2023-2025
+XAUEUR  2023-2025
 ```
 
-`GOLD 2021 = UNTOUCHED`.
+13 market-years total. These are discovery/falsification data.
 
-These 13 market-year environments are development/falsification data, not final validation.
+## 2. Frozen research control
 
-## 2. Permanent historical constraints
+| Module | Definition | N | WR | Avg positive | EV |
+|---|---|---:|---:|---:|---:|
+| H | DIRECT + D24 aligned + MENV HH | 51 | 41.18% | +3.786R | +0.971R |
+| L1 | DIRECT + D14=D24=local, excluding H-authorized parent | 76 | 57.9% | ~+0.80R | +0.147R |
+| L2 | ONE_RENEG + D24 aligned | 126 | 57.9% | ~+0.83R | +0.129R |
+| Combined | causal H priority | 253 | 54.55% | +1.269R | +0.304R |
 
-- V3 Candidate B was strong on GOLD23-25 and collapsed on GOLD22.
-- R1 M5 DMI largely duplicated local-event direction.
-- R2/R2P improved GOLD robustness but did not port universally.
-- R3/R4 were strong GOLD specializations and failed portability.
-- V3 precision/delivery semantics are not assumed invariant.
-- L is independent from H and remains unresolved.
-- Simple profit protection can raise positive frequency while destroying the required winner payoff.
+Combined net: about `+76.96R`; historical max DD about `9.37R`; positive market-years `11/13`.
 
-See `V6_002_MULTI_ENVIRONMENT_RESEARCH_RESULTS.md` and prior V6 result docs for full history.
-
-## 3. MENV-004 current benchmark
-
-Exact causal state:
+## 3. Current interpretation
 
 ```text
-scale      = planned H risk / completed D1 ATR14
-acceptance = M5 acceptance margin / completed D1 ATR14
-
-HIGH_HIGH =
-    scale > earlier same-market expanding median(scale)
-AND acceptance > earlier same-market expanding median(acceptance)
+D24 = directional authority
+D14 = L1 short-horizon synchronization
+M1 path = local negotiation quality
+MENV = H destination authority
 ```
 
-Warmup = 20 earlier valid broad-direct opportunities.
+No stage variable currently substitutes for another.
 
-Exact replay:
+## 4. Time-horizon result
+
+Active-market first-passage analysis:
 
 ```text
-620 broad-direct causal-valid
-540 state-valid
-163 HIGH_HIGH parents
-151 fills
-144 exposure accepted
-
-48 positive
-WR 33.33%
-avg positive +3.484R
-EV +0.494792R
-total +71.25R
-12/13 market-years positive
++1R median about 2.0 active h
++3R median about 7.6 active h
++5R median about 22.9 active h
+structural SL median about 3.1 active h
 ```
 
-## 4. V6-003A parity correction
-
-The first directional-prior child re-audited the full raw lineage before opening outcomes.
-
-Correct D1 semantics are the committed V3 calendar-D1 ATR14 with next-day availability. Do not delete the first observed D1 bar by a separate “partial day” heuristic.
-
-Correct pending-entry semantics begin strictly after `trigger_time`.
-
-These two checks reproduce the current MENV benchmark exactly, including every market-year outcome row.
-
-## 5. Frozen directional-prior atlas
-
-At `sweep_time`, using completed bars only:
+Role interpretation:
 
 ```text
-P1 = H1 DMI14 direction
-P2 = H1 24-bar signed displacement
-S1 = H1 BOS owner
-S2 = M30 BOS owner
-S3 = H1/M30 concordant owner
+L natural horizon: roughly 2-4 active hours
+H natural horizon: roughly 8-48 active hours
 ```
 
-Across 620 opportunities:
+H TP5 winners commonly need much longer than L and must not be subject to L-style impatience exits.
+
+## 5. Physical-horizon correction
+
+Equal lookback bar counts across TFs were previously confounded with different physical horizons.
+
+When the H direction lookback is fixed near 24 active hours, M15/M30/H1/H4 representations are broadly similar. Therefore the durable H clue is `~24 active-hour displacement/persistence`, not “H1 is the optimized timeframe.”
+
+For L, 14h+24h agreement plus smoothing is more important; raw M1 versions were weaker.
+
+## 6. L2 maturity shadow
 
 ```text
-P1: 202 ALIGNED / 418 OPPOSED
-P2: 220 ALIGNED / 400 OPPOSED
-S1: 223 ALIGNED / 397 OPPOSED
-S2: 166 ALIGNED / 454 OPPOSED
-S3: 119 ALIGNED / 350 OPPOSED / 151 NEUTRAL
+D24 age <24 H1 bars:
+N84 / WR 48.8% / EV ~+0.003R
+
+D24 age >=24 H1 bars:
+N42 / WR 76.2% / EV ~+0.381R
 ```
 
-P1/P2 absolute direction agreement = 84.52%.
+Status: `UNVALIDATED SHADOW`.
 
-## 6. First-atlas result
+Maturity does not rescue noisy M1 paths and does not replace MENV for H.
 
-Broad 620-event path:
+## 7. Density / market-suitability state
+
+The current M15 DC source can generate enough raw opportunity. Usable density is reduced mainly by the conversion chain.
+
+Outcome-blind density descriptor:
 
 ```text
-586 fills
-273 +1R
-138 +3R
-94 +5R
+recovery -> valid M5 BOS transition rate
 ```
 
-### P1
-
-P1 aligned vs opposed is essentially flat:
+Consumed-panel aggregate approximate rates:
 
 ```text
-+1R 46.88% vs 46.45%
-+3R 24.48% vs 23.10%
-+5R 16.15% vs 15.99%
+BTC      16.6%
+GOLD     11.2%
+USDJPY   11.0%
+XAUEUR   11.9%
 ```
 
-When P1 and P2 disagree, P2 wins materially.
+This descriptor is strongly related to trade count, not reliably to profitability.
 
-**P1 is CLOSED as an independent prior.**
-
-### P2 broad
+Short extra-market diagnostics:
 
 ```text
-ALIGNED: 210 fills / +1 49.05% / +3 26.67% / +5 18.57%
-OPPOSED: 376 fills / +1 45.21% / +3 21.81% / +5 14.63%
+XAUJPY  about 10.6%
+XAUCNH about 16.3%
+GAUCNH about 18.0%
+GAUUSD about 13.1%
 ```
 
-This is too weak/asymmetric for standalone direction authority. Broad benefit is concentrated in SHORT and cluster intervals cross zero.
+These are short, correlated gold-like samples and are not independent validation.
 
-## 7. P2 x MENV HIGH_HIGH candidate interaction
+## 8. Execution state
 
-Within 151 HIGH_HIGH fills:
+Median spread / initial R:
 
 ```text
-P2 ALIGNED N=53:
-+1R 58.49%
-+3R 41.51%
-+5R 35.85%
-
-P2 OPPOSED N=98:
-+1R 50.00%
-+3R 28.57%
-+5R 19.39%
+H  ~2.8%
+L1 ~6.3%
+L2 ~4.7%
 ```
 
-Pooled deltas:
+BTC L spread/R is materially higher than the panel average and can consume thin L gross edge.
+
+H remains economically thicker but often holds overnight; swap must be included before production claims.
+
+## 9. Failure decomposition
+
+H 51-trade lifecycle:
 
 ```text
-+1R +8.49pp
-+3R +12.94pp
-+5R +16.46pp
+21 SL before +1R
+9 SL after +1R but before +3R
+4 BE after +3R
+17 TP5
 ```
 
-+5R market aggregate:
+Once +3R is reached, continuation to +5R is strong. Do not re-open nearby profit-lock tuning.
+
+Negative combined environments differ by module:
 
 ```text
-BTCUSD +26.15pp
-GOLD   +20.11pp
-USDJPY +18.05pp
-XAUEUR  -2.75pp
+BTC2024    = L failure
+XAUEUR2025 = H destination failure
 ```
 
-Both LONG and SHORT pooled +5R deltas are positive.
+A single market-regime veto is not justified.
 
-Cluster bootstrap for +5R barely excludes zero; stratified permutation one-sided p is about 0.061. Continuous scale/acceptance remains a plausible confound.
+## 10. Event/FVG research closure
 
-Interpretation:
+Alternative event/source work was intentionally explored after questioning whether the existing event definition was privileged by its pipeline.
 
-> A strong local MENV reaction aligned with a completed-H1 displacement prior may have more distant continuation capacity.
+Key corrections:
+- event source and downstream pipeline must be evaluated separately;
+- body close is better interpreted as interaction state, not automatic direction;
+- chart-only direction must exclude spread;
+- overlapping FVG zones require unique event IDs.
 
-Name: `cross-scale continuation capacity`.
+After those corrections, no FVG or alternative-source module produced a sufficiently robust economic edge. FVG research is closed for now.
 
-Status: `EXTERNAL VALIDATION CANDIDATE ONLY`.
+## 11. Robustness
 
-## 8. Accepted MENV economics by P2
-
-Exact 144 accepted trades:
+13-market-year block Monte Carlo / bootstrap:
 
 ```text
-P2 ALIGNED:
-N 51
-WR 41.18%
-avg positive 3.786R
-EV +0.971R
-total +49.50R
-
-P2 OPPOSED:
-N 93
-WR 29.03%
-avg positive 3.250R
-EV +0.234R
-total +21.75R
+combined EV 2.5%  ~ +0.14R
+median             ~ +0.30R
+97.5%              ~ +0.47R
 ```
 
-Do not turn this into an aligned-only strategy:
-- WR still <50%;
-- N collapses 144 -> 51;
-- consumed-panel selection would violate the routing/trade-density rules.
+This supports the consumed-panel research freeze but is not external validation.
 
-## 9. Counter-prior branch
+## 12. Immediate research state
 
-For 79 HIGH_HIGH P2-opposed events that later hit the local structural stop:
+`H = freezeable research module.`
 
-```text
-24h prior-direction endpoint median -0.044 D1 ATR
-24h endpoint positive 45.6%
-48h endpoint median +0.013 D1 ATR
-48h endpoint positive 50.6%
-```
+`L1/L2 = frozen controls but individually validation-dependent.`
 
-Automatic `OPPOSED -> trade prior direction` is rejected.
+Do not add more same-panel conditions by default.
 
-
-## 10. Corrected direction-first research state
-
-V6-003B moved direction authority to the prior **before** the local M5 event finalized direction.
-
-Broad pre-direct geometry-valid population:
-
-```text
-1391 opportunities
-620 direct-transfer
-771 non-direct
-```
-
-Removing direct-transfer and relying on prior direction did not work economically. The best broad indicator prior remained near/under zero EV.
-
-Therefore direct local-transfer information remains useful timing/quality evidence even when direction is assigned upstream.
-
-## 11. Conventional indicator direction atlas
-
-Direction-first direct accepted economics:
-
-```text
-H1 DMI             N190 EV +0.005R
-H1/H4 DMI          N139 EV -0.110R
-H1/H4 MACD         N146 EV +0.110R
-Aroon25 H1/H4      N135 EV -0.072R
-Vortex14 H1/H4     N104 EV +0.084R
-RSI14 H1/H4        N117 EV +0.150R
-DISP24 control     N209 EV +0.133R
-H1/M30 structure   N113 EV +0.064R
-```
-
-The unconditional direct-event control is negative:
-
-```text
-560 accepted / EV -0.055R
-```
-
-Thus pre-event direction state has some selection meaning, but named indicators are not automatically the source of that meaning.
-
-## 12. RSI falsification
-
-A same-architecture simpler control was frozen:
-
-```text
-H1 14-bar signed displacement
-H4 14-bar signed displacement
-same sign -> direction
-else NEUTRAL
-```
-
-It agrees with RSI14 H1/H4 99.18% on jointly available direct events and is economically stronger:
-
-```text
-DISP14 direct:
-90 accepted
-WR 30.0%
-avg+ 3.25R
-EV +0.275R
-
-RSI14 direct:
-117 accepted
-WR 29.06%
-avg+ 2.956R
-EV +0.150R
-```
-
-Therefore RSI is not an independent indicator edge.
-
-## 13. Breadth state
-
-DISP14 direct has positive EV in 8/13 market-years and negative EV in 5/13. Several environment cells have only 2-6 trades.
-
-Stratified permutation diagnostics remain weak (one-sided raw-lifecycle-R p about 0.115 for DISP14).
-
-Do not promote or tune.
-
-## 14. Current scientific interpretation
-
-Conventional indicators did not solve direction authority independently.
-
-The strongest remaining clue is:
-
-> multi-horizon directional price persistence can help define a causal prior before local timing, but its continuation/failure mechanism is not yet understood well enough for strategy authority.
-
-This differs from returning direction authority to local structure. The prior remains architecturally upstream; the next task is to explain when directional persistence has continuation meaning versus reversal/correction meaning.
-
-## 15. Active next child
-
-Prepare a new pre-outcome contract for directional persistence **mechanism**, not another indicator/window comparison.
-
-Research questions:
-- broad persistent move versus one-leg impulse;
-- continuation versus rebound/reversal volatility state;
-- causal reassertion after local counter-move;
-- ability to recover opportunity N without replacing direct local information with noise.
-
-No DISP14/24 window tuning.
-No conventional indicator rescue.
-GOLD 2021 remains untouched.
-
-## 16. Final promotion gate remains
-
-```text
-WR >= 50%
-avg positive NET R >= 2R
-cost-adjusted EV > 0
-sufficient N / trade density
-robust market-period breadth
-acceptable DD/streak
-no unacceptable winner concentration
-independent validation
-exact execution evidence
-```
-
-No production authority exists.
+Next claim-grade work requires new outcome-blind data and execution validation.
