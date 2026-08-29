@@ -1,0 +1,19 @@
+{
+  "expected_base_head": "545f7756e357c03b06561d2090b7055815fd56b0",
+  "package": "V6-003E role-conditioned MT5 research EA R0",
+  "files": {
+    "docs/ea/v6/V6_003E_EA_APPLY_README.md": {
+      "sha256": "dbe53b45e40a08d8649cc9eb834412388f095acb6a3d3917c3121737fd09c0b1",
+      "bytes": 1367
+    },
+    "docs/ea/v6/V6_003E_MT5_ROLE_CORE_REPRO_CONTRACT.md": {
+      "sha256": "ba151202a2b3fd39e89e777b6daaebc39598cee313b453d2a5a9e1f5e6f3e431",
+      "bytes": 5544
+    },
+    "mt5/experts/MentorDeterministicV6EA.mq5": {
+      "sha256": "c7a6c2dd3bfa70e146b1b50f977e3d38e254801c89b81473661d0fbb2e6af8bf",
+      "bytes": 42669
+    }
+  },
+  "manifest_note": "file hashes cover the three payload files; manifest itself intentionally excluded"
+}
