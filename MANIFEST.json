@@ -1,0 +1,12 @@
+{
+  "status": "WORKING_VALIDATION_COMPLETE_NO_GITHUB_DOC_UPDATE_YET",
+  "base_git_head": "591f047af7084e3b8d2b37d2cf919ff0ec1da21d",
+  "input_sha256": "11083838b4a6521d21f3e7cbbcd14c2c365a4752636d731314abea2068c0ba0a",
+  "decision": {
+    "combined": "FAIL_EXTERNAL_TEMPORAL_VALIDATION",
+    "L2": "REPLICATED_KEEP_FROZEN",
+    "L1": "FAILED_TO_REPLICATE",
+    "H": "PAYOFF_FUNCTION_OBSERVED_EDGE_NOT_VALIDATED"
+  },
+  "documentation_policy": "Do not apply to GitHub yet; batch with parity + Gold-family validation later."
+}

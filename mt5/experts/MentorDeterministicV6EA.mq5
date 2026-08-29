@@ -22,11 +22,11 @@
 //+------------------------------------------------------------------+
 #property strict
 #property version   "001.000"
-#property description "V6-003E role-conditioned research EA R0; tester only; no production authority"
+#property description "V6-003E role-conditioned research EA R0.3; sweep-time prior parity"
 
 #include <Trade/Trade.mqh>
 
-#define V6_BUILD                 "V6_003E_ROLE_CORE_R0_1"
+#define V6_BUILD                 "V6_003E_ROLE_CORE_R0_3"
 #define V6_DC_K                  2.0
 #define V6_ATR_N                 14
 #define V6_MENV_MIN_PRIOR        20
@@ -63,6 +63,12 @@ input bool   InpWriteEventCsv        = true;
 input bool   InpVerboseLog           = false;
 input string InpEventCsvFile         = "mentor_v6_role_core_r0_events.csv";
 
+// Parity-only research boundary.
+// 0 = no mid-test reset. The test start itself always starts H1/D1 feature warm-up from zero.
+// For the frozen GOLD22 -> GOLD2325 reproduction run, set 2023.01.03 01:00.
+// This resets ONLY D14/D24/D1-ATR feature warm-up; MENV prior history is intentionally retained.
+input datetime InpParityFeatureResetAt = 0;
+
 struct V6LiquidityLevel
   {
    long     id;
@@ -86,6 +92,9 @@ struct V6Reaction
    double   sweep_extreme;
    int      pre_m5_owner;
    int      m1_owner_at_sweep;
+   int      prior_d14;          // frozen completed-H1 prior sampled at sweep_time
+   int      prior_d24;          // frozen completed-H1 prior sampled at sweep_time
+   int      prior_d24_age;      // shadow-only age sampled at sweep_time
    int      m1_change_count;
    int      m1_seq_state;      // 0 none, 1 event, 2 event->opp, 3 event->opp->event
    bool     m1_seq_invalid;
@@ -185,6 +194,12 @@ datetime g_last_m5_open=0;
 datetime g_last_m15_open=0;
 datetime g_last_h1_open=0;
 datetime g_last_d1_open=0;
+
+// Feature availability must be causal relative to the accepted raw-data segment,
+// not to whatever older bars happen to exist in the MT5 history cache.
+int  g_h1_completed_since_feature_start=0;
+int  g_d1_completed_since_feature_start=0;
+bool g_parity_feature_reset_applied=false;
 
 int g_csv=INVALID_HANDLE;
 
@@ -329,6 +344,32 @@ void CsvWrite(string event_type,long event_id,V6Module module,int dir,
 void LogV(string s)
   {
    if(InpVerboseLog) Print("[V6] ",s);
+  }
+
+void ResetFeatureWarmupState(string reason)
+  {
+   g_d14=0;
+   g_d24=0;
+   g_d24_age=0;
+   g_d1_atr=0.0;
+   g_d1_atr_valid=false;
+   g_h1_completed_since_feature_start=0;
+   g_d1_completed_since_feature_start=0;
+
+   CsvWrite("FEATURE_RESET",0,V6_MOD_NONE,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+            reason);
+  }
+
+void MaybeApplyParityFeatureReset(datetime current_m1_open)
+  {
+   if(g_parity_feature_reset_applied) return;
+   if(InpParityFeatureResetAt<=0) return;
+   if(current_m1_open<InpParityFeatureResetAt) return;
+
+   g_parity_feature_reset_applied=true;
+   ResetFeatureWarmupState(
+      StringFormat("parity_feature_reset_at=%s",
+                   TimeToString(InpParityFeatureResetAt,TIME_DATE|TIME_MINUTES)));
   }
 
 //+------------------------------------------------------------------+
@@ -622,6 +663,14 @@ void AddReaction(datetime sweep_time,int dir,double liq_price,datetime liq_pivot
    g_reactions[n].sweep_extreme=extreme;
    g_reactions[n].pre_m5_owner=g_m5_owner;
    g_reactions[n].m1_owner_at_sweep=g_m1_owner;
+
+   // V6-003B/C and V6-003D causal contract:
+   // directional prior is sampled at sweep_time from already-completed HTF bars.
+   // Never let H1 bars completed between sweep and later M5 trigger change authority.
+   g_reactions[n].prior_d14=g_d14;
+   g_reactions[n].prior_d24=g_d24;
+   g_reactions[n].prior_d24_age=g_d24_age;
+
    g_reactions[n].m1_change_count=0;
    g_reactions[n].m1_seq_state=0;
    g_reactions[n].m1_seq_invalid=false;
@@ -632,7 +681,9 @@ void AddReaction(datetime sweep_time,int dir,double liq_price,datetime liq_pivot
    CsvWrite(g_reactions[n].invalidated?"RECOVERY_REJECT_PRE_M5":"RECOVERY",
             g_reactions[n].id,V6_MOD_NONE,dir,sweep_time,0,liq_price,extreme,0,
             0,0,0,0,0,0,0,0,0,0,
-            StringFormat("levels=%d preM5=%d preM1=%d",n_levels,g_m5_owner,g_m1_owner));
+            StringFormat("levels=%d preM5=%d preM1=%d priorD14=%d priorD24=%d priorAge=%d",
+                         n_levels,g_m5_owner,g_m1_owner,
+                         g_reactions[n].prior_d14,g_reactions[n].prior_d24,g_reactions[n].prior_d24_age));
   }
 
 void ProcessClosedM1ForSweeps()
@@ -744,11 +795,30 @@ void ProcessH1Close()
   {
    MqlRates cur,b14,b24;
    if(!GetRate(PERIOD_H1,1,cur)) return;
-   if(!GetRate(PERIOD_H1,15,b14)) return; // current - 14 completed H1 bars
-   if(!GetRate(PERIOD_H1,25,b24)) return; // current - 24 completed H1 bars
 
-   g_d14=SignD(cur.close-b14.close);
-   int nd24=SignD(cur.close-b24.close);
+   // The just-completed H1 belongs to the current accepted-data segment.
+   // Pre-segment MT5 cache bars are not allowed to make D14/D24 available early.
+   g_h1_completed_since_feature_start++;
+
+   g_d14=0;
+   if(g_h1_completed_since_feature_start>=15 && GetRate(PERIOD_H1,15,b14))
+      g_d14=SignD(cur.close-b14.close); // latest completed vs 14 completed H1 bars earlier
+
+   if(g_h1_completed_since_feature_start<25)
+     {
+      g_d24=0;
+      g_d24_age=0;
+      return;
+     }
+
+   if(!GetRate(PERIOD_H1,25,b24))
+     {
+      g_d24=0;
+      g_d24_age=0;
+      return;
+     }
+
+   int nd24=SignD(cur.close-b24.close); // latest completed vs 24 completed H1 bars earlier
    if(nd24==0)
      {
       g_d24=0;
@@ -767,6 +837,13 @@ void ProcessH1Close()
 
 void ProcessD1Close()
   {
+   // Offline V6 D1 ATR is unavailable until 14 completed D1 bars exist
+   // inside the accepted raw-data segment. Never borrow older tester-cache days.
+   g_d1_completed_since_feature_start++;
+   g_d1_atr_valid=false;
+
+   if(g_d1_completed_since_feature_start<V6_ATR_N) return;
+
    double a=SmaAtr(PERIOD_D1,1,V6_ATR_N);
    if(a!=V6_INVALID_DOUBLE && MathIsValidNumber(a) && a>0)
      {
@@ -800,7 +877,8 @@ void AddHPending(long event_id,int dir,datetime sweep_time,datetime trigger_time
                  double liq_price,double extreme,double broken,double trigger_close,
                  double spread,double parent_entry,double parent_sl,double parent_risk,
                  double limit_entry,double planned_sl,double planned_risk,
-                 double scale,double acceptance,double med_scale,double med_accept)
+                 double scale,double acceptance,double med_scale,double med_accept,
+                 int prior_d24_age)
   {
    int n=ArraySize(g_hpending);
    ArrayResize(g_hpending,n+1);
@@ -824,7 +902,7 @@ void AddHPending(long event_id,int dir,datetime sweep_time,datetime trigger_time
    g_hpending[n].acceptance=acceptance;
    g_hpending[n].med_scale=med_scale;
    g_hpending[n].med_accept=med_accept;
-   g_hpending[n].d24_age=g_d24_age;
+   g_hpending[n].d24_age=prior_d24_age;
 
    CsvWrite("H_PENDING_ARM",event_id,V6_MOD_H,dir,sweep_time,trigger_time,liq_price,
             extreme,broken,scale,acceptance,med_scale,med_accept,limit_entry,0,
@@ -883,13 +961,26 @@ void RouteTriggeredReaction(int j,datetime trigger_time,double trigger_close,dou
       AppendDouble(g_menv_accept_hist,accept);
      }
 
-   bool h_auth=(direct && geom && menv_valid && hh && g_d24==r.dir);
+   int pd14=r.prior_d14;
+   int pd24=r.prior_d24;
+   int page=r.prior_d24_age;
+
+   if(pd14!=g_d14 || pd24!=g_d24)
+     {
+      CsvWrite("PRIOR_DRIFT",r.id,V6_MOD_NONE,r.dir,r.sweep_time,trigger_time,r.liq_price,
+               r.sweep_extreme,broken_level,scale,accept,meds,meda,limit_entry,0,
+               planned_sl,planned_risk,0,0,
+               StringFormat("sweepD14=%d sweepD24=%d triggerD14=%d triggerD24=%d",
+                            pd14,pd24,g_d14,g_d24));
+     }
+
+   bool h_auth=(direct && geom && menv_valid && hh && pd24==r.dir);
 
    CsvWrite("ROUTE_STATE",r.id,V6_MOD_NONE,r.dir,r.sweep_time,trigger_time,r.liq_price,
             r.sweep_extreme,broken_level,scale,accept,meds,meda,limit_entry,0,
             planned_sl,planned_risk,0,0,
-            StringFormat("path=%s d14=%d d24=%d age=%d menv=%s Hauth=%d",
-                         direct?"DIRECT":"ONE_RENEG",g_d14,g_d24,g_d24_age,
+            StringFormat("path=%s priorD14=%d priorD24=%d priorAge=%d triggerD14=%d triggerD24=%d triggerAge=%d menv=%s Hauth=%d",
+                         direct?"DIRECT":"ONE_RENEG",pd14,pd24,page,g_d14,g_d24,g_d24_age,
                          menv_valid?(hh?"HH":"NOT_HH"):"WARMUP",(int)h_auth));
 
    if(h_auth)
@@ -897,11 +988,11 @@ void RouteTriggeredReaction(int j,datetime trigger_time,double trigger_close,dou
       g_count_h_auth++;
       AddHPending(r.id,r.dir,r.sweep_time,trigger_time,r.liq_price,r.sweep_extreme,
                   broken_level,trigger_close,spread,parent_entry,parent_sl,parent_risk,
-                  limit_entry,planned_sl,planned_risk,scale,accept,meds,meda);
+                  limit_entry,planned_sl,planned_risk,scale,accept,meds,meda,page);
       return; // causal H priority: L1 cannot resurrect later if H does not fill.
      }
 
-   if(direct && g_d14==r.dir && g_d24==r.dir)
+   if(direct && pd14==r.dir && pd24==r.dir)
      {
       g_count_l1++;
       OpenTrade(V6_MOD_L1,r.id,r.dir,r.sweep_time,trigger_time,
@@ -910,7 +1001,7 @@ void RouteTriggeredReaction(int j,datetime trigger_time,double trigger_close,dou
       return;
      }
 
-   if(one && g_d24==r.dir)
+   if(one && pd24==r.dir)
      {
       g_count_l2++;
       OpenTrade(V6_MOD_L2,r.id,r.dir,r.sweep_time,trigger_time,
@@ -1185,13 +1276,17 @@ int OnInit()
    g_last_h1_open=iTime(_Symbol,PERIOD_H1,0);
    g_last_d1_open=iTime(_Symbol,PERIOD_D1,0);
 
-   // Initialize currently completed causal state. DC/event history is deliberately
-   // NOT reconstructed before tester start; run with sufficient warmup/full history.
-   ProcessD1Close();
-   ProcessH1Close();
+   // R0.2 parity correction:
+   // D14/D24/D1-ATR start unavailable and warm up only from bars completed
+   // after the Strategy Tester start. Older broker-cache bars have no authority.
+   ResetFeatureWarmupState("tester_start_feature_warmup");
 
    CsvWrite("INIT",0,V6_MOD_NONE,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-            StringFormat("tester=1 execute=%d magic=%I64d",(int)InpExecuteTrades,InpMagicNumber));
+            StringFormat("tester=1 execute=%d magic=%I64d parity_feature_reset=%s",
+                         (int)InpExecuteTrades,InpMagicNumber,
+                         InpParityFeatureResetAt>0?
+                           TimeToString(InpParityFeatureResetAt,TIME_DATE|TIME_MINUTES):
+                           "NONE"));
    Print("Initialized ",V6_BUILD," on ",_Symbol,
          ". Run full history with warmup; production authority NONE.");
    return INIT_SUCCEEDED;
@@ -1219,6 +1314,10 @@ void OnTick()
 
    datetime m1=iTime(_Symbol,PERIOD_M1,0);
    if(m1==0 || m1==g_last_m1_open) return;
+
+   // If the historical research dataset had a segment boundary here, reset feature
+   // availability before routing any event at/after that boundary. MENV history stays intact.
+   MaybeApplyParityFeatureReset(m1);
 
    // A new M1 bar means the previous one is now causally complete.
    CountActiveM1BarsAndTimeCaps();
