@@ -1,9 +1,14 @@
-> **V6 ACTIVE ROUTING — 2026-08-28 / CONTEXT-MEASUREMENT GENERALIZATION RESEARCH**  
-> Active research uses `docs/ea/v6/AGENTS_V6.md` and `docs/ea/v6/HANDOFF_V6.md`.  
-> Primary market remains GOLD#. Final economics remain WR >=50%, average positive NET R >=2R, cost-adjusted EV >0.  
-> V6 exists to solve V3's period/market generalization failure by testing preregistered causal indicator/context measurements while controlling V3 multiplicity, V4 no-learning, and V5 research-direction failures.  
-> Current phase is `V6-001 CONTEXT-MEASUREMENT HYPOTHESIS REGISTRY / PRE-OUTCOME DESIGN`. Read `V6_000A_V3_V5_LINEAGE_AND_FAILURE_SYNTHESIS.md` and `V6_001_CONTEXT_MEASUREMENT_REGISTRY.md`. `V6-001A` is a queued cross-market child, not the definition or fatal gate of V6. No production authority exists.  
-> GOLD 2022 is consumed falsification data; GOLD# 2021 remains untouched.
+> **V7 ACTIVE ROUTING — 2026-08-30 / DOUBLE-B · CONTEXT · KTR RESEARCH**  
+> Active research uses `docs/ea/v7/AGENTS_V7.md` and `docs/ea/v7/HANDOFF_V7.md`.  
+> V7 studies the user's Kim Jikseon-style Double-B / 더캔이지추격깨 / KTR framework as a future-hidden contextual decision process.  
+> Double-B is event detection, not automatic direction. KTR is a distance/force coordinate system, not a fixed SL/TP table.  
+> No V7 production authority or EA exists. The 24 reverse-engineered events are consumed hindsight discovery only.  
+> Final economics remain WR >=50%, average positive NET R >=2R, and positive full-cost expectancy across independent evidence.  
+> GOLD# 2021 remains untouched unless explicitly allocated.
+
+> **V6 CLOSED ROUTING — 2026-08-30**  
+> V6 H/L1/L2 strategy development is closed after external/temporal validation failure.  
+> Read `docs/ea/v6/V6_FINAL_VALIDATION_AND_CLOSE.md`. L2 is retained only as a historical research finding; no V6 production authority exists.
 
 > **V5 CLOSED ROUTING — 2026-08-28**  
 > V5 is historical and has no promoted strategy. Read `docs/ea/v5/V5_FINAL_SYNTHESIS.md`.  
