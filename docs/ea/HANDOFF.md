@@ -2,10 +2,11 @@
 
 Status: `ACTIVE V7 ROUTER`
 Date: `2026-08-30`
-Expected base HEAD for this transition package: `102791741620ca6cffe061f077d83116a1e46c09`
+Expected base HEAD for this documentation update: `3c35cdc72b9f6046de716cd0d956a918021eba1e`
 Active generation: `V7`
-Current phase: `V7-001 DOUBLE-B / CONTEXT / KTR DISCRETIONARY RESEARCH`
+Current phase: `V7-003A GOLD25/BTC25 DOUBLE-B ANATOMY DISCOVERY`
 Production authority: `NONE`
+EA authority: `NONE`
 Untouched reserve: `GOLD 2021`
 
 ## Startup order
@@ -20,96 +21,202 @@ Untouched reserve: `GOLD 2021`
 8. Read `docs/ea/v7/V7_000_RESEARCH_CONTRACT.md`.
 9. Read `docs/ea/v7/V7_001_KIMJIKSEON_METHOD_SPEC.md`.
 10. Read `docs/ea/v7/V7_002_OUTCOME_REVERSE_ENGINEERING_RESULTS.md`.
-11. Read `docs/ea/v7/DECISIONS_V7.md` and `BACKLOG_V7.md`.
-12. Inspect exact code/data/ledger before changing semantics.
+11. Read `docs/ea/v7/V7_003A_GOLD25_BTC25_DEVELOPMENT_PLAN.md`.
+12. Read `docs/ea/v7/DECISIONS_V7.md` and `BACKLOG_V7.md`.
+13. Inspect exact raw data before doing any new research.
 
 GitHub is the Single Source of Truth. Chat history is only a workbench.
 
-## Generation routing
+## V7 current authority
 
-### V7 — ACTIVE
-
-V7 replaces the previous mentor-style strategy-development line as the active research generation.
-
-V7 is based on the user's earlier Kim Jikseon / Korean Traders Association study:
+V7 studies the user's Kim Jikseon-style:
 - Double-B (더블비),
-- 더캔이지추격깨 context table,
-- KTR session-range/risk framework.
+- 더캔이지추격깨 context framework,
+- KTR session-distance/risk framework.
 
-The current V7 authority is **not an EA and not a validated strategy**.
-
-V7 starts from a discretionary/contextual research contract:
+Role separation:
 
 ```text
-Double-B
-= rare / abnormal event detector
-
-Context
-= direction and setup-type evidence
-
-KTR
-= session-relative distance / force unit
-
-Trade plan
-= event-specific Entry / WAIT / SKIP / SL / TP / optional staged entry
+Double-B = rare / abnormal event detector
+Context = meaning, direction, archetype, timing evidence
+KTR = session-relative distance / force coordinate system
+Risk architecture = Entry / SL / TP / staged-entry exposure
 ```
 
-The central classification problem is:
+Double-B itself has no LONG/SHORT authority.
+Outside-band body close is evidence, not a breakout rule.
+KTR has no universal SL/TP multiple.
+
+## Current development universe
+
+The first serious V7 development cohort is frozen as:
 
 ```text
-FRESH EXPANSION  -> BREAKOUT
-RANGE EXTREME    -> BASIC
-TERMINAL EXPANSION -> TURNING
-INSUFFICIENT ASYMMETRY -> WAIT / SKIP
+GOLD#   — calendar year 2025
+BTCUSD# — calendar year 2025
 ```
 
-No single candle-close rule, Bollinger-side rule, or fixed KTR multiplier has direction authority.
+These are **development/discovery data**.
 
-### V6 — CLOSED
+Future outcomes may be opened deliberately for reverse engineering.
+Once opened, they are consumed and must never be cited as untouched V7 validation.
 
-V6 mentor-style H/L1/L2 development is closed.
+Do not expand the development universe because another market looks easier.
 
-Final external/temporal evidence:
-- Gold-family replication was only partial.
-- 2026 factor-diverse holdout failed the combined frozen architecture.
-- L2 remained the strongest portable finding.
-- L1 failed to replicate.
-- H showed multi-R payoff function but no validated positive edge.
+## Critical plan change
 
-V6 remains a historical research control and reproducibility asset only.
-No further V6 strategy-semantic development is authorized by default.
+Do **not** start with blinded validation yet.
 
-Read:
-`docs/ea/v6/V6_FINAL_VALIDATION_AND_CLOSE.md`.
+The method contains too many interacting discretionary elements and is not understood deeply enough.
+The next phase is deliberate outcome-informed reverse engineering on GOLD25/BTC25.
 
-## Current objective
+```text
+V7-003A  Double-B Anatomy
+    ->
+V7-003B  Context Atlas
+    ->
+V7-003C  KTR Geometry
+    ->
+V7-003D  Entry Architecture
+    ->
+V7-003E  Staging / Campaign Risk
+    ->
+V7-003F  Freeze a causal decision rubric
+    ->
+V7-004   Untouched blinded validation
+```
 
-Do **not** build a V7 EA yet.
+Exact plan:
+`docs/ea/v7/V7_003A_GOLD25_BTC25_DEVELOPMENT_PLAN.md`.
 
-The immediate objective is to determine whether the contextual distinctions discovered with hindsight can be made **causally, before future bars are visible**.
+## Next-session first task
 
-Priority:
+Begin with **V7-003A Double-B Anatomy**.
 
-1. preserve the 24 reverse-engineered Double-B events as consumed discovery only;
-2. build a larger untouched Double-B event set;
-3. hide all future bars at each event close;
-4. record `ENTER_NOW / WAIT_CONFIRM / SKIP`;
-5. classify `BASIC / BREAKOUT / TURNING / UNKNOWN`;
-6. record natural-language evidence without forcing weak proxies;
-7. record event-specific KTR-based SL/TP and staged-entry plan before revealing future;
-8. reveal outcomes only after decisions are locked;
-9. measure how much of the hindsight upper bound is causally recoverable;
-10. only after repeatable blinded evidence exists, consider formalization or EA implementation.
+1. Verify exact full-year GOLD# 2025 and BTCUSD# 2025 raw M1 data.
+2. Record file names, SHA256, coverage, timezone/server convention and spread fields.
+3. Derive H1 from the M1 source using one frozen convention.
+4. Detect **all** Double-B events using the frozen V7 band definition.
+5. Freeze/save the complete event census before outcome subgroup analysis.
+6. Build an anatomy ledger for every event.
+7. Open the future because this is discovery.
+8. Study recurring event families before designing a trading rule.
 
-## Permanent restrictions for current V7 phase
+Do not begin with:
+- trade P/L;
+- KTR SL/TP optimization;
+- staged entry;
+- an additive scorecard;
+- forcing every event into BASIC/BREAKOUT/TURNING.
 
-- no reuse of the same 24 hindsight events as validation;
-- no converting hindsight event-specific KTR values into tuned global thresholds;
-- no automatic `upper DB -> short` / `lower DB -> long`;
-- no automatic `close outside both bands -> breakout`;
-- no weak numerical proxy for a discretionary factor merely to fill the scorecard;
-- no automatic 0.5-KTR averaging against every losing trade;
-- no production claim from hindsight P/L;
-- no mixing V6 H/L1/L2 conditions into V7 unless a future experiment explicitly preregisters the combination;
-- no return to previous mentor-style strategy development by default.
+The first deliverable is an **event anatomy atlas**, not a strategy backtest.
 
+## Anatomy atlas questions
+
+### Before the event
+- prior 24–48 H1 state;
+- trend / range / transition;
+- move maturity;
+- MA distance;
+- causal support/resistance and remaining room;
+- Bollinger compression/expansion;
+- session context.
+
+### Event candle
+- upper / lower / ambiguous Double-B;
+- body/full range/close location/wicks;
+- size relative to KTR;
+- BB20 geometry;
+- BB4 geometry;
+- BB20-vs-BB4 relationship;
+- session opening-candle break/accept/reject state.
+
+### After the event — discovery only
+- 1h / 4h / 12h / 24h path;
+- high/low excursion in KTR;
+- time to ±0.5 / ±1 / ±2 / ±3 KTR;
+- first structure acceptance/failure/reclaim;
+- one-stage vs two-stage behavior;
+- descriptive outcome family.
+
+## Taxonomy rule
+
+`BASIC / BREAKOUT / TURNING` are conceptual anchors but anatomy discovery must not force exactly three buckets.
+
+Allowed descriptive families include:
+- fresh breakout;
+- failed breakout;
+- range fade;
+- climactic reversal;
+- continuation -> turning;
+- chaotic / no-edge.
+
+## Context research priority
+
+After anatomy:
+
+1. session opening-candle break / acceptance / failure;
+2. causal support / resistance;
+3. Bollinger geometry and separation;
+4. candle anatomy;
+5. MA / trend maturity;
+6. trendline only if meaningful information remains unexplained.
+
+For each factor ask which job it helps:
+
+```text
+event meaning?
+archetype?
+direction?
+entry timing?
+SL invalidation?
+TP / remaining room?
+```
+
+Do not promote a useful variable to every role.
+
+## KTR boundary
+
+KTR comes after event/context anatomy.
+
+Ask:
+
+```text
+Where is structural invalidation?
+How many current KTR is that?
+
+Where is realistic destination / remaining room?
+How many current KTR is that?
+
+How does MAE/MFE geometry change when KTR is unusually small or large?
+```
+
+Structure decides the price level.
+KTR interprets the distance.
+
+## Entry / staging boundary
+
+Entry architecture is studied only after event meaning and KTR geometry:
+
+```text
+IMMEDIATE
+PLANNED_PULLBACK / ZONE
+WAIT_CONFIRM
+SKIP
+```
+
+Staged entry comes after a single-entry baseline and normal MAE by setup type.
+The equal-risk-per-leg convention remains discovery-only and can create large campaign risk.
+
+## Validation boundary
+
+GOLD25/BTC25 are not validation.
+
+Only after V7-003A~F freeze a causal decision process should V7-004 use a separate untouched cohort with future-hidden decisions.
+
+GOLD 2021 remains untouched unless explicitly reallocated.
+
+## V6 boundary
+
+V6 mentor-style strategy development remains closed.
+Do not import H/L1/L2 filters into V7 by default.

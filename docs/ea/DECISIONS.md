@@ -7009,3 +7009,38 @@ The +89.03R hindsight result has zero claim-grade performance authority.
 
 ### D080 — V7 must validate through locked future-hidden decisions
 A future V7 result is valid only when the event batch and decision ledger are frozen before outcome reveal.
+
+
+
+## D081-D090 — V7 GOLD25/BTC25 development sequence freeze (2026-08-30)
+
+### D081 — V7 development cohort freeze
+V7 development is initially limited to GOLD# 2025 and BTCUSD# 2025.
+
+### D082 — Development cohort is outcome-consumed
+GOLD25/BTC25 may be opened for reverse engineering and then lose untouched-validation authority.
+
+### D083 — Double-B anatomy precedes strategy optimization
+The first V7 development deliverable is a complete Double-B event anatomy atlas,
+not a strategy P/L backtest.
+
+### D084 — V7 research stages are separated
+Anatomy -> context -> KTR geometry -> entry -> staging/risk -> rubric freeze -> untouched validation.
+
+### D085 — Context factors have separate roles
+Do not automatically convert a descriptor into direction, entry, SL and TP authority.
+
+### D086 — Trendline is deferred
+Do not invent a trendline proxy merely to complete 더캔이지추격깨.
+
+### D087 — KTR follows structural meaning
+Find invalidation/destination first; interpret distance in KTR second.
+
+### D088 — Single-entry precedes staged-entry research
+0.5KTR additions are not studied until event meaning and normal adverse excursion are understood.
+
+### D089 — Discovery taxonomy is not forced to three buckets
+BASIC/BREAKOUT/TURNING are conceptual anchors; V7-003A may discover richer path families.
+
+### D090 — V7-004 uses separate untouched evidence
+GOLD25/BTC25 cannot later be reused as claim-grade blinded validation.

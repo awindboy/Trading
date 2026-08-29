@@ -1,70 +1,123 @@
 # V7 Backlog
 
 Status: `ACTIVE`
+Current phase: `V7-003A GOLD25/BTC25 DOUBLE-B ANATOMY`
 
-## Immediate — V7-003 blinded contextual replication
+## Immediate — next session
 
-- [ ] Build a new untouched Double-B event catalog.
-- [ ] Freeze selection before outcomes.
-- [ ] Include GOLD plus independent-factor market(s).
-- [ ] Produce H1 future-hidden chart packets.
-- [ ] Show only causally known context.
-- [ ] Freeze broker/server session mapping for KTR.
-- [ ] Record decision card for every event.
-- [ ] Save/hash decisions before future reveal.
-- [ ] Reveal future only after full batch lock.
-- [ ] Score BASIC/BREAKOUT/TURNING/WAIT classification.
-- [ ] Report Entry timing errors separately from direction errors.
-- [ ] Report SL placement errors separately from target errors.
-- [ ] Report staged-entry contribution and risk amplification separately.
+- [ ] Recheck latest GitHub HEAD and V7 handoff.
+- [ ] Locate/obtain full-year `GOLD# 2025` M1 data.
+- [ ] Locate/obtain full-year `BTCUSD# 2025` M1 data.
+- [ ] Record names, SHA256, coverage and timezone/server convention.
+- [ ] Run structural data-quality checks.
+- [ ] Freeze one H1 resampling convention.
+- [ ] Detect all Double-B events.
+- [ ] Save/freeze the complete event census before subgroup analysis.
+- [ ] Build the V7-003A anatomy ledger.
+- [ ] Open outcomes and characterize 1h/4h/12h/24h paths.
+- [ ] Discover recurring path families without forcing exactly three archetypes.
+- [ ] Write `V7_003A_DOUBLEB_ANATOMY_RESULTS.md`.
 
-## Decision-card fields
+## Anatomy fields
 
-- event id
-- market
-- event close time
-- Double-B side
-- ENTER_NOW / WAIT_CONFIRM / SKIP
-- LONG / SHORT / NONE
-- BASIC / BREAKOUT / TURNING / UNKNOWN
-- candle evidence
-- MA evidence
-- S/R evidence
-- trendline evidence or UNKNOWN
-- Bollinger separation/extension evidence
-- session opening-candle high/low behavior
-- current session KTR
-- KTR relative context
-- structural invalidation
-- SL price
-- SL/KTR
-- realistic target room
-- TP price
-- TP/KTR
-- staged entry yes/no
-- add interval
-- max legs
-- confidence
-- uncertainty note
+Identity:
+- event id;
+- market;
+- H1 time;
+- upper/lower/both.
 
-## Secondary research
+Pre-event:
+- 24h/48h displacement;
+- trend/range/transition;
+- causal S/R;
+- MA20 slope/distance;
+- BB20 width/change;
+- BB4 width/change;
+- BB4-vs-BB20;
+- session/opening-H1;
+- current KTR and causal same-session rank.
 
-- [ ] Formalize confirmation logic for WAIT_CONFIRM without outcome reuse.
-- [ ] Study whether fresh/terminal expansion can be represented reproducibly.
-- [ ] Compare AI visual decisions with user/manual decisions if both can be locked independently.
-- [ ] Study campaign-risk caps only after equal-risk-per-leg behavior is understood.
-- [ ] Add commission/slippage after a causal decision process exists.
+Event:
+- range/body/wicks/close;
+- range/KTR and body/KTR;
+- band state;
+- S/R relationship;
+- session-break state.
+
+Future — discovery only:
+- high/low excursion 1h/4h/12h/24h;
+- excursion/KTR;
+- time to ±0.5/1/2/3KTR;
+- structure acceptance/failure/reclaim;
+- one-stage/two-stage note;
+- descriptive family.
+
+## V7-003B — Context Atlas
+
+- [ ] session opening-candle break/acceptance/failure;
+- [ ] support/resistance;
+- [ ] Bollinger geometry;
+- [ ] candle anatomy;
+- [ ] MA/trend maturity;
+- [ ] trendline only if a real information gap remains.
+
+For each factor identify whether it helps:
+event meaning / archetype / direction / entry / SL / TP room.
+
+## V7-003C — KTR Geometry
+
+- [ ] same-session KTR history;
+- [ ] normalized excursion;
+- [ ] structural invalidation/KTR;
+- [ ] target room/KTR;
+- [ ] time-to-KTR barriers;
+- [ ] no fixed multiplier tournament.
+
+## V7-003D — Entry Architecture
+
+- [ ] immediate;
+- [ ] planned pullback/zone;
+- [ ] wait-confirm;
+- [ ] skip;
+- [ ] separate entry timing error from direction error.
+
+## V7-003E — Staging / Campaign Risk
+
+- [ ] single-entry baseline first;
+- [ ] adverse excursion by family;
+- [ ] staged entry only where pullback is planned;
+- [ ] report legs and total campaign stop-risk.
+
+## V7-003F — Freeze
+
+- [ ] taxonomy;
+- [ ] decision card;
+- [ ] confirmation logic;
+- [ ] KTR use;
+- [ ] staging if any;
+- [ ] metrics;
+- [ ] untouched V7-004 cohort before outcomes.
 
 ## Deferred
 
-- V7 EA implementation.
-- production sizing.
-- live/paper deployment.
-- portfolio interaction.
-- automatic trendline algorithm.
-- machine-learning classifier.
+- V7 EA;
+- production sizing;
+- live/paper deployment;
+- ML classifier;
+- automatic trendline;
+- portfolio construction.
 
 ## Permanently consumed
 
-- 24 V7-002 reverse-engineered events.
-- all event-specific hindsight SL/TP choices in that ledger.
+- V7-002 24-event set and hindsight plans.
+- GOLD# 2025 / BTCUSD# 2025 after V7-003 outcome analysis begins.
+
+## Hard restrictions
+
+- no P/L optimization in V7-003A;
+- no fixed KTR-table search;
+- no staging research before event/single-entry anatomy;
+- no deleting ambiguous Double-B events;
+- no market expansion based on discovery P/L;
+- no same-data validation;
+- no V6 filter import.

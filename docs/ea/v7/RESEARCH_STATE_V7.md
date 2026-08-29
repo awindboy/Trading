@@ -1,88 +1,111 @@
 # V7 Research State
 
-Status: `ACTIVE / PRE-VALIDATION`
+Status: `ACTIVE / DEVELOPMENT DISCOVERY`
 Date: `2026-08-30`
+Current phase: `V7-003A GOLD25/BTC25 DOUBLE-B ANATOMY`
 
 ## Phase map
 
 ### V7-000 — Research reset
-COMPLETE.
-
-The previous mentor-style V6 line is closed.
-V7 is a separate research generation.
+`COMPLETE`
 
 ### V7-001 — Method formalization
-ACTIVE.
+`COMPLETE ENOUGH TO RESEARCH`
 
 Formalized:
 - Double-B event semantics;
-- context-table semantics;
+- 더캔이지추격깨 components;
 - KTR semantics;
 - staged-entry risk convention;
 - BASIC/BREAKOUT/TURNING/WAIT vocabulary.
 
-### V7-002 — Outcome-informed reverse engineering
-COMPLETE / CONSUMED.
+### V7-002 — Initial blind pilot + outcome reverse engineering
+`COMPLETE / CONSUMED`
 
 24 events:
-- blind visual pilot failed;
+- blind contextual pilot failed;
 - future opened;
-- retrospective event-by-event plans built;
-- conservative hindsight plan = +89.03R;
-- single-entry hindsight plan = +46.76R.
+- retrospective plans built;
+- hindsight plan +89.03R;
+- single-entry hindsight +46.76R.
 
-No validation authority.
+Zero validation authority.
 
-### V7-003 — Blinded contextual replication
-NEXT.
+### V7-003 — Deep development / reverse engineering
+`ACTIVE`
 
-Goal:
-test whether V7-002 distinctions can be made before future reveal.
-
-## Current evidence table
-
-| Claim | Status |
-|---|---|
-| Double-B identifies rare events | method premise; not yet economic edge |
-| Double-B side defines direction | rejected |
-| outside-band body close defines breakout | rejected |
-| context is necessary | supported conceptually; not yet validated economically |
-| fresh vs terminal expansion matters | discovery hypothesis |
-| KTR should be adaptive | discovery hypothesis |
-| fixed KTR multiplier table is sufficient | rejected |
-| automatic 0.5KTR averaging is safe | rejected |
-| staged entry can improve selected hindsight cases | hindsight only |
-| V7 is profitable | not established |
-
-## Primary metric design for future V7
-
-Because each staged leg may risk 1R, report:
+Frozen development universe:
 
 ```text
-campaign_R_sum
-filled_leg_count
-maximum campaign stop-risk
-campaign_risk_normalized_return
-campaign WR
-avg positive campaign_R
-EV
-DD
-loss streak
+GOLD# 2025
+BTCUSD# 2025
 ```
 
-Do not report only sum-of-leg R.
+#### V7-003A — Double-B Anatomy
+`CURRENT`
+Full event census and pre/event/post outcome anatomy. No trade optimization.
 
-## Independence
+#### V7-003B — Context Atlas
+`QUEUED`
+Session -> S/R -> Bollinger -> candle -> MA maturity -> trendline if needed.
 
-Future V7 evidence should include:
-- GOLD,
-- at least one non-gold factor,
-- multiple periods.
+#### V7-003C — KTR Geometry
+`QUEUED`
+Normalized excursion, structural SL distance and target room.
 
-Correlated gold crosses do not count as multiple independent validations.
+#### V7-003D — Entry Architecture
+`QUEUED`
+Immediate vs pullback vs confirmation vs skip.
+
+#### V7-003E — Staging / Campaign Risk
+`QUEUED`
+Only after single-entry geometry.
+
+#### V7-003F — Decision Rubric Freeze
+`QUEUED`
+Freeze a causal process before validation.
+
+### V7-004 — Untouched Blinded Validation
+`DEFERRED UNTIL V7-003F`
+
+A separate untouched cohort must be frozen.
+GOLD25/BTC25 cannot be used.
+
+## Current hypothesis hierarchy
+
+Questions, not rules:
+
+1. Double-B selects information-rich rare events.
+2. The first classification problem is fresh expansion vs range extreme vs terminal expansion vs noise.
+3. Session opening-candle acceptance/failure may be high-value context.
+4. S/R may matter for archetype and target room more than simple indicator direction.
+5. BB20/BB4 relationship may distinguish fresh propulsion from terminal extension.
+6. Candle strength can mean acceptance or climax.
+7. MA may be more useful as trend maturity/extension than simple direction.
+8. KTR should normalize structural geometry rather than dictate fixed multiples.
+9. Entry mode should depend on setup meaning.
+10. Staging must be planned architecture, not loss rescue.
+
+## Not established
+
+- V7 profitability;
+- a valid archetype classifier;
+- reliable AI discretionary rubric;
+- fixed KTR SL/TP schedule;
+- justified staged-entry schedule;
+- production sizing;
+- V7 EA specification.
+
+## Development vs validation
+
+GOLD25/BTC25:
+`DISCOVERY / OUTCOME MAY BE OPENED / CONSUMED`
+
+Future validation:
+`SEPARATE COHORT / FUTURE HIDDEN / DECISIONS LOCKED`
+
+GOLD 2021 remains untouched unless explicitly reallocated.
 
 ## Production state
 
-NONE.
-
-There is no V7 EA, no V7 production candidate, and no authorized live-money implementation.
+`NONE`
