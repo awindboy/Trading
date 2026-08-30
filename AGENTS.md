@@ -1,3 +1,11 @@
+> **V8 ACTIVE ROUTING — 2026-08-30 / CAUSAL CHART REPRESENTATION · EVENT-ANCHORED ACTION POLICY**  
+> Active strategy research uses `docs/ea/v8/AGENTS_V8.md` and `docs/ea/v8/HANDOFF_V8.md`.  
+> V8 does not force ambiguous `TREND/RANGE/BREAKOUT/BASIC/TURNING` labels into rule authority.  
+> Objectively observable events anchor decisions; causal multi-timeframe chart geometry and exact numerical state are fused into a learned latent context.  
+> The target problem is action-conditioned `WAIT / ENTER / HOLD / ADD / REDUCE / EXIT` with explicit campaign risk and exposure accounting.  
+> GOLD# 2022-2026 is open/consumed development evidence. GOLD# 2021 remains untouched final temporal reserve.  
+> No V8 production authority or EA exists.
+
 > **V7 ACTIVE ROUTING — 2026-08-30 / DOUBLE-B · CONTEXT · KTR RESEARCH**  
 > Active research uses `docs/ea/v7/AGENTS_V7.md` and `docs/ea/v7/HANDOFF_V7.md`.  
 > V7 studies the user's Kim Jikseon-style Double-B / 더캔이지추격깨 / KTR framework as a future-hidden contextual decision process.  

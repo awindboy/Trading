@@ -1,6 +1,6 @@
 # V7 Research Instructions
 
-Status: `ACTIVE`
+Status: `PAUSED / PRESERVED ??V8 ACTIVE`
 Generation: `V7`
 Research family: `Double-B / 더캔이지추격깨 / KTR`
 Production authority: `NONE`

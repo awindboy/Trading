@@ -1,8 +1,8 @@
 # V7 Research State
 
-Status: `ACTIVE / DEVELOPMENT DISCOVERY`
+Status: `PAUSED / PRESERVED ??V8 ACTIVE`
 Date: `2026-08-30`
-Current phase: `V7-003A GOLD25/BTC25 DOUBLE-B ANATOMY`
+Current phase: `PAUSED / PRESERVED ??V8 ACTIVE`
 
 ## Phase map
 

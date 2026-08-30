@@ -2,9 +2,12 @@
 
 Last updated: `2026-08-30`
 Current GitHub base for this update: `3c35cdc72b9f6046de716cd0d956a918021eba1e`
-Current phase: `V7-003A GOLD25/BTC25 DOUBLE-B ANATOMY DISCOVERY`
+Current phase: `PAUSED / PRESERVED ??V8 ACTIVE`
 Production authority: `NONE`
 EA authority: `NONE`
+Superseded active routing: docs/ea/v8/HANDOFF_V8.md
+
+V7 remains historical semantic/discovery authority. Its BASIC/BREAKOUT/TURNING vocabulary is not mandatory V8 classifier authority.
 Untouched reserve: `GOLD 2021`
 
 ## Current thesis
