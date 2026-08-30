@@ -598,3 +598,34 @@ shadow information / human analysis
 V8-A remains frozen. V8-B does not consume V8-A probability as a raw side feature; the two branches meet only in the probability decomposition.
 
 No trade threshold or autonomous EA authority exists yet.
+
+
+---
+
+## V8-B1 correction — apparent direction breakthrough invalidated
+
+A later implementation audit found that the first V8-B1 direction breakthrough was not causal.
+
+The bug was subtle but severe: M15/H1 bars were resampled with left/start labels, and event-time alignment chose the latest bar start before the decision. For intrabar decisions this selected the **future completed version of the currently forming bar**.
+
+Leak prevalence was approximately 67.8% for M15 features and 90.2% for H1 features in the B1 event table.
+
+Once the representation was rebuilt using bars whose close/availability was genuinely before the decision, the high conditional AUC disappeared. A second test using legitimately reconstructed causal partial-current M15/H1 bars also failed to recover it.
+
+This changed the V8 direction conclusion again:
+
+```text
+strong endogenous same-horizon direction edge reported by B1
+= invalidated
+```
+
+while:
+
+```text
+V8-A near-term movement-intensity edge
+= unaffected / retained
+```
+
+The episode also established a new permanent audit rule: V8 may never infer HTF availability from bar start time alone.
+
+The next direction hypothesis is V8-B2: keep V8-A frozen and test a compact set of mechanism-linked external source-of-move inputs such as USDJPY and XAUEUR under strict event-time causality, with BTC as a negative control. GOLD# 2021 remains locked.

@@ -1,71 +1,65 @@
 # V8 Backlog
 
 Status date: `2026-08-31`
-Active phase: `V8-A FROZEN / V8-B1 CONDITIONAL DIRECTION PROBABILITY`
+Active phase: `V8-B2 SOURCE-OF-MOVE CAUSAL DIRECTION / DATA PREFLIGHT`
 
-## Completed V8-A
+## V8-A — frozen
 
-- [x] Causal M1/M5/M15/H1 foundation and event ledger.
-- [x] Event-close-centered representation audits.
-- [x] Visual vs numerical representation research.
-- [x] Unconditional +/-10 direction/preprocessing/model falsification program.
-- [x] Movement-intensity separation.
-- [x] Multi-horizon 10p movement-probability model.
-- [x] Portable 53-feature V8-A logistic model.
-- [x] Python/MQL equation parity reference.
-- [x] MT5 V8-A shadow indicator source.
-- [x] Freeze V8-A before V8-B.
+- [x] Causal M1/M5 movement representation.
+- [x] +/-10.0 barrier at 15m/30m/60m.
+- [x] Multi-horizon movement-probability research.
+- [x] Portable 53-feature logistic model.
+- [x] Python-to-MQL equation parity.
+- [x] MT5 movement probability indicator source.
+- [ ] User MetaEditor/runtime/feed parity if not already completed locally.
 
-## Completed V8-B research
+Do not change V8-A to improve V8-B.
 
-- [x] Align V8-B horizon with V8-A 15m/30m/60m horizons.
-- [x] Define conditional side target `P(UP|move,H)`.
-- [x] Exclude same-first-M1 ambiguous side cases.
-- [x] Generate cross-fitted V8-A scores for direction-feature tests without movement-label leakage.
-- [x] Test V8-A probability as direct side feature.
-- [x] Test continuous movement-probability gating interactions.
-- [x] Falsify both as incremental direction improvements.
-- [x] Build signed multi-horizon causal side representation.
-- [x] Compare event-only, signed core, magnitude, movement and nonlinear models.
-- [x] Run all-event joint UP/DOWN/NO-MOVE validation.
-- [x] Run outcome-blind non-overlap evaluation.
-- [x] Run week-block bootstrap uncertainty.
-- [x] Run event-family falsification.
-- [x] Identify H1 Double-B as unsupported direction family.
-- [x] Run feature-ablation and permutation negative controls.
-- [x] Check movement-probability quintiles vs side predictability.
-- [x] Record direct three-class comparison without adopting it.
+## V8-B1 corrective work
 
-## Immediate V8-B2 implementation
+- [x] Discover M15/H1 bar-start alignment lookahead.
+- [x] Quantify leakage prevalence.
+- [x] Rebuild completed-only causal HTF features.
+- [x] Rebuild causal partial-current HTF control.
+- [x] Rerun conditional AUC.
+- [x] Rerun all-event joint proper scores.
+- [x] Rerun outcome-blind non-overlap.
+- [x] Rerun event-family diagnostics.
+- [x] Invalidate stale V8-B1 positive result.
+- [x] Cancel V8-B1 MT5 direction implementation.
+- [x] Mark old coefficient manifest DO NOT DEPLOY.
+- [x] Add reusable HTF availability helper + synthetic regression test for the exact B1 failure mode.
 
-- [ ] Freeze exact V8-B1 feature equations.
-- [ ] Fit/export walk-forward 15m/30m/60m conditional-side model coefficients.
-- [ ] Decide whether 15m remains full output or is marked lower-evidence because of early mover scarcity.
-- [ ] Implement shadow-only MT5 V8-B extension.
-- [ ] Keep V8-A source/model untouched.
-- [ ] Display `P(move)`, `P(UP|move)`, joint `P(UP)`, joint `P(DOWN)` distinctly.
-- [ ] Suppress V8-B direction on H1 Double-B markers.
-- [ ] Verify Python/MQL feature and probability parity.
-- [ ] Verify no order/trade side effects.
+## V8-B2 preflight
 
-## V8-A runtime validation still required
+- [x] Freeze source-of-move research question before new outcome work.
+- [x] Freeze initial external source set: USDJPY / XAUEUR primary, BTC negative control.
+- [x] Freeze first feature family and chronological evaluation rule.
+- [x] Freeze causal HTF availability rule.
+- [ ] Mount exact external raw M1 bytes.
+- [ ] Verify SHA256 against prior lineage manifests.
+- [ ] Audit duplicates/order/OHLC/spread/time coverage.
+- [ ] Measure cross-market timestamp gaps without opening direction outcome.
+- [ ] Freeze maximum stale-age policy outcome-blind.
+- [ ] Build causal event-time cross-market feature table.
+- [ ] Run C0 frozen V8-A + prior control.
+- [ ] Run C1 corrected GOLD-only direction control.
+- [ ] Run B2 USDJPY+XAUEUR source-of-move model.
+- [ ] Add BTC negative control only as preregistered falsification.
+- [ ] Evaluate 2024 future-hidden first.
+- [ ] Only under frozen contract proceed to 2025.
+- [ ] Run non-overlap and week-block robustness.
+- [ ] No threshold/session/event-family rescue.
 
-- [ ] Compile current movement indicator in actual MetaEditor.
-- [ ] Confirm GOLD# M1/M5/H1 history and historical probability lines.
-- [ ] Verify event triangles and selected parity timestamps.
+## Direction MT5 implementation
 
-## Prospective shadow study
+- [ ] Do **not** implement V8-B2 in MQL before positive strictly causal evidence.
+- [ ] If B2 passes, freeze exact feature equations + scaler/model coefficients.
+- [ ] Then build shadow-only direction companion.
+- [ ] Require Python/MQL parity before any human use.
 
-- [ ] Log every supported M5 event, including ignored events.
-- [ ] Store V8-A movement probabilities.
-- [ ] Store V8-B conditional side and joint probabilities.
-- [ ] Store human LONG/SHORT/WAIT/SKIP before outcome.
-- [ ] Keep actual trade execution/cost results separate from prediction metrics.
-- [ ] Do not tune a trade threshold retrospectively.
+## Validation
 
-## Final validation
-
-- [ ] Keep GOLD# 2021 locked now.
-- [ ] Freeze V8-B2 implementation/protocol first.
-- [ ] Decide once whether the V8-A/V8-B pair is mature enough to consume 2021.
-- [ ] Require MT5 runtime/feed parity before any production claim.
+- [x] Keep 2022-2026 GOLD as open development evidence.
+- [ ] Keep GOLD# 2021 locked until a genuinely causal candidate is frozen.
+- [ ] No claim-grade direction test on 2021 yet.

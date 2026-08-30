@@ -276,3 +276,48 @@ Current V8-B evidence supports M5 MA20/upper-BB/lower-BB event anchors only. H1 
 Movement probability is not a default side feature: controlled tests found that direct V8-A probability inputs and gating interactions did not improve conditional side prediction.
 
 V8-B must always be evaluated both conditionally and on the full event population, and must pass non-overlap checks before promotion.
+
+
+---
+
+## 18. Higher-timeframe availability rule — added after V8-B1 invalidation
+
+A resampled bar timestamp is normally its **start time**, not its information-availability time.
+
+Therefore every V8 feature builder must enforce:
+
+```text
+completed HTF bar is observable iff
+bar_start + timeframe_duration <= decision_time
+```
+
+Do not use:
+
+```python
+searchsorted(bar_start_times, decision_time) - 1
+```
+
+as proof that an M15/H1/H4/D1 bar is available. That can select a bar whose future remainder has not happened yet.
+
+If current partial-HTF state is desired:
+
+- reconstruct it only from lower-timeframe/raw observations strictly available before the decision;
+- update recursive indicators from that prefix;
+- never substitute the later final OHLC/indicator value of that bar.
+
+Every new multi-timeframe research phase must include at least one explicit availability audit showing `source_latest_timestamp <= decision_time` for all underlying observations, not only a bar-label check.
+The repository correction pack provides `research/ea/v8/test_v8_causal_time_alignment.py` as a minimum regression guard for this exact failure mode; equivalent or stronger tests are mandatory if the implementation changes.
+
+V8-B1 is the historical example of why this rule is mandatory: a high apparent direction AUC was invalidated because full M15/H1 bars were selected by start time.
+
+## 19. Current branch authority after V8-B1 correction
+
+```text
+V8-A movement probability = FROZEN / retained
+V8-B1 endogenous direction = INVALIDATED / closed
+V8-B2 source-of-move direction = preregistered research only
+```
+
+Do not deploy `config/v8_b1_direction_models.json`.
+
+Do not open GOLD# 2021 until a later strictly causal direction candidate or other claim-grade V8 candidate is deliberately frozen.

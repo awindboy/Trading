@@ -411,3 +411,102 @@ Do not open GOLD# 2021 yet. Freeze exact V8-B equations/coefficients, implement 
 Reason:
 
 2024-2026 are already consumed development evidence, and the V8-B formulation changed materially during this research cycle.
+
+
+---
+
+## D-V8-029 — Invalidate V8-B1 due higher-timeframe lookahead
+
+Date: `2026-08-31`
+
+Decision:
+
+The positive V8-B1 conditional-direction result committed at `0529c204...` is classified `INVALIDATED_BY_HTF_LOOKAHEAD` and may not be used as direction evidence or deployment authority.
+
+Reason:
+
+The M15/H1 feature builder selected resampled bars by start timestamp. For decisions inside a bar, this supplied the final completed OHLC/indicator values containing future observations after the decision.
+
+---
+
+## D-V8-030 — Availability time, not bar-start time, governs HTF causality
+
+Date: `2026-08-31`
+
+Decision:
+
+A completed resampled bar is observable only when:
+
+```text
+bar_start + timeframe_duration <= decision_time
+```
+
+A current partial HTF bar is allowed only if reconstructed from lower-timeframe observations already available before the decision.
+
+Reason:
+
+Bar labels identify intervals; they do not prove that the interval has finished.
+
+---
+
+## D-V8-031 — Preserve V8-A despite V8-B1 invalidation
+
+Date: `2026-08-31`
+
+Decision:
+
+V8-A movement probability remains frozen and valid as open-development evidence.
+
+Reason:
+
+The portable V8-A model uses backward M1-derived range/volatility features and does not depend on the leaky M15/H1 B1 feature path. Its Python-to-MQL equation parity is separate evidence.
+
+---
+
+## D-V8-032 — Block V8-B1 model deployment
+
+Date: `2026-08-31`
+
+Decision:
+
+`config/v8_b1_direction_models.json` is historical invalidated evidence only. No MT5 direction indicator/EA may use those coefficients.
+
+Reason:
+
+The coefficients were fit to a contaminated representation. Correcting input alignment collapses the reported direction skill.
+
+---
+
+## D-V8-033 — Open V8-B2 only as source-of-move causal direction research
+
+Date: `2026-08-31`
+
+Decision:
+
+The next direction branch is `V8-B2 SOURCE-OF-MOVE / CROSS-MARKET CAUSAL DIRECTION`.
+
+Initial external sources are limited to mechanism-linked existing development data:
+
+- USDJPY# primary context;
+- XAUEUR# primary cross-gold context;
+- BTCUSD# negative control.
+
+V8-A remains frozen.
+
+Reason:
+
+Strictly causal endogenous GOLD features do not show stable strong direction information, while financial-market evidence and prior project data support testing whether USD/cross-market source-of-move information contains incremental sign information.
+
+---
+
+## D-V8-034 — Full-population proper score is mandatory for V8-B2
+
+Date: `2026-08-31`
+
+Decision:
+
+Mover-only conditional AUC remains a diagnostic, but V8-B2 promotion requires improvement of the all-event `NO MOVE / DOWN / UP` distribution relative to corrected GOLD-only and V8-A+prior controls.
+
+Reason:
+
+Conditioning evaluation on a future-known mover population can exaggerate practical usefulness even when the conditional classifier itself is causal.

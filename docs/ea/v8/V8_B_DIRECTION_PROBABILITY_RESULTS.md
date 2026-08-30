@@ -1,7 +1,23 @@
+# INVALIDATION NOTICE — 2026-08-31
+
+**Status: `INVALIDATED_BY_HTF_LOOKAHEAD / DO NOT USE AS POSITIVE EVIDENCE`**
+
+The original V8-B1 result below is preserved for research history, but its high conditional-direction AUC is not valid. The M15/H1 feature builder selected full resampled bars by bar-start time, exposing future portions of the current HTF bar.
+
+Authoritative correction:
+
+`V8_B1_CAUSAL_ALIGNMENT_INVALIDATION.md`
+
+Corrected strictly causal 30m AUC is only about `0.579 / 0.537 / 0.521` (completed-only) across 2024/2025/2026, and the full-population joint proper score does not improve reliably in later years.
+
+Do not deploy `config/v8_b1_direction_models.json`.
+
+---
+
 # V8-B Direction Probability — Conditional Same-Horizon Research Results
 
 Date: `2026-08-31`
-Status: `POSITIVE OPEN-DEVELOPMENT EVIDENCE / NOT PRODUCTION AUTHORITY`
+Status at time of original run: `SUPERSEDED / LEAKY RESULT — SEE INVALIDATION NOTICE ABOVE`
 Market: `GOLD#`
 V8-A movement model: `FROZEN`
 Untouched reserve: `GOLD# 2021` — `LOCKED`
@@ -398,7 +414,7 @@ Before opening GOLD# 2021:
 6. prospectively log every supported M5 event;
 7. do not set a trading threshold from retrospective tails.
 
-Only after implementation/protocol freeze should the project decide whether V8-B is mature enough to consume the untouched 2021 reserve.
+Historical note from the invalidated run: this proposed next step is cancelled. GOLD# 2021 remains locked; see the invalidation notice above.
 
 ## 17. Frozen research artifacts
 

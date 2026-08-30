@@ -1,112 +1,103 @@
 # V8 Research State
 
-Status: `ACTIVE / V8-A FROZEN + V8-B DEVELOPMENT CANDIDATE`
+Status: `ACTIVE / V8-A FROZEN + V8-B1 INVALIDATED + V8-B2 PREFLIGHT`
 Date: `2026-08-31`
-Current phase: `V8-B1 CONDITIONAL DIRECTION PROBABILITY`
+Current phase: `V8-B2 SOURCE-OF-MOVE CAUSAL DIRECTION`
 Production authority: `NONE`
 EA authority: `NONE`
-Direction trade authority: `NONE`
+Direction authority: `NONE`
 
-## Phase map
+## Branch map
 
-### V8-000 through V8-004
-`COMPLETE`
+### V8-A — Movement probability
 
-See `V8_RESEARCH_JOURNEY.md` for the full sequence from representation reset through failed unconditional direction research and successful movement-intensity separation.
-
-### V8-A — movement probability
-`FROZEN / SHADOW IMPLEMENTATION`
-
-V8-A remains the existing movement-intensity branch.
+`FROZEN / POSITIVE OPEN-DEVELOPMENT EVIDENCE`
 
 Target:
 
 ```text
-P(any +/-10.0 move within H), H in {15m,30m,60m}
+P(price reaches completed-M5 close +/-10.0 within H)
+H in {15,30,60}
 ```
 
-Do not tune V8-A from V8-B results.
-
-### V8-B0 — direct/gated movement-probability-as-direction-feature hypothesis
-`COMPLETE / FALSIFIED`
-
-Adding `p15/p30/p60` directly to the conditional side model did not improve side AUC. Continuous interaction/gating models were also worse or less stable than the signed causal core.
-
-### V8-B1 — same-horizon conditional side decomposition
-`POSITIVE OPEN-DEVELOPMENT EVIDENCE`
-
-Definition:
+Portable MT5 event-subset AUC remains recorded as approximately:
 
 ```text
-q_H = P(UP first | a +/-10.0 move occurs within H, causal context)
-UP_H   = p_H*q_H
-DOWN_H = p_H*(1-q_H)
-NO_H   = 1-p_H
+15m: 0.865 / 0.873 / 0.815
+30m: 0.844 / 0.851 / 0.796
+60m: 0.807 / 0.829 / 0.781
 ```
 
-Conditional side AUC, all prior movers:
+V8-A is direction-free and unaffected by the B1 invalidation.
 
-| Horizon | 2024 | 2025 | 2026 |
-|---|---:|---:|---:|
-| 15m | 0.846 | 0.866 | 0.838 |
-| 30m | 0.895 | 0.869 | 0.823 |
-| 60m | 0.863 | 0.842 | 0.795 |
+### V8-B1 — Conditional endogenous direction
 
-Non-overlap evaluation remains strong and week-block bootstrap intervals remain well above 0.5.
+`INVALIDATED_BY_HTF_LOOKAHEAD / CLOSED`
 
-### Event suitability
+The previously committed high direction AUC used future-completed M15/H1 bars for many intrabar decisions.
 
-M5 SMA20 / upper-BB / lower-BB events retain strong V8-B information.
-
-H1 Double-B does not. Direction output remains unauthorized for Double-B.
-
-### V8-B2 — MT5 shadow implementation
-`PENDING`
-
-Requirements:
-
-- freeze exact signed-feature equations and coefficients;
-- no change to V8-A;
-- output conditional and joint probabilities separately;
-- Python/MQL parity;
-- no trade actions;
-- Double-B direction blank.
-
-### V8-006 — untouched GOLD# 2021
-`LOCKED`
-
-Do not open until V8-B2 implementation/protocol freeze if V8-B is promoted to untouched validation.
-
-## Strongest current interpretation
-
-The prior conclusion `GOLD past context -> future sign weak` was too broad.
-
-The refined finding is:
+Leak prevalence:
 
 ```text
-unconditional / eventually-resolved sign: weak and unstable
-near-term side conditional on a real expansion: materially predictable
-movement intensity itself: strongly predictable
+M15 67.78%
+H1  90.20%
 ```
 
-The side signal is dominated by signed M15/H1 progression and is weaker in the most extreme movement-intensity states.
+After strict causal realignment:
 
-## Restrictions
+```text
+completed-only 30m AUC: 0.579 / 0.537 / 0.521
+completed-only 60m AUC: 0.530 / 0.514 / 0.511
+```
 
-Do not:
+A causal current-partial M15/H1 reconstruction also fails to restore the edge.
 
-- retrofit V8-A to improve V8-B;
-- report q_H as unconditional LONG probability;
-- report p_H as directional confidence;
-- give Double-B a V8-B direction output;
-- use retrospective joint-probability tails as a trade threshold;
-- open GOLD# 2021 before implementation/protocol freeze;
-- treat overlapping event hits as independent proof.
+The B1 coefficient artifact is historical invalidated evidence only and must not be deployed.
 
-## Required current documents
+### V8-B2 — Source-of-move causal direction
 
-- `V8_B_DIRECTION_PROBABILITY_RESULTS.md`
-- `V8_RESEARCH_JOURNEY.md`
-- `HANDOFF_V8.md`
-- `DECISIONS_V8.md`
+`PRE-REGISTERED / RAW EXTERNAL DATA NOT CURRENTLY MOUNTED`
+
+Purpose:
+
+Test whether a compact external context tied to a specific failure mechanism adds directional information beyond corrected GOLD-only input while V8-A remains frozen.
+
+Initial sources:
+
+- USDJPY# — primary USD/rate-pressure proxy;
+- XAUEUR# — primary cross-gold / USD-translation separator;
+- BTCUSD# — negative-control risk/sentiment context.
+
+Full contract:
+
+`V8_B2_SOURCE_OF_MOVE_RESEARCH_CONTRACT.md`
+
+## Causal-alignment authority
+
+For every V8 branch:
+
+```text
+completed bar is observable only if
+bar_start + timeframe_duration <= decision_time
+```
+
+A current partial HTF bar may be used only when reconstructed from lower-timeframe observations available before the decision.
+
+Bar-start timestamp alone is never sufficient proof of availability.
+
+## Validation reserve
+
+```text
+GOLD# 2021 = UNTOUCHED / LOCKED
+```
+
+No V8-B result currently authorizes opening it.
+
+## Current required documents
+
+- `V8_B1_CAUSAL_ALIGNMENT_INVALIDATION.md`
+- `V8_B2_SOURCE_OF_MOVE_RESEARCH_CONTRACT.md`
 - `V8_005_MOVEMENT_PROBABILITY_INDICATOR.md`
+- `V8_RESEARCH_JOURNEY.md`
+- `DECISIONS_V8.md`
+- `HANDOFF_V8.md`

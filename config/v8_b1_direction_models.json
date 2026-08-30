@@ -473,5 +473,11 @@
         "up_rate": 0.48058697645979825
       }
     }
-  }
+  },
+  "status": "INVALIDATED_BY_HTF_LOOKAHEAD_DO_NOT_DEPLOY",
+  "deployment_authority": "NONE",
+  "invalidated_date": "2026-08-31",
+  "invalidated_reason": "M15/H1 features selected final resampled bars by bar-start timestamp, exposing future portions after decision time.",
+  "corrected_result_doc": "docs/ea/v8/V8_B1_CAUSAL_ALIGNMENT_INVALIDATION.md",
+  "replacement_research_contract": "docs/ea/v8/V8_B2_SOURCE_OF_MOVE_RESEARCH_CONTRACT.md"
 }
