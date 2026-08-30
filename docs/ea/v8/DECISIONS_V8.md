@@ -304,3 +304,110 @@ Do not promote a hard movement-probability threshold for discretionary trading f
 Reason:
 
 Retrospective selection of attractive/high-score winners would create selection bias and could manufacture an apparent human+AI edge.
+
+
+---
+
+## D-V8-022 — Freeze V8-A movement probability while V8-B is researched
+
+Date: `2026-08-31`
+
+Decision:
+
+V8-A is frozen at its current 10.0-price-unit, 15m/30m/60m movement-probability contract. V8-B research must not change V8-A features, labels, historical model policy or MT5 semantics in order to improve direction results.
+
+Reason:
+
+Movement probability already has positive open-development evidence and must remain an independent control. Direction research must not contaminate the component that already works.
+
+---
+
+## D-V8-023 — Reopen direction only as same-horizon conditional side probability
+
+Date: `2026-08-31`
+
+Decision:
+
+V8-B estimates `q_H = P(UP first | a +/-10 move occurs within H, causal context)` for the same horizons used by V8-A.
+
+Joint probabilities are:
+
+```text
+UP_H   = p_H * q_H
+DOWN_H = p_H * (1 - q_H)
+NO_H   = 1 - p_H
+```
+
+Reason:
+
+The old eventual-first-hit direction target mixed radically different resolution times. The new formulation aligns direction with the near-term movement horizon that V8-A actually predicts.
+
+---
+
+## D-V8-024 — Do not use V8-A probability as a direct V8-B direction feature by default
+
+Date: `2026-08-31`
+
+Decision:
+
+V8-B1 does not feed `p15/p30/p60` into the conditional side model. V8-A probabilities enter only through the final joint-probability multiplication.
+
+Reason:
+
+Direct movement-probability features and continuous gating interactions failed to improve side AUC and often reduced it. Extreme movement states also showed lower, not higher, side predictability.
+
+---
+
+## D-V8-025 — V8-B directional support is event-family specific
+
+Date: `2026-08-31`
+
+Decision:
+
+Current V8-B development support includes M5 SMA20, upper-BB and lower-BB contact-start events. H1 Double-B remains movement-only and has no authorized directional probability.
+
+Reason:
+
+M5 families retained strong conditional-side AUC across 2024-2026, while H1 Double-B remained approximately chance in every tested year and horizon.
+
+---
+
+## D-V8-026 — Use signed causal progression as the V8-B1 representation
+
+Date: `2026-08-31`
+
+Decision:
+
+V8-B1 uses regularized logistic modeling of signed multi-horizon price progression and completed M5/M15/H1 technical state. No hard TREND/RANGE/BREAKOUT label is supplied.
+
+Reason:
+
+The strongest single mechanism was H1 progression, but a broader signed context materially improved it. M5-only context was weak, while M15/H1 context remained informative.
+
+---
+
+## D-V8-027 — Require all-event and non-overlap validation for conditional direction
+
+Date: `2026-08-31`
+
+Decision:
+
+Conditional mover AUC is insufficient by itself. V8-B must also improve joint UP/DOWN/NO-MOVE probability on the full event population and survive outcome-blind non-overlap evaluation.
+
+Reason:
+
+Conditioning evaluation on future movers can create an attractive but operationally misleading result. The joint decomposition and non-overlap tests are required to prove practical information survives.
+
+---
+
+## D-V8-028 — Keep GOLD# 2021 locked after the V8-B discovery result
+
+Date: `2026-08-31`
+
+Decision:
+
+Do not open GOLD# 2021 yet. Freeze exact V8-B equations/coefficients, implement shadow-only output and verify parity before deciding whether V8-B is ready for untouched validation.
+
+Reason:
+
+2024-2026 are already consumed development evidence, and the V8-B formulation changed materially during this research cycle.

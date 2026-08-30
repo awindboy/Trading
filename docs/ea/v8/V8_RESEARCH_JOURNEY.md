@@ -502,3 +502,99 @@ This must be answered prospectively. Do not retrospectively choose only attracti
 `GOLD# 2021` remains untouched.
 
 Do not open it for movement-probability validation until the shadow indicator, preprocessing, model policy and evaluation claim are frozen at a claim-grade stage.
+
+
+## 24. V8-A frozen and V8-B reopened with a different question
+
+After the movement-probability branch was frozen, direction research was reopened only because the formulation changed materially.
+
+The old question was eventual first passage with no fixed time horizon. The new question is aligned to V8-A:
+
+```text
+within H, does a +/-10 move occur?        -> V8-A
+if it occurs, which side is reached first? -> V8-B
+```
+
+This preserves the successful movement model while making direction conditional on the same near-term expansion event.
+
+## 25. The proposed movement-probability gating idea was tested and rejected
+
+The first V8-B hypothesis was to feed `P15/P30/P60` into the direction model or let them gate multiple direction experts.
+
+That hypothesis did not survive.
+
+The best side model used signed causal progression without the V8-A probabilities. Adding the probabilities or their interactions was neutral-to-negative.
+
+Further regression showed why: at the most extreme movement-probability quintile, side predictability often falls. The market becomes more certain to move but less certain in sign from endogenous chart context.
+
+V8-A therefore remains a movement marginal, not a direction feature.
+
+## 26. A new positive direction result: conditional side is learnable
+
+The surprising result was that signed multi-horizon context predicted the side of a near-term expansion strongly.
+
+The strongest single mechanism was recent H1 progression. M15/H1 position and momentum added substantial information, while M5-only context was close to chance.
+
+Using all causally eligible prior movers, conditional side AUC was approximately:
+
+```text
+15m  0.846 / 0.866 / 0.838
+30m  0.895 / 0.869 / 0.823
+60m  0.863 / 0.842 / 0.795
+```
+
+This did not justify immediate promotion because the evaluation population is conditioned on a future move actually occurring.
+
+## 27. Regression against future-selection illusion
+
+To test whether the conditional AUC was operationally meaningless, V8-B was mapped back to every event:
+
+```text
+P(UP)   = P(move) * P(UP|move)
+P(DOWN) = P(move) * P(DOWN|move)
+P(NO)   = 1-P(move)
+```
+
+This full-population three-class probability improved log loss relative to the same frozen V8-A model with no side model.
+
+Therefore the conditional signal is not only an artifact of reporting performance after selecting future movers.
+
+## 28. Regression against duplicate-event inflation
+
+Evaluation was repeated with an outcome-blind non-overlap rule that does not accept a new event for H minutes after an accepted event.
+
+The side result remained strong. Week-block bootstrap confidence intervals also stayed far above 0.5.
+
+This blocks the explanation that one underlying move was simply counted repeatedly as many successful direction calls.
+
+## 29. Event-family boundary discovered
+
+The result is not universal.
+
+M5 SMA20, upper-BB and lower-BB contact-start events retained direction information.
+
+H1 Double-B did not; its side AUC remained about chance across years and horizons.
+
+This strengthens an older project lesson: Double-B is an attention/volatility event, not stable direction authority.
+
+V8-B direction is therefore not displayed for Double-B under the current contract.
+
+## 30. Current V8 architecture after V8-B1
+
+The conceptual system is now:
+
+```text
+factual M5 event
+    |
+    +--> V8-A: how likely is a 10p move within H?
+    |
+    +--> V8-B: if a move occurs, which side is structurally favored?
+
+joint UP/DOWN/NO-MOVE probabilities
+    ↓
+shadow information / human analysis
+```
+
+V8-A remains frozen. V8-B does not consume V8-A probability as a raw side feature; the two branches meet only in the probability decomposition.
+
+No trade threshold or autonomous EA authority exists yet.

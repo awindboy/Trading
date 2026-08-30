@@ -253,3 +253,26 @@ On every resumed V8 session:
 6. `docs/ea/v8/DECISIONS_V8.md`;
 7. `docs/ea/v8/RESEARCH_STATE_V8.md`;
 8. current indicator source.
+
+
+## V8-A / V8-B branch contract — 2026-08-31 addendum
+
+V8 now contains two explicitly separated probabilistic branches.
+
+### V8-A — frozen movement marginal
+
+`p_H = P(any +/-10.0 move within H)` for H=15m/30m/60m.
+
+Do not alter V8-A from V8-B research.
+
+### V8-B — conditional side
+
+`q_H = P(UP first | a move occurs within H, causal context)`.
+
+Joint probabilities are `p_H*q_H`, `p_H*(1-q_H)`, and `1-p_H`.
+
+Current V8-B evidence supports M5 MA20/upper-BB/lower-BB event anchors only. H1 Double-B has no direction authority.
+
+Movement probability is not a default side feature: controlled tests found that direct V8-A probability inputs and gating interactions did not improve conditional side prediction.
+
+V8-B must always be evaluated both conditionally and on the full event population, and must pass non-overlap checks before promotion.

@@ -1,165 +1,112 @@
 # V8 Research State
 
-Status: `ACTIVE / SHADOW IMPLEMENTATION`
+Status: `ACTIVE / V8-A FROZEN + V8-B DEVELOPMENT CANDIDATE`
 Date: `2026-08-31`
-Current phase: `V8-005A MOVEMENT PROBABILITY SHADOW INDICATOR`
+Current phase: `V8-B1 CONDITIONAL DIRECTION PROBABILITY`
 Production authority: `NONE`
 EA authority: `NONE`
-Direction authority: `NONE`
+Direction trade authority: `NONE`
 
 ## Phase map
 
-### V8-000 — Representation reset
+### V8-000 through V8-004
 `COMPLETE`
 
-V8 rejected mandatory hard TREND/RANGE/BREAKOUT/TURNING state labels and separated factual anchors from contextual meaning.
+See `V8_RESEARCH_JOURNEY.md` for the full sequence from representation reset through failed unconditional direction research and successful movement-intensity separation.
 
-### V8-001A — Causal representation foundation
-`COMPLETE / PASS`
+### V8-A — movement probability
+`FROZEN / SHADOW IMPLEMENTATION`
 
-Completed:
-
-- causal M1/M5/M15/H1 streams;
-- completed-bar/no-future boundary;
-- deterministic event ledger;
-- indicator-prefix invariance checks;
-- event/source timestamp parity;
-- event-close-centered price-coordinate audit;
-- translation-invariance audit.
-
-### V8-001B / V8-002 — Representation and direction diagnostics
-`COMPLETE / DIRECTION HYPOTHESIS WEAKENED`
-
-Findings:
-
-- exact numerical geometry retained more information than the first raster branch;
-- visual/fused complexity did not create stable direction edge;
-- future excursion magnitude was more learnable than sign;
-- simple nearest-neighbor chart similarity was not a stable directional predictor.
-
-### V8-003 — 10p direction / preprocessing tournament
-`COMPLETE / DIRECTION PATH REDIRECTED`
+V8-A remains the existing movement-intensity branch.
 
 Target:
 
 ```text
-which is reached first: C0 + 10.0 or C0 - 10.0
+P(any +/-10.0 move within H), H in {15m,30m,60m}
 ```
 
-Research included:
+Do not tune V8-A from V8-B results.
 
-- OHLC vs indicator-history input;
-- multi-lag dynamics;
-- robust normalization;
-- fractional differentiation;
-- overlap/uniqueness weighting;
-- purged chronological boundaries;
-- self-supervised reconstruction;
-- linear / LightGBM / TCN / patch models;
-- competing-risk direction+time modeling;
-- event-family splits;
-- Double-B follow-up chains;
-- one-active/non-overlap population;
-- rolling/online retraining;
-- meta-labeling.
+### V8-B0 — direct/gated movement-probability-as-direction-feature hypothesis
+`COMPLETE / FALSIFIED`
 
-Stable strong direction information was not demonstrated. A representative competing-risk direction sequence degraded from roughly `0.523 -> 0.510 -> 0.475` across 2024/2025/2026.
+Adding `p15/p30/p60` directly to the conditional side model did not improve side AUC. Continuous interaction/gating models were also worse or less stable than the signed causal core.
 
-### V8-004 — Movement-intensity separation
-`COMPLETE / POSITIVE DEVELOPMENT EVIDENCE`
+### V8-B1 — same-horizon conditional side decomposition
+`POSITIVE OPEN-DEVELOPMENT EVIDENCE`
 
-The learnable component is near-term movement intensity rather than sign.
-
-Structured multi-horizon M1 range/realized-volatility preprocessing produced strong 10p barrier-crossing discrimination over 15m/30m/60m horizons.
-
-The strongest research benchmark reached approximately:
+Definition:
 
 ```text
-15m: 2024 0.883 / 2025 0.861 / 2026 0.800
-30m: 2024 0.868 / 2025 0.844 / 2026 0.789
-60m: 2024 0.838 / 2025 0.831 / 2026 0.784
+q_H = P(UP first | a +/-10.0 move occurs within H, causal context)
+UP_H   = p_H*q_H
+DOWN_H = p_H*(1-q_H)
+NO_H   = 1-p_H
 ```
 
-The key explanatory variables were recent realized range/volatility/activity and time context, not event identity or a broad generic technical-indicator snapshot.
+Conditional side AUC, all prior movers:
 
-### V8-005A — MT5 movement-probability shadow indicator
-`IMPLEMENTED / AWAITING USER METAEDITOR COMPILE + RUNTIME PARITY`
+| Horizon | 2024 | 2025 | 2026 |
+|---|---:|---:|---:|
+| 15m | 0.846 | 0.866 | 0.838 |
+| 30m | 0.895 | 0.869 | 0.823 |
+| 60m | 0.863 | 0.842 | 0.795 |
 
-Artifact:
+Non-overlap evaluation remains strong and week-block bootstrap intervals remain well above 0.5.
 
-`mt5/indicators/V8MovementProbabilityIndicator.mq5`
+### Event suitability
 
-Portable event-subset AUC:
+M5 SMA20 / upper-BB / lower-BB events retain strong V8-B information.
 
-```text
-15m: 2024 0.865 / 2025 0.873 / 2026 0.815
-30m: 2024 0.844 / 2025 0.851 / 2026 0.796
-60m: 2024 0.807 / 2025 0.829 / 2026 0.781
-```
+H1 Double-B does not. Direction output remains unauthorized for Double-B.
 
-The indicator is non-trading and direction-free.
-
-### V8-005B — Prospective human+AI shadow study
+### V8-B2 — MT5 shadow implementation
 `PENDING`
 
-Log every supported event, all three probabilities, human discretionary direction/skip decision and eventual trade result.
+Requirements:
 
-Primary question:
+- freeze exact signed-feature equations and coefficients;
+- no change to V8-A;
+- output conditional and joint probabilities separately;
+- Python/MQL parity;
+- no trade actions;
+- Double-B direction blank.
 
-> Does human directional/trade performance improve as movement probability increases?
-
-### V8-006 — GOLD# 2021 reserve
+### V8-006 — untouched GOLD# 2021
 `LOCKED`
 
-Do not open.
+Do not open until V8-B2 implementation/protocol freeze if V8-B is promoted to untouched validation.
 
-## Current model authority
+## Strongest current interpretation
 
-The portable MT5 shadow model is a continuous-M5 walk-forward logistic representation with 53 causal M1 range/volatility features.
+The prior conclusion `GOLD past context -> future sign weak` was too broad.
 
-Historical models:
-
-```text
-2024 <- 2022-2023
-2025 <- 2022-2024
-2026 <- 2022-2025
-```
-
-Target:
+The refined finding is:
 
 ```text
-P(price reaches current completed-M5 close +/- 10.0 within H)
-H in {15m,30m,60m}
+unconditional / eventually-resolved sign: weak and unstable
+near-term side conditional on a real expansion: materially predictable
+movement intensity itself: strongly predictable
 ```
 
-No LONG/SHORT probability is authorized.
+The side signal is dominated by signed M15/H1 progression and is weaker in the most extreme movement-intensity states.
 
-## Current data interpretation
-
-The strongest V8 evidence currently supports:
-
-```text
-GOLD past context -> movement intensity / speed: strong
-GOLD past context -> future sign: weak / unstable
-```
-
-This is a research result, not a philosophical assumption. It emerged after repeated falsification of direction-oriented representations and models.
-
-## Main restrictions
+## Restrictions
 
 Do not:
 
-- convert movement probability into automatic direction;
-- claim it is liquidity probability;
-- claim it is trade win-rate probability;
-- change the 10.0 barrier without retraining;
-- apply the 2026 model historically to 2024/2025;
-- open GOLD# 2021 early;
-- retrospectively mine a discretionary threshold from selected winning screenshots.
+- retrofit V8-A to improve V8-B;
+- report q_H as unconditional LONG probability;
+- report p_H as directional confidence;
+- give Double-B a V8-B direction output;
+- use retrospective joint-probability tails as a trade threshold;
+- open GOLD# 2021 before implementation/protocol freeze;
+- treat overlapping event hits as independent proof.
 
-## Current required documents
+## Required current documents
 
-- `V8_RESEARCH_JOURNEY.md` — complete research reasoning/history;
-- `V8_005_MOVEMENT_PROBABILITY_INDICATOR.md` — current MT5 model/implementation contract;
-- `DECISIONS_V8.md` — durable decisions;
-- `HANDOFF_V8.md` — immediate continuation state.
+- `V8_B_DIRECTION_PROBABILITY_RESULTS.md`
+- `V8_RESEARCH_JOURNEY.md`
+- `HANDOFF_V8.md`
+- `DECISIONS_V8.md`
+- `V8_005_MOVEMENT_PROBABILITY_INDICATOR.md`

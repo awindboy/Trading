@@ -1,84 +1,71 @@
 # V8 Backlog
 
 Status date: `2026-08-31`
-Active phase: `V8-005A MOVEMENT PROBABILITY SHADOW INDICATOR`
+Active phase: `V8-A FROZEN / V8-B1 CONDITIONAL DIRECTION PROBABILITY`
 
-## Completed foundation
+## Completed V8-A
 
-- [x] Build deterministic causal M1/M5/M15/H1 resampler.
-- [x] Build no-future representation/audit harness.
-- [x] Implement factual Double-B / M5 MA20 / M5 BB20 event anchors.
-- [x] Record unified GOLD source SHA256/coverage.
-- [x] Implement event-close-centered price representation.
-- [x] Test visual vs exact numerical representation.
-- [x] Run numerical/visual/fused/retrieval direction diagnostics.
-- [x] Build +/-10p first-passage direction target.
-- [x] Add historical indicator sequences and dynamics.
-- [x] Run preprocessing tournament including robust normalization and fractional differentiation.
-- [x] Add purged chronological label boundaries.
-- [x] Test overlap/uniqueness weighting and one-active population.
-- [x] Test masked self-supervised reconstruction.
-- [x] Test linear / LightGBM / TCN / patch-Transformer model families.
-- [x] Test competing-risk direction+time formulation.
-- [x] Test event-family and Double-B follow-up direction hypotheses.
-- [x] Test rolling / online retraining and simple meta-labeling.
-- [x] Separate movement intensity from direction.
-- [x] Run movement-probability ablations.
-- [x] Build multi-horizon HAR/range-style movement model.
-- [x] Build portable 53-feature logistic model for MT5.
-- [x] Verify Python-to-MQL formula parity on sampled timestamps.
-- [x] Implement MT5 shadow indicator source.
+- [x] Causal M1/M5/M15/H1 foundation and event ledger.
+- [x] Event-close-centered representation audits.
+- [x] Visual vs numerical representation research.
+- [x] Unconditional +/-10 direction/preprocessing/model falsification program.
+- [x] Movement-intensity separation.
+- [x] Multi-horizon 10p movement-probability model.
+- [x] Portable 53-feature V8-A logistic model.
+- [x] Python/MQL equation parity reference.
+- [x] MT5 V8-A shadow indicator source.
+- [x] Freeze V8-A before V8-B.
 
-## Immediate runtime validation
+## Completed V8-B research
 
-- [ ] Compile `mt5/indicators/V8MovementProbabilityIndicator.mq5` in the user's actual MetaEditor.
-- [ ] Resolve any compiler warnings/errors without changing the frozen model contract.
-- [ ] Confirm GOLD# M1/M5/H1 history depth is sufficient.
-- [ ] Verify completed-M5 probability lines display historically.
-- [ ] Verify H1 Double-B and M5 MA/BB triangle timing visually.
-- [ ] Compare selected timestamps against the parity reference when feed alignment permits.
-- [ ] Verify OFF/ON non-interference: no orders, positions or EA state affected.
+- [x] Align V8-B horizon with V8-A 15m/30m/60m horizons.
+- [x] Define conditional side target `P(UP|move,H)`.
+- [x] Exclude same-first-M1 ambiguous side cases.
+- [x] Generate cross-fitted V8-A scores for direction-feature tests without movement-label leakage.
+- [x] Test V8-A probability as direct side feature.
+- [x] Test continuous movement-probability gating interactions.
+- [x] Falsify both as incremental direction improvements.
+- [x] Build signed multi-horizon causal side representation.
+- [x] Compare event-only, signed core, magnitude, movement and nonlinear models.
+- [x] Run all-event joint UP/DOWN/NO-MOVE validation.
+- [x] Run outcome-blind non-overlap evaluation.
+- [x] Run week-block bootstrap uncertainty.
+- [x] Run event-family falsification.
+- [x] Identify H1 Double-B as unsupported direction family.
+- [x] Run feature-ablation and permutation negative controls.
+- [x] Check movement-probability quintiles vs side predictability.
+- [x] Record direct three-class comparison without adopting it.
+
+## Immediate V8-B2 implementation
+
+- [ ] Freeze exact V8-B1 feature equations.
+- [ ] Fit/export walk-forward 15m/30m/60m conditional-side model coefficients.
+- [ ] Decide whether 15m remains full output or is marked lower-evidence because of early mover scarcity.
+- [ ] Implement shadow-only MT5 V8-B extension.
+- [ ] Keep V8-A source/model untouched.
+- [ ] Display `P(move)`, `P(UP|move)`, joint `P(UP)`, joint `P(DOWN)` distinctly.
+- [ ] Suppress V8-B direction on H1 Double-B markers.
+- [ ] Verify Python/MQL feature and probability parity.
+- [ ] Verify no order/trade side effects.
+
+## V8-A runtime validation still required
+
+- [ ] Compile current movement indicator in actual MetaEditor.
+- [ ] Confirm GOLD# M1/M5/H1 history and historical probability lines.
+- [ ] Verify event triangles and selected parity timestamps.
 
 ## Prospective shadow study
 
-- [ ] Create an append-only shadow log for every supported event.
-- [ ] Store 15m/30m/60m predicted probabilities before outcome.
-- [ ] Store event type and source timestamp.
-- [ ] Store human `LONG / SHORT / WAIT / SKIP` decision before outcome.
-- [ ] Store actual entry/SL/TP if traded.
-- [ ] Store ignored events as well as traded events.
-- [ ] Evaluate calibration and score-percentile separation prospectively.
-- [ ] Evaluate whether human directional/trading performance improves with movement probability.
-- [ ] Do not set a trading threshold until prospective evidence exists.
-
-## Movement-model maintenance
-
-- [ ] Define retraining procedure for 2027 before displaying post-2026 probabilities with authority.
-- [ ] Define model-version metadata embedded in the indicator/log.
-- [ ] Add optional historical percentile/activity score only if calculated causally from prior data.
-- [ ] Investigate broker-feed sensitivity after runtime parity.
-- [ ] Test whether live tick activity adds incremental value beyond the current M1 bar-derived portable features.
-
-## Direction branch — paused
-
-Do not spend the next cycle on another isolated RSI/EMA/threshold/architecture variant.
-
-Only reopen autonomous direction research if one of these exists:
-
-- materially new causal information source;
-- preregistered new formulation with a different information mechanism;
-- prospective human-direction labels that reveal a learnable filtering problem.
-
-## Strategy/campaign research — not yet authorized by movement score alone
-
-- [ ] Only after prospective evidence, test whether movement filtering improves discretionary campaign outcomes.
-- [ ] Keep spread/cost/exposure and campaign accounting explicit.
-- [ ] Prevent duplicate same-move trade credit.
-- [ ] Separate human directional edge from movement-filter contribution.
+- [ ] Log every supported M5 event, including ignored events.
+- [ ] Store V8-A movement probabilities.
+- [ ] Store V8-B conditional side and joint probabilities.
+- [ ] Store human LONG/SHORT/WAIT/SKIP before outcome.
+- [ ] Keep actual trade execution/cost results separate from prediction metrics.
+- [ ] Do not tune a trade threshold retrospectively.
 
 ## Final validation
 
-- [ ] Keep 2022-2026 as open development evidence.
-- [ ] Freeze claim-grade movement model and shadow protocol before opening GOLD# 2021.
-- [ ] Open untouched 2021 only once under the frozen protocol.
-- [ ] Require MT5 runtime/feed parity before any final claim.
+- [ ] Keep GOLD# 2021 locked now.
+- [ ] Freeze V8-B2 implementation/protocol first.
+- [ ] Decide once whether the V8-A/V8-B pair is mature enough to consume 2021.
+- [ ] Require MT5 runtime/feed parity before any production claim.
