@@ -2,374 +2,254 @@
 
 Status: `ACTIVE`
 Generation: `V8`
-Research family: `Causal Chart Representation / Event-Anchored Action Policy`
+Active branch: `Movement Probability / Human Decision Support`
 Production authority: `NONE`
 EA authority: `NONE`
+Direction authority: `NONE`
+Market: `GOLD#`
+Untouched reserve: `GOLD# 2021`
 
-## 1. Purpose
+## 1. Current V8 thesis
 
-V8 changes the representation problem, not merely the entry rule.
+V8 began as a representation-first attempt to avoid forcing ambiguous chart concepts into arbitrary deterministic labels.
 
-The project has repeatedly failed when ambiguous chart meaning was converted too early into hard labels or
-scalar thresholds such as:
+That principle remains valid, but the research has now produced a more specific empirical result:
+
+> GOLD historical context contains strong information about near-term movement intensity / barrier crossing, while stable direction information has not been demonstrated.
+
+The active V8 branch therefore focuses on **movement probability as human decision support**, not autonomous direction.
+
+## 2. Do not conflate three different questions
+
+Keep these separate:
+
+```text
+A. Is a meaningful move likely soon?
+B. Which direction will it move?
+C. Will a particular trade be profitable?
+```
+
+Current authority:
+
+- A: positive open-development evidence;
+- B: no authority;
+- C: no authority.
+
+A high movement probability must never be silently converted into LONG/SHORT or automatic entry permission.
+
+## 3. Active movement target
+
+The current human-facing target is:
+
+```text
+C0 = completed M5 decision close
+barrier = +/- 10.0 GOLD price units
+H in {15m, 30m, 60m}
+
+P(price reaches C0 + 10.0 or C0 - 10.0 within H)
+```
+
+The target is direction-free.
+
+Changing the `10.0` barrier requires retraining and renewed validation. Do not expose a runtime barrier input that reuses frozen model coefficients.
+
+## 4. Active representation
+
+The active movement model does not require visual/raster input.
+
+Use explicit causal numerical range/volatility/activity features. Current portable MT5 representation uses 53 features derived from M1 history over multiple windows including approximately:
+
+```text
+5 / 15 / 30 / 60 / 120 / 240 / 480 / 1440 M1 rows
+```
+
+Feature families include:
+
+- realized squared price changes;
+- high-low range accumulation;
+- rolling max(high)-min(low);
+- absolute close-change accumulation;
+- candle body activity;
+- current range/true-range/absolute-change state;
+- short-vs-long activity ratios;
+- time context where frozen in the model.
+
+Broad RSI/MACD/EMA accumulation is not the active path unless a controlled incremental-value test proves added movement information.
+
+## 5. Historical indicator/price representation lessons
+
+Earlier V8 research established useful general rules:
+
+- price-level variables may be represented relative to a common event close `C0` when the task requires chart-geometry invariance;
+- indicator histories can be useful representations, but adding more indicators does not create information that is absent from the underlying market path;
+- level + change/dynamics channels can be more useful than level alone;
+- preprocessing must be evaluated chronologically and causally rather than assumed from generic ML literature.
+
+Do not revive a failed normalization or architecture simply because it is fashionable in time-series research.
+
+## 6. Factual event anchors
+
+Current main-chart shadow markers:
+
+- H1 Double-B confirmation;
+- M5 SMA20 contact episode start;
+- M5 BB20 upper contact episode start;
+- M5 BB20 lower contact episode start.
+
+These events are attention anchors only.
+
+They do not encode:
 
 ```text
 TREND
 RANGE
 BREAKOUT
 TURNING
-HEALTHY_PULLBACK
-TERMINAL_EXPANSION
+LONG
+SHORT
 ```
 
-These concepts may be useful to a human after looking at a chart, but they are not assumed to have a unique,
-causally correct numerical definition.
+Event identity by itself was much weaker for movement probability than recent range/volatility state.
 
-V8 therefore tests a different claim:
+## 7. Causality rules
 
-> Preserve the causal chart geometry and precise numerical state, anchor decisions at objectively observable
-> events, learn a latent representation of context, and evaluate actions directly without requiring a hard
-> human market-state label first.
+Every model input and historical display is part of the information boundary.
 
-V8 is GOLD-only strategy research unless a later preregistered decision changes the market universe.
+Required:
 
-## 2. Core representation rule
+- use completed bars only for displayed probabilities;
+- no future-confirmed event may be marked early;
+- no future price may enter scaling or feature construction;
+- training examples must be purged if their label-resolution interval crosses a validation/evaluation boundary;
+- train/validation preprocessing must fit on past data only;
+- historical chart display must use the model that would have existed before that historical evaluation period.
 
-Do not reduce ambiguous context to a manually invented state machine before learning.
-
-The default V8 abstraction is:
+Current walk-forward display policy:
 
 ```text
-causal multi-timeframe chart geometry
-+ precise numerical sequence
-+ objectively observable event facts
-+ current position/campaign facts
-        ↓
-learned latent context z_t
-        ↓
-action-conditioned future-path / utility estimates
-        ↓
-WAIT / ENTER / HOLD / ADD / REDUCE / EXIT
+2024 <- train 2022-2023
+2025 <- train 2022-2024
+2026 <- train 2022-2025
 ```
 
-The latent representation does not need to be named `trend`, `range`, `breakout`, or `turning`.
+No current authority exists for pre-2024 display or post-2026 extrapolation.
 
-Human vocabulary may be used later for explanation, retrieval, or qualitative audit. It is not decision
-authority unless an independent experiment proves that a specific label is stable and useful.
+## 8. Direction research status
 
-## 3. Observable facts vs ambiguous interpretation
+Do not resume incremental direction feature mining as the default task.
 
-### Observable facts may be explicitly encoded
+Direction research has already tested, among other things:
 
-Examples:
+- OHLC-only and indicator-history sequences;
+- event-centered chart geometry;
+- visual and fused representations;
+- multi-lag dynamics;
+- robust normalization;
+- fractional differentiation;
+- self-supervised masked reconstruction;
+- linear / LightGBM / TCN / patch-Transformer models;
+- competing-risk direction+time heads;
+- nearest-neighbor retrieval;
+- event-family splits;
+- Double-B follow-up chains;
+- overlap weighting and one-active populations;
+- rolling / online retraining;
+- simple meta-labeling.
 
-- Double-B occurrence under the frozen mathematical detector;
-- Bollinger-band touch/pierce;
-- MA touch/cross/body-close relation;
-- session opening timestamp;
-- prior session high/low touch;
-- causally confirmed swing or S/R interaction;
-- candle OHLC geometry;
-- spread and tick activity;
-- current position, entry, stop-risk, realized/unrealized P/L;
-- whether a prior entry/add/reduction actually occurred.
+Stable strong direction information did not survive later development periods.
 
-These are observations, not claims about market meaning.
+A new direction branch requires a materially new source of information or a new preregistered causal hypothesis.
 
-### Ambiguous interpretations are not hard labels by default
+## 9. Movement-probability evidence
 
-Do not force labels such as:
+The portable continuous-M5 logistic model remains strongly discriminative when evaluated only at factual event timestamps.
 
-- fresh trend;
-- mature trend;
-- range;
-- healthy pullback;
-- terminal extension;
-- breakout Double-B;
-- basic Double-B;
-- turning Double-B.
-
-A human may use these words in qualitative discussion, but the base model must not require them as targets
-or rule gates.
-
-## 4. Hybrid chart representation
-
-V8 uses two complementary channels.
-
-### Visual / geometric channel
-
-Render causal multi-timeframe chart panels from information available at decision time only.
-
-Initial panels:
+Open-development event-subset AUC:
 
 ```text
-H1
-M15
-M5
-M1
+15m: 2024 0.865 / 2025 0.873 / 2026 0.815
+30m: 2024 0.844 / 2025 0.851 / 2026 0.796
+60m: 2024 0.807 / 2025 0.829 / 2026 0.781
 ```
 
-The renderer may include causally known overlays such as:
+These are not untouched validation results.
 
-- Bollinger A / Bollinger B;
-- selected moving averages;
-- session boundaries;
-- objectively detected event markers;
-- causally confirmed S/R levels.
+## 10. Active implementation
 
-The purpose is to preserve spatial and temporal chart relationships that are easily destroyed by scalar
-feature engineering.
+Artifact:
 
-### Numerical channel
+`mt5/indicators/V8MovementProbabilityIndicator.mq5`
 
-Preserve exact quantities required for execution and risk:
+Purpose:
 
-- OHLC;
-- spread;
-- tick activity;
-- exact indicator values;
-- timestamp/session coordinates;
-- current exposure;
-- leg entries;
-- stop-risk;
-- realized and unrealized R;
-- event metadata.
+- separate subwindow with continuous 15m/30m/60m movement-probability lines;
+- factual event triangles on the main chart;
+- configurable event-family colors;
+- marker tooltip with probabilities at the event decision time;
+- no trade/order action;
+- no direction output.
 
-Visual input does not replace precise numerical accounting.
+The current forming M5 candle must remain blank.
 
-## 5. Causal rendering rules
+## 11. Runtime validation before discretionary reliance
 
-Every rendered chart is part of the information boundary.
+Before using the indicator as a serious human filter:
 
-Therefore:
+1. compile in the user's actual MetaEditor;
+2. verify broker M1/M5/H1 history availability;
+3. verify event timing visually;
+4. compare selected timestamps against the Python parity reference where feeds match;
+5. confirm no trade/order side effects;
+6. begin prospective logging of every eligible event, including ignored events.
 
-- no future candles may be visible;
-- no future-confirmed swing may be drawn early;
-- no axis or normalization may use a future global range;
-- no future outcome annotation may enter the model input;
-- indicator lines use only completed/causally available bars;
-- event markers appear only when the event would actually be known;
-- train/validation preprocessing must not fit on future data.
+## 12. Prospective human+AI study
 
-A visually attractive chart is invalid if its construction leaks future information.
+The next practical question is not whether the movement score predicts direction.
 
-## 6. Event anchors
+It is:
 
-V8 does not require every minute to be an independent trade signal.
+> Does the trader's discretionary directional/trade performance improve as movement probability increases?
 
-Events are decision anchors: moments at which the current chart deserves re-evaluation.
+Log before outcome:
 
-Initial observable anchor families may include:
+- event;
+- 15m/30m/60m probabilities;
+- human LONG/SHORT/WAIT/SKIP;
+- actual trade parameters if any;
+- realized outcome.
 
-```text
-Double-B confirmation
-MA touch / cross / body-close interaction
-Bollinger touch / pierce / re-entry
-session-open and prior-session-boundary interaction
-causally confirmed S/R touch / break / retest
-large displacement / activity shock
-position-management milestones
-```
+Do not tune a threshold from remembered winners or selected screenshots.
 
-Double-B is a privileged research anchor because V7 already developed detector and contextual knowledge, but
-it is not the only possible V8 event.
+## 13. Campaign and final-strategy discipline
 
-The event itself does not determine LONG/SHORT.
+The original final strategy requirements remain unchanged:
 
-## 7. Decision problem
+- realized win rate at least 50%;
+- average winner meaningfully above 1R;
+- positive full-cost expectancy;
+- acceptable drawdown / loss streak / exposure;
+- no duplicate same-move trade credit;
+- preferably multiple legitimate opportunities when supported by the market.
 
-V8 does not primarily train a generic `future return is up/down` classifier.
+Movement probability is currently a decision-support input, not evidence that these strategy requirements are met.
 
-The research target is the economic consequence of available actions under the current latent context.
+## 14. Data roles
 
-When flat, the minimal action set is:
+GOLD# 2022-2026 is open/consumed development evidence.
 
-```text
-WAIT
-ENTER_LONG
-ENTER_SHORT
-```
+`GOLD# 2021` remains untouched and locked.
 
-When long:
+Do not open 2021 until a claim-grade candidate, preprocessing/model contract and evaluation protocol are frozen.
 
-```text
-HOLD
-ADD_LONG
-REDUCE_LONG
-EXIT_LONG
-```
+## 15. Required reading order
 
-When short:
+On every resumed V8 session:
 
-```text
-HOLD
-ADD_SHORT
-REDUCE_SHORT
-EXIT_SHORT
-```
-
-A later stage may add finer reduction sizes or risk actions only after the simpler action set is understood.
-
-## 8. Action-conditioned future path
-
-The model/research harness should estimate information relevant to actual trade management, such as:
-
-- MAE distribution;
-- MFE distribution;
-- probability/time to reach risk multiples;
-- probability/time to structural failure;
-- path after a pullback/retest;
-- path conditional on continuing to hold;
-- cost of changing exposure;
-- future opportunity to add/reduce.
-
-The goal is not to manufacture a single magical score.
-
-## 9. Campaign accounting
-
-Multiple entries inside one move are allowed only as explicit campaign actions.
-
-Do not repeat the old error of counting overlapping signals as independent winning trades.
-
-For every campaign record:
-
-- each leg and timestamp;
-- each leg's initial stop-risk;
-- total simultaneous exposure;
-- realized partial P/L;
-- remaining position;
-- add/reduce reason/action;
-- campaign maximum risk;
-- campaign net R;
-- campaign risk-normalized return;
-- maximum adverse excursion;
-- maximum favorable excursion.
-
-A high-frequency system must earn its frequency through genuine sequential opportunities, not duplicate
-counting of one underlying move.
-
-## 10. Indicators
-
-Indicators are allowed as representations, overlays, and exact observed variables.
-
-Do not assume:
-
-```text
-ADX high = trend
-RSI overbought = short
-CCI extreme = reversal
-MA slope > threshold = breakout
-```
-
-The value of an indicator may depend on the whole chart context.
-
-V8 specifically allows the model to learn those conditional relationships without requiring a fixed
-human-written interpretation first.
-
-## 11. V7 relationship
-
-V7 is paused and preserved as semantic/research history.
-
-V8 inherits useful observable machinery from V7, including:
-
-- Double-B detector semantics;
-- Bollinger definitions;
-- KTR/session concepts when causally available;
-- S/R and target-room lessons;
-- campaign-risk warnings;
-- the finding that Double-B side alone is not direction.
-
-V8 does **not** inherit BASIC/BREAKOUT/TURNING as mandatory classifier labels.
-
-Do not retrospectively rewrite V7 results.
-
-## 12. V4 relationship
-
-V4 correctly identified the representation-level problem:
-
-```text
-human-defined state -> rule
-```
-
-should be challenged by:
-
-```text
-causal sequence -> learned latent state -> policy
-```
-
-V8 does not simply reopen V4.
-
-Differences:
-
-- GOLD-only strategic objective;
-- visual chart geometry is first-class input;
-- event-anchored decision points;
-- action-conditioned path/campaign problem rather than generic next-return prediction;
-- explicit add/reduce/hold/exit lifecycle;
-- V7 chart semantics used as observable context, not hard market-state labels.
-
-## 13. Data roles
-
-All GOLD# 2022-2026 evidence is considered open/consumed for V8 development because these years have already
-been inspected by prior research or the current project.
-
-They may be used for chronological development diagnostics, but not claimed as pristine final validation.
-
-Current untouched reserve recorded by the repository:
-
-```text
-GOLD# 2021
-```
-
-Do not open GOLD# 2021 until a V8 candidate, preprocessing pipeline, model selection protocol, action policy,
-and evaluation procedure are frozen.
-
-## 14. Research progression
-
-### V8-001 — Causal representation foundation
-Build and verify chart renderer, numerical stream, event anchors, campaign state and strict information boundary.
-
-### V8-002 — Representation / retrieval diagnostics
-Test whether learned representations preserve recurring chart-context information better than hand-engineered
-scalar baselines. Use nearest-neighbor retrieval and future-hidden diagnostics.
-
-### V8-003 — Action-conditioned path model
-Estimate future path consequences of flat/long/short and simple campaign actions.
-
-### V8-004 — Sequential campaign controller
-Evaluate one-position/campaign replay with costs and explicit exposure accounting.
-
-### V8-005 — Freeze
-Freeze the representation, event population, controller and risk architecture.
-
-### V8-006 — Untouched validation
-Only after V8-005, open the untouched temporal reserve.
-
-## 15. Hard restrictions
-
-Do not:
-
-- create a new hard `TREND/RANGE/BREAKOUT/TURNING` classifier merely to make the problem look interpretable;
-- tune arbitrary visual window lengths from P/L without a preregistered reason;
-- allow future information into chart rendering;
-- optimize on the untouched reserve;
-- count overlapping same-move decisions as independent trades;
-- report event-level expectancy as campaign expectancy;
-- use a black-box model without same-input baselines and ablations;
-- promote a model because one year/session looks good;
-- use RL to rescue a representation with no demonstrated information value;
-- modify production EA logic from V8 development results.
-
-## 16. Final strategy requirements
-
-The project goal remains demanding:
-
-- realized win rate at least 50%, with the research objective materially higher;
-- average positive payoff meaningfully above 1R and preferably near/above 2R;
-- clearly positive full-cost expectancy;
-- target final average net expectancy of approximately +1R/trade if evidence supports it;
-- multiple executable opportunities when the chart legitimately presents them;
-- acceptable drawdown, exposure and loss-streak behavior;
-- no hidden hindsight or duplicate-event inflation.
-
-Frequency is an objective, not permission to lower evidence quality.
+1. refresh GitHub HEAD;
+2. `docs/ea/v8/AGENTS_V8.md`;
+3. `docs/ea/v8/HANDOFF_V8.md`;
+4. `docs/ea/v8/V8_RESEARCH_JOURNEY.md`;
+5. `docs/ea/v8/V8_005_MOVEMENT_PROBABILITY_INDICATOR.md`;
+6. `docs/ea/v8/DECISIONS_V8.md`;
+7. `docs/ea/v8/RESEARCH_STATE_V8.md`;
+8. current indicator source.

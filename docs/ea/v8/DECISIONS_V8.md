@@ -13,8 +13,7 @@ Decision:
 
 Reason:
 
-The next bottleneck is not another V7 threshold or archetype rule. It is how ambiguous chart context is
-represented for machine decision making.
+The next bottleneck is not another V7 threshold or archetype rule. It is how ambiguous chart context is represented for machine decision making.
 
 ---
 
@@ -38,10 +37,7 @@ TERMINAL_EXPANSION
 
 Reason:
 
-These terms can be meaningful to a human while lacking a unique causal numerical definition. Creating
-threshold definitions would risk substituting a proxy for the phenomenon being studied.
-
-They may remain human explanatory vocabulary.
+These terms can be meaningful to a human while lacking a unique causal numerical definition. Creating threshold definitions would risk substituting a proxy for the phenomenon being studied.
 
 ---
 
@@ -51,33 +47,23 @@ Date: `2026-08-30`
 
 Decision:
 
-Objectively observable events may be encoded explicitly.
+Objectively observable events may be encoded explicitly, but the event does not automatically determine direction or archetype.
 
-Examples include Double-B, MA interaction, Bollinger interaction, session-boundary interaction, causal S/R
-interaction and displacement events.
-
-The event does not automatically determine direction or archetype.
-
-Reason:
-
-A common event can be actionable in many different ways depending on the surrounding chart. The anchor and
-its meaning must remain separate.
+Examples include Double-B, MA interaction, Bollinger interaction, session-boundary interaction, causal S/R interaction and displacement events.
 
 ---
 
-## D-V8-004 — Use hybrid visual + numerical representation
+## D-V8-004 — Start with hybrid visual + numerical representation
 
 Date: `2026-08-30`
 
 Decision:
 
-V8 will treat multi-timeframe rendered chart geometry as a first-class input and retain an exact numerical
-sequence in parallel.
+The initial V8 representation tournament will compare rendered multi-timeframe chart geometry and exact numerical sequence information.
 
 Reason:
 
-Rendering does not create new market information, but it preserves spatial/temporal relationships and gives
-the model a different inductive bias. Numerical input remains necessary for exact risk, spread and execution.
+Rendering may preserve spatial/temporal relationships while numerical input preserves exact execution quantities. This was an initial hypothesis, not permanent authority.
 
 ---
 
@@ -87,31 +73,17 @@ Date: `2026-08-30`
 
 Decision:
 
-The model may learn an unlabeled latent representation `z_t`.
-
-We do not require each latent region to be named.
-
-Reason:
-
-The economic decision can be tested directly without proving that a particular human label is the uniquely
-correct description of the market.
+The model may learn an unlabeled latent representation `z_t`; each latent region does not need a human market-state name.
 
 ---
 
-## D-V8-006 — Action-conditioned path is preferred over generic next-return prediction
+## D-V8-006 — Prefer path/action questions over generic terminal-return prediction
 
 Date: `2026-08-30`
 
 Decision:
 
-V8 will eventually estimate the consequence of WAIT/ENTER/HOLD/ADD/REDUCE/EXIT under the current context.
-
-Generic 15m up/down prediction may remain a diagnostic baseline but is not the central V8 formulation.
-
-Reason:
-
-The user's target behavior is sequential campaign management, including re-entry/add-on and partial profit
-taking as the chart evolves.
+Generic future-up/down classification is a diagnostic baseline, not the final V8 formulation. V8 should eventually reason about path and action consequences.
 
 ---
 
@@ -121,13 +93,11 @@ Date: `2026-08-30`
 
 Decision:
 
-Multiple actions in one underlying move must be grouped under one campaign with explicit total risk and
-exposure.
+Multiple actions inside one underlying move must be grouped under one campaign with explicit total risk and exposure.
 
 Reason:
 
-Previous research found that counting overlapping high-confidence signals as separate trades can manufacture
-a false edge.
+Counting overlapping high-confidence signals as independent trades can manufacture a false edge.
 
 ---
 
@@ -140,11 +110,6 @@ Decision:
 - GOLD# 2022-2026: open/consumed V8 development evidence.
 - GOLD# 2021: untouched final temporal reserve.
 
-Reason:
-
-Prior project work has already inspected 2022-2026 in various forms. V8 must not relabel them pristine simply
-because the new representation is different.
-
 ---
 
 ## D-V8-009 — Representation correctness precedes profitability
@@ -153,10 +118,7 @@ Date: `2026-08-30`
 
 Decision:
 
-The first V8 deliverable is the causal chart/numerical representation and audit harness.
-
-No new strategy will be promoted from P/L before future-leakage, timestamp parity, event timing and campaign
-state are verified.
+No V8 strategy is promoted from P/L before future-leakage, timestamp parity, event timing and representation correctness are verified.
 
 ---
 
@@ -170,5 +132,175 @@ Visual, numerical and fused representations must be compared using the same caus
 
 Reason:
 
-The hypothesis is about representation and inductive bias, not about adding information that does not exist
-in the underlying market data.
+The hypothesis concerns representation/inductive bias, not adding information that does not exist in the market data.
+
+---
+
+## D-V8-011 — De-scope visual input from the active base path
+
+Date: `2026-08-31`
+
+Decision:
+
+Visual/raster input is no longer required for the active V8 movement-probability path. Exact causal numerical information is preferred unless a later controlled test demonstrates incremental visual value.
+
+Reason:
+
+Low-resolution visual encoding lost information relative to exact numerical geometry, while larger model architecture did not fix the active bottleneck.
+
+---
+
+## D-V8-012 — Use event-close-centered coordinates for price-level representation
+
+Date: `2026-08-31`
+
+Decision:
+
+When V8 represents chart geometry around a decision/event anchor, all price-level variables share `C0 = event/source candle close` and are transformed as `x - C0`.
+
+Reason:
+
+This removes absolute GOLD price-era translation while preserving relative geometry across timeframes. Magnitude/oscillator variables are not shifted by `C0`.
+
+---
+
+## D-V8-013 — Fix the human-facing movement barrier at +/-10.0 price units
+
+Date: `2026-08-31`
+
+Decision:
+
+The current discretionary-support movement target is whether GOLD reaches either `C0 + 10.0` or `C0 - 10.0` within 15/30/60 elapsed minutes.
+
+Reason:
+
+This directly measures meaningful short-horizon price movement without pretending to know direction. The barrier must not be changed without retraining.
+
+---
+
+## D-V8-014 — Separate movement intensity from direction
+
+Date: `2026-08-31`
+
+Decision:
+
+V8 treats `movement likely` and `which direction` as separate research questions. Strong movement-probability evidence does not authorize LONG/SHORT output.
+
+Reason:
+
+Direction models remained near chance or unstable across extensive diagnostics while movement-intensity models were consistently discriminative.
+
+---
+
+## D-V8-015 — Purge training labels that resolve across evaluation boundaries
+
+Date: `2026-08-31`
+
+Decision:
+
+A training example is not eligible merely because its decision timestamp precedes an evaluation boundary. Its outcome/label resolution must also occur before the boundary.
+
+Reason:
+
+A late-period event whose +/-10p outcome resolves in the evaluation period leaks evaluation prices into the training label.
+
+---
+
+## D-V8-016 — Do not rescue weak direction with preprocessing or architecture mining
+
+Date: `2026-08-31`
+
+Decision:
+
+Robust normalization, fractional differentiation, masked pretraining, overlap weighting, larger neural models, event-family splitting, rolling retraining and meta-labeling are not default rescue paths for V8 direction.
+
+Reason:
+
+They were directly tested and did not produce stable strong future-hidden directional information. A reopened direction branch requires a materially new causal source or formulation.
+
+---
+
+## D-V8-017 — Treat multi-horizon realized range/volatility as the active movement representation
+
+Date: `2026-08-31`
+
+Decision:
+
+The active movement-probability branch prioritizes causal multi-horizon range, realized-variation and activity structure rather than broad generic technical-indicator accumulation.
+
+Reason:
+
+Ablations showed that recent range/volatility/activity carried most of the movement information, while event identity and broad indicator snapshots added little.
+
+---
+
+## D-V8-018 — Promote movement probability to MT5 shadow-development
+
+Date: `2026-08-31`
+
+Decision:
+
+Implement a non-trading MT5 indicator that displays continuous 15m/30m/60m movement probabilities and factual event markers.
+
+Reason:
+
+A portable walk-forward logistic model retains strong event-subset discrimination across 2024-2026 and can be translated to MQL with floating-point parity.
+
+---
+
+## D-V8-019 — Historical probability display must be walk-forward causal
+
+Date: `2026-08-31`
+
+Decision:
+
+Historical MT5 values use the model that existed before that evaluation calendar year:
+
+```text
+2024 <- 2022-2023
+2025 <- 2022-2024
+2026 <- 2022-2025
+```
+
+No pre-2024 value is shown by the current model pack.
+
+Reason:
+
+Using one final model across old history would create visually convincing but look-ahead-contaminated historical probabilities.
+
+---
+
+## D-V8-020 — Movement probability is a human filter, not trade authority
+
+Date: `2026-08-31`
+
+Decision:
+
+The active near-term product hypothesis is human-assisted discretionary filtering:
+
+```text
+factual event
++ movement probability
+        ↓
+human chart analysis
+        ↓
+LONG / SHORT / WAIT / SKIP
+```
+
+Reason:
+
+Current evidence supports movement-intensity discrimination but not stable autonomous direction or trade expectancy.
+
+---
+
+## D-V8-021 — Prospective logging is required before a trading threshold
+
+Date: `2026-08-31`
+
+Decision:
+
+Do not promote a hard movement-probability threshold for discretionary trading from retrospective chart review. Log every supported event and the human decision prospectively first.
+
+Reason:
+
+Retrospective selection of attractive/high-score winners would create selection bias and could manufacture an apparent human+AI edge.

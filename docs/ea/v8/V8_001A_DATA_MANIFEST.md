@@ -1,7 +1,8 @@
 # V8-001A Data Manifest
 
-Status: `OPEN DEVELOPMENT SOURCE`
+Status: `OPEN DEVELOPMENT SOURCE / STILL AUTHORITATIVE FOR CURRENT V8 DATA LINEAGE`
 Date recorded: `2026-08-30`
+Last reviewed: `2026-08-31`
 
 ## Source
 
@@ -30,12 +31,17 @@ Expected columns:
 
 ## V8 role
 
-This file is open development evidence.
+This file remains the open development source used by the current V8 representation, direction-falsification and movement-probability research.
 
-All years contained in it are treated as consumed/open for final-claim purposes because prior/current project
-research has already inspected these periods.
+All years contained in it are treated as consumed/open for final-claim purposes because prior/current project research has already inspected these periods.
 
 It may support chronological development diagnostics but cannot become a pristine V8 holdout.
+
+## Important chronological rule added during V8-003
+
+For labels that resolve after the decision timestamp, chronological evaluation must purge a training event if the event's label-resolution time crosses the next evaluation boundary.
+
+A decision occurring before an evaluation year is not sufficient by itself to make the sample eligible for training.
 
 ## Untouched temporal reserve
 
@@ -43,8 +49,12 @@ It may support chronological development diagnostics but cannot become a pristin
 GOLD# 2021
 ```
 
-The 2021 reserve is not present in this manifest and must not be opened before V8-005 freeze.
+The 2021 reserve is not present in this manifest and remains unopened.
+
+Do not open it merely because the project is currently in phase name `V8-005A`. The reserve stays locked until a **claim-grade candidate and evaluation protocol are frozen**, not simply until a phase number is reached.
 
 ## Repository policy
 
-The raw CSV is intentionally not included in the document-update ZIP and should not be committed by this pack.
+The raw CSV is intentionally not committed to Git by the current update package.
+
+Small reproducibility artifacts such as model parity references may be committed under `ledgers/v8/`.

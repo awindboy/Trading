@@ -31,6 +31,16 @@
     "tradingView": {
       "indicator": "tradingview/ict_cockpit_indicator.pine",
       "mt5Indicator": "mt5/indicators/ICTCockpitIndicator.mq5"
+    },
+    "v8MovementProbabilityShadow": {
+      "status": "SHADOW_IMPLEMENTED_AWAITING_METAEDITOR_RUNTIME_PARITY",
+      "indicator": "mt5/indicators/V8MovementProbabilityIndicator.mq5",
+      "handoff": "docs/ea/v8/HANDOFF_V8.md",
+      "researchJourney": "docs/ea/v8/V8_RESEARCH_JOURNEY.md",
+      "modelContract": "docs/ea/v8/V8_005_MOVEMENT_PROBABILITY_INDICATOR.md",
+      "parityReference": "ledgers/v8/V8MovementProbabilityParityReference.csv",
+      "directionAuthority": "NONE",
+      "productionAuthority": "NONE"
     }
   },
   "artifactPolicy": {
