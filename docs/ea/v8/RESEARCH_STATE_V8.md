@@ -1,120 +1,106 @@
 # V8 Research State
 
-Status: `ACTIVE / V8-A FROZEN + INTERNAL V8-B RESEARCH`
+Status: `ACTIVE / V8-A FROZEN + V8-B LOCAL-SEQUENTIAL RESEARCH`
 Date: `2026-08-31`
 Production authority: `NONE`
 EA authority: `NONE`
 Direction authority: `NONE`
 
-## V8-A — Movement probability
+## V8-A
 
 `FROZEN / POSITIVE OPEN-DEVELOPMENT EVIDENCE`
 
-The portable 53-feature M1-derived model remains the active movement-intensity component.
-
-It estimates:
+Target:
 
 ```text
-P(reach C0 +/-10.0 within 15m/30m/60m)
+P(reach C0 +/-10 within 15m / 30m / 60m)
 ```
 
-It is not a LONG/SHORT or trade-win probability.
+V8-A remains direction-free.
 
 ## V8-B1
 
 `INVALIDATED_BY_HTF_LOOKAHEAD / CLOSED`
 
-The previously high conditional direction AUC cannot be used.
+Do not deploy old coefficients.
 
-Strictly causal realignment reduced the broad direction result toward chance in later development years.
+## External direction branch
 
-## External source-of-move branch
+`DE-SCOPED`
 
-`DE-SCOPED / HISTORICAL PROPOSAL`
+Not active.
 
-External/cross-market research is not the active branch after the user chose to continue with GOLD-internal information plus frozen V8-A.
+## Current V8-B branch
 
-## Internal V8-B research
+`LOCAL / SEQUENTIAL DIRECTION TARGET RESEARCH`
 
-`ACTIVE RESEARCH / NO DIRECTION AUTHORITY`
+The project tested whether direction becomes learnable when the target itself is narrowed in the same spirit as V8-A.
 
-Research performed after B1 invalidation:
+### Failed or weak local targets
 
-- V8-A probability snapshot and trajectory;
-- probability slopes/acceleration/hazard shape;
-- price + probability joint sequences;
-- TCN joint-sequence model;
-- event-centered causal geometry;
-- causal volatility/probability regime canonicalization;
-- directional semivariance/body/wick/activity features;
-- V8-A + directional-activity interaction;
-- score fusion and stacking;
-- all-M5 direction training controls;
-- recent-year / rolling retraining controls;
-- event-family diagnostics;
-- selective confidence tails;
-- exact independent rebuild;
-- delayed-event posterior diagnostics with mandatory recenter correction.
+- 5/10/15/30/60m future-close sign;
+- future local slope;
+- up/down excursion dominance;
+- +/-1, +/-2, +/-3 micro barriers;
+- V8-A-weighted direction loss;
+- future-magnitude-weighted direction loss;
+- simple WAIT 1/3/5m -> recenter -> endpoint sign.
 
-## Current result
+These remained near chance or weakened materially by 2025/2026.
 
-No tested internal representation has demonstrated a stable broad direction edge across 2024 -> 2025 -> 2026.
+### Independent touch formulation
 
-Promising 2024 results repeatedly weakened in 2025 and approached chance in 2026.
+2024 individual probabilities for `+10 touched` and `-10 touched` were learnable, but the directional difference between them weakened in later years. This indicates substantial shared movement-intensity information.
 
-The independently reconstructed selective direction model produced approximately:
+### Weakest surviving direction clue
+
+The 15m exclusive-direction target:
 
 ```text
-30m AUC: 2025 0.533 / 2026 0.520
-60m AUC: 2025 0.516 / 2026 0.506
++10 only
+vs
+-10 only
 ```
 
-Adding V8-A can materially increase the probability that a 10p move occurs, but this must not be confused with direction skill.
-
-## Directional-excess rule
-
-Use:
+produced approximately:
 
 ```text
-directional_excess =
-chosen_side_hit_rate - 0.5 * move_rate
+2024 0.603
+2025 0.556
+2026 0.535
 ```
 
-as a mandatory companion metric.
-
-High `chosen_side_hit_rate` with near-zero directional excess is movement filtering, not direction edge.
-
-## Exact V8-A trajectory infrastructure
-
-An exact continuous completed-M5 V8-A probability series was independently reconstructed for 2024-2026.
-
-This enables causal tests of:
-
-- current probability;
-- 5/15/30/60-minute probability history;
-- probability slope and acceleration;
-- event interaction;
-- sequential posterior state.
-
-The final exact trajectory/event matrix is still the immediate unfinished internal diagnostic.
-
-## Remaining active hypothesis
-
-The most credible remaining internal-only formulation is not a forced one-shot LONG/SHORT classifier.
-
-It is:
+A simple recent-15m direction-efficiency baseline was roughly:
 
 ```text
-event
--> V8-A says attention/movement state
--> WAIT when direction evidence is weak
--> observe new causal GOLD evidence
--> recenter C0 at the new decision
--> update/enter only if direction evidence appears
+0.639 / 0.577 / 0.531
 ```
+
+This is not sufficient for direction authority.
+
+## Sequential result
+
+Fully recentered:
+
+```text
+WAIT 1/3/5m
+new C0
+predict next 5/10/15m endpoint sign
+```
+
+remained around AUC 0.50-0.52.
+
+Therefore simple post-event confirmation by endpoint sign is rejected.
+
+## Immediate active test
+
+Combine:
+
+- fixed WAIT 1/3/5m;
+- mandatory recentering;
+- next 15m `+10 only` vs `-10 only` exclusive direction target;
+- full-population evaluation afterward.
 
 ## Reserve
 
 `GOLD# 2021 = LOCKED / UNTOUCHED`
-
-No current direction candidate justifies consuming it.

@@ -1,70 +1,70 @@
 # V8 Backlog
 
 Status date: `2026-08-31`
-Active phase: `V8-B INTERNAL-ONLY DIRECTION / SEQUENTIAL EVIDENCE`
+Active phase: `V8-B LOCAL / SEQUENTIAL DIRECTION`
 
 ## V8-A — frozen
 
-- [x] +/-10.0, 15m/30m/60m movement target.
+- [x] +/-10, 15m/30m/60m movement target.
 - [x] Portable 53-feature causal M1 model.
 - [x] MT5 movement-probability indicator.
-- [x] Python/MQL equation parity.
-- [x] Exact continuous 2024-2026 M5 probability reconstruction for internal research.
-- [ ] Keep V8-A unchanged while direction research continues.
+- [x] Python/MQL parity.
+- [x] Continuous V8-A research series.
+- [ ] Do not change V8-A to rescue direction.
 
-## Direction corrections
+## Corrective history
 
-- [x] Invalidate V8-B1 M15/H1 lookahead.
-- [x] Add permanent HTF availability regression guard.
-- [x] Cancel stale B1 MT5 direction implementation.
-- [x] Reject delayed-response results that keep the original C0 after waiting.
-- [x] Independently rebuild selective direction tails.
-- [x] Reject non-reproducible 70-90% direction-tail result.
-- [x] Separate movement-filter effect from direction via directional excess.
+- [x] Invalidate B1 HTF lookahead.
+- [x] Reject original-C0 delayed-response illusion.
+- [x] Reject non-reproducible selective 70-90% direction tail.
+- [x] De-scope external/cross-market branch.
+- [x] Require directional-excess accounting.
 
-## Internal-only V8-B experiments completed
+## Local direction experiments completed
 
-- [x] V8-A snapshot as direction input.
-- [x] V8-A trajectory / slope / acceleration / shape.
-- [x] Price + V8-A joint sequence.
-- [x] Small temporal CNN.
-- [x] Event-centered geometry.
-- [x] Causal regime canonicalization.
-- [x] Directional semivariance/body/wick/activity decomposition.
-- [x] Tick-activity / signed price-impact proxies.
-- [x] Score fusion / stacking.
-- [x] All-M5 direction training.
-- [x] Recent-year / rolling-retraining controls.
-- [x] Event-family direction diagnostics.
-- [x] Confidence-tail selection.
-- [x] Exact independent B28 reconstruction.
-- [x] Non-overlap and cluster-bootstrap checks on exact rebuild.
+- [x] Future close sign at 15/30/60m.
+- [x] Event-only future-close training.
+- [x] 5/10/15m ultra-local future-close sign.
+- [x] Direction-only signed representation.
+- [x] Future excursion-dominance target.
+- [x] Independent +10 / -10 touch models.
+- [x] Mirrored symmetric direction model.
+- [x] 15/30/60m exclusive +10-only vs -10-only target.
+- [x] +/-1/2/3 micro barriers.
+- [x] V8-A sample weighting.
+- [x] Future-magnitude sample weighting.
+- [x] Future local-slope direction.
+- [x] WAIT 1/3/5m -> recenter -> next 5/10/15m endpoint sign.
 
-## Immediate internal research
+## Current next experiment
 
-- [ ] Finish exact V8-A trajectory × event-family matrix.
-- [ ] Test V8-A rising/falling/extreme-state interactions without outcome-tuned thresholds.
-- [ ] Build sequential WAIT policy with fixed observation delays.
-- [ ] At every delayed decision reset C0 and targets to current price +/-10.0.
-- [ ] Compare t=0 vs t=+1/+3/+5/+10m under identical recentered targets.
-- [ ] Report move rate, conditional direction accuracy, chosen hit and directional excess.
-- [ ] Report MAE/MFE and whether opposite barrier/path damage occurs first.
-- [ ] Run outcome-blind non-overlap.
-- [ ] Split robustness by month, hour, event family and predicted direction.
-- [ ] Use weekly/monthly block bootstrap.
-- [ ] If no stable direction remains, stop retrospective feature mining and move to prospective human-direction labels.
+- [ ] Build delayed decision rows for WAIT 1m / 3m / 5m.
+- [ ] Recenter C0 at each delayed decision.
+- [ ] Define next-15m exclusive direction:
+  - [ ] +10 only = UP.
+  - [ ] -10 only = DOWN.
+  - [ ] both/neither excluded from direction training.
+- [ ] Train only on chronological past exclusive-direction rows.
+- [ ] Apply the model to all delayed event decisions.
+- [ ] Compare with t=0 15m exclusive-direction control.
+- [ ] Compare with simple recent-15m direction-efficiency baseline.
+- [ ] Combine with frozen V8-A only after direction contribution is separately measured.
 
-## Explicitly de-scoped
+## Required robustness
 
-- [x] External/cross-market V8-B2 source-of-move branch is not active.
-- [ ] Do not reopen external markets without an explicit project decision.
+- [ ] 2024 discovery -> 2025 validation -> 2026 stress.
+- [ ] outcome-blind non-overlap.
+- [ ] week/month block bootstrap.
+- [ ] month/hour/event-family/predicted-direction breakdown.
+- [ ] move rate vs conditional direction vs directional excess.
+- [ ] MAE/MFE and opposite-side path.
 
 ## MT5 direction implementation
 
-- [ ] No direction companion yet.
-- [ ] Only implement after a strictly causal, independently reproducible candidate survives 2024 discovery -> 2025 validation -> 2026 stress.
+- [ ] None authorized.
+- [ ] Implement only after strict causal and independently reproducible validation.
 
-## Final validation
+## Reserve
 
-- [x] 2022-2026 remain open development.
-- [ ] Keep GOLD# 2021 locked.
+- [x] 2022-2026 consumed development evidence.
+- [ ] GOLD# 2021 remains locked.

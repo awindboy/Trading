@@ -4,101 +4,107 @@ Status: `ACTIVE`
 Generation: `V8`
 Active branches:
 - `V8-A MOVEMENT PROBABILITY` — FROZEN
-- `V8-B INTERNAL-ONLY DIRECTION RESEARCH` — ACTIVE RESEARCH / NO AUTHORITY
+- `V8-B LOCAL / SEQUENTIAL DIRECTION` — ACTIVE RESEARCH / NO AUTHORITY
 Production authority: `NONE`
 EA authority: `NONE`
 Direction authority: `NONE`
 Market: `GOLD#`
 Untouched reserve: `GOLD# 2021`
 
-## 1. Current empirical thesis
+## 1. Current thesis
 
-V8-A has strong open-development evidence that causal GOLD history contains useful information about near-term movement intensity / +/-10.0 barrier crossing.
+V8-A retains strong open-development evidence for short-horizon movement intensity. V8-B remains separate and must not convert movement probability into LONG/SHORT authority.
 
-Direction remains a separate problem. Repeated strictly causal internal-only direction studies have not yet demonstrated a stable broad LONG/SHORT edge across 2024/2025/2026.
+The active V8-B question is now narrow:
 
-Do not convert V8-A into a direction or trade signal.
+> Can direction become learnable when V8-B is trained only on a local short-horizon sign target, analogous to V8-A's localized movement target?
 
-## 2. V8-A is frozen
+## 2. V8-A remains frozen
 
-Do not change to rescue V8-B:
+Do not change:
 
 ```text
 C0 = completed M5 decision close
-barrier = +/-10.0 GOLD price units
+barrier = +/-10 GOLD price units
 H = 15m / 30m / 60m
-portable representation = frozen 53-feature causal M1 model
-historical models = walk-forward by year
+53-feature causal M1 movement representation
+walk-forward historical model policy
 ```
 
-Primary artifact:
+## 3. Internal-only direction
 
-`mt5/indicators/V8MovementProbabilityIndicator.mq5`
+External/cross-market data are de-scoped unless explicitly reopened.
 
-V8-A remains direction-free.
+V8-B may use only causal GOLD information plus frozen V8-A state.
 
-## 3. Direction research is internal-only unless explicitly reopened
+## 4. Permanent causality rules
 
-The user decided that external/cross-market source-of-move inputs are not the active direction path.
-
-Do not use USDJPY, XAUEUR, BTCUSD, DXY, yields or other external markets as the default V8-B research source.
-
-A future external branch requires an explicit project decision to reopen it.
-
-## 4. Permanent causality boundary
-
-For every resampled timeframe:
+Completed resampled bars are available only when:
 
 ```text
-completed bar observable iff
 bar_start + timeframe_duration <= decision_time
 ```
 
-A current partial HTF bar may be used only if rebuilt from lower-timeframe observations already available before the decision.
+Current partial HTF inputs must be rebuilt from already-observed lower-timeframe data.
 
-Never infer availability from bar-start timestamp alone.
+Outcome windows crossing an evaluation boundary must be purged from training.
 
-Training rows whose outcome window crosses a validation/evaluation boundary must be purged.
+## 5. Invalidated evidence
 
-## 5. Invalidated direction evidence
+Do not revive:
 
-The high V8-B1 direction AUC committed before the causal-alignment audit is invalid.
+- original B1 high-AUC HTF model;
+- selective 70-90% tail artifact that failed exact reconstruction;
+- delayed-response results using original event C0 after observing new price.
 
-Cause:
+## 6. Local-target findings
 
-- M15/H1 `label=left` bars were selected by start timestamp;
-- later prices inside the same HTF interval entered the model.
+Tested and not stable:
 
-The old `config/v8_b1_direction_models.json` is historical invalidated evidence only and must never be deployed.
+- 5/10/15/30/60m future-close sign;
+- future local slope;
+- excursion dominance;
+- +/-1/2/3 micro barriers;
+- V8-A-weighted direction loss;
+- future-magnitude-weighted direction loss;
+- simple WAIT 1/3/5m -> recenter -> endpoint sign.
 
-## 6. Internal V8-B research lessons
+The only weakly persistent local clue is 15m exclusive direction:
 
-The following have been tested and did not produce a stable broad direction edge after temporal validation:
+```text
++10 only -> UP
+-10 only -> DOWN
+both/neither -> not direction-training rows
+```
 
-- price/indicator sequences;
-- visual/fused direction models;
-- robust normalization and fractional differentiation;
-- self-supervised reconstruction;
-- TCN / Transformer / LightGBM / logistic variants;
-- nearest-neighbor/meta-labeling;
-- event-family direction splits;
-- V8-A P15/P30/P60 as raw direction features;
-- V8-A probability slopes, acceleration and shape;
-- event-centered price geometry + V8-A trajectory;
-- regime-normalized V8-A probability state;
-- directional semivariance/body/wick decomposition;
-- signed tick-activity / price-impact proxies;
-- low-dimensional score fusion and stacking;
-- rolling/recent-year retraining;
-- direction-confidence selective tails after exact independent rebuild.
+Approximate AUC:
 
-A good 2024 discovery result is not sufficient. If 2025/2026 collapses, do not threshold-tune to save it.
+```text
+2024 0.603
+2025 0.556
+2026 0.535
+```
 
-## 7. Selective-direction accounting rule
+This is research evidence only.
 
-A high chosen-side hit rate can be manufactured by a strong movement filter even when direction is random.
+## 7. Recenter every delayed decision
 
-Always report:
+For sequential studies:
+
+```text
+WAIT
+-> new decision time
+-> new C0 = current causal price
+-> define all future targets from new C0
+```
+
+Never measure delayed direction against the old event C0.
+
+## 8. Directional accounting
+
+Always separate movement filtering from sign information.
+
+Report:
 
 ```text
 move_rate
@@ -110,52 +116,28 @@ directional_excess
 where:
 
 ```text
-directional_excess =
-chosen_side_hit_rate - 0.5 * move_rate
+directional_excess = chosen_side_hit_rate - 0.5 * move_rate
 ```
 
-If directional excess is near zero, V8-A is selecting movement but V8-B is not adding meaningful sign information.
-
-## 8. Exact-rebuild requirement
-
-Any promising direction result must be independently reconstructible from:
-
-- the current factual event ledger;
-- explicit feature equations;
-- explicit model/scaler parameters;
-- exact training population;
-- exact chronological purge rules;
-- exact selection rule.
-
-If an old score artifact cannot be independently regenerated, it is diagnostic history, not authority.
-
-## 9. Current remaining internal hypotheses
-
-Highest-priority remaining work:
-
-1. exact V8-A trajectory × factual event interaction using the frozen continuous M5 probability series;
-2. sequential `WAIT -> observe -> recenter -> update` policy;
-3. every delayed decision must reset `C0` to the new current decision price before defining +/-10.0;
-4. distinguish movement selection from direction contribution with proper scores and directional excess;
-5. if retrospective internal direction remains weak, prioritize prospective human-decision labels rather than endless feature mining.
-
-## 10. Sequential decision warning
-
-Do not measure an event at C0, wait 5 minutes, then claim direction skill against the original C0 +/-10 barriers.
-
-If price moved +5 during the wait, the original UP barrier is mechanically closer.
-
-At each delayed decision:
+## 9. Current next experiment
 
 ```text
-new C0 = current causal decision price
-new targets = new C0 +/- 10.0
+event
+-> WAIT 1/3/5m
+-> reset C0
+-> next 15m exclusive direction:
+   +10 only = UP
+   -10 only = DOWN
+   both/neither excluded from direction training
+-> evaluate prediction on all delayed eligible decisions
 ```
 
-This recentering is mandatory.
+If positive, immediately run 2024->2025->2026 temporal validation, non-overlap, cluster bootstrap, concentration, MAE/MFE and opposite-side path checks.
 
-## 11. GOLD# 2021
+## 10. Deployment gate
 
-`LOCKED / UNTOUCHED`
+No MT5 direction companion until a candidate is strictly causal, fully reproducible, survives later-year validation, and shows genuine directional excess rather than movement selection.
 
-Do not consume the reserve until a direction claim-grade candidate exists under a frozen, strictly causal and independently reproducible protocol.
+## 11. Reserve
+
+`GOLD# 2021 = LOCKED / UNTOUCHED`

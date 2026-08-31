@@ -634,3 +634,140 @@ Do not open the 2021 reserve for current V8-B direction research.
 Reason:
 
 No direction candidate currently satisfies strict causal, reproducibility and later-year stability gates.
+
+---
+
+## D-V8-043 — Localize the V8-B target before adding more model complexity
+
+Date: `2026-08-31`
+
+Decision:
+
+Before further architecture mining, reformulate V8-B around short fixed-horizon direction targets analogous to V8-A's localized movement target.
+
+Reason:
+
+A broad direction objective can mix different path meanings and resolution times. Target definition should be tested before blaming model capacity.
+
+---
+
+## D-V8-044 — Do not force tiny endpoint displacement to count as meaningful direction
+
+Date: `2026-08-31`
+
+Decision:
+
+Future-close UP/DOWN remains a diagnostic target only.
+
+Reason:
+
+5/10/15/30/60-minute endpoint-sign models remained near chance even after localizing the horizon.
+
+---
+
+## D-V8-045 — Separate +10-touch and -10-touch probability from pure direction
+
+Date: `2026-08-31`
+
+Decision:
+
+V8-B may model `P(+10 touch within H)` and `P(-10 touch within H)` independently, but individual touch AUC must not be interpreted as direction skill.
+
+Reason:
+
+Both probabilities can be predictable because they share the same movement-intensity component. Pure sign information must be measured separately.
+
+---
+
+## D-V8-046 — Preserve 15m exclusive-direction only as a weak research clue
+
+Date: `2026-08-31`
+
+Decision:
+
+The 15m `+10 only` versus `-10 only` target remains the strongest local direction research clue but has no deployment authority.
+
+Observed AUC approximately:
+
+```text
+2024 0.603
+2025 0.556
+2026 0.535
+```
+
+Reason:
+
+The relationship is weak, decays over time and uses a smaller direction-training population.
+
+---
+
+## D-V8-047 — Do not mine micro-barrier size
+
+Date: `2026-08-31`
+
+Decision:
+
+Do not choose +/-1, +/-2, +/-3 or another small barrier from the best discovery-year score.
+
+Reason:
+
+Smaller barriers did not produce a stable monotonic improvement and discovery differences vanished later.
+
+---
+
+## D-V8-048 — V8-A attention weighting is not direction evidence
+
+Date: `2026-08-31`
+
+Decision:
+
+Weighting direction training more heavily when V8-A probability is high is not an authorized default.
+
+Reason:
+
+The weighted model failed chronological validation. V8-A remains a movement-state estimate, not a sign label.
+
+---
+
+## D-V8-049 — Reject simple WAIT/recenter endpoint confirmation
+
+Date: `2026-08-31`
+
+Decision:
+
+Reject:
+
+```text
+event -> WAIT 1/3/5m -> recenter -> predict next 5/10/15m close sign
+```
+
+as the active sequential candidate.
+
+Reason:
+
+Strictly recentered results remained approximately chance and did not show stable continuation information.
+
+---
+
+## D-V8-050 — Next sequential candidate uses 15m exclusive direction after recentering
+
+Date: `2026-08-31`
+
+Decision:
+
+Next experiment:
+
+```text
+event
+-> WAIT 1/3/5m
+-> reset C0
+-> next 15m:
+   +10 only = UP
+   -10 only = DOWN
+   both/neither excluded from direction training
+-> evaluate on all delayed eligible decisions
+```
+
+Reason:
+
+This combines the only weakly persistent local direction target with genuinely new causal post-event evidence while preserving symmetric targets.

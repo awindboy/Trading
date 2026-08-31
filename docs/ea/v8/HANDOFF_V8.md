@@ -1,8 +1,8 @@
 # V8 Development Handoff
 
 Last updated: `2026-08-31`
-GitHub base audited: `7cd9761f00e42e62aabcf8427c1a25fb8c71d235`
-Current phase: `V8-B INTERNAL-ONLY DIRECTION / EXACT REBUILD + SEQUENTIAL POLICY`
+GitHub base audited: `93f8c829c4825b60942cfd5260da06b30baeacd4`
+Current phase: `V8-B LOCAL / SEQUENTIAL DIRECTION TARGET RESEARCH`
 Production authority: `NONE`
 EA authority: `NONE`
 Direction authority: `NONE`
@@ -15,125 +15,241 @@ Untouched reserve: `GOLD# 2021`
 
 `FROZEN / RETAINED`
 
-V8-A remains the 15m/30m/60m +/-10.0 movement-probability model and MT5 shadow indicator.
+V8-A remains the 15m/30m/60m +/-10 movement-probability model and MT5 shadow indicator. Do not modify V8-A to rescue V8-B.
 
-The B1 lookahead error did not affect V8-A.
+### V8-B history
 
-A later exact Python reconstruction generated approximately `187,708` completed-M5 V8-A states over 2024-2026 with probability parity to the embedded MQL equations at roughly `1e-9` percentage-point scale.
+Still authoritative:
 
-### V8-B1
+- original B1 high AUC invalidated by M15/H1 lookahead;
+- original-C0 delayed-response continuation invalidated by barrier-distance asymmetry;
+- selective 70-90% direction-tail artifact rejected after exact independent rebuild;
+- external/cross-market branch de-scoped by user decision.
 
-`INVALIDATED_BY_HTF_LOOKAHEAD / CLOSED`
+## New research question
 
-Do not deploy old B1 coefficients.
+The active hypothesis is now narrower:
 
-### External B2
+> V8-A succeeds because it predicts one local property only: whether a +/-10 move occurs within a fixed horizon. V8-B may also need an equally local target that predicts only short-horizon sign, rather than a broad eventual direction.
 
-`DE-SCOPED / NOT ACTIVE`
+This hypothesis has now been tested through B30-B39 and the first fully recentered sequential experiment.
 
-The user explicitly chose to continue direction research from GOLD-internal information and V8-A rather than external/cross-market inputs.
+## B30 — Local endpoint direction
 
-`V8_B2_SOURCE_OF_MOVE_RESEARCH_CONTRACT.md` is historical only.
-
-## Internal-only direction research completed after B1 correction
-
-The project tested whether frozen V8-A could expose direction through better preprocessing rather than as a simple scalar.
-
-Families tested included:
-
-- full V8-A P15/P30/P60 trajectory;
-- probability slope/acceleration/shape;
-- price sequence + probability sequence;
-- small temporal CNN;
-- event-centered OHLC/MA/BB geometry;
-- causal regime normalization of price and V8-A logit state;
-- directional semivariance/body/wick/tick-activity decomposition;
-- score fusion / two-score stacking;
-- recent-year and rolling retraining controls;
-- event-family conditioning;
-- selective confidence tails;
-- delayed 1/3/5/10-minute response experiments.
-
-Typical pattern:
+Targets:
 
 ```text
-2024 discovery: moderate AUC can be produced
-2025 validation: weakens materially
-2026 stress: tends toward ~0.5
+sign(close[t+H] - C0)
+H = 15/30/60m
 ```
 
-No broad direction model is authorized.
+Later 5m/10m/15m versions were also tested.
 
-## Important failed apparent edges
-
-### Delayed-response illusion
-
-Using the first 5 minutes after an event to predict the original event-C0 +/-10 race produced apparently strong continuation.
-
-This was rejected because the first 5-minute move mechanically shortens one barrier and lengthens the other.
-
-After resetting C0 at the delayed decision and defining a new symmetric +/-10 race, the large effect disappeared.
-
-### Selective-tail illusion / reproducibility failure
-
-A prior score artifact suggested 60m chosen-side hit rates above 70%.
-
-It did not survive independent exact reconstruction using the current event ledger and explicit causal signed-activity equations.
-
-Exact rebuild direction AUC:
+Result:
 
 ```text
-30m: 2025 ~0.533 / 2026 ~0.520
-60m: 2025 ~0.516 / 2026 ~0.506
+AUC generally ~0.50-0.52
 ```
 
-High chosen-side hit rates after adding V8-A were explained primarily by higher `move_rate`, while conditional direction accuracy stayed near 50%.
+Event-only training did not materially improve the result.
 
-## Mandatory accounting
+## B31 — Direction-only representation
 
-Always decompose:
+Past GOLD state was restricted toward signed information:
+
+- signed net displacement;
+- path efficiency;
+- up/down semivariance imbalance;
+- bullish/bearish body imbalance;
+- wick imbalance;
+- rolling-range location;
+- signed tick activity / price-impact proxies.
+
+Endpoint sign and future excursion-dominance targets remained about chance to low-0.52 in 2024.
+
+## B32/B33 — Independent up/down touch models
+
+A V8-A-like formulation was tested:
 
 ```text
-chosen_hit = movement selection + directional contribution
+P(+10 touched within H)
+P(-10 touched within H)
 ```
 
-Report:
+Representative 2024 30m:
 
 ```text
-move_rate
-conditional_direction_accuracy
-chosen_side_hit_rate
-directional_excess = chosen_side_hit_rate - 0.5*move_rate
++10 touch AUC ~0.655
+-10 touch AUC ~0.646
 ```
+
+A mirrored symmetric model reached approximately:
+
+```text
++10 AUC ~0.664
+-10 AUC ~0.659
+pure direction-skew AUC ~0.572
+```
+
+But temporal validation weakened:
+
+```text
+2025 direction ~0.547
+2026 direction ~0.512
+```
+
+Interpretation: individual touch models relearn substantial movement-intensity information; stable sign information is much weaker.
+
+## B34 — Exclusive local direction
+
+Direction training was limited to clear one-sided outcomes:
+
+```text
++10 only within H -> UP
+-10 only within H -> DOWN
+both/neither -> excluded from direction training
+```
+
+The prediction must still be applied back to all eligible events for operational evaluation.
+
+The 15m horizon was strongest:
+
+```text
+2024 ~0.603
+2025 ~0.556
+2026 ~0.535
+```
+
+30m/60m were weaker.
+
+A simple recent-15m direction-efficiency baseline was approximately:
+
+```text
+2024 ~0.639
+2025 ~0.577
+2026 ~0.531
+```
+
+This is the best weak clue so far, not direction authority.
+
+## B35 — Micro barriers
+
+15m local barriers:
+
+```text
++/-1 -> near chance
++/-2 -> ~0.528 / 0.512 / 0.505
++/-3 -> ~0.553 / 0.518 / 0.506
+```
+
+for 2024/2025/2026.
+
+Smaller barriers are not automatically more predictable. Do not barrier-mine.
+
+## B36 — Ultra-local endpoint
+
+5m/10m/15m future-close direction remained:
+
+```text
+AUC ~0.50-0.52
+```
+
+Merely shrinking horizon does not solve direction.
+
+## B37/B38 — Direction-label weighting
+
+Tested:
+
+- V8-A P15 as sample weight;
+- absolute future 15m net displacement as sample weight.
+
+Neither improved temporal validation.
+
+## B39 — Future local slope
+
+The sign of a fitted future price slope was used instead of endpoint sign.
+
+Result:
+
+```text
+AUC ~0.50-0.53
+```
+
+Endpoint noise was not the sole problem.
+
+## Sequential WAIT/recenter result
+
+Completed protocol:
+
+```text
+event
+-> WAIT 1m / 3m / 5m
+-> observe only causal new information
+-> new C0 = delayed decision price
+-> predict next 5m / 10m / 15m future-close sign
+```
+
+Result:
+
+```text
+AUC generally ~0.50-0.52
+```
+
+The first post-event response also did not become a robust continuation signal and often showed weak mean-reversion.
+
+Therefore simple WAIT -> recenter -> endpoint confirmation is rejected.
+
+## Immediate next experiment
+
+Do not return to broad endpoint sign.
+
+Test:
+
+```text
+event
+-> WAIT fixed 1m / 3m / 5m
+-> reset C0 at delayed decision
+-> next 15m:
+      +10 only = UP direction example
+      -10 only = DOWN direction example
+      both/neither = excluded from direction training
+-> apply score back to all delayed eligible decisions
+```
+
+This combines the only weakly persistent local target with genuinely new causal post-event evidence.
+
+## Mandatory checks if positive
+
+1. timestamp / information-boundary audit;
+2. full-population evaluation;
+3. outcome-blind non-overlap;
+4. 2024 discovery -> 2025 validation -> 2026 stress;
+5. month/hour/event/direction breakdown;
+6. weekly/monthly cluster bootstrap;
+7. movement-rate vs directional-excess decomposition;
+8. MAE/MFE and opposite-side path analysis.
 
 ## Current best conclusion
 
 ```text
-GOLD endogenous history -> near-term movement intensity: strong
-GOLD endogenous history -> stable broad near-term sign: not demonstrated
+V8-A movement probability: strong and frozen
+broad t=0 direction: not demonstrated
+local t=0 direction: weak at best
+simple WAIT->recenter endpoint direction: failed
+next candidate: WAIT->recenter->15m exclusive +/-10 direction
 ```
 
-V8-A remains useful even though V8-B has not yet found stable sign information.
-
-## Immediate next work
-
-1. finish exact `V8-A trajectory × factual event` conditioning on the frozen continuous probability series;
-2. run the sequential `WAIT -> observe -> recenter -> update` policy with a new C0 at every decision;
-3. keep all selection rules causal and independently reproducible;
-4. test overlap, month, hour, event-family and direction concentration;
-5. report directional excess, MAE/MFE and opposite-barrier path;
-6. do not implement a direction MT5 companion until a candidate survives 2024 discovery -> 2025 validation -> 2026 stress;
-7. keep GOLD# 2021 locked.
+GOLD# 2021 remains locked.
 
 ## Reading order next session
 
 1. `docs/ea/v8/AGENTS_V8.md`
 2. `docs/ea/v8/HANDOFF_V8.md`
-3. `docs/ea/v8/V8_B_INTERNAL_DIRECTION_RESEARCH_20260831.md`
-4. `docs/ea/v8/V8_B1_CAUSAL_ALIGNMENT_INVALIDATION.md`
-5. `docs/ea/v8/V8_005_MOVEMENT_PROBABILITY_INDICATOR.md`
+3. `docs/ea/v8/V8_B_LOCAL_DIRECTION_RESEARCH_20260831.md`
+4. `docs/ea/v8/V8_B_INTERNAL_DIRECTION_RESEARCH_20260831.md`
+5. `docs/ea/v8/V8_B1_CAUSAL_ALIGNMENT_INVALIDATION.md`
 6. `docs/ea/v8/DECISIONS_V8.md`
 7. `docs/ea/v8/RESEARCH_STATE_V8.md`
-8. `docs/ea/v8/V8_RESEARCH_JOURNEY.md`
+8. `docs/ea/v8/BACKLOG_V8.md`
 
 Always refresh GitHub HEAD before continuing.
