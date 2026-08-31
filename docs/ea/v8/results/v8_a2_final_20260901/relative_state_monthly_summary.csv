@@ -1,0 +1,7 @@
+H,state,months_evaluated,months_beating_month_base,fraction_beating_base,median_monthly_lift,state_event_count_sum
+15,HIGH,32,32,1.0,2.799449,8628
+15,EXTREME,32,32,1.0,4.163215,3222
+30,HIGH,32,32,1.0,2.57893,8628
+30,EXTREME,32,32,1.0,3.606061,3222
+60,HIGH,32,32,1.0,2.11419,8628
+60,EXTREME,32,32,1.0,2.692186,3222

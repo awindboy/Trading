@@ -1,0 +1,30 @@
+{
+  "name": "V8-A2 reliability layer",
+  "status": "RESEARCH_ONLY_SHADOW_PENDING_MT5_PARITY_AND_PROSPECTIVE_VALIDATION",
+  "date": "2026-09-01",
+  "control": "Existing frozen V8-A remains authority and is not replaced.",
+  "model_pack_sha256": "9f22944c34688ab2cce249cdf42d0d2185e498dce0524fed6a6e6846fdfd7764",
+  "target": {
+    "barrier_price_units": 10.0,
+    "horizons_minutes": [
+      15,
+      30,
+      60
+    ]
+  },
+  "rank": {
+    "window_completed_m5": 288,
+    "same_model_calendar_year": true,
+    "definition": "fraction of immediately prior 288 A2 scores <= current score"
+  },
+  "state": {
+    "EXTREME": "R15>=90 and R30>=90 and R60>=90",
+    "HIGH": "R15>=75 and R30>=75 and R60>=75",
+    "QUIET": "R15<=25 and R30<=25 and R60<=25",
+    "NORMAL": "otherwise"
+  },
+  "scope_warning": "Historical state precision/lift claims are validated on factual V8 event decisions. Continuous every-M5 output outside events is context only.",
+  "calibration_policy": "Do not auto-refit/recalibrate. Raw probability is model estimate; rank/state is the preferred regime-relative reliability signal.",
+  "monthly_result": "HIGH and EXTREME beat each calendar month's event base movement rate in all 32 evaluated months for P15/P30/P60 when state_n>=10.",
+  "prospective": "Use V8A2ProspectiveLoggerEA. Do not backfill the prospective ledger."
+}
