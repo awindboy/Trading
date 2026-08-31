@@ -1,0 +1,30 @@
+{
+  "name": "V8-A2 multi-horizon survival challenger",
+  "status": "RESEARCH_ONLY_NO_MT5_AUTHORITY",
+  "date": "2026-09-01",
+  "source_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+  "target": {
+    "barrier_price_units": 10.0,
+    "horizons_minutes": [15, 30, 60],
+    "classes": ["hit <=15m", "hit 15-30m", "hit 30-60m", "no hit by 60m"]
+  },
+  "features": {
+    "original_v8a": 53,
+    "barrier_difficulty_regime": 33,
+    "total": 86
+  },
+  "model": {
+    "family": "multinomial_regularized_logistic",
+    "standardization": "StandardScaler",
+    "C": 0.5,
+    "training_boundary": "decision + 60m <= evaluation cutoff for every output horizon"
+  },
+  "walk_forward_models": [
+    {"evaluation_year": 2024, "auc15": 0.866005, "auc30": 0.850077, "auc60": 0.812978},
+    {"evaluation_year": 2025, "auc15": 0.873618, "auc30": 0.856543, "auc60": 0.838420},
+    {"evaluation_year": 2026, "auc15": 0.819016, "auc30": 0.799895, "auc60": 0.792521}
+  ],
+  "local_full_model_pack_sha256": "9f22944c34688ab2cce249cdf42d0d2185e498dce0524fed6a6e6846fdfd7764",
+  "promotion": "NOT_PROMOTED",
+  "control": "Existing frozen V8-A model pack remains authority"
+}

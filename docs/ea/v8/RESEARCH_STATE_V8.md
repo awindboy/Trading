@@ -1,6 +1,6 @@
 # V8 Research State
 
-Status: `ACTIVE / V8-A FROZEN + V8-C LONG PROVISIONAL FROZEN + V8-C-S1 SHORT RESEARCH`
+Status: `ACTIVE / V8-A FROZEN + V8-A2 CHALLENGER RETAINED + V8-C LONG FROZEN + V8-C-S1 SHORT RESEARCH`
 Date: `2026-09-01`
 Production authority: `NONE`
 Market: `GOLD#`
@@ -8,7 +8,7 @@ Untouched reserve: `GOLD# 2021`
 
 ## V8-A
 
-`FROZEN / POSITIVE OPEN-DEVELOPMENT MOVEMENT EVIDENCE`
+`FROZEN / POSITIVE OPEN-DEVELOPMENT MOVEMENT EVIDENCE / CURRENT CONTROL`
 
 Target:
 
@@ -16,7 +16,7 @@ Target:
 P(reach C0 +/-10 within 15m / 30m / 60m)
 ```
 
-Walk-forward:
+Historical walk-forward:
 
 ```text
 2024 <- 2022-2023
@@ -24,31 +24,47 @@ Walk-forward:
 2026 <- 2022-2025
 ```
 
-Direction-free.
+Direction-free. Current MT5 indicator/model pack unchanged.
+
+## V8-A2
+
+`RESEARCH COMPLETE / CHALLENGER RETAINED / NOT PROMOTED`
+
+Best repeatable improvement:
+
+```text
+original 53 movement features
++ 33 barrier-difficulty/regime features
++ unified first-hit-time survival formulation
+```
+
+Strict 60m-purged survival AUC:
+
+```text
+15m  0.8660 / 0.8736 / 0.8190
+30m  0.8501 / 0.8565 / 0.7999
+60m  0.8130 / 0.8384 / 0.7925
+```
+
+Frozen control:
+
+```text
+15m  0.8566 / 0.8715 / 0.8177
+30m  0.8418 / 0.8526 / 0.7977
+60m  0.8068 / 0.8316 / 0.7868
+```
+
+No robust future-year AUC >=0.90 demonstrated. No A2 MT5 authority.
 
 ## V8-B
 
 `PAUSED / NEGATIVE-RESULT AUTHORITY`
 
-Important result:
-
-Broad learned direction remained weak or unstable after strict causal reconstruction.
-
-The original B1 positive result is invalidated by HTF look-ahead.
-
-The best weak local clue, 15m exclusive direction, decayed approximately:
-
-```text
-0.603 / 0.556 / 0.535
-```
-
-No standalone direction-model deployment authority.
+Standalone learned direction remains weak/unstable after strict causal reconstruction. No deployment authority.
 
 ## V8-C LONG
 
 `PROVISIONAL FROZEN / MT5 REAL-TICK VERIFIED ON OPEN DEVELOPMENT EVIDENCE`
-
-Frozen entry:
 
 ```text
 M5 SMA20 contact-start
@@ -70,36 +86,11 @@ Accepted R0.4:
 pooled N456 WR60.09% +91.85R
 expectancy +0.201R/trade
 PF ~1.49
-max observed closed-trade DD ~7.64R
 ```
 
-No artificial EXPERT exits in accepted R0.4 runs.
+## V8-C-S1 SHORT
 
-## Runtime history
-
-- R0/R0.1: iCustom deployment dependency fixed with embedded V8-A resource.
-- R0.2: unnecessary host-period initialization hard-fail removed.
-- R0.3: causal online P15 queue introduced; execution fail-close bug discovered.
-- R0.4: actual protection-state verification fixed the execution bug.
-
-R0.3 economics are invalid.
-
-## Current SHORT candidate
-
-Simple symmetric SHORT is rejected.
-
-V8-C-S1:
-
-```text
-P15 > prior-288 Q75
-K < D
-previous M5 entirely below SMA20
-event closes below SMA20 after contact-start
-trailing 288 M5 net displacement < 0
-=> SHORT
-```
-
-M1 proxy:
+`RESEARCH ONLY / M1 PROXY`
 
 ```text
 2024 N41 WR58.54%
@@ -110,26 +101,14 @@ pooled N140 WR58.57% +24R
 
 No MT5 authority yet.
 
-## Exit status
+## V8-A reliability conclusion
 
-Current +/-10 full exit validates entry edge only.
+The present concern for live use is calibration/base-rate drift more than demonstrated collapse of ranking skill. Movement prevalence changed drastically from 2024 to 2026. Use V8-A primarily as a relative movement-state estimate, and monitor prospective AUC/calibration/decile ordering before changing the model.
 
-Average winner remains near 1R, so final exit architecture is not solved.
+## Current action
 
-Holding-time compression:
-
-```text
-2024 ~279m
-2025 ~56m
-2026 ~15m
-```
-
-must be studied separately from entry quality.
-
-## Immediate action
-
-1. Keep V8-C LONG unchanged.
-2. MT5 real-tick validate V8-C-S1 SHORT.
-3. If SHORT survives, freeze entry architecture.
-4. Move to winner-continuation / exit research.
-5. Keep 2021 locked.
+1. Keep frozen V8-A as control.
+2. Preserve A2 results/model manifest as research-only challenger evidence.
+3. Add prospective V8-A reliability logging before replacement decisions.
+4. Continue V8-C SHORT/exit research separately when desired.
+5. Keep GOLD# 2021 locked.
