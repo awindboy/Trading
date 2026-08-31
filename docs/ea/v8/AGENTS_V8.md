@@ -2,322 +2,160 @@
 
 Status: `ACTIVE`
 Generation: `V8`
-Active branch: `Movement Probability / Human Decision Support`
+Active branches:
+- `V8-A MOVEMENT PROBABILITY` — FROZEN
+- `V8-B INTERNAL-ONLY DIRECTION RESEARCH` — ACTIVE RESEARCH / NO AUTHORITY
 Production authority: `NONE`
 EA authority: `NONE`
 Direction authority: `NONE`
 Market: `GOLD#`
 Untouched reserve: `GOLD# 2021`
 
-## 1. Current V8 thesis
+## 1. Current empirical thesis
 
-V8 began as a representation-first attempt to avoid forcing ambiguous chart concepts into arbitrary deterministic labels.
+V8-A has strong open-development evidence that causal GOLD history contains useful information about near-term movement intensity / +/-10.0 barrier crossing.
 
-That principle remains valid, but the research has now produced a more specific empirical result:
+Direction remains a separate problem. Repeated strictly causal internal-only direction studies have not yet demonstrated a stable broad LONG/SHORT edge across 2024/2025/2026.
 
-> GOLD historical context contains strong information about near-term movement intensity / barrier crossing, while stable direction information has not been demonstrated.
+Do not convert V8-A into a direction or trade signal.
 
-The active V8 branch therefore focuses on **movement probability as human decision support**, not autonomous direction.
+## 2. V8-A is frozen
 
-## 2. Do not conflate three different questions
-
-Keep these separate:
-
-```text
-A. Is a meaningful move likely soon?
-B. Which direction will it move?
-C. Will a particular trade be profitable?
-```
-
-Current authority:
-
-- A: positive open-development evidence;
-- B: no authority;
-- C: no authority.
-
-A high movement probability must never be silently converted into LONG/SHORT or automatic entry permission.
-
-## 3. Active movement target
-
-The current human-facing target is:
+Do not change to rescue V8-B:
 
 ```text
 C0 = completed M5 decision close
-barrier = +/- 10.0 GOLD price units
-H in {15m, 30m, 60m}
-
-P(price reaches C0 + 10.0 or C0 - 10.0 within H)
+barrier = +/-10.0 GOLD price units
+H = 15m / 30m / 60m
+portable representation = frozen 53-feature causal M1 model
+historical models = walk-forward by year
 ```
 
-The target is direction-free.
-
-Changing the `10.0` barrier requires retraining and renewed validation. Do not expose a runtime barrier input that reuses frozen model coefficients.
-
-## 4. Active representation
-
-The active movement model does not require visual/raster input.
-
-Use explicit causal numerical range/volatility/activity features. Current portable MT5 representation uses 53 features derived from M1 history over multiple windows including approximately:
-
-```text
-5 / 15 / 30 / 60 / 120 / 240 / 480 / 1440 M1 rows
-```
-
-Feature families include:
-
-- realized squared price changes;
-- high-low range accumulation;
-- rolling max(high)-min(low);
-- absolute close-change accumulation;
-- candle body activity;
-- current range/true-range/absolute-change state;
-- short-vs-long activity ratios;
-- time context where frozen in the model.
-
-Broad RSI/MACD/EMA accumulation is not the active path unless a controlled incremental-value test proves added movement information.
-
-## 5. Historical indicator/price representation lessons
-
-Earlier V8 research established useful general rules:
-
-- price-level variables may be represented relative to a common event close `C0` when the task requires chart-geometry invariance;
-- indicator histories can be useful representations, but adding more indicators does not create information that is absent from the underlying market path;
-- level + change/dynamics channels can be more useful than level alone;
-- preprocessing must be evaluated chronologically and causally rather than assumed from generic ML literature.
-
-Do not revive a failed normalization or architecture simply because it is fashionable in time-series research.
-
-## 6. Factual event anchors
-
-Current main-chart shadow markers:
-
-- H1 Double-B confirmation;
-- M5 SMA20 contact episode start;
-- M5 BB20 upper contact episode start;
-- M5 BB20 lower contact episode start.
-
-These events are attention anchors only.
-
-They do not encode:
-
-```text
-TREND
-RANGE
-BREAKOUT
-TURNING
-LONG
-SHORT
-```
-
-Event identity by itself was much weaker for movement probability than recent range/volatility state.
-
-## 7. Causality rules
-
-Every model input and historical display is part of the information boundary.
-
-Required:
-
-- use completed bars only for displayed probabilities;
-- no future-confirmed event may be marked early;
-- no future price may enter scaling or feature construction;
-- training examples must be purged if their label-resolution interval crosses a validation/evaluation boundary;
-- train/validation preprocessing must fit on past data only;
-- historical chart display must use the model that would have existed before that historical evaluation period.
-
-Current walk-forward display policy:
-
-```text
-2024 <- train 2022-2023
-2025 <- train 2022-2024
-2026 <- train 2022-2025
-```
-
-No current authority exists for pre-2024 display or post-2026 extrapolation.
-
-## 8. Direction research status
-
-Do not resume incremental direction feature mining as the default task.
-
-Direction research has already tested, among other things:
-
-- OHLC-only and indicator-history sequences;
-- event-centered chart geometry;
-- visual and fused representations;
-- multi-lag dynamics;
-- robust normalization;
-- fractional differentiation;
-- self-supervised masked reconstruction;
-- linear / LightGBM / TCN / patch-Transformer models;
-- competing-risk direction+time heads;
-- nearest-neighbor retrieval;
-- event-family splits;
-- Double-B follow-up chains;
-- overlap weighting and one-active populations;
-- rolling / online retraining;
-- simple meta-labeling.
-
-Stable strong direction information did not survive later development periods.
-
-A new direction branch requires a materially new source of information or a new preregistered causal hypothesis.
-
-## 9. Movement-probability evidence
-
-The portable continuous-M5 logistic model remains strongly discriminative when evaluated only at factual event timestamps.
-
-Open-development event-subset AUC:
-
-```text
-15m: 2024 0.865 / 2025 0.873 / 2026 0.815
-30m: 2024 0.844 / 2025 0.851 / 2026 0.796
-60m: 2024 0.807 / 2025 0.829 / 2026 0.781
-```
-
-These are not untouched validation results.
-
-## 10. Active implementation
-
-Artifact:
+Primary artifact:
 
 `mt5/indicators/V8MovementProbabilityIndicator.mq5`
 
-Purpose:
+V8-A remains direction-free.
 
-- separate subwindow with continuous 15m/30m/60m movement-probability lines;
-- factual event triangles on the main chart;
-- configurable event-family colors;
-- marker tooltip with probabilities at the event decision time;
-- no trade/order action;
-- no direction output.
+## 3. Direction research is internal-only unless explicitly reopened
 
-The current forming M5 candle must remain blank.
+The user decided that external/cross-market source-of-move inputs are not the active direction path.
 
-## 11. Runtime validation before discretionary reliance
+Do not use USDJPY, XAUEUR, BTCUSD, DXY, yields or other external markets as the default V8-B research source.
 
-Before using the indicator as a serious human filter:
+A future external branch requires an explicit project decision to reopen it.
 
-1. compile in the user's actual MetaEditor;
-2. verify broker M1/M5/H1 history availability;
-3. verify event timing visually;
-4. compare selected timestamps against the Python parity reference where feeds match;
-5. confirm no trade/order side effects;
-6. begin prospective logging of every eligible event, including ignored events.
+## 4. Permanent causality boundary
 
-## 12. Prospective human+AI study
-
-The next practical question is not whether the movement score predicts direction.
-
-It is:
-
-> Does the trader's discretionary directional/trade performance improve as movement probability increases?
-
-Log before outcome:
-
-- event;
-- 15m/30m/60m probabilities;
-- human LONG/SHORT/WAIT/SKIP;
-- actual trade parameters if any;
-- realized outcome.
-
-Do not tune a threshold from remembered winners or selected screenshots.
-
-## 13. Campaign and final-strategy discipline
-
-The original final strategy requirements remain unchanged:
-
-- realized win rate at least 50%;
-- average winner meaningfully above 1R;
-- positive full-cost expectancy;
-- acceptable drawdown / loss streak / exposure;
-- no duplicate same-move trade credit;
-- preferably multiple legitimate opportunities when supported by the market.
-
-Movement probability is currently a decision-support input, not evidence that these strategy requirements are met.
-
-## 14. Data roles
-
-GOLD# 2022-2026 is open/consumed development evidence.
-
-`GOLD# 2021` remains untouched and locked.
-
-Do not open 2021 until a claim-grade candidate, preprocessing/model contract and evaluation protocol are frozen.
-
-## 15. Required reading order
-
-On every resumed V8 session:
-
-1. refresh GitHub HEAD;
-2. `docs/ea/v8/AGENTS_V8.md`;
-3. `docs/ea/v8/HANDOFF_V8.md`;
-4. `docs/ea/v8/V8_RESEARCH_JOURNEY.md`;
-5. `docs/ea/v8/V8_005_MOVEMENT_PROBABILITY_INDICATOR.md`;
-6. `docs/ea/v8/DECISIONS_V8.md`;
-7. `docs/ea/v8/RESEARCH_STATE_V8.md`;
-8. current indicator source.
-
-
-## V8-A / V8-B branch contract — 2026-08-31 addendum
-
-V8 now contains two explicitly separated probabilistic branches.
-
-### V8-A — frozen movement marginal
-
-`p_H = P(any +/-10.0 move within H)` for H=15m/30m/60m.
-
-Do not alter V8-A from V8-B research.
-
-### V8-B — conditional side
-
-`q_H = P(UP first | a move occurs within H, causal context)`.
-
-Joint probabilities are `p_H*q_H`, `p_H*(1-q_H)`, and `1-p_H`.
-
-Current V8-B evidence supports M5 MA20/upper-BB/lower-BB event anchors only. H1 Double-B has no direction authority.
-
-Movement probability is not a default side feature: controlled tests found that direct V8-A probability inputs and gating interactions did not improve conditional side prediction.
-
-V8-B must always be evaluated both conditionally and on the full event population, and must pass non-overlap checks before promotion.
-
-
----
-
-## 18. Higher-timeframe availability rule — added after V8-B1 invalidation
-
-A resampled bar timestamp is normally its **start time**, not its information-availability time.
-
-Therefore every V8 feature builder must enforce:
+For every resampled timeframe:
 
 ```text
-completed HTF bar is observable iff
+completed bar observable iff
 bar_start + timeframe_duration <= decision_time
 ```
 
-Do not use:
+A current partial HTF bar may be used only if rebuilt from lower-timeframe observations already available before the decision.
 
-```python
-searchsorted(bar_start_times, decision_time) - 1
-```
+Never infer availability from bar-start timestamp alone.
 
-as proof that an M15/H1/H4/D1 bar is available. That can select a bar whose future remainder has not happened yet.
+Training rows whose outcome window crosses a validation/evaluation boundary must be purged.
 
-If current partial-HTF state is desired:
+## 5. Invalidated direction evidence
 
-- reconstruct it only from lower-timeframe/raw observations strictly available before the decision;
-- update recursive indicators from that prefix;
-- never substitute the later final OHLC/indicator value of that bar.
+The high V8-B1 direction AUC committed before the causal-alignment audit is invalid.
 
-Every new multi-timeframe research phase must include at least one explicit availability audit showing `source_latest_timestamp <= decision_time` for all underlying observations, not only a bar-label check.
-The repository correction pack provides `research/ea/v8/test_v8_causal_time_alignment.py` as a minimum regression guard for this exact failure mode; equivalent or stronger tests are mandatory if the implementation changes.
+Cause:
 
-V8-B1 is the historical example of why this rule is mandatory: a high apparent direction AUC was invalidated because full M15/H1 bars were selected by start time.
+- M15/H1 `label=left` bars were selected by start timestamp;
+- later prices inside the same HTF interval entered the model.
 
-## 19. Current branch authority after V8-B1 correction
+The old `config/v8_b1_direction_models.json` is historical invalidated evidence only and must never be deployed.
+
+## 6. Internal V8-B research lessons
+
+The following have been tested and did not produce a stable broad direction edge after temporal validation:
+
+- price/indicator sequences;
+- visual/fused direction models;
+- robust normalization and fractional differentiation;
+- self-supervised reconstruction;
+- TCN / Transformer / LightGBM / logistic variants;
+- nearest-neighbor/meta-labeling;
+- event-family direction splits;
+- V8-A P15/P30/P60 as raw direction features;
+- V8-A probability slopes, acceleration and shape;
+- event-centered price geometry + V8-A trajectory;
+- regime-normalized V8-A probability state;
+- directional semivariance/body/wick decomposition;
+- signed tick-activity / price-impact proxies;
+- low-dimensional score fusion and stacking;
+- rolling/recent-year retraining;
+- direction-confidence selective tails after exact independent rebuild.
+
+A good 2024 discovery result is not sufficient. If 2025/2026 collapses, do not threshold-tune to save it.
+
+## 7. Selective-direction accounting rule
+
+A high chosen-side hit rate can be manufactured by a strong movement filter even when direction is random.
+
+Always report:
 
 ```text
-V8-A movement probability = FROZEN / retained
-V8-B1 endogenous direction = INVALIDATED / closed
-V8-B2 source-of-move direction = preregistered research only
+move_rate
+conditional_direction_accuracy
+chosen_side_hit_rate
+directional_excess
 ```
 
-Do not deploy `config/v8_b1_direction_models.json`.
+where:
 
-Do not open GOLD# 2021 until a later strictly causal direction candidate or other claim-grade V8 candidate is deliberately frozen.
+```text
+directional_excess =
+chosen_side_hit_rate - 0.5 * move_rate
+```
+
+If directional excess is near zero, V8-A is selecting movement but V8-B is not adding meaningful sign information.
+
+## 8. Exact-rebuild requirement
+
+Any promising direction result must be independently reconstructible from:
+
+- the current factual event ledger;
+- explicit feature equations;
+- explicit model/scaler parameters;
+- exact training population;
+- exact chronological purge rules;
+- exact selection rule.
+
+If an old score artifact cannot be independently regenerated, it is diagnostic history, not authority.
+
+## 9. Current remaining internal hypotheses
+
+Highest-priority remaining work:
+
+1. exact V8-A trajectory × factual event interaction using the frozen continuous M5 probability series;
+2. sequential `WAIT -> observe -> recenter -> update` policy;
+3. every delayed decision must reset `C0` to the new current decision price before defining +/-10.0;
+4. distinguish movement selection from direction contribution with proper scores and directional excess;
+5. if retrospective internal direction remains weak, prioritize prospective human-decision labels rather than endless feature mining.
+
+## 10. Sequential decision warning
+
+Do not measure an event at C0, wait 5 minutes, then claim direction skill against the original C0 +/-10 barriers.
+
+If price moved +5 during the wait, the original UP barrier is mechanically closer.
+
+At each delayed decision:
+
+```text
+new C0 = current causal decision price
+new targets = new C0 +/- 10.0
+```
+
+This recentering is mandatory.
+
+## 11. GOLD# 2021
+
+`LOCKED / UNTOUCHED`
+
+Do not consume the reserve until a direction claim-grade candidate exists under a frozen, strictly causal and independently reproducible protocol.

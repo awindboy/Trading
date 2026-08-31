@@ -1,144 +1,139 @@
 # V8 Development Handoff
 
 Last updated: `2026-08-31`
-GitHub base audited: `0529c204a655e9cc281e1e6f35e5e7883bf4b427`
-Current phase: `V8-B2 SOURCE-OF-MOVE CAUSAL DIRECTION / DATA PREFLIGHT`
+GitHub base audited: `7cd9761f00e42e62aabcf8427c1a25fb8c71d235`
+Current phase: `V8-B INTERNAL-ONLY DIRECTION / EXACT REBUILD + SEQUENTIAL POLICY`
 Production authority: `NONE`
 EA authority: `NONE`
 Direction authority: `NONE`
 Market: `GOLD#`
 Untouched reserve: `GOLD# 2021`
 
-## Critical correction first
+## Current branch status
 
-The V8-B1 positive result committed at `0529c204...` is **INVALIDATED_BY_HTF_LOOKAHEAD**.
+### V8-A
 
-Do not continue from the stale B1 AUC tables or deploy `config/v8_b1_direction_models.json`.
+`FROZEN / RETAINED`
 
-Read first:
+V8-A remains the 15m/30m/60m +/-10.0 movement-probability model and MT5 shadow indicator.
 
-`docs/ea/v8/V8_B1_CAUSAL_ALIGNMENT_INVALIDATION.md`
+The B1 lookahead error did not affect V8-A.
 
-### Bug
+A later exact Python reconstruction generated approximately `187,708` completed-M5 V8-A states over 2024-2026 with probability parity to the embedded MQL equations at roughly `1e-9` percentage-point scale.
 
-M15/H1 feature bars were selected from a `label=left` resample by bar-start timestamp. For decisions inside the current M15/H1 interval, the model therefore received the later full completed bar, including future prices after the decision.
+### V8-B1
 
-Leak prevalence over the B1 event table:
+`INVALIDATED_BY_HTF_LOOKAHEAD / CLOSED`
 
-```text
-M15: 67.78% of event rows
-H1:  90.20% of event rows
-```
+Do not deploy old B1 coefficients.
 
-Correct rule:
+### External B2
 
-```text
-completed HTF: bar_start + duration <= decision_time
-partial HTF: rebuild only from M1 prefix strictly before decision_time
-```
+`DE-SCOPED / NOT ACTIVE`
 
-## Corrected V8-B1 verdict
+The user explicitly chose to continue direction research from GOLD-internal information and V8-A rather than external/cross-market inputs.
 
-Same-family causal re-audit no longer shows a useful stable direction edge.
+`V8_B2_SOURCE_OF_MOVE_RESEARCH_CONTRACT.md` is historical only.
 
-Completed-only conditional AUC:
+## Internal-only direction research completed after B1 correction
 
-```text
-15m: 2024 0.666 / 2025 0.553 / 2026 0.534
-30m: 2024 0.579 / 2025 0.537 / 2026 0.521
-60m: 2024 0.530 / 2025 0.514 / 2026 0.511
-```
+The project tested whether frozen V8-A could expose direction through better preprocessing rather than as a simple scalar.
 
-Causal partial-current HTF also fails to restore the stale result.
+Families tested included:
 
-Full-population V8-A + corrected V8-B generally fails to improve proper score in 2025/2026 relative to frozen V8-A with a simple side prior.
+- full V8-A P15/P30/P60 trajectory;
+- probability slope/acceleration/shape;
+- price sequence + probability sequence;
+- small temporal CNN;
+- event-centered OHLC/MA/BB geometry;
+- causal regime normalization of price and V8-A logit state;
+- directional semivariance/body/wick/tick-activity decomposition;
+- score fusion / two-score stacking;
+- recent-year and rolling retraining controls;
+- event-family conditioning;
+- selective confidence tails;
+- delayed 1/3/5/10-minute response experiments.
 
-Therefore:
-
-```text
-V8-B1 MT5 direction extension = CANCELLED
-V8-B1 coefficients            = DO NOT DEPLOY
-```
-
-Permanent regression guard added by this correction pack:
+Typical pattern:
 
 ```text
-research/ea/v8/v8_causal_time_alignment.py
-research/ea/v8/test_v8_causal_time_alignment.py
+2024 discovery: moderate AUC can be produced
+2025 validation: weakens materially
+2026 stress: tends toward ~0.5
 ```
 
-Any future B2 multi-timeframe builder should reuse or match this availability contract rather than recreate bar-start selection ad hoc.
+No broad direction model is authorized.
 
-## V8-A status
+## Important failed apparent edges
 
-`FROZEN / UNAFFECTED`
+### Delayed-response illusion
 
-Do not change:
+Using the first 5 minutes after an event to predict the original event-C0 +/-10 race produced apparently strong continuation.
 
-- +/-10.0 price-unit barrier;
-- 15m/30m/60m horizons;
-- 53-feature causal M1 movement representation;
-- walk-forward portable logistic family;
-- existing MT5 movement probability semantics.
+This was rejected because the first 5-minute move mechanically shortens one barrier and lengthens the other.
 
-V8-A does not use the leaky M15/H1 B1 feature path.
+After resetting C0 at the delayed decision and defining a new symmetric +/-10 race, the large effect disappeared.
 
-Primary artifact remains:
+### Selective-tail illusion / reproducibility failure
 
-`mt5/indicators/V8MovementProbabilityIndicator.mq5`
+A prior score artifact suggested 60m chosen-side hit rates above 70%.
 
-## Current V8-B2 question
+It did not survive independent exact reconstruction using the current event ledger and explicit causal signed-activity equations.
 
-The failure mechanism is now specific:
+Exact rebuild direction AUC:
 
-> endogenous GOLD history strongly predicts movement intensity but not stable direction once HTF alignment is truly causal.
+```text
+30m: 2025 ~0.533 / 2026 ~0.520
+60m: 2025 ~0.516 / 2026 ~0.506
+```
 
-V8-B2 therefore asks whether source-of-move external context adds sign information:
+High chosen-side hit rates after adding V8-A were explained primarily by higher `move_rate`, while conditional direction accuracy stayed near 50%.
 
-- USDJPY# as a USD/rate-pressure proxy with caveats;
-- XAUEUR# as a cross-gold / USD-translation separator;
-- BTCUSD# as a negative-control risk/sentiment market.
+## Mandatory accounting
 
-Read the frozen contract:
+Always decompose:
 
-`docs/ea/v8/V8_B2_SOURCE_OF_MOVE_RESEARCH_CONTRACT.md`
+```text
+chosen_hit = movement selection + directional contribution
+```
 
-## Data access
+Report:
 
-The current runtime has:
+```text
+move_rate
+conditional_direction_accuracy
+chosen_side_hit_rate
+directional_excess = chosen_side_hit_rate - 0.5*move_rate
+```
 
-- full GOLD# 2022-2026 M1 raw source.
+## Current best conclusion
 
-File-library manifests establish prior raw lineage for:
+```text
+GOLD endogenous history -> near-term movement intensity: strong
+GOLD endogenous history -> stable broad near-term sign: not demonstrated
+```
 
-- USDJPY# 2023-2025;
-- XAUEUR# 2023-2025;
-- BTCUSD# 2023-2025;
-- later USDJPY#/BTCUSD# 2026 YTD working evidence.
+V8-A remains useful even though V8-B has not yet found stable sign information.
 
-But the raw external M1 bytes are not mounted in the active runtime now. Derived result files are not sufficient for causal event-time feature construction.
+## Immediate next work
 
-Therefore the immediate B2 execution gate is:
-
-1. obtain/mount the exact external raw M1 files;
-2. hash/data-quality audit;
-3. freeze source-age/missing-data rule outcome-blind;
-4. run the already-frozen B2 feature/evaluation contract;
-5. no rescue if the future-hidden result fails.
-
-## GOLD# 2021
-
-Still untouched. Do not open.
+1. finish exact `V8-A trajectory × factual event` conditioning on the frozen continuous probability series;
+2. run the sequential `WAIT -> observe -> recenter -> update` policy with a new C0 at every decision;
+3. keep all selection rules causal and independently reproducible;
+4. test overlap, month, hour, event-family and direction concentration;
+5. report directional excess, MAE/MFE and opposite-barrier path;
+6. do not implement a direction MT5 companion until a candidate survives 2024 discovery -> 2025 validation -> 2026 stress;
+7. keep GOLD# 2021 locked.
 
 ## Reading order next session
 
 1. `docs/ea/v8/AGENTS_V8.md`
 2. `docs/ea/v8/HANDOFF_V8.md`
-3. `docs/ea/v8/V8_B1_CAUSAL_ALIGNMENT_INVALIDATION.md`
-4. `docs/ea/v8/V8_B2_SOURCE_OF_MOVE_RESEARCH_CONTRACT.md`
+3. `docs/ea/v8/V8_B_INTERNAL_DIRECTION_RESEARCH_20260831.md`
+4. `docs/ea/v8/V8_B1_CAUSAL_ALIGNMENT_INVALIDATION.md`
 5. `docs/ea/v8/V8_005_MOVEMENT_PROBABILITY_INDICATOR.md`
 6. `docs/ea/v8/DECISIONS_V8.md`
 7. `docs/ea/v8/RESEARCH_STATE_V8.md`
 8. `docs/ea/v8/V8_RESEARCH_JOURNEY.md`
 
-Refresh GitHub HEAD before further work.
+Always refresh GitHub HEAD before continuing.

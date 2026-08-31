@@ -510,3 +510,127 @@ Mover-only conditional AUC remains a diagnostic, but V8-B2 promotion requires im
 Reason:
 
 Conditioning evaluation on a future-known mover population can exaggerate practical usefulness even when the conditional classifier itself is causal.
+
+---
+
+## D-V8-035 — De-scope the external source-of-move branch
+
+Date: `2026-08-31`
+
+Decision:
+
+External/cross-market data is not the active V8-B direction path. Continue with GOLD-internal information and frozen V8-A unless the user explicitly reopens external sources.
+
+Reason:
+
+The intended system is built around frequent GOLD events and the user wants to test whether V8-A plus better internal representation can support direction without depending on other instruments.
+
+---
+
+## D-V8-036 — Treat V8-A trajectory as a research representation, not presumed direction information
+
+Date: `2026-08-31`
+
+Decision:
+
+V8-B may use the causal P15/P30/P60 history, slopes, acceleration and horizon shape as inputs, but their usefulness must be proven incrementally against GOLD price/activity controls.
+
+Reason:
+
+Multiple sequence, geometry and TCN studies showed that V8-A trajectory can correlate with market state without providing stable incremental direction skill.
+
+---
+
+## D-V8-037 — Recenter every delayed direction decision
+
+Date: `2026-08-31`
+
+Decision:
+
+If V8-B waits after an event before making a direction decision, set the new decision price as C0 and redefine symmetric +/-10.0 barriers from that price.
+
+Reason:
+
+Keeping the original event C0 after observing a price response creates mechanical barrier-distance asymmetry and can manufacture apparent continuation accuracy.
+
+---
+
+## D-V8-038 — Selective direction requires independently reproducible score provenance
+
+Date: `2026-08-31`
+
+Decision:
+
+No selective confidence-tail result is authority unless the event population, features, scaler/model parameters, training chronology and cutoff construction can be independently regenerated from source data.
+
+Reason:
+
+A prior 70-90% direction-tail result did not reproduce under an exact independent rebuild.
+
+---
+
+## D-V8-039 — Separate movement filtering from directional contribution
+
+Date: `2026-08-31`
+
+Decision:
+
+Every V8-B selective analysis must report movement rate, conditional direction accuracy, chosen-side hit and directional excess.
+
+Use:
+
+```text
+directional_excess = chosen_side_hit_rate - 0.5 * move_rate
+```
+
+Reason:
+
+V8-A can make chosen-side hit rates look high simply by selecting events that move, even if direction is effectively random.
+
+---
+
+## D-V8-040 — No current V8-B direction model has deployment authority
+
+Date: `2026-08-31`
+
+Decision:
+
+Do not build or deploy an MT5 LONG/SHORT probability companion from the current retrospective V8-B models.
+
+Reason:
+
+Strictly causal and independently rebuilt later-year direction AUC remains near chance, and the strongest previous selective result failed reproduction.
+
+---
+
+## D-V8-041 — Prioritize sequential WAIT/recenter research over more one-shot feature mining
+
+Date: `2026-08-31`
+
+Decision:
+
+The next internal direction study prioritizes a causal sequential decision policy:
+
+```text
+event -> movement state -> WAIT if direction weak -> observe -> recenter -> update
+```
+
+rather than another broad one-shot direction classifier.
+
+Reason:
+
+Many one-shot preprocessing/model families have already been exhausted without stable sign information, while the human use of V8-A naturally supports attention followed by later confirmation.
+
+---
+
+## D-V8-042 — Keep GOLD# 2021 locked
+
+Date: `2026-08-31`
+
+Decision:
+
+Do not open the 2021 reserve for current V8-B direction research.
+
+Reason:
+
+No direction candidate currently satisfies strict causal, reproducibility and later-year stability gates.

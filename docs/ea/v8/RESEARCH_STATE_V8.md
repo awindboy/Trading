@@ -1,103 +1,120 @@
 # V8 Research State
 
-Status: `ACTIVE / V8-A FROZEN + V8-B1 INVALIDATED + V8-B2 PREFLIGHT`
+Status: `ACTIVE / V8-A FROZEN + INTERNAL V8-B RESEARCH`
 Date: `2026-08-31`
-Current phase: `V8-B2 SOURCE-OF-MOVE CAUSAL DIRECTION`
 Production authority: `NONE`
 EA authority: `NONE`
 Direction authority: `NONE`
 
-## Branch map
-
-### V8-A — Movement probability
+## V8-A — Movement probability
 
 `FROZEN / POSITIVE OPEN-DEVELOPMENT EVIDENCE`
 
-Target:
+The portable 53-feature M1-derived model remains the active movement-intensity component.
+
+It estimates:
 
 ```text
-P(price reaches completed-M5 close +/-10.0 within H)
-H in {15,30,60}
+P(reach C0 +/-10.0 within 15m/30m/60m)
 ```
 
-Portable MT5 event-subset AUC remains recorded as approximately:
+It is not a LONG/SHORT or trade-win probability.
 
-```text
-15m: 0.865 / 0.873 / 0.815
-30m: 0.844 / 0.851 / 0.796
-60m: 0.807 / 0.829 / 0.781
-```
-
-V8-A is direction-free and unaffected by the B1 invalidation.
-
-### V8-B1 — Conditional endogenous direction
+## V8-B1
 
 `INVALIDATED_BY_HTF_LOOKAHEAD / CLOSED`
 
-The previously committed high direction AUC used future-completed M15/H1 bars for many intrabar decisions.
+The previously high conditional direction AUC cannot be used.
 
-Leak prevalence:
+Strictly causal realignment reduced the broad direction result toward chance in later development years.
 
-```text
-M15 67.78%
-H1  90.20%
-```
+## External source-of-move branch
 
-After strict causal realignment:
+`DE-SCOPED / HISTORICAL PROPOSAL`
 
-```text
-completed-only 30m AUC: 0.579 / 0.537 / 0.521
-completed-only 60m AUC: 0.530 / 0.514 / 0.511
-```
+External/cross-market research is not the active branch after the user chose to continue with GOLD-internal information plus frozen V8-A.
 
-A causal current-partial M15/H1 reconstruction also fails to restore the edge.
+## Internal V8-B research
 
-The B1 coefficient artifact is historical invalidated evidence only and must not be deployed.
+`ACTIVE RESEARCH / NO DIRECTION AUTHORITY`
 
-### V8-B2 — Source-of-move causal direction
+Research performed after B1 invalidation:
 
-`PRE-REGISTERED / RAW EXTERNAL DATA NOT CURRENTLY MOUNTED`
+- V8-A probability snapshot and trajectory;
+- probability slopes/acceleration/hazard shape;
+- price + probability joint sequences;
+- TCN joint-sequence model;
+- event-centered causal geometry;
+- causal volatility/probability regime canonicalization;
+- directional semivariance/body/wick/activity features;
+- V8-A + directional-activity interaction;
+- score fusion and stacking;
+- all-M5 direction training controls;
+- recent-year / rolling retraining controls;
+- event-family diagnostics;
+- selective confidence tails;
+- exact independent rebuild;
+- delayed-event posterior diagnostics with mandatory recenter correction.
 
-Purpose:
+## Current result
 
-Test whether a compact external context tied to a specific failure mechanism adds directional information beyond corrected GOLD-only input while V8-A remains frozen.
+No tested internal representation has demonstrated a stable broad direction edge across 2024 -> 2025 -> 2026.
 
-Initial sources:
+Promising 2024 results repeatedly weakened in 2025 and approached chance in 2026.
 
-- USDJPY# — primary USD/rate-pressure proxy;
-- XAUEUR# — primary cross-gold / USD-translation separator;
-- BTCUSD# — negative-control risk/sentiment context.
-
-Full contract:
-
-`V8_B2_SOURCE_OF_MOVE_RESEARCH_CONTRACT.md`
-
-## Causal-alignment authority
-
-For every V8 branch:
+The independently reconstructed selective direction model produced approximately:
 
 ```text
-completed bar is observable only if
-bar_start + timeframe_duration <= decision_time
+30m AUC: 2025 0.533 / 2026 0.520
+60m AUC: 2025 0.516 / 2026 0.506
 ```
 
-A current partial HTF bar may be used only when reconstructed from lower-timeframe observations available before the decision.
+Adding V8-A can materially increase the probability that a 10p move occurs, but this must not be confused with direction skill.
 
-Bar-start timestamp alone is never sufficient proof of availability.
+## Directional-excess rule
 
-## Validation reserve
+Use:
 
 ```text
-GOLD# 2021 = UNTOUCHED / LOCKED
+directional_excess =
+chosen_side_hit_rate - 0.5 * move_rate
 ```
 
-No V8-B result currently authorizes opening it.
+as a mandatory companion metric.
 
-## Current required documents
+High `chosen_side_hit_rate` with near-zero directional excess is movement filtering, not direction edge.
 
-- `V8_B1_CAUSAL_ALIGNMENT_INVALIDATION.md`
-- `V8_B2_SOURCE_OF_MOVE_RESEARCH_CONTRACT.md`
-- `V8_005_MOVEMENT_PROBABILITY_INDICATOR.md`
-- `V8_RESEARCH_JOURNEY.md`
-- `DECISIONS_V8.md`
-- `HANDOFF_V8.md`
+## Exact V8-A trajectory infrastructure
+
+An exact continuous completed-M5 V8-A probability series was independently reconstructed for 2024-2026.
+
+This enables causal tests of:
+
+- current probability;
+- 5/15/30/60-minute probability history;
+- probability slope and acceleration;
+- event interaction;
+- sequential posterior state.
+
+The final exact trajectory/event matrix is still the immediate unfinished internal diagnostic.
+
+## Remaining active hypothesis
+
+The most credible remaining internal-only formulation is not a forced one-shot LONG/SHORT classifier.
+
+It is:
+
+```text
+event
+-> V8-A says attention/movement state
+-> WAIT when direction evidence is weak
+-> observe new causal GOLD evidence
+-> recenter C0 at the new decision
+-> update/enter only if direction evidence appears
+```
+
+## Reserve
+
+`GOLD# 2021 = LOCKED / UNTOUCHED`
+
+No current direction candidate justifies consuming it.
