@@ -1,209 +1,155 @@
 # V8 Development Handoff
 
 Last updated: `2026-09-01`
-Current phase: `V8-A-N NORMALIZED FRESH-HIGH STRATEGY RESEARCH`
+Current phase: `V8-A-N N1 FROZEN / N2 NEW-INFORMATION DIRECTION RESEARCH`
 Production authority: `NONE`
 Market: `GOLD#`
 Untouched reserve: `GOLD# 2021`
 
-## 1. Immediate authority state
+## 1. Read-this-first
 
-### V8-A
-Frozen absolute-$10 movement control.
+The normalized movement research succeeded at the **movement/trigger** layer but not yet at the complete trading layer.
 
-### V8-A2
-Retained absolute-$10 86-feature survival challenger and rank/state layer. Not promoted.
-
-### V8-A-N
-New retained ATR-normalized movement challenger. Current active research branch.
-
-### V8-C LONG
-Provisional frozen, MT5 real-tick verified. Do not change entry.
-
-### Fixed-$10 fresh75
-Development control only. Direction remains around ~59% on consumed 2025/2026 evidence. Fixed $10 SL with ~$13 TP produced a useful ~1.30R comparison point, but no authority.
-
-## 2. Why V8-A-N was opened
-
-Fixed $10 changed effective difficulty dramatically across years.
-
-All-M5 P15 fixed-$10 base rate:
+Current primary chain:
 
 ```text
-2022 0.57%
-2023 0.38%
-2024 1.04%
-2025 7.34%
-2026 28.83%
+V8-A-N movement surface
+        ↓
+N1 = 1.50ATR fresh P15 75-cross FROZEN
+        ↓
+N2 direction = current bottleneck
+        ↓
+N3 ATR exits paused until N2 improves
 ```
 
-For `2 * causal M5 ATR14`:
+Fixed-$10 fresh75 with $10 SL / $13 TP remains the stronger complete development benchmark.
+
+## 2. N1 frozen trigger
 
 ```text
-2022 18.41%
-2023 18.77%
-2024 18.61%
-2025 18.50%
-2026 18.19%
+ATR = causal pre-decision M5 Wilder ATR14
+barrier = 1.50 ATR
+
+previous P15_1.50ATR <75%
+current P15_1.50ATR >=75%
 ```
 
-P30/P60 show the same stabilization.
+Direction-blind selection.
 
-Future excursion / ATR distribution is also highly stable across years.
-
-This is strong evidence that volatility normalization addresses a real target-definition problem.
-
-## 3. Prototype model status
-
-A2 pipeline parity was reproduced before normalized training.
-
-Prototype V8-A-N models exist for:
+Movement realization:
 
 ```text
-0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.50, 3.00 ATR
+2024 N809 P15 81.64% P30 93.92% P60 98.88%
+2025 N834 P15 77.85% P30 91.77% P60 98.18%
+2026 N551 P15 80.04% P30 93.77% P60 97.80%
 ```
 
-They are research-only.
+Monthly count is roughly 67-70, active-day median 3, median trigger spacing roughly 5.5-6.3 hours.
 
-Independent distance models have rare monotonicity violations. Final model architecture must enforce distance/horizon ordering.
+Do not change k because of later direction results.
 
-## 4. New fresh-high movement populations
+## 3. N2 result
 
-### 1.25 ATR fresh75
+First 2024-only technical rule:
 
 ```text
-2024 N1958, P15 hit 81.38%
-2025 N2230, P15 hit 79.03%
-2026 N1690, P15 hit 77.09%
+2024 ~59.6%
+2025 48.28%
+2026 49.44%
 ```
 
-### 1.50 ATR fresh75
+Falsified. No threshold rescue.
+
+After all years became development evidence, N2-R1 maximin ensemble produced:
 
 ```text
-2024 N809, P15 hit 81.64%
-2025 N834, P15 hit 77.85%
-2026 N551, P15 hit 80.04%
+2024 57.34%
+2025 57.62%
+2026 57.43%
 ```
 
-### 2.00 ATR fresh75
+This is stable but post-hoc and has no independent-validation authority.
+
+Broad chronological regularized models did not improve transfer.
+
+Interpretation:
+
+`direction remains the bottleneck`.
+
+## 4. N3 result
+
+With N2-R1:
 
 ```text
-2024 N180, P15 hit 80.90%
-2025 N151, P15 hit 73.29%
-2026 N131, P15 hit 75.19%
+SL1 / TP1 ATR:
+WR ~55%, EV ~+0.09 to +0.11R
+but winner =1R
+
+SL1 / TP1.25:
+WR 49.94 / 49.04 / 51.18%
+EV +0.124 / +0.103 / +0.153R
+
+SL1 / TP1.50:
+WR 45.36 / 46.16 / 47.55%
+EV +0.134 / +0.150 / +0.191R
 ```
 
-All have very high 30m/60m movement realization.
+None meet the combined project requirement across all years.
 
-The next task is to choose/freeze a normalized movement trigger using structural/movement criteria, not direction P/L.
+One-position sensitivity is nearly identical because most signals resolve quickly.
 
-## 5. Old fixed-$10 fresh75 remains a control
+Do not fine-tune nearby TP values yet.
 
-Original fresh75:
+## 5. Cost warning
+
+A 1ATR stop is small relative to recorded spread in 2024:
 
 ```text
-previous fixed-$10 P15 <75%
-current fixed-$10 P15 >=75%
+median entry spread / 1ATR risk:
+2024 ~13.7%
+2025 ~6.1%
+2026 ~4.9%
 ```
 
-On that population, extending fixed SL=$10 to TP=$13 gave:
+These are rough M1 spread proxies, not exact MT5 costs.
+
+Real-tick execution is mandatory before any normalized strategy authority.
+
+## 6. Benchmark
+
+Existing fixed-$10 fresh75 development benchmark:
 
 ```text
-2025 WR52.63% EV +0.207R
-2026 WR52.07% EV +0.198R
+SL $10 / TP $13
+
+2025 WR52.63% EV+0.207R
+2026 WR52.07% EV+0.198R
 ```
 
-TP=$13.5 stayed just above 50% in both years but is the observed boundary.
+Current normalized complete candidate is inferior to this benchmark despite having a much better movement target/cadence.
 
-Use `$10/$13` as a comparison control only.
+Do not confuse a superior movement model with a superior complete trade.
 
-Do not optimize more decimal TP values.
+## 7. Next research
 
-## 6. Critical next-stage separation
+Keep N1 fixed.
 
-The normalized strategy must be built in this order:
+Next work:
 
-```text
-N1 normalized movement trigger
-          ↓ freeze
-N2 direction engine
-          ↓ freeze
-N3 ATR-consistent SL/TP
-          ↓ freeze
-N4 complete-strategy comparison
-```
+1. construct frozen-N1 tick/quote probe;
+2. extract trigger-local 5s/15s/30s/60s/180s/300s raw quote features;
+3. include shifted placebo windows;
+4. test whether tick information improves direction above N2-R1;
+5. do not reopen N3 unless direction improves materially;
+6. if XM quote information also fails, consider CME GC order flow / macro surprise;
+7. keep 2021 locked.
 
-Do not use final P/L to select N1.
+## 8. Other branches
 
-Do not copy the old fresh75 direction engine into N2 without revalidation.
+V8-A/A2 remain unchanged.
 
-Do not tune N3 while changing N2.
+V8-C LONG remains provisionally frozen and real-tick verified; do not modify its entry.
 
-## 7. N1 candidate decision criteria
+V8-C-S1 remains research-only.
 
-Compare `1.25 / 1.50 / 2.00 ATR` fresh75 populations on:
-
-- P15/P30/P60 realized movement precision;
-- count per year/month;
-- year stability;
-- trigger clustering and spacing;
-- ATR distribution;
-- session distribution;
-- probability/rank distribution;
-- implementation complexity;
-- independence from one short volatility burst.
-
-No direction labels or P/L in N1 selection.
-
-## 8. N2 direction research
-
-After N1 is frozen, rebuild direction research for that exact population.
-
-Candidate information families may include:
-
-- M1/M5 candle sequence;
-- M5/M15/H1 partial and completed geometry;
-- stochastic/momentum/exhaustion;
-- signed activity/tick-volume;
-- swing/liquidity location;
-- session as context;
-- raw quote microstructure if needed;
-- centralized futures/macro information only as a later new-source branch.
-
-Target remains mandatory LONG/SHORT unless a separate selective-strategy branch is explicitly opened.
-
-## 9. N3 ATR-consistent economics
-
-Only after direction freeze.
-
-Initial simple family should be preregistered, e.g.:
-
-```text
-SL 1.0 ATR / TP 1.0 ATR
-SL 1.0 ATR / TP 1.25 ATR
-SL 1.0 ATR / TP 1.5 ATR
-```
-
-Potential alternative SL scales may be opened only under a new predeclared experiment, not by dense post-hoc grid rescue.
-
-Report actual dollar SL/TP distributions as well as R.
-
-## 10. Evidence status
-
-2022-2026 are development evidence for V8-A-N.
-
-Do not claim independent production validation from these years.
-
-`GOLD# 2021 remains locked`.
-
-Before reserve use, the complete trigger + direction + risk/payoff architecture must be frozen and MT5 execution semantics defined.
-
-## 11. Next session
-
-1. refresh GitHub HEAD;
-2. read AGENTS/HANDOFF;
-3. open `V8_A_N_ATR_NORMALIZED_MOVEMENT_RESEARCH_20260901.md`;
-4. run N1 structural trigger comparison only;
-5. freeze one trigger family;
-6. then begin N2 direction engine research;
-7. do not touch 2021.
+V8-C exit/winner-continuation work remains retained but is not the immediate priority.

@@ -1,0 +1,6 @@
+feature,condition,threshold,long_vote
+M1_5_range_atr,>=,2.841113,1
+H4_rsi7_slope,>=,-1.686305,1
+M5_mfi14,<=,52.210746,1
+H4_wickskew,>=,-0.156968,1
+H1_range_atr,>=,0.787591,1

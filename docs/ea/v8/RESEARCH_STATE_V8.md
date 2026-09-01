@@ -1,100 +1,72 @@
 # V8 Research State
 
-Status: `ACTIVE / V8-A-N NORMALIZED FRESH-HIGH PRIMARY`
+Status: `ACTIVE / V8-A-N N1 FROZEN / N2 BOTTLENECK`
 Date: `2026-09-01`
 Production authority: `NONE`
 Market: `GOLD#`
 Untouched reserve: `GOLD# 2021`
 
 ## V8-A
-`FROZEN / CURRENT ABSOLUTE-$10 CONTROL`.
+`FROZEN / ABSOLUTE-$10 CONTROL`.
 
 ## V8-A2
 `RETAINED / NOT PROMOTED`.
 
-```text
-P15 AUC 0.8660 / 0.8736 / 0.8190
-P30 AUC 0.8501 / 0.8565 / 0.7999
-P60 AUC 0.8130 / 0.8384 / 0.7925
-```
-
-R15/R30/R60 reliability layer retained.
-
 ## V8-A-N
-`RETAINED RESEARCH CHALLENGER / ACTIVE`.
+`RETAINED NORMALIZED MOVEMENT CHALLENGER`.
 
-Target:
+Normalized movement portability is strongly supported on 2022-2026 development evidence.
 
-```text
-P(reach C0 +/- k * causal M5 ATR14 within 15/30/60m)
-```
-
-Prototype k:
-
-`0.75,1.00,1.25,1.50,1.75,2.00,2.50,3.00`.
-
-Main finding: ATR-normalized movement base rates and excursion distributions are far more stable across 2022-2026 than fixed $10.
-
-Prototype independent-distance probabilities have small monotonicity violations; no live authority.
-
-## Normalized fresh-high candidates
+## N1
+`FROZEN DEVELOPMENT TRIGGER`.
 
 ```text
-1.25 ATR:
-N 1958 / 2230 / 1690
-P15 realized 81.38 / 79.03 / 77.09%
-
-1.50 ATR:
-N 809 / 834 / 551
-P15 realized 81.64 / 77.85 / 80.04%
-
-2.00 ATR:
-N 180 / 151 / 131
-P15 realized 80.90 / 73.29 / 75.19%
+1.50 ATR fresh P15 75-cross
 ```
 
-Next task: freeze N1 trigger using movement/structural criteria before direction research.
+P15 realized movement ~78-82%, high P30/P60 precision, stable monthly cadence.
 
-## Fixed-$10 fresh75
-`DEVELOPMENT CONTROL / NO AUTHORITY`.
+## N2
+`ACTIVE BOTTLENECK`.
 
-Broad direction research remained around ~59%.
+First 2024-only rule failed 2025/2026.
 
-With fixed SL=$10, TP=$13 / 1.30R produced:
+N2-R1 post-hoc development control:
 
 ```text
-2025 WR52.63% EV +0.207R
-2026 WR52.07% EV +0.198R
+57.34 / 57.62 / 57.43% direction accuracy
 ```
 
-Retain as comparison control only.
+No independent validation authority.
 
-## V8-C LONG
-`PROVISIONAL FROZEN / MT5 REAL-TICK VERIFIED`.
+Next direction work requires genuinely new information, preferably raw tick/quote microstructure on the frozen N1 population.
+
+## N3
+`INITIAL FAMILY COMPLETE / NOT RETAINED AS FINAL EXIT`.
 
 ```text
-N456 / WR60.09% / +91.85R / +0.201R
+TP1.0: WR~55%, winner1R
+TP1.25: WR~49-51%, winner1.25R
+TP1.50: WR~45-48%, winner1.5R
 ```
 
-Do not alter entry.
+No candidate meets both WR>=50% every year and winner>1R.
 
-Exit/winner-continuation research remains separate and is not the current primary branch.
+## N4
+`NORMALIZED COMPLETE STRATEGY NOT PROMOTED`.
 
-## V8-C-S1
-`RESEARCH-ONLY / M1 PROXY`: N140 / WR58.57% / +24R.
+Fixed-$10 fresh75 $10/$13 remains stronger combined development benchmark on 2025/2026.
 
-## Current primary action
+## Execution
+Normalized 1ATR risk is materially spread-sensitive, especially in 2024. No cost-adjusted or real-tick authority.
 
-```text
-N1 normalized fresh-high trigger freeze
--> N2 population-specific direction engine
--> N3 ATR-consistent SL/TP
--> N4 complete strategy comparison
-```
+## V8-C
+LONG remains provisionally frozen / real-tick verified. Keep separate.
 
-No direction P/L may be used to choose N1.
+## Current ordering
 
-Do not reuse the fixed-$10 direction engine without a separate N2 test.
-
-## Reserve
-GOLD# 2021 remains locked until a complete normalized architecture is frozen and merits final temporal validation.
+1. frozen N1 tick/quote direction research;
+2. if direction improves, reopen preregistered N3;
+3. if tick data fail, change information source;
+4. monotonic V8-A-N surface before live implementation;
+5. 2021 remains locked.

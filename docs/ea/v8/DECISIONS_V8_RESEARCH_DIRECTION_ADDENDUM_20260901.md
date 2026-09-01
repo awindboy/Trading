@@ -252,3 +252,171 @@ Do not use 2021 to choose normalized k, direction features or ATR SL/TP.
 Reason:
 
 The complete normalized strategy is not frozen. Reserve use is justified only after trigger, direction, risk/payoff and execution semantics are all fixed.
+## D-V8-104 — Freeze N1 at 1.50 ATR using direction-blind criteria
+
+Decision:
+
+Freeze the normalized movement trigger as:
+
+```text
+previous P15_1.50ATR <75%
+current P15_1.50ATR >=75%
+```
+
+Reason:
+
+1.25ATR was excessively clustered and 2ATR was too sparse. 1.50ATR retained ~78-82% realized P15 movement, high P30/P60 precision, approximately three active-day triggers, and materially lower within-hour clustering.
+
+No LONG/SHORT result or P/L was used to choose N1.
+
+---
+
+## D-V8-105 — Reject the first 2024-only normalized direction rule
+
+Decision:
+
+The first five-vote N2 rule is rejected.
+
+Evidence:
+
+```text
+2024 ~59.6%
+2025 48.28%
+2026 49.44%
+```
+
+Do not adjust its thresholds to rescue later years.
+
+---
+
+## D-V8-106 — Mark 2024-2026 consumed for normalized direction/economic development
+
+Decision:
+
+After opening the frozen N2 rule on 2025/2026, all three years are development evidence for this normalized direction branch.
+
+Reason:
+
+Later model/rule selection can no longer claim untouched validation on these years.
+
+2021 remains locked.
+
+---
+
+## D-V8-107 — Retain N2-R1 only as a maximin development control
+
+Decision:
+
+Retain the post-hoc deterministic N2-R1 ensemble as a development baseline:
+
+```text
+2024 57.34%
+2025 57.62%
+2026 57.43%
+```
+
+Reason:
+
+It is much more stable than the first rule but was selected using all three consumed years. It has no independent-validation authority.
+
+---
+
+## D-V8-108 — Record the initial N3 ATR payoff family as incomplete for project targets
+
+Decision:
+
+The predeclared:
+
+```text
+SL1ATR / TP1ATR
+SL1ATR / TP1.25ATR
+SL1ATR / TP1.50ATR
+```
+
+family is complete.
+
+No candidate simultaneously maintains WR>=50% in every year and average winner meaningfully above 1R.
+
+Do not immediately insert intermediate TP values to rescue the family.
+
+---
+
+## D-V8-109 — Separate movement success from complete-strategy success
+
+Decision:
+
+Retain V8-A-N and N1 despite the current trading result.
+
+Reason:
+
+The normalized movement target and trigger show strong portability. The current failure occurs downstream in direction/economics.
+
+Do not discard a successful movement layer merely because N2 is weak.
+
+---
+
+## D-V8-110 — Treat spread-to-ATR ratio as a required execution diagnostic
+
+Decision:
+
+Any normalized trading architecture must report spread/slippage relative to the chosen ATR risk unit.
+
+Observed M1 entry-spread proxy:
+
+```text
+2024 median spread / 1ATR ~0.137R
+2025 ~0.061R
+2026 ~0.049R
+```
+
+Reason:
+
+A statistically portable ATR target can still be economically poor when the risk unit becomes too small relative to execution cost.
+
+These are proxies, not full-cost authority.
+
+---
+
+## D-V8-111 — Keep fixed-$10 $10/$13 as the current complete development benchmark
+
+Decision:
+
+Until a normalized direction/execution architecture improves, compare against:
+
+```text
+fixed-$10 fresh75
+SL $10
+TP $13
+```
+
+Development evidence:
+
+```text
+2025 WR52.63% EV+0.207R
+2026 WR52.07% EV+0.198R
+```
+
+This remains benchmark-only, not production authority.
+
+---
+
+## D-V8-112 — Next normalized work returns to N2 new-information research
+
+Decision:
+
+Keep N1 fixed and pause further N3 optimization.
+
+Next research should use genuinely new direction information:
+
+- raw XM quote/tick microstructure;
+- bid/ask update imbalance;
+- quote arrival/burst features;
+- spread dynamics;
+- shifted placebo windows;
+- later CME GC order flow or macro surprise if necessary.
+
+Reason:
+
+The main bottleneck is direction, and arbitrary TP refinement cannot fix it robustly.
+
+GOLD# 2021 remains locked.

@@ -1,90 +1,80 @@
 # V8 Backlog
 
 Status date: `2026-09-01`
-Active phase: `V8-A-N NORMALIZED FRESH-HIGH STRATEGY RESEARCH`
+Active phase: `V8-A-N N1 FROZEN / N2 NEW-INFORMATION DIRECTION`
 
-## V8-A / A2 controls
-- [x] Preserve frozen V8-A.
-- [x] Preserve retained V8-A2 survival/rank layer.
-- [x] Reproduce A2 pipeline before normalized research.
+## V8-A / A2
+- [x] Preserve frozen controls.
 - [ ] No authority changes.
 
-## V8-A-N normalized movement
-- [x] Define causal pre-decision M5 Wilder ATR14 scale.
-- [x] Compare fixed-$10 vs ATR-normalized all-M5 base rates.
-- [x] Show normalized excursion-distribution stability 2022-2026.
-- [x] Train prototype 0.75-3.00 ATR survival surfaces.
-- [x] Evaluate outer-year AUC/Brier.
-- [x] Audit distance monotonicity.
-- [x] Retain branch as research challenger.
-- [ ] Replace independent-distance prototype with a structurally monotonic distance/horizon surface before any live implementation.
-- [ ] MT5/Python parity only after architecture freeze.
+## V8-A-N movement
+- [x] ATR normalization base-rate study.
+- [x] normalized excursion distribution study.
+- [x] prototype 0.75-3ATR surfaces.
+- [x] monotonicity audit.
+- [ ] build structurally monotonic distance/horizon surface before live authority.
 
-## N1 — normalized fresh-high trigger — CURRENT
-- [x] Generate 1.25ATR fresh75 population.
-- [x] Generate 1.50ATR fresh75 population.
-- [x] Generate 2.00ATR fresh75 population.
-- [x] Confirm high/stable realized P15/P30/P60 movement.
-- [ ] Compare monthly/yearly trigger counts.
-- [ ] Compare trigger spacing/clustering.
-- [ ] Compare ATR distribution.
-- [ ] Compare session distribution.
-- [ ] Compare probability/rank shape.
-- [ ] Freeze one N1 population without using direction labels or P/L.
+## N1 normalized trigger
+- [x] compare 1.25 / 1.50 / 2.00 ATR without direction P/L.
+- [x] movement realization comparison.
+- [x] monthly counts.
+- [x] spacing/clustering.
+- [x] session/context distribution.
+- [x] freeze `1.50 ATR fresh75`.
+- [ ] do not reopen k from direction/economic results.
 
-## N2 — direction engine
-- [ ] Start only after N1 freeze.
-- [ ] Rebuild feature tournament on exact normalized-trigger population.
-- [ ] Do not assume old fixed-$10 fresh75 direction engine transfers.
-- [ ] Separate trend continuation vs exhaustion/reversal families.
-- [ ] Include causal partial HTF geometry.
-- [ ] Include signed activity/tick-volume.
-- [ ] Include liquidity/location.
-- [ ] Use new raw microstructure information only if same-information technical features stall.
-- [ ] Freeze direction before any SL/TP optimization.
+## N2 direction
+- [x] 2024-only technical rule.
+- [x] falsify unchanged on 2025/2026.
+- [x] no threshold rescue.
+- [x] mark 2024-2026 consumed for normalized direction development.
+- [x] build N2-R1 maximin development control (~57.5%).
+- [x] confirm broad chronological regularized models do not solve transfer.
+- [ ] build raw XM tick/quote feature probe for frozen N1.
+- [ ] use aligned vs shifted/placebo windows.
+- [ ] test bid/ask update imbalance.
+- [ ] test quote-arrival acceleration.
+- [ ] test spread dynamics.
+- [ ] test sub-minute persistence/reversal.
+- [ ] if weak, consider CME GC order flow.
+- [ ] if weak, consider macro surprise/context.
+- [ ] no 2021 use during N2 development.
 
-## N3 — ATR-consistent risk/payoff
-- [ ] Predeclare first simple family after N2 freeze.
-- [ ] Start with 1.0ATR SL and 1.0/1.25/1.5ATR TP family unless N2 evidence requires a separately documented alternative.
-- [ ] Report dollar risk distribution as well as R.
-- [ ] Report costs, holding, DD, streaks.
-- [ ] No dense parameter rescue.
+## N3 ATR-consistent payoff
+- [x] preregister SL1ATR / TP1,1.25,1.5 ATR.
+- [x] run 60m primary horizon.
+- [x] run 480m sensitivity.
+- [x] one-position sensitivity.
+- [x] same-M1 ambiguity treated conservatively.
+- [x] no tested variant meets WR>=50% every year + winner>1R.
+- [ ] pause N3; do not optimize intermediate TP values.
+- [ ] reopen only after material N2 or execution improvement.
+- [ ] future new experiment may study executable minimum-risk floor / larger ATR risk scale, but must be preregistered.
 
-## N4 — complete strategy comparison
-- [ ] Fixed-$10 fresh75 + 1R control.
-- [ ] Fixed-$10 fresh75 + fixed $13 TP development control.
-- [ ] Normalized trigger + normalized direction + ATR-consistent exit.
-- [ ] Compare WR, avg winner/loser, EV, PF, DD, streak, holding, clustering and cost sensitivity.
-- [ ] Do not use 2021 until the complete normalized architecture is frozen.
+## Execution/cost
+- [x] quantify M1 spread / 1ATR risk proxy.
+- [x] identify 2024 cost sensitivity.
+- [ ] MT5 Every Tick based on real ticks before strategy authority.
+- [ ] actual fill-relative ATR risk verification.
+- [ ] spread/slippage/commission/swap economics.
 
-## Fixed-$10 fresh75 control
-- [x] Broad ~790-feature direction research.
-- [x] 2025/2026 consumed.
-- [x] Payoff surface with SL=$10.
-- [x] Retain $13 TP / 1.30R as central comparison candidate.
-- [x] Record $13.5 / 1.35R as observed WR>=50% boundary, not an authority.
-- [ ] No further decimal TP optimization.
+## N4 comparison
+- [x] compare normalized strategy with fixed-$10 1R.
+- [x] compare with fixed-$10 $10/$13 ~1.30R control.
+- [x] retain fixed-$10 $10/$13 as current complete development benchmark.
+- [ ] no normalized promotion yet.
 
-## V8-C LONG
-- [x] MT5 R0.4 N456 / WR60.09% / +91.85R.
-- [ ] Preserve entry unchanged.
-- [ ] Exit/winner-continuation branch retained separately; resume later.
+## Fixed-$10 fresh75
+- [x] development direction research.
+- [x] fixed payoff surface.
+- [x] retain $10/$13 as benchmark only.
+- [ ] no more decimal TP optimization.
 
-## V8-C-S1 SHORT
-- [x] M1 proxy N140 / WR58.57% / +24R.
-- [ ] MT5 real-tick validation later without changing LONG.
-
-## TradingView / session
-- [x] Existing A2 TV79/session work retained.
-- [ ] Re-evaluate session only on frozen V8-A-N trigger population; do not copy fixed-$10 session conclusions automatically.
-- [ ] No TradingView V8-A-N port before normalized architecture freeze.
-
-## Execution
-- [ ] Define MT5 normalized ATR calculation exactly before Strategy Tester validation.
-- [ ] Ensure ATR uses only completed information available at decision time.
-- [ ] Verify fill-relative risk units.
-- [ ] Treat broker/feed changes as separate environments.
+## V8-C
+- [x] LONG R0.4 real-tick authority unchanged.
+- [ ] resume exit research separately later.
+- [ ] S1 MT5 validation separately later.
 
 ## Reserve
-- [x] 2022-2026 development evidence.
+- [x] 2022-2026 consumed development evidence.
 - [ ] GOLD# 2021 locked.
