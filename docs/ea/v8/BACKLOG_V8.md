@@ -1,80 +1,101 @@
 # V8 Backlog
 
-Status date: `2026-09-01`
-Active phase: `V8-A-N N1 FROZEN / N2 NEW-INFORMATION DIRECTION`
+Status date: `2026-09-02`
+Active phase: `V8-A-N SLOW-SCALE FORMALIZATION / LEGACY DOWNSTREAM REVALIDATION PENDING`
 
-## V8-A / A2
-- [x] Preserve frozen controls.
-- [ ] No authority changes.
+## Authority reset
+- [x] Identify mismatch between intended meaningful-move normalization and per-M5 ATR target chasing.
+- [x] Reclassify old `1.50*M5 ATR fresh75` N1 as legacy M5-relative research, not active Slow-N authority.
+- [x] Preserve old results as historical evidence rather than deleting/relabeling them as invalid.
+- [x] Mark all old downstream direction/M1/tick/Bollinger/economic results as requiring Slow-N revalidation.
+- [x] Keep GOLD# 2021 locked.
 
-## V8-A-N movement
-- [x] ATR normalization base-rate study.
-- [x] normalized excursion distribution study.
-- [x] prototype 0.75-3ATR surfaces.
-- [x] monotonicity audit.
-- [ ] build structurally monotonic distance/horizon surface before live authority.
+## Slow-scale target research
+- [x] Compare target update cadence for M5/H1/H4/D1 ATR scales.
+- [x] Build initial H1/H4/D1 target-size and 15m base-rate diagnostics.
+- [x] Identify `0.25 * previous-completed H4 ATR14` as provisional primary balance candidate.
+- [x] Confirm 2022-2026 H4 target base rate is roughly stable (~20.7-22.8%).
+- [x] Confirm 2026 median H4 target is ~10.1p.
+- [x] Identify D1 as potentially too slow from quarterly difficulty drift.
+- [ ] Rebuild exact full causal H1/H4/D1 bars with explicit block-boundary unit tests.
+- [ ] Verify no partial H4/D1 candle enters target scale.
+- [ ] Stress H4 target constancy, gaps/weekends, DST/server-time effects and missing bars.
+- [ ] Freeze final slow scale before direction research.
+- [ ] Do not optimize H4 multiplier from direction/P&L.
 
-## N1 normalized trigger
-- [x] compare 1.25 / 1.50 / 2.00 ATR without direction P/L.
-- [x] movement realization comparison.
-- [x] monthly counts.
-- [x] spacing/clustering.
-- [x] session/context distribution.
-- [x] freeze `1.50 ATR fresh75`.
-- [ ] do not reopen k from direction/economic results.
+## Slow-N probability model
+- [x] Lightweight 86-feature survival probe for fixed10/M5/H1/H4/D1 target families.
+- [x] H4 probe annual fresh75 ~78.55 / 78.53 / 76.47%.
+- [x] 25-minute training-phase sensitivity check.
+- [ ] Decide full-training vs explicitly de-overlapped training architecture before final pack.
+- [ ] Rebuild formal P15/P30/P60 model with strict 60m purge.
+- [ ] Report AUC/Brier/logloss/calibration/deciles by year and quarter.
+- [ ] Enforce/check horizon monotonicity.
+- [ ] Build reproducible model/manifest pack.
+- [ ] Python/MQL parity before any MT5 authority.
 
-## N2 direction
-- [x] 2024-only technical rule.
-- [x] falsify unchanged on 2025/2026.
-- [x] no threshold rescue.
-- [x] mark 2024-2026 consumed for normalized direction development.
-- [x] build N2-R1 maximin development control (~57.5%).
-- [x] confirm broad chronological regularized models do not solve transfer.
-- [ ] build raw XM tick/quote feature probe for frozen N1.
-- [ ] use aligned vs shifted/placebo windows.
-- [ ] test bid/ask update imbalance.
-- [ ] test quote-arrival acceleration.
-- [ ] test spread dynamics.
-- [ ] test sub-minute persistence/reversal.
-- [ ] if weak, consider CME GC order flow.
-- [ ] if weak, consider macro surprise/context.
-- [ ] no 2021 use during N2 development.
+## New Slow-N N1
+- [ ] Profile P15>=75 without direction labels.
+- [ ] Profile fresh75 without direction labels.
+- [ ] Annual/monthly/quarterly movement realization.
+- [ ] Active-day frequency and trigger spacing.
+- [ ] H4-block clustering / repeat-trigger rate.
+- [ ] Session distribution.
+- [ ] actual target-distance distribution.
+- [ ] Freeze N1 before opening downstream direction outcomes.
 
-## N3 ATR-consistent payoff
-- [x] preregister SL1ATR / TP1,1.25,1.5 ATR.
-- [x] run 60m primary horizon.
-- [x] run 480m sensitivity.
-- [x] one-position sensitivity.
-- [x] same-M1 ambiguity treated conservatively.
-- [x] no tested variant meets WR>=50% every year + winner>1R.
-- [ ] pause N3; do not optimize intermediate TP values.
-- [ ] reopen only after material N2 or execution improvement.
-- [ ] future new experiment may study executable minimum-risk floor / larger ATR risk scale, but must be preregistered.
+## Legacy chart-direction transfer tests
+- [ ] Re-run semantic deterministic 7-voter panel unchanged where possible.
+- [ ] Re-run MTF expansions / market-question panel as negative controls.
+- [ ] Re-run M5 Stochastic direction.
+- [ ] Re-run causal M15/M30/H1/H4 structure states.
+- [ ] Re-run Path Clearance states.
+- [ ] Do not threshold-rescue failed transfers.
 
-## Execution/cost
-- [x] quantify M1 spread / 1ATR risk proxy.
-- [x] identify 2024 cost sensitivity.
-- [ ] MT5 Every Tick based on real ticks before strategy authority.
-- [ ] actual fill-relative ATR risk verification.
-- [ ] spread/slippage/commission/swap economics.
+## M1 transfer tests
+- [ ] Re-run M1 recent direction / pressure / causal confirmed structure.
+- [ ] Re-run M1 sweep/reclaim / M1 Stoch / EMA3-8 context.
+- [ ] Test M1 structure agreement as a confidence layer.
+- [ ] Re-run M5 Stoch -> M1 counter-move -> M1 oscillator transition sequence.
 
-## N4 comparison
-- [x] compare normalized strategy with fixed-$10 1R.
-- [x] compare with fixed-$10 $10/$13 ~1.30R control.
-- [x] retain fixed-$10 $10/$13 as current complete development benchmark.
-- [ ] no normalized promotion yet.
+## Raw tick transfer tests
+- [x] Preserve V4 UTC-wall-clock alignment method; V1/V2/V3 remain invalid.
+- [ ] Rebuild exact V4 aligned and -10m placebo windows for new N1 decisions.
+- [ ] Re-run unique tick4 `[NET,MOVE,CLV,RUN]` panel as negative control.
+- [ ] Pre-register and test old relative `0001` Stoch/tick re-synchronization rule unchanged.
+- [ ] Re-run M1-Stoch + relative `0001` interaction.
+- [ ] Re-run Path relative `1110` anti-edge and near-miss states.
+- [ ] Family-wise permutation audit after fixed transfer family is evaluated.
 
-## Fixed-$10 fresh75
-- [x] development direction research.
-- [x] fixed payoff surface.
-- [x] retain $10/$13 as benchmark only.
-- [ ] no more decimal TP optimization.
+## Bollinger(20,2) transfer tests
+- [ ] Re-run state representation using primary 5 prior M5 bars + trigger; n=3/8 robustness only.
+- [ ] BB-A middle residence -> near lower inside.
+- [ ] BB-B middle residence -> above upper + abs SMA gap widening.
+- [ ] BB-C inside + gap shifts down + >=2 center crosses.
+- [ ] BB-D middle residence + bandwidth contraction + exactly 1 center cross.
+- [ ] Do not convert Bollinger components into generic independent voters.
+- [ ] Re-run multiplicity audit.
 
-## V8-C
-- [x] LONG R0.4 real-tick authority unchanged.
-- [ ] resume exit research separately later.
-- [ ] S1 MT5 validation separately later.
+## Direction authority
+- [ ] Treat exact old N2-R1 only as a legacy diagnostic because it contains old M5-A-N probability semantics.
+- [ ] Build any native Slow-N direction rule only after fixed transfer tests.
+- [ ] Separate discovery and validation; 2022-2026 remain consumed.
+- [ ] Do not use 2021 for direction discovery.
+
+## Economics / execution
+- [ ] Keep N3 closed until Slow-N direction is frozen.
+- [ ] Pre-register Slow-N-consistent risk/payoff family before opening results.
+- [ ] Define whether trade risk/target remains frozen from entry H4 block for the full trade.
+- [ ] MT5 Every Tick based on real ticks.
+- [ ] Include spread, slippage, commission and swap where applicable.
+- [ ] Report WR, avg winner/loser R, EV, PF, DD, loss streak, holding time and big-winner dependence.
+
+## Controls / other branches
+- [x] V8-A absolute-$10 control preserved.
+- [x] V8-A2 preserved.
+- [x] fixed-$10 $10/$13 remains historical complete development benchmark.
+- [x] V8-C kept separate.
 
 ## Reserve
-- [x] 2022-2026 consumed development evidence.
-- [ ] GOLD# 2021 locked.
+- [x] 2022-2026 = consumed/open development evidence.
+- [ ] GOLD# 2021 remains locked until a complete Slow-N architecture genuinely merits reserve validation.

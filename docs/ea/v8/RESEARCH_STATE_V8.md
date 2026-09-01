@@ -1,72 +1,81 @@
 # V8 Research State
 
-Status: `ACTIVE / V8-A-N N1 FROZEN / N2 BOTTLENECK`
-Date: `2026-09-01`
+Status: `ACTIVE / A-N SEMANTIC RESET / SLOW-SCALE CANDIDATE NOT YET FROZEN`
+Date: `2026-09-02`
 Production authority: `NONE`
 Market: `GOLD#`
 Untouched reserve: `GOLD# 2021`
 
 ## V8-A
-`FROZEN / ABSOLUTE-$10 CONTROL`.
+`FROZEN / ABSOLUTE-$10 MOVEMENT CONTROL`.
 
 ## V8-A2
-`RETAINED / NOT PROMOTED`.
+`RETAINED / ABSOLUTE-$10 86-FEATURE SURVIVAL CHALLENGER / NOT PROMOTED`.
 
-## V8-A-N
-`RETAINED NORMALIZED MOVEMENT CHALLENGER`.
+## Legacy V8-A-N-M5
+`HISTORICAL / VALID FOR M5-VOLATILITY-RELATIVE MOVEMENT / SUPERSEDED AS ACTIVE STRATEGY-SCALE SEMANTICS`.
 
-Normalized movement portability is strongly supported on 2022-2026 development evidence.
-
-## N1
-`FROZEN DEVELOPMENT TRIGGER`.
+Legacy question:
 
 ```text
-1.50 ATR fresh P15 75-cross
+P(reach k * pre-decision M5 ATR within horizon)
 ```
 
-P15 realized movement ~78-82%, high P30/P60 precision, stable monthly cadence.
+Old N1/N2/N3/N4 results remain archived development evidence but are not current Slow-N authority.
 
-## N2
-`ACTIVE BOTTLENECK`.
+## Active V8-A-N-SLOW
+`ACTIVE TARGET-SCALE RESEARCH`.
 
-First 2024-only rule failed 2025/2026.
-
-N2-R1 post-hoc development control:
+Intended question:
 
 ```text
-57.34 / 57.62 / 57.43% direction accuracy
+P(reach a meaningful regime-normalized movement distance within 15/30/60m)
 ```
 
-No independent validation authority.
-
-Next direction work requires genuinely new information, preferably raw tick/quote microstructure on the frozen N1 population.
-
-## N3
-`INITIAL FAMILY COMPLETE / NOT RETAINED AS FINAL EXIT`.
+Current provisional candidate:
 
 ```text
-TP1.0: WR~55%, winner1R
-TP1.25: WR~49-51%, winner1.25R
-TP1.50: WR~45-48%, winner1.5R
+T = 0.25 * previous-completed H4 Wilder ATR14
+T held constant for the next H4 block
 ```
 
-No candidate meets both WR>=50% every year and winner>1R.
+Target median / hit15 across 2022-2026:
 
-## N4
-`NORMALIZED COMPLETE STRATEGY NOT PROMOTED`.
+```text
+2.33/22.07%, 2.14/21.72%, 3.03/22.02%, 5.07/22.75%, 10.09/20.68%
+```
 
-Fixed-$10 fresh75 $10/$13 remains stronger combined development benchmark on 2025/2026.
+First lightweight survival probe fresh75 hit:
 
-## Execution
-Normalized 1ATR risk is materially spread-sensitive, especially in 2024. No cost-adjusted or real-tick authority.
+```text
+2024 78.55% N648
+2025 78.53% N531
+2026 76.47% N323
+```
 
-## V8-C
-LONG remains provisionally frozen / real-tick verified. Keep separate.
+Not yet final-model authority.
+
+## Legacy downstream status
+
+`REVALIDATION REQUIRED`.
+
+Retained hypotheses include:
+
+- M5 Stoch + tick relative `0001` re-synchronization;
+- M1 confirmed structure as confidence context;
+- M1 Stoch alignment/transition;
+- Path Clearance anti-edge state;
+- Bollinger BB-A/BB-B/BB-C/BB-D states.
+
+Their old percentages are conditional on the superseded M5-A-N N1 population.
 
 ## Current ordering
 
-1. frozen N1 tick/quote direction research;
-2. if direction improves, reopen preregistered N3;
-3. if tick data fail, change information source;
-4. monotonic V8-A-N surface before live implementation;
-5. 2021 remains locked.
+1. formalize and freeze Slow-N scale semantics;
+2. rebuild official P15/P30/P60 with strict purge;
+3. freeze new fresh75 movement population without direction/P&L;
+4. rerun legacy direction/M1/tick/Bollinger definitions on new N1;
+5. open new feature discovery only after transfer tests;
+6. freeze direction;
+7. then reopen exits/economics/execution;
+8. keep 2021 locked.
