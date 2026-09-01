@@ -1,101 +1,101 @@
 # V8 Backlog
 
 Status date: `2026-09-02`
-Active phase: `V8-A-N SLOW-SCALE FORMALIZATION / LEGACY DOWNSTREAM REVALIDATION PENDING`
+Active phase: `V8-A-N-SLOW / DOWNSTREAM REVALIDATION`
 
-## Authority reset
-- [x] Identify mismatch between intended meaningful-move normalization and per-M5 ATR target chasing.
-- [x] Reclassify old `1.50*M5 ATR fresh75` N1 as legacy M5-relative research, not active Slow-N authority.
-- [x] Preserve old results as historical evidence rather than deleting/relabeling them as invalid.
-- [x] Mark all old downstream direction/M1/tick/Bollinger/economic results as requiring Slow-N revalidation.
-- [x] Keep GOLD# 2021 locked.
+## Slow scale / probability
 
-## Slow-scale target research
-- [x] Compare target update cadence for M5/H1/H4/D1 ATR scales.
-- [x] Build initial H1/H4/D1 target-size and 15m base-rate diagnostics.
-- [x] Identify `0.25 * previous-completed H4 ATR14` as provisional primary balance candidate.
-- [x] Confirm 2022-2026 H4 target base rate is roughly stable (~20.7-22.8%).
-- [x] Confirm 2026 median H4 target is ~10.1p.
-- [x] Identify D1 as potentially too slow from quarterly difficulty drift.
-- [ ] Rebuild exact full causal H1/H4/D1 bars with explicit block-boundary unit tests.
-- [ ] Verify no partial H4/D1 candle enters target scale.
-- [ ] Stress H4 target constancy, gaps/weekends, DST/server-time effects and missing bars.
-- [ ] Freeze final slow scale before direction research.
-- [ ] Do not optimize H4 multiplier from direction/P&L.
+- [x] Semantic reset from per-M5 ATR target chasing to slow regime-scale target.
+- [x] Identify `0.25 * previous-completed H4 ATR14` as provisional primary candidate.
+- [x] Rebuild decision-block H4 alignment and horizon eligibility.
+- [x] Reproduce Phase-0 aggregate probability result.
+- [x] Build Phase-2 outcome-blind sampling robustness model.
+- [x] Quantify fresh-event identity sensitivity: Jaccard 57.22%.
+- [ ] Decide/freeze final training architecture: full vs explicitly de-overlapped.
+- [ ] Build final reproducible official Slow-N P15/P30/P60 pack.
+- [ ] Calibration/logloss/decile/month/quarter stress before final probability authority.
+- [ ] Keep multiplier selection independent of direction/P&L.
 
-## Slow-N probability model
-- [x] Lightweight 86-feature survival probe for fixed10/M5/H1/H4/D1 target families.
-- [x] H4 probe annual fresh75 ~78.55 / 78.53 / 76.47%.
-- [x] 25-minute training-phase sensitivity check.
-- [ ] Decide full-training vs explicitly de-overlapped training architecture before final pack.
-- [ ] Rebuild formal P15/P30/P60 model with strict 60m purge.
-- [ ] Report AUC/Brier/logloss/calibration/deciles by year and quarter.
-- [ ] Enforce/check horizon monotonicity.
-- [ ] Build reproducible model/manifest pack.
-- [ ] Python/MQL parity before any MT5 authority.
+## Direction transfer — completed negatives
 
-## New Slow-N N1
-- [ ] Profile P15>=75 without direction labels.
-- [ ] Profile fresh75 without direction labels.
-- [ ] Annual/monthly/quarterly movement realization.
-- [ ] Active-day frequency and trigger spacing.
-- [ ] H4-block clustering / repeat-trigger rate.
-- [ ] Session distribution.
-- [ ] actual target-distance distribution.
-- [ ] Freeze N1 before opening downstream direction outcomes.
+- [x] Legacy deterministic 7-voter transfer: failed.
+- [x] M5 Stoch standalone: failed.
+- [x] Market-question equal panel: failed.
+- [x] Immediate pressure: failed.
+- [x] Oscillator transition: failed.
+- [x] M15/H1/H4 structure standalone: failed.
+- [x] HTF regime: failed.
+- [x] Volatility transition: failed.
+- [x] Location/liquidity: failed.
+- [x] M1 tape proxy: failed.
+- [x] M1 recent direction: failed.
+- [x] M1 pressure: failed.
+- [x] M1 Stoch standalone: failed.
+- [x] M1 EMA3/8 standalone: failed.
+- [x] Old asymmetric MTF state: failed/reversed.
+- [x] BB-A transfer: failed.
+- [x] BB-C transfer: failed/reversed in 2026.
+- [x] BB-D transfer: failed.
+- [x] Generic tick majority on available overlap: failed.
 
-## Legacy chart-direction transfer tests
-- [ ] Re-run semantic deterministic 7-voter panel unchanged where possible.
-- [ ] Re-run MTF expansions / market-question panel as negative controls.
-- [ ] Re-run M5 Stochastic direction.
-- [ ] Re-run causal M15/M30/H1/H4 structure states.
-- [ ] Re-run Path Clearance states.
-- [ ] Do not threshold-rescue failed transfers.
+Do not rescue these with threshold or weight searches.
 
-## M1 transfer tests
-- [ ] Re-run M1 recent direction / pressure / causal confirmed structure.
-- [ ] Re-run M1 sweep/reclaim / M1 Stoch / EMA3-8 context.
-- [ ] Test M1 structure agreement as a confidence layer.
-- [ ] Re-run M5 Stoch -> M1 counter-move -> M1 oscillator transition sequence.
+## Direction transfer — retained candidates
 
-## Raw tick transfer tests
-- [x] Preserve V4 UTC-wall-clock alignment method; V1/V2/V3 remain invalid.
-- [ ] Rebuild exact V4 aligned and -10m placebo windows for new N1 decisions.
-- [ ] Re-run unique tick4 `[NET,MOVE,CLV,RUN]` panel as negative control.
-- [ ] Pre-register and test old relative `0001` Stoch/tick re-synchronization rule unchanged.
-- [ ] Re-run M1-Stoch + relative `0001` interaction.
-- [ ] Re-run Path relative `1110` anti-edge and near-miss states.
-- [ ] Family-wise permutation audit after fixed transfer family is evaluated.
+### BB-B
+- [x] Phase-0 n=5 transfer.
+- [x] Phase-2 n=5 transfer.
+- [x] n=3/5/8 robustness across both phases.
+- [x] All 18 year x phase x window cells >50%.
+- [ ] Quarter/month stress.
+- [ ] Near-miss state comparison.
+- [ ] Interaction with Stoch/M1/tick without arbitrary search.
 
-## Bollinger(20,2) transfer tests
-- [ ] Re-run state representation using primary 5 prior M5 bars + trigger; n=3/8 robustness only.
-- [ ] BB-A middle residence -> near lower inside.
-- [ ] BB-B middle residence -> above upper + abs SMA gap widening.
-- [ ] BB-C inside + gap shifts down + >=2 center crosses.
-- [ ] BB-D middle residence + bandwidth contraction + exactly 1 center cross.
-- [ ] Do not convert Bollinger components into generic independent voters.
-- [ ] Re-run multiplicity audit.
+### Stoch/M1/tick temporal re-synchronization
+- [x] Test `relative 0001` on old/new event overlap.
+- [x] Test -10m shifted placebo on overlap.
+- [x] Check M1 recent counter-move.
+- [x] Check M1 Stoch alignment/3m transition as tiny nested diagnostics.
+- [ ] Extract raw ticks for every new Slow-N fresh75 decision.
+- [ ] Re-run aligned/placebo `0001` on full coverage.
+- [ ] Re-run M1 Stoch transition on full coverage.
+- [ ] Family-wise permutation audit after full transfer.
 
-## Direction authority
-- [ ] Treat exact old N2-R1 only as a legacy diagnostic because it contains old M5-A-N probability semantics.
-- [ ] Build any native Slow-N direction rule only after fixed transfer tests.
-- [ ] Separate discovery and validation; 2022-2026 remain consumed.
-- [ ] Do not use 2021 for direction discovery.
+## M1 structure
+
+- [x] Detect reproducibility gap in old confirmed-structure generator.
+- [ ] Recover original generator or explicitly freeze a new definition.
+- [ ] Require parity test before using as a confidence layer.
+
+## Path Clearance
+
+- [ ] Rebuild natively using Slow-N target geometry.
+- [ ] Retest old `1110` old-flow anti-edge.
+- [ ] Compare against BB-B/new-flow temporal states.
+
+## MT5 indicator
+
+- [x] Preserve legacy `V8ANP15ContextIndicator.mq5` as M5-A-N historical indicator.
+- [x] Add `V8SlowNP15ContextIndicator.mq5` for Phase-0 Slow-N chart inspection.
+- [x] Embed Phase-0 scaler/4-class coefficients.
+- [x] H4 decision-block target alignment.
+- [x] Adjustable P15 threshold drives both horizontal line and main-chart marker.
+- [x] H4 ATR rank + MA20-distance/SlowTarget rank in same 0-100 panel.
+- [x] Create Python/MQL reference points.
+- [ ] Local MetaEditor compile.
+- [ ] Python/MQL live parity audit on references.
+- [ ] Replace probe model only when final Slow-N model is frozen.
 
 ## Economics / execution
-- [ ] Keep N3 closed until Slow-N direction is frozen.
-- [ ] Pre-register Slow-N-consistent risk/payoff family before opening results.
-- [ ] Define whether trade risk/target remains frozen from entry H4 block for the full trade.
+
+- [ ] Keep exits closed until Slow-N direction is frozen.
+- [ ] Pre-register payoff family.
+- [ ] Define whether entry-time H4 scale remains frozen for the entire trade.
 - [ ] MT5 Every Tick based on real ticks.
-- [ ] Include spread, slippage, commission and swap where applicable.
-- [ ] Report WR, avg winner/loser R, EV, PF, DD, loss streak, holding time and big-winner dependence.
+- [ ] Full costs: spread/slippage/commission/swap as applicable.
+- [ ] WR / avg winner / EV / PF / DD / loss streak / big-winner dependence.
 
-## Controls / other branches
-- [x] V8-A absolute-$10 control preserved.
-- [x] V8-A2 preserved.
-- [x] fixed-$10 $10/$13 remains historical complete development benchmark.
-- [x] V8-C kept separate.
+## Evidence discipline
 
-## Reserve
-- [x] 2022-2026 = consumed/open development evidence.
-- [ ] GOLD# 2021 remains locked until a complete Slow-N architecture genuinely merits reserve validation.
+- [x] 2022-2026 consumed development evidence.
+- [ ] GOLD# 2021 remains locked.

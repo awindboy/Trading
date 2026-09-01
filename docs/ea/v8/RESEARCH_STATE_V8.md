@@ -1,81 +1,90 @@
 # V8 Research State
 
-Status: `ACTIVE / A-N SEMANTIC RESET / SLOW-SCALE CANDIDATE NOT YET FROZEN`
+Status: `ACTIVE / V8-A-N-SLOW DOWNSTREAM REVALIDATION`
 Date: `2026-09-02`
 Production authority: `NONE`
 Market: `GOLD#`
 Untouched reserve: `GOLD# 2021`
 
-## V8-A
-`FROZEN / ABSOLUTE-$10 MOVEMENT CONTROL`.
+## Movement layer
 
-## V8-A2
-`RETAINED / ABSOLUTE-$10 86-FEATURE SURVIVAL CHALLENGER / NOT PROMOTED`.
-
-## Legacy V8-A-N-M5
-`HISTORICAL / VALID FOR M5-VOLATILITY-RELATIVE MOVEMENT / SUPERSEDED AS ACTIVE STRATEGY-SCALE SEMANTICS`.
-
-Legacy question:
-
-```text
-P(reach k * pre-decision M5 ATR within horizon)
-```
-
-Old N1/N2/N3/N4 results remain archived development evidence but are not current Slow-N authority.
-
-## Active V8-A-N-SLOW
-`ACTIVE TARGET-SCALE RESEARCH`.
-
-Intended question:
-
-```text
-P(reach a meaningful regime-normalized movement distance within 15/30/60m)
-```
-
-Current provisional candidate:
+Current provisional Slow-N scale:
 
 ```text
 T = 0.25 * previous-completed H4 Wilder ATR14
-T held constant for the next H4 block
+decision-block aligned
+T fixed for the H4 block
 ```
 
-Target median / hit15 across 2022-2026:
+Phase-0 fresh75:
 
 ```text
-2.33/22.07%, 2.14/21.72%, 3.03/22.02%, 5.07/22.75%, 10.09/20.68%
+2024 N653 78.10%
+2025 N535 78.50%
+2026 N321 76.01%
 ```
 
-First lightweight survival probe fresh75 hit:
+Phase-2 robustness:
 
 ```text
-2024 78.55% N648
-2025 78.53% N531
-2026 76.47% N323
+2024 N733 80.22%
+2025 N579 76.34%
+2026 N292 78.08%
 ```
 
-Not yet final-model authority.
+Exact fresh-event membership is only moderately stable across phases (`Jaccard 57.22%`), so downstream candidates require cross-phase robustness.
 
-## Legacy downstream status
+## Direction layer
 
-`REVALIDATION REQUIRED`.
+No frozen Slow-N direction engine.
 
-Retained hypotheses include:
+### Failed transfer families
 
-- M5 Stoch + tick relative `0001` re-synchronization;
-- M1 confirmed structure as confidence context;
-- M1 Stoch alignment/transition;
-- Path Clearance anti-edge state;
-- Bollinger BB-A/BB-B/BB-C/BB-D states.
+Generic deterministic chart voting, standalone Stoch, market-question panel, standalone M1 questions, BB-A/C/D and generic tick majority are negative evidence.
 
-Their old percentages are conditional on the superseded M5-A-N N1 population.
+### Current positive candidates
 
-## Current ordering
+`BB-B`:
 
-1. formalize and freeze Slow-N scale semantics;
-2. rebuild official P15/P30/P60 with strict purge;
-3. freeze new fresh75 movement population without direction/P&L;
-4. rerun legacy direction/M1/tick/Bollinger definitions on new N1;
-5. open new feature discovery only after transfer tests;
-6. freeze direction;
-7. then reopen exits/economics/execution;
+```text
+middle residence -> upper-band outside close -> SMA-distance AWAY
+predict UP
+```
+
+Pooled:
+
+```text
+Phase-0 N64 65.63%
+Phase-2 N63 65.08%
+```
+
+`Stoch/M1/tick re-synchronization`:
+
+```text
+old/new tick-covered overlap only
+relative 0001 N45 66.67%
+-10m placebo 45.00%
+```
+
+Promising but not full-population evidence.
+
+## Instrumentation
+
+- V4 tick wall-clock alignment remains authority.
+- Legacy M1 confirmed-structure generator has a reproducibility gap; do not use old percentages as new evidence.
+- New `V8SlowNP15ContextIndicator.mq5` is Phase-0 research visualization only.
+
+## Economics
+
+Closed until direction is frozen.
+
+## Next ordering
+
+1. full Slow-N raw tick extraction;
+2. full `0001`/M1 transition transfer test;
+3. native Path Clearance;
+4. BB-B x temporal transition;
+5. M1 structure parity/redefinition;
+6. direction freeze;
+7. exits/economics/execution;
 8. keep 2021 locked.

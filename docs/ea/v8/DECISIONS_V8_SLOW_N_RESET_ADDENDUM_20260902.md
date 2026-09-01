@@ -297,3 +297,220 @@ Reason:
 It embeds the `1.50 * pre-decision M5 ATR14` model and therefore answers the superseded M5-relative question.
 
 A new Slow-N MT5 indicator may be built only after the slow model contract is frozen and Python parity is established.
+
+---
+
+## D-V8-130 — Correct Slow-N horizon eligibility before downstream claims
+
+Decision:
+
+Use the complete future label-window eligibility rule in the formal Slow-N reconstruction.
+
+Reason:
+
+An independent rebuild initially differed by ~0.2-0.3 percentage points annually. The mismatch was traced to future-window completeness rather than H4 target construction. After correction, the prior Slow-N probe was reproduced closely.
+
+Current corrected Phase-0 fresh75:
+
+```text
+2024 N653 78.10%
+2025 N535 78.50%
+2026 N321 76.01%
+```
+
+---
+
+## D-V8-131 — Add probability-model realization robustness as a downstream gate
+
+Decision:
+
+A downstream Slow-N direction candidate should be checked on more than one reasonable outcome-blind probability-model training realization where feasible.
+
+Evidence:
+
+```text
+Phase-0 fresh events N1509
+Phase-2 fresh events N1604
+intersection N1133
+Jaccard 57.22%
+```
+
+Aggregate AUC/fresh-hit remain similar, but exact event identity is materially less stable.
+
+Reason:
+
+A direction state that works only because one probability fit happened to cross 75 on a specific set of M5 bars is not sufficiently robust.
+
+---
+
+## D-V8-132 — Close the generic chart/MTF/M1 voter transfer family as negative Slow-N evidence
+
+Decision:
+
+Do not extend or threshold-rescue:
+
+- legacy deterministic 7-voter;
+- standalone M5 Stoch;
+- market-question equal panel;
+- immediate pressure;
+- oscillator transition;
+- standalone M15/H1/H4 structure;
+- HTF regime;
+- volatility transition;
+- location/liquidity;
+- M1 tape;
+- M1 recent direction/pressure/Stoch/EMA3-8;
+- old asymmetric MTF state.
+
+Reason:
+
+Slow-N transfer results remained near chance or reversed by year/model phase.
+
+---
+
+## D-V8-133 — Retain BB-B as the strongest current full-Slow-N direction/context candidate
+
+Decision:
+
+Retain unchanged:
+
+```text
+prior Bollinger residence = middle
+trigger close = above upper band
+absolute normalized SMA-distance path = AWAY
+predict UP
+```
+
+Evidence:
+
+```text
+Phase-0 n5 pooled N64 65.63%
+Phase-2 n5 pooled N63 65.08%
+all tested year x phase x window(n3/n5/n8) cells >50%
+```
+
+Reason:
+
+The predefined semantic state survived a changed N1 population, two probability-model realizations and three residence windows.
+
+No production or complete-direction authority is granted because samples remain small and 2022-2026 are consumed development evidence.
+
+---
+
+## D-V8-134 — Reject BB-A, BB-C and BB-D as current Slow-N transfer candidates
+
+Decision:
+
+Do not continue these states through threshold rescue.
+
+Evidence:
+
+- BB-A pooled ~52.9%;
+- BB-C reversed to 33.3% in 2026;
+- BB-D pooled ~53.1%.
+
+Reason:
+
+The legacy state meanings did not transfer robustly.
+
+---
+
+## D-V8-135 — Keep Stoch/M1/tick re-synchronization alive only as a limited-coverage mechanism hypothesis
+
+Decision:
+
+Do not claim a full Slow-N tick edge yet.
+
+On the old/new tick-covered overlap, predefined relative `0001` following M5 Stoch produced:
+
+```text
+N45 / 66.67%
+```
+
+while shifted -10m placebo `0001` produced:
+
+```text
+N40 / 45.00%
+```
+
+Reason:
+
+The direction and placebo behavior are consistent with the old mechanism, but raw ticks have not yet been extracted for the full new Slow-N N1 population.
+
+---
+
+## D-V8-136 — Treat tiny M1-Stoch nested percentages as diagnostic only
+
+Decision:
+
+Do not promote:
+
+```text
+tick0001 + M1 Stoch aligned N14 85.71%
+tick0001 + prior M1 Stoch opposite -> now aligned N10 90.00%
+```
+
+Reason:
+
+Samples are too small. Their only role is to prioritize a predeclared full-population re-synchronization test.
+
+---
+
+## D-V8-137 — Mark legacy M1 confirmed-structure transfer as blocked by reproducibility
+
+Decision:
+
+Do not reuse old M1 confirmed-structure percentages until the original generator is recovered or a new explicit definition is frozen.
+
+Reason:
+
+The retained result artifacts/document description did not reproduce the exact state labels; a new reconstruction reached only ~85% parity.
+
+This is an instrumentation/reproducibility issue, not evidence for or against the market hypothesis itself.
+
+---
+
+## D-V8-138 — Permit a research-only Phase-0 Slow-N MT5 indicator before final model freeze
+
+Decision:
+
+Add:
+
+`mt5/indicators/V8SlowNP15ContextIndicator.mq5`
+
+with the embedded Phase-0 probe model solely for manual chart inspection and Python/MQL parity.
+
+It must visibly identify itself as:
+
+```text
+PROBE / NO PRODUCTION AUTHORITY
+```
+
+Reason:
+
+Chart inspection is useful now, but the final official Slow-N model architecture remains unfrozen.
+
+This decision narrows/supersedes D-V8-129 only for shadow visualization. D-V8-129 remains correct that the legacy `V8ANP15ContextIndicator` is not the active Slow-N implementation.
+
+---
+
+## D-V8-139 — Next direction work prioritizes full raw-tick transfer and BB-B interaction
+
+Decision:
+
+Next work order:
+
+1. extract V4-aligned raw ticks for all new Slow-N fresh75 events;
+2. keep -10m placebo;
+3. rerun exact `Stoch D + relative 0001`;
+4. rerun M1 Stoch alignment/transition;
+5. rebuild native Slow-N Path Clearance;
+6. test BB-B as context for the temporal transition;
+7. recover/freeze M1 confirmed structure;
+8. run multiplicity/near-miss audits;
+9. only then open new feature discovery.
+
+Reason:
+
+Generic technical panels have repeatedly failed, while BB-B and temporal re-synchronization are the only current hypotheses with meaningful transfer evidence.
+

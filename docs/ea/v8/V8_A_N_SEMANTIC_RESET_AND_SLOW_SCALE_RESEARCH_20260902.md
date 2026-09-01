@@ -2,7 +2,8 @@
 
 Status: `DEVELOPMENT RESEARCH / ACTIVE REPLACEMENT CANDIDATE / NOT FROZEN`
 Market: `GOLD#`
-Base Git HEAD: `7344f8c3918a89e3fc6d30f1df64d90d567ecda5`
+Base Git HEAD (original semantic-reset study): `7344f8c3918a89e3fc6d30f1df64d90d567ecda5`
+Current update base Git HEAD: `cfb286b1947ccb77e5e907caa9e96b26af314654`
 Primary M1 source: `GOLD#_M1_202201030100_202608282357.csv`
 Source SHA256 authority: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 Reserve: `GOLD# 2021 LOCKED / UNTOUCHED`
@@ -241,3 +242,70 @@ Their old methods and frozen hypotheses are valuable precisely because they can 
 2022-2026 are consumed development evidence. No claim that Slow-N creates a new independent holdout.
 
 `GOLD# 2021` remains locked until target, N1, direction and execution architecture are sufficiently frozen.
+
+## 13. Rebuild correction — horizon eligibility
+
+During downstream restart, the Slow-N label pipeline was independently reconstructed from the raw M1 source.
+
+An initial ~0.2-0.3 percentage-point annual base-rate mismatch was traced to label-window eligibility rather than H4 target construction.
+
+After requiring the complete future label horizon to exist and restoring the intended decision-time alignment, the lightweight H4 probe was reproduced closely.
+
+Corrected Phase-0 model-evaluation metrics:
+
+```text
+2024 AUC15 .813936 / fresh75 N653 / actual 78.10%
+2025 AUC15 .764832 / fresh75 N535 / actual 78.50%
+2026 AUC15 .776809 / fresh75 N321 / actual 76.01%
+```
+
+This supersedes tiny count/metric differences in the first exploratory report. The semantic H4 target conclusion is unchanged.
+
+## 14. Probability-model realization sensitivity
+
+A second outcome-blind de-overlap phase was trained without using downstream direction/P&L.
+
+```text
+Phase-2 fresh75
+2024 N733 / 80.22%
+2025 N579 / 76.34%
+2026 N292 / 78.08%
+```
+
+Aggregate discrimination remains similar, but exact fresh75 event identity is less stable:
+
+```text
+Phase-0 events 1509
+Phase-2 events 1604
+intersection 1133
+union 1980
+Jaccard 57.22%
+```
+
+Research consequence:
+
+> downstream direction evidence must be robust to reasonable probability-model realizations, not only to calendar years.
+
+This is now an additional development gate.
+
+## 15. Phase-0 MT5 shadow implementation
+
+A research-only indicator is now permitted before final model freeze because its purpose is manual chart inspection and Python/MQL parity work, not strategy authority.
+
+File:
+
+`mt5/indicators/V8SlowNP15ContextIndicator.mq5`
+
+It embeds the Phase-0 probe model and uses the exact Slow-N target alignment:
+
+```text
+source M5 closes at decision
+decision determines current H4 block
+use ATR14 from immediately previous completed H4 bar
+T = 0.25 * ATR14
+```
+
+The indicator is explicitly labeled `PROBE / NO PRODUCTION AUTHORITY`.
+
+The final official Slow-N model, when frozen, must replace this probe pack rather than silently inheriting it.
+

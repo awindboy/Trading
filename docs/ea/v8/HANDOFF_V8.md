@@ -1,291 +1,232 @@
 # V8 Development Handoff
 
 Last updated: `2026-09-02`
-Current phase: `V8-A-N TARGET-SEMANTICS RESET / SLOW-SCALE FORMALIZATION / DOWNSTREAM REVALIDATION PENDING`
+Current phase: `V8-A-N-SLOW / DOWNSTREAM REVALIDATION IN PROGRESS`
 Production authority: `NONE`
 Market: `GOLD#`
+Open development evidence: `2022-2026`
 Untouched reserve: `GOLD# 2021`
-Package base Git HEAD: `7344f8c3918a89e3fc6d30f1df64d90d567ecda5`
+Base Git HEAD for this update: `cfb286b1947ccb77e5e907caa9e96b26af314654`
 
-## 1. Read this first
+## 1. Current problem definition
 
-The previous active V8-A-N architecture used a barrier that changed every M5:
-
-```text
-barrier = 1.50 * pre-decision M5 Wilder ATR14
-N1 = fresh P15 75-cross
-```
-
-This is retained as a legitimate **M5-volatility-relative movement detector**, but it answered a different question from the intended trading use.
-
-The intended P15 question is:
-
-> Is a meaningful tradable movement likely in the next 15 minutes, with the meaning/difficulty of “meaningful” adjusted slowly across market eras/regimes rather than every five minutes?
-
-Therefore the old N1 is no longer the active strategy-scale authority. All direction/M1/tick/Bollinger/exit results conditioned on it are historical development findings and must be rerun.
-
-Current chain:
+Legacy M5-A-N:
 
 ```text
-V8-A fixed-10 control
-        +
-legacy M5-A-N lessons
-        ↓
-V8-A-N-SLOW target semantics
-        ↓
-formal slow scale freeze
-        ↓
-formal P15/P30/P60 rebuild
-        ↓
-new fresh75 N1 freeze
-        ↓
-rerun direction / M1 / tick / Bollinger
-        ↓
-freeze direction
-        ↓
-reopen economics/execution
+barrier = 1.50 * causal pre-decision M5 ATR14
 ```
 
-## 2. Provisional Slow-N target
+is retained only as historical M5-volatility-relative movement research.
 
-Current primary candidate:
+Active intended probability contract:
 
 ```text
-At each new H4 block:
-ATR_H4 = Wilder ATR14 from the previous fully completed H4 bar
-T = 0.25 * ATR_H4
-hold T constant for the entire next H4 block
+decision = completed M5 close timestamp
 
-P15 = P(reach C0 +/- T within 15m)
+H4 block = block containing decision
+scale = Wilder ATR14 from the immediately previous completed H4 bar
+T = 0.25 * scale
+T stays fixed for the whole H4 decision block
+
+P15 = P(reach +/-T within 15m)
+P30 = P(reach +/-T within 30m)
+P60 = P(reach +/-T within 60m)
 ```
 
-This is **provisional**, not final N1 authority.
+The H4 choice remains provisional but is the current primary balance candidate.
 
-Why H4 currently leads:
+## 2. Probability probe — corrected current numbers
+
+A horizon-eligibility mismatch was found during independent reconstruction. After restoring the correct requirement that the full future label window is available, the original Slow-N probe was reproduced closely.
+
+### Phase-0
+
+| Year | Eval N | AUC15 | P15>=75 N | P15>=75 actual | fresh75 N | fresh75 actual |
+|---|---:|---:|---:|---:|---:|---:|
+| 2024 | 67,954 | .81394 | 3,399 | 82.61% | 653 | 78.10% |
+| 2025 | 67,582 | .76483 | 2,230 | 81.21% | 535 | 78.50% |
+| 2026 | 44,605 | .77681 | 1,262 | 80.43% | 321 | 76.01% |
+
+### Phase-2 robustness model
+
+| Year | Eval N | AUC15 | P15>=75 N | P15>=75 actual | fresh75 N | fresh75 actual |
+|---|---:|---:|---:|---:|---:|---:|
+| 2024 | 67,954 | .81507 | 3,341 | 83.30% | 733 | 80.22% |
+| 2025 | 67,582 | .76485 | 2,185 | 80.87% | 579 | 76.34% |
+| 2026 | 44,605 | .77583 | 1,161 | 81.14% | 292 | 78.08% |
+
+Fresh75 identity sensitivity:
 
 ```text
-0.25*H4 ATR14 target median / 15m hit base rate
-2022  2.33p / 22.07%
-2023  2.14p / 21.72%
-2024  3.03p / 22.02%
-2025  5.07p / 22.75%
-2026 10.09p / 20.68%
+Phase-0 N1509
+Phase-2 N1604
+intersection N1133
+Jaccard 57.22%
 ```
 
-Target update rate per M5 transition:
+Interpretation: probability ranking/calibration is fairly stable at aggregate level, but exact fresh-cross membership is model-realization sensitive. Use cross-phase robustness as a downstream gate.
+
+## 3. Downstream transfer — failures
+
+| Method | Current Slow-N result | Decision |
+|---|---|---|
+| Legacy deterministic 7-voter | P0 51.73 / 54.08 / 50.00%; P2 49.17 / 56.79 / 49.83% | FAIL |
+| M5 Stoch standalone | P0 47.96 / 51.99 / 54.46%; P2 46.25 / 53.79 / 51.92% | FAIL |
+| Market-question equal panel | 50.94 / 53.51 / 48.41% | FAIL |
+| Immediate pressure | 49.69 / 51.80 / 47.45% | FAIL |
+| Oscillator transition | 50.00 / 52.18 / 51.59% | FAIL |
+| M15 structure | 50.94 / 53.51 / 54.14% | FAIL |
+| H1 structure | 48.27 / 52.75 / 53.18% | FAIL |
+| H4 structure | 51.10 / 52.37 / 52.87% | FAIL |
+| HTF regime | 52.04 / 49.72 / 54.14% | FAIL |
+| Volatility transition | 50.63 / 54.08 / 50.00% | FAIL |
+| Location/liquidity | 49.06 / 52.18 / 50.00% | FAIL |
+| M1 tape proxy | 50.16 / 53.51 / 50.32% | FAIL |
+| M1 recent direction | 48.90 / 51.99 / 50.00% | FAIL |
+| M1 pressure | 51.10 / 53.32 / 53.18% | FAIL |
+| M1 Stoch standalone | 51.10 / 47.63 / 51.59% | FAIL |
+| M1 EMA3/8 | 51.89 / 52.94 / 48.41% | FAIL |
+| Old asymmetric MTF state | UP 36.36 / 50.00 / 63.64% | FAIL / relation reversal |
+| BB-A | DOWN 50.00 / 55.56 / 58.33% | FAIL |
+| BB-C | DOWN 57.14 / 61.90 / 33.33% | FAIL / 2026 reversal |
+| BB-D | UP 52.94 / 52.63 / 54.17% | FAIL |
+| Generic raw-tick panel on overlap only | 50.86 / 52.32 / 52.17%, pooled 51.67% | FAIL |
+
+Do not continue threshold/weight search on these failures.
+
+## 4. Positive candidate — BB-B
+
+Definition is frozen from legacy research, not redesigned on Slow-N:
 
 ```text
-M5 1.50ATR  100.00%
-H1 0.50ATR    8.34%
-H4 0.25ATR    2.18%
-D1 0.10ATR    0.36%
+prior residence = MID
+trigger closes OUT_U
+abs normalized SMA-gap path = AWAY
+predict UP
 ```
 
-Interpretation:
-- M5 is too reactive for the intended scale semantics.
-- H1 is viable but updates hourly.
-- H4 is the current balance candidate.
-- D1 is too slow; 2026 quarterly difficulty drifted materially.
-
-Do not tune H4 decimals from trade outcomes.
-
-## 3. First Slow-N P15 probe
-
-Research-only 86-feature survival probe with outcome-blind 25-minute training de-overlap:
+Primary n=5:
 
 ```text
-H4 0.25ATR
+Phase-0:
+2024 N34 58.82
+2025 N17 76.47
+2026 N13 69.23
+ALL N64 65.63%
 
-             AUC15    P15>=75 hit      fresh75 hit
-2024         .8142       82.73%          78.55% N648
-2025         .7650       81.46%          78.53% N531
-2026 YTD     .7770       80.58%          76.47% N323
+Phase-2:
+2024 N34 64.71
+2025 N18 66.67
+2026 N11 63.64
+ALL N63 65.08%
 ```
 
-Training phase shift produced broadly similar results.
-
-Important caveat: this is not the final official model and not untouched validation. Quarter-level fresh75 precision is less uniform than annual results; 2026Q2 was ~69.75%.
-
-## 4. Legacy M5-A-N downstream research — status reset
-
-Old population:
+Window robustness:
 
 ```text
-1.50 * M5 ATR fresh75
-resolved direction events = 2149
+Phase-0 n3: 55.56 / 70.00 / 57.14
+Phase-0 n5: 58.82 / 76.47 / 69.23
+Phase-0 n8: 66.67 / 71.43 / 62.50
+
+Phase-2 n3: 55.17 / 61.54 / 58.33
+Phase-2 n5: 64.71 / 66.67 / 63.64
+Phase-2 n8: 71.43 / 60.00 / 71.43
 ```
 
-Everything below remains useful as a hypothesis, but **none transfers automatically to Slow-N**.
+All 18 year x phase x window cells are above 50%.
 
-### Chart voter findings
+Status: `STRONG DEVELOPMENT CANDIDATE / NOT VALIDATED / SMALL SAMPLE`.
 
-- semantic deterministic 7-voter panel: ~49.6 / 51.6 / 50.9% -> failed.
-- expanded MTF panels: generally ~49-52% -> failed.
-- market-question equal panel: ~49.9 / 51.1 / 51.9% -> failed.
-- refined asymmetric M15+M30 up / HTF short / location long state: ~58.2 / 60.0 / 62.0%, discovery only.
-- large chart-state family showed substantial multiple-testing risk; do not promote small 65-70% chart states.
+## 5. Positive hypothesis — Stoch/M1/tick re-synchronization
 
-### Raw tick audit and result
+Current raw tick data cover only the intersection between new Slow-N events and the old tick-instrumented N1 ledger.
 
-V1/V2/V3 raw-tick probes were invalidated because the ledger wall-clock had been shifted through Europe/Helsinki before MT5 tick lookup.
+Resolved overlap rows: `N418`.
 
-V4 corrected this:
+Predefined aligned tick state `0001` following M5 Stoch D:
 
 ```text
-raw tick count vs M1 tickvol correlation: 0.9816 aligned / 0.9863 placebo
-aligned coverage: 99.77%
-placebo coverage: 94.23%
-after-decision ticks: 0
+2024 N18 61.11%
+2025 N20 70.00%
+2026 N7  71.43%
+ALL  N45 66.67%
 ```
 
-The generic tick-direction panel failed near 50%; tick data should not override N2-R1 generically.
-
-### Strong old-population Stoch/tick hypothesis
-
-Let D = M5 Stochastic K>D direction.
-
-Relative tick state `0001`:
+Shifted -10m placebo `0001`:
 
 ```text
-NET  opposite D
-MOVE opposite D
-CLV  opposite D
-RUN  same D
+ALL N40 45.00%
 ```
 
-Following D:
+Nested M1 observations:
 
 ```text
-2024 N71 63.38%
-2025 N64 68.75%
-2026 N40 62.50%
-ALL N175 65.14%
++ M1 recent counter-move                       N26 65.38%
++ M1 Stoch aligned with M5 D                   N14 85.71%
++ M1 Stoch opposite ~3m earlier -> now aligned N10 90.00%
 ```
 
-Restricted-family permutation audit was strong internally (~0.0044 familywise), but this was still consumed-data development evidence.
+Status: `PROMISING MECHANISM / INSUFFICIENT COVERAGE`.
 
-### M1 bridge findings
+Do not quote 85-90% as an edge. The correct next test is full raw-tick extraction for all new N1 decisions.
 
-M1 standalone direction voters were near 50%.
+## 6. Reproducibility finding
 
-Useful interactions:
+Legacy M1 confirmed-structure state could not be reproduced exactly from the retained documentation/package. A new reconstruction reached only ~85% state-label parity.
+
+Treat this as an instrumentation/reproducibility defect.
+
+Do not use old `M1 structure == N2-R1` percentages as Slow-N evidence until:
+
+1. original generator is recovered, or
+2. a new explicit state definition is frozen and treated as a new experiment.
+
+## 7. MT5 research indicator
+
+New file:
+
+`mt5/indicators/V8SlowNP15ContextIndicator.mq5`
+
+Purpose:
+
+- Phase-0 Slow-N P15 line, 0-100;
+- user-set P15 threshold horizontal line;
+- main-chart arrows when P15 meets the selected level/fresh-cross condition;
+- H4 ATR14 causal percentile rank, 0-100;
+- `abs(M5 close-SMA20) / SlowTarget` causal percentile rank, 0-100.
+
+Critical target alignment:
 
 ```text
-M1 confirmed structure == N2-R1:
-N832, N2 accuracy 59.86%
-2024/25/26 = 60.07 / 60.12 / 59.15%
-
-M5 Stoch + tick 0001 + M1 Stoch aligned:
-N57, 71.43 / 72.73 / 71.43%
-pooled 71.93%
-shifted-tick placebo pooled 47.12%
-
-M1 Stoch transition subset:
-N40, pooled 75.0% (too small)
+source M5 11:55 -> decision 12:00
+decision belongs to H4 block starting 12:00
+use ATR14 from H4 bar that ended at 12:00
+T = 0.25 * that ATR
 ```
 
-Working hypothesis: pullback-ending / cross-scale re-synchronization.
+No partial current H4 is used.
 
-### Bollinger(20,2) state findings
+The embedded Phase-0 model is **research-only** because the official full Slow-N model architecture is not yet frozen.
 
-Bollinger components were weak alone; state paths were more informative.
+## 8. Next work
 
-```text
-BB-A: prior middle residence -> trigger near lower but inside
-DOWN pooled 60.26%, N78
+1. full new-N1 raw tick extraction using V4 wall-clock alignment;
+2. aligned vs -10m placebo;
+3. exact old `0001` transfer test on full population;
+4. M1 Stoch alignment/transition on full population;
+5. native Slow-N Path Clearance;
+6. BB-B x temporal-transition interaction;
+7. recover/freeze M1 structure generator;
+8. multiplicity and near-miss audits;
+9. freeze direction only after these tests;
+10. exits/economics remain closed;
+11. 2021 remains locked.
 
-BB-B: prior middle residence -> trigger above upper + SMA distance widening
-UP pooled 59.33%, N150; best cross-window robustness
+## 9. Files
 
-BB-C: inside bands + normalized SMA gap shifts down + >=2 center crosses
-DOWN pooled 63.38%, N71; n=5-specific
+Read next:
 
-BB-D: middle residence + bandwidth contraction + exactly 1 center cross
-UP pooled 61.25%, N160; n=5-specific
-```
-
-Family-wise scan did not justify promotion. Retain Bollinger as context/state representation, not voter authority.
-
-## 5. Critical transfer rule
-
-Do not say:
-
-```text
-Slow-N Stoch/tick = 65%
-Slow-N M1-sync = 72%
-Slow-N BB-C = 63%
-```
-
-Those numbers belong only to the old M5-A-N population.
-
-Correct language:
-
-> These are predefined mechanisms/states to retest on the new Slow-N N1 population.
-
-## 6. Next session work order
-
-### Step A — formal Slow-N scale audit
-
-- exact completed H1/H4/D1 construction;
-- no partial HTF values;
-- target constancy across each block;
-- target-size/base-rate/update-cadence tables;
-- quarter/month stress;
-- decide/freeze slow scale without direction/P&L.
-
-Current leading candidate: `0.25 * previous-completed H4 ATR14`.
-
-### Step B — official probability rebuild
-
-- strict 60m purge;
-- chronological 2024/2025/2026 walk-forward;
-- full training population, not just the lightweight probe, unless de-overlap is explicitly frozen as architecture;
-- AUC/Brier/logloss/calibration/deciles;
-- P15/P30/P60 monotonicity;
-- reproducible model pack.
-
-### Step C — new N1 freeze
-
-Profile `P15>=75` and `fresh75` using movement outcomes only. Include H4-block clustering and actual target distance.
-
-### Step D — downstream rerun
-
-Before exploring new rules, rerun old definitions unchanged where semantically possible:
-
-1. legacy deterministic chart panel;
-2. M5 Stochastic;
-3. M1 structure/transition;
-4. V4 tick windows + placebo;
-5. preregistered `Stoch D + relative tick 0001`;
-6. M1-Stoch alignment/transition;
-7. Path Clearance anti-edge;
-8. Bollinger BB-A/B/C/D;
-9. trusted-state hierarchy;
-10. multiplicity audit.
-
-Rules containing old M5-A-N probability values (e.g. old N2-R1 P60 vote) may be scored only as legacy diagnostics; do not silently treat them as native Slow-N features.
-
-### Step E — only after direction freeze
-
-Reopen exit/risk/payoff and MT5 real-tick execution.
-
-## 7. Reserve / evidence discipline
-
-```text
-2022-2026 = consumed development evidence
-2021 = untouched reserve
-```
-
-The new population does not reset the temporal evidence clock.
-
-Do not use 2021 until the complete Slow-N movement + direction + execution architecture is frozen enough to justify reserve expenditure.
-
-## 8. Files to read next
-
-1. `AGENTS_V8.md`
-2. this `HANDOFF_V8.md`
-3. `V8_A_N_SEMANTIC_RESET_AND_SLOW_SCALE_RESEARCH_20260902.md`
-4. `V8_A_N_LEGACY_DOWNSTREAM_REVALIDATION_MAP_20260902.md`
-5. `DECISIONS_V8_SLOW_N_RESET_ADDENDUM_20260902.md`
-6. `RESEARCH_STATE_V8.md`
-7. `BACKLOG_V8.md`
+1. `V8_A_N_SLOW_DOWNSTREAM_REVALIDATION_RESULT_20260902.md`
+2. `V8_A_N_SEMANTIC_RESET_AND_SLOW_SCALE_RESEARCH_20260902.md`
+3. `V8_A_N_LEGACY_DOWNSTREAM_REVALIDATION_MAP_20260902.md`
+4. `DECISIONS_V8_SLOW_N_RESET_ADDENDUM_20260902.md`
