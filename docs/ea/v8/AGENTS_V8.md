@@ -1,13 +1,13 @@
 # V8 Research Instructions
 
-Status: `ACTIVE / V8-A-N-SLOW REVALIDATION`
+Status: `ACTIVE / V8-A-N-SLOW ONSET + EXTENSION / DIRECTION BOTTLENECK`
 Generation: `V8`
 Last synchronized: `2026-09-02`
 Production authority: `NONE`
 Market: `GOLD#`
 Open development evidence: `2022-2026`
 Untouched reserve: `GOLD# 2021`
-Base Git HEAD for this update: `cfb286b1947ccb77e5e907caa9e96b26af314654`
+Base Git HEAD for this update: `45925b29fbec7d52509652e5787654624ecc0848`
 
 ## 1. Read this first
 
@@ -72,7 +72,73 @@ Jaccard = 57.22%
 
 Therefore downstream direction candidates must not be accepted from a single probability-model realization alone.
 
-## 3. Downstream revalidation result
+
+## 3. Higher-horizon extension layer
+
+The 0.25/P15 Slow-N population is now interpreted as an **ONSET** movement detector, not the final movement-distance target.
+
+Movement-only screening of:
+
+```text
+H = 60 / 120 / 240m
+k = 0.50 / 0.75 / 1.00 H4 ATR
+```
+
+found stable annual base rates across 2022-2026.
+
+Retained extension research surface:
+
+```text
+V8-A-N-SLOW-EXT
+T_ext = 0.75 * previous-completed H4 ATR14
+
+P60  = P(reach +/-T_ext within 60m)
+P120 = P(reach +/-T_ext within 120m)
+P240 = P(reach +/-T_ext within 240m)
+```
+
+2026 median `T_ext` is approximately `30.28p`.
+
+Joint Phase-0 / Phase-2 survival AUC:
+
+```text
+P60:
+2024 ~.814-.815
+2025 ~.769-.770
+2026 ~.776-.777
+
+P120:
+2024 ~.759
+2025 ~.702-.703
+2026 ~.716-.718
+
+P240:
+2024 ~.730
+2025 ~.665-.666
+2026 ~.661-.662
+```
+
+The current onset fresh75 population itself already has strong larger-move realization:
+
+```text
+                2024    2025    2026
+0.50ATR / 60m   71.36   71.59   68.22%
+0.75ATR /120m   62.63   58.69   56.07%
+1.00ATR /240m   54.82   51.21   48.91%
+```
+
+Therefore:
+
+```text
+0.25/P15 fresh75 = ONSET
+0.75 P60/P120/P240 = EXTENSION magnitude/horizon context
+```
+
+`P120` is the central extension research coordinate. EXT probability is **not** an entry veto and no EXT fresh trigger is frozen.
+
+Direct higher-horizon P_UP/P_DOWN and signed M1/M5 path direction models failed to transfer. Do not claim that longer horizon solves mandatory direction.
+
+## 4. Downstream revalidation result
 
 ### Failed / do not extend
 
@@ -171,7 +237,7 @@ tick0001 + M1 Stoch aligned with M5 D         N14 85.71%
 
 The final two are far too small for authority. They only justify extracting raw ticks for **all new Slow-N N1 decisions**.
 
-## 4. Reproducibility warning
+## 5. Reproducibility warning
 
 The old M1 confirmed-structure study has a reproducibility gap: the result ledger and definition description remain, but the exact original generation code is not present in the retained package. A fresh reconstruction reached only ~85% parity with the old state labels.
 
@@ -180,9 +246,17 @@ Therefore:
 - M1 standalone Stoch/pressure/EMA and other exact-parity components may be transferred normally;
 - old M1 confirmed-structure percentages must not be claimed on Slow-N until the exact state generator is recovered or a new definition is explicitly frozen.
 
-## 5. Current authority
+## 6. Current authority
 
 ```text
+Movement onset:
+provisional = 0.25 * previous-completed H4 ATR14 / P15 fresh75
+
+Movement extension:
+research-only = 0.75 * previous-completed H4 ATR14 / P60-P120-P240
+P120 = central research coordinate
+no EXT fresh trigger authority
+
 Movement scale:
 provisional = 0.25 * previous-completed H4 ATR14, decision-block aligned
 
@@ -202,19 +276,21 @@ Economics/exits:
 CLOSED until direction architecture improves/freeze
 ```
 
-## 6. Current work order
+## 7. Current work order
 
-1. Extract V4-aligned raw tick windows for the **entire new Slow-N fresh75 population**, with -10m placebo.
-2. Rerun generic tick negative controls and predefined `Stoch D + relative 0001`.
-3. Rerun M1-Stoch alignment/transition on the full tick-covered population.
-4. Rebuild Path Clearance natively for the Slow-N target and retest its old-flow anti-edge.
-5. Study BB-B interaction with Stoch/M1/tick without arbitrary threshold search.
-6. Recover or replace the M1 confirmed-structure generator with explicit parity tests.
-7. Only after fixed transfer tests are exhausted, open new Slow-N-specific discovery.
-8. Freeze direction before reopening SL/TP/payoff or MT5 real-tick strategy economics.
-9. Keep `GOLD# 2021` locked.
+1. Preserve ONSET = `0.25 H4 ATR / P15 fresh75`; do not replace it from extension results.
+2. Retain `V8-A-N-SLOW-EXT` = `0.75 H4 ATR / P60/P120/P240` as shadow movement context, with P120 central.
+3. Extract V4-aligned raw tick windows for the **entire onset fresh75 population**, with -10m placebo.
+4. Rerun generic tick negative controls and predefined `Stoch D + relative 0001`.
+5. Rerun M1-Stoch alignment/transition on the full tick-covered population.
+6. Rebuild Path Clearance natively for the Slow-N target and retest its old-flow anti-edge.
+7. Study BB-B interaction with Stoch/M1/tick without arbitrary threshold search.
+8. Recover or replace the M1 confirmed-structure generator with explicit parity tests.
+9. Do not run more generic higher-horizon direction searches without genuinely new information.
+10. Freeze direction before reopening payoff; later preregister EXT-conditioned holding/runner research without dropping onset trades.
+11. Keep `GOLD# 2021` locked.
 
-## 7. Indicator authority
+## 8. Indicator authority
 
 `mt5/indicators/V8ANP15ContextIndicator.mq5` remains the legacy per-M5 `1.50*M5 ATR` indicator.
 
@@ -222,14 +298,15 @@ CLOSED until direction architecture improves/freeze
 
 It must not be described as production authority or final frozen Slow-N probability authority.
 
-## 8. Reading order
+## 9. Reading order
 
 1. `HANDOFF_V8.md`
-2. `V8_A_N_SLOW_DOWNSTREAM_REVALIDATION_RESULT_20260902.md`
-3. `V8_A_N_SEMANTIC_RESET_AND_SLOW_SCALE_RESEARCH_20260902.md`
-4. `V8_A_N_LEGACY_DOWNSTREAM_REVALIDATION_MAP_20260902.md`
-5. `DECISIONS_V8_SLOW_N_RESET_ADDENDUM_20260902.md`
-6. `RESEARCH_STATE_V8.md`
-7. `BACKLOG_V8.md`
+2. `V8_A_N_SLOW_HIGHER_HORIZON_EXTENSION_RESEARCH_20260902.md`
+3. `V8_A_N_SLOW_DOWNSTREAM_REVALIDATION_RESULT_20260902.md`
+4. `V8_A_N_SEMANTIC_RESET_AND_SLOW_SCALE_RESEARCH_20260902.md`
+5. `V8_A_N_LEGACY_DOWNSTREAM_REVALIDATION_MAP_20260902.md`
+6. `DECISIONS_V8_SLOW_N_RESET_ADDENDUM_20260902.md`
+7. `RESEARCH_STATE_V8.md`
+8. `BACKLOG_V8.md`
 
 Always refresh GitHub HEAD before continuing.

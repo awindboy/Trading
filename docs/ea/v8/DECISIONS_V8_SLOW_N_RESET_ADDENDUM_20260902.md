@@ -513,4 +513,197 @@ Next work order:
 Reason:
 
 Generic technical panels have repeatedly failed, while BB-B and temporal re-synchronization are the only current hypotheses with meaningful transfer evidence.
+---
+
+## D-V8-140 — Open higher-horizon movement research as an extension layer, not an automatic N1 replacement
+
+Decision:
+
+Open a separate higher-horizon Slow-N research question while preserving the current `0.25 * H4 ATR / P15 fresh75` onset population.
+
+Reason:
+
+The user wants to know whether a materially larger move is likely over 60-240 minutes. This is distinct from the current 15-minute onset question and must not silently redefine the existing movement trigger before evidence is gathered.
+
+---
+
+## D-V8-141 — Screen 60/120/240m x 0.50/0.75/1.00 H4-ATR using movement-only criteria
+
+Decision:
+
+Use the predeclared grid:
+
+```text
+H = 60 / 120 / 240m
+k = 0.50 / 0.75 / 1.00
+T = k * previous-completed H4 ATR14
+```
+
+Select the extension target using:
+
+- annual/quarter movement base-rate stability;
+- target meaning / current price distance;
+- event frequency;
+- model ranking behavior;
+- implementation properties.
+
+Do not use direction accuracy or trade P/L to choose `k`.
+
+Reason:
+
+Target semantics must remain upstream of direction/economics.
+
+---
+
+## D-V8-142 — Retain 0.75 H4 ATR as the research extension distance
+
+Decision:
+
+Retain:
+
+```text
+T_ext = 0.75 * previous-completed H4 ATR14
+```
+
+for a joint `P60/P120/P240` extension surface.
+
+Reason:
+
+`0.50` becomes too common by 240m (~63-69%), while `1.00` is too rare at 60m (~3.6-4.8%). `0.75` provides a useful survival range (~8-10% / ~19-21% / ~38-42%) and corresponds to roughly 30p median distance in 2026.
+
+This is a research target, not production authority.
+
+---
+
+## D-V8-143 — Interpret current 0.25/P15 fresh75 as an onset detector for larger volatility episodes
+
+Decision:
+
+Retain the current onset fresh population after observing:
+
+```text
+0.50 H4 ATR within 60m:
+71.36 / 71.59 / 68.22%
+
+0.75 H4 ATR within 120m:
+62.63 / 58.69 / 56.07%
+
+1.00 H4 ATR within 240m:
+54.82 / 51.21 / 48.91%
+```
+
+on 2024/2025/2026 Phase-0 onset fresh75 events.
+
+Reason:
+
+These rates are roughly 2-3x their unconditional annual base rates. The current fresh event therefore contains evidence of episode onset beyond its local 0.25-ATR P15 label.
+
+Do not replace it merely because a larger-distance extension surface exists.
+
+---
+
+## D-V8-144 — Retain a research-only 0.75-H4-ATR survival extension surface
+
+Decision:
+
+Open:
+
+```text
+V8-A-N-SLOW-EXT
+
+T_ext = 0.75 * H4 ATR14
+P60  = reach +/-T_ext within 60m
+P120 = reach +/-T_ext within 120m
+P240 = reach +/-T_ext within 240m
+```
+
+using a joint four-class survival model so that horizon monotonicity is structural.
+
+Phase-0 and Phase-2 development evidence supports usable movement ranking, strongest at P60 and weaker at P240.
+
+Reason:
+
+The surface quantifies extension magnitude/horizon without conflating it with direction.
+
+No EXT fresh trigger is frozen.
+
+---
+
+## D-V8-145 — Use P120 as the central extension research coordinate, not as entry authority
+
+Decision:
+
+For human interpretation and later exit research, treat `P120` at `0.75 H4 ATR` as the central extension coordinate.
+
+Reason:
+
+It balances:
+
+- material current distance (~30p in 2026);
+- non-sparse base rate (~19-21%);
+- useful high-score population;
+- better horizon meaning than P60 without the weaker 4-hour ranking of P240.
+
+P60 and P240 remain supporting short/long extension context.
+
+This does not authorize filtering onset entries.
+
+---
+
+## D-V8-146 — Falsify “longer horizon solves mandatory direction” on current information
+
+Decision:
+
+Do not promote higher-horizon direct direction models.
+
+Evidence:
+
+- separate movement-feature P_UP/P_DOWN models were unstable across years;
+- a new signed M1/M5 multi-horizon path representation also remained near chance / reversed by year;
+- fixed-0.75 survival-fresh direction likewise failed transfer.
+
+Reason:
+
+Longer horizon and larger target improve the economic meaning of the movement question but do not, by themselves, supply robust LONG/SHORT information.
+
+Do not rescue the hypothesis by choosing whichever horizon/year looks best.
+
+---
+
+## D-V8-147 — Extension probability must not become an abstention filter for the mandatory-fresh objective
+
+Decision:
+
+Preserve the active strategy research objective:
+
+> every Slow-N onset fresh event remains eligible for mandatory LONG/SHORT direction.
+
+Do not use low `P60/P120/P240` extension probability to drop trades merely to increase reported WR.
+
+Reason:
+
+The user's target problem is high direction accuracy across all fresh events. Extension probability answers how far/how long the episode may continue, not whether a fresh event is allowed to exist.
+
+Later, after direction is frozen, EXT probability may be preregistered for holding/runner/target architecture while preserving the mandatory-entry population.
+
+---
+
+## D-V8-148 — Direction research returns to genuinely faster information after the higher-horizon falsification
+
+Decision:
+
+The primary direction work remains:
+
+1. full V4-aligned raw-tick extraction for every onset fresh event;
+2. exact relative `0001` + shifted placebo transfer;
+3. M1 oscillator transition on full tick coverage;
+4. BB-B x temporal transition;
+5. native Path Clearance;
+6. M1 confirmed-structure recovery/redefinition.
+
+Reason:
+
+Changing only horizon/target did not solve direction. The remaining positive direction hypotheses depend on temporal information below M5 rather than another generic higher-horizon technical model.
+
+`GOLD# 2021` remains locked.
 

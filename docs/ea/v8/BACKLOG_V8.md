@@ -1,7 +1,7 @@
 # V8 Backlog
 
 Status date: `2026-09-02`
-Active phase: `V8-A-N-SLOW / DOWNSTREAM REVALIDATION`
+Active phase: `V8-A-N-SLOW / ONSET + EXTENSION MAPPED / DIRECTION BOTTLENECK`
 
 ## Slow scale / probability
 
@@ -15,6 +15,26 @@ Active phase: `V8-A-N-SLOW / DOWNSTREAM REVALIDATION`
 - [ ] Build final reproducible official Slow-N P15/P30/P60 pack.
 - [ ] Calibration/logloss/decile/month/quarter stress before final probability authority.
 - [ ] Keep multiplier selection independent of direction/P&L.
+
+
+## Higher-horizon EXTENSION
+
+- [x] Predeclare `H={60,120,240}m x k={0.50,0.75,1.00} H4 ATR` movement-only screen.
+- [x] Confirm annual target base-rate stability across 2022-2026.
+- [x] Retain `0.75 * previous-completed H4 ATR14` as extension research target.
+- [x] Build joint 4-class `P60/P120/P240` survival surface with structural horizon monotonicity.
+- [x] Run Phase-0 and Phase-2 de-overlap robustness.
+- [x] Quantify P60/P120/P240 AUC / calibration / fresh75 realization.
+- [x] Measure Phase-0/Phase-2 extension-fresh Jaccard.
+- [x] Show current ONSET fresh predicts 0.50/60, 0.75/120, 1.00/240 larger moves at ~2-3x unconditional base rate.
+- [x] Test direct P_UP/P_DOWN on higher-horizon fresh: failed.
+- [x] Build signed M1/M5 multi-horizon direction representation: failed to transfer.
+- [x] Reject “longer horizon solves direction” without threshold rescue.
+- [x] Keep `P120 @ 0.75 H4 ATR` as central extension research coordinate.
+- [ ] Do not freeze an EXT fresh trigger yet.
+- [ ] Do not use EXT as an entry veto for the mandatory-fresh objective.
+- [ ] After direction freeze, preregister EXT-conditioned holding/runner/target research.
+- [ ] Build final ONSET+EXT probability model pack only after training architecture freeze.
 
 ## Direction transfer — completed negatives
 
@@ -37,6 +57,8 @@ Active phase: `V8-A-N-SLOW / DOWNSTREAM REVALIDATION`
 - [x] BB-C transfer: failed/reversed in 2026.
 - [x] BB-D transfer: failed.
 - [x] Generic tick majority on available overlap: failed.
+- [x] Generic higher-horizon P_UP/P_DOWN: failed.
+- [x] Signed higher-horizon M1/M5 path direction: failed.
 
 Do not rescue these with threshold or weight searches.
 

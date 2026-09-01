@@ -1,232 +1,207 @@
 # V8 Development Handoff
 
 Last updated: `2026-09-02`
-Current phase: `V8-A-N-SLOW / DOWNSTREAM REVALIDATION IN PROGRESS`
+Current phase: `V8-A-N-SLOW / ONSET + EXTENSION MAPPED / DIRECTION BOTTLENECK`
 Production authority: `NONE`
 Market: `GOLD#`
 Open development evidence: `2022-2026`
 Untouched reserve: `GOLD# 2021`
-Base Git HEAD for this update: `cfb286b1947ccb77e5e907caa9e96b26af314654`
+Base Git HEAD for this update: `45925b29fbec7d52509652e5787654624ecc0848`
 
-## 1. Current problem definition
+## 1. Read this first
 
-Legacy M5-A-N:
+The active Slow-N movement architecture now separates two questions.
 
 ```text
-barrier = 1.50 * causal pre-decision M5 ATR14
+ONSET
+T_onset = 0.25 * previous-completed H4 ATR14
+P15 fresh75
+=> is a movement episode starting?
+
+EXTENSION
+T_ext = 0.75 * previous-completed H4 ATR14
+P60 / P120 / P240
+=> how likely is the episode to travel materially farther?
 ```
 
-is retained only as historical M5-volatility-relative movement research.
+Both scales use the H4 block containing the M5 **decision timestamp** and Wilder ATR14 from the immediately previous fully completed H4 bar. No partial H4 value is allowed.
 
-Active intended probability contract:
+Direction remains separate and unfrozen.
+
+## 2. ONSET movement population
+
+Phase-0:
 
 ```text
-decision = completed M5 close timestamp
-
-H4 block = block containing decision
-scale = Wilder ATR14 from the immediately previous completed H4 bar
-T = 0.25 * scale
-T stays fixed for the whole H4 decision block
-
-P15 = P(reach +/-T within 15m)
-P30 = P(reach +/-T within 30m)
-P60 = P(reach +/-T within 60m)
+2024 fresh75 N653 / hit15 78.10%
+2025 fresh75 N535 / hit15 78.50%
+2026 fresh75 N321 / hit15 76.01%
 ```
 
-The H4 choice remains provisional but is the current primary balance candidate.
-
-## 2. Probability probe — corrected current numbers
-
-A horizon-eligibility mismatch was found during independent reconstruction. After restoring the correct requirement that the full future label window is available, the original Slow-N probe was reproduced closely.
-
-### Phase-0
-
-| Year | Eval N | AUC15 | P15>=75 N | P15>=75 actual | fresh75 N | fresh75 actual |
-|---|---:|---:|---:|---:|---:|---:|
-| 2024 | 67,954 | .81394 | 3,399 | 82.61% | 653 | 78.10% |
-| 2025 | 67,582 | .76483 | 2,230 | 81.21% | 535 | 78.50% |
-| 2026 | 44,605 | .77681 | 1,262 | 80.43% | 321 | 76.01% |
-
-### Phase-2 robustness model
-
-| Year | Eval N | AUC15 | P15>=75 N | P15>=75 actual | fresh75 N | fresh75 actual |
-|---|---:|---:|---:|---:|---:|---:|
-| 2024 | 67,954 | .81507 | 3,341 | 83.30% | 733 | 80.22% |
-| 2025 | 67,582 | .76485 | 2,185 | 80.87% | 579 | 76.34% |
-| 2026 | 44,605 | .77583 | 1,161 | 81.14% | 292 | 78.08% |
-
-Fresh75 identity sensitivity:
+Phase-2:
 
 ```text
-Phase-0 N1509
-Phase-2 N1604
-intersection N1133
-Jaccard 57.22%
+2024 N733 / 80.22%
+2025 N579 / 76.34%
+2026 N292 / 78.08%
 ```
 
-Interpretation: probability ranking/calibration is fairly stable at aggregate level, but exact fresh-cross membership is model-realization sensitive. Use cross-phase robustness as a downstream gate.
+Phase-0 vs Phase-2 event-set Jaccard = `57.22%`.
 
-## 3. Downstream transfer — failures
+Interpretation: aggregate movement quality is stable, exact fresh membership is only moderately stable.
 
-| Method | Current Slow-N result | Decision |
-|---|---|---|
-| Legacy deterministic 7-voter | P0 51.73 / 54.08 / 50.00%; P2 49.17 / 56.79 / 49.83% | FAIL |
-| M5 Stoch standalone | P0 47.96 / 51.99 / 54.46%; P2 46.25 / 53.79 / 51.92% | FAIL |
-| Market-question equal panel | 50.94 / 53.51 / 48.41% | FAIL |
-| Immediate pressure | 49.69 / 51.80 / 47.45% | FAIL |
-| Oscillator transition | 50.00 / 52.18 / 51.59% | FAIL |
-| M15 structure | 50.94 / 53.51 / 54.14% | FAIL |
-| H1 structure | 48.27 / 52.75 / 53.18% | FAIL |
-| H4 structure | 51.10 / 52.37 / 52.87% | FAIL |
-| HTF regime | 52.04 / 49.72 / 54.14% | FAIL |
-| Volatility transition | 50.63 / 54.08 / 50.00% | FAIL |
-| Location/liquidity | 49.06 / 52.18 / 50.00% | FAIL |
-| M1 tape proxy | 50.16 / 53.51 / 50.32% | FAIL |
-| M1 recent direction | 48.90 / 51.99 / 50.00% | FAIL |
-| M1 pressure | 51.10 / 53.32 / 53.18% | FAIL |
-| M1 Stoch standalone | 51.10 / 47.63 / 51.59% | FAIL |
-| M1 EMA3/8 | 51.89 / 52.94 / 48.41% | FAIL |
-| Old asymmetric MTF state | UP 36.36 / 50.00 / 63.64% | FAIL / relation reversal |
-| BB-A | DOWN 50.00 / 55.56 / 58.33% | FAIL |
-| BB-C | DOWN 57.14 / 61.90 / 33.33% | FAIL / 2026 reversal |
-| BB-D | UP 52.94 / 52.63 / 54.17% | FAIL |
-| Generic raw-tick panel on overlap only | 50.86 / 52.32 / 52.17%, pooled 51.67% | FAIL |
+## 3. New higher-horizon extension result
 
-Do not continue threshold/weight search on these failures.
-
-## 4. Positive candidate — BB-B
-
-Definition is frozen from legacy research, not redesigned on Slow-N:
+Movement-only target screen:
 
 ```text
-prior residence = MID
-trigger closes OUT_U
-abs normalized SMA-gap path = AWAY
+H = 60 / 120 / 240m
+k = 0.50 / 0.75 / 1.00 H4 ATR
+```
+
+Annual base rates were stable across 2022-2026.
+
+Retained research target:
+
+```text
+T_ext = 0.75 * previous-completed H4 ATR14
+2026 median distance ~30.28p
+```
+
+Joint survival model:
+
+```text
+P60 <= P120 <= P240 structurally
+```
+
+AUC range by year:
+
+```text
+P60  .814/.769/.777
+P120 .759/.703/.718
+P240 .730/.665/.661
+```
+
+Phase-2 is materially similar.
+
+`P120` is the central extension research coordinate.
+
+No EXT trigger is frozen and EXT probability is not an entry veto.
+
+## 4. Critical finding — ONSET predicts larger episodes
+
+Without selecting new events, current Phase-0 ONSET fresh75 later reached:
+
+```text
+0.50 H4 ATR within 60m:
+71.36 / 71.59 / 68.22%
+
+0.75 H4 ATR within 120m:
+62.63 / 58.69 / 56.07%
+
+1.00 H4 ATR within 240m:
+54.82 / 51.21 / 48.91%
+```
+
+Unconditional annual base rates for these three questions are only roughly `19-25%`.
+
+Interpretation:
+
+> ONSET fresh75 is not merely a small 15-minute burst detector; it marks the beginning of a larger volatility episode at roughly 2-3x unconditional frequency.
+
+This supports preserving ONSET and using EXT as a separate continuation/holding context.
+
+## 5. Higher horizon did not solve direction
+
+The following mandatory-direction approaches failed to transfer robustly:
+
+1. separate `P_UP/P_DOWN` using the movement representation;
+2. signed M1/M5 multi-horizon path representation;
+3. signed direction on the fixed-0.75 survival-fresh population.
+
+Representative first-touch accuracy stayed near chance or reversed by year.
+
+Therefore:
+
+```text
+longer horizon != solved direction
+```
+
+Do not choose a horizon/target from whichever year gives the best direction result.
+
+## 6. Current direction evidence
+
+No frozen Slow-N direction engine.
+
+### Failed families
+
+Generic deterministic chart voting, standalone Stoch, market-question panels, standalone M1 questions, BB-A/C/D, generic tick majority, and the new generic higher-horizon direction models are negative evidence.
+
+### BB-B retained
+
+```text
+middle residence
+-> trigger closes above upper Bollinger band
+-> absolute SMA distance AWAY
 predict UP
 ```
 
-Primary n=5:
-
 ```text
-Phase-0:
-2024 N34 58.82
-2025 N17 76.47
-2026 N13 69.23
-ALL N64 65.63%
-
-Phase-2:
-2024 N34 64.71
-2025 N18 66.67
-2026 N11 63.64
-ALL N63 65.08%
+Phase-0 N64 65.63%
+Phase-2 N63 65.08%
 ```
 
-Window robustness:
+Small-sample development candidate only.
+
+### Stoch/M1/tick re-synchronization retained as mechanism hypothesis
+
+Old/new tick-covered overlap:
 
 ```text
-Phase-0 n3: 55.56 / 70.00 / 57.14
-Phase-0 n5: 58.82 / 76.47 / 69.23
-Phase-0 n8: 66.67 / 71.43 / 62.50
-
-Phase-2 n3: 55.17 / 61.54 / 58.33
-Phase-2 n5: 64.71 / 66.67 / 63.64
-Phase-2 n8: 71.43 / 60.00 / 71.43
+relative 0001 N45 / 66.67%
+-10m placebo N40 / 45.00%
 ```
 
-All 18 year x phase x window cells are above 50%.
+Full new ONSET tick extraction is still missing.
 
-Status: `STRONG DEVELOPMENT CANDIDATE / NOT VALIDATED / SMALL SAMPLE`.
+## 7. Mandatory-fresh objective
 
-## 5. Positive hypothesis — Stoch/M1/tick re-synchronization
+The strategy research target remains:
 
-Current raw tick data cover only the intersection between new Slow-N events and the old tick-instrumented N1 ledger.
+> every ONSET fresh event must receive LONG or SHORT; no abstention layer merely to inflate WR.
 
-Resolved overlap rows: `N418`.
+Therefore EXT probability may not be used to delete low-EXT trades.
 
-Predefined aligned tick state `0001` following M5 Stoch D:
+If direction is later frozen, EXT may be tested for:
 
-```text
-2024 N18 61.11%
-2025 N20 70.00%
-2026 N7  71.43%
-ALL  N45 66.67%
-```
+- holding horizon;
+- runner permission;
+- target distance;
+- exit architecture;
 
-Shifted -10m placebo `0001`:
+while preserving all ONSET entries.
 
-```text
-ALL N40 45.00%
-```
+## 8. Next work order
 
-Nested M1 observations:
+1. Read `V8_A_N_SLOW_HIGHER_HORIZON_EXTENSION_RESEARCH_20260902.md`.
+2. Preserve ONSET and EXT as separate movement questions.
+3. Full V4-aligned raw-tick extraction for every ONSET fresh75 event.
+4. Exact `Stoch D + relative 0001` + -10m placebo on full coverage.
+5. Full M1 oscillator alignment/transition transfer.
+6. BB-B x temporal-transition interaction.
+7. Native Slow-N Path Clearance.
+8. Recover/redefine M1 confirmed structure with parity.
+9. No additional generic higher-horizon direction search without new information.
+10. Freeze direction.
+11. Only then preregister economics, including possible EXT-conditioned holding/runner logic.
+12. Keep 2021 locked.
 
-```text
-+ M1 recent counter-move                       N26 65.38%
-+ M1 Stoch aligned with M5 D                   N14 85.71%
-+ M1 Stoch opposite ~3m earlier -> now aligned N10 90.00%
-```
+## 9. Reading order
 
-Status: `PROMISING MECHANISM / INSUFFICIENT COVERAGE`.
-
-Do not quote 85-90% as an edge. The correct next test is full raw-tick extraction for all new N1 decisions.
-
-## 6. Reproducibility finding
-
-Legacy M1 confirmed-structure state could not be reproduced exactly from the retained documentation/package. A new reconstruction reached only ~85% state-label parity.
-
-Treat this as an instrumentation/reproducibility defect.
-
-Do not use old `M1 structure == N2-R1` percentages as Slow-N evidence until:
-
-1. original generator is recovered, or
-2. a new explicit state definition is frozen and treated as a new experiment.
-
-## 7. MT5 research indicator
-
-New file:
-
-`mt5/indicators/V8SlowNP15ContextIndicator.mq5`
-
-Purpose:
-
-- Phase-0 Slow-N P15 line, 0-100;
-- user-set P15 threshold horizontal line;
-- main-chart arrows when P15 meets the selected level/fresh-cross condition;
-- H4 ATR14 causal percentile rank, 0-100;
-- `abs(M5 close-SMA20) / SlowTarget` causal percentile rank, 0-100.
-
-Critical target alignment:
-
-```text
-source M5 11:55 -> decision 12:00
-decision belongs to H4 block starting 12:00
-use ATR14 from H4 bar that ended at 12:00
-T = 0.25 * that ATR
-```
-
-No partial current H4 is used.
-
-The embedded Phase-0 model is **research-only** because the official full Slow-N model architecture is not yet frozen.
-
-## 8. Next work
-
-1. full new-N1 raw tick extraction using V4 wall-clock alignment;
-2. aligned vs -10m placebo;
-3. exact old `0001` transfer test on full population;
-4. M1 Stoch alignment/transition on full population;
-5. native Slow-N Path Clearance;
-6. BB-B x temporal-transition interaction;
-7. recover/freeze M1 structure generator;
-8. multiplicity and near-miss audits;
-9. freeze direction only after these tests;
-10. exits/economics remain closed;
-11. 2021 remains locked.
-
-## 9. Files
-
-Read next:
-
-1. `V8_A_N_SLOW_DOWNSTREAM_REVALIDATION_RESULT_20260902.md`
-2. `V8_A_N_SEMANTIC_RESET_AND_SLOW_SCALE_RESEARCH_20260902.md`
-3. `V8_A_N_LEGACY_DOWNSTREAM_REVALIDATION_MAP_20260902.md`
-4. `DECISIONS_V8_SLOW_N_RESET_ADDENDUM_20260902.md`
+1. `AGENTS_V8.md`
+2. this `HANDOFF_V8.md`
+3. `V8_A_N_SLOW_HIGHER_HORIZON_EXTENSION_RESEARCH_20260902.md`
+4. `V8_A_N_SLOW_DOWNSTREAM_REVALIDATION_RESULT_20260902.md`
+5. `DECISIONS_V8_SLOW_N_RESET_ADDENDUM_20260902.md`
+6. `RESEARCH_STATE_V8.md`
+7. `BACKLOG_V8.md`
