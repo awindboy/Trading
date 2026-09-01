@@ -1,114 +1,80 @@
 # V8 Research State
 
-Status: `ACTIVE / V8-A FROZEN + V8-A2 CHALLENGER RETAINED + V8-C LONG FROZEN + V8-C-S1 SHORT RESEARCH`
+Status: `ACTIVE / V8-C EXIT-PATH PRIMARY + FRESH75 SECONDARY`
 Date: `2026-09-01`
 Production authority: `NONE`
 Market: `GOLD#`
 Untouched reserve: `GOLD# 2021`
 
 ## V8-A
-
-`FROZEN / POSITIVE OPEN-DEVELOPMENT MOVEMENT EVIDENCE / CURRENT CONTROL`
-
-Target:
-
-```text
-P(reach C0 +/-10 within 15m / 30m / 60m)
-```
-
-Historical walk-forward:
-
-```text
-2024 <- 2022-2023
-2025 <- 2022-2024
-2026 <- 2022-2025
-```
-
-Direction-free. Current MT5 indicator/model pack unchanged.
+`FROZEN / CURRENT MOVEMENT CONTROL`. Direction-free +/-10 within 15/30/60m. No model/indicator change authorized.
 
 ## V8-A2
-
-`RESEARCH COMPLETE / CHALLENGER RETAINED / NOT PROMOTED`
-
-Best repeatable improvement:
+`RESEARCH COMPLETE / CHALLENGER RETAINED / NOT PROMOTED`.
 
 ```text
-original 53 movement features
-+ 33 barrier-difficulty/regime features
-+ unified first-hit-time survival formulation
+P15 AUC 0.8660 / 0.8736 / 0.8190
+P30 AUC 0.8501 / 0.8565 / 0.7999
+P60 AUC 0.8130 / 0.8384 / 0.7925
 ```
 
-Strict 60m-purged survival AUC:
+Reliability layer: R15/R30/R60 = prior-288 completed-M5 percentile; EXTREME all>=90, HIGH all>=75, QUIET all<=25.
+
+## TradingView/A2 visualization
+`SHADOW / NO AUTHORITY`.
+
+TV79 price-only AUC:
 
 ```text
-15m  0.8660 / 0.8736 / 0.8190
-30m  0.8501 / 0.8565 / 0.7999
-60m  0.8130 / 0.8384 / 0.7925
+P15 0.8624 / 0.8727 / 0.8161
+P30 0.8465 / 0.8527 / 0.7961
+P60 0.8085 / 0.8337 / 0.7832
 ```
 
-Frozen control:
+M15+ probability candles aggregate completed M5 P15 OHLC. Visualization only.
 
-```text
-15m  0.8566 / 0.8715 / 0.8177
-30m  0.8418 / 0.8526 / 0.7977
-60m  0.8068 / 0.8316 / 0.7868
-```
+## Session research
+`COMPLETED DESCRIPTIVE / NO ENTRY AUTHORITY`.
 
-No robust future-year AUC >=0.90 demonstrated. No A2 MT5 authority.
+NY local 08:00-10:30 was the strongest recurring movement window. Session overlaps with A2 rank; EXTREME is not to be rejected solely outside NY.
 
 ## V8-B
-
-`PAUSED / NEGATIVE-RESULT AUTHORITY`
-
-Standalone learned direction remains weak/unstable after strict causal reconstruction. No deployment authority.
+`PAUSED / NEGATIVE-RESULT AUTHORITY`.
 
 ## V8-C LONG
-
-`PROVISIONAL FROZEN / MT5 REAL-TICK VERIFIED ON OPEN DEVELOPMENT EVIDENCE`
-
-```text
-M5 SMA20 contact-start
-P15 > prior-288 Q75
-K14 > D3
-completed M15 3-bar up
-completed H1 3-bar down
-=> LONG next M5 open
-SL/TP +/-10
-one position
-```
-
-Accepted R0.4:
+`PROVISIONAL FROZEN / MT5 REAL-TICK VERIFIED`.
 
 ```text
-2024 N152 WR59.87% +29.26R
-2025 N165 WR61.21% +37.35R
-2026 N139 WR58.99% +25.24R
-pooled N456 WR60.09% +91.85R
-expectancy +0.201R/trade
-PF ~1.49
+N456 / WR60.09% / +91.85R / +0.201R per trade / PF ~1.49
 ```
+
+Entry must not be tuned. +/-10 exit = entry-edge validator only.
 
 ## V8-C-S1 SHORT
+`RESEARCH-ONLY / M1 PROXY`: N140 / WR58.57% / +24R. No MT5 authority.
 
-`RESEARCH ONLY / M1 PROXY`
+## Fresh75 auto-direction
+`SECONDARY RESEARCH / NO AUTHORITY`.
+
+Fresh P15 <75 -> >=75 trigger retained. Roughly 790-feature technical/MTF/activity tournament did not produce a robust ~70% mandatory-direction rule; best compact development results remained ~59%. 2026 is consumed development evidence for this branch.
+
+## Primary current action
+`V8-C LONG EXIT / WINNER CONTINUATION`.
+
+Path audit all 456 trades: MFE/MAE, post-1R extension, retracement, time and censoring.
 
 ```text
-2024 N41 WR58.54%
-2025 N51 WR54.90%
-2026 N48 WR62.50%
-pooled N140 WR58.57% +24R
+2024 discovery
+2025 validation 1
+2026 validation 2
+2021 locked
 ```
 
-No MT5 authority yet.
+Goal: realized WR >=50%, average winner meaningfully >1R, positive full-cost expectancy.
 
-## V8-A reliability conclusion
-
-The present concern for live use is calibration/base-rate drift more than demonstrated collapse of ranking skill. Movement prevalence changed drastically from 2024 to 2026. Use V8-A primarily as a relative movement-state estimate, and monitor prospective AUC/calibration/decile ordering before changing the model.
-
-## Current action
-
-1. Keep frozen V8-A as control.
-2. Preserve A2 results/model manifest as research-only challenger evidence.
-3. Add prospective V8-A reliability logging before replacement decisions.
-4. Continue V8-C SHORT/exit research separately when desired.
-5. Keep GOLD# 2021 locked.
+## Ordering
+1. V8-C path audit / exit discovery.
+2. V8-C-S1 MT5 validation when resumed.
+3. Fresh75 new-information-source research as secondary.
+4. A2 prospective/platform parity work.
+5. 2021 locked.

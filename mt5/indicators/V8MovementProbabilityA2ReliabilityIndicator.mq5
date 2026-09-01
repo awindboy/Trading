@@ -4,11 +4,11 @@
 //| Model pack SHA256: 9f22944c34688ab2cce249cdf42d0d2185e498dce0524fed6a6e6846fdfd7764 |
 //+------------------------------------------------------------------+
 #property strict
-#property version   "1.00"
+#property version   "1.10"
 #property description "V8-A2 research-only shadow: P(+/-10 move) 15/30/60m + trailing relative-rank reliability. Direction NOT estimated."
 #property indicator_separate_window
-#property indicator_buffers 7
-#property indicator_plots   3
+#property indicator_buffers 12
+#property indicator_plots   4
 #property indicator_minimum 0.0
 #property indicator_maximum 100.0
 
@@ -24,6 +24,10 @@
 #property indicator_type3   DRAW_LINE
 #property indicator_color3  clrOrange
 #property indicator_width3  2
+#property indicator_label4  "A2 P15 Probability OHLC"
+#property indicator_type4   DRAW_COLOR_CANDLES
+#property indicator_color4  clrLimeGreen,clrTomato
+#property indicator_width4  1
 
 input group "Display"
 input color InpColor15m = clrLimeGreen;
@@ -31,6 +35,9 @@ input color InpColor30m = clrDeepSkyBlue;
 input color InpColor60m = clrOrange;
 input int   InpLineWidth = 2;
 input bool  InpShowStatusLabel = true;
+input bool  InpShowHTFProbabilityCandles = true; // >M5: aggregate completed M5 P15 into OHLC probability candles
+input color InpCandleUpColor = clrLimeGreen;     // P15 close >= open
+input color InpCandleDownColor = clrTomato;      // P15 close < open
 input ENUM_BASE_CORNER InpStatusCorner = CORNER_RIGHT_UPPER;
 input int   InpStatusX = 12;
 input int   InpStatusY = 84;
@@ -42,6 +49,11 @@ input bool InpAllow2026ModelAfter2026 = false;
 double Prob15Buffer[];
 double Prob30Buffer[];
 double Prob60Buffer[];
+double CandleOpenBuffer[];
+double CandleHighBuffer[];
+double CandleLowBuffer[];
+double CandleCloseBuffer[];
+double CandleColorBuffer[];
 double Rank15Buffer[];
 double Rank30Buffer[];
 double Rank60Buffer[];
@@ -52,6 +64,13 @@ string V8A2_STATUS = "V8A2_REL_STATUS";
 bool g_ready=false;
 datetime g_last_chart_bar=0;
 int g_last_rates_total=0;
+datetime g_last_closed_m5=0;
+
+// Higher-timeframe status is still based on the latest completed underlying M5 state.
+double g_status_p15=EMPTY_VALUE,g_status_p30=EMPTY_VALUE,g_status_p60=EMPTY_VALUE;
+double g_status_r15=EMPTY_VALUE,g_status_r30=EMPTY_VALUE,g_status_r60=EMPTY_VALUE;
+int g_recent_year=0,g_recent_count=0;
+double g_recent_p15[289],g_recent_p30[289],g_recent_p60[289];
 
 const int V8A2_WINS[8]={5,15,30,60,120,240,480,1440};
 #define V8A2_FEATURE_COUNT 86
@@ -751,14 +770,34 @@ void UpdateStatus()
       ObjectSetInteger(0,V8A2_STATUS,OBJPROP_SELECTABLE,false);
       ObjectSetInteger(0,V8A2_STATUS,OBJPROP_HIDDEN,true);
    }
+
    string txt="V8-A2 SHADOW | +/-10 | Direction NOT estimated";
-   if(ArraySize(Prob15Buffer)>1 && Prob15Buffer[1]!=EMPTY_VALUE)
+   if(_Period==PERIOD_M5)
    {
-      string state=StateName(Rank15Buffer[1],Rank30Buffer[1],Rank60Buffer[1]);
-      txt+="\nP15="+DoubleToString(Prob15Buffer[1],1)+"%  P30="+DoubleToString(Prob30Buffer[1],1)+"%  P60="+DoubleToString(Prob60Buffer[1],1)+"%";
-      if(Rank15Buffer[1]!=EMPTY_VALUE)
-         txt+="\nR15="+DoubleToString(Rank15Buffer[1],1)+"  R30="+DoubleToString(Rank30Buffer[1],1)+"  R60="+DoubleToString(Rank60Buffer[1],1)+"  STATE="+state;
-      else txt+="\nRank warmup: need prior 288 completed M5 states in same model year.";
+      if(ArraySize(Prob15Buffer)>1 && Prob15Buffer[1]!=EMPTY_VALUE)
+      {
+         string state=StateName(Rank15Buffer[1],Rank30Buffer[1],Rank60Buffer[1]);
+         txt+="\nM5 P15="+DoubleToString(Prob15Buffer[1],1)+"%  P30="+DoubleToString(Prob30Buffer[1],1)+"%  P60="+DoubleToString(Prob60Buffer[1],1)+"%";
+         if(Rank15Buffer[1]!=EMPTY_VALUE)
+            txt+="\nR15="+DoubleToString(Rank15Buffer[1],1)+"  R30="+DoubleToString(Rank30Buffer[1],1)+"  R60="+DoubleToString(Rank60Buffer[1],1)+"  STATE="+state;
+         else
+            txt+="\nRank warmup: need prior 288 completed M5 states in same model year.";
+      }
+   }
+   else
+   {
+      if(g_status_p15!=EMPTY_VALUE)
+      {
+         string state=StateName(g_status_r15,g_status_r30,g_status_r60);
+         txt+="\nLatest M5 P15="+DoubleToString(g_status_p15,1)+"%  P30="+DoubleToString(g_status_p30,1)+"%  P60="+DoubleToString(g_status_p60,1)+"%";
+         if(g_status_r15!=EMPTY_VALUE)
+            txt+="\nR15="+DoubleToString(g_status_r15,1)+"  R30="+DoubleToString(g_status_r30,1)+"  R60="+DoubleToString(g_status_r60,1)+"  STATE="+state;
+         else
+            txt+="\nRank warmup: need prior 288 completed M5 states in same model year.";
+      }
+      if(ArraySize(CandleOpenBuffer)>0 && CandleOpenBuffer[0]!=EMPTY_VALUE)
+         txt+="\nP15 candle O/H/L/C="+DoubleToString(CandleOpenBuffer[0],1)+"/"+DoubleToString(CandleHighBuffer[0],1)+"/"+DoubleToString(CandleLowBuffer[0],1)+"/"+DoubleToString(CandleCloseBuffer[0],1);
+      txt+="\nHTF candle = OHLC of completed underlying M5 P15 values.";
    }
    txt+="\nState rules: EXTREME=all ranks>=90, HIGH=all>=75, QUIET=all<=25.";
    txt+="\nValidated claims apply to factual V8 events; continuous values elsewhere are context only.";
@@ -811,23 +850,218 @@ void UpdateLatestClosedBar(const int rates_total,const datetime &time[])
    ComputeRanksForShift(1,rates_total,time);
 }
 
+void ResetHigherStatusQueue()
+{
+   g_recent_year=0; g_recent_count=0;
+   g_status_p15=EMPTY_VALUE; g_status_p30=EMPTY_VALUE; g_status_p60=EMPTY_VALUE;
+   g_status_r15=EMPTY_VALUE; g_status_r30=EMPTY_VALUE; g_status_r60=EMPTY_VALUE;
+}
+
+void PushHigherStatusScore(const int yr,const double p15,const double p30,const double p60)
+{
+   if(yr<=0 || p15==EMPTY_VALUE || p30==EMPTY_VALUE || p60==EMPTY_VALUE) return;
+   if(g_recent_year!=yr)
+   {
+      g_recent_year=yr;
+      g_recent_count=0;
+   }
+
+   if(g_recent_count<289)
+   {
+      g_recent_p15[g_recent_count]=p15;
+      g_recent_p30[g_recent_count]=p30;
+      g_recent_p60[g_recent_count]=p60;
+      g_recent_count++;
+   }
+   else
+   {
+      for(int i=0;i<288;i++)
+      {
+         g_recent_p15[i]=g_recent_p15[i+1];
+         g_recent_p30[i]=g_recent_p30[i+1];
+         g_recent_p60[i]=g_recent_p60[i+1];
+      }
+      g_recent_p15[288]=p15;
+      g_recent_p30[288]=p30;
+      g_recent_p60[288]=p60;
+   }
+
+   g_status_p15=p15; g_status_p30=p30; g_status_p60=p60;
+   g_status_r15=EMPTY_VALUE; g_status_r30=EMPTY_VALUE; g_status_r60=EMPTY_VALUE;
+
+   if(g_recent_count>=289)
+   {
+      int c15=0,c30=0,c60=0;
+      double cur15=g_recent_p15[288],cur30=g_recent_p30[288],cur60=g_recent_p60[288];
+      for(int i=0;i<288;i++)
+      {
+         if(g_recent_p15[i]<=cur15) c15++;
+         if(g_recent_p30[i]<=cur30) c30++;
+         if(g_recent_p60[i]<=cur60) c60++;
+      }
+      g_status_r15=100.0*(double)c15/288.0;
+      g_status_r30=100.0*(double)c30/288.0;
+      g_status_r60=100.0*(double)c60/288.0;
+   }
+}
+
+void SetProbabilityCandleValue(const int shift,const double p15)
+{
+   if(shift<0 || shift>=ArraySize(CandleOpenBuffer) || p15==EMPTY_VALUE) return;
+   if(CandleOpenBuffer[shift]==EMPTY_VALUE)
+   {
+      CandleOpenBuffer[shift]=p15;
+      CandleHighBuffer[shift]=p15;
+      CandleLowBuffer[shift]=p15;
+      CandleCloseBuffer[shift]=p15;
+   }
+   else
+   {
+      CandleHighBuffer[shift]=MathMax(CandleHighBuffer[shift],p15);
+      CandleLowBuffer[shift]=MathMin(CandleLowBuffer[shift],p15);
+      CandleCloseBuffer[shift]=p15;
+   }
+   CandleColorBuffer[shift]=(CandleCloseBuffer[shift]>=CandleOpenBuffer[shift] ? 0.0 : 1.0);
+}
+
+bool RebuildHigherTimeframeHistory(const int rates_total,const datetime &time[])
+{
+   ArrayInitialize(Prob15Buffer,EMPTY_VALUE); ArrayInitialize(Prob30Buffer,EMPTY_VALUE); ArrayInitialize(Prob60Buffer,EMPTY_VALUE);
+   ArrayInitialize(Rank15Buffer,EMPTY_VALUE); ArrayInitialize(Rank30Buffer,EMPTY_VALUE); ArrayInitialize(Rank60Buffer,EMPTY_VALUE); ArrayInitialize(ConsensusRankBuffer,EMPTY_VALUE);
+   ArrayInitialize(CandleOpenBuffer,EMPTY_VALUE); ArrayInitialize(CandleHighBuffer,EMPTY_VALUE); ArrayInitialize(CandleLowBuffer,EMPTY_VALUE); ArrayInitialize(CandleCloseBuffer,EMPTY_VALUE);
+   ArrayInitialize(CandleColorBuffer,0.0);
+   ResetHigherStatusQueue();
+
+   datetime now=TimeCurrent();
+   datetime cutoff=now-(datetime)(MathMax(30,InpHistoryDays)*86400);
+   int max_shift=rates_total-1;
+   while(max_shift>1 && time[max_shift]<cutoff) max_shift--;
+   datetime first_chart_time=time[max_shift];
+   datetime oldest=first_chart_time-(datetime)(30*86400);
+
+   MqlRates m1[],m5[];
+   int copied1=CopyRates(_Symbol,PERIOD_M1,oldest,now,m1);
+   int copied5=CopyRates(_Symbol,PERIOD_M5,first_chart_time,now,m5);
+   if(copied1<1442 || copied5<1)
+   {
+      Print("V8-A2 HTF: insufficient history M1=",copied1," M5=",copied5);
+      return false;
+   }
+
+   double psq[],prange[],pabs[],pbody[],ptick[];
+   double hl5[],hl15[],hl30[],hl60[],hl120[],hl240[],hl480[],hl1440[];
+   if(!BuildHistoricalFeatureCaches(m1,psq,prange,pabs,pbody,ptick,hl5,hl15,hl30,hl60,hl120,hl240,hl480,hl1440)) return false;
+
+   int mi=0;
+   while(mi<copied5 && m5[mi].time<first_chart_time) mi++;
+   double f[];
+
+   for(int shift=max_shift;shift>=0;shift--)
+   {
+      datetime start_time=time[shift];
+      datetime end_time=(shift==0 ? now+(datetime)1 : time[shift-1]);
+      while(mi<copied5 && m5[mi].time<start_time) mi++;
+
+      while(mi<copied5 && m5[mi].time<end_time)
+      {
+         datetime decision=m5[mi].time+PeriodSeconds(PERIOD_M5);
+         if(decision<=now)
+         {
+            int pos=FindLastRateBefore(m1,decision);
+            if(BuildFeaturesCached(m1,pos,psq,prange,pabs,pbody,ptick,hl5,hl15,hl30,hl60,hl120,hl240,hl480,hl1440,f))
+            {
+               double p15,p30,p60;
+               if(PredictA2(YearOf(decision),f,p15,p30,p60))
+               {
+                  double q15=100.0*p15,q30=100.0*p30,q60=100.0*p60;
+                  if(InpShowHTFProbabilityCandles) SetProbabilityCandleValue(shift,q15);
+                  PushHigherStatusScore(YearOf(decision),q15,q30,q60);
+               }
+            }
+         }
+         mi++;
+      }
+   }
+
+   g_last_closed_m5=iTime(_Symbol,PERIOD_M5,1);
+   return true;
+}
+
+void UpdateHigherTimeframeLatestM5(const int rates_total)
+{
+   datetime m5_start=iTime(_Symbol,PERIOD_M5,1);
+   if(m5_start<=0 || m5_start==g_last_closed_m5) return;
+
+   datetime decision=m5_start+PeriodSeconds(PERIOD_M5);
+   if(decision>TimeCurrent()) return;
+
+   double f[],p15,p30,p60;
+   if(!BuildFeaturesDirect(decision,f)) return;
+   if(!PredictA2(YearOf(decision),f,p15,p30,p60)) return;
+
+   double q15=100.0*p15,q30=100.0*p30,q60=100.0*p60;
+   int shift=iBarShift(_Symbol,_Period,m5_start,false);
+   if(InpShowHTFProbabilityCandles && shift>=0 && shift<rates_total)
+      SetProbabilityCandleValue(shift,q15);
+
+   PushHigherStatusScore(YearOf(decision),q15,q30,q60);
+   g_last_closed_m5=m5_start;
+}
+
 int OnInit()
 {
-   if(_Period!=PERIOD_M5)
+   int tf_seconds=PeriodSeconds(_Period);
+   if(tf_seconds<PeriodSeconds(PERIOD_M5))
    {
-      Print("V8-A2: attach to a GOLD M5 chart.");
+      Print("V8-A2: attach to M5 or a higher timeframe.");
       return INIT_PARAMETERS_INCORRECT;
    }
-   SetIndexBuffer(0,Prob15Buffer,INDICATOR_DATA); SetIndexBuffer(1,Prob30Buffer,INDICATOR_DATA); SetIndexBuffer(2,Prob60Buffer,INDICATOR_DATA);
-   SetIndexBuffer(3,Rank15Buffer,INDICATOR_DATA); SetIndexBuffer(4,Rank30Buffer,INDICATOR_DATA); SetIndexBuffer(5,Rank60Buffer,INDICATOR_DATA); SetIndexBuffer(6,ConsensusRankBuffer,INDICATOR_DATA);
+
+   SetIndexBuffer(0,Prob15Buffer,INDICATOR_DATA);
+   SetIndexBuffer(1,Prob30Buffer,INDICATOR_DATA);
+   SetIndexBuffer(2,Prob60Buffer,INDICATOR_DATA);
+
+   SetIndexBuffer(3,CandleOpenBuffer,INDICATOR_DATA);
+   SetIndexBuffer(4,CandleHighBuffer,INDICATOR_DATA);
+   SetIndexBuffer(5,CandleLowBuffer,INDICATOR_DATA);
+   SetIndexBuffer(6,CandleCloseBuffer,INDICATOR_DATA);
+   SetIndexBuffer(7,CandleColorBuffer,INDICATOR_COLOR_INDEX);
+
+   SetIndexBuffer(8,Rank15Buffer,INDICATOR_DATA);
+   SetIndexBuffer(9,Rank30Buffer,INDICATOR_DATA);
+   SetIndexBuffer(10,Rank60Buffer,INDICATOR_DATA);
+   SetIndexBuffer(11,ConsensusRankBuffer,INDICATOR_DATA);
+
    ArraySetAsSeries(Prob15Buffer,true); ArraySetAsSeries(Prob30Buffer,true); ArraySetAsSeries(Prob60Buffer,true);
+   ArraySetAsSeries(CandleOpenBuffer,true); ArraySetAsSeries(CandleHighBuffer,true); ArraySetAsSeries(CandleLowBuffer,true); ArraySetAsSeries(CandleCloseBuffer,true); ArraySetAsSeries(CandleColorBuffer,true);
    ArraySetAsSeries(Rank15Buffer,true); ArraySetAsSeries(Rank30Buffer,true); ArraySetAsSeries(Rank60Buffer,true); ArraySetAsSeries(ConsensusRankBuffer,true);
-   PlotIndexSetInteger(0,PLOT_LINE_COLOR,InpColor15m); PlotIndexSetInteger(1,PLOT_LINE_COLOR,InpColor30m); PlotIndexSetInteger(2,PLOT_LINE_COLOR,InpColor60m);
-   PlotIndexSetInteger(0,PLOT_LINE_WIDTH,MathMax(1,MathMin(5,InpLineWidth))); PlotIndexSetInteger(1,PLOT_LINE_WIDTH,MathMax(1,MathMin(5,InpLineWidth))); PlotIndexSetInteger(2,PLOT_LINE_WIDTH,MathMax(1,MathMin(5,InpLineWidth)));
-   PlotIndexSetDouble(0,PLOT_EMPTY_VALUE,EMPTY_VALUE); PlotIndexSetDouble(1,PLOT_EMPTY_VALUE,EMPTY_VALUE); PlotIndexSetDouble(2,PLOT_EMPTY_VALUE,EMPTY_VALUE);
-   IndicatorSetString(INDICATOR_SHORTNAME,"V8-A2 Movement Reliability SHADOW");
+
+   bool m5_mode=(_Period==PERIOD_M5);
+   PlotIndexSetInteger(0,PLOT_DRAW_TYPE,m5_mode ? DRAW_LINE : DRAW_NONE);
+   PlotIndexSetInteger(1,PLOT_DRAW_TYPE,m5_mode ? DRAW_LINE : DRAW_NONE);
+   PlotIndexSetInteger(2,PLOT_DRAW_TYPE,m5_mode ? DRAW_LINE : DRAW_NONE);
+   PlotIndexSetInteger(3,PLOT_DRAW_TYPE,(!m5_mode && InpShowHTFProbabilityCandles) ? DRAW_COLOR_CANDLES : DRAW_NONE);
+
+   PlotIndexSetInteger(0,PLOT_LINE_COLOR,InpColor15m);
+   PlotIndexSetInteger(1,PLOT_LINE_COLOR,InpColor30m);
+   PlotIndexSetInteger(2,PLOT_LINE_COLOR,InpColor60m);
+   PlotIndexSetInteger(0,PLOT_LINE_WIDTH,MathMax(1,MathMin(5,InpLineWidth)));
+   PlotIndexSetInteger(1,PLOT_LINE_WIDTH,MathMax(1,MathMin(5,InpLineWidth)));
+   PlotIndexSetInteger(2,PLOT_LINE_WIDTH,MathMax(1,MathMin(5,InpLineWidth)));
+   PlotIndexSetInteger(3,PLOT_COLOR_INDEXES,2);
+   PlotIndexSetInteger(3,PLOT_LINE_COLOR,0,InpCandleUpColor);
+   PlotIndexSetInteger(3,PLOT_LINE_COLOR,1,InpCandleDownColor);
+
+   for(int p=0;p<4;p++) PlotIndexSetDouble(p,PLOT_EMPTY_VALUE,EMPTY_VALUE);
+
+   IndicatorSetString(INDICATOR_SHORTNAME,m5_mode ? "V8-A2 Movement Reliability SHADOW" : "V8-A2 P15 Probability Candles SHADOW");
    IndicatorSetInteger(INDICATOR_DIGITS,1);
    DeleteStatus();
+   ResetHigherStatusQueue();
+   g_ready=false;
+   g_last_chart_bar=0;
+   g_last_rates_total=0;
+   g_last_closed_m5=0;
    return INIT_SUCCEEDED;
 }
 
@@ -841,18 +1075,47 @@ int OnCalculate(const int rates_total,const int prev_calculated,
                 const long &tick_volume[],const long &volume[],const int &spread[])
 {
    ArraySetAsSeries(time,true);
-   if(rates_total<400) return 0;
+   if(rates_total<2) return 0;
+
+   bool m5_mode=(_Period==PERIOD_M5);
+   if(m5_mode && rates_total<400) return 0;
+
    bool need_full=(!g_ready || prev_calculated==0);
    if(g_ready && time[0]==g_last_chart_bar && rates_total!=g_last_rates_total) need_full=true;
-   if(need_full)
+
+   if(m5_mode)
    {
-      if(RebuildHistory(rates_total,time)) g_ready=true;
+      if(need_full)
+      {
+         if(RebuildHistory(rates_total,time)) g_ready=true;
+      }
+      else if(time[0]!=g_last_chart_bar)
+      {
+         UpdateLatestClosedBar(rates_total,time);
+      }
    }
-   else if(time[0]!=g_last_chart_bar)
+   else
    {
-      UpdateLatestClosedBar(rates_total,time);
+      if(need_full)
+      {
+         if(RebuildHigherTimeframeHistory(rates_total,time)) g_ready=true;
+      }
+      else
+      {
+         if(time[0]!=g_last_chart_bar)
+         {
+            CandleOpenBuffer[0]=EMPTY_VALUE;
+            CandleHighBuffer[0]=EMPTY_VALUE;
+            CandleLowBuffer[0]=EMPTY_VALUE;
+            CandleCloseBuffer[0]=EMPTY_VALUE;
+            CandleColorBuffer[0]=0.0;
+         }
+         UpdateHigherTimeframeLatestM5(rates_total);
+      }
    }
-   g_last_chart_bar=time[0]; g_last_rates_total=rates_total;
+
+   g_last_chart_bar=time[0];
+   g_last_rates_total=rates_total;
    UpdateStatus();
    return rates_total;
 }

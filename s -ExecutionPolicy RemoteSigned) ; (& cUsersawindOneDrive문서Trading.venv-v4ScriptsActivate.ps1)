@@ -1,0 +1,11 @@
+warning: in the working copy of 'docs/ea/v8/AGENTS_V8.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/ea/v8/BACKLOG_V8.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/ea/v8/HANDOFF_V8.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/ea/v8/RESEARCH_STATE_V8.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mt5/indicators/V8MovementProbabilityA2ReliabilityIndicator.mq5', LF will be replaced by CRLF the next time Git touches it
+ docs/ea/v8/AGENTS_V8.md                            | 286 [32m++++++++++[m[31m---------[m
+ docs/ea/v8/BACKLOG_V8.md                           | 160 [32m++++++[m[31m-----[m
+ docs/ea/v8/HANDOFF_V8.md                           | 208 [32m++++[m[31m----------[m
+ docs/ea/v8/RESEARCH_STATE_V8.md                    | 118 [32m+++[m[31m-----[m
+ ...V8MovementProbabilityA2ReliabilityIndicator.mq5 | 309 [32m+++++++++++++++++++[m[31m--[m
+ 5 files changed, 628 insertions(+), 453 deletions(-)
