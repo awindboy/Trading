@@ -1,101 +1,90 @@
 # V8 Backlog
 
 Status date: `2026-09-01`
-Active phase: `V8-C LONG EXIT/PATH AUDIT + SECONDARY FRESH75 DIRECTION RESEARCH`
+Active phase: `V8-A-N NORMALIZED FRESH-HIGH STRATEGY RESEARCH`
 
-## V8-A
-- [x] Frozen +/-10 15/30/60m movement control.
-- [x] Walk-forward 2024/2025/2026 and MT5 parity.
-- [ ] Prospective AUC/Brier/calibration/decile audit when live shadow evidence is desired.
-- [ ] No reactive retraining.
+## V8-A / A2 controls
+- [x] Preserve frozen V8-A.
+- [x] Preserve retained V8-A2 survival/rank layer.
+- [x] Reproduce A2 pipeline before normalized research.
+- [ ] No authority changes.
 
-## V8-A2
-- [x] 86-feature strict 60m-purged survival challenger.
-- [x] Prior-288 R15/R30/R60 reliability layer.
-- [x] 32-month HIGH/EXTREME factual-event lift audit.
-- [x] Preserve frozen A as authority.
-- [ ] Prospective/platform parity required before promotion.
+## V8-A-N normalized movement
+- [x] Define causal pre-decision M5 Wilder ATR14 scale.
+- [x] Compare fixed-$10 vs ATR-normalized all-M5 base rates.
+- [x] Show normalized excursion-distribution stability 2022-2026.
+- [x] Train prototype 0.75-3.00 ATR survival surfaces.
+- [x] Evaluate outer-year AUC/Brier.
+- [x] Audit distance monotonicity.
+- [x] Retain branch as research challenger.
+- [ ] Replace independent-distance prototype with a structurally monotonic distance/horizon surface before any live implementation.
+- [ ] MT5/Python parity only after architecture freeze.
 
-## TradingView / TV79 / probability candles
-- [x] Diagnose no-volume failure.
-- [x] Reject zero/mean imputation into FULL A2.
-- [x] Retrain 79-feature TV79.
-- [x] Define M15+ P15 probability-candle OHLC from completed M5 values.
-- [ ] Verify final Pine compile/application state before implementation authority.
-- [ ] Verify MT5 HTF probability-candle compile/application state if not already confirmed.
-- [ ] Keep TV79 shadow-only and separate from XM feed authority.
+## N1 — normalized fresh-high trigger — CURRENT
+- [x] Generate 1.25ATR fresh75 population.
+- [x] Generate 1.50ATR fresh75 population.
+- [x] Generate 2.00ATR fresh75 population.
+- [x] Confirm high/stable realized P15/P30/P60 movement.
+- [ ] Compare monthly/yearly trigger counts.
+- [ ] Compare trigger spacing/clustering.
+- [ ] Compare ATR distribution.
+- [ ] Compare session distribution.
+- [ ] Compare probability/rank shape.
+- [ ] Freeze one N1 population without using direction labels or P/L.
 
-## Session/time
-- [x] Cyprus/DST server-time interpretation.
-- [x] KST/NY movement distribution.
-- [x] NY 08:00-10:30 strongest recurring window.
-- [x] Session x R interaction.
-- [x] Reject session hard filter for frozen LONG.
+## N2 — direction engine
+- [ ] Start only after N1 freeze.
+- [ ] Rebuild feature tournament on exact normalized-trigger population.
+- [ ] Do not assume old fixed-$10 fresh75 direction engine transfers.
+- [ ] Separate trend continuation vs exhaustion/reversal families.
+- [ ] Include causal partial HTF geometry.
+- [ ] Include signed activity/tick-volume.
+- [ ] Include liquidity/location.
+- [ ] Use new raw microstructure information only if same-information technical features stall.
+- [ ] Freeze direction before any SL/TP optimization.
+
+## N3 — ATR-consistent risk/payoff
+- [ ] Predeclare first simple family after N2 freeze.
+- [ ] Start with 1.0ATR SL and 1.0/1.25/1.5ATR TP family unless N2 evidence requires a separately documented alternative.
+- [ ] Report dollar risk distribution as well as R.
+- [ ] Report costs, holding, DD, streaks.
+- [ ] No dense parameter rescue.
+
+## N4 — complete strategy comparison
+- [ ] Fixed-$10 fresh75 + 1R control.
+- [ ] Fixed-$10 fresh75 + fixed $13 TP development control.
+- [ ] Normalized trigger + normalized direction + ATR-consistent exit.
+- [ ] Compare WR, avg winner/loser, EV, PF, DD, streak, holding, clustering and cost sensitivity.
+- [ ] Do not use 2021 until the complete normalized architecture is frozen.
+
+## Fixed-$10 fresh75 control
+- [x] Broad ~790-feature direction research.
+- [x] 2025/2026 consumed.
+- [x] Payoff surface with SL=$10.
+- [x] Retain $13 TP / 1.30R as central comparison candidate.
+- [x] Record $13.5 / 1.35R as observed WR>=50% boundary, not an authority.
+- [ ] No further decimal TP optimization.
 
 ## V8-C LONG
-- [x] Freeze exact entry.
-- [x] R0.4 real-tick 2024/2025/2026.
-- [x] N456 / WR60.09% / +91.85R / +0.201R.
-- [ ] Do not add LONG entry filters.
-
-## V8-C exit / winner continuation — CURRENT PRIORITY
-### Path ledger
-- [ ] Recover exact 456 R0.4 entry timestamps/fills/exits.
-- [ ] Reconstruct all-trade price paths.
-- [ ] MFE/MAE and first +0.5R/+1R timestamps.
-- [ ] Post-1R +1.25/+1.5/+2/+3R continuation.
-- [ ] Post-1R retracement before extension.
-- [ ] Time-to-extension and right-censoring.
-- [ ] Separate 2024/2025/2026.
-
-### Discovery discipline
-- [ ] Inspect 2024 exit evidence first.
-- [ ] Freeze simple exit family.
-- [ ] Validate unchanged on 2025.
-- [ ] Validate unchanged on 2026.
-- [ ] Keep 2021 locked.
-
-### Simple controls
-- [ ] 100% +1R control.
-- [ ] 50%@1R + 50%@1.5R.
-- [ ] 50%@1R + 50%@2R.
-- [ ] Partial +1R then BE runner.
-- [ ] Partial +1R then simple fixed trailing.
-- [ ] Report WR, avg winner/loser, expectancy, PF, DD, streaks, holding, winner concentration.
-
-### Conditional continuation — only after simple runner survives
-- [ ] V8-A/A2 state after +1R.
-- [ ] time-to-1R.
-- [ ] session/context.
-- [ ] simple M5 continuation structure.
-
-### Promotion
-- [ ] WR >=50%.
-- [ ] average winner meaningfully >1R.
-- [ ] positive spread/commission/slippage-adjusted expectancy.
-- [ ] stable validation and no rare-winner dependence.
+- [x] MT5 R0.4 N456 / WR60.09% / +91.85R.
+- [ ] Preserve entry unchanged.
+- [ ] Exit/winner-continuation branch retained separately; resume later.
 
 ## V8-C-S1 SHORT
 - [x] M1 proxy N140 / WR58.57% / +24R.
-- [ ] MT5 real-tick implementation/validation without changing LONG.
+- [ ] MT5 real-tick validation later without changing LONG.
 
-## Fresh75 auto-direction — SECONDARY
-- [x] Fresh crossing trigger retained.
-- [x] Repeated high-P15 entry rejected.
-- [x] Broad ~790-feature causal technical tournament.
-- [x] RSI-BB, MACD-BB, QQE-like/composite families included.
-- [x] Partial HTF candle and M1 signed activity included.
-- [x] No robust ~70% all-trigger direction result.
-- [x] 2026 marked consumed development evidence.
-- [ ] Correct any older tick-probe claim that 2026 is untouched.
-- [ ] Prefer genuinely new information sources: XM quote microstructure, CME GC order flow, macro surprise.
-- [ ] Do not spend 2021 merely to rescue fresh75.
+## TradingView / session
+- [x] Existing A2 TV79/session work retained.
+- [ ] Re-evaluate session only on frozen V8-A-N trigger population; do not copy fixed-$10 session conclusions automatically.
+- [ ] No TradingView V8-A-N port before normalized architecture freeze.
 
-## Execution environment
-- [x] GOLD# Every Tick real-tick LONG evidence.
-- [ ] Full-cost validation where commission is non-zero.
-- [ ] Treat broker/account/server/symbol/feed changes as separate environments.
+## Execution
+- [ ] Define MT5 normalized ATR calculation exactly before Strategy Tester validation.
+- [ ] Ensure ATR uses only completed information available at decision time.
+- [ ] Verify fill-relative risk units.
+- [ ] Treat broker/feed changes as separate environments.
 
 ## Reserve
-- [x] 2022-2026 consumed development evidence at project level.
-- [ ] GOLD# 2021 locked until a complete frozen architecture merits final validation.
+- [x] 2022-2026 development evidence.
+- [ ] GOLD# 2021 locked.

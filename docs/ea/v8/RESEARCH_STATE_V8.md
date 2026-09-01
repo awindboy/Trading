@@ -1,16 +1,16 @@
 # V8 Research State
 
-Status: `ACTIVE / V8-C EXIT-PATH PRIMARY + FRESH75 SECONDARY`
+Status: `ACTIVE / V8-A-N NORMALIZED FRESH-HIGH PRIMARY`
 Date: `2026-09-01`
 Production authority: `NONE`
 Market: `GOLD#`
 Untouched reserve: `GOLD# 2021`
 
 ## V8-A
-`FROZEN / CURRENT MOVEMENT CONTROL`. Direction-free +/-10 within 15/30/60m. No model/indicator change authorized.
+`FROZEN / CURRENT ABSOLUTE-$10 CONTROL`.
 
 ## V8-A2
-`RESEARCH COMPLETE / CHALLENGER RETAINED / NOT PROMOTED`.
+`RETAINED / NOT PROMOTED`.
 
 ```text
 P15 AUC 0.8660 / 0.8736 / 0.8190
@@ -18,63 +18,83 @@ P30 AUC 0.8501 / 0.8565 / 0.7999
 P60 AUC 0.8130 / 0.8384 / 0.7925
 ```
 
-Reliability layer: R15/R30/R60 = prior-288 completed-M5 percentile; EXTREME all>=90, HIGH all>=75, QUIET all<=25.
+R15/R30/R60 reliability layer retained.
 
-## TradingView/A2 visualization
-`SHADOW / NO AUTHORITY`.
+## V8-A-N
+`RETAINED RESEARCH CHALLENGER / ACTIVE`.
 
-TV79 price-only AUC:
+Target:
 
 ```text
-P15 0.8624 / 0.8727 / 0.8161
-P30 0.8465 / 0.8527 / 0.7961
-P60 0.8085 / 0.8337 / 0.7832
+P(reach C0 +/- k * causal M5 ATR14 within 15/30/60m)
 ```
 
-M15+ probability candles aggregate completed M5 P15 OHLC. Visualization only.
+Prototype k:
 
-## Session research
-`COMPLETED DESCRIPTIVE / NO ENTRY AUTHORITY`.
+`0.75,1.00,1.25,1.50,1.75,2.00,2.50,3.00`.
 
-NY local 08:00-10:30 was the strongest recurring movement window. Session overlaps with A2 rank; EXTREME is not to be rejected solely outside NY.
+Main finding: ATR-normalized movement base rates and excursion distributions are far more stable across 2022-2026 than fixed $10.
 
-## V8-B
-`PAUSED / NEGATIVE-RESULT AUTHORITY`.
+Prototype independent-distance probabilities have small monotonicity violations; no live authority.
+
+## Normalized fresh-high candidates
+
+```text
+1.25 ATR:
+N 1958 / 2230 / 1690
+P15 realized 81.38 / 79.03 / 77.09%
+
+1.50 ATR:
+N 809 / 834 / 551
+P15 realized 81.64 / 77.85 / 80.04%
+
+2.00 ATR:
+N 180 / 151 / 131
+P15 realized 80.90 / 73.29 / 75.19%
+```
+
+Next task: freeze N1 trigger using movement/structural criteria before direction research.
+
+## Fixed-$10 fresh75
+`DEVELOPMENT CONTROL / NO AUTHORITY`.
+
+Broad direction research remained around ~59%.
+
+With fixed SL=$10, TP=$13 / 1.30R produced:
+
+```text
+2025 WR52.63% EV +0.207R
+2026 WR52.07% EV +0.198R
+```
+
+Retain as comparison control only.
 
 ## V8-C LONG
 `PROVISIONAL FROZEN / MT5 REAL-TICK VERIFIED`.
 
 ```text
-N456 / WR60.09% / +91.85R / +0.201R per trade / PF ~1.49
+N456 / WR60.09% / +91.85R / +0.201R
 ```
 
-Entry must not be tuned. +/-10 exit = entry-edge validator only.
+Do not alter entry.
 
-## V8-C-S1 SHORT
-`RESEARCH-ONLY / M1 PROXY`: N140 / WR58.57% / +24R. No MT5 authority.
+Exit/winner-continuation research remains separate and is not the current primary branch.
 
-## Fresh75 auto-direction
-`SECONDARY RESEARCH / NO AUTHORITY`.
+## V8-C-S1
+`RESEARCH-ONLY / M1 PROXY`: N140 / WR58.57% / +24R.
 
-Fresh P15 <75 -> >=75 trigger retained. Roughly 790-feature technical/MTF/activity tournament did not produce a robust ~70% mandatory-direction rule; best compact development results remained ~59%. 2026 is consumed development evidence for this branch.
-
-## Primary current action
-`V8-C LONG EXIT / WINNER CONTINUATION`.
-
-Path audit all 456 trades: MFE/MAE, post-1R extension, retracement, time and censoring.
+## Current primary action
 
 ```text
-2024 discovery
-2025 validation 1
-2026 validation 2
-2021 locked
+N1 normalized fresh-high trigger freeze
+-> N2 population-specific direction engine
+-> N3 ATR-consistent SL/TP
+-> N4 complete strategy comparison
 ```
 
-Goal: realized WR >=50%, average winner meaningfully >1R, positive full-cost expectancy.
+No direction P/L may be used to choose N1.
 
-## Ordering
-1. V8-C path audit / exit discovery.
-2. V8-C-S1 MT5 validation when resumed.
-3. Fresh75 new-information-source research as secondary.
-4. A2 prospective/platform parity work.
-5. 2021 locked.
+Do not reuse the fixed-$10 direction engine without a separate N2 test.
+
+## Reserve
+GOLD# 2021 remains locked until a complete normalized architecture is frozen and merits final temporal validation.
