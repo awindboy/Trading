@@ -62,3 +62,59 @@ Continue `0.75 H4 ATR P60/P120/P240` as movement-magnitude/horizon context. Simp
 
 ## D-V8-165 — Keep 2021 locked and all retention evidence developmental
 All persistence/retention findings use consumed 2022-2026 development evidence. `GOLD# 2021` remains untouched.
+
+## D-V8-166 — Treat reconstructed P0/P2 population as exact downstream authority
+Per explicit project direction on 2026-09-03, the reconstructed current Slow-N 4-class P0/P2 population is the exact downstream authority. Small historical parity differences are not a blocker and must not be reopened unless a direct contradiction appears.
+
+## D-V8-167 — Keep micro3 as acceptance-time prior, not repeated dynamic updater
+Exact-population static retention remains positive, but after strong geometry/process control acceptance-time and current-time micro3 add approximately zero robust incremental break-hazard AUC. Do not build a repeated micro3 voter.
+
+## D-V8-168 — Freeze dynamic hazard semantics as structural geometry/process state
+Dynamic 0->1 / 1->3 / 3->5 / 5->10 / 10->15m hazard is mainly a function of current distance to the pullback extreme, nearest approach, path progress/MFE, acceptance geometry and lifecycle timing. High hazard AUC is structural-state discrimination, not directional alpha.
+
+## D-V8-169 — Replace flat competing risk with hierarchical State A
+Use `ACCEPTANCE alive -> BREAK / SAME75 / unresolved`, with `PRE_SAME75` separate. Opposite-side delivery is a post-break question because it is structurally nested behind failure.
+
+## D-V8-170 — Add staged structural integrity states
+Keep wick equality as the sensitive primary break label, but distinguish:
+`PRISTINE = wick intact`,
+`DAMAGED = wick breached but close integrity retained`,
+`CLOSE_BROKEN = M1 close breaches the structural extreme`.
+Do not treat a wick touch as automatic terminal invalidation.
+
+## D-V8-171 — Do not interpret post-break as reversal
+The break bar often closes back inside the structure, close-through repair vs further adverse move is approximately balanced, and equal-distance post-break direction is near chance. Break means structural damage, not automatic opposite-direction permission.
+
+## D-V8-172 — Retain direction/regime interaction without permission rules
+SHORT retention ranking remains materially stronger than LONG and quarter variation is real. Preserve these as interaction variables only; do not create SHORT-only or quarter-specific rules from consumed years.
+
+## D-V8-173 — Keep raw tick fail-closed and BB-B secondary
+Current raw-tick coverage fails predeclared gates (`83.853% aligned / 69.660% joint`). No tick evidence may be promoted. BB-B remains secondary context only, with no acceptance/retention gate frozen.
+
+## D-V8-174 — Structural phase complete; open practical movement characterization, not economics optimization
+The structural lifecycle is frozen enough to characterize MFE, current displacement, giveback, target-distance and hit-time distributions, large-winner continuation and structural-state conditioning. Explicit entry/SL/TP economics remain closed until that descriptive/causal mapping is complete and preregistered.
+
+## D-V8-175 — Keep 2021 locked
+The new dynamic structural-state evidence still uses only consumed 2022-2026 development evidence. `GOLD# 2021` remains untouched.
+
+## D-V8-166 — Treat practical movement in S units as primary research scale
+Use S-normalized movement for cross-regime research. Fixed GOLD points remain implementation/economic views because the same +10 points changes from roughly 0.84S in 2024 to roughly 0.23S in 2026.
+
+## D-V8-167 — Separate available MFE from retained displacement
+Large MFE is common while fixed-horizon terminal displacement is near zero. Do not use passive time holding as the default exit concept.
+
+## D-V8-168 — Do not equate structural break with the final trading stop
+A substantial fraction of eventual 0.50/0.75S winners experience wick and sometimes close damage before target. Structural invalidation and trade-stop economics must be tested separately.
+
+## D-V8-169 — Retain close-intact + realized early MFE as the primary runner candidate
+At 15m, within close-intact events, MFE15/S predicts future +0.50S with AUC roughly .657-.716 and future +0.75S roughly .745-.820 across P0/P2 2025/26.
+
+## D-V8-170 — Freeze validation method, not the MFE threshold
+2024-derived top-quartile MFE15 (~0.55S) materially enriches future large continuation in 2025/26, but Q75/~0.55S is not a production threshold. Future economics must not threshold-rescue it on consumed outcomes.
+
+## D-V8-171 — Downgrade giveback ratio as standalone runner evidence
+Current displacement/giveback is less stable than realized MFE for future large continuation. Do not create a giveback gate from current evidence.
+
+## D-V8-172 — Open economics only through preregistration
+Practical movement characterization is complete enough to open entry/risk/partial-profit/runner economics. Candidate architecture families and parameter ranges must be frozen before examining P/L. 2021 remains locked.
+

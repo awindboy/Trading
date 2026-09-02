@@ -1,12 +1,12 @@
 # V8 Development Handoff
 
-Last updated: `2026-09-02`
-Current phase: `V8-A-N-SLOW / ONSET + ACCEPTANCE + STRUCTURAL RETENTION`
+Last updated: `2026-09-03`
+Current phase: `V8-A-N-SLOW / PRACTICAL MOVEMENT CHARACTERIZED / ECONOMICS PREREGISTRATION NEXT`
 Production authority: `NONE`
 Market: `GOLD#`
 Open development evidence: `2022-2026`
 Untouched reserve: `GOLD# 2021`
-Base Git HEAD for this update: `cde7cfec1a6e07b872c72cdfaa62562c5e545735`
+Base Git HEAD expected before apply: `2b93ff27bc66ead466efc98f564de40b0e05986f`
 
 ## 1. Read this first
 
@@ -15,12 +15,20 @@ ONSET
 0.25 H4 ATR / P15 fresh75
 = excursion / movement-episode onset
 
--> actual directional M1-close reveal
+-> directional M1-close reveal
 -> pullback
 -> reclaim = ACCEPTANCE
 
-STRUCTURAL RETENTION
-= probability that the accepted pullback extreme remains intact
+ACCEPTANCE QUALITY
+micro3 = prog1 + run_accept + prog3
+
+DYNAMIC STRUCTURAL STATE
+PRISTINE / DAMAGED / CLOSE_BROKEN
++
+geometry/process break hazard
+
+COMPETING RISK
+BREAK / SAME75 / unresolved
 
 EXTENSION
 0.75 H4 ATR / P60-P120-P240
@@ -29,81 +37,173 @@ EXTENSION
 
 Direction remains unfrozen.
 
-## 2. ONSET semantics
-Phase-0 fresh75:
-`2024 N653 78.10% / 2025 N535 78.50% / 2026 N321 76.01%`.
+## 2. Exact downstream population
 
-`P15 = barrier touch probability`, not terminal net-displacement or persistence. Only roughly 46-49% of touched events still hold a full same-direction 0.25-ATR displacement at 15m close.
+Per project direction on 2026-09-03, use the reconstructed current Slow-N population as exact authority and do not reopen small historical parity differences without a direct contradiction.
 
-## 3. Negative reveal findings
-Fixed/local ATR reveal, blind pullback, extra M1-close dwell and equal-distance continuation do not create a robust universal momentum edge. Early strong origin-anchored results were partly distance geometry.
-
-## 4. ACCEPTANCE
-Primary:
-`fresh75 -> <=15m +/-0.25 H4ATR M1-close reveal -> >=25% pullback with origin retained -> M1-close reclaim`.
-30m and 40/50% are robustness families. No exact percent frozen.
-
-## 5. Structural Retention
-Label: after acceptance, does the pullback extreme remain unbroken for 15/30/60m?
-
-`micro3 = prog1 + run + prog3`.
-
-Primary 25% family AUC:
 ```text
-15m P0 .729/.735 ; P2 .754/.727
-30m P0 .722/.712 ; P2 .725/.693
-60m P0 .726/.713 ; P2 .721/.684
+P0
+2024 fresh75 648 -> acceptance 281
+2025 fresh75 533 -> acceptance 234
+2026 fresh75 322 -> acceptance 154
+
+P2
+2024 fresh75 735 -> acceptance 318
+2025 fresh75 583 -> acceptance 239
+2026 fresh75 291 -> acceptance 144
 ```
-(2025/2026).
 
-Base retention: ~35-37% / 27-28% / 21-22%.
+## 3. Static retention revalidation
 
-Robust to week-block bootstrap, quarter-preserving permutation, 60/120m overlap collapse, both directions, quarters, 15/30m reveal and 25/40% pullback family. 50% pullback is weaker.
+Primary acceptance family:
+`fresh75 -> <=15m 0.25ATR M1-close reveal -> >=25% pullback with origin retained -> M1-close reclaim`.
 
-Status: `STRONG DEVELOPMENT CANDIDATE / NOT PRODUCTION / NOT COMPLETE ENTRY RULE`.
+Exact-population micro3 AUC:
 
-## 6. Interpretation guardrail
-Structural Retention predicts **structure survival**, not generic same-direction momentum. Equal-distance continuation remains near chance.
+```text
+15m P0 .720/.756 ; P2 .742/.755
+30m P0 .701/.723 ; P2 .699/.710
+60m P0 .705/.722 ; P2 .702/.705
+```
+(2025/2026)
 
-Earlier PERSIST-A/B claims were downgraded after geometry control; later 0.50->0.75 / 0.75->1.00 do not support a universal rung law.
+This preserves structural-retention evidence but does not imply generic continuation.
 
-## 7. EXT bridge
-Actual 15m retention strongly enriches same-direction 0.75-ATR realization (e.g. P0 2025 120m 40.4% fail vs 67.9% survive; 2026 40.2% vs 58.8%).
+## 4. Dynamic hazard result
 
-But current predicted retention + directionless EXT gives only modest/inconsistent direct same-side delivery AUC. Do not freeze a combined threshold.
+Strong causal-control state uses current structural distance/approach, progress/MFE so far, acceptance geometry and lifecycle timing.
 
-## 8. Timing problem
-Roughly 34-38% of confirmed-retention events already hit same-direction 0.75 ATR before full 15m retention confirmation. Therefore next work is **early dynamic retention hazard**, not waiting 15m.
+Geometry/process AUC by interval is roughly:
+`0->1 .831-.879 / 1->3 .791-.846 / 3->5 .811-.863 / 5->10 .756-.844 / 10->15 .667-.802`.
 
-## 9. Candidate lifecycle
-Every fresh opens a deterministic lifecycle:
-`ONSET -> reveal -> pullback -> reclaim/ACCEPTANCE -> dynamic retention probability -> later entry/holding research`.
+Acceptance-time or current-time micro3 adds no robust incremental AUC after these controls.
 
-Immediate position at fresh close is no longer a required assumption. Hindsight abstention remains forbidden.
+Interpretation:
+`micro3 = initial structural-quality prior`.
+`dynamic geometry/process = ongoing hazard updater`.
 
-## 10. Next work
-1. 1/3/5/10/15m dynamic retention hazard after acceptance.
-2. competing risk: structural break / same-side delivery / opposite-side delivery / unresolved.
-3. equal-distance controls.
-4. full V4 raw ticks around reveal/retest/reclaim.
-5. shifted-placebo incremental tick audit vs micro3.
-6. direction/regime interaction.
-7. BB-B only as acceptance/retention context.
-8. keep EXT directionless unless new evidence.
-9. freeze lifecycle/entry timing before economics.
-10. keep 2021 locked.
+Do not build a repeated micro3 voter.
 
-## 11. Legacy retained secondary hypotheses
-BB-B: Phase-0 N64 65.63%, Phase-2 N63 65.08%.
-Tick relative0001: old/new overlap N45 66.67%, -10m placebo 45%. Full Slow-N raw-tick transfer still missing.
+## 5. Competing-risk result
 
-## 12. Reading order
+Correct State A:
+`ACCEPTANCE alive -> BREAK / SAME-SIDE 0.75ATR / unresolved`.
+
+Separate `PRE_SAME75`.
+
+SAME75-before-BREAK among resolved events rises with survival:
+`t0 ~20-25% / t5 ~35-41% / t15 ~42-51%`.
+
+Most predictive power comes from current barrier geometry/path. This is state information, not new direction alpha.
+
+## 6. Structural invalidation semantics
+
+At 15m:
+- WICK_INTACT ~30-38%;
+- WICK_ONLY_BREAK ~6-11%;
+- CLOSE_BREAK ~55-62%.
+
+Among events not already at same75 by 15m, later 60m same75:
+`WICK_INTACT 48.8% / WICK_ONLY_BREAK 40.3% / CLOSE_BREAK 24.8%`.
+
+`CLOSE_INTACT 47.3% vs CLOSE_BREAK 24.8%`.
+
+Use:
+`PRISTINE -> DAMAGED -> CLOSE_BROKEN`.
+
+Wick equality remains the sensitive retention label, but wick break is not terminal failure.
+
+## 7. Post-break negative
+
+Break candle closes back inside structure roughly 41-48%.
+Close-through repair vs additional adverse 0.10S is approximately balanced.
+Equal-distance +/-0.10S after break close: `452 original-direction / 475 adverse`.
+
+Therefore break is not a reversal predictor.
+
+## 8. Direction / regime
+
+15m micro3 retention AUC:
+`P0 2025 SHORT .793 / LONG .621`
+`P0 2026 SHORT .821 / LONG .695`
+`P2 2025 SHORT .779 / LONG .697`
+`P2 2026 SHORT .846 / LONG .674`.
+
+Retain direction as interaction only. No SHORT-only rule.
+
+Weak quarter cells remain around 2025Q3 and 2026Q2, but no quarter rule.
+
+## 9. Raw tick / BB-B
+
+Raw tick remains fail-closed:
+`aligned 83.853% / joint placebo 69.660%`, below `90% / 80%`.
+
+BB-B remains secondary:
+`P0 N64 65.63% / P2 N63 65.08%`.
+No gate frozen.
+
+## 10. Structural phase freeze
+
+Current lifecycle semantics are frozen enough to stop structural redesign before practical movement research:
+
+`ONSET -> reveal -> pullback -> ACCEPTANCE -> initial micro3 prior -> dynamic PRISTINE/DAMAGED/CLOSE_BROKEN state -> geometry/process hazard -> BREAK vs SAME75 vs unresolved`.
+
+No production score threshold and no entry/SL/TP rule is frozen.
+
+## 11. Practical movement/payoff characterization
+
+The movement phase is complete enough to stop descriptive expansion and preregister economics.
+
+Core findings:
+
+```text
+median MFE
+15m  ~0.18-0.22S
+60m  ~0.34-0.38S
+240m ~0.52-0.61S
+```
+
+Despite this, median time-held directional close displacement at 60/240m is near zero. Large excursions are frequently given back.
+
+Fixed points are strongly regime-dependent: +10 points is ~0.84S in 2024, ~0.5S in 2025 and ~0.23S in 2026.
+
+Within 15m `CLOSE_INTACT` events, `MFE15/S` is the primary runner-continuation candidate:
+
+```text
+future +0.50S AUC: .657-.716
+future +0.75S AUC: .745-.820
+```
+
+2024-frozen top-quartile MFE15 (~0.55S) materially enriches future large continuation in both 2025/2026 and P0/P2. No Q75/~0.55S threshold is frozen.
+
+Giveback ratio does not add a stable standalone runner rule.
+
+Structural break is not automatically the trade stop: many eventual 0.50/0.75S winners first experience wick or even close damage.
+
+## 12. Next work
+
+Next phase is **preregistered entry / risk / partial-profit / runner economics**.
+
+Before P/L inspection, freeze candidate architecture families:
+1. simple single-exit control;
+2. small-profit + runner split;
+3. state/progress-conditioned runner retention;
+4. structural-vs-price-distance stop semantics.
+
+Then evaluate cost-adjusted expectancy, WR, average winner, DD, loss streaks and P0/P2/year/direction/regime robustness.
+
+2021 remains locked.
+
+## 13. Reading order
+
 1. `AGENTS_V8.md`
 2. this file
-3. `V8_A_N_SLOW_PERSISTENCE_RETENTION_RESEARCH_20260902.md`
-4. `DECISIONS_V8_PERSISTENCE_RETENTION_ADDENDUM_20260902.md`
-5. `V8_A_N_SLOW_HIGHER_HORIZON_EXTENSION_RESEARCH_20260902.md`
-6. `V8_A_N_SLOW_DOWNSTREAM_REVALIDATION_RESULT_20260902.md`
-7. `DECISIONS_V8_SLOW_N_RESET_ADDENDUM_20260902.md`
-8. `RESEARCH_STATE_V8.md`
-9. `BACKLOG_V8.md`
+3. `V8_A_N_SLOW_PRACTICAL_MOVEMENT_CHARACTERIZATION_20260903.md`
+4. `V8_A_N_SLOW_DYNAMIC_STRUCTURAL_STATE_RESEARCH_20260903.md`
+4. `V8_A_N_SLOW_PERSISTENCE_RETENTION_RESEARCH_20260902.md`
+5. `DECISIONS_V8_PERSISTENCE_RETENTION_ADDENDUM_20260902.md`
+6. `V8_A_N_SLOW_HIGHER_HORIZON_EXTENSION_RESEARCH_20260902.md`
+7. `V8_A_N_SLOW_DOWNSTREAM_REVALIDATION_RESULT_20260902.md`
+8. `DECISIONS_V8_SLOW_N_RESET_ADDENDUM_20260902.md`
+9. `RESEARCH_STATE_V8.md`
+10. `BACKLOG_V8.md`
