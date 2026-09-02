@@ -1,0 +1,26 @@
+V8 STRUCTURAL DOCUMENT UPDATE — 2026-09-03
+
+Expected base Git HEAD:
+2b93ff27bc66ead466efc98f564de40b0e05986f
+
+Purpose:
+- treat reconstructed current Slow-N P0/P2 population as exact downstream authority;
+- record exact-population static retention revalidation;
+- freeze dynamic structural hazard / hierarchical competing-risk semantics;
+- add PRISTINE / DAMAGED / CLOSE_BROKEN states;
+- record raw-tick fail-closed status;
+- set next phase to practical movement/payoff characterization before explicit economics.
+
+Complete replacements / additions:
+docs/ea/v8/AGENTS_V8.md
+docs/ea/v8/HANDOFF_V8.md
+docs/ea/v8/RESEARCH_STATE_V8.md
+docs/ea/v8/BACKLOG_V8.md
+docs/ea/v8/DECISIONS_V8_PERSISTENCE_RETENTION_ADDENDUM_20260902.md
+docs/ea/v8/V8_A_N_SLOW_DYNAMIC_STRUCTURAL_STATE_RESEARCH_20260903.md
+
+FAIL CLOSED:
+Do not apply automatically if repository HEAD is not the expected base.
+Review changes if HEAD moved.
+
+GitHub connector write attempt in the research session returned HTTP 403 despite repository metadata reporting push permission, so this package is the fallback SSOT update bundle.
