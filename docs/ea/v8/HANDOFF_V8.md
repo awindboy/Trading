@@ -1,14 +1,26 @@
 # V8 Development Handoff
 
 Last updated: `2026-09-03`
-Current phase: `V8-A-N-SLOW / PRACTICAL MOVEMENT CHARACTERIZED / ECONOMICS PREREGISTRATION NEXT`
+Current phase: `V8-A-N-SLOW / REALISTIC CHRONOLOGICAL ACCOUNT REPLAY IS THE IMMEDIATE NEXT ACTION`
 Production authority: `NONE`
 Market: `GOLD#`
 Open development evidence: `2022-2026`
 Untouched reserve: `GOLD# 2021`
-Base Git HEAD expected before apply: `2b93ff27bc66ead466efc98f564de40b0e05986f`
+Base Git HEAD expected before apply: `0b7dab2b0b61be3deadd2908060e6e8ebb718b28`
 
-## 1. Read this first
+## 1. Immediate instruction to the next session
+
+**Do not start another strategy variant, indicator family, threshold search, market-context branch, or P0/P2 comparison before completing the already-defined chronological account replay.**
+
+The user explicitly wants the practical question answered now:
+
+> If one executable V8 policy had actually traded through the open development period, what would the account path have looked like?
+
+This is an account/execution replay question, not another P0-vs-P2 research comparison.
+
+Use the supplied `V8_PHASE0_REALISTIC_REPLAY_PROBE_20260903.zip` or reproduce exactly the same frozen policy. If replay results are supplied, analyze them directly before opening any new research branch.
+
+## 2. Frozen architecture semantics
 
 ```text
 ONSET
@@ -25,21 +37,20 @@ micro3 = prog1 + run_accept + prog3
 DYNAMIC STRUCTURAL STATE
 PRISTINE / DAMAGED / CLOSE_BROKEN
 +
-geometry/process break hazard
+geometry/process survival hazard
 
-COMPETING RISK
-BREAK / SAME75 / unresolved
-
-EXTENSION
-0.75 H4 ATR / P60-P120-P240
-= directionless larger-movement context
+WINNER CONTINUATION
+realized early progress, especially MFE15/S,
+within a surviving structure
 ```
 
-Direction remains unfrozen.
+P15 is not terminal direction/persistence.
+Retention is not movement.
+Winner continuation is a separate downstream question.
 
-## 2. Exact downstream population
+## 3. Exact Slow-N downstream authority
 
-Per project direction on 2026-09-03, use the reconstructed current Slow-N population as exact authority and do not reopen small historical parity differences without a direct contradiction.
+Per project direction, do not reopen historical reconstruction differences without a direct contradiction.
 
 ```text
 P0
@@ -53,7 +64,9 @@ P2
 2026 fresh75 291 -> acceptance 144
 ```
 
-## 3. Static retention revalidation
+P0 and P2 are alternate deterministic training-sample realizations. They are robustness realizations, not two strategies to merge opportunistically.
+
+## 4. Structural-retention authority
 
 Primary acceptance family:
 `fresh75 -> <=15m 0.25ATR M1-close reveal -> >=25% pullback with origin retained -> M1-close reclaim`.
@@ -67,143 +80,166 @@ Exact-population micro3 AUC:
 ```
 (2025/2026)
 
-This preserves structural-retention evidence but does not imply generic continuation.
+micro3 remains an acceptance-time structural-quality prior. After strong causal geometry/process controls, repeatedly recomputed micro3 adds approximately zero robust incremental AUC and must not become a dynamic voter.
 
-## 4. Dynamic hazard result
-
-Strong causal-control state uses current structural distance/approach, progress/MFE so far, acceptance geometry and lifecycle timing.
-
-Geometry/process AUC by interval is roughly:
-`0->1 .831-.879 / 1->3 .791-.846 / 3->5 .811-.863 / 5->10 .756-.844 / 10->15 .667-.802`.
-
-Acceptance-time or current-time micro3 adds no robust incremental AUC after these controls.
-
-Interpretation:
-`micro3 = initial structural-quality prior`.
-`dynamic geometry/process = ongoing hazard updater`.
-
-Do not build a repeated micro3 voter.
-
-## 5. Competing-risk result
-
-Correct State A:
-`ACCEPTANCE alive -> BREAK / SAME-SIDE 0.75ATR / unresolved`.
-
-Separate `PRE_SAME75`.
-
-SAME75-before-BREAK among resolved events rises with survival:
-`t0 ~20-25% / t5 ~35-41% / t15 ~42-51%`.
-
-Most predictive power comes from current barrier geometry/path. This is state information, not new direction alpha.
-
-## 6. Structural invalidation semantics
-
-At 15m:
-- WICK_INTACT ~30-38%;
-- WICK_ONLY_BREAK ~6-11%;
-- CLOSE_BREAK ~55-62%.
-
-Among events not already at same75 by 15m, later 60m same75:
-`WICK_INTACT 48.8% / WICK_ONLY_BREAK 40.3% / CLOSE_BREAK 24.8%`.
-
-`CLOSE_INTACT 47.3% vs CLOSE_BREAK 24.8%`.
+## 5. Structural-state correction
 
 Use:
-`PRISTINE -> DAMAGED -> CLOSE_BROKEN`.
-
-Wick equality remains the sensitive retention label, but wick break is not terminal failure.
-
-## 7. Post-break negative
-
-Break candle closes back inside structure roughly 41-48%.
-Close-through repair vs additional adverse 0.10S is approximately balanced.
-Equal-distance +/-0.10S after break close: `452 original-direction / 475 adverse`.
-
-Therefore break is not a reversal predictor.
-
-## 8. Direction / regime
-
-15m micro3 retention AUC:
-`P0 2025 SHORT .793 / LONG .621`
-`P0 2026 SHORT .821 / LONG .695`
-`P2 2025 SHORT .779 / LONG .697`
-`P2 2026 SHORT .846 / LONG .674`.
-
-Retain direction as interaction only. No SHORT-only rule.
-
-Weak quarter cells remain around 2025Q3 and 2026Q2, but no quarter rule.
-
-## 9. Raw tick / BB-B
-
-Raw tick remains fail-closed:
-`aligned 83.853% / joint placebo 69.660%`, below `90% / 80%`.
-
-BB-B remains secondary:
-`P0 N64 65.63% / P2 N63 65.08%`.
-No gate frozen.
-
-## 10. Structural phase freeze
-
-Current lifecycle semantics are frozen enough to stop structural redesign before practical movement research:
-
-`ONSET -> reveal -> pullback -> ACCEPTANCE -> initial micro3 prior -> dynamic PRISTINE/DAMAGED/CLOSE_BROKEN state -> geometry/process hazard -> BREAK vs SAME75 vs unresolved`.
-
-No production score threshold and no entry/SL/TP rule is frozen.
-
-## 11. Practical movement/payoff characterization
-
-The movement phase is complete enough to stop descriptive expansion and preregister economics.
-
-Core findings:
 
 ```text
-median MFE
-15m  ~0.18-0.22S
-60m  ~0.34-0.38S
-240m ~0.52-0.61S
+PRISTINE     = pullback-extreme wick intact
+DAMAGED      = wick breached but M1-close integrity retained
+CLOSE_BROKEN = M1 close breaches the structural extreme
 ```
 
-Despite this, median time-held directional close displacement at 60/240m is near zero. Large excursions are frequently given back.
+Wick damage is not terminal reversal. Close damage is more serious but is still not automatically the executable trade stop.
 
-Fixed points are strongly regime-dependent: +10 points is ~0.84S in 2024, ~0.5S in 2025 and ~0.23S in 2026.
+Post-break equal-distance direction is approximately chance; do not use break as reversal alpha.
 
-Within 15m `CLOSE_INTACT` events, `MFE15/S` is the primary runner-continuation candidate:
+## 6. Practical movement / payoff authority
+
+The critical correction is:
 
 ```text
-future +0.50S AUC: .657-.716
-future +0.75S AUC: .745-.820
+structure survived != price moved far in the accepted direction
 ```
 
-2024-frozen top-quartile MFE15 (~0.55S) materially enriches future large continuation in both 2025/2026 and P0/P2. No Q75/~0.55S threshold is frozen.
+Broad causal discovery showed that longer survival by itself mostly predicts additional survival, not a materially larger next-15m excursion.
 
-Giveback ratio does not add a stable standalone runner rule.
+Among full-horizon retained events, median MFE grows with horizon but many structures survive while barely paying:
 
-Structural break is not automatically the trade stop: many eventual 0.50/0.75S winners first experience wick or even close damage.
+```text
+15m retained median MFE ~0.21S
+30m retained median MFE ~0.33S
+60m retained median MFE ~0.50S
+```
 
-## 12. Next work
+At t15 among structurally alive events, actual realized progress separates later runner potential strongly. Using first-15m MFE/S:
 
-Next phase is **preregistered entry / risk / partial-profit / runner economics**.
+```text
+MFE15 <0.10S  -> future45 >=0.50S only ~5-6%, survive45 ~38-44%
+MFE15 >=0.50S -> future45 >=0.50S ~30-35%, survive45 ~73-82%
+```
 
-Before P/L inspection, freeze candidate architecture families:
-1. simple single-exit control;
-2. small-profit + runner split;
-3. state/progress-conditioned runner retention;
-4. structural-vs-price-distance stop semantics.
+The monotonic relation persists across 2022-2026 and both directions in broad discovery.
 
-Then evaluate cost-adjusted expectancy, WR, average winner, DD, loss streaks and P0/P2/year/direction/regime robustness.
+Geometry-control stress:
+- for modest future +0.25S movement, progress adds little over geometry;
+- for larger future +0.50S movement, progress adds meaningful incremental discrimination after nonlinear geometry in later-year tests;
+- +0.75S incremental evidence is positive but less stable in 2026 and must not be overstated.
 
-2021 remains locked.
+Exact Slow-N close-intact runner continuation evidence remains:
+`MFE15/S` AUC roughly `.657-.716` for future +0.50S and `.745-.820` for future +0.75S across P0/P2 2025/26.
 
-## 13. Reading order
+This is a **winner-continuation signal**, not an initial entry permission signal.
+
+## 7. Directional economic viability result
+
+A wide set of causal GOLD-internal formulations failed to robustly rank the economic direction of an already-formed ACCEPTANCE:
+- auction/local-liquidity context;
+- persistence/mean-reversion state;
+- reveal purity/commitment;
+- six-hour session state;
+- transfer of old N2 M1 synchronization;
+- transfer of B34 recent-15m signed efficiency.
+
+Their later-year AUCs were generally near chance.
+
+Therefore close the branch:
+`static GOLD-internal ACCEPTANCE direction filter mining`.
+
+Do **not** generalize this negative result to movement onset, structural retention, damage-state estimation, or winner continuation. Those answer different questions and remain preserved evidence.
+
+## 8. Capital-allocation correction
+
+For the user's `$1,000` account, `0.01 lot` minimum, and `1:1000` leverage, the old conceptual 50/50 split is not executable at the smallest base size.
+
+Executable research decomposition:
+
+### Routine base
+- ACCEPTANCE -> 0.01 lot.
+- next executable M1 open.
+- TP `+0.25S`.
+- SL `-0.25S`.
+- max lifecycle `240m`.
+
+### High-Q runner re-entry
+- only after ACCEPTANCE+15m.
+- structure M1-close intact through 15m.
+- use the previously frozen 2024 P0 high-progress reference `MFE15 >= 0.555S` for the current replay; do not re-fit it from later P/L.
+- enter at next executable M1 open.
+- TP `+0.75S`.
+- SL `-0.40S`.
+- max lifecycle `60m` for the current replay probe.
+- size in 0.01-lot increments so stop risk is at most `2%` of current floating equity; floor the lot size.
+- if 0.01 lot already exceeds the risk budget, skip the runner.
+
+The capital idea is causal:
+`frequent small opportunity -> market demonstrates runner-grade progress -> allocate more later`.
+
+Do not increase size merely because predicted retention or P15 is high.
+
+## 9. Chronological replay contract
+
+The current account replay is one single execution path:
+
+- population/signals: **P0 Phase-0 only**;
+- trade chronologically through 2024 -> 2025 -> 2026;
+- do not mix P2 trades into the account;
+- starting balance `$1,000`;
+- minimum/step `0.01 lot`;
+- leverage `1:1000`;
+- allow overlapping positions and measure concurrent exposure;
+- raw M1 OHLC treated as Bid; Ask = Bid + `SPREAD * 0.01` for this GOLD# feed;
+- LONG enters Ask/exits Bid; SHORT enters Bid/exits Ask;
+- if TP and SL are both reachable in one M1 bar, use **SL-first**;
+- enforce margin checks;
+- report realized balance and floating equity, not only aggregate R;
+- report annual/monthly results, DD, max loss streak, max concurrency, initial-risk concentration, skipped runner signals, and cost sensitivity.
+
+Raw GOLD M1 authority used in this session:
+- expected SHA256 `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`.
+
+Exact P0 acceptance counts must fail-closed at:
+`2024 281 / 2025 234 / 2026 154`.
+
+## 10. Research-inference guardrail
+
+Read `DECISIONS_V8_RESEARCH_INFERENCE_GUARDRAILS_ADDENDUM_20260903.md` before any new negative verdict.
+
+Permanent rule:
+
+```text
+component failure != transfer failure != exit failure != capital-allocation failure != full strategy failure
+```
+
+A negative wrapper does not erase a supported upstream mechanism unless it directly contradicts that mechanism.
+
+Do not create a new variant merely because a viewed P/L table is disappointing.
+
+## 11. What comes after the replay
+
+Only after the chronological replay is analyzed:
+
+1. decide whether the current executable wrapper is economically viable as-is;
+2. identify whether any weakness is direction, entry, exit, exposure, or minimum-lot/capital granularity;
+3. preserve supported upstream modules even if the wrapper is negative;
+4. only then open the already-preregistered source-of-move / market-universe transfer work if it is still the correct next question;
+5. keep the outcome-blind external universe frozen as `USDJPY# / XAUEUR# / BTCUSD#` if that branch proceeds;
+6. do not use 2021.
+
+## 12. Reading order
 
 1. `AGENTS_V8.md`
 2. this file
-3. `V8_A_N_SLOW_PRACTICAL_MOVEMENT_CHARACTERIZATION_20260903.md`
-4. `V8_A_N_SLOW_DYNAMIC_STRUCTURAL_STATE_RESEARCH_20260903.md`
-4. `V8_A_N_SLOW_PERSISTENCE_RETENTION_RESEARCH_20260902.md`
-5. `DECISIONS_V8_PERSISTENCE_RETENTION_ADDENDUM_20260902.md`
-6. `V8_A_N_SLOW_HIGHER_HORIZON_EXTENSION_RESEARCH_20260902.md`
-7. `V8_A_N_SLOW_DOWNSTREAM_REVALIDATION_RESULT_20260902.md`
-8. `DECISIONS_V8_SLOW_N_RESET_ADDENDUM_20260902.md`
-9. `RESEARCH_STATE_V8.md`
-10. `BACKLOG_V8.md`
+3. `DECISIONS_V8_RESEARCH_INFERENCE_GUARDRAILS_ADDENDUM_20260903.md`
+4. `V8_SEQUENTIAL_CAPITAL_ALLOCATION_RESEARCH_20260903.md`
+5. `V8_DIRECTIONAL_ECONOMIC_VIABILITY_FALSIFICATION_20260903.md`
+6. `V8_A_N_SLOW_PRACTICAL_MOVEMENT_CHARACTERIZATION_20260903.md`
+7. `V8_A_N_SLOW_DYNAMIC_STRUCTURAL_STATE_RESEARCH_20260903.md`
+8. `V8_A_N_SLOW_PERSISTENCE_RETENTION_RESEARCH_20260902.md`
+9. `DECISIONS_V8_PERSISTENCE_RETENTION_ADDENDUM_20260902.md`
+10. `V8_SLOWN_SOURCE_OF_MOVE_AND_MARKET_UNIVERSE_CONTRACT_20260903.md` only after account replay context is understood
+11. older V8 state/backlog docs as needed
+
+Always refresh GitHub HEAD first. If the repository has moved beyond the expected base, inspect the new commits before applying or replacing files.
