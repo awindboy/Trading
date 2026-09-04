@@ -1,267 +1,154 @@
 # V8 Research State
 
-Status: `ACTIVE / ATR GRID DIRECTION-ERROR ABSORBER / SIZING + WRONG-DIRECTION ACTION NEXT`
-Date: `2026-09-04`
-Production authority: `NONE`
-Market: `GOLD# ONLY`
-Untouched reserve: `GOLD# 2021`
-Source Git HEAD at synchronization: `bbe30f7d23d13def712ad53117df9e8bc42a5e2e`
+Status: `ACTIVE / GRID STATIC SIZING + SIMPLE DEEP ACTION COMPLETE / NEXT PAYOFF-TRANSFORMATION RESEARCH`  
+Date: `2026-09-04`  
+Production authority: `NONE`  
+Market: `GOLD# ONLY`  
+Untouched reserve: `GOLD# 2021`  
+Source Git HEAD before latest local synchronization package: `ba28a16be6751178549eab5a623f14b5ded38778`
 
-## 1. Stable upstream conclusions
+## 1. Current authority chain
 
-### P15
+Read in this order:
 
-`fresh75` remains a valid near-term movement/excursion opportunity state.
+1. `HANDOFF_V8.md`
+2. this file
+3. `V8_GRID_SIZING_DEEP_ACTION_RESULT_20260904.md`
+4. `DECISIONS_V8_GRID_SIZING_DEEP_ACTION_ADDENDUM_20260904.md`
+5. `V8_ATR_GRID_DIRECTION_ERROR_ABSORBER_RESEARCH_20260904.md`
+6. `DECISIONS_V8_ATR_GRID_ADDENDUM_20260904.md`
+7. `V8_NEXT_GRID_SIZING_AND_WRONG_DIRECTION_CONTRACT_20260904.md` as the completed preregistration/history for this stage.
 
-P0 fresh75:
+Older V8 history remains useful only when needed to understand a preserved conclusion or failed branch.
 
-- 2024 653
-- 2025 535
-- 2026 321
-- total 1509
+## 2. Stable upstream conclusions
 
-Fresh75 to actual `+/-0.25S` touch within 15m remains about `77.8%`.
+- P15/fresh75 is a near-term movement/excursion opportunity state, not a robust initial-direction signal.
+- ACCEPTANCE is a structural transition, not automatic direction/entry permission.
+- `micro3` remains structural-retention context.
+- High-Q remains sparse positive continuation evidence, not a broad initial direction gate.
+- movement onset remains more learnable than initial direction.
+- denominator/coverage collapse is not accepted as a solution.
+- M1 is not execution authority for multi-fill grid economics.
+- exact Bid/Ask tick chronology is mandatory for candidate grid P/L.
+- GOLD# 2021 remains locked.
 
-P15 does not provide robust initial direction.
+## 3. P0 execution-population version note
 
-### ACCEPTANCE
+Prior synchronized docs listed P0 2024 fresh75 `653`.
 
-P0 ACCEPTANCE:
+The old Phase-0 population has now been reconstructed with near-exact model parity and gives `648` events.
 
-- 279 / 236 / 153
-- total 668
+Per user instruction, current exact-execution development research proceeds on the reproducible `648` population.
 
-P2 ACCEPTANCE:
+Do not silently mix 648 and 653. Do not rewrite unrelated historical counts without rebuilding them.
 
-- 316 / 235 / 144
-- total 695
+## 4. 2025 exact-tick status
 
-ACCEPTANCE is a structural transition, not a finished direction/entry rule.
+Usable full-year 2025 exact tick is not available.
 
-### Structural retention
+The sparse/incomplete uploaded 2025 package is not validation authority.
 
-`micro3` remains an initial structural-quality prior.
+Therefore current execution evidence remains 2024 development only. 2025 M1 can be descriptive; 2021 remains untouched.
 
-Dynamic state remains:
+## 5. Current grid control
 
-    PRISTINE
-    DAMAGED
-    CLOSE_BROKEN
+Development control geometry:
 
-No structural label is an automatic trading action.
+- weak causal 30m momentum direction;
+- entries `0 / -0.4S / -0.8S`;
+- fixed control sizing `1:1:1`;
+- hard boundary `-1.2S`;
+- weighted BE = rescue;
+- exact historical runner-protection semantics are not sufficiently preserved for new sizing parity.
 
-### Winner continuation
+For the sizing-isolation study, `+1S` immediate exit was used strictly as an unambiguous execution control.
 
-High-Q remains sparse but economically positive development evidence.
+## 6. Completed static sizing result
 
-P0:
+Same-boundary exact tick:
 
-- N61
-- mean about +0.287R
-- PF about 1.68-1.71
+- fixed `1:1:1`: completed 542, censored 106, mean about `+$0.053`, PF about `1.015`;
+- `1:0.5:0.25`: mean about `-$0.307`;
+- `1:0.5:0.5`: mean about `-$0.237`;
+- `1:0.25:0.25`: mean about `-$0.515`;
+- `1:2:4`: mean about `-$0.331`, worst about `-$94.23`.
 
-P2:
+Fixed remains the best tested static control.
 
-- N70
-- mean about +0.214R
-- PF about 1.53-1.56
+Static decreasing sizing and martingale are not promoted.
 
-## 2. Closed or downgraded direction branches
+## 7. Equal-risk extension
 
-Current evidence does not justify reopening these without a new mechanism:
+Equalizing gross basket risk by widening decreasing boundaries did not beat fixed on pairwise complete events and introduced substantial schedule-dependent censoring.
 
-- generic fresh75 direction classifier;
-- reveal FOLLOW / FADE;
-- every-M1 LONG/SHORT EV;
-- rolling EV retraining;
-- direct probability sizing;
-- micro first-touch direction;
-- simultaneous LONG+SHORT synthetic straddle;
-- simple stop-and-reverse;
-- continuous M1 trend-follow;
-- random-direction payoff search.
+Do not promote the raw positive schedule-specific means.
 
-The repeated lesson is:
+## 8. Deep-state action result
 
-> Movement onset is much easier than robust initial direction.
+Third fill / approximately -0.8S remains a meaningful diagnostic branchpoint, but not an automatic intervention trigger.
 
-## 3. Coverage lesson
+Common deep-state action population showed:
 
-A delayed t10 state was profitable but sparse:
+- HOLD future Q from deep state about `+$5.02`;
+- REDUCE_LATEST about `+$1.28`;
+- REDUCE_HALF_ALL about `+$2.51`;
+- EXIT `0` from the mark-to-market state;
+- FLIP about `-$1.39`.
 
-- P0 N126 total
-- WR 59.5%
-- mean +0.197R
-- PF 1.57
+Unconditional HOLD was best.
 
-This is only about 8.35% of all P0 fresh75 events.
+## 9. Five-minute causal model
 
-It is preserved as state evidence, not final strategy architecture.
+The first xmin/xmax implementation leaked future information and was invalidated.
 
-Research must report full campaign coverage and never hide denominator collapse.
+Corrected hard-loss discrimination was only moderate (~0.69 H1->H2), and expanding-quarter action-value stability failed.
 
-## 4. ATR-grid branch
+No 5-minute action model is frozen.
 
-The active idea is to use ATR-scaled staged exposure as a `direction-error absorber`.
+## 10. Price-trigger action result
 
-Intended economic outcomes:
+Automatic REDUCE/EXIT/FLIP at `-0.9 / -1.0 / -1.1S` all reduced mean dollar value versus HOLD.
 
-- correct initial direction -> protected directional winner;
-- wrong initial direction but normal rotation -> weighted-BE rescue;
-- wrong initial direction that becomes genuine opposite continuation -> reduce / exit / flip before the large tail;
-- continuation after base economics are secured -> possible separate runner/add tranche.
+At -1.1S, EXIT improved many individual paths but still worsened average EV because the sacrificed BE recoveries were larger.
 
-Current focused scaffold:
+Permanent lesson:
 
-- weak causal initial direction: 30m momentum hypothesis;
-- entries around `0`, `-0.4S`, `-0.8S`;
-- hard adverse control around `-1.2S`;
-- `+1S` is a progress/protection milestone;
-- protected runner target around `+1.5S`;
-- weighted BE is rescue;
-- no mandatory fixed timeout.
+> P(hard loss) is not Q(action).
 
-These values are research scaffolding, not production parameters.
+## 11. Conditional hedge result
 
-## 5. M1 versus tick authority
+A single-use one-unit opposite hedge opened at -1.0S and closed at -1.2S or -0.8S had:
 
-M1 is allowed for:
+- ideal same-path zero-spread total about `+$21.94`;
+- actual Bid/Ask total about `-$9.82`.
 
-- broad family screening;
-- geometry;
-- state characterization;
-- hazard research.
+The gross edge was too thin to survive execution.
 
-Exact tick is mandatory for:
+Do not threshold/size-optimize this hedge on the same 2024 outcomes.
 
-- multi-fill chronology;
-- weighted-BE chronology;
-- Bid/Ask execution;
-- candidate profitability.
+## 12. Current conclusion
 
-M1 favorable intrabar assumptions previously generated false positive grid results.
+The current static ATR-grid family has not solved V8's direction/payoff problem.
 
-## 6. Causal-alignment guardrail
+The fixed control is not rejected as a diagnostic scaffold, but no tested sizing/action is production-worthy.
 
-For a `15:35` decision whose origin is the `15:34` close:
+The central economic obstacle is the asymmetric value of BE recovery versus remaining hard-boundary loss after deep adverse movement.
 
-- legal feature data ends at 15:34;
-- execution begins at 15:35.
+## 13. Immediate next research
 
-A 1-minute look-ahead was found and all affected results were discarded.
+Do not continue another threshold tournament on the same HOLD/EXIT family.
 
-Every future study must declare `known_at` for each feature.
+Before opening P/L, preregister a genuinely different payoff-transformation mechanism whose purpose is:
 
-## 7. Current payoff state
+- preserve most normal-rotation recovery value;
+- create stronger convex protection against genuine opposite continuation than the failed one-unit hedge;
+- stay compatible with P15's near-term semantics;
+- avoid martingale tail growth;
+- report zero-cost same-path and actual Bid/Ask economics separately.
 
-The user rejected `+1S` as final TP.
+No 2021 use.
 
-The revised structure uses:
-
-- `+1S` = progress milestone;
-- protected runner toward about `+1.5S`.
-
-Representative P0 2024 exact-tick improvement:
-
-Old +1S exit:
-
-- mean about +$0.248/campaign
-- average winner about +$12.15
-
-Revised protected +1.5S:
-
-- mean about +$0.378/campaign
-- average winner about +$18.65
-
-P2 2024 exact tick remained approximately flat:
-
-- mean about -$0.015/campaign
-- PF about 0.996
-
-Therefore the economics improved but are not yet robust enough.
-
-## 8. BE interpretation
-
-Weighted-BE touch is a rescue event.
-
-It is not reliable proof that the original direction has restarted.
-
-Do not leave the full grid basket running after BE without independent continuation evidence.
-
-Same-direction High-Q inside a live campaign is interesting development evidence for a separate continuation tranche, but simply moving the existing TP farther to +3S worsened economics.
-
-## 9. Current main bottleneck
-
-The large remaining problem is not normal BE recovery.
-
-It is the deep adverse tail.
-
-For the current equal-size three-tranche scaffold:
-
-- hard losses concentrate after the third tranche / roughly `-0.8S`;
-- P0 deep-state N about 153;
-- P2 deep-state N about 180;
-- BE recovery and hard loss split about 52% / 48%.
-
-Among eventual hard-loss cases, roughly 78-80% later deliver an opposite-direction `+1.5S` diagnostic move.
-
-This suggests the high-value problem is:
-
-> Detect genuine opposite continuation after the deep-adverse state and convert some hard losses into smaller losses or opposite-direction winners.
-
-## 10. Campaign RR problem
-
-Equal size `1:1:1` at `0`, `-0.4S`, `-0.8S` with hard boundary `-1.2S` has basket loss `2.4S`.
-
-Direct first-unit target is about `+1.5S`.
-
-Gross campaign RR:
-
-    1.5 / 2.4 = 0.625
-
-The loss side is too large.
-
-Tightening the price stop harmed recovery.
-
-The next approach is to preserve price room while changing size and actions.
-
-## 11. Immediate next research
-
-Compare identical geometry with:
-
-Fixed:
-
-    1 : 1 : 1
-
-Decreasing:
-
-    1 : 0.5 : 0.25
-    1 : 0.5 : 0.5
-    1 : 0.25 : 0.25
-
-Martingale:
-
-    1 : 2 : 4
-
-Then combine with deep-state actions:
-
-    HOLD
-    REDUCE
-    EXIT
-    FLIP
-
-Report actual dollars, exposure and tail losses.
-
-## 12. Sequential validation
-
-- 2024 -> development/training.
-- 2025 -> exact-tick validation using only 2024 knowledge.
-- 2026 -> retrain through 2025, then validate.
-
-The user stated that 2025 GOLD tick data has been uploaded. The next session must verify the file and use it.
-
-## 13. Production status
+## 14. Production status
 
 `NONE`
-
-No sizing or wrong-direction rule is frozen.
