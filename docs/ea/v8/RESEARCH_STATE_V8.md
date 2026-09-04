@@ -1,90 +1,267 @@
 # V8 Research State
 
-Status: `ACTIVE / PRACTICAL MOVEMENT CHARACTERIZED / ECONOMICS PREREGISTRATION NEXT`
-Date: `2026-09-03`
+Status: `ACTIVE / ATR GRID DIRECTION-ERROR ABSORBER / SIZING + WRONG-DIRECTION ACTION NEXT`
+Date: `2026-09-04`
 Production authority: `NONE`
-Market: `GOLD#`
+Market: `GOLD# ONLY`
 Untouched reserve: `GOLD# 2021`
+Source Git HEAD at synchronization: `bbe30f7d23d13def712ad53117df9e8bc42a5e2e`
 
-## ONSET
+## 1. Stable upstream conclusions
 
-`0.25 * previous-completed H4 ATR14 / P15 fresh75`.
-P15 is either-side barrier-touch / excursion probability, not persistence.
+### P15
 
-Current exact downstream population authority is the reconstructed P0/P2 population fixed on 2026-09-03.
+`fresh75` remains a valid near-term movement/excursion opportunity state.
 
-## EXTENSION
+P0 fresh75:
 
-Research-only `0.75 * previous-completed H4 ATR14 / P60-P120-P240`.
-Directionless movement-magnitude/horizon context only.
+- 2024 653
+- 2025 535
+- 2026 321
+- total 1509
 
-## ACCEPTANCE
+Fresh75 to actual `+/-0.25S` touch within 15m remains about `77.8%`.
 
-`fresh75 -> M1-close reveal -> >=25% pullback with origin retained -> M1-close reclaim`.
+P15 does not provide robust initial direction.
 
-No blind pullback or reveal-momentum authority.
+### ACCEPTANCE
 
-## Static Structural Retention
+P0 ACCEPTANCE:
 
-Primary wick-retention micro3 AUC on exact population:
-`15m .720-.756 / 30m .699-.723 / 60m .702-.722`.
+- 279 / 236 / 153
+- total 668
 
-micro3 is an initial acceptance-quality ranking signal only.
+P2 ACCEPTANCE:
 
-## Dynamic Structural State
+- 316 / 235 / 144
+- total 695
 
-After strong causal control, current geometry/process dominates 1/3/5/10/15m break hazard.
-Repeated micro3 adds no robust incremental value.
+ACCEPTANCE is a structural transition, not a finished direction/entry rule.
 
-State semantics:
-`PRISTINE / DAMAGED / CLOSE_BROKEN`.
+### Structural retention
 
-Wick break remains sensitive structural damage; close break is stronger invalidation.
+`micro3` remains an initial structural-quality prior.
 
-## Competing risk
+Dynamic state remains:
 
-Correct State A:
-`BREAK / SAME-SIDE 0.75ATR / unresolved`, with `PRE_SAME75` separate.
+    PRISTINE
+    DAMAGED
+    CLOSE_BROKEN
 
-SAME75-before-BREAK rises from roughly 20-25% initially to 42-51% among 15m survivors, mostly explained by survival/barrier geometry.
+No structural label is an automatic trading action.
 
-Opposite-direction competition remains a post-break question and equal-distance direction is near chance.
+### Winner continuation
 
-## Direction / regime
+High-Q remains sparse but economically positive development evidence.
 
-Retention ranking remains substantially stronger on SHORT than LONG.
-Keep as interaction only; no SHORT-only rule.
+P0:
 
-Weak quarter cells exist but no quarter permission rule.
+- N61
+- mean about +0.287R
+- PF about 1.68-1.71
 
-## Raw tick / BB-B
+P2:
 
-Raw tick remains fail-closed on coverage.
-BB-B remains secondary context with no trading gate.
+- N70
+- mean about +0.214R
+- PF about 1.53-1.56
 
-## Critical negatives
+## 2. Closed or downgraded direction branches
 
-- retention != generic momentum;
-- repeated micro3 is not a dynamic edge;
-- wick break != reversal;
-- close-through break != opposite continuation;
-- equal-distance continuation remains near chance;
-- no EXT directional permission;
-- no threshold rescue.
+Current evidence does not justify reopening these without a new mechanism:
 
-## Practical movement/payoff
+- generic fresh75 direction classifier;
+- reveal FOLLOW / FADE;
+- every-M1 LONG/SHORT EV;
+- rolling EV retraining;
+- direct probability sizing;
+- micro first-touch direction;
+- simultaneous LONG+SHORT synthetic straddle;
+- simple stop-and-reverse;
+- continuous M1 trend-follow;
+- random-direction payoff search.
 
-Movement characterization is complete enough to open economics preregistration.
+The repeated lesson is:
 
-- median MFE: ~0.18-0.22S at 15m, ~0.34-0.38S at 60m, ~0.52-0.61S at 240m;
-- median terminal displacement remains near zero at longer fixed horizons;
-- fixed point targets are nonstationary across 2024-2026 volatility;
-- many eventual large winners experience structural damage before target;
-- `close-intact + MFE15/S` is the primary runner candidate;
-- future +0.50S AUC `.657-.716`, future +0.75S `.745-.820` across P0/P2 2025/26;
-- 2024-frozen top-quartile progress validates strongly in 2025/26, but no threshold is frozen;
-- giveback ratio is secondary/unstable.
+> Movement onset is much easier than robust initial direction.
 
-## Next
+## 3. Coverage lesson
 
-Preregister explicit entry/risk/partial-profit/runner architecture before testing economics. Include single-exit control and cost-adjusted R metrics. Keep 2021 locked.
+A delayed t10 state was profitable but sparse:
+
+- P0 N126 total
+- WR 59.5%
+- mean +0.197R
+- PF 1.57
+
+This is only about 8.35% of all P0 fresh75 events.
+
+It is preserved as state evidence, not final strategy architecture.
+
+Research must report full campaign coverage and never hide denominator collapse.
+
+## 4. ATR-grid branch
+
+The active idea is to use ATR-scaled staged exposure as a `direction-error absorber`.
+
+Intended economic outcomes:
+
+- correct initial direction -> protected directional winner;
+- wrong initial direction but normal rotation -> weighted-BE rescue;
+- wrong initial direction that becomes genuine opposite continuation -> reduce / exit / flip before the large tail;
+- continuation after base economics are secured -> possible separate runner/add tranche.
+
+Current focused scaffold:
+
+- weak causal initial direction: 30m momentum hypothesis;
+- entries around `0`, `-0.4S`, `-0.8S`;
+- hard adverse control around `-1.2S`;
+- `+1S` is a progress/protection milestone;
+- protected runner target around `+1.5S`;
+- weighted BE is rescue;
+- no mandatory fixed timeout.
+
+These values are research scaffolding, not production parameters.
+
+## 5. M1 versus tick authority
+
+M1 is allowed for:
+
+- broad family screening;
+- geometry;
+- state characterization;
+- hazard research.
+
+Exact tick is mandatory for:
+
+- multi-fill chronology;
+- weighted-BE chronology;
+- Bid/Ask execution;
+- candidate profitability.
+
+M1 favorable intrabar assumptions previously generated false positive grid results.
+
+## 6. Causal-alignment guardrail
+
+For a `15:35` decision whose origin is the `15:34` close:
+
+- legal feature data ends at 15:34;
+- execution begins at 15:35.
+
+A 1-minute look-ahead was found and all affected results were discarded.
+
+Every future study must declare `known_at` for each feature.
+
+## 7. Current payoff state
+
+The user rejected `+1S` as final TP.
+
+The revised structure uses:
+
+- `+1S` = progress milestone;
+- protected runner toward about `+1.5S`.
+
+Representative P0 2024 exact-tick improvement:
+
+Old +1S exit:
+
+- mean about +$0.248/campaign
+- average winner about +$12.15
+
+Revised protected +1.5S:
+
+- mean about +$0.378/campaign
+- average winner about +$18.65
+
+P2 2024 exact tick remained approximately flat:
+
+- mean about -$0.015/campaign
+- PF about 0.996
+
+Therefore the economics improved but are not yet robust enough.
+
+## 8. BE interpretation
+
+Weighted-BE touch is a rescue event.
+
+It is not reliable proof that the original direction has restarted.
+
+Do not leave the full grid basket running after BE without independent continuation evidence.
+
+Same-direction High-Q inside a live campaign is interesting development evidence for a separate continuation tranche, but simply moving the existing TP farther to +3S worsened economics.
+
+## 9. Current main bottleneck
+
+The large remaining problem is not normal BE recovery.
+
+It is the deep adverse tail.
+
+For the current equal-size three-tranche scaffold:
+
+- hard losses concentrate after the third tranche / roughly `-0.8S`;
+- P0 deep-state N about 153;
+- P2 deep-state N about 180;
+- BE recovery and hard loss split about 52% / 48%.
+
+Among eventual hard-loss cases, roughly 78-80% later deliver an opposite-direction `+1.5S` diagnostic move.
+
+This suggests the high-value problem is:
+
+> Detect genuine opposite continuation after the deep-adverse state and convert some hard losses into smaller losses or opposite-direction winners.
+
+## 10. Campaign RR problem
+
+Equal size `1:1:1` at `0`, `-0.4S`, `-0.8S` with hard boundary `-1.2S` has basket loss `2.4S`.
+
+Direct first-unit target is about `+1.5S`.
+
+Gross campaign RR:
+
+    1.5 / 2.4 = 0.625
+
+The loss side is too large.
+
+Tightening the price stop harmed recovery.
+
+The next approach is to preserve price room while changing size and actions.
+
+## 11. Immediate next research
+
+Compare identical geometry with:
+
+Fixed:
+
+    1 : 1 : 1
+
+Decreasing:
+
+    1 : 0.5 : 0.25
+    1 : 0.5 : 0.5
+    1 : 0.25 : 0.25
+
+Martingale:
+
+    1 : 2 : 4
+
+Then combine with deep-state actions:
+
+    HOLD
+    REDUCE
+    EXIT
+    FLIP
+
+Report actual dollars, exposure and tail losses.
+
+## 12. Sequential validation
+
+- 2024 -> development/training.
+- 2025 -> exact-tick validation using only 2024 knowledge.
+- 2026 -> retrain through 2025, then validate.
+
+The user stated that 2025 GOLD tick data has been uploaded. The next session must verify the file and use it.
+
+## 13. Production status
+
+`NONE`
+
+No sizing or wrong-direction rule is frozen.

@@ -1,301 +1,429 @@
 # V8 Research Instructions
 
-Status: `ACTIVE / GOLD EXECUTABLE MAPPING -> EARLY-PATH ACTION & EXPOSURE RESEARCH`
+Status: `ACTIVE / GOLD P15 + ATR GRID DIRECTION-ERROR ABSORBER`
 Generation: `V8`
-Last synchronized: `2026-09-03`
+Last synchronized: `2026-09-04`
 Production authority: `NONE`
 Market: `GOLD# ONLY`
 Open development evidence: `2022-2026`
 Untouched reserve: `GOLD# 2021`
-Source Git HEAD verified before this synchronization: `636524efc0335b1569405cfed420e84549a0c4b9`
+Source Git HEAD verified before this synchronization: `bbe30f7d23d13def712ad53117df9e8bc42a5e2e`
 
-## 1. Authority and immediate priority
+## 1. Authority
 
-GitHub is the project authority. On resume, refresh HEAD, then read `HANDOFF_V8.md` and `V8_EXECUTABLE_MAPPING_REVALIDATION_20260903.md`.
+GitHub is the permanent project authority.
 
-The realistic chronological replay has been completed and decomposed.
+On resume:
 
-The immediate research bottleneck is now:
+1. refresh Git HEAD;
+2. read `HANDOFF_V8.md`;
+3. read `RESEARCH_STATE_V8.md`;
+4. read the research/decision files named by HANDOFF;
+5. do not rely on conversation memory over newer GitHub state.
 
-```text
-ACCEPTANCE / early causal path
--> executable action / exposure mapping
--> runner-grade progress
-```
+## 2. Hard scope
 
-Do not immediately open another indicator family or threshold treadmill.
+Until the user explicitly reopens scope:
 
-## 2. GOLD-only freeze
+- GOLD# only;
+- no other markets;
+- no market-universe screening;
+- no GOLD# 2021;
+- no production authority.
 
-Absolutely do not research or validate another market until the user explicitly reopens that scope.
+P0 and P2 are alternate deterministic training de-overlap realizations.
 
-- No USDJPY#.
-- No XAUEUR#.
-- No BTCUSD#.
-- No new market-universe screen.
-- Existing external-market/source-of-move documents are historical/preregistered context only.
-- Do not touch GOLD# 2021.
+Never merge them as independent trades.
 
-## 3. Current architecture
+## 3. Stable semantic separation
 
-```text
-ONSET
--> reveal
--> pullback
--> reclaim / ACCEPTANCE
--> initial structural-quality prior
--> dynamic structural state
--> realized progress / winner continuation
--> executable action, exit, exposure and capital allocation
-```
-
-ONSET remains `0.25 H4ATR / P15 fresh75`.
-
-P15 means movement/excursion onset probability, not terminal direction.
-
-## 4. Current working population authority
-
-Current revalidated P0 full-M5 inference funnel:
-
-```text
-fresh75:
-2024 653 / 2025 535 / 2026 321 / total 1509
-
-<=15m +/-0.25S actual touch:
-510 / 420 / 244 / total 1174
-
-<=15m M1-close reveal:
-426 / 361 / 211 / total 998
-
-25% pullback fill diagnostic:
-390 / 318 / 193 / total 901
-
-full ACCEPTANCE:
-279 / 236 / 153 / total 668
-```
-
-Current P2 acceptance robustness realization:
-
-```text
-2024 316 / 2025 235 / 2026 144 / total 695
-```
-
-Do not reopen older count archaeology unless a new direct contradiction changes the actual research conclusion.
-
-## 5. P0/P2 semantics
-
-P0/P2 are alternate deterministic training-sample de-overlap realizations.
-
-They are not execution phases.
-
-The trained model is inferred across the full modelable M5 population. Do not describe P0 as trading only one M5 residue.
-
-Do not mix P0/P2 into one account. P2 is robustness evidence unless a future architecture explicitly preregisters otherwise.
-
-## 6. Acceptance and structural state
-
-Primary ACCEPTANCE:
-
-`fresh75 -> <=15m 0.25ATR M1-close reveal -> >=25% pullback, origin retained -> M1-close reclaim`.
-
-Initial structural-quality prior:
-
-`micro3 = prog1 + run_accept + prog3`.
-
-Dynamic state:
-
-```text
-PRISTINE      = pullback-extreme wick intact
-DAMAGED       = wick breached but M1-close integrity retained
-CLOSE_BROKEN  = M1 close breaches the structural extreme
-```
-
-micro3 ranks structural retention quality. It is not a proven direct Base permission signal.
-
-`CLOSE_BROKEN` is a hazard state. It is not an automatic exit rule.
-
-## 7. Mandatory semantic separation
-
-Never collapse these without direct evidence:
+Never silently merge these concepts:
 
 - movement onset;
-- direction viability;
+- initial direction viability;
 - structural survival;
+- normal adverse rotation;
+- opposite one-way continuation;
 - winner continuation;
-- entry timing;
-- exit/payoff;
-- execution/cost;
+- entry;
+- staged exposure;
+- rescue;
+- exit;
+- execution;
+- cost;
 - capital allocation.
 
 Permanent reminders:
 
-```text
-retention != movement
-movement opportunity != direction edge
-high AUC != profitable trading rule
-MFE != capturable P/L
-structural damage != automatic stop
-```
+    P15 movement opportunity != direction edge
+    retention != movement
+    high AUC != profitable action
+    BE recovery != direction continuation
+    MFE != capturable P/L
+    structural damage != automatic stop
+    campaign RR != first-entry TP/SL distance
 
-## 8. Current executable mapping evidence
+## 4. P15 time-scale guardrail
 
-### Routine Base control
+P15 is a near-term movement/excursion probability model.
 
-`ACCEPTANCE -> next M1 open -> TP +0.25S / SL -0.25S`
+Do not silently transform it into a multi-hour trend predictor.
 
-Current P0 668:
+ATR-grid research is allowed to use staged positions to absorb initial direction error, but it must remain conceptually connected to the V8 movement event unless a separate longer-horizon hypothesis is preregistered and validated.
 
-- WR `48.5%`
-- mean about `-0.029R`
-- PF about `0.944`
-- chronological account contribution about `-$31.85`
+Do not repeat the research drift from micro-grid candle slicing to 3-24h unrelated mean-reversion without explicitly declaring a new strategy.
 
-Base is a negative economic control, not the surviving V8 edge.
+## 5. Current working architecture
 
-### micro3 mapping
+The current research architecture is:
 
-Retention AUC remains meaningful, but high micro3 used as direct Base permission failed.
+    P15 fresh75
+    -> weak initial direction hypothesis
+    -> ATR-scaled staged exposure
+    -> normal rotation may rescue at weighted BE
+    -> directional progress milestone protects winner
+    -> genuine opposite continuation should trigger reduction / exit / flip
+    -> validated continuation may justify a separate runner/add tranche
 
-Representative 2025+2026 Q75 mapping:
+This is a research scaffold, not a frozen strategy.
 
-- N90
-- WR `44.4%`
-- mean `-0.111R`
-- PF `0.800`
+## 6. P15 / ACCEPTANCE / High-Q authority
 
-Preserve micro3 only for its supported structural-quality semantics.
+P15 remains movement opportunity, not direction.
 
-### simple close-break exit
+ACCEPTANCE remains a structural state transition, not direct direction permission.
 
-Across 668 Base events:
+micro3 remains a structural-retention quality prior.
 
-- WR about `38.5%`
-- mean about `-0.043R`
-- PF about `0.900`
+PRISTINE / DAMAGED / CLOSE_BROKEN remain structural/hazard states.
 
-Loss severity improves, but expectancy does not. Do not freeze this exit.
+High-Q remains sparse positive continuation evidence.
 
-### High-Q runner
+Do not repurpose a model from one semantic layer into another merely because it has a high score.
 
-At ACCEPTANCE+15m:
+## 7. Direction-research status
 
-- close integrity intact;
-- `MFE15 >= 0.555S`;
-- next M1 open;
-- TP +0.75S;
-- SL -0.40S.
+The following direct direction families have already failed or remained unstable:
 
-P0 fixed-0.01 diagnostic:
+- fresh75 direct LONG/SHORT action EV;
+- reveal FOLLOW / FADE;
+- every-M1 EV;
+- rolling EV;
+- direct P(win) x payoff;
+- probability sizing;
+- micro first-touch;
+- stop-and-reverse;
+- synthetic straddle;
+- continuous M1 trend following.
 
-- N61
-- WR `49.18%`
-- mean about `+0.287R`
-- PF about `1.68-1.71`
-- average winner about `+1.4R`
-- positive mean R in every current year.
+Do not rescue them by fine threshold search.
 
-P2 robustness:
+A genuinely new directional mechanism may reopen the question.
 
-- N70
-- WR about `51.4%`
-- mean about `+0.214R`
-- PF about `1.53-1.56`.
+## 8. Trade-frequency guardrail
 
-This is the strongest positive executable component but is not production authority.
+Do not solve poor economics by repeatedly narrowing the population.
 
-## 9. Account replay authority
+For every candidate report:
 
-Frozen P0 chronological wrapper:
+- original denominator;
+- selected N;
+- excluded N;
+- unique campaigns;
+- tickets/tranches;
+- campaign coverage;
+- year split.
 
-- start `$1,000`;
-- Base 0.01 lot;
-- High-Q runner risk <=2% floating equity, 0.01 minimum/step;
-- leverage 1:1000;
-- causal spread;
-- overlap allowed.
+A profitable 5-10% subset is a state/component, not automatically the final strategy.
 
-Result:
+## 9. M1 versus exact tick
 
-```text
-Base             -$31.85
-Runner          +$250.21
-Combined net    +$218.36
-Ending balance  $1218.36
-Floating MDD    -21.85%
-Max concurrency 2
-```
+Grid and multi-fill strategies are intrabar-order sensitive.
 
-Runner-only 60m control:
+M1 is appropriate for:
 
-```text
-ending balance about $1220.89
-net about +$220.89
-floating MDD about -9.86%
-```
+- broad family screening;
+- geometry;
+- state characterization;
+- descriptive hazard research.
 
-Do not infer that paying every ACCEPTANCE is necessary.
+Exact tick is mandatory for:
 
-## 10. Mandatory AUC-to-trade reporting
+- execution P/L;
+- fill chronology;
+- weighted-average chronology;
+- BE chronology;
+- Bid/Ask;
+- same-minute conflict resolution.
 
-Whenever AUC or another statistical score is presented for a state intended to affect trading, report its executable mapping next to it if tested:
+Never infer add-before-exit or exit-before-add from M1 OHLC without explicit conservative/favorable sensitivity.
 
-- exact target;
-- information time;
-- action;
+## 10. Tick coverage
+
+For every exact-tick dataset:
+
+- verify period;
+- timezone;
+- timestamp precision;
+- Bid/Ask;
+- duplicates;
+- month/file boundaries;
+- missing intervals.
+
+Campaigns crossing missing coverage are right-censored/incomplete.
+
+Never force them into win/loss.
+
+## 11. Causal timing
+
+Every feature must have an explicit `known_at`.
+
+For a decision stamped `15:35` whose origin is 15:34 close:
+
+    legal feature cutoff = 15:34 close
+    earliest execution = 15:35
+
+Do not allow the 15:35 M1 into the feature vector.
+
+A 1-minute look-ahead occurred once in this research and all affected results were invalidated.
+
+This error must never recur.
+
+## 12. Spread analysis
+
+Do not say "spread killed the edge" without decomposition.
+
+Required when spread is material:
+
+- exact actual-spread replay;
+- same tick path with zero spread;
+- difference in direct cost;
+- difference in outcome classification;
+- actual-dollar effect.
+
+A strategy that is only breakeven at zero spread does not have a strong edge destroyed by the broker.
+
+## 13. Actual-dollar reporting
+
+R remains useful for normalization, but the user requires actual economic scale.
+
+Every grid report must include actual dollars for the chosen reference lot.
+
+Minimum categories:
+
+- direct/protected TP;
+- grid-before-winner if present;
+- BE rescue;
+- early cut;
+- flip winner;
+- hard loss;
+- timeout/censored if any.
+
+For each category report:
+
 - N;
-- WR;
-- mean R;
+- rate;
+- average dollars;
+- total dollars.
+
+Also report:
+
+- total campaigns;
+- completed / censored;
+- mean dollars per campaign;
+- total dollars;
 - PF;
-- winner/loss payoff where meaningful;
-- year split;
-- research status.
+- max campaign loss;
+- tail contribution;
+- lot schedule.
 
-If no executable mapping exists, explicitly write:
+## 14. Direction accuracy reporting
 
-`NO EXECUTABLE TRADING RESULT YET`.
+If direction accuracy is reported, define the target exactly.
 
-## 11. Active next research
+If the "correct direction" uses future first-touch or future +1.5S outcome, label it:
 
-The next GOLD-only research is a shadow-first **economic bridge / action-exposure audit**.
+`DIAGNOSTIC / NONCAUSAL`
 
-At causal checkpoints such as acceptance, +1m, +3m, +5m and +10m:
+Do not present it as a tradable classifier.
 
-- use only information available by that checkpoint;
-- restrict analysis to trades/events still alive/unresolved at that checkpoint;
-- ask what the existing Base/structural state implies for subsequent executable economics;
-- test whether delayed entry, confirmation, reduction, abort, add or hold logic is actually supported;
-- preserve frozen Base and High-Q runner controls;
-- do not tune dozens of thresholds;
-- do not use future MFE15 as acceptance-time information.
+If a causal direction model is used, report:
 
-The goal is to connect the already-supported modules without silently repurposing their targets.
+- training window;
+- validation window;
+- known_at;
+- N;
+- accuracy/AUC;
+- actual trade economics.
 
-## 12. Research-inference guardrail
+## 15. ATR-grid scale
 
-Read `DECISIONS_V8_RESEARCH_INFERENCE_GUARDRAILS_ADDENDUM_20260903.md` and `DECISIONS_V8_EXECUTABLE_MAPPING_ADDENDUM_20260903.md`.
+Do not repeat the `0.08S` micro-grid drift unless deliberately testing execution-noise behavior.
 
-Use precise labels:
+The active grid should represent meaningful ATR-scaled adverse movement, not M1 candle slicing.
 
-- semantic mismatch;
-- entry/direction failure;
-- exit/payoff failure;
-- capital-allocation failure;
-- transfer failure;
-- full-strategy failure.
+But do not jump to multi-hour spacing/horizons merely to raise BE recovery.
 
-One bad wrapper does not erase a supported upstream mechanism.
+The grid must solve the original V8 problem, not create a different strategy.
 
-## 13. Reading order
+## 16. BE semantics
+
+Weighted BE is primarily a rescue level.
+
+BE touch does not prove the original direction has restarted.
+
+Default behavior after rescue must not assume continuation.
+
+If continuation is traded after BE, require independent causal evidence and evaluate it as a separate action/tranche.
+
+## 17. Progress / TP semantics
+
+`+1S` is currently treated as meaningful directional progress, not automatically the final TP.
+
+The active protected-runner reference is around `+1.5S`, because that is roughly one H4 ATR-scale move and is economically more meaningful.
+
+Do not increase TP merely to improve backtest payoff.
+
+Any runner extension must be supported by continuation evidence.
+
+## 18. Campaign RR
+
+Always calculate risk over all filled tranches.
+
+Example current equal-size scaffold:
+
+    entry 1 = 0
+    entry 2 = -0.4S
+    entry 3 = -0.8S
+    hard boundary = -1.2S
+
+Equal `1:1:1` basket loss:
+
+    1.2 + 0.8 + 0.4 = 2.4S
+
+A +1.5S single initial-unit winner therefore has gross campaign reward/risk 0.625.
+
+Never report RR from first-entry price distance alone.
+
+## 19. Sizing research
+
+The immediate mandatory sizing controls are:
+
+Fixed:
+
+    1 : 1 : 1
+
+Decreasing:
+
+    1 : 0.5 : 0.25
+    1 : 0.5 : 0.5
+    1 : 0.25 : 0.25
+
+Martingale:
+
+    1 : 2 : 4
+
+Do not label martingale "better" based on BE-recovery rate.
+
+For martingale, maximum basket loss, exposure and margin are first-class metrics.
+
+## 20. Deep-adverse state
+
+The current key state is after the third tranche / about `-0.8S`.
+
+At this point the current exact-tick development population is approximately split between:
+
+- normal recovery to BE;
+- continued adverse move to hard loss.
+
+The research question is not another generic classifier.
+
+It is:
+
+    What is the action EV of HOLD?
+    What is the action EV of REDUCE?
+    What is the action EV of EXIT?
+    What is the action EV of FLIP?
+
+Report actual dollars for each.
+
+## 21. Wrong-direction / flip research
+
+Among eventual hard-loss campaigns, a large majority later produce a substantial move in the opposite direction.
+
+This is diagnostic evidence that many hard losses are true initial-direction mistakes.
+
+The future opposite move is never a causal input.
+
+Research may use only information available after the deep-adverse state to decide whether an opposite-direction flip has positive action EV.
+
+## 22. Sequential training
+
+For model-based decisions:
+
+2025 test:
+
+    train <= 2024
+
+2026 test:
+
+    retrain <= 2025
+    i.e. use 2024 + 2025
+
+Do not keep a 2024-only model through 2026 merely because the feature was normalized.
+
+Do not leak validation outcomes.
+
+## 23. Threshold discipline
+
+Discovery and validation are separate.
+
+Do not rescue a failed validation by moving the threshold.
+
+Do not freeze a threshold from one year, one P0/P2 realization or one small cell.
+
+Prefer broad economic plateaus over single-point peaks.
+
+## 24. Existing probability models
+
+Use existing V8 models when their semantics fit the action.
+
+Potential valid uses:
+
+- structural models as hazard context;
+- High-Q as continuation context;
+- P15 as campaign authorization / movement scale context.
+
+Invalid default uses:
+
+- micro3 as direct direction permission;
+- CLOSE_BROKEN as automatic exit;
+- High-Q as justification to move every existing TP farther;
+- P15 as multi-hour directional trend probability.
+
+## 25. Final strategy requirements
+
+The final strategy still needs:
+
+- realized WR >=50% as the baseline condition;
+- average winner/payoff meaningfully >1R under the final campaign-risk definition;
+- spread, commission and slippage-adjusted positive expectancy;
+- acceptable drawdown and loss streak;
+- robustness across independent GOLD periods;
+- adequate trade frequency;
+- no reliance on right-censored assumptions;
+- 2021 untouched until preregistered final validation.
+
+## 26. Reading order
 
 1. `HANDOFF_V8.md`
-2. `V8_EXECUTABLE_MAPPING_REVALIDATION_20260903.md`
-3. `DECISIONS_V8_EXECUTABLE_MAPPING_ADDENDUM_20260903.md`
-4. `DECISIONS_V8_RESEARCH_INFERENCE_GUARDRAILS_ADDENDUM_20260903.md`
-5. `V8_SEQUENTIAL_CAPITAL_ALLOCATION_RESEARCH_20260903.md`
-6. `V8_A_N_SLOW_PRACTICAL_MOVEMENT_CHARACTERIZATION_20260903.md`
-7. `V8_A_N_SLOW_DYNAMIC_STRUCTURAL_STATE_RESEARCH_20260903.md`
-8. `V8_A_N_SLOW_PERSISTENCE_RETENTION_RESEARCH_20260902.md`
-9. `V8_DIRECTIONAL_ECONOMIC_VIABILITY_FALSIFICATION_20260903.md`
-10. older V8 history only as needed.
+2. `RESEARCH_STATE_V8.md`
+3. `V8_ATR_GRID_DIRECTION_ERROR_ABSORBER_RESEARCH_20260904.md`
+4. `DECISIONS_V8_ATR_GRID_ADDENDUM_20260904.md`
+5. `V8_NEXT_GRID_SIZING_AND_WRONG_DIRECTION_CONTRACT_20260904.md`
+6. `V8_EXECUTABLE_MAPPING_REVALIDATION_20260903.md`
+7. `DECISIONS_V8_RESEARCH_INFERENCE_GUARDRAILS_ADDENDUM_20260903.md`
+8. `V8_SEQUENTIAL_CAPITAL_ALLOCATION_RESEARCH_20260903.md`
+9. older V8 history only as needed
 
-Always refresh GitHub HEAD first.
+Always refresh GitHub HEAD before continuing.
