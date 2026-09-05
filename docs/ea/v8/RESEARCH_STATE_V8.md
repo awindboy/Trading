@@ -1,11 +1,11 @@
 # V8 Research State
 
-Status: `ACTIVE / GRID STATIC SIZING + SIMPLE DEEP ACTION COMPLETE / NEXT PAYOFF-TRANSFORMATION RESEARCH`  
-Date: `2026-09-04`  
+Status: `ACTIVE / SCENARIO PORTFOLIO + P15-CENTERED STATE-TRANSITION / PERSISTENCE RESEARCH`  
+Date: `2026-09-05`  
 Production authority: `NONE`  
 Market: `GOLD# ONLY`  
 Untouched reserve: `GOLD# 2021`  
-Source Git HEAD before latest local synchronization package: `ba28a16be6751178549eab5a623f14b5ded38778`
+Source Git HEAD before this synchronization: `eb0daed45f8c2784d28599b954faba3ce2cd246c`
 
 ## 1. Current authority chain
 
@@ -13,142 +13,292 @@ Read in this order:
 
 1. `HANDOFF_V8.md`
 2. this file
-3. `V8_GRID_SIZING_DEEP_ACTION_RESULT_20260904.md`
-4. `DECISIONS_V8_GRID_SIZING_DEEP_ACTION_ADDENDUM_20260904.md`
-5. `V8_ATR_GRID_DIRECTION_ERROR_ABSORBER_RESEARCH_20260904.md`
-6. `DECISIONS_V8_ATR_GRID_ADDENDUM_20260904.md`
-7. `V8_NEXT_GRID_SIZING_AND_WRONG_DIRECTION_CONTRACT_20260904.md` as the completed preregistration/history for this stage.
+3. `V8_SCENARIO_GLASS_CEILING_RESEARCH_PRINCIPLES_20260904.md`
+4. `V8_EXTERNAL_DIRECTION_RESEARCH_SYNTHESIS_20260905.md`
+5. `V8_NEXT_P15_STATE_TRANSITION_PERSISTENCE_CONTRACT_20260905.md`
+6. `V8_SCENARIO_LAYER_PHASE0_RESULT_20260904.md`
+7. `V8_DIRECTIONAL_CHANGE_GLASS_CEILING_AUDIT_20260904.md`
+8. `DECISIONS_V8_SCENARIO_GLASS_CEILING_ADDENDUM_20260904.md`
+9. older V8/V3 history only as needed.
 
-Older V8 history remains useful only when needed to understand a preserved conclusion or failed branch.
+External literature is supporting evidence only. GitHub project evidence remains authority.
 
 ## 2. Stable upstream conclusions
 
-- P15/fresh75 is a near-term movement/excursion opportunity state, not a robust initial-direction signal.
-- ACCEPTANCE is a structural transition, not automatic direction/entry permission.
-- `micro3` remains structural-retention context.
-- High-Q remains sparse positive continuation evidence, not a broad initial direction gate.
-- movement onset remains more learnable than initial direction.
-- denominator/coverage collapse is not accepted as a solution.
-- M1 is not execution authority for multi-fill grid economics.
-- exact Bid/Ask tick chronology is mandatory for candidate grid P/L.
+- P15/fresh75 is a near-term movement/excursion opportunity state, not a robust universal direction signal.
+- movement onset is more learnable than broad initial direction.
+- ACCEPTANCE is structural, not automatic Entry permission.
+- High-Q is sparse continuation evidence, not a broad initial direction gate.
+- generic current-state/next-bar direction families remain failed/downgraded.
+- denominator/coverage collapse is not an accepted solution.
+- exact Bid/Ask tick chronology is mandatory for execution authority.
+- 2025 exact tick is unavailable.
 - GOLD# 2021 remains locked.
 
-## 3. P0 execution-population version note
+## 3. Population/data authority
 
-Prior synchronized docs listed P0 2024 fresh75 `653`.
+Current exact-execution development uses reproducible old P0 2024 fresh75:
 
-The old Phase-0 population has now been reconstructed with near-exact model parity and gives `648` events.
+    N = 648
 
-Per user instruction, current exact-execution development research proceeds on the reproducible `648` population.
+Prior synchronized `653` remains a documented historical mismatch.
 
-Do not silently mix 648 and 653. Do not rewrite unrelated historical counts without rebuilding them.
+Authoritative M1 SHA256:
 
-## 4. 2025 exact-tick status
+`626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
-Usable full-year 2025 exact tick is not available.
+2024 exact tick = development execution evidence.
 
-The sparse/incomplete uploaded 2025 package is not validation authority.
-
-Therefore current execution evidence remains 2024 development only. 2025 M1 can be descriptive; 2021 remains untouched.
-
-## 5. Current grid control
-
-Development control geometry:
-
-- weak causal 30m momentum direction;
-- entries `0 / -0.4S / -0.8S`;
-- fixed control sizing `1:1:1`;
-- hard boundary `-1.2S`;
-- weighted BE = rescue;
-- exact historical runner-protection semantics are not sufficiently preserved for new sizing parity.
-
-For the sizing-isolation study, `+1S` immediate exit was used strictly as an unambiguous execution control.
-
-## 6. Completed static sizing result
-
-Same-boundary exact tick:
-
-- fixed `1:1:1`: completed 542, censored 106, mean about `+$0.053`, PF about `1.015`;
-- `1:0.5:0.25`: mean about `-$0.307`;
-- `1:0.5:0.5`: mean about `-$0.237`;
-- `1:0.25:0.25`: mean about `-$0.515`;
-- `1:2:4`: mean about `-$0.331`, worst about `-$94.23`.
-
-Fixed remains the best tested static control.
-
-Static decreasing sizing and martingale are not promoted.
-
-## 7. Equal-risk extension
-
-Equalizing gross basket risk by widening decreasing boundaries did not beat fixed on pairwise complete events and introduced substantial schedule-dependent censoring.
-
-Do not promote the raw positive schedule-specific means.
-
-## 8. Deep-state action result
-
-Third fill / approximately -0.8S remains a meaningful diagnostic branchpoint, but not an automatic intervention trigger.
-
-Common deep-state action population showed:
-
-- HOLD future Q from deep state about `+$5.02`;
-- REDUCE_LATEST about `+$1.28`;
-- REDUCE_HALF_ALL about `+$2.51`;
-- EXIT `0` from the mark-to-market state;
-- FLIP about `-$1.39`.
-
-Unconditional HOLD was best.
-
-## 9. Five-minute causal model
-
-The first xmin/xmax implementation leaked future information and was invalidated.
-
-Corrected hard-loss discrimination was only moderate (~0.69 H1->H2), and expanding-quarter action-value stability failed.
-
-No 5-minute action model is frozen.
-
-## 10. Price-trigger action result
-
-Automatic REDUCE/EXIT/FLIP at `-0.9 / -1.0 / -1.1S` all reduced mean dollar value versus HOLD.
-
-At -1.1S, EXIT improved many individual paths but still worsened average EV because the sacrificed BE recoveries were larger.
-
-Permanent lesson:
-
-> P(hard loss) is not Q(action).
-
-## 11. Conditional hedge result
-
-A single-use one-unit opposite hedge opened at -1.0S and closed at -1.2S or -0.8S had:
-
-- ideal same-path zero-spread total about `+$21.94`;
-- actual Bid/Ask total about `-$9.82`.
-
-The gross edge was too thin to survive execution.
-
-Do not threshold/size-optimize this hedge on the same 2024 outcomes.
-
-## 12. Current conclusion
-
-The current static ATR-grid family has not solved V8's direction/payoff problem.
-
-The fixed control is not rejected as a diagnostic scaffold, but no tested sizing/action is production-worthy.
-
-The central economic obstacle is the asymmetric value of BE recovery versus remaining hard-boundary loss after deep adverse movement.
-
-## 13. Immediate next research
-
-Do not continue another threshold tournament on the same HOLD/EXIT family.
-
-Before opening P/L, preregister a genuinely different payoff-transformation mechanism whose purpose is:
-
-- preserve most normal-rotation recovery value;
-- create stronger convex protection against genuine opposite continuation than the failed one-unit hedge;
-- stay compatible with P15's near-term semantics;
-- avoid martingale tail growth;
-- report zero-cost same-path and actual Bid/Ask economics separately.
+2025/2026 M1 = screening/descriptive robustness only for the current scenario/state-transition work.
 
 No 2021 use.
 
-## 14. Production status
+## 4. Completed grid branch
+
+Static sizing/deep-action grid research is no longer primary.
+
+Rejected/downgraded:
+
+- decreasing sizing;
+- martingale;
+- equal-risk wider boundaries;
+- unconditional REDUCE/EXIT/FLIP;
+- simple adverse thresholds;
+- corrected five-minute action model;
+- single-use opposite hedge.
+
+Fixed `1:1:1` remains historical diagnostic control only.
+
+## 5. Permanent V3 bridge
+
+V3 contributes the semantic architecture:
+
+    higher auction/delivery state
+    x local event
+    x acceptance/failure
+
+V3 also contributes the core warning:
+
+    serial selectivity -> sparse population -> possible validation reversal
+
+Do not copy V3's complete strict Entry chain into V8.
+
+## 6. Permanent glass-ceiling rules
+
+For every new theory/representation:
+
+1. identify its common structural failure mode before P/L search;
+2. distinguish information-preserving representation from information-expanding input;
+3. require `Invariant before profitable`;
+4. report coverage/frequency and overlap with existing modules;
+5. compare gross structural edge with actual execution cost;
+6. reject validation rescue by threshold movement.
+
+## 7. Current Phase-0 scenario modules
+
+### BB persistent expansion + HTF alignment
+
+2024 exact tick:
+
+- N37 / completed32;
+- WR46.9%;
+- mean +0.0435R;
+- PF~1.10;
+- avg positive +1.040R.
+
+### Endogenous late ignition
+
+2024 exact tick:
+
+- N/completed28;
+- WR60.7%;
+- mean +0.134R;
+- PF~1.36;
+- avg positive +0.839R.
+
+M1 same-payoff screening remains positive across 2024/2025/2026, not execution validation.
+
+### Scheduled major macro reaction
+
+2024 exact tick:
+
+- N35 / completed33;
+- WR57.6%;
+- mean +0.120R;
+- PF~1.31;
+- avg positive +0.887R.
+
+Calendar = exogenous movement information. Direction requires surprise/reaction/acceptance work.
+
+## 8. Current 2024 exact-tick union
+
+One causal module per P15 campaign:
+
+- unique candidates 96;
+- completed 89;
+- censored 7;
+- wins 49 / losses 40;
+- WR 55.06%;
+- mean +0.1049R;
+- total +9.339R;
+- PF 1.262;
+- avg positive +0.9168R;
+- avg negative -0.8896R;
+- +1R checkpoints 47;
+- residual +2R hits 19.
+
+Promising development evidence only.
+
+The final average-winner requirement is unmet and independent exact-tick validation is absent.
+
+## 9. Current payoff control
+
+    risk = 0.25S
+    +1R survival checkpoint
+    -> realize 50%
+    -> residual BE
+    -> residual +2R
+
+This preserves the semantic split:
+
+    Entry survival != winner continuation
+
+Continuation beyond +2R thins materially. Do not stretch TP to force average winner >1R.
+
+## 10. Completed Directional Change audit
+
+`BROAD DC DIRECTION GATE = REJECTED / DOWNGRADED`
+
+3-scale alignment outside existing modules:
+
+- 2024 ~49.8%;
+- 2025 ~54.2%;
+- 2026 ~48.2%.
+
+DC representation remains nearly identical across natural 240/480/960-minute initialization windows.
+
+Conclusion:
+
+> stable representation != new directional information
+
+DC remains shadow context only unless a genuinely new causal interaction is preregistered.
+
+## 11. Updated external-evidence interpretation
+
+Verified outside evidence supports two simultaneous conclusions:
+
+### A. Short-horizon static direction can hit a friction ceiling
+
+Mesfin (2026) provides a directly relevant MNQ falsification example under walk-forward/friction criteria.
+
+### B. Price-only information is not declared exhausted
+
+The same study's positive controls are state/regime-transition oriented and use longer economic horizons.
+
+This does not authorize their rules for GOLD.
+
+It motivates a new target:
+
+    disturbance -> state transition -> persistence
+
+Time-series momentum literature separately supports the broader distinction between fresh-direction prediction and persistence of an established state.
+
+External research remains supporting evidence only.
+
+## 12. Current primary hypothesis
+
+After P15 movement ignition, a market transition may occur that is more informative than the static state at t0.
+
+Research object:
+
+    pre-state
+    -> P15 disturbance
+    -> transition geometry
+    -> post-state
+    -> persistence/failure
+
+The hypothesis is not that every P15 event becomes a trend.
+
+The goal is to identify whether certain broad transition families exist with stable direction-distance-lifetime relationships.
+
+## 13. State-transition audit boundaries
+
+Stage 1 is shadow-only.
+
+Frozen descriptor families:
+
+- activity/movement intensity;
+- directional efficiency;
+- balance/overlap;
+- value migration/acceptance proxies;
+- existing M30/H1/HTF state;
+- DC shadow path coordinates only.
+
+Do not use future observations as t0 features.
+
+Do not optimize state count or thresholds from P/L.
+
+If unsupervised states are used, map them by semantic descriptor centroids and test semantic stability across periods.
+
+## 14. Mandatory transition tests
+
+For each candidate transition:
+
+- denominator and coverage;
+- 2024 H1/H2 stability;
+- 2025/2026 M1 descriptive stability;
+- natural window/state-count perturbation;
+- static-state control;
+- simple momentum/breakout/fade control;
+- overlap/incremental information versus Late Ignition / BB Persistence / Macro;
+- persistence over natural ~15/30/60m horizons;
+- only later, executable timing and edge margin.
+
+If the result collapses back to V3-like scarcity through serial confirmations, downgrade it.
+
+## 15. Existing-module unification question
+
+Mandatory diagnostic:
+
+> Are Late Ignition, BB Persistence + HTF and Macro three manifestations of one state-transition mechanism, or genuinely distinct causes that should remain separate portfolio modules?
+
+Do not merge them because a cluster groups them.
+
+Cause identity and outcome-blind module definition remain important.
+
+## 16. Failed-auction positioning
+
+Failed auction is now a transition hypothesis inside this framework:
+
+    attempted expansion
+    -> persistence failure
+    -> reclaim toward prior value
+    -> opposite acceptance if causally observed
+
+It must beat simple breakout fade and must not become another serial filter chain.
+
+## 17. Parallel information-expanding lane
+
+Macro remains primary:
+
+    scheduled release
+    -> pre-event state
+    -> actual-consensus surprise when known
+    -> first reaction
+    -> acceptance/failure
+
+Potential COMEX/order-flow work remains separate and should resolve scenario meaning rather than become generic `OFI sign -> trade`.
+
+## 18. Immediate next research
+
+Execute the preregistered contract:
+
+`V8_NEXT_P15_STATE_TRANSITION_PERSISTENCE_CONTRACT_20260905.md`
+
+Do not open a new profitability tournament before completing the shadow transition/persistence audit.
+
+No 2021 use.
+
+## 19. Production status
 
 `NONE`
