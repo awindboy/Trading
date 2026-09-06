@@ -53,13 +53,7 @@ understanding the market
 predicting future direction
 !=
 making a good trade
-
-
-
-
-
-
-
+```
 V9 changes the primary research target from:
 
 > How can direction be predicted more accurately?

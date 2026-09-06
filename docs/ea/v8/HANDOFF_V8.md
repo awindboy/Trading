@@ -1,3 +1,11 @@
+> **V8 HANDOFF CLOSED FOR ACTIVE ROUTING — SUPERSEDED BY V9 — 2026-09-07**  
+> Preserve this file as the final active V8 handoff and predecessor research record.  
+> Do not continue active strategy research from the V8 next-step instructions below.  
+> Current active research starts from `docs/ea/v9/AGENTS_V9.md` and `docs/ea/v9/HANDOFF_V9.md`.  
+> All V8 results, failures, controls, and research contracts remain valid historical evidence.  
+> Production authority remains `NONE`.
+
+
 # V8 Development Handoff
 
 Last updated: `2026-09-05`  

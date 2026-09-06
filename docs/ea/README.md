@@ -1,10 +1,16 @@
+> **CURRENT ACTIVE STRATEGY RESEARCH — V9 — 2026-09-07**  
+> Current strategy research resumes from `docs/ea/v9/AGENTS_V9.md` and `docs/ea/v9/HANDOFF_V9.md`.  
+> V8 and all earlier generations remain preserved historical research and implementation evidence.  
+> V9 production authority: `NONE`.  
+> `GOLD# 2021` remains untouched final temporal reserve.
+
 # EA Development Documentation
 
 이 디렉터리는 `Trading` 저장소의 deterministic MT5 EA 개발·검증·전략 연구 상태를 장기간 유지하기 위한 영속 문서 계층이다.
 
 대화 기록이나 특정 AI 세션의 기억이 아니라, 이 저장소의 최신 문서를 프로젝트 상태의 기준으로 사용한다.
 
-Last reviewed for current research state: 2026-08-20.
+Last reviewed for current research state: 2026-09-07.
 
 ## Authority Order
 

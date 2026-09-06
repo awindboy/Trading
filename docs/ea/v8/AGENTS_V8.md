@@ -1,3 +1,10 @@
+> **V8 ACTIVE RESEARCH SUPERSEDED BY V9 — 2026-09-07**  
+> This document remains authoritative for preserved V8 research contracts, evidence, negative controls, and historical decisions.  
+> It is no longer the active strategy-research routing document.  
+> Current active research resumes from `docs/ea/v9/AGENTS_V9.md` and `docs/ea/v9/HANDOFF_V9.md`.  
+> V9 does not invalidate V8 findings; it changes the primary research objective after separating market understanding, directional prediction, and trade quality.  
+> Do not resume new V8 threshold/model research unless V9 explicitly reopens a V8 question.
+
 # V8 Research Instructions
 
 Status: `ACTIVE / GOLD P15 SCENARIO PORTFOLIO + STATE-TRANSITION / GLASS-CEILING RESEARCH`  

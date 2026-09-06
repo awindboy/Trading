@@ -1,3 +1,23 @@
+> **V9 ACTIVE RESEARCH ROUTING — 2026-09-07 / HUMAN-LIKE MARKET REPLAY · DECISION CORRIDOR · PAPER TRADING**  
+> Current active strategy research uses `docs/ea/v9/AGENTS_V9.md` and `docs/ea/v9/HANDOFF_V9.md`.  
+> V9 preserves V8 and all earlier generations as historical research evidence, controls, and implementation history; it does not rewrite them as invalid.  
+> V9 changes the primary research problem from universal direction prediction toward trade decision quality under uncertainty.  
+> Core separation: `market understanding != direction prediction != good trade`.  
+> Current research uses adaptive multi-timeframe chart replay, sparse active market memory, counterfactual thesis dependence, structural falsification, next active memory, and Decision Corridor reasoning.  
+> No V9 EA or production authority exists. `GOLD# 2021` remains untouched final temporal reserve.
+>
+> **V9 startup order:**  
+> 1. refresh latest GitHub HEAD;  
+> 2. read `docs/ea/v9/AGENTS_V9.md`;  
+> 3. read `docs/ea/v9/HANDOFF_V9.md`;  
+> 4. read `docs/ea/v9/RESEARCH_STATE_V9.md`;  
+> 5. read `docs/ea/v9/V9_MANUAL_CHART_REPLAY_MARKET_MEMORY_AND_DECISIONS_20260907.md`;  
+> 6. read `docs/ea/v9/DECISIONS_V9.md`;  
+> 7. read `docs/ea/v9/V9_PAPER_TRADING_JOURNAL_20260907.md`.  
+>
+> The older V8/V7/V6 routing blocks below are preserved historical routing records and must not override the V9 routing above.
+
+
 > **V8 ACTIVE ROUTING — 2026-08-30 / CAUSAL CHART REPRESENTATION · EVENT-ANCHORED ACTION POLICY**  
 > Active strategy research uses `docs/ea/v8/AGENTS_V8.md` and `docs/ea/v8/HANDOFF_V8.md`.  
 > V8 does not force ambiguous `TREND/RANGE/BREAKOUT/BASIC/TURNING` labels into rule authority.  
