@@ -2,12 +2,12 @@
 
 Last updated: `2026-09-07`
 Status: `ACTIVE V9`
-Current phase: `DECISION CORRIDOR ENTRY CONTROL -> H4-NORMALIZED EXIT/DISTANCE -> SEQUENTIAL CONTINUATION / OPEN-ROUTE SHADOW RESEARCH`
+Current phase: `GOOD-ATTEMPT PHILOSOPHY -> PARENT JOURNEY CONTINUITY -> CHILD OPPORTUNITY REPLAY`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
 Untouched reserve: `GOLD# 2021`
-Expected Git base for this update: `0880cafaac8752e2976ca970244dab6a215955d9`
+Expected Git base for this update: `737392e824927f478270aec89cfea27bffaefbc6`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
 ## 1. Resume order
@@ -17,23 +17,23 @@ Every V9 session must:
 1. refresh latest GitHub HEAD;
 2. read `docs/ea/v9/AGENTS_V9.md`;
 3. read this file;
-4. read `docs/ea/v9/RESEARCH_STATE_V9.md`;
-5. read `docs/ea/v9/V9_MANUAL_CHART_REPLAY_MARKET_MEMORY_AND_DECISIONS_20260907.md`;
-6. read `docs/ea/v9/DECISIONS_V9.md`;
-7. read `docs/ea/v9/DECISIONS_V9_ADDENDUM_20260907.md`;
-8. read `docs/ea/v9/V9_PAPER_TRADING_JOURNAL_20260907.md`;
-9. read `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_EXIT_DISTANCE_OPEN_ROUTE_20260907.md`;
-10. use the latest relevant result documents under `docs/ea/v9/results/`;
-11. use V8 only as preserved upstream evidence/controls where V9 explicitly needs it;
-12. inspect raw data before any new replay.
+4. read `docs/ea/v9/V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md`;
+5. read `docs/ea/v9/RESEARCH_STATE_V9.md`;
+6. read `docs/ea/v9/V9_MANUAL_CHART_REPLAY_MARKET_MEMORY_AND_DECISIONS_20260907.md`;
+7. read `docs/ea/v9/DECISIONS_V9.md`;
+8. read `docs/ea/v9/DECISIONS_V9_ADDENDUM_20260907.md`;
+9. read `docs/ea/v9/DECISIONS_V9_MINDSET_ADDENDUM_20260907.md`;
+10. read `docs/ea/v9/V9_PAPER_TRADING_JOURNAL_20260907.md`;
+11. read `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_PARENT_JOURNEY_OPPORTUNITY_20260907.md`;
+12. read the latest relevant result documents under `docs/ea/v9/results/`, especially `V9_PARENT_JOURNEY_ANATOMY_20260907.md` and `V9_EXIT_DISTANCE_SHADOW_AUDIT_20260907.md`;
+13. use V8 only as preserved upstream evidence/controls where V9 explicitly needs it;
+14. inspect raw data before any new replay.
 
 GitHub is the Single Source of Truth. Chat history is a workbench.
 
 ---
 
-## 2. Why V9 exists
-
-Permanent distinction:
+## 2. Permanent V9 separation
 
 ```text
 market understanding
@@ -43,31 +43,29 @@ direction prediction
 good trade
 ```
 
-V9 asks whether incomplete but causally disciplined market understanding can find trades where:
+V9 does not need to know the final direction, top, bottom, or total trend length before trading.
+
+The practical objective is:
 
 ```text
-wrong thesis -> observable relatively nearby
-right thesis -> meaningful structural route
+good opportunity
++
+meaningful nearby falsification
++
+execution discipline
++
+continued availability for the next opportunity
 ```
 
-The working object remains the `Decision Corridor`:
+The active philosophical authority is the baseball-hitter mindset:
 
-```text
-Falsification Anchor
-        ^
-        |
-   Current Price
-        |
-        | open route
-        v
-Next Active Memory / Open Route
-```
+> We do not know whether a good swing becomes a home run, single, or out. We work on recognizing pitches worth swinging at, taking the best attempt available, accepting misses, and staying able to participate if the market journey continues.
 
-No V9 EA or production strategy exists.
+Do not regress into research whose hidden goal is to make direction certainty high enough to feel comfortable.
 
 ---
 
-## 3. Stable market-reading principles retained
+## 3. Stable market-reading principles
 
 Retain:
 
@@ -77,8 +75,15 @@ boundary crossing != value translation
 reaction != rejection
 destination != reversal
 direction correctness != trade quality
-later same-direction movement cannot rescue an invalidated thesis
+later same-direction movement cannot rescue an invalidated child thesis
 abrupt traversal != automatic continuation
+```
+
+New permanent distinctions:
+
+```text
+invalidated child thesis != invalidated parent journey
+winning child trade != proof of parent journey direction
 ```
 
 Also retain:
@@ -87,17 +92,20 @@ Also retain:
 - sparse active memory;
 - parent/child hierarchy;
 - counterfactual thesis dependence;
-- failed repair as a process hypothesis, not a pattern rule;
+- failed repair as process language, not a pattern rule;
 - NO TRADE / NOT YET as successful decisions;
-- manage thesis, not unrealized P/L.
+- manage the thesis, not unrealized P/L;
+- no hindsight rescue.
 
 ---
 
-## 4. January 2026 discretionary development replay
+## 4. What January replay established
 
-Evidence class: `DISCRETIONARY / CONTAMINATED DEVELOPMENT`, not OOS validation.
+### January 2026
 
-Trades recorded:
+Evidence: `DISCRETIONARY / CONTAMINATED DEVELOPMENT`.
+
+Recorded trades:
 
 | Trade | Direction | Entry | Structural outcome | Descriptive result |
 |---|---|---:|---|---:|
@@ -109,102 +117,39 @@ Trades recorded:
 | V9-PAPER-006 | SHORT | ~4589.27 | weekend-gap / execution-censored failure | ~-3.36R first-print mark only |
 | V9-PAPER-007 | SHORT | ~5512.62 | destination resolved | +1.42R |
 
-Six destination-resolved examples sum to ~`+10.38R` descriptively. Do not report a validated WR/PF/expectancy. PAPER-006 has no exact executable loss because the structural invalidation was crossed during market closure.
+Six destination-resolved examples sum to ~`+10.38R` descriptively. Never report this as validated WR/PF/expectancy.
 
-Important lessons:
+### January 2025
 
-- waiting for repair can improve entry geometry;
-- memory role can invert after genuine restoration;
-- `touch/penetration != genuine restoration`;
-- structural falsification can be close while executable gap risk is not;
-- large parent scars can become tradeable only after smaller child repair creates a nearer counterfactual anchor;
-- price discovery produced many obvious directional moves that the original known-destination contract could not trade.
+Evidence: `PERIOD-TRANSFER DEVELOPMENT / NOT UNTOUCHED OOS`.
 
-Detailed replay: `results/V9_CAUSAL_REPLAY_202601.md`.
-
----
-
-## 5. January 2025 period-transfer replay
-
-Evidence class: `PERIOD-TRANSFER DEVELOPMENT / NOT UNTOUCHED OOS`.
-
-Full January was replayed with the same qualitative V9 contract.
-
-Result:
+Full month replay produced one actual trade:
 
 ```text
-actual trades: 1
 2025JAN-PAPER-001 LONG
 entry ~2653.74
 falsification ~2649-2650 genuine re-loss
-first destination ~2660-2663
 exit ~2649.32
-descriptive result ~-1.04R
+~ -1.04R descriptive
 ```
 
-The market later rallied above the original destination. This does not rescue the invalidated trade; the later rise is a new episode.
+The later rally does not rescue the invalidated child trade.
 
-Dominant environment:
-
-- balance / node-internal travel;
-- direction becoming clear only after the first bridge was mostly consumed;
-- frequent nearby active memories;
-- price discovery without a known destination;
-- substantially fewer tradeable Decision Corridors than January 2026.
-
-Key conclusion:
-
-> market-reading discipline transferred better than trade production/performance.
-
-Do not call V9 period-robust yet.
-
-Detailed replay: `results/V9_CAUSAL_REPLAY_202501.md`.
+The month contained many large directional journeys but few tradeable corridors under the original contract.
 
 ---
 
-## 6. Deep January review
+## 5. H4 ATR distance correction
 
-The 2025/2026 comparison supports:
-
-- `direction correctness != trade quality` across both periods;
-- causal hygiene around invalidation and later same-direction moves;
-- structural role-change / repair as promising discretionary information.
-
-It also exposes unresolved risks:
-
-1. `genuine restoration` is still subjective;
-2. `active vs consumed memory` can change room/destination selection materially;
-3. parent context may be partly narrative unless its actual decision effect is recorded;
-4. price discovery is a real blind spot of the original corridor;
-5. execution continuity must be separate from structural risk;
-6. 2026 results are strongly contamination-sensitive.
-
-See `results/V9_JAN_2025_2026_DEEP_REVIEW_20260907.md`.
-
----
-
-## 7. Distance architecture correction — H4 ATR coordinate
-
-V8 evidence established that fixed-point movement has unstable meaning across volatility regimes. V9 now uses the same slow coordinate for research:
+Use only as a coordinate:
 
 ```text
-S(t) = Wilder ATR14 of the immediately previous fully completed H4 bar
+S(t) = previous fully completed H4 Wilder ATR14
 ```
 
-`S` is a coordinate system, not the thesis, SL, TP, or entry gate.
+Do not derive fixed SL/TP/trend thresholds from S.
 
-For every candidate record:
-
-```text
-Risk/S
-FirstCheckpoint/S
-nearest intervening memory/S
-later route distances/S when relevant
-```
-
-Exact reconstructed S values for the January trades are documented in the Exit/Distance audit.
-
-The completed 2026 winners generally reached CP1 after only about `0.29-0.44S`; their strong R came mainly from close structural invalidation rather than capturing a large fraction of the volatility episode.
+Exact January work showed several 2026 winners reached first checkpoint after only ~`0.29-0.44S`. Their good R came mainly from close local invalidation, not from capturing a large market-scale move.
 
 Therefore:
 
@@ -212,89 +157,156 @@ Therefore:
 high R != large market-scale winner
 ```
 
+This remains important, but distance architecture is no longer the deepest problem.
+
 ---
 
-## 8. Exit architecture shadow audit
+## 6. Exit audit retained
 
 Control A:
 
 ```text
-100% exit at first natural destination / CP1
+100% exit at first checkpoint / natural destination
 ```
 
-Neutral challenger C:
+Neutral 50/50 original-structure runner challenger:
 
 ```text
-50% exit at CP1
-50% remain under original structural management
+A sum +8.861R
+C sum +4.758R
+C-A   -4.104R
 ```
 
-Same five CP1-reached audit rows:
+Do not tune the partial ratio to rescue the challenger.
+
+Available post-CP1 MFE existed, but slow structural recognition gave back much of it.
+
+Retain:
 
 ```text
-A sum  = +8.861R
-C sum  = +4.758R
-C - A  = -4.104R
+available MFE != captured runner profit
 ```
 
-C is therefore downgraded. Do not tune the partial ratio to rescue it.
+and `capture latency` as an exit problem.
 
-Crucial finding:
-
-```text
-large favorable MFE existed after CP1
-!=
-slow structural runner captured it
-```
-
-The core exit problem is now `capture latency`: continuation/rejection may only become obvious after much of the favorable excursion has been given back.
-
-Keep CP1 full-exit as the current comparison control, not as final production authority.
-
-See `results/V9_EXIT_DISTANCE_SHADOW_AUDIT_20260907.md`.
+CP1 full exit remains comparison control, not final production authority.
 
 ---
 
-## 9. Revised continuation research
+## 7. Parent Journey archaeology changed the research priority
 
-Do not solve the problem by simply widening TP or holding a passive runner.
+Outcome-informed January H1/H4 archaeology showed large market journeys on the order of roughly `5S` to `20S+`, while local V9 checkpoints often captured only fractions of `1S`.
 
-Primary challenger becomes:
+The deeper limitation is now understood as:
 
 ```text
-bridge 1 reaches CP1
--> original trade resolves / control exits
--> observe whether CP1 is actually consumed
--> wait for a NEW thesis-dependent falsification
--> verify intervening memory / room in H4 ATR coordinates
--> take a NEW continuation trade only if a new Decision Corridor exists
+CONTINUITY ARCHITECTURE
 ```
 
-This preserves the best original entry's realized profit while allowing large winners to emerge as sequential bridges.
+Original V9 often did:
 
-`consumed memory` alone is not enough for a re-entry.
+```text
+market read
+-> good local trade
+-> local trade resolved
+-> near-reset of larger market story
+```
+
+This made child/transit memories behave like terminal destinations and caused V9 to miss repeated participation in larger journeys.
+
+See `results/V9_PARENT_JOURNEY_ANATOMY_20260907.md`.
+
+This archaeology is not a trend algorithm and has no validation authority.
 
 ---
 
-## 10. Open-route / price-discovery research
+## 8. Parent Journey is a working belief, not a trend oracle
 
-Original V9 often treated:
+Do not freeze a mechanical `UPTREND / DOWNTREND / RANGE` label.
+
+Maintain a sparse working story such as:
+
+```text
+upward journey remains more coherent
+recent counterflow materially damaged it
+opposing route has not yet taken control
+uncertainty remains
+```
+
+Update only when new behavior materially changes that story.
+
+Parent Journey exists to preserve continuity of understanding across local trade resolution.
+
+It must not become a hidden direction gate.
+
+---
+
+## 9. Two-ledger research protocol
+
+### Parent Ledger
+
+Write only when the larger working belief materially changes.
+
+Record:
+
+- current parent story;
+- why it remains coherent;
+- major damage/counterflow;
+- whether that damage repaired;
+- what would materially change the story;
+- uncertainty;
+- change from previous parent entry.
+
+### Child Trade Ledger
+
+Continue the existing V9 local trade contract:
+
+- direction;
+- local route;
+- entry;
+- local falsification;
+- first checkpoint / open route;
+- Risk/S and checkpoint/S where useful;
+- uncertainty;
+- result.
+
+Add the mandatory question:
+
+> Did this child result materially change the parent story? Why or why not?
+
+---
+
+## 10. Large opportunity as campaign, not prophecy
+
+V9 does not need to predict or hold a +100 / +300 / +800 GOLD move from exact origin to exact end.
+
+A large opportunity may be captured as:
+
+```text
+Parent Journey
+   +-- good child attempt A -> resolved
+   +-- good child attempt B -> resolved
+   +-- good child attempt C -> resolved
+```
+
+The trader should remain available for the next good pitch while the parent story remains coherent.
+
+Do not force every trade to become a runner.
+Do not force frequency merely because a parent journey exists.
+
+---
+
+## 11. Open-route research remains active but subordinate to good location
+
+Downgraded simplification:
 
 ```text
 no known destination -> NO TRADE
 ```
 
-This is now downgraded.
-
-New descriptive state:
+Descriptive state:
 
 ```text
-last meaningful directional memory consumed
-+
-full causal history checked
-+
-no meaningful overhead/downstream active memory
-=
 OPEN ROUTE / PRICE DISCOVERY
 ```
 
@@ -304,49 +316,57 @@ But:
 PRICE DISCOVERY != TRADE
 ```
 
-A trade still requires:
+A good attempt still requires an earned, thesis-dependent local anchor and acceptable location.
 
-- no breakout chase;
-- a pullback/repair or otherwise earned local structure;
-- a nearby **thesis-dependent** falsification anchor;
-- H4-normalized risk/room documentation;
-- no fabricated micro-anchor merely to improve R.
-
-Strong archaeology example: 2026-01-20 after ~4690 consumption. A 07:15 pullback remained above the consumed memory, giving a reconstructed risk of only ~`0.193S` before a major continuation.
-
-Weak-geometry counterexample: 2025-01-30 after ~2785 consumption; using the genuinely thesis-dependent old boundary gave ~`0.699S` risk despite later upside.
-
-These are development archaeology examples only. Seek negative open-route examples deliberately.
+2026-01-20 remains positive archaeology; 2025-01-30 remains weaker-geometry contrast.
 
 ---
 
-## 11. Current immediate research contract
+## 12. Mandatory anti-drift guardrail
 
-Read `V9_NEXT_RESEARCH_CONTRACT_EXIT_DISTANCE_OPEN_ROUTE_20260907.md` before doing new replay.
+Before adding a new rule/model/threshold/label, ask:
 
-The immediate work is:
+1. Are we secretly trying to solve direction instead of trade quality?
+2. Are we converting a useful description into supposed objective truth?
+3. Are we fitting one example?
+4. Are we confusing child outcome with parent state?
+5. Are we demanding certainty a real trader would not need?
+6. Are we ignoring a good pitch because final destination is unknown?
+7. Are we taking a bad pitch because a large move looks obvious?
+8. Are we optimizing outcome rather than quality of attempt?
 
-1. keep original V9 entry logic as control;
-2. use previous-completed H4 ATR14 for distance descriptions;
-3. retain CP1 full exit as Exit Control A;
-4. do **not** promote the 50/50 runner;
-5. study `exit -> earned continuation re-entry` as the main continuation challenger;
-6. open `OPEN ROUTE` as a separate discretionary research family;
-7. prerecord what exactly counts as genuine restoration/invalidation;
-8. record what parent context actually changes;
-9. seek losses, failed consumption, false open routes, and bad re-entries deliberately;
-10. keep GOLD# 2021 locked.
+If yes, return to replay rather than formalize.
 
 ---
 
-## 12. Formalization gate remains closed
+## 13. Immediate next research
 
-Do not code a V9 strategy or EA until:
+Read `V9_NEXT_RESEARCH_CONTRACT_PARENT_JOURNEY_OPPORTUNITY_20260907.md`.
 
-- more independent discretionary wins/losses/no-trades exist;
-- open-route negatives exist;
-- restoration and memory-consumption language is reproducible across sessions;
-- another AI/session can identify substantially similar anchors/CPs from hidden-future charts;
-- exit/re-entry semantics stop changing after each small sample.
+Priority:
+
+1. future-hidden sequential replay;
+2. maintain Parent Ledger separately from Child Trade Ledger;
+3. preserve existing local entry logic as a control, not immutable dogma;
+4. preserve CP1 full exit as local comparison control while continuity is studied;
+5. seek child loss + parent survival, child win + parent failure, counter-parent child wins, repaired parent damage, genuine parent switches, false open routes, and large moves with no good local pitch;
+6. use previous-completed H4 ATR only as a distance coordinate;
+7. do not optimize trend labels, direction accuracy, partial percentages, ATR multiples, or January P/L;
+8. test whether independent sessions maintain broadly comparable parent stories without requiring exact labels;
+9. keep GOLD# 2021 locked.
+
+---
+
+## 14. Formalization gate remains closed
+
+Do not code a V9 strategy/EA until:
+
+- multiple future-hidden parent campaigns exist;
+- positive and negative child/parent combinations exist;
+- parent belief does not become a hidden direction classifier;
+- child invalidation vs parent change remains stable across sessions;
+- independent sessions produce substantially comparable causal stories;
+- opportunity selection improves without definitions changing after each outcome;
+- later exact execution work is possible.
 
 Production status: `NONE`.
