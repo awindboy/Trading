@@ -1,892 +1,357 @@
-# V9 Research Instructions
+# V9 Research Instructions — Current Authority
 
-Status: `ACTIVE / HUMAN-LIKE CHART REPLAY + DECISION CORRIDOR + DISCRETIONARY PAPER-TRADING RESEARCH`  
-Generation: `V9`  
-Last synchronized: `2026-09-07`  
-Production authority: `NONE`  
-EA authority: `NONE`  
-Market: `GOLD# ONLY`  
-Untouched final temporal reserve: `GOLD# 2021`  
-V8 predecessor Git HEAD: `14e67d26ef1a896a37e52a64dfedbbf1b1bba913`
+Last synchronized: `2026-09-09`
+Status: `ACTIVE / MARCH+APRIL CONSUMED / MAY HARD-SL + CAMPAIGN-HEALTH REPLAY`
+Production authority: `NONE`
+EA authority: `NONE`
+Market: `GOLD# ONLY`
+Untouched final temporal reserve: `GOLD# 2021`
+Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
-## 1. Why V9 exists
+## 1. Authority and resume order
 
-V9 is not a declaration that V1-V8 were irrational, meaningless, or simply wrong.
-
-The previous generations investigated many theoretically coherent market ideas:
-
-- deterministic market structure;
-- liquidity / OB / FVG / sweep / CHoCH;
-- higher-timeframe delivery and auction state;
-- local acceptance / failure;
-- entry survival;
-- winner continuation;
-- exit architecture;
-- AI-native context representations;
-- Double-B / KTR;
-- H/L scenario families;
-- P15 movement probability;
-- grid and deep-adverse campaign management;
-- scenario portfolios;
-- Directional Change;
-- price-only state transition / persistence;
-- scheduled macro events.
-
-Several of these produced genuine research findings and some produced positive development economics.
-
-The reason for a new version is deeper.
-
-Repeated testing showed that no representation studied so far gives the project a reliable right to know future GOLD direction with high precision.
-
-This does not mean:
-
-- markets are random;
-- structure is useless;
-- every previous version was wrong;
-- direction contains no information.
-
-It means three problems must be permanently separated:
-
-```text
-understanding the market
-!=
-predicting future direction
-!=
-making a good trade
-```
-V9 changes the primary research target from:
-
-> How can direction be predicted more accurately?
-
-to:
-
-> Given incomplete market knowledge, can we identify situations where being wrong becomes observable relatively nearby while being right leaves a materially larger structural route?
-
-This is `decision sufficiency`, not omniscience.
-
----
-
-## 2. Permanent V9 principle
-
-A good trade does not require:
-
-* the ultimate market direction;
-* the final top or bottom;
-* a complete causal model of every price move;
-* identification of the exact institutional actor;
-* certainty;
-* a complete map of every historical swing or node.
-
-A V9 trade requires enough causal information to answer:
-
-1. What current route or local thesis is being traded?
-2. What observable market behavior would make that thesis wrong?
-3. If the thesis survives, where is the next meaningful place to reassess?
-4. Is the asymmetry between falsification and available structural route attractive enough?
-
-The project is allowed to say:
-
-```text
-I do not know what GOLD ultimately does.
-I know enough about this local decision to trade or not trade.
-```
-
----
-
-## 3. Authority and resume order
-
-GitHub is the project's permanent memory.
-
-ChatGPT conversation is the workbench.
+GitHub is permanent memory. Chat history is a workbench.
 
 Every new V9 session must:
 
-1. refresh Git HEAD;
-2. read `docs/ea/v9/AGENTS_V9.md`;
-3. read `docs/ea/v9/HANDOFF_V9.md`;
-4. read `docs/ea/v9/RESEARCH_STATE_V9.md`;
-5. read `docs/ea/v9/V9_MANUAL_CHART_REPLAY_MARKET_MEMORY_AND_DECISIONS_20260907.md`;
-6. read `docs/ea/v9/DECISIONS_V9.md`;
-7. read the V9 paper-trading journal;
-8. use V8/V3 documents as preserved upstream research evidence and controls;
-9. never let conversation memory override newer GitHub state.
+1. refresh latest GitHub HEAD;
+2. read root `AGENTS.md` and `docs/ea/HANDOFF.md` only for routing/context;
+3. read this file;
+4. read `docs/ea/v9/HANDOFF_V9.md`;
+5. read `docs/ea/v9/RESEARCH_STATE_V9.md`;
+6. read `docs/ea/v9/V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md` for stable mindset;
+7. read `docs/ea/v9/V9_MANUAL_CHART_REPLAY_MARKET_MEMORY_AND_DECISIONS_20260907.md` for retained vocabulary/history;
+8. read `docs/ea/v9/DECISIONS_V9_APR25_PIPELINE_ADDENDUM_20260909.md`;
+9. read `docs/ea/v9/results/V9_APR25_COMPLETION_AND_PIPELINE_POSTMORTEM_20260909.md`;
+10. read `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_MAY25_20260909.md`;
+11. read `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_MAY25_HARD_SL_CAMPAIGN_HEALTH_20260909.md` before advancing May;
+12. inspect authoritative raw data and causal replay state before revealing new future data.
 
-V8 remains research history and evidence authority for its own experiments.
+Documents whose name begins `V9_NEXT_RESEARCH_CONTRACT_` but are explicitly marked `SUPERSEDED` are historical pointers only and have no current trading authority.
 
-V9 supersedes V8 only as the active research direction.
-
----
-
-## 4. Market and data authority
-
-Scope:
-
-```text
-GOLD# ONLY
-```
-
-Authoritative M1 source used in late V8/V9:
-
-```text
-GOLD#_M1_202201030100_202608282357.csv
-SHA256:
-626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2
-```
-
-Data boundaries:
-
-* 2024 exact Bid/Ask tick data exists and is development execution evidence.
-* Known active tick gaps are censored when M1 proves the market traded through the gap.
-* 2025 exact tick is unavailable. Treat it as absent.
-* 2025 and 2026 M1 may be used for descriptive/replay research.
-* M1 is not exact execution authority where intrabar chronology matters.
-* GOLD# 2021 remains untouched final temporal reserve.
-
-Do not silently convert M1 replay economics into spread/slippage-adjusted strategy claims.
+The separate V10 experiment is not V9 authority.
 
 ---
 
-## 5. V9 does not begin with code
+## 2. Permanent objective
 
-Required order:
+V9 does not seek a market oracle.
 
 ```text
-manual chart replay
--> historical archaeology
--> matched success/failure comparisons
--> counterexamples
--> revised market language
--> blind/sequential replay
--> discretionary paper trading
--> trade journal
--> stable decision rubric
--> only then formalization
--> only then code / shadow instrumentation
--> only then EA / exact execution
+market understanding
+!=
+direction prediction
+!=
+good trade
 ```
 
-Do not answer every market idea by immediately building:
+The target trader:
 
-* an indicator;
-* a classifier;
-* a score;
-* a threshold;
-* a veto;
-* an entry gate;
-* an EA;
-* a P/L tournament.
+```text
+selects worthwhile pitches
++ enters with a precommitted bounded loss
++ lets a child thesis fail without automatically killing the parent story
++ distinguishes another Child attempt from the previous failure using contemporaneous market information
++ participates materially when a larger journey develops
++ recognizes campaign deterioration without pretending to know the final top/bottom
+```
 
-Early code may only assist with:
-
-* retrieving dates;
-* aggregating M1 into chart timeframes;
-* rendering charts;
-* hiding future data;
-* indexing episodes;
-* chronology.
-
-Fixed-N retrieval screens are retrieval tools, not market definitions.
+A good trade may lose. A losing trade is not automatically a bad decision.
 
 ---
 
-## 6. Human-like adaptive resolution
+## 3. Stable market language
 
-Humans do not necessarily inspect a fixed number of bars.
-
-If meaningful history is too far away on M5, change resolution:
+Retain:
 
 ```text
-M5
--> M15
--> H1
--> H4
--> D1
-```
-
-Higher timeframe is not merely another trend filter.
-
-It is historical compression.
-
-The correct question is not:
-
-> What happened in the last 100 / 240 / 1000 bars?
-
-It is:
-
-> How far back, and at what resolution, must I look to understand the history still relevant to current price?
-
-Do not freeze V9 into a single timeframe.
-
----
-
-## 7. Sparse active memory
-
-The conceptual `Market Memory Graph` remains useful:
-
-```text
-accepted regions = nodes
-directional journeys = edges
-```
-
-But do not build an exhaustive graph of every swing.
-
-That recreates AI-style over-modeling.
-
-For a current trade decision, the trader usually needs only a sparse set of active memories:
-
-* current child structure;
-* relevant parent structure;
-* the area whose restoration would falsify the current route thesis;
-* the next meaningful destination.
-
-Everything else can remain ignored until relevant.
-
----
-
-## 8. Core chart vocabulary
-
-These are reasoning tools.
-
-They are not frozen algorithmic states.
-
-### Candidate area
-
-A temporary staging / two-way area that may later become important.
-
-A pause is not automatically a node.
-
-### Accepted region / node
-
-An area that has demonstrated meaningful two-way business and/or supported a subsequent route.
-
-Balance does not mean low volatility or narrow compression.
-
-A wide multi-week range can be a major accepted region.
-
-### Launch memory
-
-A prior candidate area may gain structural meaning after a later causally observed departure materially changes the route.
-
-This is not look-ahead if the trader waits until the departure has already happened before granting the old area authority.
-
-### Active memory
-
-A historical area that still has functional relevance to the current route.
-
-### Consumed / merged memory
-
-A former structure whose old function has been sufficiently reaccepted/traded through that it no longer governs the current decision.
-
-### Parent / child structure
-
-Market structures are hierarchical.
-
-A local H1/M5 child can exist inside an H4/D1 parent journey.
-
-### Journey / edge / route
-
-Directional translation between relevant memories.
-
-### Departure / transit / arrival
-
-The same local chart pattern can have different meaning according to where it occurs in the larger journey.
-
-### Destination
-
-The next meaningful active memory where the current trade question should be reassessed.
-
-Destination does not imply automatic reversal.
-
-### Reaction
-
-Opposite-direction movement occurred.
-
-### Rejection
-
-The tested side failed functionally enough to change the route interpretation.
-
-Therefore:
-
-```text
+Role > Pattern
 reaction != rejection
+destination != reversal
+boundary crossing != value translation
+direction correctness != trade quality
+later same-direction movement cannot rescue an invalidated child thesis
+invalidated child thesis != invalidated parent journey
+winning child trade != proof of parent direction
+high R != large market-scale capture
 ```
 
-### Settlement ladder
-
-Track where the market repeatedly forms temporary accepted centers after disturbance.
-
-Example recovery:
+Core hierarchy:
 
 ```text
-4100 -> 4120 -> 4140 -> 4170
+PARENT JOURNEY        H1/H4 strategic continuity
+CHILD ROUTE           M15/H1 current attempt / repair / continuation
+EXECUTION STRUCTURE   M5/M15/M1 precise decision and hard risk
 ```
 
-Example bearish migration:
+H4 ATR remains distance-only:
 
 ```text
-4420 -> 4408 -> 4395 -> 4380
+S(t) = previous fully completed H4 Wilder ATR14
 ```
 
-The migration of centers can matter more than the original shock candle.
-
-### Structural scar
-
-A meaningful counterflow can damage child structure and create new endogenous memory, especially during price discovery where no historical resistance exists.
-
-Scar presence is not reversal authority.
-
-### Repair
-
-The market attempts to restore a prior active structure to its old functional role.
-
-### Failed repair
-
-A repair attempt occurs but does not restore the old role.
-
-This may support route switching.
-
-Do not reduce it to generic `break + retest`.
-
-### Bridge length / structural room
-
-The usable route between the current decision and the next active memory.
-
-Do not freeze this into a fixed ATR or R value yet.
+Never derive fixed SL/TP/trend rules from S.
 
 ---
 
-## 9. Role > Pattern
+## 4. Critical March correction to old Scale Alignment wording
 
-Permanent V9 lesson:
+The February postmortem correctly diagnosed excessive local authority, but the first March pass over-corrected it.
 
-> The role of a visible event inside the larger market episode matters more than the pattern name itself.
+**Current authority:**
 
-The same:
+```text
+A Child hard SL must invalidate the current Child entry thesis.
+It does NOT need to invalidate the entire Parent Journey.
+```
 
-* breakout;
-* sweep;
-* reclaim;
-* displacement;
-* rejection candle;
-* FVG;
-* OB;
-* Bollinger event;
-* P15 ignition;
+A Parent can remain alive after a Child is stopped. If genuinely new market information later forms a new Child, another attempt is allowed.
 
-may represent different things in:
+For a `PARENT-JOURNEY PARTICIPATION` trade, scale alignment means:
 
-* young departure;
-* active transit;
-* parent arrival;
-* failed repair;
-* already-consumed structure.
+- the Child is economically meaningful inside the larger context;
+- local risk is real Child falsification, not an arbitrary candle low/high;
+- there is materially larger room if the Child joins a continuing Parent;
+- management does not silently promote every later micro anchor to campaign-stop authority.
 
-These objects may be useful execution vocabulary.
-
-They have no standalone trade authority.
+Do not return to the superseded interpretation that every local stop must also kill the H1/H4 Parent.
 
 ---
 
-## 10. Origin -> Journey -> Destination
+## 5. Hard SL is mandatory from May onward
 
-Early V9 replay found the useful narrative:
-
-```text
-Origin
--> Journey
--> Destination
-```
-
-But replay also falsified the simplification:
+For every **new** trade, before entry freeze:
 
 ```text
-destination -> reversal
+Decision timestamp
+Direction
+Entry M1 reference
+Hard SL price
+Initial risk points = |Entry - Hard SL|
+Initial R = that hard risk
+Child thesis / structural falsification
+Intended Journey Scale
+Destination or OPEN ROUTE
+S
 ```
 
-A destination can be:
+Rules:
 
-* defended;
-* temporarily reacted from;
-* consumed;
-* merged into a new node;
-* converted into a new origin.
+- the Hard SL must already exist before the position opens;
+- touching the Hard SL ends the trade; review delay cannot enlarge the planned price loss;
+- the Hard SL may never be widened to rescue a trade;
+- no automatic BE, fixed-R trail, ATR trail, or fixed partial is authorized;
+- a structure-based manual exit before the Hard SL remains allowed;
+- a stopped Child does not automatically invalidate the Parent.
 
-Episode age also does not automatically imply reversal.
+2025 M1 cannot provide exact broker fill/slippage/spread economics. Historical R is therefore descriptive price-risk accounting, not exact execution P/L.
 
-A mature route can accelerate before finally failing.
-
-Therefore the more general model is hierarchical route switching.
+P038 is a grandfathered April carry. Do not rewrite April history as if it had a hard SL at entry. The May contract specifies its prospective protective treatment.
 
 ---
 
-## 11. Hierarchical route switching
+## 6. Entry and repeated attempts
 
-Conceptual example:
+Before entry ask:
 
-```text
-Parent Node A
-      |
-      | edge
-      v
-Child Node B
-      |
-      | edge
-      v
-Child Node C
-```
+1. What is the Parent working belief and strongest counterevidence?
+2. Is value migrating, or are both directions repairing inside the same broad auction?
+3. What exactly is the current Child?
+4. What new information makes this Child independent?
+5. If this is another same-direction attempt, **what exists now that did not exist at the previous failure?**
+6. What price invalidates this Child now?
+7. Is that exact price acceptable as the precommitted Hard SL?
+8. Is the intended journey `LOCAL BRIDGE` or `PARENT-JOURNEY PARTICIPATION`?
 
-If C survives, the local route can continue.
+A new attempt is not justified by attempt count or by Parent survival alone.
 
-If C fails:
+`WHAT IS NEW?` is a reasoning requirement, **not** a minimum-maturity checklist or automatic veto. A valid new Child can form quickly if the market immediately supplies causally new evidence (for example a stop-out followed by a genuine reclaim/departure). No minimum number of bars, holds, retests, or elapsed time is required.
 
-```text
-C -> B
-```
-
-may become the active route.
-
-When B is reached, the C->B trade thesis is normally resolved.
-
-Then B is reassessed.
-
-If B subsequently fails:
+Useful descriptive evidence of genuinely new information includes:
 
 ```text
-B -> A
+new business at a different area
+repeated hold
+hold + departure
+hold + departure + meaningful return test
+auction/value relocation
+failed repair that changes the active route
 ```
 
-may become a new trade question.
-
-This means a large winner may emerge as:
-
-```text
-bridge 1
--> reassess
--> bridge 2
--> reassess
--> bridge 3
-```
-
-rather than an initial prediction of +5R.
+Do not create an N-loss cooldown or retry limit.
 
 ---
 
-## 12. Node importance is functional
+## 7. Position management and campaign health
 
-Do not decide importance solely from:
+Manage the declared thesis, not unrealized P/L.
 
-* touch count;
-* candle count;
-* duration;
-* visual prominence;
-* swing labels;
-* tick activity.
+Separate:
 
-Ask instead:
+```text
+execution damage
+child-route damage
+parent/campaign damage
+```
 
-> Which already-known market-memory area, if genuinely restored, would demonstrate that my current route interpretation has failed?
+For Parent-Journey positions, inspect whether the campaign can still progress:
 
-This is `counterfactual thesis dependence`.
+- are new favorable extremes still being produced?
+- after counterflow, is prior route/value being repaired?
+- is settlement migrating in the intended direction or against it?
+- is counterflow forming stronger/longer-lived business?
+- are important Parent/Child origins being consumed?
 
-Node relevance is thesis-relative.
+Do not wait for metaphysical proof that a trend has ended. The research question is whether **progression ability is materially deteriorating**.
 
 ---
 
-## 13. Node birth is a process
+## 8. HTF indicator instrumentation is SHADOW ONLY
 
-Blind replay rejected:
+April retrospective discovery suggests H1 momentum location may help identify moments worth closer review, but it is not validated.
 
-```text
-pause + first departure = node
-```
-
-A better conceptual process is:
+Record on completed H1 bars while a Parent-Journey trade is open:
 
 ```text
-candidate area
--> departure
--> departure creates meaningful separation / journey
--> prior area earns launch-memory authority
--> later revisit tests whether its role survives
+Stochastic(14,3,3) K and D
+cross direction, if any
+exact K/D location at cross
+band: BELOW_20 / BETWEEN_20_80 / ABOVE_80
+whether price subsequently makes a new favorable extreme
+whether oscillator re-accelerates with the trend
+H1 close vs EMA9
+EMA9 direction
+H1 settlement migration
 ```
 
-Do not predict every important node at birth.
+Interpretation for research only:
 
-Authority can be earned through subsequent causally known behavior.
+- LONG: an adverse dead cross above/around 80 can be an early warning, not an exit command;
+- SHORT: an adverse golden cross below/around 20 can be an early warning, not an exit command;
+- do not presume that a mid-range or extreme-zone cross is inherently stronger; May must test whether cross location adds information beyond price/settlement;
+- strong trends can cross repeatedly in extreme zones and continue.
+
+**Never enter or exit solely because of Stochastic/EMA.**
+H4 indicator crosses were generally too slow in April discovery and have no current trade authority.
 
 ---
 
-## 14. Node failure is a process
+## 9. Review cadence is operational, not a market rule
 
-Do not equate:
+Hard SL prevents review latency from increasing planned loss, but late review can still damage winner capture.
 
-```text
-wick through
-```
+Operational cadence:
 
-or:
+- flat/no candidate: H1 context is the default review granularity; coarser compression is allowed only when no candidate is being skipped intentionally;
+- candidate forming: M15;
+- new trade / hard-SL vicinity / ambiguity: M15 and M1/M5 as required;
+- open Parent-Journey trade: inspect every completed H1 at minimum as an **operational monitoring cadence**, not as an entry veto or mechanical exit trigger; tighten to M15 on meaningful deterioration warning;
+- open Local-Bridge trade: M15-centered lifecycle.
 
-```text
-one close through
-```
+If a coarse reveal skips an opportunity, do not backfill it.
 
-with definitive failure.
-
-Observed route-switch styles include:
-
-### Gradual role inversion
-
-```text
-penetration
--> value forms beyond prior node
--> repair attempt
--> old role not restored
--> new departure
-```
-
-### Abrupt multi-node traversal
-
-Strong movement crosses several nested child structures too quickly for a textbook retest.
-
-Do not require the same candle sequence in every valid transition.
+Use `scripts/v9_causal_m1.py` for exact future-hidden prefix control and `scripts/v9_hard_stop_guard.py` to detect the first stop touch inside an already-revealed prefix.
 
 ---
 
-## 15. Direction correctness != trade quality
+## 10. Data authority and causal integrity
 
-A directionally correct thesis can be a poor trade.
-
-Example conceptually:
+Authoritative raw M1:
 
 ```text
-current price
-↓
-next active memory very close
+SHA256 626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2
 ```
 
-There may be little structural room even when direction is correctly read.
+The causal helper must expose only an exact chronological prefix. No future bar may be consulted before its cutoff.
 
-The opposite can also occur:
+Uploaded M5/M15/M30/H1/H4 files may accelerate reading only when:
 
-```text
-falsification relatively nearby
-+
-next active memory far enough away
-```
+- the bar is fully completed at the current causal cutoff;
+- no unfinished higher-TF bar leaks later minutes;
+- ambiguous entry/exit decisions fall back to revealed M1.
 
-The directional probability need not be extraordinary for the trade to be attractive.
-
-Therefore V9 first asks:
-
-```text
-TRADEABLE?
-```
-
-not:
-
-```text
-HOW CERTAIN AM I ABOUT DIRECTION?
-```
+2025 exact Bid/Ask tick is unavailable. Do not present M1 price accounting as exact broker execution.
 
 ---
 
-## 16. Decision Corridor
+## 11. Current consumed evidence and active start state
 
-Current practical V9 object:
+Consumed development evidence includes January through April 2025. Do not treat those months as independent validation after using them for research revisions.
 
-```text
-       Falsification Anchor
-               ^
-               |
-          Current Price
-               |
-               | open structural route
-               |
-               v
-       Next Active Memory
-```
-
-A candidate becomes tradeable when:
-
-1. the falsification anchor is causally observable;
-2. genuine recovery of that anchor would weaken/kill the thesis;
-3. sufficient evidence exists that the opposite route is currently open;
-4. the next meaningful memory is materially farther away;
-5. the asymmetry is attractive enough despite uncertainty.
-
----
-
-## 17. Decision sufficiency
-
-Do not explain the market forever.
-
-Once enough is known:
+April closed ledger (descriptive):
 
 ```text
-falsification = A
-current market fails to restore A
-next meaningful destination = B
-risk toward A is materially smaller than available route toward B
+32 closed trades including March carry P006
+6 positive / 26 loss
+closed sum = +62.28R
+April-new-entry closed sum = +32.58R
+longest loss streak = 11 trades / -13.43R
 ```
 
-freeze the thesis.
-
-Do not continue adding narrative merely because more explanation is possible.
-
-This is both a practical principle and a hindsight-storytelling guardrail.
-
----
-
-## 18. Trader states
-
-These are states of the decision maker, not objective market regimes.
-
-### OBSERVE
-
-No sufficient route/asymmetry.
-
-### ARMED
-
-A meaningful junction exists but required evidence has not occurred.
-
-### TRADEABLE
-
-A usable Decision Corridor exists.
-
-### RESOLVED
-
-Destination reached or falsification occurred.
-
-Restart the market read.
-
-`NO TRADE` and `NOT YET` are legitimate successful decisions.
-
----
-
-## 19. Entry protocol
-
-Before every discretionary paper entry record:
+Major positive examples:
 
 ```text
-decision time
-LONG / SHORT
-parent context
-current child route
-falsification anchor
-first natural destination
-why route is open
-why asymmetry is sufficient
-what remains uncertain
+P006 +29.70R  (March carry)
+P017 +16.77R
+P029 +24.17R
+P031 +23.05R
+P032 +10.58R
 ```
 
-Entry is the final output of analysis.
-
-It is not the starting point of V9 research.
-
----
-
-## 20. Trade management
-
-Manage the market thesis, not unrealized P/L.
-
-Do not automatically:
-
-* move to BE at +1R;
-* take partial at a fixed R;
-* exit after 30/60 minutes;
-* hold to +2R/+3R to improve statistics.
-
-Ask:
+Critical counterexamples:
 
 ```text
-Has falsification occurred?
-Has the first natural destination been reached?
-Has the relevant market structure changed?
+P009 MFE ~+15.6R -> +0.29R
+P035 MFE ~+4.1R  -> -1.45R
+P036 MFE ~+11.4R -> -4.39R
+P019-P023 same-auction churn cluster
 ```
 
-At the first natural destination, the original thesis normally becomes `RESOLVED`.
-
-Reassess from there.
-
-A further route requires new causal justification.
-
----
-
-## 21. V9 evidence classes
-
-### Outcome-informed archaeology
-
-Future deliberately visible.
-
-Used to learn market language and find counterexamples.
-
-Never validation.
-
-### Blind snapshot replay
-
-Everything after t0 hidden.
-
-Interpretation written before future reveal.
-
-### Sequential replay
-
-Future revealed incrementally, e.g.:
+May starts after:
 
 ```text
-t0
--> +1h
--> +4h
--> +1d
+2025-04-30 23:58
+P038 SHORT OPEN
+entry 3326.04
+legacy accounting reference 3331.29
+month-end 3288.42
+month-end MTM about +7.17R on the legacy reference
+MFE through April about +11.27R
 ```
 
-Belief updates are recorded.
-
-### Paper-trading replay
-
-Actual discretionary entry/manage/exit using only revealed information.
-
-Then a trader-style journal is written.
-
-Do not mix the authority of these evidence classes.
+Read the May contract for prospective treatment.
 
 ---
 
-## 22. Contamination rule
+## 12. Prohibited overfit
 
-By V9 start, many 2024-2026 dates had already been viewed through:
+Do not add from the consumed March/April examples alone:
 
-* archaeology;
-* blind montages;
-* sequential replay;
-* existing V8 strategy outputs;
-* matched-pair analysis.
-
-Therefore 2026 is consumed qualitative/development evidence.
-
-Do not call the full 2026 year a clean blind OOS sample.
-
-A locally future-hidden paper trade can still test process.
-
-It cannot by itself establish untouched annual performance.
-
-Also:
-
-> Later same-direction movement cannot rescue a thesis after an opposing structure/reset already resolved the original episode.
+- N-loss stop/cooldown;
+- retry limits;
+- minimum 3R/5R entry filters;
+- fixed ATR/point SL or TP;
+- Stochastic cross exit rules;
+- EMA cross exit rules;
+- indicator entry gates;
+- fixed auction width;
+- numeric scale score;
+- mandatory Parent direction filter;
+- passive hold-until-parent-death;
+- fixed partial percentages;
+- fixed profit-lock thresholds.
 
 ---
 
-## 23. V8 bridge that must remain preserved
+## 13. Formalization gate remains closed
 
-V8 2024 exact scenario portfolio:
+No production V9 EA yet.
 
-```text
-unique candidates 96
-completed         89
-censored           7
-wins              49
-losses            40
-WR             55.06%
-mean           +0.1049R
-total          +9.339R
-PF              1.262
-avg positive   +0.9168R
-avg negative   -0.8896R
-```
+Need multiple future-hidden periods showing that:
 
-Interpretation:
-
-* positive development evidence;
-* improved frequency versus strict V3;
-* still a relatively weak edge;
-* average winner did not satisfy the desired final property;
-* no independent exact-tick validation.
-
-Do not rewrite this as failure or success.
-
-It is an important benchmark.
-
-Directional Change broad direction:
-
-```text
-outside existing modules:
-2024 ~49.8%
-2025 ~54.2%
-2026 ~48.2%
-```
-
-Conclusion:
-
-```text
-stable representation != stable directional information
-```
-
-Generic P15 price-only state transition likewise did not yield a stable universal direction resolver across later periods.
-
-Macro calendar remains information-expanding for movement, but generic release-M5-body direction did not remain stable.
-
----
-
-## 24. Final strategy objectives remain
-
-V9 does not lower the economic bar.
-
-Final strategy still seeks:
-
-* realized WR >= 50%;
-* average winner meaningfully > 1R;
-* positive cost-adjusted expectancy;
-* acceptable drawdown and loss streak;
-* adequate trade frequency;
-* robustness across independent evidence;
-* no denominator manipulation;
-* no validation rescue by threshold changes.
-
-The new hypothesis is that structural asymmetry plus good no-trade decisions may produce better payoff geometry than trying to predict every movement more accurately.
-
----
-
-## 25. Stop rules
-
-Do not:
-
-* prematurely automate V9 vocabulary;
-* threshold-mine node definitions;
-* invent `N bars = node`;
-* invent `X ATR = meaningful departure` from a few cases;
-* map every historical swing;
-* treat every sweep/FVG/OB as relevant;
-* treat reaction as rejection;
-* treat destination as reversal authority;
-* demand complete market explanation;
-* claim causal actor/mechanism without evidence;
-* hold beyond a resolved destination merely to manufacture larger R;
-* use M1 as exact execution authority;
-* call 2026 untouched blind validation;
-* use GOLD# 2021.
-
----
-
-## 26. Immediate active research
-
-Continue:
-
-```text
-future-hidden chart replay
--> TRADE / NO TRADE / NOT YET
--> Decision Corridor
--> discretionary entry/manage/exit
--> journal
--> self-falsification
-```
-
-The next important evidence is not another indicator score.
-
-It is whether the V9 decision process repeatedly produces sensible trades and sensible refusals under hidden future data.
-
----
-
-## 27. Production status
-
-`NONE`
-
-No V9 EA or production strategy exists.
+- hard-SL precommitment produces bounded comparable risk without destroying good Child entries;
+- same-auction/new-information distinctions reduce churn without suppressing genuine repeated participation;
+- campaign-health observations preserve large winners while reducing catastrophic MFE giveback;
+- HTF indicator observations add information beyond price/settlement rather than merely restating hindsight;
+- the payoff shape survives other periods and later other instruments;
+- exact execution is separately validated before production claims.

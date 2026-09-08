@@ -1,421 +1,237 @@
 # V9 Development Handoff
 
-Last updated: `2026-09-08`
-Status: `ACTIVE V9 / FEBRUARY COMPLETE / SCALE-ALIGNED JOURNEY REVISION`
-Current phase: `PARENT JOURNEY CONTINUITY -> FEBRUARY POSTMORTEM -> SCALE-ALIGNED JOURNEY PARTICIPATION`
+Last updated: `2026-09-09`
+Status: `ACTIVE V9 / APRIL COMPLETE / MAY HARD-SL + CAMPAIGN-HEALTH REVISION`
+Current phase: `MAY 2025 FUTURE-HIDDEN REPLAY`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
 Untouched reserve: `GOLD# 2021`
-Expected Git base for this update: `bf3e3d731111e894b8583e511fd169092f4ba2c1`
+Expected Git base for this update: `087299c9351233fe9a9d8a8b72c4840a65b93a91`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
 ## 1. Resume order
 
-Every new V9 session must:
+Start every new V9 session from GitHub, not conversation memory.
 
-1. refresh latest GitHub HEAD;
-2. read root `AGENTS.md` and `docs/ea/HANDOFF.md` only for repository routing/context;
-3. read `docs/ea/v9/AGENTS_V9.md`;
-4. read this file;
-5. read `docs/ea/v9/RESEARCH_STATE_V9.md`;
-6. read `docs/ea/v9/V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md`;
-7. read `docs/ea/v9/V9_MANUAL_CHART_REPLAY_MARKET_MEMORY_AND_DECISIONS_20260907.md`;
-8. read existing V9 decision documents, including `DECISIONS_V9_FEB25_POSTMORTEM_ADDENDUM_20260908.md`;
-9. read the original February evidence: `V9_PARENT_CHILD_REPLAY_202502.md` and `V9_FEB25_CAUSAL_REPLAY_ADDENDUM_20260908.md`;
-10. read the February completion journal: `V9_PAPER_TRADING_JOURNAL_FEB25_FINAL_20260908.md`;
-11. read `results/V9_FEB25_COMPLETION_AND_STRATEGY_POSTMORTEM_20260908.md`;
-12. read `V9_NEXT_RESEARCH_CONTRACT_SCALE_ALIGNED_JOURNEY_20260908.md` before any further V9 replay;
-13. use `results/V9_PARENT_JOURNEY_ANATOMY_20260907.md` and `results/V9_EXIT_DISTANCE_SHADOW_AUDIT_20260907.md` as retained upstream evidence;
-14. inspect authoritative raw data before advancing any future-hidden replay.
+Read in this order:
 
-GitHub is the V9 memory. Chat history is a workbench.
+1. latest Git HEAD;
+2. root routing docs only as needed;
+3. `docs/ea/v9/AGENTS_V9.md`;
+4. this file;
+5. `docs/ea/v9/RESEARCH_STATE_V9.md`;
+6. `docs/ea/v9/DECISIONS_V9_APR25_PIPELINE_ADDENDUM_20260909.md`;
+7. `docs/ea/v9/results/V9_MAR25_REPLAY_CORRECTION_AND_SUMMARY_20260909.md`;
+8. `docs/ea/v9/results/V9_APR25_COMPLETION_AND_PIPELINE_POSTMORTEM_20260909.md`;
+9. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_MAY25_20260909.md`;
+10. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_MAY25_HARD_SL_CAMPAIGN_HEALTH_20260909.md`;
+11. stable mindset/manual-replay docs only for retained language and historical evidence;
+12. authoritative raw-data state before any new reveal.
 
-The separate V10 experiment is not V9 authority and must not overwrite, backfill, or reinterpret V9 evidence.
-
----
-
-## 2. Permanent objective
-
-```text
-market understanding
-!=
-direction prediction
-!=
-good trade
-```
-
-V9 is building a trader that:
-
-```text
-recognizes worthwhile pitches
-+
-enters where being wrong can be recognized nearby
-+
-accepts bounded losses
-+
-keeps larger market context alive across child outcomes
-+
-participates materially when the market develops into a larger journey
-```
-
-Do not make direction certainty the hidden objective.
-Do not call a small local win a successful trend capture merely because its R is positive.
+Any older `V9_NEXT_RESEARCH_CONTRACT_*` file marked `SUPERSEDED` is historical only.
+V10 is separate and not V9 authority.
 
 ---
 
-## 3. Stable language
+## 2. What changed after March/April
 
-Retain:
+### March correction
 
-```text
-Role > Pattern
-reaction != rejection
-destination != reversal
-boundary crossing != value translation
-direction correctness != trade quality
-later same-direction movement cannot rescue an invalidated child thesis
-invalidated child thesis != invalidated parent journey
-winning child trade != proof of parent direction
-high R != large market-scale capture
-```
+The first post-February pass became too restrictive by effectively requiring a local Child stop to also invalidate the Parent. That is no longer V9 authority.
 
-H4 ATR remains only a distance coordinate:
+Current principle:
 
 ```text
-S(t) = previous fully completed H4 Wilder ATR14
+Child stop invalidates the current Child.
+Parent survives or fails on its own evidence.
 ```
 
-Never derive fixed SL/TP/trend thresholds from S.
+This correction restored repeated participation and produced large Parent-Journey captures. The earlier March one-trade pass is a **superseded diagnostic pass**, not the active March performance ledger. Read `results/V9_MAR25_REPLAY_CORRECTION_AND_SUMMARY_20260909.md` for the corrected March replay.
+
+### April confirmation and new problems
+
+April showed repeated large-winner architecture but also severe loss clusters and winner giveback.
+
+Closed April ledger including March carry P006:
+
+```text
+32 closed
+6 positive / 26 loss
++62.28R descriptive closed sum
++32.58R for April-new-entry closed trades
+11-loss streak P018-P028 = -13.43R
+```
+
+This payoff shape is convex and baseball-like, but fragile if large winners are missed or given back.
 
 ---
 
-## 4. February 2025 is complete
+## 3. April mandatory evidence
 
-Future-hidden V9 replay reached:
-
-```text
-2025-02-28 23:57
-POSITION: NONE
-FEBRUARY: COMPLETE
-```
-
-February child count:
+Major positives:
 
 ```text
-24 CLOSED
-10 structural positive
-14 structural loss
-raw descriptive positive fraction = 41.7%
+P006 LONG +29.70R (carry from March)
+P017 LONG +16.77R
+P029 LONG +24.17R
+P031 LONG +23.05R
+P032 SHORT +10.58R
 ```
 
-This is NOT an execution-valid win rate, Profit Factor, or expectancy claim because exact 2025 Bid/Ask tick, spread, slippage and some intraminute ordering remain unavailable.
-
-PAPER-016 through PAPER-024 completed after the earlier 10:30 cutoff:
+Critical negative/counterexample evidence:
 
 ```text
-P016 LONG  positive
-P017 SHORT loss
-P018 SHORT loss
-P019 SHORT loss
-P020 LONG  loss
-P021 LONG  loss
-P022 LONG  loss
-P023 LONG  loss
-P024 LONG  positive
+P009  ~+15.6R MFE -> +0.29R
+P035  ~+4.1R MFE  -> -1.45R
+P036  ~+11.4R MFE -> -4.39R
+P019-P023 repeated same-auction attempts -> loss cluster
+P024/P026/P028 failed LONGs before P029 large LONG
 ```
 
-The seven-loss P017-P023 cluster is mandatory evidence. Do not hide it and do not add an outcome-fitted rescue rule.
+Do not hide either side.
 
 ---
 
-## 5. February changed the diagnosis
+## 4. Current diagnosis
 
-January showed that V9 was primarily a local-corridor trader.
-February improved continuity and opportunity count with Parent Journey, OPEN ROUTE and repeated child attempts.
+Three active problems now dominate:
 
-But the completed February review exposed the deeper remaining problem:
+### A. Risk must be real before entry
 
-```text
-THE MARKET WAS OFTEN LARGE.
-OUR DECISION SCALE WAS STILL TOO LOCAL.
-```
+April used accounting references that could be exceeded while waiting for structural confirmation. Review latency then changed realized loss materially.
 
-Several February H1/H4 campaigns traveled multiple S while V9 repeatedly gave 2-10 point child memories too much strategic authority.
+From May, every new entry must have a **precommitted Hard SL**. Hard SL touch ends the trade and it is never widened.
 
-The error was not simply `TP too close`.
-It was a scale hierarchy error affecting entry selection, thesis renewal, management and exit.
+### B. Independent Child vs same-auction reaction
 
----
+Repeated attempts are allowed, but the trader must be able to causally distinguish the new Child from the prior failed attempt. The question is not `how many times have we tried?`; it is `what exists now that did not exist at the previous failure?`. This is **not** a requirement to wait N bars, demand a full hold/departure/return-test sequence, or impose a cooldown; immediate retry can be valid when genuinely new evidence appears immediately.
 
-## 6. New highest-priority principle: local execution must align with larger-scale meaning
+### C. Campaign-health recognition
 
-A close stop is not automatically a good location.
-
-Bad reasoning:
-
-```text
-anchor is only 3 points away
-=> good entry
-```
-
-Required reasoning:
-
-```text
-local execution anchor is close
-+
-losing that area would meaningfully damage the child/parent opportunity being traded
-+
-if the idea is right, materially larger market room exists
-=> potentially good journey entry
-```
-
-Call this `SCALE ALIGNMENT`.
-
-If an M5/M15 anchor can be broken as ordinary noise while the H1/H4 thesis remains essentially unchanged, that anchor alone is too weak to justify a parent-journey position.
-
-Do NOT solve this by widening a stop after entry. If the larger thesis requires more ordinary noise room than the proposed entry permits, wait for a better location.
+The strategy can now hold very large winners. It still sometimes recognizes deterioration too late. Research must distinguish normal Parent pullback from loss of progression ability.
 
 ---
 
-## 7. Entry local; lifecycle larger-scale
+## 5. HTF indicator status
 
-Required hierarchy:
+Retrospective April exploration found possible value in **H1** momentum location, not as a rule but as a review warning.
 
-```text
-PARENT JOURNEY        H1/H4 strategic continuity
-      |
-CHILD ROUTE           M15/H1 current bridge / repair / continuation
-      |
-EXECUTION STRUCTURE   M5/M15 precise entry and initial risk
-```
-
-The entry can be precise and local.
-The reason for continuing to hold a journey trade must not automatically shrink to the newest micro anchor.
-
-Never silently convert:
+Keep shadow-only:
 
 ```text
-new M5/M15 child anchor
-=> full-position campaign stop
+H1 Stochastic(14,3,3) K/D
+cross direction
+exact cross location and 20/80 band
+post-cross favorable-extreme behavior
+re-acceleration or failure to re-accelerate
+H1 close vs EMA9
+EMA9 direction
+settlement migration
 ```
 
-Ask what scale the lost structure actually damages.
+Important counterexample: strong trends can produce multiple >80 dead crosses or <20 golden crosses and continue. Therefore no Stochastic/EMA exit rule is authorized.
+
+H4 indicator crosses were generally too slow in consumed April discovery.
 
 ---
 
-## 8. Memory authority must be hierarchical
+## 6. May causal start state
 
-At minimum distinguish functionally:
-
-```text
-EXECUTION ANCHOR
-CHILD ORIGIN
-CHILD TRANSIT MEMORY
-PARENT ORIGIN / PARENT FAILURE AREA
-PARENT MAJOR ARRIVAL
-```
-
-A nearby child transit memory may cause reaction without ending a larger journey.
-
-The nearest known memory is not automatically:
+April completed at:
 
 ```text
-full TP
-or
-full-position invalidation
+2025-04-30 23:58
 ```
 
-This corrects one of the most persistent V9 errors.
+Position is **not flat**:
+
+```text
+P038 SHORT OPEN
+Entry: 3326.04
+Legacy April accounting reference: 3331.29
+April month-end: 3288.42
+April MTM on legacy reference: about +7.17R
+April MFE: 3266.86, about +11.27R
+```
+
+P038 predates the new hard-SL rule. Do not rewrite its April history.
+
+At the May boundary, prospectively arm `3331.29` as a **one-time protective stop for this grandfathered carry**, decided before any May reveal. This is not an initial Hard SL, is not evidence for future stop placement, and must not be used as a template for new trades. Preserve the old initial-R label as `legacy accounting R`; do not call the stop retroactively precommitted.
+
+For every trade opened from May onward, Hard SL is mandatory **before entry**.
 
 ---
 
-## 9. Intended Journey Scale is frozen before entry
+## 7. Exact operational pipeline
 
-Before every future V9 entry, state what the trade is intended to participate in.
+Use:
 
-At minimum:
+- `scripts/v9_causal_m1.py` to create/advance an exact revealed prefix;
+- `scripts/v9_hard_stop_guard.py` to find the earliest Hard-SL touch inside the revealed prefix;
+- completed uploaded higher-TF files only as optional speed aids; never read an unfinished bar containing future minutes.
+
+While flat:
 
 ```text
-LOCAL BRIDGE
-or
-PARENT-JOURNEY PARTICIPATION
+H4/H1 Parent context
+-> auction/value state
+-> M15 Child candidate
+-> exact M1 decision only when needed
 ```
 
-This is not a mechanical filter and not a promise that a parent journey will continue.
-It prevents a local execution signal from being managed as if its nearest micro memory were automatically the entire opportunity.
+Before entry:
 
-The main V9 research objective is parent-journey participation from good local locations. A local bridge may still be a valid trade, but must not be mislabeled as large-move capture.
+```text
+Parent belief
+Child thesis
+what is new since any prior same-side failure
+Entry
+Hard SL
+Initial R
+Intended Journey Scale
+Destination/OPEN ROUTE
+S
+uncertainty
+```
+
+While open:
+
+```text
+Hard SL is binding
++ structural exit may occur earlier
++ H1 campaign health reviewed at every completed H1 for Parent-Journey positions
++ M15/M1 review when deterioration/stop ambiguity becomes relevant
+```
 
 ---
 
-## 10. Broad auction interior is a major churn risk
+## 8. What must not regress
 
-P017-P020 showed repeated:
+Do not return to:
 
-```text
-lower translation
--> repair
--> failed repair
--> renewed repair
--> opposite micro thesis
-```
-
-The important higher-scale question should have been:
-
-> Is value genuinely migrating, or are both routes repeatedly repairing inside the same broad auction?
-
-Do not automatically treat every interior failed repair as an independent new journey thesis.
-
-Shadow labels for research only:
-
-```text
-NEW AUCTION
-SAME AUCTION
-AMBIGUOUS
-```
-
-These labels must not become a score or fixed veto until repeated evidence supports them.
+- requiring Child SL to equal Parent death;
+- treating every local memory as full TP/full exit;
+- chase after missed legs;
+- interpreting one stopped Child as campaign death;
+- same-auction rapid-fire re-entry without new information;
+- passive hold because `Parent is still alive`;
+- exact-top prediction;
+- fixed indicator exits;
+- fixed R/ATR trailing rules.
 
 ---
 
-## 11. OPEN ROUTE must include journey maturity
+## 9. Immediate next task
 
-Retain:
+Continue May 2025 future-hidden replay from the exact boundary above with P038 carried.
 
-```text
-PRICE DISCOVERY != TRADE
-```
+Primary research questions:
 
-Add:
+1. Does precommitted Hard SL keep losses bounded and R meaningful without making Child entries artificially narrow?
+2. Does mandatory `WHAT IS NEW?` documentation distinguish P029-type eventual winner from P024/P026/P028-type failed attempts?
+3. Can H1 campaign-health review reduce P009/P035/P036-style giveback while preserving P017/P029/P031/P032-style large winners?
+4. Do H1 Stochastic cross **location** and re-acceleration add useful shadow information beyond price/settlement?
+5. Does the same convex payoff shape recur in May without outcome-fitted rescue rules?
 
-```text
-OPEN ROUTE
-+
-close local anchor
-!=
-automatically good location
-```
-
-The trader must ask whether the entry is near a fresh launch, inside an established journey, or late in an already extended move.
-
-Shadow language only:
-
-```text
-FRESH LAUNCH
-ESTABLISHED JOURNEY
-LATE EXTENSION
-DAMAGED / REPAIR
-```
-
-P013/P014/P023 remain mandatory counterexamples to naive `known high consumed => continuation LONG` thinking.
-
----
-
-## 12. Winner continuation: do not regress to either extreme
-
-The old full-CP1 exit often captured only small local bridges.
-The old neutral 50/50 passive runner challenger performed worse because slow structural recognition returned too much MFE.
-
-Therefore neither is promoted as the universal solution.
-
-The new problem is:
-
-> Which structures have enough scale authority to say the parent-journey opportunity is genuinely deteriorating, rather than merely pulling back through a child transit memory?
-
-P010/P016 highlight possible over-promotion of child anchors to full exit authority.
-P011 remains the opposite counterexample: abrupt shock can erase large MFE quickly, so `just hold longer` is not an answer.
-
-Do not optimize partial percentages or fixed profit-lock thresholds yet.
-
----
-
-## 13. Parent Journey must change actual trading ambition
-
-Parent Journey is not useful if it is only prose while the trader still:
-
-```text
-enters locally
-exits at nearest local memory
-resets
-```
-
-When a parent route remains coherent, V9 must remain available to participate through:
-
-- a continuing position whose larger-scale thesis remains alive; or
-- a genuinely new scale-aligned child after a local trade resolves.
-
-Do not chase after a large move.
-Do not give up on an active parent campaign merely because the first leg was missed or a nearby child destination was reached.
-Wait for the next meaningful repair/location.
-
----
-
-## 14. Accounting instrumentation is now mandatory
-
-From the next V9 replay onward, freeze for every trade at decision time:
-
-```text
-exact decision timestamp
-exact M1 entry reference
-structural falsification description
-exact initial accounting-risk reference
-intended journey scale
-first destination or OPEN ROUTE
-exact exit trigger timestamp
-exact exit reference
-MFE / MAE
-initial-risk R
-captured points
-captured S
-```
-
-After a parent journey is retrospectively resolved, shadow-record:
-
-```text
-parent journey MFE / span
-journey participation / capture ratio
-```
-
-Retrospective journey metrics are research diagnostics only and must never leak into causal trade decisions.
-
-Do not rewrite old trades by inventing exact historical stops that were not frozen at the time.
-
----
-
-## 15. Immediate next V9 research
-
-Read `V9_NEXT_RESEARCH_CONTRACT_SCALE_ALIGNED_JOURNEY_20260908.md`.
-
-Next V9 replay begins after February 2025 from the first available March print, flat.
-
-Primary questions:
-
-1. Can local entries be chosen where the local falsification also carries meaningful larger-scale information?
-2. Can broad-auction interior churn be recognized without inventing a rigid regime classifier?
-3. Can child transit memories be prevented from automatically terminating parent-journey positions?
-4. Can V9 remain available for the next meaningful repair/re-entry while a parent journey survives?
-5. Can winner continuation improve without exact-top prediction or passive giveback?
-6. Do `NEW/SAME AUCTION`, `NEW BUSINESS`, `ANCHOR AUTHORITY`, `JOURNEY MATURITY`, and `SCALE ALIGNMENT` shadow observations repeatedly separate good from poor attempts?
-
-Do not tune numeric thresholds from February.
-
----
-
-## 16. Formalization gate remains closed
-
-Do not code a production V9 EA yet.
-
-Need multiple future-hidden campaigns showing:
-
-- scale-aligned entries and failures;
-- broad-auction counterexamples;
-- parent survival after child damage;
-- genuine parent failure;
-- OPEN ROUTE winners and losers;
-- larger winner participation without hindsight exit design;
-- independent-session reproducibility;
-- exact accounting instrumentation;
-- no definition repair after outcomes.
-
-Production status: `NONE`.
+Formalization gate remains closed.
