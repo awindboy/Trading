@@ -1,22 +1,22 @@
 # V9 Research State
 
-Date: `2026-09-07`
-Status: `ACTIVE / GOOD-ATTEMPT PHILOSOPHY + PARENT JOURNEY CONTINUITY + CHILD OPPORTUNITY REPLAY`
-Production authority: `NONE`
-EA authority: `NONE`
-Market: `GOLD# ONLY`
-Expected Git base: `737392e824927f478270aec89cfea27bffaefbc6`
+Date: `2026-09-08`  
+Status: `ACTIVE / FEBRUARY FUTURE-HIDDEN CHILD-PARENT REPLAY`  
+Production authority: `NONE`  
+EA authority: `NONE`  
+Market: `GOLD# ONLY`  
+Expected Git base: `14e1a31d876f220c237223607d7d651584cd7703`  
 Untouched reserve: `GOLD# 2021`
 
 ## 1. Current research question
 
-V9 no longer asks primarily:
+V9 does not primarily ask:
 
-> Can the next direction be known with high accuracy?
+> Can the next market direction be predicted accurately?
 
 It asks:
 
-> Can incomplete but causally disciplined market understanding help the trader recognize good attempts, limit the cost of being wrong, and remain able to participate repeatedly when a larger market journey continues?
+> Can a trader with incomplete but causally disciplined market understanding repeatedly recognize worthwhile attempts, invalidate bad child theses quickly, preserve larger context without narrative attachment, and participate farther when the market permits it?
 
 Permanent separation:
 
@@ -28,378 +28,626 @@ direction prediction
 good trade
 ```
 
-The active research object is now four linked but separate problems:
+Current research objects:
 
 ```text
-A. LOCAL OPPORTUNITY / ENTRY QUALITY
-B. LOCAL FALSIFICATION / RISK
-C. PARENT JOURNEY CONTINUITY
-D. REPEATED PARTICIPATION / CAMPAIGN CAPTURE
+A. local opportunity / entry quality
+B. local falsification / risk
+C. Parent Journey continuity
+D. independent repeated participation
+E. winner capture / exit latency
 ```
 
-Do not solve C/D by turning A into a trend classifier or by mechanically widening B.
+These are related but must not be collapsed into one direction model.
 
 ---
 
-## 2. Active mindset authority
-
-Read `V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md`.
-
-Core analogy:
-
-> A hitter cannot know whether a good swing becomes a home run, single, or out. The controllable problem is selecting pitches worth swinging at, executing the swing, accepting misses, and staying available for the next opportunity.
-
-Trading implication:
-
-```text
-quality of attempt != realized outcome
-```
-
-The market is always moving, but every movement is not our pitch.
-
-Do not require final destination certainty before participating.
-Do not trade merely because a large move is visible.
-
----
-
-## 3. Stable upstream facts
-
-Retain:
-
-- broad mandatory direction has repeatedly been weak or chronologically unstable in prior generations;
-- H4-volatility normalization is more portable than fixed GOLD-point distance;
-- exact execution and structural semantics are separate problems;
-- 2024-2026 are heavily consumed development evidence across branches;
-- 2025 exact tick is unavailable;
-- M1 is descriptive where exact Bid/Ask/intrabar chronology matters;
-- GOLD# 2021 remains untouched.
-
-These facts are not excuses to stop research. They define the limits inside which better trade decisions must be found.
-
----
-
-## 4. Stable V9 market-reading principles
+## 2. Stable V9 principles
 
 Retain:
 
 ```text
 Role > Pattern
-boundary crossing != value translation
 reaction != rejection
-destination != automatic reversal
+destination != reversal
+boundary crossing != value translation
 direction correctness != trade quality
-market understanding != trade quality
-later same-direction movement cannot rescue an invalidated child thesis
-```
-
-New permanent separations:
-
-```text
-invalidated child thesis != invalidated parent journey
-winning child trade != proof of parent journey direction
+later movement cannot rescue an invalidated child
+invalidated child != invalidated parent
+winning child != parent-direction proof
 ```
 
 Also retain:
 
-- adaptive multi-timeframe history;
+- adaptive multi-timeframe context;
 - sparse active memory;
 - counterfactual thesis dependence;
 - candidate -> departure -> earned memory authority;
 - failed repair as process language;
-- abrupt multi-node traversal as a distinct process;
 - NO TRADE / NOT YET as valid outcomes;
-- no outcome-based rewrite of frozen decisions.
+- no hindsight rescue;
+- structure first, S second.
 
 ---
 
-## 5. January 2026 development evidence
+## 3. Data authority
 
-Seven paper/replay trades:
-
-```text
-6 destination-resolved winners
-1 weekend-gap / execution-censored failure
-```
-
-Destination-resolved descriptive R:
+Authoritative GOLD# M1 SHA256:
 
 ```text
-P001 +1.52R
-P002 +1.36R
-P003 +2.29R
-P004 +1.95R
-P005 +1.84R
-P007 +1.42R
-sum  +10.38R
+626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2
 ```
 
-P006 Monday first-print implies ~-3.36R adverse mark but is not exact executable loss authority.
+Evidence limitations:
 
-This evidence remains contaminated development only.
+```text
+2025 exact Bid/Ask tick: unavailable
+2025 M1: replay/descriptive authority
+2024-2026: consumed development evidence
+GOLD# 2021: untouched reserve
+```
+
+Do not present February replay as untouched OOS or exact execution validation.
 
 ---
 
-## 6. January 2025 period-transfer evidence
+## 4. Prior retained findings
 
-Full January replay produced one actual trade:
+### January 2026
+
+Six destination-resolved descriptive positives plus one weekend-gap/execution-censored failure.
+
+The six positives total approximately:
 
 ```text
-LONG ~2653.74
-falsification ~2649-2650 genuine re-loss
-exit ~2649.32
-~ -1.04R descriptive
++10.38R
 ```
 
-Price later rallied above the original target.
-The child trade remains correctly classified as invalidated.
+This is development evidence only.
 
-Crucial new interpretation:
+### January 2025
 
-> the child trade failed, but the larger upward market journey later survived/re-emerged.
+One actual child LONG was invalidated for approximately `-1.04R` descriptively.
 
-This is a central reason child state and parent state must be separated.
+The market later rallied.
+
+The trade remains a valid loss.
+
+This produced the crucial distinction:
+
+```text
+child failure
+!=
+parent failure
+```
+
+### Exit shadow audit
+
+Existing comparison:
+
+```text
+CP1 full-exit control A: +8.861R
+neutral 50/50 runner C: +4.758R
+delta:                  -4.104R
+```
+
+Do not tune the runner ratio.
+
+`CAPTURE LATENCY` remains the relevant unresolved exit problem.
 
 ---
 
-## 7. H4 ATR remains the distance coordinate
+## 5. February 2025 current state
 
-Use:
+Primary detailed evidence:
 
-```text
-S(t) = previous fully completed H4 Wilder ATR14
-```
+- `V9_PARENT_CHILD_REPLAY_202502.md`
+- `V9_FEB25_CAUSAL_REPLAY_ADDENDUM_20260908.md`
 
-Structure first, scale second.
-
-Never infer from this alone:
+Current causal boundary:
 
 ```text
-SL = kS
-TP = kS
-trend ends after kS pullback
+2025-02-20 10:30:00
 ```
 
-January examples showed several strong-R local winners captured only ~0.3-0.4S.
-
-This established:
+Trade count:
 
 ```text
-high R != large market-scale winner
+15 closed
+1 open
 ```
+
+Decision-replay outcomes:
+
+```text
+8 structural positive
+7 structural loss
+1 open
+```
+
+Do not call this an execution-valid `53.3% WR`.
+
+No validated monthly expectancy, Profit Factor, or production metric should be calculated from this sample.
 
 ---
 
-## 8. Exit shadow audit retained
+## 6. Strongest February finding: continuity architecture
 
-Control A:
+The largest improvement over January is not direction prediction.
 
-```text
-full exit at first checkpoint
-```
-
-Neutral C:
-
-```text
-50% exit at first checkpoint + 50% original-structure runner
-```
-
-Same five CP1-reached examples:
-
-```text
-A sum  +8.861R
-C sum  +4.758R
-Delta  -4.104R
-```
-
-Do not tune the partial ratio to rescue C.
-
-All audited rows had additional favorable excursion after CP1, but slow structural runner recognition gave much of it back.
-
-Retain `CAPTURE LATENCY` as a problem, but do not assume passive runner is the answer.
-
----
-
-## 9. Parent Journey Anatomy — strongest new conceptual finding
-
-Outcome-informed H1/H4 archaeology of January 2025/2026 showed multiple large directional journeys roughly `5S` to `20S+` in scale.
-
-The original V9 often traded only small child bridges inside those journeys and then nearly reset its larger market understanding when the local trade resolved.
-
-Therefore the deeper limitation is:
+It is:
 
 ```text
 CONTINUITY ARCHITECTURE
 ```
 
-not merely exit distance.
+V9 can now maintain:
 
-The key mistake was not that local memories were meaningless.
-The mistake was giving child/transit memories too much authority over the larger market story.
+```text
+larger Parent Journey understanding
++
+independent local child theses
+```
 
-See:
+without requiring one continuous position.
 
-- `results/V9_PARENT_JOURNEY_ANATOMY_20260907.md`
-- `results/V9_PARENT_JOURNEY_ANATOMY_JAN25_JAN26.csv`
+A larger opportunity can therefore behave like:
 
-This archaeology is outcome-informed development evidence only and must not become a hindsight trend algorithm.
+```text
+Parent Journey
+   -> child A
+   -> resolve
+   -> observe
+   -> child B
+   -> resolve
+   -> observe
+   -> child C
+```
+
+Each child remains independently falsifiable.
+
+Parent continuity does not waive local risk discipline.
 
 ---
 
-## 10. Parent Journey working concept
+## 7. Parent Journey evidence
 
-Parent Journey is a sparse working belief about the larger route.
-
-It is not a required objective label.
-
-Example acceptable language:
+February provides examples of:
 
 ```text
-upward journey remains more coherent
-recent downside counterflow caused material damage
-that damage has partly repaired
-opposing route has not clearly taken control
-uncertainty remains high
-```
-
-The belief can be wrong.
-The objective is not classification accuracy.
-The objective is to preserve enough continuity so local trade resolution does not erase the larger opportunity context.
-
----
-
-## 11. Two-ledger research structure
-
-### Parent Ledger
-
-Write only when larger understanding changes materially.
-
-### Child Trade Ledger
-
-Keep the existing local trade contract and add:
-
-```text
-did this child result materially change the parent story?
-```
-
-Important expected cases:
-
-```text
-child loss + parent survives
-child win + parent fails later
-counter-parent child win
+child loss + parent survival
+repeated child losses + parent damage
 parent damage + repair
-parent route switch
+counter-parent child winner
+large route switch attempt + later repair
 ```
 
-These are valuable evidence, not exceptions to eliminate.
+This supports Parent Journey as continuity context.
+
+It does NOT support Parent Journey as a direction gate.
+
+The working belief must remain revisable.
 
 ---
 
-## 12. Campaign interpretation of large winners
+## 8. PAPER-003 to PAPER-006 stress case
 
-V9 no longer assumes a large winner must be one continuous position from exact origin to final destination.
-
-A large market opportunity may be captured through multiple independently justified attempts inside one parent campaign.
-
-This preserves:
-
-- local falsification discipline;
-- ability to take losses without denying the larger story;
-- ability to re-enter without hindsight rescue;
-- continued participation without predicting final trend length.
-
-Do not force each child trade to become a runner.
-Do not force each parent journey to produce a trade.
-
----
-
-## 13. Open-route research retained
-
-Downgraded simplification:
+Sequence:
 
 ```text
-no known destination = NO TRADE
+PAPER-003 LONG loss
+PAPER-004 LONG loss
+PAPER-005 LONG loss
+parent increasingly damaged / unresolved
+market repair produces a new thesis
+PAPER-006 LONG ~+3R / +1.48S
 ```
 
-Descriptive state:
+Lessons:
 
 ```text
-OPEN ROUTE / PRICE DISCOVERY
+one child loss does not kill the parent
 ```
 
-But open route does not override location quality.
+but also:
 
-Potential trade still requires a genuine local thesis and thesis-dependent anchor.
+```text
+parent survival does not keep a dead child alive
+```
 
-Do not chase.
-Do not fabricate micro-anchors.
+and:
 
----
+```text
+re-entry requires a new independently justified thesis
+```
 
-## 14. Research anti-drift constraints
-
-Do not use this phase to optimize:
-
-- trend direction accuracy;
-- UPTREND/DOWNTREND labels;
-- HH/HL formulas;
-- ATR trend thresholds;
-- partial percentages;
-- fixed campaign targets;
-- one-month P/L;
-- filters whose purpose is to make direction certainty feel higher.
-
-Before new formalization ask whether it improves an actual trader decision.
-If it mainly makes the market story more elaborate, treat it with suspicion.
+This is one of the strongest current V9 examples.
 
 ---
 
-## 15. Current next research
+## 9. Counter-parent evidence
 
-Use `V9_NEXT_RESEARCH_CONTRACT_PARENT_JOURNEY_OPPORTUNITY_20260907.md`.
+PAPER-008 and PAPER-009 were successful local SHORT trades while upper Parent Journey context remained meaningful.
 
-Run future-hidden sequential replay with separate Parent and Child ledgers.
+The larger market later expanded upward.
 
-Seek deliberately:
+Therefore:
 
-1. good child losses;
-2. bad child winners;
-3. child losses while parent survives;
-4. child winners that do not imply parent change;
-5. repaired parent damage;
-6. genuine larger route switches;
-7. repeated good child opportunities in one parent campaign;
-8. parent journeys with no good pitch;
-9. open-route losses and correct skips;
-10. large moves that were obvious directionally but still poor locations.
+```text
+good trade
+!=
+larger-direction truth
+```
 
-The point is not to maximize historical capture.
-It is to improve quality and continuity of attempts.
+This supports allowing counter-parent trades when local asymmetry is independently worthwhile.
 
 ---
 
-## 16. Formalization gate
+## 10. February larger-winner evidence
+
+PAPER-006:
+
+```text
+~+20.9 dollars captured
+~+1.48S
+~+3R descriptive
+```
+
+PAPER-010:
+
+```text
+~+13 dollars captured
+~+0.8S
+~+4R or better descriptive
+```
+
+This is first meaningful sequential evidence that V9 can combine:
+
+```text
+nearby structural invalidation
++
+larger market participation
+```
+
+without using a fixed distant TP.
+
+Do not promote a structural trailing rule yet.
+
+---
+
+## 11. Capture latency counterexample
+
+PAPER-011:
+
+```text
+entry ~2922.7
+MFE ~2942.55
+~19.8 dollars favorable excursion
+capture only ~1-3 dollars
+```
+
+This shows structural exit confirmation can become too late.
+
+Current research question:
+
+> Can deterioration be recognized earlier while still allowing ordinary continuation noise and without predicting a top?
+
+Do not solve this by arbitrary profit-lock thresholds before matched-case archaeology.
+
+---
+
+## 12. OPEN ROUTE evidence
+
+Closed subset:
+
+```text
+positive:
+006
+010
+011
+
+loss:
+003
+013
+014
+015
+```
+
+Small sample:
+
+```text
+n = 7
+```
+
+No rule authority.
+
+The key warning is PAPER-013 through PAPER-015.
+
+Potential interpretation to test:
+
+```text
+memory consumed
+-> pullback
+-> small reaction
+-> reaction labeled as earned anchor
+-> continuation entry
+-> failure
+```
+
+Research question:
+
+> Was a truly new child thesis created, or was the failed prior breakout thesis being revived under a new anchor label?
+
+Do not convert this into:
+
+```text
+maximum retries = N
+```
+
+or another arbitrary threshold.
+
+---
+
+## 13. PAPER-016 current state
+
+Frozen child:
+
+```text
+Time: 2025-02-20 09:00
+LONG
+Entry: ~2946.8
+OPEN ROUTE continuation
+Working anchor: 2944-2945
+Fixed TP: none
+Status: OPEN
+```
+
+Falsification:
+
+```text
+genuine 2944-2945 re-loss
++
+failure to recover 2946-2947 business
+```
+
+At `2025-02-20 10:30`:
+
+```text
+current ~2954.17
+MFE ~2954.73
+```
+
+`2947-2948` has not yet earned enough authority to replace the working anchor.
+
+Parent belief:
+
+```text
+upper journey more coherent
+endpoint unknown
+PAPER-016 outcome cannot prove parent direction
+```
+
+---
+
+## 14. PAPER-016 S correction
+
+Historical frozen note:
+
+```text
+S ≈ 9.90
+```
+
+was inconsistent with the established February H4 Wilder ATR calculation.
+
+Authority audit reproduced prior February S records and gave:
+
+```text
+S(2025-02-20 09:00)
+=
+14.26401609770702
+```
+
+using:
+
+```text
+previous fully completed H4 Wilder ATR14
+```
+
+Corrected descriptive coordinates:
+
+```text
+initial anchor distance ≈ 0.13-0.20S
+MFE                 ≈ +0.56S
+10:30 mark          ≈ +0.52S
+```
+
+This correction changes only the coordinate.
+
+It must not alter the frozen trade thesis.
+
+---
+
+## 15. Frequency finding
+
+February reached 16 attempts by February 20 without forcing daily trading.
+
+Example:
+
+```text
+2025-02-17
+0 trades
+```
+
+despite substantial market movement.
+
+This suggests the continuity architecture can increase opportunities without redefining every movement as tradeable.
+
+The evidence remains qualitative/developmental.
+
+---
+
+## 16. Causal hygiene finding
+
+Coarse reveal cadence caused several potential opportunities to be excluded.
+
+They were correctly NOT backfilled.
+
+Therefore:
+
+```text
+observed February trades
+!=
+all trades V9 hypothetically could have taken
+```
+
+Current 8:7 is a causal subset, not a maximum historical performance simulation.
+
+This blocks claims of validated PF/monthly expectancy.
+
+---
+
+## 17. Current active hypotheses
+
+### H1 — Parent Journey usefulness
+
+Parent continuity may help the trader participate repeatedly in one larger market journey without turning direction into a mandatory filter.
+
+Status:
+
+```text
+supported descriptively
+not formalized
+```
+
+### H2 — independent child thesis problem
+
+OPEN ROUTE failures may occur when a supposedly new launch anchor is not genuinely independent from the previously failed continuation thesis.
+
+Status:
+
+```text
+active counterexample research
+```
+
+### H3 — capture latency problem
+
+Structural trailing can capture larger winners but may identify failure too late in abrupt deterioration.
+
+Status:
+
+```text
+active
+```
+
+### H4 — high R vs large capture
+
+Nearby invalidation can create high R even when actual market-scale capture is small.
+
+Status:
+
+```text
+retained
+```
+
+---
+
+## 18. Immediate next research
+
+First:
+
+```text
+finish February unchanged
+```
+
+Current continuation point:
+
+```text
+2025-02-20 10:30
+PAPER-016 OPEN
+```
+
+Reveal only data after the cutoff.
+
+Do not use the February review to alter PAPER-016 management.
+
+After February is complete, separate the next work.
+
+### Track A — OPEN ROUTE entry archaeology
+
+Compare:
+
+```text
+006 / 010
+vs
+003 / 013 / 014 / 015
+```
+
+Use PAPER-011 as a special positive/capture-latency case.
+
+Study role and context rather than thresholds.
+
+### Track B — winner capture archaeology
+
+Compare:
+
+```text
+006
+010
+011
+```
+
+Study normal pullback versus genuine continuation deterioration.
+
+Do not combine entry filtering and exit optimization into one model.
+
+---
+
+## 19. Research prohibitions
+
+Do not currently add:
+
+- trend direction classifier;
+- HH/HL score;
+- OPEN ROUTE score;
+- breakout score;
+- retry limit;
+- fixed minimum departure size;
+- fixed ATR SL/TP;
+- fixed campaign target;
+- tuned partial ratio;
+- hindsight re-entry;
+- monthly P/L optimization.
+
+Do not reopen GOLD# 2021.
+
+---
+
+## 20. Formalization gate
 
 Still closed.
 
 Need:
 
-- multiple future-hidden campaigns;
-- both parent-survival and parent-failure evidence;
-- stable separation of child invalidation and parent change;
-- broadly reproducible parent narratives across independent sessions;
-- no hidden trend classifier emerging from the parent ledger;
-- no per-outcome definition edits;
-- later exact execution work.
+- multiple complete future-hidden campaigns;
+- good child losses and bad child wins;
+- parent survival and genuine parent failure examples;
+- stable independent-child definition;
+- stable OPEN ROUTE language;
+- independent-session reproducibility;
+- no definition changes driven by outcomes;
+- later exact execution research.
 
-Final economic project targets remain:
+Economic project goals remain downstream targets, not current optimization objectives:
 
-- realized WR >=50%;
-- average winner meaningfully >1R;
-- clearly positive cost-adjusted expectancy;
-- acceptable DD / loss streak;
-- adequate frequency;
-- robustness across independent evidence;
-- no validation repair by retuning.
+- realized WR >= 50%;
+- average winner meaningfully > 1R;
+- positive cost-adjusted expectancy;
+- acceptable drawdown/loss streak;
+- adequate opportunity frequency;
+- robustness across independent evidence.
 
-Production authority: `NONE`.
+Production authority:
+
+```text
+NONE
+```
