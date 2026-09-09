@@ -200,26 +200,34 @@ For Local Bridge, fixed destination remains required.
 
 ## 9. API/runtime state machine
 
+The next runtime is **prepared-pitch first**, not continuous AI observation.
+
 ```text
-FLAT
-  -> H1 AI heartbeat
-  -> if serious candidate: M15 mode
+PLANNING
+  -> AI may return NO SETUP or precommitted conditional setup(s)
 
-SERIOUS CANDIDATE
-  -> next completed M15 only
-  -> TRADE or NO TRADE
-
-OPEN PARENT-JOURNEY
-  -> continuous M1 mechanical guards
-  -> deterministic structure event => next completed M15 AI review
-  -> otherwise next completed H1 AI heartbeat
+SETUP ARMED
+  -> runtime monitors raw M1 locally
+  -> no routine candle-by-candle AI calls
+  -> stop only at entry / cancellation / expiry / invalidation / replanning event
 
 OPEN LOCAL BRIDGE
-  -> continuous M1 SL/destination guards
-  -> M15 lifecycle heartbeat
+  -> precommitted Hard SL + fixed destination
+  -> normally no AI call until mechanical resolution
+
+OPEN PARENT-JOURNEY
+  -> precommitted Hard SL
+  -> objective selected review/remap events
+  -> maximum-staleness heartbeat only as fail-safe
 ```
 
-This keeps API calls efficient without missing mapped structural events.
+This is strategically important, not merely an API-cost optimization.
+
+Repeatedly showing the AI more candles can create more apparent marginal pitches without increasing the number of genuinely good pitches. The desired system prepares for a good pitch in advance and lets price come to it.
+
+The same architecture also addresses live inference latency: entry conditions can be armed before the market reaches them rather than relying on a large-model response after a fast break/retracement has already occurred.
+
+Reference: `V9_PRECOMMITTED_ORDER_AND_AI_CALL_SCHEDULER_PROTOCOL_20260910.md`.
 
 ---
 

@@ -238,3 +238,33 @@ No new future-hidden replay until:
 5. consumed-June parity tests pass.
 
 `GOLD# 2021` remains untouched.
+
+
+---
+
+## Additional decision — prepared-pitch / pending-order architecture
+
+User feedback after the first post-June simplification clarified an important execution principle:
+
+> Calling the AI more often does not create more good opportunities; it can cause the system to perceive more marginal pitches.
+
+Therefore V9 now prefers a **prepared-pitch architecture**:
+
+```text
+AI plans conditional entries in advance
+-> runtime arms executable pending conditions/orders
+-> market is monitored locally without continuous AI
+-> if filled, Hard SL and any Local-Bridge destination are already frozen
+-> next AI call occurs only at a precommitted discretionary review/remap event or maximum-staleness replanning boundary
+```
+
+This is both strategic and operational:
+
+- it better matches the baseball analogy;
+- it reduces same-auction overtrading caused by repeated observation;
+- it avoids relying on large-model latency to capture a fast entry after the fact;
+- it makes replay closer to eventual live deployment.
+
+No generic fixed limit/stop offset, expiry duration, or automatic TP is promoted. Order trigger, cancellation, expiry, and bracket semantics must be deterministic, versioned, and parity-tested.
+
+Reference: `V9_PRECOMMITTED_ORDER_AND_AI_CALL_SCHEDULER_PROTOCOL_20260910.md`.

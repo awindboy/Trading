@@ -112,69 +112,87 @@ Do not allow discretionary language to alter the causal data boundary.
 
 ---
 
-## 7. Review state machine
+## 7. Replay / AI-call state machine
 
-### FLAT
+The causal tool must represent eventual live deployment: the runtime watches price continuously; the AI does not.
 
-Routine AI heartbeat: every completed H1.
+### PLANNING / FLAT
 
-The AI reviews H4/H1 context and decides whether a serious candidate exists.
+An authorized planning call uses completed H4/H1 context plus the deterministic structure packet.
 
-No need to inspect every M15 while flat.
-
-### SERIOUS CANDIDATE
-
-Immediately switch to M15.
-
-Reveal exactly the next completed M15, then ask the AI again.
-
-Continue M15-by-M15 until:
+The AI may return:
 
 ```text
-TRADE
+NO SETUP
 or
-NO TRADE
+PRECOMMITTED SETUP(S)
 ```
 
-Once candidate mode begins, never reveal the rest of the H1 in one step.
+Do not call the AI on every completed H1 merely to search for a trade.
+
+A later planning/replanning call requires a frozen planning event or maximum-staleness boundary defined by the active scheduler version.
+
+### SETUP ARMED
+
+Once a setup is armed, advance raw M1 chronologically **without discretionary AI inspection** until the first relevant event:
+
+```text
+ENTRY FILLED
+SETUP CANCELLED
+SETUP EXPIRED
+SETUP INVALIDATED BEFORE FILL
+REPLANNING BOUNDARY
+```
+
+Intermediate M15/H1 candles are processed locally but are not automatically shown to the AI.
+
+If the entry rule itself requires completed-bar confirmation, reveal only the exact completed bar needed by the frozen rule.
 
 ### OPEN PARENT-JOURNEY
 
-Local runtime scans M1 continuously for mechanical guards and mapped review events.
+Local runtime scans M1 continuously for Hard SL and preselected review events.
+
+The next large-model call is the earliest of:
 
 ```text
-next AI review = earliest mapped review event OR next completed H1 heartbeat
+precommitted discretionary review event
+maximum-staleness replanning/review boundary
 ```
 
-If a mapped event occurs intrahour, the discretionary review normally uses the next completed M15 and stops there.
+A mapped intrahour event may schedule a next-completed-M15 packet when the frozen event rule requires bar completion.
 
-If no event occurs, completed H1 is the maximum routine heartbeat.
+Ordinary M15/H1 completion does not itself require a call.
 
 ### OPEN LOCAL BRIDGE
 
-Local runtime guards both Hard SL and fixed destination using M1 chronology.
+Local runtime guards Hard SL and fixed destination chronologically.
 
-M15 is the routine discretionary heartbeat until mechanical resolution or earlier structural invalidation.
+Default behavior is no discretionary AI call between fill and mechanical resolution.
+
+An earlier discretionary review is allowed only if the pre-entry Local-Bridge setup explicitly froze such a review condition.
 
 ---
 
-## 8. Why H1 remains but is no longer a blind replay instruction
+## 8. Heartbeat / maximum-staleness rule
 
-H1 solves a practical API problem: slow deterioration should not go unreviewed indefinitely.
+A heartbeat is a fail-safe against an indefinitely stale plan, not the primary observation cadence.
 
-Therefore H1 is a maximum routine review latency.
+The exact maximum-staleness boundary must be part of the versioned scheduler and justified by the lifecycle scale.
 
-It does **not** mean:
+The runtime may cheaply update completed H1/H4 facts without invoking the large model.
+
+The model is called only when:
 
 ```text
-always reveal a full hour regardless of what happened inside it
+a precommitted event requires discretionary judgment
+or
+the frozen maximum-staleness boundary requires replanning
 ```
 
-Mapped structural events may cause an earlier M15 review.
+This prevents two opposite failures:
 
-This preserves API efficiency while allowing important price interactions to be examined promptly.
-
----
+- minute/candle polling that manufactures marginal opportunities;
+- an old plan remaining armed after its context is no longer valid.
 
 ## 9. Mechanical guarded advance
 
@@ -217,9 +235,15 @@ An AI-only phrase such as `important memory is being tested` cannot itself fire 
 
 ---
 
-## 11. Entry reference
+## 11. Entry / pending-order reference
 
-The descriptive entry reference is normally the close of the latest fully revealed M1 at the decision cutoff.
+Post-June V9 no longer assumes that entry occurs at the current M1 close when the AI makes a decision.
+
+For a precommitted setup, the planning packet freezes a deterministic `ENTRY_TRIGGER_RULE` and the runtime derives the associated planned order/trigger price according to the frozen execution version.
+
+Replay then advances causally until that condition first occurs. The descriptive fill reference follows the frozen order-simulation rule; it is not hindsight-selected after seeing the move.
+
+For an immediate-entry setup explicitly allowed by a future runtime version, the latest fully revealed M1 close may still be used, but immediate entry is not the default architecture.
 
 Do not use future next-bar opens or hindsight best prices.
 

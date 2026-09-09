@@ -22,9 +22,10 @@ Every V9 session must first refresh latest GitHub HEAD, then read in this order:
 6. `docs/ea/v9/results/V9_JUN25_EXECUTION_ENVIRONMENT_POSTMORTEM_20260910.md`
 7. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
 8. `docs/ea/v9/V9_DETERMINISTIC_EXECUTION_RUNTIME_AND_STRUCTURE_PACKET_PROTOCOL_20260910.md`
-9. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
-10. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md`
-11. current implementation/parity state before any new future-hidden reveal.
+9. `docs/ea/v9/V9_PRECOMMITTED_ORDER_AND_AI_CALL_SCHEDULER_PROTOCOL_20260910.md`
+10. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
+11. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md`
+12. current implementation/parity state before any new future-hidden reveal.
 
 April/May/June historical pipeline and contract files remain evidence and history. They do not override the post-June active authority above.
 
@@ -79,18 +80,20 @@ V9 uses AI because some judgments are difficult to encode honestly in an EA. It 
 - Entry/SL distances;
 - `R` and `S` geometry;
 - forward structure distances;
-- Hard SL/fixed-destination guards;
+- pending-entry trigger/order state;
+- pre-fill cancellation/expiry/OCO logic;
+- Hard SL/fixed-destination bracket guards;
 - event timestamps;
-- review scheduling;
+- AI-call/review scheduling;
 - MFE/MAE and journal arithmetic.
 
 ### AI owns only the irreducibly discretionary questions
 
 1. What is the current Parent working belief, and what is the strongest opposite case?
-2. Is the current opportunity a sufficiently good pitch to risk on?
+2. What future conditional setup, if any, is a sufficiently good pitch to prepare and risk on if price comes to it?
 3. Which **already-mapped objective structure** genuinely falsifies this Child?
 4. Is this a Local Bridge or Parent-Journey attempt?
-5. When called after an event/heartbeat, should the position HOLD, EXIT, or REMAP because progression has actually changed?
+5. When called at a precommitted review/remap event or maximum-staleness boundary, should the position HOLD, EXIT, or REMAP?
 
 The AI must not create official SL/TP/review prices from unversioned language such as `important memory`, `strong support`, `failed-repair origin`, or `major liquidity`.
 
@@ -135,16 +138,18 @@ Every new trade has a real Hard SL before entry.
 
 The AI selects the falsification **from objective structures already supplied in the deterministic packet**. The runtime derives the exact boundary according to the frozen structure/runtime version.
 
-Before entry record:
+When arming a setup record:
 
 ```text
-Entry
+ENTRY_CONDITION / planned trigger price
 SL_STRUCTURE_ID
 Hard SL
-SL distance points
-SL distance S
-1R
+planned SL distance points
+PLAN_S / planned SL distance S
+1R = planned entry-to-SL price risk
 ```
+
+At fill, record the causal fill reference and `FILL_S` separately.
 
 No stop may be selected because it produces a desirable R multiple.
 
@@ -205,31 +210,45 @@ Do not add mechanical trailing, BE, partial, or fixed MFE-giveback rules from Ju
 
 ---
 
-## 7. Review environment is event-driven with a heartbeat
+## 7. Prepared-pitch / pending-order environment
 
-The AI/API is not called every minute.
+The AI/API is not called every minute, every M15, or automatically every H1.
 
-The local runtime continuously processes M1 and guards mechanical boundaries.
-
-For an open Parent-Journey:
+The default flat workflow is:
 
 ```text
-next AI review = earliest deterministic review event OR next completed H1 heartbeat
+PLANNING CALL
+-> define zero/one/more worthwhile conditional setups
+-> ARM executable price conditions/orders
+-> local runtime waits without large-model calls
 ```
 
-Examples of deterministic review events:
+A good pitch should normally be describable before its entry price is reached.
 
-- selected forward structure touched/entered;
-- configured structure boundary crossed;
-- pre-frozen warning/review structure reached;
-- Hard SL touch (mechanical resolution; no discretionary AI needed to keep the trade alive);
-- new route map required because a prior structure was consumed.
+The AI is not supposed to stare at every candle until something looks tradable. More observation can create more marginal explanations without creating more genuine opportunity.
 
-When an intrahour review event occurs, reveal only enough future data to reach the next authorized completed M15 review. Do not automatically reveal the remainder of the H1.
+Each armed setup freezes:
 
-The H1 heartbeat is a **maximum routine review latency**, not a command to blindly replay one hour at a time.
+- deterministic entry condition;
+- objective SL structure;
+- Local-Bridge destination or Parent-Journey review structures;
+- pre-fill invalidation/cancellation/expiry conditions.
 
----
+After fill:
+
+### Local Bridge
+
+Runtime normally resolves the precommitted bracket lifecycle (`SL` vs fixed destination) without another AI call.
+
+### Parent-Journey
+
+Runtime guards Hard SL and waits for a precommitted objective review/remap event. Fixed TP may remain NONE.
+
+A maximum-staleness heartbeat exists only as a fail-safe; ordinary H1 completion is not automatic large-model work.
+
+Entry and review architecture is governed by:
+
+`V9_PRECOMMITTED_ORDER_AND_AI_CALL_SCHEDULER_PROTOCOL_20260910.md`.
 
 ## 8. Minimal pre-entry AI contract
 
@@ -240,13 +259,16 @@ Required AI outputs:
 ```text
 PARENT_WORKING_BELIEF        one line
 STRONGEST_OPPOSITE_CASE      one line
-PITCH                        TRADE / NO TRADE
-SIDE                         LONG / SHORT if trade
+SETUPS                       NONE or prepared conditional setup(s)
+SIDE                         LONG / SHORT per setup
+WHY_GOOD_PITCH               concise
 ATTEMPT_THESIS               one sentence
-SL_STRUCTURE_ID              if trade
+ENTRY_CONDITION              deterministic executable condition
+SL_STRUCTURE_ID              objective falsification anchor
 SCALE                        LOCAL_BRIDGE / PARENT_JOURNEY
 FIXED_DESTINATION_ID         Local Bridge only; otherwise NONE
-REVIEW_STRUCTURE_IDS         selected from packet, optional subset
+REVIEW_STRUCTURE_IDS         Parent-Journey objective review points
+SETUP_INVALIDATION/EXPIRY    pre-fill conditions
 WHAT_IS_NEW                  only if retry after a prior failed Child
 ```
 

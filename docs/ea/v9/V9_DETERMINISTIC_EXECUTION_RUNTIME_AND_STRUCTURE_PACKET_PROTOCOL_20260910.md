@@ -22,6 +22,10 @@ DETERMINISTIC EXECUTION / EVENT MONITORING
 
 The goal is lower AI burden and higher cross-session parity, not a more complicated market model.
 
+Prepared entry/order behavior and AI-call scheduling are specified separately in:
+
+`V9_PRECOMMITTED_ORDER_AND_AI_CALL_SCHEDULER_PROTOCOL_20260910.md`.
+
 ---
 
 ## 2. Core reproducibility principle
@@ -141,18 +145,24 @@ provenance
 current side/distance
 ```
 
-### C. Candidate geometry
+### C. Setup geometry
 
-For candidate side(s):
+For each prospective conditional entry the runtime can display:
 
 ```text
+ENTRY_CONDITION candidate
+planned trigger/order price under frozen rule
 possible falsification STRUCTURE_IDs
 deterministic invalidation boundary for each candidate anchor
-risk points from current entry reference
-risk S
+planned risk points from trigger price to SL
+PLAN_S and planned risk in S
 forward structures
-points/R/S to each forward structure
+planned points/R/S to each forward structure
 ```
+
+If the setup remains armed across a new H4 completion, the runtime may also record updated `CURRENT_S` for description. It must not silently change the frozen entry/SL prices or create a new entry gate merely because S changed.
+
+At fill, record `FILL_S` from the previous fully completed H4 at the actual causal fill time for later descriptive comparison.
 
 No AI arithmetic is needed.
 
@@ -176,16 +186,25 @@ No minimum stop size is implied.
 
 ## 8. Trade geometry
 
-For a selected anchor:
+For a prepared setup:
 
 ```text
-Entry
+planned Entry trigger/order price
 Hard SL
-risk points = |Entry - SL|
+risk points = |planned Entry - SL|
 1R = risk points
-S = prior completed H4 Wilder ATR14
-SL/S
+PLAN_S = prior completed H4 Wilder ATR14 at setup creation
+planned SL/S
 ```
+
+At actual fill, runtime additionally records:
+
+```text
+fill timestamp/reference under frozen order simulation
+FILL_S = prior completed H4 Wilder ATR14 at fill time
+```
+
+`R` remains defined by the frozen entry-to-SL price risk. S is a descriptive distance coordinate and may change while a pending setup waits.
 
 For every forward structure in trade direction:
 
@@ -249,11 +268,34 @@ The AI does not need to name:
 
 ---
 
-## 11. Event scheduler
+## 11. Prepared-order state and event scheduler
 
 The local engine continuously processes M1 without large-model calls.
 
-### Mechanical events
+The preferred flat-state workflow is not `H1 -> ask AI for a trade` repeatedly. It is:
+
+```text
+planning call
+-> zero/one/more precommitted setups
+-> ARMED pending conditions
+-> local runtime waits
+```
+
+Read `V9_PRECOMMITTED_ORDER_AND_AI_CALL_SCHEDULER_PROTOCOL_20260910.md`.
+
+### Pre-fill events
+
+```text
+entry condition filled
+setup invalidated before fill
+setup cancelled by frozen OCO rule
+setup expired by frozen expiry rule
+planning context reaches maximum-staleness/replanning boundary
+```
+
+Ordinary candle completion does not itself require an AI call.
+
+### Post-fill mechanical events
 
 ```text
 Hard SL touch
@@ -262,28 +304,32 @@ fixed Local-Bridge destination touch
 
 These are resolved directly by chronology.
 
-### Structural review events
+### Parent-Journey discretionary review events
 
 A selected mapped structure may generate a review event according to frozen runtime logic such as:
 
 ```text
 zone touch/entry
 zone boundary cross
-completed M15 close through boundary
+completed-bar close through a selected boundary
+route-map exhaustion requiring REMAP
 ```
 
-The AI chooses which existing structures matter to its current trade; the event detector decides exactly when the chosen structure condition occurred.
+The AI chooses which existing objective structures justify future review; the event detector decides exactly when the frozen event condition occurred.
 
-### Heartbeats
+### Heartbeat principle
+
+A heartbeat is a **maximum-staleness fail-safe**, not the normal reason to call the AI.
+
+The runtime should use cheap deterministic state comparison at completed H1/H4 boundaries and invoke the large model only when:
 
 ```text
-FLAT: completed H1
-SERIOUS CANDIDATE: completed M15
-OPEN PARENT-JOURNEY: completed H1 maximum heartbeat
-OPEN LOCAL BRIDGE: completed M15
+a frozen planning/review condition is met
+or
+the maximum-staleness boundary requires genuine replanning
 ```
 
-For Parent-Journey, an earlier structural event overrides the H1 heartbeat and schedules the next completed M15 review.
+Do not minute-poll the AI.
 
 ---
 
@@ -349,17 +395,26 @@ This is not a retry count rule. It prevents paying repeatedly for the identical 
 
 ---
 
-## 15. API-efficiency model
+## 15. API-efficiency and entry-latency model
 
-The target architecture is not minute polling.
+The target architecture is not minute polling and not candle-by-candle opportunity search.
 
-A typical Parent-Journey position may need:
+A typical setup should be created **before** the desired entry condition occurs. The runtime can then place/represent the corresponding pending order or deterministic trigger locally.
 
-- zero AI calls during quiet minutes;
-- one call when a mapped structure event occurs;
-- otherwise one H1 heartbeat call.
+This solves two problems at once:
 
-This is compatible with real API deployment and causal replay.
+1. repeated AI observation does not manufacture marginal pitches;
+2. live entry does not depend on waiting for a large-model response after a fast price event has already happened.
+
+A typical lifecycle may contain:
+
+- one planning call;
+- long periods of local monitoring with zero AI calls;
+- no AI call at the exact entry fill if the setup was already fully frozen;
+- one later call only at a precommitted Parent-Journey review/remap event;
+- mechanical SL/fixed-destination resolution without discretionary AI.
+
+The objective is not the fewest possible calls. It is to call the AI only when a genuinely discretionary decision is required.
 
 ---
 

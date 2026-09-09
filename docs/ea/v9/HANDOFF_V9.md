@@ -2,7 +2,7 @@
 
 Last updated: `2026-09-10`
 Status: `ACTIVE V9 / JUNE CONSUMED / POST-JUNE EXECUTION-RUNTIME BUILD`
-Current phase: `SIMPLIFY AI DUTIES -> BUILD DETERMINISTIC STRUCTURE PACKET + EVENT SCHEDULER -> CONSUMED-DATA PARITY TEST`
+Current phase: `SIMPLIFY AI DUTIES -> BUILD DETERMINISTIC STRUCTURE + PRECOMMITTED ORDER RUNTIME -> CONSUMED-DATA PARITY TEST`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
@@ -21,9 +21,10 @@ Start from latest GitHub HEAD, then read:
 6. June execution-environment postmortem
 7. causal numeric tooling protocol dated 2026-09-10
 8. deterministic execution-runtime protocol dated 2026-09-10
-9. post-June discretionary pipeline dated 2026-09-10
-10. active post-June research contract
-11. implementation/parity state.
+9. precommitted-order / AI-call scheduler protocol dated 2026-09-10
+10. post-June discretionary pipeline dated 2026-09-10
+11. active post-June research contract
+12. implementation/parity state.
 
 Do not resume future-hidden trading until the active contract's runtime gate is satisfied.
 
@@ -143,31 +144,35 @@ At review: HOLD / EXIT / REMAP?
 
 ---
 
-## 7. Event-driven API environment
+## 7. Prepared-pitch API environment
 
-No 1-minute large-model polling.
+No continuous large-model observation.
 
-Flat:
+The target lifecycle is:
 
-- routine full AI review on completed H1;
-- if H1 creates a plausible serious candidate, candidate mode switches to M15.
+```text
+planning call
+-> prepared conditional setup
+-> pending entry/trigger ARMED
+-> local M1 monitoring
+-> entry / cancel / expiry / invalidation
+-> if filled: precommitted SL + destination/review events
+```
 
-Serious candidate:
+Important operational transfer:
 
-- one completed M15 at a time until `TRADE` or `NO TRADE`;
-- no full-H1 future reveal after candidate mode begins.
+- a good pitch is preferably prepared before price reaches it;
+- the large model should not be called after every new candle to discover another possible trade;
+- fast live entry cannot depend on waiting for model latency after the price event;
+- replay should skip directly between precommitted relevant events without exposing intermediate candles to AI.
 
-Open Parent-Journey:
+Local Bridge normally uses precommitted entry + SL + fixed destination.
 
-- M1 local engine continuously guards Hard SL;
-- mapped structural review events can trigger earlier review;
-- next completed H1 is the maximum heartbeat if no event fires;
-- intrahour event reviews use the next authorized completed M15.
+Parent-Journey uses precommitted entry + SL + objective future review/remap events; fixed TP may remain NONE.
 
-Open Local Bridge:
+Maximum-staleness heartbeat is a fail-safe only, not a periodic trade-search instruction.
 
-- M1 guards Hard SL and fixed destination;
-- M15 remains the routine lifecycle heartbeat unless resolved mechanically.
+Read `V9_PRECOMMITTED_ORDER_AND_AI_CALL_SCHEDULER_PROTOCOL_20260910.md`.
 
 ---
 
@@ -179,10 +184,13 @@ First:
 
 1. define/version the objective structure registry;
 2. implement deterministic geometry packet;
-3. implement event scheduler;
-4. implement minimal AI request/response schema;
-5. replay consumed June episodes for parity only;
-6. confirm identical structure/geometry/event outputs across repeated runs;
-7. only then freeze the runtime and choose the next future-hidden development period.
+3. implement deterministic pending-entry trigger types and order state machine;
+4. implement cancellation/expiry/OCO/bracket semantics;
+5. implement event-driven AI scheduler and maximum-staleness fail-safe;
+6. implement minimal planning/review AI schema;
+7. replay consumed June episodes in setup-armed mode for parity only;
+8. measure AI-call reasons/counts and confirm intermediate candles are not unnecessarily exposed;
+9. confirm identical structure/geometry/order/event outputs across repeated runs;
+10. only then freeze the runtime and choose the next future-hidden development period.
 
 `GOLD# 2021` remains untouched.

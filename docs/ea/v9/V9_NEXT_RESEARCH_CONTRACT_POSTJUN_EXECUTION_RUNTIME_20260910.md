@@ -56,41 +56,60 @@ No `major/minor` importance label is required unless it also has a deterministic
 Given a fixed cutoff and selected side, code must reproduce exactly:
 
 ```text
-current entry reference
+candidate pending-entry condition(s)
+planned trigger/order price for each condition
 candidate falsification structures
 exact SL boundary for each candidate structure
-SL points
-S
-SL/S
+planned SL points / 1R
+PLAN_S and planned SL/S
 all forward structure price ranges
-points/R/S to each forward structure
+planned points/R/S to each forward structure
+FILL_S recorded if/when order fills
 ```
 
 No AI arithmetic and no undocumented price buffer.
 
 ---
 
-## 5. Workstream C — event-driven scheduler
+## 5. Workstream C — prepared orders and event-driven scheduler
 
-Implement continuous local M1 monitoring.
+Implement continuous local M1 monitoring without continuous AI calls.
 
-Required mechanical events:
+The required primary state flow is:
+
+```text
+PLANNING
+-> SETUP PLANNED
+-> ORDER/CONDITION ARMED
+-> FILLED / CANCELLED / EXPIRED / INVALIDATED-BEFORE-FILL
+-> if filled: SL / destination / selected review events
+```
+
+Required entry-condition support must include deterministic, parity-tested forms for at least:
+
+```text
+retracement-style pending entry
+break-style pending entry
+```
+
+Do not authorize vague executable conditions such as `meaningful reclaim` until their exact rule is frozen.
+
+Required mechanical post-fill events:
 
 ```text
 Hard SL touch
 fixed Local-Bridge destination touch
 ```
 
-Required scheduling behaviors:
+Required scheduling principle:
 
 ```text
-FLAT -> completed H1 heartbeat
-SERIOUS CANDIDATE -> next completed M15 only
-OPEN PARENT-JOURNEY -> selected mapped event OR H1 heartbeat
-OPEN LOCAL BRIDGE -> M15 heartbeat plus mechanical guards
+ordinary candle completion != automatic AI call
+precommitted price/order event -> local handling or scheduled AI review
+heartbeat -> maximum-staleness fail-safe only
 ```
 
-For an intrahour Parent-Journey event, stop at the next authorized completed M15 rather than revealing the full H1.
+Replay must advance directly from one precommitted relevant event to the next without showing the AI every intermediate candle.
 
 ---
 
@@ -100,18 +119,20 @@ Freeze the request/response schema from the post-June pipeline.
 
 The AI should not be asked to produce discretionary labels that the runtime can neither verify nor use.
 
-Required pre-entry AI fields remain small:
+Required planning/setup AI fields remain small:
 
 ```text
 Parent belief
 opposite case
-trade/no-trade
+NO SETUP or prepared setup(s)
 good-pitch rationale
 attempt thesis
+entry condition / objective entry structure
 SL structure selection
 journey scale
 fixed destination if Local Bridge
-review structures
+review structures if Parent-Journey
+setup invalidation / expiry condition
 WHAT_IS_NEW only on retry
 ```
 
@@ -183,12 +204,14 @@ This phase passes only if:
 2. no AI-invented price structure has execution authority;
 3. SL derivation is deterministic after structure selection;
 4. p/R/S arithmetic is automatic;
-5. mapped review events fire reproducibly;
-6. H1 remains a maximum heartbeat rather than blind replay;
-7. no candidate-mode full-H1 leakage occurs;
-8. AI prompt is materially simpler than the June harness;
-9. no new numeric edge rules were fitted to June;
-10. untouched reserve remains untouched.
+5. pending entry conditions and their cancel/expiry logic fire reproducibly;
+6. mapped post-fill review events fire reproducibly;
+7. ordinary candle completion does not cause unnecessary large-model calls;
+8. heartbeat is a maximum-staleness fail-safe rather than blind periodic analysis;
+9. replay can move from armed setup to first relevant event without exposing intermediate candles to AI;
+10. AI prompt is materially simpler than the June harness;
+11. no new numeric edge rules were fitted to June;
+12. untouched reserve remains untouched.
 
 ---
 
@@ -199,8 +222,9 @@ After all criteria pass:
 1. freeze runtime version;
 2. freeze active structure registry version;
 3. freeze AI packet schema;
-4. select a future-hidden development period without inspecting future price;
-5. perform contamination preflight;
-6. begin a new prospective replay.
+4. freeze precommitted-order / cancellation / expiry / bracket semantics;
+5. select a future-hidden development period without inspecting future price;
+6. perform contamination preflight;
+7. begin a new prospective replay.
 
 Do not call this production validation yet.
