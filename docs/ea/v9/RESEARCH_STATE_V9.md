@@ -1,7 +1,7 @@
 # V9 Research State
 
-Date: `2026-09-09`
-Status: `ACTIVE / MAY CONSUMED / JUNE AUDITABLE-DISCRETION RESEARCH`
+Date: `2026-09-10`
+Status: `ACTIVE / JUNE CONSUMED / EXECUTION ENVIRONMENT UNDER FORMALIZATION`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
@@ -10,286 +10,242 @@ Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f
 
 ## 1. Current research objective
 
-V9 now asks whether a discretionary trader can:
+The immediate research objective is no longer to ask the AI for more market-analysis concepts.
+
+It is to build an environment in which:
 
 ```text
-identify a worthwhile pitch under uncertainty
-+ freeze real Child risk before entry
-+ preserve Parent/Child separation
-+ evaluate both directions symmetrically
-+ remain available for Parent-scale opportunity
-+ detect campaign deterioration
-+ make the entire decision path auditable across sessions
+objective price facts and geometry are deterministic
++ AI performs only irreducibly discretionary judgment
++ losses remain bounded
++ genuinely good winners can remain large
++ another AI receives the same market packet
 ```
 
-The new variable is **session compliance / harness reproducibility**, not a new market predictor.
-
 ---
 
-## 2. Data authority
-
-2025 exact Bid/Ask tick is unavailable. M1 is causal/descriptive price authority, not exact execution authority for spread/slippage/intraminute fill claims.
-
-`GOLD# 2021` remains untouched final reserve.
-
-January-May 2025 are now consumed development evidence.
-
-June must not be revealed before its contamination preflight.
-
----
-
-## 3. Retained strategy findings
+## 2. Stable V9 thesis
 
 Retain:
 
-- Role > Pattern;
-- Parent is a working belief, not an oracle or direction veto;
-- invalid Child != invalid Parent;
-- winning Child != proof of Parent direction;
-- later movement cannot rescue an invalidated Child;
-- nearest memory != automatic full TP/full-position stop;
-- OPEN ROUTE requires context;
-- same-auction churn is real;
-- capture latency is real;
-- real Hard SL is required;
-- no hindsight rescue/backfill.
-
-New retained distinction from May:
-
 ```text
-independent Child != worthwhile pitch
+Role > Pattern
+market understanding != direction prediction != good trade
+Parent is a working belief, not a direction veto
+Child stop != Parent death
+Child win != Parent proof
+stopped Child cannot be rescued later
+new Child != worthwhile pitch
+nearest structure != TP
+small loss can be good trading
+large winner participation matters
+no hindsight rescue/backfill
 ```
 
+The baseball-player model remains central:
+
+- ordinary failed swings are acceptable;
+- no perfect directional prediction is required;
+- a few losses must be tolerable;
+- the strategy only makes sense if good pitches are selected selectively enough and large journeys are allowed to pay materially.
+
+No numeric target is attached to `a few losses`.
+
 ---
 
-## 4. April evidence status
+## 3. Evidence status
 
-April showed concentrated convex Parent-Journey outcomes:
+January-May 2025 remain consumed development evidence.
+
+June 2025 is now also fully revealed and consumed development evidence.
+
+June is **not** clean strategy validation because:
+
+- early-June ledger recovery is incomplete in current SSOT;
+- known qualitative contamination dates exist;
+- causal cadence incidents occurred;
+- objective execution structure was under-specified;
+- the practical review scheduler was not sufficiently event-driven.
+
+Do not use June P/L to tune numeric thresholds.
+
+`GOLD# 2021` remains untouched final temporal reserve.
+
+---
+
+## 4. What June clarified
+
+### A. Directional asymmetry improved
+
+The May first-pass problem of near one-sided trading was materially reduced.
+
+Therefore the next bottleneck is not simply `AI prefers SHORT` or `AI prefers LONG`.
+
+### B. Long loss clusters were not all the same
+
+Some clusters occurred in broad rotational auctions.
+
+Other clusters occurred while the market ultimately moved directionally, implying that local execution anchors and repeated inversion attempts were also part of the problem.
+
+Therefore do not add a universal sideways-market veto.
+
+### C. Parent-Journey and local stop authority sometimes mismatched
+
+Very local M15/M1 anchors sometimes ended a declared Parent-Journey Child.
+
+A small stop is not automatically wrong. The missing requirement was objective anchor provenance and a concise explanation of why losing that exact structure ends the **current attempt**.
+
+### D. Winners were often managed without enough route context
+
+A nearby remembered price was sometimes shown as `CP1`, even when it was not a TP.
+
+Parent-Journey positions often lacked a complete deterministic forward structure map and event-driven re-analysis at those structures.
+
+This contributed to both small-looking profit architecture and large MFE giveback.
+
+---
+
+## 5. AI-complexity correction
+
+The June harness asked the AI to produce many overlapping labels and audit fields.
+
+Some were useful for diagnosis, but too many mandatory discretionary labels can consume model capacity without improving market decisions.
+
+Active correction:
+
+### Keep mandatory
+
+- Parent working belief;
+- strongest opposite case;
+- trade/no-trade good-pitch decision;
+- current attempt thesis;
+- objective SL structure selection;
+- Local Bridge vs Parent-Journey;
+- `WHAT IS NEW?` only on retry;
+- event/heartbeat HOLD/EXIT/REMAP decision with factual evidence.
+
+### Move to optional commentary / audit-only
+
+- detailed memory-role taxonomy;
+- detailed Child-type taxonomy;
+- mandatory repair/reclaim/hold labels;
+- verbose mirror-check prose;
+- repeated long-form hidden-veto essays;
+- fixed campaign-health checklist at every H1.
+
+Bias control is still mandatory through opposite-side consideration and session-level directional audit.
+
+---
+
+## 6. Deterministic runtime requirement
+
+Before another future-hidden replay, V9 must freeze and parity-test:
 
 ```text
-P006 +29.70R
-P017 +16.77R
-P029 +24.17R
-P031 +23.05R
-P032 +10.58R
+structure-registry version
+exact structure price ranges
+provenance
+structure invalidation-boundary rule
+R/S geometry calculations
+event scheduler
+AI packet schema
 ```
 
-But it also showed same-auction churn, review-latency loss drift, and severe MFE giveback.
+If a concept cannot be reproduced from the same data, it cannot create official SL/TP/review price authority.
 
-Status: `PROMISING CONSUMED DEVELOPMENT EVIDENCE / NOT VALIDATED`.
-
-Hard SL and campaign-health research were introduced from this evidence.
+No universal support/resistance extractor is promoted yet. It must be defined and tested explicitly rather than improvised by an AI.
 
 ---
 
-## 5. May first-pass evidence status
-
-First-pass May-new summary:
-
-```text
-24 trades
-5 positive / 19 loss
-net -6.66R
-LONG / SHORT = 1 / 23
-```
-
-Hard SL succeeded as bounded-risk process control, but the first pass failed to participate materially in several large Parent Journeys.
-
-Postmortem found process drift:
-
-- directional asymmetry;
-- Parent narrative inertia;
-- `NO CHASE` / nearest-memory logic acting as hidden minimum-R veto;
-- Child independence used too close to entry permission;
-- Parent-Journey ambition collapsing into local management.
-
-Status: `RETAINED PROCESS-DRIFT / STRATEGY-EXECUTION EVIDENCE`.
-
-Do not treat -6.66R as a clean test of faithfully executed V9.
-
----
-
-## 6. May second-pass evidence status
-
-Retrospective strategy-compliance audit:
-
-```text
-15 trades
-12 positive / 3 loss
-about +51.37R descriptive
-LONG / SHORT = 7 / 8
-```
-
-The month outcome was already known.
-
-Status:
-
-`OUTCOME-CONTAMINATED RETROSPECTIVE HARNESS AUDIT / NOT VALIDATION / NOT PERFORMANCE AUTHORITY`.
-
-Do not copy exact May entry/exit patterns or use the P/L as evidence of edge.
-
-Useful conclusion only:
-
-> the same high-level V9 authority can generate materially different discretionary behavior when compliance is not explicit enough.
-
----
-
-## 7. Current accepted harness findings
-
-### H1 — Symmetric evaluation is required
-
-Each serious candidate must record both current Parent support and the strongest opposite/inversion case.
-
-`WHY THIS SIDE / WHY NOT OPPOSITE` and mirror check are mandatory process fields.
-
-No forced side balance.
-
-### H2 — Child independence and pitch quality must be separate
-
-A causally new Child can still be a poor trade.
-
-Every entry must explain why the opportunity is worth risking on now.
-
-No mandatory pattern sequence is introduced.
-
-### H3 — `NO CHASE` cannot operate as hidden min-R filter
-
-Prior movement, route room, and journey maturity are context.
-
-They need structural interpretation and cannot become undocumented numeric vetoes.
-
-### H4 — Intended journey scale is a compliance variable
-
-Local Bridge is valid only for a genuinely local thesis.
-
-When Parent + Child support a larger opportunity, Parent-Journey participation must be explicitly considered.
-
-### H5 — Serious candidate rejection must be logged
-
-This is necessary to detect hidden filters and missed opportunities that never appear in trade-only ledgers.
-
-### H6 — Campaign-health remains qualitative
-
-Exit must cite failing layer and actual progression/settlement/counterflow evidence.
-
-No fixed profit lock or indicator exit is promoted.
-
----
-
-## 8. Hard SL status
+## 7. Hard SL status
 
 `ACTIVE / RETAIN`.
 
-- frozen pre-entry;
-- 1R = entry-to-Hard-SL distance;
+- frozen before entry;
+- selected from objective mapped structure;
+- exact boundary generated under frozen runtime definition;
+- 1R = Entry-to-Hard-SL distance;
 - never widened;
 - touch ends Child;
-- manual structural exit may be earlier;
 - Parent separate;
-- no fixed point/ATR formula.
-
-May did not falsify this process-control correction.
+- no minimum point/S/ATR stop.
 
 ---
 
-## 9. Indicator status
+## 8. Profit management status
 
-H1 Stochastic/EMA remain `SHADOW ONLY`.
-
-They may increase attention when aligned with price deterioration, but no entry/exit authority is earned.
-
----
-
-## 10. June instrumentation / mandatory ledger
-
-The June pipeline requires a serious-candidate ledger, not only a trade ledger.
-
-Before every serious candidate decision record:
-
-- Parent support/damage;
-- opposite/inversion case;
-- Child role;
-- independence;
-- worthwhile-pitch reasoning;
-- strongest counterevidence;
-- side/opposite reasoning;
-- mirror and hidden-veto checks;
-- TRADE / NO TRADE reason.
-
-Trades add exact entry, Hard SL, intended scale, route, S, lifecycle, MFE/MAE, and exit-layer evidence.
-
-Session end adds directional/process compliance audit.
-
----
-
-## 10A. Tooling / perceptual parity authority
-
-Cross-AI reproducibility now requires the same observation contract, not merely the same strategy text.
-
-Official representation:
+For Parent-Journey:
 
 ```text
-verified raw M1 causal prefix
--> numeric completed H4/H1/M15
--> exact M1 only for execution/falsification ambiguity
+FIXED TP may be NONE
 ```
 
-Images are supplemental only and cannot independently authorize a trade, rejection, Hard SL, or campaign exit.
+but forward structures must be visible before entry.
 
-Official timeframe state machine is H1 while flat, M15 for serious candidates, H1 for Parent-Journey lifecycle with M15 on warning, and M15 for Local Bridges.
+Structure interaction causes re-analysis, not automatic exit.
 
-Reference: `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260909.md`.
+The campaign may continue through a structure when acceptance/continuation is supported. The AI may exit when factual progression has materially deteriorated.
 
-## 11. June start state
+Do not promote:
 
-```text
-MAY END: 2025-05-30 23:57
-POSITION: FLAT
-FIRST JUNE PRINT: 2025-06-02 01:00
-```
+- automatic BE;
+- fixed-R trail;
+- partial take-profit;
+- fixed MFE-giveback exit;
+- nearest-structure full exit.
 
-Before first June price reveal, run the mandatory contamination audit across current V9/history documents.
+For Local Bridge, fixed destination remains required.
 
 ---
 
-### June tooling adoption boundary
+## 9. API/runtime state machine
 
-The user explicitly standardized tooling during June at `2025-06-12 07:59`, while J-025 LONG remained open (`3352.75`, Hard SL `3346.20`, MFE `3377.78` through the revealed prefix).
+```text
+FLAT
+  -> H1 AI heartbeat
+  -> if serious candidate: M15 mode
 
-This is not a retrospective market-rule change. It standardizes representation and causal reveal mechanics. June postmortem must distinguish the earlier segment from the post-standardization segment.
+SERIOUS CANDIDATE
+  -> next completed M15 only
+  -> TRADE or NO TRADE
 
-## 12. What is explicitly NOT promoted
+OPEN PARENT-JOURNEY
+  -> continuous M1 mechanical guards
+  -> deterministic structure event => next completed M15 AI review
+  -> otherwise next completed H1 AI heartbeat
+
+OPEN LOCAL BRIDGE
+  -> continuous M1 SL/destination guards
+  -> M15 lifecycle heartbeat
+```
+
+This keeps API calls efficient without missing mapped structural events.
+
+---
+
+## 10. Explicitly not promoted
 
 Do not add:
 
-- N-loss cooldown/stop;
-- retry limits;
-- fixed minimum R;
-- fixed point/ATR stop size;
-- fixed journey-age threshold;
-- mandatory hold/retest counts;
-- Stochastic/EMA entry/exit rules;
+- N-loss stop/cooldown;
+- retry limit;
+- minimum R;
+- minimum stop size;
+- fixed ATR/point stop;
+- sideways-market ban;
+- fixed range-width classifier;
+- mandatory bar counts;
 - fixed profit lock/partial/trailing;
-- Parent direction veto;
-- forced LONG/SHORT balance;
+- indicator authority;
+- forced side balance;
 - numeric pitch score;
-- numeric symmetry score;
-- mechanical Parent switch;
-- mid-June harness changes from P/L.
+- AI-invented official support/resistance;
+- AI-invented liquidity claims from OHLC.
 
 ---
 
-## 13. Formalization gate
+## 11. Formalization gate
 
-Still closed.
+The next phase is successful only if the execution packet and event timing are reproducible **without demanding more discretionary intelligence from the AI**.
 
-June must first show whether the revised process is prospectively:
-
-- usable;
-- inspectable;
-- resistant to hidden directional/geometry filters;
-- stable across the month;
-- compatible with genuine Parent-Journey participation;
-- capable of distinguishing strategy failure from compliance failure.
-
-Positive P/L is neither necessary nor sufficient for this phase.
+Only after this gate passes may a new future-hidden replay begin.
