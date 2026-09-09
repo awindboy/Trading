@@ -52,6 +52,27 @@ Possible improvements are logged as `HARNESS SHADOW ISSUE` and reviewed only aft
 
 ---
 
+### 3A. User-directed tooling standardization amendment
+
+During the still-future-hidden June replay, the user explicitly required cross-AI tooling parity.
+
+Adoption boundary:
+
+```text
+cutoff 2025-06-12 07:59
+J-025 LONG OPEN
+entry 3352.75
+Hard SL 3346.20
+MFE 3377.78 through boundary
+next mode M15
+```
+
+From that boundary forward, official June execution also follows `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260909.md`.
+
+This amendment standardizes representation and reveal mechanics: verified raw-M1 prefix, numeric OHLC primary input, fixed timeframe escalation, and guarded exact event chronology. It does not add a new entry/exit pattern or numeric market threshold.
+
+No post-boundary June price was used to design it. June postmortem must preserve the pre/post tooling-formalization distinction.
+
 ## 4. Primary prospective hypotheses
 
 ### H1 — Auditable symmetry reduces directional process drift
@@ -202,7 +223,8 @@ It requires:
 6. Parent/Child/lifecycle scale remains explicit;
 7. no mid-month harness change from outcome pressure;
 8. causal integrity is preserved;
-9. month-end postmortem can distinguish strategy failure from compliance failure.
+9. post-adoption decisions satisfy the canonical numeric tooling/observation protocol or are explicitly labeled `TOOLING NON-PARITY`;
+10. month-end postmortem can distinguish strategy failure, compliance failure, and tooling-parity failure.
 
 Only after this can June P/L be meaningfully interpreted as evidence about V9 under the revised process.
 

@@ -26,6 +26,26 @@ The harness must expose hidden drift without converting examples into numeric ru
 
 ---
 
+## 1A. Canonical tooling / market representation
+
+Read and obey `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260909.md`.
+
+The official decision input is numeric OHLC reconstructed from the verified raw-M1 causal prefix. Chart images are optional visualization only and have no image-only authority.
+
+Do not preload the full future file into the active discretionary dataframe. Use monotonic prefix streaming.
+
+Timeframe state machine:
+
+```text
+flat/no candidate -> H1 default
+serious candidate -> M15
+exact ambiguity -> M5/M1
+Parent-Journey -> H1; M15 on warning
+Local Bridge -> M15
+```
+
+Once candidate mode begins, do not reveal the remainder of the H1. A cadence violation contaminates the exposed interval and forbids backfill.
+
 ## 2. Session bootstrap — mandatory before any new future reveal
 
 1. Refresh latest GitHub HEAD.
@@ -381,6 +401,8 @@ Trade-count symmetry is not required. The audit detects bias; it does not create
 ## 17. Frozen-harness rule for June
 
 The June process above is frozen once the first June price is revealed.
+
+By explicit user instruction, a tooling/observation parity amendment was added at causal cutoff `2025-06-12 07:59`. That amendment is documented separately and does not authorize a new market edge. From that boundary onward, the tooling protocol is also frozen.
 
 New possible improvements must be logged as:
 

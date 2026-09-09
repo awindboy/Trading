@@ -22,12 +22,14 @@ Read in this order:
 5. `docs/ea/v9/RESEARCH_STATE_V9.md`;
 6. `docs/ea/v9/DECISIONS_V9_APR25_PIPELINE_ADDENDUM_20260909.md`;
 7. `docs/ea/v9/DECISIONS_V9_MAY25_HARNESS_ADDENDUM_20260909.md`;
-8. `docs/ea/v9/results/V9_APR25_COMPLETION_AND_PIPELINE_POSTMORTEM_20260909.md`;
-9. `docs/ea/v9/results/V9_MAY25_COMPLETION_AND_HARNESS_POSTMORTEM_20260909.md`;
-10. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_JUN25_20260909.md`;
-11. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_JUN25_AUDITABLE_DISCRETION_20260909.md`;
-12. stable mindset/manual-replay docs for retained vocabulary/history;
-13. raw-data cutoff state before any future reveal.
+8. `docs/ea/v9/DECISIONS_V9_JUN25_CAUSAL_TOOLING_STANDARD_ADDENDUM_20260909.md`;
+9. `docs/ea/v9/results/V9_APR25_COMPLETION_AND_PIPELINE_POSTMORTEM_20260909.md`;
+10. `docs/ea/v9/results/V9_MAY25_COMPLETION_AND_HARNESS_POSTMORTEM_20260909.md`;
+11. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260909.md`;
+12. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_JUN25_20260909.md`;
+13. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_JUN25_AUDITABLE_DISCRETION_20260909.md`;
+14. stable mindset/manual-replay docs for retained vocabulary/history;
+15. raw-data cutoff state before any future reveal.
 
 Old May pipeline/contract are historical consumed evidence, not current June authority.
 V10 is separate.
@@ -160,6 +162,25 @@ This should reduce black-box drift without defining a numeric market model.
 
 ---
 
+## 6A. Canonical analysis/tooling standard
+
+Official V9 replay perception is standardized separately from strategy and harness.
+
+Use:
+
+`V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260909.md`
+
+Core contract:
+
+- raw M1 verified by authority hash;
+- monotonic chronological prefix, no full-future dataframe preload;
+- completed H4/H1/M15 reconstructed from revealed M1;
+- numeric OHLC is primary input; chart images are supplemental only;
+- flat = H1 default; serious candidate = M15; exact execution ambiguity = M5/M1;
+- Parent-Journey = H1 campaign review, M15 on warning; Local Bridge = M15-centered;
+- guarded Hard-SL/destination chronology should halt reveal at the first precommitted event;
+- image-only or non-parity replay is labeled `TOOLING NON-PARITY`.
+
 ## 7. June exact start state
 
 May data ends:
@@ -180,6 +201,22 @@ Do not reveal its price until the June contract's **preflight contamination audi
 No June price outcome has current strategy authority merely because the full raw file exists.
 
 ---
+
+### June tooling-standard adoption boundary
+
+By explicit user instruction, tooling parity was formalized at the still-future-hidden boundary:
+
+```text
+2025-06-12 07:59
+J-025 LONG OPEN
+entry 3352.75
+Hard SL 3346.20
+MFE 3377.78 through boundary
+campaign state DAMAGED / DETERIORATING CANDIDATE
+next mode M15
+```
+
+No later June price was used to design the tooling protocol. Preserve pre/post formalization segmentation in the June postmortem.
 
 ## 8. June operational rule
 

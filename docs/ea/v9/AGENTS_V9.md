@@ -22,11 +22,13 @@ Every new V9 session must:
 6. read `docs/ea/v9/V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md` for stable mindset;
 7. read `docs/ea/v9/DECISIONS_V9_APR25_PIPELINE_ADDENDUM_20260909.md`;
 8. read `docs/ea/v9/DECISIONS_V9_MAY25_HARNESS_ADDENDUM_20260909.md`;
-9. read `docs/ea/v9/results/V9_APR25_COMPLETION_AND_PIPELINE_POSTMORTEM_20260909.md`;
-10. read `docs/ea/v9/results/V9_MAY25_COMPLETION_AND_HARNESS_POSTMORTEM_20260909.md`;
-11. read `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_JUN25_20260909.md`;
-12. read `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_JUN25_AUDITABLE_DISCRETION_20260909.md` before any June reveal;
-13. inspect authoritative raw-data/cutoff state before advancing future-hidden replay.
+9. read `docs/ea/v9/DECISIONS_V9_JUN25_CAUSAL_TOOLING_STANDARD_ADDENDUM_20260909.md`;
+10. read `docs/ea/v9/results/V9_APR25_COMPLETION_AND_PIPELINE_POSTMORTEM_20260909.md`;
+11. read `docs/ea/v9/results/V9_MAY25_COMPLETION_AND_HARNESS_POSTMORTEM_20260909.md`;
+12. read `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260909.md`;
+13. read `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_JUN25_20260909.md`;
+14. read `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_JUN25_AUDITABLE_DISCRETION_20260909.md` before advancing future-hidden June data;
+15. inspect authoritative raw-data/cutoff state before advancing future-hidden replay.
 
 Older `V9_NEXT_RESEARCH_CONTRACT_*` files marked `SUPERSEDED` or `CONSUMED` are historical only.
 
@@ -116,6 +118,34 @@ It must not invent a new market edge, score, threshold, or pattern checklist.
 A session must not claim compliance merely because it read these files. It must complete the active pipeline's decision packet and self-audits contemporaneously.
 
 ---
+
+## 4A. Canonical tooling / observation authority
+
+Official V9 discretionary replay must use `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260909.md`.
+
+Canonical representation:
+
+```text
+verified raw M1 chronological prefix
+-> raw-M1-derived completed H4/H1/M15
+-> numeric OHLC as primary perceptual input
+```
+
+Chart images are optional visualization only. Image zoom, y-axis scale, candle pixel size, or visual slope has no independent trade authority. Any material visual claim must be restated in exact causal price/settlement terms.
+
+Canonical observation state machine:
+
+```text
+FLAT / NO CANDIDATE     -> H1 default, H4 context
+SERIOUS CANDIDATE       -> M15
+EXACT EXECUTION ISSUE   -> M5/M1 as needed
+OPEN PARENT-JOURNEY     -> completed H1; M15 on material warning
+OPEN LOCAL BRIDGE       -> M15-centered
+```
+
+Do not preload the complete future price file into the official discretionary analysis dataframe. Use monotonic prefix streaming / guarded advance.
+
+Tooling parity is part of session compliance. If another AI cannot reproduce the canonical numeric observation contract, label its replay `TOOLING NON-PARITY` rather than merging it with equivalent V9 execution evidence.
 
 ## 5. Child and Parent authority
 
@@ -351,6 +381,8 @@ Before the first June price reveal, complete the contamination preflight in the 
 
 Once June begins, the active June pipeline is frozen for the month.
 
+At causal cutoff `2025-06-12 07:59`, the user explicitly standardized cross-AI tooling/observation. This is an allowed user-directed contract amendment, documented in `DECISIONS_V9_JUN25_CAUSAL_TOOLING_STANDARD_ADDENDUM_20260909.md`. From that boundary forward, the causal numeric tooling protocol is frozen unless the user explicitly changes it or causal/safety integrity is compromised.
+
 New possible process improvements are `HARNESS SHADOW ISSUE` only. Do not repair the live harness from emerging P/L unless the user explicitly changes the contract or causal/safety integrity is compromised.
 
 ---
@@ -363,7 +395,7 @@ Authoritative M1 SHA256:
 
 Use an exact chronological prefix. Never inspect a future price row before its cutoff.
 
-Uploaded higher-TF data is usable only when the complete bar is behind the current cutoff. Ambiguous decisions fall back to revealed M1.
+Raw-M1-derived higher-timeframe aggregation is the canonical/default representation. Uploaded higher-TF data is usable only as a parity/acceleration aid when the complete bar is behind the current cutoff. Any disagreement or ambiguity falls back to the revealed raw M1 prefix.
 
 Any accidental reveal is recorded and no hindsight trade is inserted into the exposed interval.
 

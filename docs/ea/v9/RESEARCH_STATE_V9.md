@@ -222,6 +222,24 @@ Session end adds directional/process compliance audit.
 
 ---
 
+## 10A. Tooling / perceptual parity authority
+
+Cross-AI reproducibility now requires the same observation contract, not merely the same strategy text.
+
+Official representation:
+
+```text
+verified raw M1 causal prefix
+-> numeric completed H4/H1/M15
+-> exact M1 only for execution/falsification ambiguity
+```
+
+Images are supplemental only and cannot independently authorize a trade, rejection, Hard SL, or campaign exit.
+
+Official timeframe state machine is H1 while flat, M15 for serious candidates, H1 for Parent-Journey lifecycle with M15 on warning, and M15 for Local Bridges.
+
+Reference: `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260909.md`.
+
 ## 11. June start state
 
 ```text
@@ -233,6 +251,12 @@ FIRST JUNE PRINT: 2025-06-02 01:00
 Before first June price reveal, run the mandatory contamination audit across current V9/history documents.
 
 ---
+
+### June tooling adoption boundary
+
+The user explicitly standardized tooling during June at `2025-06-12 07:59`, while J-025 LONG remained open (`3352.75`, Hard SL `3346.20`, MFE `3377.78` through the revealed prefix).
+
+This is not a retrospective market-rule change. It standardizes representation and causal reveal mechanics. June postmortem must distinguish the earlier segment from the post-standardization segment.
 
 ## 12. What is explicitly NOT promoted
 
