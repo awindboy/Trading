@@ -1,7 +1,7 @@
 # V9 Research Instructions — Current Authority
 
 Last synchronized: `2026-09-09`
-Status: `ACTIVE / MARCH+APRIL CONSUMED / MAY HARD-SL + CAMPAIGN-HEALTH REPLAY`
+Status: `ACTIVE / MAY CONSUMED / JUNE AUDITABLE-DISCRETION REPLAY NEXT`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
@@ -15,21 +15,22 @@ GitHub is permanent memory. Chat history is a workbench.
 Every new V9 session must:
 
 1. refresh latest GitHub HEAD;
-2. read root `AGENTS.md` and `docs/ea/HANDOFF.md` only for routing/context;
+2. read root `AGENTS.md` / `docs/ea/HANDOFF.md` only for routing/context;
 3. read this file;
 4. read `docs/ea/v9/HANDOFF_V9.md`;
 5. read `docs/ea/v9/RESEARCH_STATE_V9.md`;
 6. read `docs/ea/v9/V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md` for stable mindset;
-7. read `docs/ea/v9/V9_MANUAL_CHART_REPLAY_MARKET_MEMORY_AND_DECISIONS_20260907.md` for retained vocabulary/history;
-8. read `docs/ea/v9/DECISIONS_V9_APR25_PIPELINE_ADDENDUM_20260909.md`;
+7. read `docs/ea/v9/DECISIONS_V9_APR25_PIPELINE_ADDENDUM_20260909.md`;
+8. read `docs/ea/v9/DECISIONS_V9_MAY25_HARNESS_ADDENDUM_20260909.md`;
 9. read `docs/ea/v9/results/V9_APR25_COMPLETION_AND_PIPELINE_POSTMORTEM_20260909.md`;
-10. read `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_MAY25_20260909.md`;
-11. read `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_MAY25_HARD_SL_CAMPAIGN_HEALTH_20260909.md` before advancing May;
-12. inspect authoritative raw data and causal replay state before revealing new future data.
+10. read `docs/ea/v9/results/V9_MAY25_COMPLETION_AND_HARNESS_POSTMORTEM_20260909.md`;
+11. read `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_JUN25_20260909.md`;
+12. read `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_JUN25_AUDITABLE_DISCRETION_20260909.md` before any June reveal;
+13. inspect authoritative raw-data/cutoff state before advancing future-hidden replay.
 
-Documents whose name begins `V9_NEXT_RESEARCH_CONTRACT_` but are explicitly marked `SUPERSEDED` are historical pointers only and have no current trading authority.
+Older `V9_NEXT_RESEARCH_CONTRACT_*` files marked `SUPERSEDED` or `CONSUMED` are historical only.
 
-The separate V10 experiment is not V9 authority.
+V10 is separate and not V9 authority.
 
 ---
 
@@ -50,8 +51,8 @@ The target trader:
 ```text
 selects worthwhile pitches
 + enters with a precommitted bounded loss
-+ lets a child thesis fail without automatically killing the parent story
-+ distinguishes another Child attempt from the previous failure using contemporaneous market information
++ lets a Child fail without automatically killing the Parent
++ remains available for genuinely new Child attempts
 + participates materially when a larger journey develops
 + recognizes campaign deterioration without pretending to know the final top/bottom
 ```
@@ -70,10 +71,11 @@ reaction != rejection
 destination != reversal
 boundary crossing != value translation
 direction correctness != trade quality
-later same-direction movement cannot rescue an invalidated child thesis
-invalidated child thesis != invalidated parent journey
-winning child trade != proof of parent direction
+later same-direction movement cannot rescue an invalidated Child
+invalid Child != invalid Parent
+winning Child != proof of Parent direction
 high R != large market-scale capture
+independent Child != worthwhile pitch
 ```
 
 Core hierarchy:
@@ -81,10 +83,10 @@ Core hierarchy:
 ```text
 PARENT JOURNEY        H1/H4 strategic continuity
 CHILD ROUTE           M15/H1 current attempt / repair / continuation
-EXECUTION STRUCTURE   M5/M15/M1 precise decision and hard risk
+EXECUTION STRUCTURE   M5/M15/M1 exact decision and hard risk
 ```
 
-H4 ATR remains distance-only:
+H4 ATR is distance-only:
 
 ```text
 S(t) = previous fully completed H4 Wilder ATR14
@@ -94,264 +96,321 @@ Never derive fixed SL/TP/trend rules from S.
 
 ---
 
-## 4. Critical March correction to old Scale Alignment wording
+## 4. Strategy authority and compliance harness are separate
 
-The February postmortem correctly diagnosed excessive local authority, but the first March pass over-corrected it.
+May proved that reading the same strategy documents does not guarantee equivalent execution.
 
-**Current authority:**
+Permanent separation:
 
 ```text
-A Child hard SL must invalidate the current Child entry thesis.
-It does NOT need to invalidate the entire Parent Journey.
+STRATEGY AUTHORITY
+= market hierarchy, opportunity, falsification, risk, lifecycle
+
+COMPLIANCE HARNESS
+= required questions and records proving the strategy was applied consistently
 ```
 
-A Parent can remain alive after a Child is stopped. If genuinely new market information later forms a new Child, another attempt is allowed.
+The harness may constrain **how reasoning is performed and recorded**.
+It must not invent a new market edge, score, threshold, or pattern checklist.
 
-For a `PARENT-JOURNEY PARTICIPATION` trade, scale alignment means:
-
-- the Child is economically meaningful inside the larger context;
-- local risk is real Child falsification, not an arbitrary candle low/high;
-- there is materially larger room if the Child joins a continuing Parent;
-- management does not silently promote every later micro anchor to campaign-stop authority.
-
-Do not return to the superseded interpretation that every local stop must also kill the H1/H4 Parent.
+A session must not claim compliance merely because it read these files. It must complete the active pipeline's decision packet and self-audits contemporaneously.
 
 ---
 
-## 5. Hard SL is mandatory from May onward
+## 5. Child and Parent authority
 
-For every **new** trade, before entry freeze:
+A Child hard SL must invalidate the current Child thesis.
+It does **not** need to invalidate the entire Parent Journey.
+
+A stopped Child is finished. Later same-direction movement never rescues it.
+
+A Parent may survive, but Parent survival alone does not authorize another trade.
+A new attempt requires causally new current information.
+
+Critical May addition:
+
+```text
+NEW / INDEPENDENT CHILD
+!=
+GOOD PITCH
+```
+
+Before entry the trader must explain both:
+
+1. why the current Child is distinct from a prior failed attempt / same auction;
+2. why this Child is worth risking on **now** inside current Parent/opposite context.
+
+Examples such as repeated hold, departure, return/reuse, failed repair, or value relocation are descriptive only. No minimum sequence or bar count is authorized.
+
+---
+
+## 6. Parent is a working belief, never a directional veto
+
+While flat, the trader must evaluate:
+
+```text
+CURRENT PARENT CONTINUATION CASE
++
+STRONGEST OPPOSITE / INVERSION CASE
+```
+
+Before entry state:
+
+```text
+WHY THIS SIDE NOW?
+WHY NOT THE OPPOSITE SIDE NOW?
+```
+
+Run a mirror check:
+
+> If equivalent evidence appeared in the opposite direction, would I judge it by the same standard?
+
+This does not force equal LONG/SHORT counts. It prevents a previous Parent narrative from receiving unexplained privilege.
+
+After every Child resolution, explicitly reassess Parent status from current evidence rather than carrying it forward by inertia.
+
+---
+
+## 7. Hard SL remains mandatory
+
+For every new trade, freeze before entry:
 
 ```text
 Decision timestamp
 Direction
 Entry M1 reference
+Child thesis / structural falsification
 Hard SL price
 Initial risk points = |Entry - Hard SL|
 Initial R = that hard risk
-Child thesis / structural falsification
 Intended Journey Scale
-Destination or OPEN ROUTE
+Destination / checkpoint / OPEN ROUTE
 S
 ```
 
 Rules:
 
-- the Hard SL must already exist before the position opens;
-- touching the Hard SL ends the trade; review delay cannot enlarge the planned price loss;
-- the Hard SL may never be widened to rescue a trade;
-- no automatic BE, fixed-R trail, ATR trail, or fixed partial is authorized;
-- a structure-based manual exit before the Hard SL remains allowed;
-- a stopped Child does not automatically invalidate the Parent.
+- Hard SL exists before entry;
+- touch ends the Child;
+- never widen;
+- manual structural exit may occur earlier;
+- no automatic BE, fixed-R trail, ATR trail, or fixed partial;
+- Child stop does not imply Parent death.
 
-2025 M1 cannot provide exact broker fill/slippage/spread economics. Historical R is therefore descriptive price-risk accounting, not exact execution P/L.
-
-P038 is a grandfathered April carry. Do not rewrite April history as if it had a hard SL at entry. The May contract specifies its prospective protective treatment.
+2025 M1 provides descriptive price-risk accounting, not exact broker execution economics.
 
 ---
 
-## 6. Entry and repeated attempts
+## 8. `NO CHASE` must not become a hidden filter
 
-Before entry ask:
-
-1. What is the Parent working belief and strongest counterevidence?
-2. Is value migrating, or are both directions repairing inside the same broad auction?
-3. What exactly is the current Child?
-4. What new information makes this Child independent?
-5. If this is another same-direction attempt, **what exists now that did not exist at the previous failure?**
-6. What price invalidates this Child now?
-7. Is that exact price acceptable as the precommitted Hard SL?
-8. Is the intended journey `LOCAL BRIDGE` or `PARENT-JOURNEY PARTICIPATION`?
-
-A new attempt is not justified by attempt count or by Parent survival alone.
-
-`WHAT IS NEW?` is a reasoning requirement, **not** a minimum-maturity checklist or automatic veto. A valid new Child can form quickly if the market immediately supplies causally new evidence (for example a stop-out followed by a genuine reclaim/departure). No minimum number of bars, holds, retests, or elapsed time is required.
-
-Useful descriptive evidence of genuinely new information includes:
+Permanent interpretation:
 
 ```text
-new business at a different area
-repeated hold
-hold + departure
-hold + departure + meaningful return test
-auction/value relocation
-failed repair that changes the active route
+already moved != automatic no-trade
+nearest memory != automatic TP
+nearest-memory R != automatic entry gate
+OPEN ROUTE != permission to ignore structure
 ```
 
-Do not create an N-loss cooldown or retry limit.
+`NO CHASE` means do not enter merely from fear of missing an already-moving market.
+It does not prohibit a Parent-Journey entry after meaningful prior movement if a current Child still provides real falsification inside a live larger route.
 
----
-
-## 7. Position management and campaign health
-
-Manage the declared thesis, not unrealized P/L.
-
-Separate:
+If the trader uses words such as:
 
 ```text
-execution damage
-child-route damage
-parent/campaign damage
+too late
+too extended
+not enough room
+nearest memory too close
 ```
 
-For Parent-Journey positions, inspect whether the campaign can still progress:
+it must state the **structural meaning** that makes that context relevant.
 
-- are new favorable extremes still being produced?
-- after counterflow, is prior route/value being repaired?
-- is settlement migrating in the intended direction or against it?
-- is counterflow forming stronger/longer-lived business?
-- are important Parent/Child origins being consumed?
-
-Do not wait for metaphysical proof that a trend has ended. The research question is whether **progression ability is materially deteriorating**.
+No fixed minimum-R, ATR, point, or journey-age gate is authorized.
 
 ---
 
-## 8. HTF indicator instrumentation is SHADOW ONLY
+## 9. Intended journey scale must change actual behavior
 
-April retrospective discovery suggests H1 momentum location may help identify moments worth closer review, but it is not validated.
-
-Record on completed H1 bars while a Parent-Journey trade is open:
+Freeze:
 
 ```text
-Stochastic(14,3,3) K and D
-cross direction, if any
-exact K/D location at cross
-band: BELOW_20 / BETWEEN_20_80 / ABOVE_80
-whether price subsequently makes a new favorable extreme
-whether oscillator re-accelerates with the trend
+LOCAL BRIDGE
+or
+PARENT-JOURNEY PARTICIPATION
+```
+
+`LOCAL BRIDGE` is valid when the trade thesis itself is local and resolves at a local route/destination.
+
+It must not be used simply because Parent continuation is uncertain, the trader fears giveback, or the nearest memory is visible.
+
+When a coherent Parent and meaningful Child exist, explicitly consider Parent-Journey participation.
+
+The main V9 research ambition remains material participation in larger market journeys.
+
+---
+
+## 10. Serious candidate audit is mandatory
+
+A `SERIOUS CANDIDATE` starts when the trader tightens from ordinary H1 context to M15 because an entry may plausibly form.
+
+Every serious candidate must end in either:
+
+```text
+TRADE
+or
+NO TRADE + explicit authority-grounded reason
+```
+
+Before decision record at minimum:
+
+```text
+side
+Parent support / damage
+opposite-side case
+Child role
+why independent, if retry
+why worthwhile pitch
+strongest counterevidence
+why this side / why not opposite
+mirror check
+hidden-veto check
+```
+
+This exposes missed Parent opportunities and undocumented filters.
+
+Do not backfill a rejected/skipped candidate after outcome reveal.
+
+---
+
+## 11. Position management and campaign health
+
+Always separate:
+
+```text
+EXECUTION DAMAGE
+CHILD-ROUTE DAMAGE
+PARENT/CAMPAIGN DAMAGE
+```
+
+For Parent-Journey positions, inspect every completed H1 at minimum:
+
+- new favorable extreme?
+- settlement/value migration?
+- counterflow business strength/longevity?
+- route repair after damage?
+- important memory consumed?
+- progression alive, repairing, unclear, or materially deteriorating?
+
+A full manual Parent-Journey exit must name which layer is failing and the actual price/settlement evidence showing loss of progression ability.
+
+Do not wait for metaphysical Parent death, but do not promote a micro reaction into Parent failure either.
+
+---
+
+## 12. HTF indicators remain shadow-only
+
+May did not earn indicator authority.
+
+H1 shadow observations may include:
+
+```text
+Stochastic(14,3,3) K/D and cross
+20/80 location
+post-cross favorable-extreme behavior
+re-acceleration
 H1 close vs EMA9
 EMA9 direction
-H1 settlement migration
+settlement migration
 ```
 
-Interpretation for research only:
-
-- LONG: an adverse dead cross above/around 80 can be an early warning, not an exit command;
-- SHORT: an adverse golden cross below/around 20 can be an early warning, not an exit command;
-- do not presume that a mid-range or extreme-zone cross is inherently stronger; May must test whether cross location adds information beyond price/settlement;
-- strong trends can cross repeatedly in extreme zones and continue.
-
-**Never enter or exit solely because of Stochastic/EMA.**
-H4 indicator crosses were generally too slow in April discovery and have no current trade authority.
+Never enter or exit solely from Stochastic/EMA.
+Strong trends can cross repeatedly in extreme zones and continue.
 
 ---
 
-## 9. Review cadence is operational, not a market rule
+## 13. Session-level compliance self-audit
 
-Hard SL prevents review latency from increasing planned loss, but late review can still damage winner capture.
+At every pause/end of session record:
 
-Operational cadence:
+- LONG/SHORT trades and serious candidates;
+- any strong directional imbalance and the current market reason;
+- candidates rejected using no-chase/room/Parent language;
+- whether any hidden rule not in authority was used;
+- whether Local Bridge was chosen where a coherent Parent-Journey thesis was available;
+- whether any definition/process changed after seeing P/L;
+- any causal-integrity incident.
 
-- flat/no candidate: H1 context is the default review granularity; coarser compression is allowed only when no candidate is being skipped intentionally;
-- candidate forming: M15;
-- new trade / hard-SL vicinity / ambiguity: M15 and M1/M5 as required;
-- open Parent-Journey trade: inspect every completed H1 at minimum as an **operational monitoring cadence**, not as an entry veto or mechanical exit trigger; tighten to M15 on meaningful deterioration warning;
-- open Local-Bridge trade: M15-centered lifecycle.
-
-If a coarse reveal skips an opportunity, do not backfill it.
-
-Use `scripts/v9_causal_m1.py` for exact future-hidden prefix control and `scripts/v9_hard_stop_guard.py` to detect the first stop touch inside an already-revealed prefix.
+Do not force balanced trade counts.
 
 ---
 
-## 10. Data authority and causal integrity
+## 14. June frozen-harness rule
 
-Authoritative raw M1:
+Before the first June price reveal, complete the contamination preflight in the June contract.
 
-```text
-SHA256 626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2
-```
+Once June begins, the active June pipeline is frozen for the month.
 
-The causal helper must expose only an exact chronological prefix. No future bar may be consulted before its cutoff.
-
-Uploaded M5/M15/M30/H1/H4 files may accelerate reading only when:
-
-- the bar is fully completed at the current causal cutoff;
-- no unfinished higher-TF bar leaks later minutes;
-- ambiguous entry/exit decisions fall back to revealed M1.
-
-2025 exact Bid/Ask tick is unavailable. Do not present M1 price accounting as exact broker execution.
+New possible process improvements are `HARNESS SHADOW ISSUE` only. Do not repair the live harness from emerging P/L unless the user explicitly changes the contract or causal/safety integrity is compromised.
 
 ---
 
-## 11. Current consumed evidence and active start state
+## 15. Data and causal integrity
 
-Consumed development evidence includes January through April 2025. Do not treat those months as independent validation after using them for research revisions.
+Authoritative M1 SHA256:
 
-April closed ledger (descriptive):
+`626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
-```text
-32 closed trades including March carry P006
-6 positive / 26 loss
-closed sum = +62.28R
-April-new-entry closed sum = +32.58R
-longest loss streak = 11 trades / -13.43R
-```
+Use an exact chronological prefix. Never inspect a future price row before its cutoff.
 
-Major positive examples:
+Uploaded higher-TF data is usable only when the complete bar is behind the current cutoff. Ambiguous decisions fall back to revealed M1.
 
-```text
-P006 +29.70R  (March carry)
-P017 +16.77R
-P029 +24.17R
-P031 +23.05R
-P032 +10.58R
-```
-
-Critical counterexamples:
-
-```text
-P009 MFE ~+15.6R -> +0.29R
-P035 MFE ~+4.1R  -> -1.45R
-P036 MFE ~+11.4R -> -4.39R
-P019-P023 same-auction churn cluster
-```
-
-May starts after:
-
-```text
-2025-04-30 23:58
-P038 SHORT OPEN
-entry 3326.04
-legacy accounting reference 3331.29
-month-end 3288.42
-month-end MTM about +7.17R on the legacy reference
-MFE through April about +11.27R
-```
-
-Read the May contract for prospective treatment.
+Any accidental reveal is recorded and no hindsight trade is inserted into the exposed interval.
 
 ---
 
-## 12. Prohibited overfit
+## 16. Consumed evidence status
 
-Do not add from the consumed March/April examples alone:
+January-May 2025 are consumed development evidence.
+
+April remains promising convex Parent-Journey evidence with concentrated large winners, but not validation.
+
+May first pass is retained as **discretionary execution/process-drift evidence**.
+
+May second pass is retained as **retrospective outcome-contaminated harness audit**, not performance evidence.
+
+The large first/second-pass divergence is itself evidence that cross-session compliance must be tested prospectively.
+
+---
+
+## 17. Prohibited overfit / process drift
+
+Do not add or use:
 
 - N-loss stop/cooldown;
 - retry limits;
-- minimum 3R/5R entry filters;
+- fixed minimum R;
 - fixed ATR/point SL or TP;
-- Stochastic cross exit rules;
-- EMA cross exit rules;
-- indicator entry gates;
-- fixed auction width;
-- numeric scale score;
+- Stochastic/EMA entry or exit rules;
+- fixed profit lock/partial/trailing multiple;
 - mandatory Parent direction filter;
-- passive hold-until-parent-death;
-- fixed partial percentages;
-- fixed profit-lock thresholds.
+- forced LONG/SHORT balance;
+- mandatory hold/retest counts;
+- fixed auction-width classifier;
+- `already moved too much` as undocumented veto;
+- Child independence as sufficient entry permission;
+- silent mid-June harness revision from P/L;
+- passive hold-until-parent-death.
 
 ---
 
-## 13. Formalization gate remains closed
+## 18. Formalization gate remains closed
 
 No production V9 EA yet.
 
-Need multiple future-hidden periods showing that:
+Need future-hidden evidence showing both:
 
-- hard-SL precommitment produces bounded comparable risk without destroying good Child entries;
-- same-auction/new-information distinctions reduce churn without suppressing genuine repeated participation;
-- campaign-health observations preserve large winners while reducing catastrophic MFE giveback;
-- HTF indicator observations add information beyond price/settlement rather than merely restating hindsight;
-- the payoff shape survives other periods and later other instruments;
-- exact execution is separately validated before production claims.
+1. the strategy itself retains useful Parent-Journey opportunity/risk behavior; and
+2. the auditable harness makes discretionary execution inspectable and more reproducible across sessions without becoming a rigid threshold system.
+
+June is the next prospective test.

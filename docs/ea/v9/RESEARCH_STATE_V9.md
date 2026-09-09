@@ -1,112 +1,70 @@
 # V9 Research State
 
 Date: `2026-09-09`
-Status: `ACTIVE / APRIL COMPLETE / MAY HARD-SL + CAMPAIGN-HEALTH RESEARCH`
+Status: `ACTIVE / MAY CONSUMED / JUNE AUDITABLE-DISCRETION RESEARCH`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
-Expected Git base: `087299c9351233fe9a9d8a8b72c4840a65b93a91`
 Untouched reserve: `GOLD# 2021`
+Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
 ## 1. Current research objective
 
-V9 asks whether a discretionary trader can:
+V9 now asks whether a discretionary trader can:
 
 ```text
-enter a genuinely independent Child with bounded precommitted risk
-+ allow Child failure without automatically killing the Parent
-+ reattempt only when new market information exists
-+ hold materially when a Parent Journey develops
-+ detect deterioration early enough to protect meaningful participation
+identify a worthwhile pitch under uncertainty
++ freeze real Child risk before entry
++ preserve Parent/Child separation
++ evaluate both directions symmetrically
++ remain available for Parent-scale opportunity
++ detect campaign deterioration
++ make the entire decision path auditable across sessions
 ```
 
-This remains decision research, not direction-oracle research.
+The new variable is **session compliance / harness reproducibility**, not a new market predictor.
 
 ---
 
 ## 2. Data authority
 
-Authoritative M1 SHA256:
+2025 exact Bid/Ask tick is unavailable. M1 is causal/descriptive price authority, not exact execution authority for spread/slippage/intraminute fill claims.
 
-```text
-626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2
-```
+`GOLD# 2021` remains untouched final reserve.
 
-2025 exact Bid/Ask tick is unavailable. M1 is causal/descriptive price authority, not exact execution authority where spread, slippage, gaps, or intraminute fill ordering matter.
+January-May 2025 are now consumed development evidence.
 
-`GOLD# 2021` remains untouched final temporal reserve.
-January-April 2025 are consumed development evidence. March includes a superseded one-trade diagnostic pass and a later corrected full replay; only the corrected replay is the active March ledger. See `results/V9_MAR25_REPLAY_CORRECTION_AND_SUMMARY_20260909.md`.
+June must not be revealed before its contamination preflight.
 
 ---
 
-## 3. Retained findings
+## 3. Retained strategy findings
 
 Retain:
 
-- `Role > Pattern`;
-- Parent is a working belief, not a direction oracle;
+- Role > Pattern;
+- Parent is a working belief, not an oracle or direction veto;
 - invalid Child != invalid Parent;
 - winning Child != proof of Parent direction;
-- later movement cannot rescue an already invalidated Child;
-- high R != large market-scale capture;
+- later movement cannot rescue an invalidated Child;
 - nearest memory != automatic full TP/full-position stop;
-- OPEN ROUTE requires context/maturity, not price discovery alone;
+- OPEN ROUTE requires context;
 - same-auction churn is real;
 - capture latency is real;
-- no hindsight rescue.
+- real Hard SL is required;
+- no hindsight rescue/backfill.
 
-Critical March correction:
+New retained distinction from May:
 
 ```text
-Child local invalidation only needs to invalidate the current Child entry thesis.
-It does not need to kill the entire Parent Journey.
+independent Child != worthwhile pitch
 ```
-
-This supersedes the overly strict first formulation of Scale Alignment.
 
 ---
 
-## 4. April completed evidence
+## 4. April evidence status
 
-Causal April boundary:
-
-```text
-2025-04-30 23:58
-```
-
-Closed trades including March carry P006:
-
-```text
-32 closed
-6 positive
-26 loss
-+62.28R descriptive closed sum
-+104.56R gross positive
--42.28R gross loss
-April-new-entry closed sum = +32.58R
-longest loss streak P018-P028 = 11 / -13.43R
-```
-
-Open carry:
-
-```text
-P038 SHORT
-entry 3326.04
-legacy accounting ref 3331.29
-month-end 3288.42
-MTM ~+7.17R
-MFE ~+11.27R
-```
-
-This is not an execution-valid PF/expectancy claim.
-
----
-
-## 5. April diagnosis
-
-### H1 — Convex Parent-Journey payoff exists in consumed evidence
-
-Large outcomes were not confined to one month:
+April showed concentrated convex Parent-Journey outcomes:
 
 ```text
 P006 +29.70R
@@ -116,166 +74,198 @@ P031 +23.05R
 P032 +10.58R
 ```
 
-Status: `PROMISING / NOT VALIDATED`.
+But it also showed same-auction churn, review-latency loss drift, and severe MFE giveback.
 
-The result remains highly concentrated in a small number of large winners. Missing or mishandling them can destroy the profile.
+Status: `PROMISING CONSUMED DEVELOPMENT EVIDENCE / NOT VALIDATED`.
 
-### H2 — Same-auction relabeling creates avoidable churn
-
-P019-P023 and other clusters show repeated Child creation inside unresolved two-way business.
-
-Status: `ACTIVE / SUPPORTED BY COUNTEREXAMPLES / NOT FORMALIZED`.
-
-### H3 — New information, not retry count, may separate failed attempts from eventual launch
-
-P024/P026/P028 failed before P029 large LONG. P029 differed by hours of new business, hold, departure, and reuse rather than by being the Nth attempt.
-
-Status: `ACTIVE / PROMISING / NEEDS FUTURE-HIDDEN MATCHED PAIRS`.
-
-### H4 — Campaign-health recognition is the largest open winner-management problem
-
-Critical giveback examples:
-
-```text
-P009 ~+15.6R MFE -> +0.29R
-P035 ~+4.1R MFE  -> -1.45R
-P036 ~+11.4R MFE -> -4.39R
-```
-
-Status: `ACTIVE / HIGH PRIORITY`.
-
-### H5 — H1 Stochastic cross location may be useful as a warning, not an exit rule
-
-Retrospective examples include adverse SHORT golden crosses in/near oversold territory before major giveback, but strong trends also produced repeated extreme-zone crosses and continued.
-
-Status: `SHADOW DISCOVERY ONLY / NOT VALIDATED / NO TRADE AUTHORITY`.
-
-H4 indicator crosses appeared too slow in April discovery.
+Hard SL and campaign-health research were introduced from this evidence.
 
 ---
 
-## 6. Hard SL decision
+## 5. May first-pass evidence status
 
-From May onward every new trade has a binding pre-entry Hard SL.
-
-Purpose:
+First-pass May-new summary:
 
 ```text
-review latency must not change maximum planned price risk
-+
-Initial R must mean actual precommitted price risk
+24 trades
+5 positive / 19 loss
+net -6.66R
+LONG / SHORT = 1 / 23
 ```
 
-Hard SL rules:
+Hard SL succeeded as bounded-risk process control, but the first pass failed to participate materially in several large Parent Journeys.
 
-- frozen before entry;
+Postmortem found process drift:
+
+- directional asymmetry;
+- Parent narrative inertia;
+- `NO CHASE` / nearest-memory logic acting as hidden minimum-R veto;
+- Child independence used too close to entry permission;
+- Parent-Journey ambition collapsing into local management.
+
+Status: `RETAINED PROCESS-DRIFT / STRATEGY-EXECUTION EVIDENCE`.
+
+Do not treat -6.66R as a clean test of faithfully executed V9.
+
+---
+
+## 6. May second-pass evidence status
+
+Retrospective strategy-compliance audit:
+
+```text
+15 trades
+12 positive / 3 loss
+about +51.37R descriptive
+LONG / SHORT = 7 / 8
+```
+
+The month outcome was already known.
+
+Status:
+
+`OUTCOME-CONTAMINATED RETROSPECTIVE HARNESS AUDIT / NOT VALIDATION / NOT PERFORMANCE AUTHORITY`.
+
+Do not copy exact May entry/exit patterns or use the P/L as evidence of edge.
+
+Useful conclusion only:
+
+> the same high-level V9 authority can generate materially different discretionary behavior when compliance is not explicit enough.
+
+---
+
+## 7. Current accepted harness findings
+
+### H1 — Symmetric evaluation is required
+
+Each serious candidate must record both current Parent support and the strongest opposite/inversion case.
+
+`WHY THIS SIDE / WHY NOT OPPOSITE` and mirror check are mandatory process fields.
+
+No forced side balance.
+
+### H2 — Child independence and pitch quality must be separate
+
+A causally new Child can still be a poor trade.
+
+Every entry must explain why the opportunity is worth risking on now.
+
+No mandatory pattern sequence is introduced.
+
+### H3 — `NO CHASE` cannot operate as hidden min-R filter
+
+Prior movement, route room, and journey maturity are context.
+
+They need structural interpretation and cannot become undocumented numeric vetoes.
+
+### H4 — Intended journey scale is a compliance variable
+
+Local Bridge is valid only for a genuinely local thesis.
+
+When Parent + Child support a larger opportunity, Parent-Journey participation must be explicitly considered.
+
+### H5 — Serious candidate rejection must be logged
+
+This is necessary to detect hidden filters and missed opportunities that never appear in trade-only ledgers.
+
+### H6 — Campaign-health remains qualitative
+
+Exit must cite failing layer and actual progression/settlement/counterflow evidence.
+
+No fixed profit lock or indicator exit is promoted.
+
+---
+
+## 8. Hard SL status
+
+`ACTIVE / RETAIN`.
+
+- frozen pre-entry;
+- 1R = entry-to-Hard-SL distance;
 - never widened;
-- touch ends trade;
-- structural/manual exit may occur earlier;
-- no fixed point/ATR formula;
-- no automatic BE/trailing/partial rule;
-- Child stop does not imply Parent death.
+- touch ends Child;
+- manual structural exit may be earlier;
+- Parent separate;
+- no fixed point/ATR formula.
 
-This is an **active execution contract**, not shadow instrumentation.
-
-P038 is grandfathered; its April history is not rewritten. The May boundary prospectively arms 3331.29 as a protective stop.
+May did not falsify this process-control correction.
 
 ---
 
-## 7. Active shadow instrumentation for May
+## 9. Indicator status
 
-### Auction / independence
+H1 Stochastic/EMA remain `SHADOW ONLY`.
 
-```text
-AUCTION: NEW / SAME / AMBIGUOUS
-NEW BUSINESS: CLEAR / TENTATIVE / NONE
-ANCHOR AUTHORITY: REACTION / REPEATED HOLD / HOLD+DEPARTURE / HOLD+DEPARTURE+RETURN TEST
-WHAT IS NEW SINCE PRIOR SAME-SIDE FAILURE?
-```
-
-### Journey
-
-```text
-INTENDED SCALE: LOCAL BRIDGE / PARENT-JOURNEY PARTICIPATION
-JOURNEY MATURITY: FRESH / ESTABLISHED / LATE / DAMAGED-REPAIR
-```
-
-### Campaign health on completed H1
-
-```text
-new favorable extreme? yes/no
-settlement migration direction
-counterflow business strength
-repair success/failure
-important memory consumption
-```
-
-### Indicator shadow
-
-```text
-H1 Stochastic(14,3,3) K/D
-cross direction
-exact cross K/D
-cross band BELOW_20 / BETWEEN_20_80 / ABOVE_80
-post-cross favorable-extreme behavior
-re-acceleration behavior
-H1 close vs EMA9
-EMA9 direction
-```
-
-No indicator field has entry/exit permission authority.
+They may increase attention when aligned with price deterioration, but no entry/exit authority is earned.
 
 ---
 
-## 8. Mandatory contemporaneous ledger from May
+## 10. June instrumentation / mandatory ledger
 
-Before every new entry:
+The June pipeline requires a serious-candidate ledger, not only a trade ledger.
 
-- decision timestamp;
-- exact M1 entry reference;
-- direction;
-- Parent belief and strongest counterevidence;
-- current Child;
-- what is genuinely new vs prior same-side failure;
-- Hard SL price;
-- initial risk points;
-- intended journey scale;
-- destination/OPEN ROUTE;
-- S;
-- uncertainty.
+Before every serious candidate decision record:
 
-During/after:
+- Parent support/damage;
+- opposite/inversion case;
+- Child role;
+- independence;
+- worthwhile-pitch reasoning;
+- strongest counterevidence;
+- side/opposite reasoning;
+- mirror and hidden-veto checks;
+- TRADE / NO TRADE reason.
 
-- first Hard SL touch if any;
-- manual structural exit trigger if earlier;
-- exit reference;
-- MFE/MAE;
-- initial-risk R;
-- captured points/S;
-- campaign-health observations;
-- indicator shadows.
+Trades add exact entry, Hard SL, intended scale, route, S, lifecycle, MFE/MAE, and exit-layer evidence.
+
+Session end adds directional/process compliance audit.
 
 ---
 
-## 9. What is explicitly NOT promoted
+## 11. June start state
+
+```text
+MAY END: 2025-05-30 23:57
+POSITION: FLAT
+FIRST JUNE PRINT: 2025-06-02 01:00
+```
+
+Before first June price reveal, run the mandatory contamination audit across current V9/history documents.
+
+---
+
+## 12. What is explicitly NOT promoted
 
 Do not add:
 
 - N-loss cooldown/stop;
 - retry limits;
-- fixed minimum R filter;
+- fixed minimum R;
 - fixed point/ATR stop size;
-- Stochastic or EMA entry/exit rules;
-- fixed profit lock;
-- fixed partial;
-- fixed trailing multiple;
+- fixed journey-age threshold;
+- mandatory hold/retest counts;
+- Stochastic/EMA entry/exit rules;
+- fixed profit lock/partial/trailing;
 - Parent direction veto;
-- passive hold-until-parent-death.
+- forced LONG/SHORT balance;
+- numeric pitch score;
+- numeric symmetry score;
+- mechanical Parent switch;
+- mid-June harness changes from P/L.
 
 ---
 
-## 10. Current start state
+## 13. Formalization gate
 
-May replay begins after `2025-04-30 23:58` with P038 SHORT open. Read the active May contract before advancing.
+Still closed.
 
-Formalization gate remains closed.
+June must first show whether the revised process is prospectively:
+
+- usable;
+- inspectable;
+- resistant to hidden directional/geometry filters;
+- stable across the month;
+- compatible with genuine Parent-Journey participation;
+- capable of distinguishing strategy failure from compliance failure.
+
+Positive P/L is neither necessary nor sufficient for this phase.
