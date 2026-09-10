@@ -1,270 +1,130 @@
-# V9 Decision Addendum — Post-June Simplification and Execution Runtime
+# V9 Decision Authority — Chart-Native HTF Market Map
 
 Date: `2026-09-10`
-Status: `ACTIVE V9 DECISION AUTHORITY / POST-JUNE`
+Status: `ACTIVE V9 DECISION AUTHORITY`
 Market: `GOLD# ONLY`
 
-## 1. Decision summary
+## Decision
 
-June demonstrated that V9's next improvement must **not** be `ask the AI to understand more things`.
+Make chart-native HTF market mapping the primary V9 research problem.
 
-The active decision is:
+Use AI to decide which structures matter.
+Use code to execute selected structures exactly.
 
-> Keep the V9 discretionary core, reduce mandatory AI interpretation, and move all reproducible price geometry / event timing into a deterministic runtime.
+Defer deterministic major-structure extraction.
 
-This is a process simplification, not a new market edge.
+## Market scale
 
----
+Read H1 over multi-day structure.
+Use H4 for broader context.
 
-## 2. V9 philosophy is unchanged
+Start with:
 
-V9 continues to accept that:
+- major legs;
+- major highs/lows;
+- major POIs;
+- external liquidity candidates;
+- range edges;
+- compression;
+- displacement origins;
+- large route.
 
-```text
-being right on direction != making a good trade
-being stopped != bad decision
-being profitable != good decision
-```
+Do not start with the nearest M15/M5 setup.
 
-The baseball-player model remains:
+## V3 transfer
 
-- wait for good pitches;
-- take bounded swings;
-- accept ordinary misses;
-- do not need to predict every pitch;
-- allow one good hit to pay for several misses.
-
-No exact number of acceptable consecutive losses is promoted.
-
----
-
-## 3. June loss-cluster interpretation
-
-June included long stop clusters.
-
-These are retained as evidence that at least three mechanisms can coexist:
-
-1. **same-auction churn** — too many local events were promoted into paid attempts;
-2. **falsification scale mismatch** — some local anchors may have represented normal intrahour reuse rather than robust Child failure for a Parent-Journey attempt;
-3. **under-controlled execution environment** — objective route structures and early review triggers were not standardized enough.
-
-Do not reduce this diagnosis to `sideways market` alone.
-
-Do not respond with:
-
-- max three losses;
-- cooldown;
-- wider stops;
-- minimum R;
-- sideways veto.
-
----
-
-## 4. AI mandatory duties are reduced
-
-From the next active phase, AI mandatory duties are limited to:
+Retain this V3 lesson:
 
 ```text
-1. Parent working belief + strongest opposite case
-2. Good pitch? TRADE / NO TRADE
-3. Which mapped structure falsifies this attempt?
-4. Local Bridge or Parent-Journey?
-5. At event/heartbeat: HOLD / EXIT / REMAP?
+detected ICT object != meaningful market structure
 ```
 
-For same-side retry after a stopped Child, add only:
+A swing, sweep, FVG, OB, BOS, or CHOCH may exist without being a good trade object.
+
+Do not rebuild V3 by turning those labels into another mandatory chain.
+
+## AI authority
+
+AI may identify and select major semantic structures from standardized charts.
+
+Require concise outputs:
 
 ```text
-WHAT OBJECTIVE FACT CHANGED SINCE THE FAILURE?
+MARKET_MAP
+MAJOR_POIS
+EXTERNAL_LIQUIDITY
+LONG_SCENARIO
+SHORT_SCENARIO
+GOOD_PITCH / WAIT
+CHILD_INVALIDATION
+DESTINATION / REVIEW_ROUTE
 ```
 
-The following are no longer mandatory execution fields:
+Do not require long taxonomies.
 
-- detailed memory role;
-- exact Child taxonomy;
-- mandatory repair/reclaim/hold classification;
-- verbose mirror-check prose;
-- long hidden-veto prose each trade;
-- multi-field campaign status taxonomy every H1.
+## Runtime authority
 
-They may remain optional explanatory language.
+Runtime handles exact arithmetic and execution after AI selection.
 
----
+It does not decide major/minor importance.
 
-## 5. Parent/Child is retained, not deleted
+## Entry
 
-Child remains one paid attempt with its own Hard SL.
+Wait for the large scenario first.
+Study LTF entry later.
 
-This distinction is strategically important because:
+Use LTF to improve price and timing.
+Do not let LTF create an unrelated trade thesis.
 
-```text
-Child failure does not kill Parent
-Parent survival does not automatically authorize re-entry
-```
+## Hard SL
 
-The simplification removes taxonomy, not the Parent/Child concept.
+Set Hard SL before entry.
+Never widen it.
 
----
+Place SL at actual Child invalidation for the intended scale.
 
-## 6. Deterministic structure authority
+Do not use a tiny local structure only because it gives a good R.
+Do not use a distant Parent failure level only to survive noise.
 
-AI may select among mapped structures. It may not invent official execution structures.
+## TP and route
 
-Any structure used for:
+Use major HTF structure and external-liquidity candidates.
 
-- Hard SL;
-- fixed Local-Bridge destination;
-- forward route distance;
-- review event;
-- deterministic breakout/touch state
+Parent-Journey may have no fixed TP.
 
-must have:
+Treat intermediate structure as review or transit unless it resolves the thesis.
 
-```text
-STRUCTURE_ID
-versioned definition
-exact price range
-source timestamp provenance
-```
+Use S for scale measurement.
+Do not use S as a fixed TP.
 
-The structure extractor itself is not yet promoted. It must be defined/versioned and parity-tested on consumed data before future-hidden use.
+## Research order
 
----
+Use consumed January-June.
 
-## 7. SL correction
+Research:
 
-Hard SL remains mandatory and precommitted.
+1. market map;
+2. POI selection;
+3. route selection;
+4. SL authority;
+5. winner management;
+6. LTF execution;
+7. runtime implementation.
 
-The runtime provides objective candidate structures and exact geometry. The AI selects the structure that genuinely ends the current Child.
+Do not open July before this research phase passes.
 
-A small local structure may be selected even for Parent-Journey participation, but the AI must briefly explain why losing that exact structure ends **this attempt**.
+## Retained V9 rules
 
-No minimum stop, ATR stop, minimum SL/S, or arbitrary safety buffer is created.
+Keep:
 
----
-
-## 8. TP / route correction
-
-Do not report the nearest structure as `CP1` by default.
-
-Future packets instead show:
-
-```text
-FORWARD STRUCTURES
-ID
-price range
-points from entry
-R from entry
-S from entry
-```
-
-### Local Bridge
-
-Requires a fixed destination selected from the packet.
-
-### Parent-Journey
-
-May have no fixed TP.
-
-Mapped structures ahead are review locations. Touching them does not force exit. If the market accepts/consumes them and continues, remap and stay available for the larger journey.
-
-This corrects the June pattern of Parent-Journey entries being managed like small scalps.
-
----
-
-## 9. Event-driven review authority
-
-Large-model polling every M1 is prohibited as the default architecture.
-
-Runtime continuously scans M1 locally.
-
-For Parent-Journey:
-
-```text
-Hard SL = continuous mechanical guard
-mapped structure event = early AI review path
-H1 close = maximum heartbeat if no event
-```
-
-An intrahour event normally leads to the next completed M15 review and halts further reveal until that decision is made.
-
-H1 is not a blind replay step. It is a fail-safe maximum review interval.
-
----
-
-## 10. Profit management correction
-
-June had both large MFE giveback and small realized winners.
-
-No mechanical profit lock is promoted.
-
-The correction is to give the AI the objective forward route before entry and call it again when those structures are reached/crossed.
-
-The AI should not exit a Parent-Journey solely because:
-
-- profit is already +5p/+10p;
-- nearest structure was touched;
-- a single M15 moved against the position;
-- Stochastic/EMA changed;
-- a fixed R level was reached.
-
-A manual exit still requires factual loss of progression.
-
----
-
-## 11. Bias audit retained but simplified
-
-Per-trade long-form mirror essays are not required.
-
-Every serious trade decision still states the strongest opposite case in one concise field.
-
-At session end audit:
-
-- LONG/SHORT serious candidates and trades;
-- unexplained side imbalance;
-- whether one side required materially stronger evidence;
-- any hidden no-chase/minimum-R behavior.
-
----
-
-## 12. Next-phase gate
-
-No new future-hidden replay until:
-
-1. deterministic structure registry is versioned;
-2. geometry outputs are reproducible;
-3. event scheduler is reproducible;
-4. minimal AI packet schema is frozen;
-5. consumed-June parity tests pass.
-
-`GOLD# 2021` remains untouched.
-
-
----
-
-## Additional decision — prepared-pitch / pending-order architecture
-
-User feedback after the first post-June simplification clarified an important execution principle:
-
-> Calling the AI more often does not create more good opportunities; it can cause the system to perceive more marginal pitches.
-
-Therefore V9 now prefers a **prepared-pitch architecture**:
-
-```text
-AI plans conditional entries in advance
--> runtime arms executable pending conditions/orders
--> market is monitored locally without continuous AI
--> if filled, Hard SL and any Local-Bridge destination are already frozen
--> next AI call occurs only at a precommitted discretionary review/remap event or maximum-staleness replanning boundary
-```
-
-This is both strategic and operational:
-
-- it better matches the baseball analogy;
-- it reduces same-auction overtrading caused by repeated observation;
-- it avoids relying on large-model latency to capture a fast entry after the fact;
-- it makes replay closer to eventual live deployment.
-
-No generic fixed limit/stop offset, expiry duration, or automatic TP is promoted. Order trigger, cancellation, expiry, and bracket semantics must be deterministic, versioned, and parity-tested.
-
-Reference: `V9_PRECOMMITTED_ORDER_AND_AI_CALL_SCHEDULER_PROTOCOL_20260910.md`.
+- Parent/Child separation;
+- good pitch != new event;
+- Hard SL before entry;
+- no widening;
+- no hindsight rescue;
+- no minimum R;
+- no fixed ATR stop;
+- no cooldown;
+- no retry cap;
+- no forced side balance;
+- large-winner participation.

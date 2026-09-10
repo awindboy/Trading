@@ -1,230 +1,149 @@
-# V9 Next Research Contract — Post-June Execution Runtime
+# V9 Next Research Contract — HTF Market Map
 
 Date: `2026-09-10`
-Status: `ACTIVE NEXT V9 CONTRACT / IMPLEMENTATION + PARITY PHASE`
+Status: `ACTIVE NEXT V9 CONTRACT / CONSUMED-DATA RESEARCH`
 Market: `GOLD# ONLY`
 Production authority: `NONE`
 EA authority: `NONE`
+Consumed data: `2025-01 through 2025-06`
+Future-hidden: `2025-07 LOCKED`
 Untouched reserve: `GOLD# 2021`
 
-## 1. Purpose
+## Purpose
 
-Do not ask the AI for more discretionary intelligence before fixing the execution environment.
+Answer:
 
-The next phase asks:
+> Can AI repeatedly build a useful multi-day H1/H4 market map, select meaningful POIs and routes, and produce HTF-scale trade ideas before LTF execution is optimized?
 
-> Can V9 present the same objective price geometry and trigger the same review moments across sessions, while leaving only a small set of genuinely discretionary decisions to AI?
+Do not optimize runtime first.
+Do not optimize LTF entry first.
 
-Positive retrospective P/L is irrelevant to this phase.
+## Workstream A — chart packet
 
----
+Build a standard chart input.
 
-## 2. Future-hidden gate
+Include:
 
-No new future-hidden trading period may be opened until all workstreams below pass on already-consumed data.
+- H1 multi-day chart;
+- H4 broader chart when needed;
+- exact current price;
+- S;
+- time labels;
+- no future candles beyond cutoff.
 
-Do not use `GOLD# 2021` to design or tune the runtime.
+Use the same visual scale across repeated tests where practical.
 
----
+## Workstream B — semantic market map
 
-## 3. Workstream A — structure registry
-
-Define each active objective structure family mathematically/algorithmically.
-
-For every family document:
-
-```text
-name/version
-required input timeframe
-exact construction rule
-price-range rule
-status rule
-provenance rule
-invalidation-boundary rule if usable for SL
-```
-
-Do not promote a family because it seems visually sensible.
-
-At minimum, trivial objective facts such as exact prior session/day/week extremes can be implemented without AI. More complex pivot/range structures require explicit frozen definitions first.
-
-No `major/minor` importance label is required unless it also has a deterministic definition.
-
----
-
-## 4. Workstream B — geometry packet
-
-Given a fixed cutoff and selected side, code must reproduce exactly:
+At each research cutoff require:
 
 ```text
-candidate pending-entry condition(s)
-planned trigger/order price for each condition
-candidate falsification structures
-exact SL boundary for each candidate structure
-planned SL points / 1R
-PLAN_S and planned SL/S
-all forward structure price ranges
-planned points/R/S to each forward structure
-FILL_S recorded if/when order fills
+MAJOR_LEGS
+MAJOR_HIGHS_LOWS
+MAJOR_POIS
+EXTERNAL_LIQUIDITY_CANDIDATES
+RANGE_OR_COMPRESSION
+LONG_SCENARIO
+SHORT_SCENARIO
+PREFERRED_PITCH_OR_WAIT
 ```
 
-No AI arithmetic and no undocumented price buffer.
+Keep the explanation short.
 
----
+## Workstream C — repeated-run stability
 
-## 5. Workstream C — prepared orders and event-driven scheduler
+Run the same cutoff multiple times independently.
 
-Implement continuous local M1 monitoring without continuous AI calls.
+Compare:
 
-The required primary state flow is:
+- selected major legs;
+- selected POIs;
+- selected liquidity;
+- scenario direction;
+- Child invalidation scale;
+- destination hierarchy.
+
+Do not require pixel-identical annotations.
+Require materially similar market meaning.
+
+## Workstream D — consumed-data replay
+
+Use January-June.
+
+Repeat:
 
 ```text
-PLANNING
--> SETUP PLANNED
--> ORDER/CONDITION ARMED
--> FILLED / CANCELLED / EXPIRED / INVALIDATED-BEFORE-FILL
--> if filled: SL / destination / selected review events
+map
+-> plan
+-> reveal
+-> review
+-> revise method
+-> test another consumed episode
 ```
 
-Required entry-condition support must include deterministic, parity-tested forms for at least:
+Include winners, losses, ranges, false breakouts, and failed trends.
 
-```text
-retracement-style pending entry
-break-style pending entry
-```
+Do not select only clean examples.
 
-Do not authorize vague executable conditions such as `meaningful reclaim` until their exact rule is frozen.
+## Workstream E — scale
 
-Required mechanical post-fill events:
+Measure:
 
-```text
-Hard SL touch
-fixed Local-Bridge destination touch
-```
+- intended route points;
+- intended route S;
+- Hard SL points;
+- SL/S;
+- MFE S;
+- realized S;
+- R;
+- holding time.
 
-Required scheduling principle:
+Do not fit fixed S or R thresholds.
 
-```text
-ordinary candle completion != automatic AI call
-precommitted price/order event -> local handling or scheduled AI review
-heartbeat -> maximum-staleness fail-safe only
-```
+## Workstream F — SL and exit
 
-Replay must advance directly from one precommitted relevant event to the next without showing the AI every intermediate candle.
+Study:
 
----
+- which HTF structure invalidates the Child;
+- when LTF structure has enough authority to be Hard SL;
+- when a major POI is consumed;
+- when destination is exit versus review;
+- when progression failure justifies exit.
 
-## 6. Workstream D — minimal AI packet
+Do not add fixed BE, partial, trail, or MFE-giveback rules.
 
-Freeze the request/response schema from the post-June pipeline.
+## Workstream G — LTF execution later
 
-The AI should not be asked to produce discretionary labels that the runtime can neither verify nor use.
+Do not optimize M15/M5 trigger families until A-F are stable.
 
-Required planning/setup AI fields remain small:
+Then test whether LTF improves entry without changing the HTF thesis.
 
-```text
-Parent belief
-opposite case
-NO SETUP or prepared setup(s)
-good-pitch rationale
-attempt thesis
-entry condition / objective entry structure
-SL structure selection
-journey scale
-fixed destination if Local Bridge
-review structures if Parent-Journey
-setup invalidation / expiry condition
-WHAT_IS_NEW only on retry
-```
+## Pass criteria
 
-Required open-position field:
+Pass this phase when:
 
-```text
-HOLD / EXIT / REMAP + concise factual evidence
-```
+1. the chart packet is reproducible;
+2. AI repeatedly identifies materially similar large structure;
+3. selected POIs and routes are explainable before outcomes;
+4. bad examples expose clear reasoning failures;
+5. Child SL scale is coherent with the trade thesis;
+6. winner management operates at HTF scale;
+7. the method produces a recognizable strategy identity across periods;
+8. no hidden numeric threshold is fitted to January-June;
+9. July remains unopened;
+10. 2021 remains untouched.
 
----
+## After pass
 
-## 7. Workstream E — consumed-June parity dry run
+Then:
 
-Use already-consumed June only for runtime/parity testing.
+1. freeze the market-map protocol;
+2. define the minimal AI schema;
+3. research LTF execution;
+4. build deterministic execution runtime;
+5. freeze order and scheduler semantics;
+6. run consumed-data parity;
+7. perform July contamination preflight;
+8. start fresh July replay from FLAT.
 
-Important audit windows include:
-
-```text
-2025-06-17 06:00 -> 2025-06-18 06:59
-2025-06-26 10:00 -> 16:59
-2025-06-30 07:00 -> 15:59
-```
-
-These windows contain:
-
-- broad rotational churn;
-- directional movement with repeated local stop-outs;
-- repeated short-lived inversion attempts.
-
-Do **not** alter structure definitions to make historical trades profitable.
-
-The purpose is exact reproducibility and event timing.
-
----
-
-## 8. Parity test
-
-At identical consumed cutoffs, repeated independent runs must match exactly on:
-
-```text
-structure IDs
-price ranges
-provenance
-SL boundary for the same selected structure
-S
-points/R/S geometry
-event timestamp
-next authorized review time
-```
-
-The following may differ and should be labeled `AI DISCRETIONARY DIVERGENCE`, not tooling failure:
-
-```text
-Parent belief
-pitch quality
-trade/no-trade
-which objective SL structure is selected
-Local Bridge vs Parent-Journey
-hold/exit/remap decision
-```
-
----
-
-## 9. Success criteria
-
-This phase passes only if:
-
-1. objective packet is reproducible;
-2. no AI-invented price structure has execution authority;
-3. SL derivation is deterministic after structure selection;
-4. p/R/S arithmetic is automatic;
-5. pending entry conditions and their cancel/expiry logic fire reproducibly;
-6. mapped post-fill review events fire reproducibly;
-7. ordinary candle completion does not cause unnecessary large-model calls;
-8. heartbeat is a maximum-staleness fail-safe rather than blind periodic analysis;
-9. replay can move from armed setup to first relevant event without exposing intermediate candles to AI;
-10. AI prompt is materially simpler than the June harness;
-11. no new numeric edge rules were fitted to June;
-12. untouched reserve remains untouched.
-
----
-
-## 10. Promotion gate
-
-After all criteria pass:
-
-1. freeze runtime version;
-2. freeze active structure registry version;
-3. freeze AI packet schema;
-4. freeze precommitted-order / cancellation / expiry / bracket semantics;
-5. select a future-hidden development period without inspecting future price;
-6. perform contamination preflight;
-7. begin a new prospective replay.
-
-Do not call this production validation yet.
+Do not call this production validation.

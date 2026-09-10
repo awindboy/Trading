@@ -1,259 +1,139 @@
 # V9 Research State
 
 Date: `2026-09-10`
-Status: `ACTIVE / JUNE CONSUMED / EXECUTION ENVIRONMENT UNDER FORMALIZATION`
+Status: `ACTIVE / HTF MARKET-MAP RESEARCH`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
+Consumed development data: `2025-01 through 2025-06`
+Future-hidden candidate: `2025-07 LOCKED`
 Untouched reserve: `GOLD# 2021`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
-## 1. Current research objective
+## Current problem
 
-The immediate research objective is no longer to ask the AI for more market-analysis concepts.
+V9 often understood local price action but mapped the market at too small a scale.
 
-It is to build an environment in which:
+This produced:
 
-```text
-objective price facts and geometry are deterministic
-+ AI performs only irreducibly discretionary judgment
-+ losses remain bounded
-+ genuinely good winners can remain large
-+ another AI receives the same market packet
-```
+- local stop authority inside large Parent ideas;
+- local targets inside large directional legs;
+- same-auction churn;
+- repeated AI attention to small structures;
+- weak strategy identity across sessions.
 
----
+The current problem is market representation and scale.
 
-## 2. Stable V9 thesis
+## Current hypothesis
 
-Retain:
+AI can read chart-native H1/H4 structure better than a deterministic swing/liquidity engine.
 
-```text
-Role > Pattern
-market understanding != direction prediction != good trade
-Parent is a working belief, not a direction veto
-Child stop != Parent death
-Child win != Parent proof
-stopped Child cannot be rescued later
-new Child != worthwhile pitch
-nearest structure != TP
-small loss can be good trading
-large winner participation matters
-no hindsight rescue/backfill
-```
+Use AI to select the meaningful structure.
+Use code to execute the selected structure exactly.
 
-The baseball-player model remains central:
-
-- ordinary failed swings are acceptable;
-- no perfect directional prediction is required;
-- a few losses must be tolerable;
-- the strategy only makes sense if good pitches are selected selectively enough and large journeys are allowed to pay materially.
-
-No numeric target is attached to `a few losses`.
-
----
-
-## 3. Evidence status
-
-January-May 2025 remain consumed development evidence.
-
-June 2025 is now also fully revealed and consumed development evidence.
-
-June is **not** clean strategy validation because:
-
-- early-June ledger recovery is incomplete in current SSOT;
-- known qualitative contamination dates exist;
-- causal cadence incidents occurred;
-- objective execution structure was under-specified;
-- the practical review scheduler was not sufficiently event-driven.
-
-Do not use June P/L to tune numeric thresholds.
-
-`GOLD# 2021` remains untouched final temporal reserve.
-
----
-
-## 4. What June clarified
-
-### A. Directional asymmetry improved
-
-The May first-pass problem of near one-sided trading was materially reduced.
-
-Therefore the next bottleneck is not simply `AI prefers SHORT` or `AI prefers LONG`.
-
-### B. Long loss clusters were not all the same
-
-Some clusters occurred in broad rotational auctions.
-
-Other clusters occurred while the market ultimately moved directionally, implying that local execution anchors and repeated inversion attempts were also part of the problem.
-
-Therefore do not add a universal sideways-market veto.
-
-### C. Parent-Journey and local stop authority sometimes mismatched
-
-Very local M15/M1 anchors sometimes ended a declared Parent-Journey Child.
-
-A small stop is not automatically wrong. The missing requirement was objective anchor provenance and a concise explanation of why losing that exact structure ends the **current attempt**.
-
-### D. Winners were often managed without enough route context
-
-A nearby remembered price was sometimes shown as `CP1`, even when it was not a TP.
-
-Parent-Journey positions often lacked a complete deterministic forward structure map and event-driven re-analysis at those structures.
-
-This contributed to both small-looking profit architecture and large MFE giveback.
-
----
-
-## 5. AI-complexity correction
-
-The June harness asked the AI to produce many overlapping labels and audit fields.
-
-Some were useful for diagnosis, but too many mandatory discretionary labels can consume model capacity without improving market decisions.
-
-Active correction:
-
-### Keep mandatory
-
-- Parent working belief;
-- strongest opposite case;
-- trade/no-trade good-pitch decision;
-- current attempt thesis;
-- objective SL structure selection;
-- Local Bridge vs Parent-Journey;
-- `WHAT IS NEW?` only on retry;
-- event/heartbeat HOLD/EXIT/REMAP decision with factual evidence.
-
-### Move to optional commentary / audit-only
-
-- detailed memory-role taxonomy;
-- detailed Child-type taxonomy;
-- mandatory repair/reclaim/hold labels;
-- verbose mirror-check prose;
-- repeated long-form hidden-veto essays;
-- fixed campaign-health checklist at every H1.
-
-Bias control is still mandatory through opposite-side consideration and session-level directional audit.
-
----
-
-## 6. Deterministic runtime requirement
-
-Before another future-hidden replay, V9 must freeze and parity-test:
+Research this sequence:
 
 ```text
-structure-registry version
-exact structure price ranges
-provenance
-structure invalidation-boundary rule
-R/S geometry calculations
-event scheduler
-AI packet schema
+large H1/H4 structure
+-> major POI / external liquidity
+-> scenario
+-> wait
+-> Child entry
+-> HTF-aligned Hard SL
+-> large route
 ```
 
-If a concept cannot be reproduced from the same data, it cannot create official SL/TP/review price authority.
+## Evidence status
 
-No universal support/resistance extractor is promoted yet. It must be defined and tested explicitly rather than improvised by an AI.
+2025 January-June is consumed development evidence.
 
----
+Use it for:
 
-## 7. Hard SL status
+- retrospective structure study;
+- causal sub-replay from chosen cutoffs;
+- matched-pair research;
+- AI stability tests;
+- failure taxonomy.
 
-`ACTIVE / RETAIN`.
+Do not call these results validation.
 
-- frozen before entry;
-- selected from objective mapped structure;
-- exact boundary generated under frozen runtime definition;
-- 1R = Entry-to-Hard-SL distance;
-- never widened;
-- touch ends Child;
-- Parent separate;
-- no minimum point/S/ATR stop.
+Do not use July.
+Do not use 2021.
 
----
+## What AI should learn to do
 
-## 8. Profit management status
+AI should identify:
 
-For Parent-Journey:
+- major legs;
+- meaningful swing highs/lows;
+- major POIs;
+- external liquidity candidates;
+- range and compression;
+- displacement and failed displacement;
+- consumed structure;
+- open route;
+- opposite scenario;
+- Child invalidation structure;
+- major destination/review structure.
 
-```text
-FIXED TP may be NONE
-```
+AI should ignore most local structures until the large map makes them relevant.
 
-but forward structures must be visible before entry.
+## What code should do
 
-Structure interaction causes re-analysis, not automatic exit.
+Code should:
 
-The campaign may continue through a structure when acceptance/continuation is supported. The AI may exit when factual progression has materially deteriorated.
+- render causal multi-timeframe charts;
+- store selected coordinates;
+- calculate exact geometry;
+- monitor entry/SL/review events;
+- measure R, S, MFE, MAE, hold time.
 
-Do not promote:
+Do not ask code to decide which mechanical swing is strategically important.
 
-- automatic BE;
-- fixed-R trail;
-- partial take-profit;
-- fixed MFE-giveback exit;
-- nearest-structure full exit.
+## SL research
 
-For Local Bridge, fixed destination remains required.
+Keep Hard SL.
 
----
+Study which structure actually kills the current Child.
 
-## 9. API/runtime state machine
+Compare:
 
-The next runtime is **prepared-pitch first**, not continuous AI observation.
+- LTF execution anchor;
+- H1 pullback structure;
+- broader H1 Child structure;
+- Parent failure structure.
 
-```text
-PLANNING
-  -> AI may return NO SETUP or precommitted conditional setup(s)
+Do not select the winner after seeing the outcome.
+Do not widen after entry.
 
-SETUP ARMED
-  -> runtime monitors raw M1 locally
-  -> no routine candle-by-candle AI calls
-  -> stop only at entry / cancellation / expiry / invalidation / replanning event
+## Journey research
 
-OPEN LOCAL BRIDGE
-  -> precommitted Hard SL + fixed destination
-  -> normally no AI call until mechanical resolution
+Measure:
 
-OPEN PARENT-JOURNEY
-  -> precommitted Hard SL
-  -> objective selected review/remap events
-  -> maximum-staleness heartbeat only as fail-safe
-```
+- captured points;
+- captured S;
+- MFE in S;
+- MFE in R;
+- holding time;
+- distance to major destination;
+- giveback before exit.
 
-This is strategically important, not merely an API-cost optimization.
+Do not turn `1S`, `2S`, or `3S` into fixed targets.
 
-Repeatedly showing the AI more candles can create more apparent marginal pitches without increasing the number of genuinely good pitches. The desired system prepares for a good pitch in advance and lets price come to it.
+A strategy claiming HTF trend capture should produce meaningful S-scale winners.
 
-The same architecture also addresses live inference latency: entry conditions can be armed before the market reaches them rather than relying on a large-model response after a fast break/retracement has already occurred.
+## Current gate
 
-Reference: `V9_PRECOMMITTED_ORDER_AND_AI_CALL_SCHEDULER_PROTOCOL_20260910.md`.
+Do not freeze a production strategy yet.
 
----
+Pass the next phase when:
 
-## 10. Explicitly not promoted
+1. the chart packet is stable;
+2. repeated AI runs produce materially similar large maps;
+3. major POIs and routes are explainable before outcomes;
+4. failure examples are understood without threshold mining;
+5. SL scale matches the Child thesis;
+6. large-winner management is defined at HTF scale;
+7. LTF entry can be added without changing the market thesis.
 
-Do not add:
-
-- N-loss stop/cooldown;
-- retry limit;
-- minimum R;
-- minimum stop size;
-- fixed ATR/point stop;
-- sideways-market ban;
-- fixed range-width classifier;
-- mandatory bar counts;
-- fixed profit lock/partial/trailing;
-- indicator authority;
-- forced side balance;
-- numeric pitch score;
-- AI-invented official support/resistance;
-- AI-invented liquidity claims from OHLC.
-
----
-
-## 11. Formalization gate
-
-The next phase is successful only if the execution packet and event timing are reproducible **without demanding more discretionary intelligence from the AI**.
-
-Only after this gate passes may a new future-hidden replay begin.
+Only then design the final deterministic runtime and open a new future-hidden period.

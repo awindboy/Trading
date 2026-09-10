@@ -1,277 +1,131 @@
-# V9 Discretionary Trading Pipeline — Post-June Prepared-Pitch AI Contract
+# V9 Discretionary Trading Pipeline — HTF Market Map
 
 Date: `2026-09-10`
-Status: `ACTIVE PIPELINE DESIGN / USE AFTER RUNTIME PARITY GATE`
+Status: `ACTIVE RESEARCH PIPELINE`
 Market: `GOLD# ONLY`
 Production authority: `NONE`
 EA authority: `NONE`
 
-## 1. Purpose
+## 1. Build the chart packet
 
-V9 is a baseball-style discretionary strategy:
+Show:
 
 ```text
-predicting direction != good trading
+H4 broader context
+H1 multi-day chart
+numeric scale facts
 ```
 
-A few bounded Child losses are acceptable when the trader avoids marginal pitches and participates materially when a strong Parent-scale journey works.
+Show enough history to contain the active major legs.
 
-The AI should therefore not inspect every candle looking for new trades.
+Do not begin with LTF.
 
-Its primary job is to **prepare a worthwhile conditional pitch in advance**, then let the runtime wait for price.
+## 2. Build the market map
 
-Read together with:
+AI marks:
 
-- `V9_DETERMINISTIC_EXECUTION_RUNTIME_AND_STRUCTURE_PACKET_PROTOCOL_20260910.md`
-- `V9_PRECOMMITTED_ORDER_AND_AI_CALL_SCHEDULER_PROTOCOL_20260910.md`
-- `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
+- major legs;
+- major highs/lows;
+- major POIs;
+- external liquidity candidates;
+- range/compression boundaries;
+- consumed structure;
+- large directional routes.
 
----
+State both LONG and SHORT scenarios.
 
-## 2. Planning state — default while flat
+## 3. Decide WAIT or PITCH
 
-The default flat state is not continuous trade search.
+Default to WAIT.
 
-At an authorized planning call, runtime supplies deterministic H4/H1 context and the objective structure/geometry packet.
+A pitch exists when a meaningful HTF scenario has become actionable near a selected POI or structural transition.
 
-AI answers:
+Do not trade because a local pattern appeared.
 
-```text
-PARENT_WORKING_BELIEF: one line
-STRONGEST_OPPOSITE_CASE: one line
-SETUPS: NONE or one/more PRECOMMITTED SETUP records
-```
+## 4. Open LTF only when needed
 
-`NONE` is a valid result.
+After the HTF scenario is clear, inspect H1/M15/M5 for execution.
 
-The question is:
+Use LTF for:
 
-> What future price condition, if reached, would be worth one bounded swing?
+- better entry location;
+- trigger timing;
+- reduced execution risk.
 
-not:
+Do not let LTF redefine the Parent map.
 
-> Is there something to trade right now?
+## 5. Freeze the Child
 
----
-
-## 3. Prepared setup
-
-For each worthwhile pitch the AI freezes:
+Before entry record:
 
 ```text
-SETUP_ID
 SIDE
 ATTEMPT_THESIS
-SCALE: LOCAL_BRIDGE / PARENT_JOURNEY
-ENTRY_CONDITION_TYPE
-ENTRY_STRUCTURE_ID
-ENTRY_TRIGGER_RULE
-SL_STRUCTURE_ID
-FIXED_DESTINATION_ID if Local Bridge
-REVIEW_STRUCTURE_IDS if Parent-Journey
-SETUP_INVALIDATION_CONDITION
-SETUP_EXPIRY_CONDITION
+ENTRY
+HARD_SL
+WHY_SL_INVALIDATES_THIS_CHILD
+PARENT_ROUTE
+MAJOR_DESTINATION / REVIEW_STRUCTURE
 ```
 
-If this is a same-side retry after a stopped Child:
+Set Hard SL before entry.
+Never widen it.
+
+## 6. Hold at the intended scale
+
+Do not manage a multi-hour Parent-Journey from every M5/M15 fluctuation.
+
+Review when:
+
+- Hard SL is touched;
+- a major mapped HTF structure is reached;
+- progression is materially damaged;
+- a predeclared remap event occurs.
+
+At review answer:
 
 ```text
-WHAT_IS_NEW: one objective factual change
+HOLD
+EXIT
+REMAP
 ```
 
-The runtime calculates all exact order prices, risk points, R, S, and forward-structure distances.
+## 7. Destination
 
----
+Use major HTF structure and external-liquidity candidates.
 
-## 4. Armed state
+Do not use the nearest local high/low as automatic TP.
 
-Once a setup is `ARMED`, stop asking the AI to reinterpret ordinary candles.
+Parent-Journey may use `FIXED TP = NONE`.
 
-Runtime advances/monitors price until the first relevant precommitted event:
+## 8. Retry
+
+After a stopped Child ask:
 
 ```text
-ENTRY FILLED
-SETUP CANCELLED
-SETUP EXPIRED
-SETUP INVALIDATED BEFORE FILL
+WHAT OBJECTIVE FACT CHANGED?
+IS THE NEW PITCH WORTH PAYING RISK FOR?
 ```
 
-There is no M15-by-M15 `STILL FORMING` loop by default.
+Do not use retry counts or cooldown.
 
-That loop is allowed only when the setup itself explicitly requires a deterministic completed-bar confirmation that cannot be expressed as an immediately executable pending order.
+## 9. Journal
 
----
+Record:
 
-## 5. Entry and Hard SL
+- chart cutoff;
+- market map image;
+- selected POIs;
+- selected liquidity/route;
+- LONG/SHORT scenarios;
+- entry;
+- Hard SL;
+- exit/review;
+- points;
+- R;
+- S;
+- MFE/MAE;
+- hold time;
+- execution-quality review.
 
-When the entry condition is filled, Hard SL becomes active immediately.
-
-```text
-touch = Child finished
-never widen
-later same-side movement cannot rescue it
-```
-
-A Child remains simply:
-
-> the current attempt on which money is at risk.
-
-Do not require the AI to generate an elaborate Child subtype taxonomy.
-
----
-
-## 6. Local Bridge
-
-A Local Bridge must have a precommitted deterministic destination.
-
-After fill, runtime can normally monitor:
-
-```text
-Hard SL vs fixed destination
-```
-
-without AI calls.
-
-Whichever resolves first ends the local trade, subject to M1 execution-order ambiguity rules.
-
-An earlier AI exit is permitted only at a precommitted review event that shows the local thesis itself has failed.
-
----
-
-## 7. Parent-Journey
-
-A Parent-Journey always has a Hard SL but may have no fixed TP.
-
-Before entry the AI selects objective forward structures that justify future discretionary review.
-
-After fill, the default is **HOLD WITHOUT RE-ANALYSIS** until:
-
-```text
-Hard SL
-or
-selected objective review event
-or
-coarse maximum-staleness heartbeat requiring genuine remap/reassessment
-```
-
-At a discretionary review the AI answers only:
-
-```text
-HOLD / EXIT / REMAP
-EVIDENCE: 1-3 exact price/settlement facts
-```
-
-Do not exit solely because:
-
-- profit is +5p or +10p;
-- one opposing candle appears;
-- the nearest structure was touched;
-- a fixed R was reached;
-- Stochastic/EMA changed.
-
-The intended payoff architecture accepts giveback when necessary to remain available for a large winner.
-
----
-
-## 8. Good-pitch and retry discipline
-
-The existence of a new candle, break, reclaim, or local event is not automatically a new pitch.
-
-A good pitch should normally be describable before its entry condition occurs.
-
-After a stop, Parent may survive. But another same-side swing requires a genuinely new prepared setup and concise `WHAT_IS_NEW`.
-
-Do not introduce:
-
-- N-loss limits;
-- retry caps;
-- minimum R;
-- minimum SL;
-- generic no-trade range rule.
-
-Repeated losses are audited as possible evidence that the system kept preparing marginal pitches inside the same auction.
-
----
-
-## 9. Opposite-side fairness
-
-The planning call must preserve:
-
-```text
-PARENT_WORKING_BELIEF
-STRONGEST_OPPOSITE_CASE
-```
-
-The AI may prepare a conditional opposite-side setup if it is genuinely worthwhile and independently executable.
-
-Parent belief is never a direction veto.
-
-No forced LONG/SHORT balance.
-
----
-
-## 10. AI-call discipline
-
-Large-model calls exist only for genuinely discretionary decisions.
-
-Preferred categories:
-
-```text
-PLANNING / REPLANNING
-PRECOMMITTED REVIEW EVENT
-PARENT-JOURNEY REMAP / HOLD-EXIT DECISION
-```
-
-Do not call merely because an M1, M5, M15, or H1 candle completed unless that completion is itself a frozen planning/review condition.
-
-The runtime may continuously process M1 locally without exposing every intermediate candle to the AI.
-
----
-
-## 11. Session audit
-
-At session end ask only:
-
-```text
-Did we prepare too many marginal pitches?
-Were repeated stops genuinely different opportunities or repeated attempts inside one auction?
-Did we convert ordinary candle noise into new setups?
-Did any good winner get managed like a scalp?
-Did we ignore real progression damage because we were afraid to exit?
-Was opposite-side evidence judged fairly?
-```
-
-These are audit questions, not mechanical rules.
-
----
-
-## 12. Journal
-
-Runtime records factual fields automatically:
-
-```text
-setup creation time
-entry/cancel/expiry/invalidation condition
-entry fill reference
-Hard SL
-fixed destination if any
-p/R/S geometry
-MFE/MAE
-all order/review event timestamps
-AI-call count and reason
-```
-
-AI-specific journal fields remain small:
-
-```text
-Parent belief
-opposite case
-why this conditional setup is a good pitch
-attempt thesis
-selected SL structure
-scale
-WHAT_IS_NEW if retry
-HOLD/EXIT/REMAP decisions
-```
-
-This preserves auditability without turning the AI into a form-filling market classifier.
+Judge process before outcome.
