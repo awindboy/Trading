@@ -2,211 +2,269 @@
 
 Date: `2026-09-10`
 Status: `ACTIVE EXECUTION / ANALYSIS TOOLING AUTHORITY`
-Scope: `CAUSAL MARKET INPUT + REVIEW SCHEDULING; NOT A MARKET EDGE`
+Scope: `CAUSAL MARKET INPUT + OBJECT GEOMETRY + EVENT REPLAY; NOT A MARKET EDGE`
 Market: `GOLD# ONLY`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
-## 1. Canonical input
+## 1. Dual authority: chart semantics vs numeric execution
 
-Official V9 discretionary analysis uses numeric OHLC reconstructed from the verified raw M1 chronological prefix.
+Chart images are a primary AI input for semantic market interpretation.
 
-Primary fields:
+Raw revealed M1 remains the authoritative source for:
 
-```text
-timestamp
-open
-high
-low
-close
-```
+- timestamps;
+- OHLC;
+- higher-timeframe construction;
+- exact ICT object coordinates;
+- object touch/fill/raid/invalidation timestamps;
+- Entry/SL/R/S arithmetic;
+- runtime event chronology.
 
-Chart images are supplemental only. Zoom, y-axis scale, visual slope, aspect ratio, and candle pixel size have no independent execution authority.
+A visual structure selected by AI must resolve to exact objective price/time facts before it receives execution authority.
 
-Any visual claim used for a decision must be restated in exact price/time facts.
+Visual slope, aspect ratio, zoom, candle pixel size, or freehand box edges have no independent price authority.
 
----
-
-## 2. Raw-data and clock authority
+## 2. Canonical input and clock
 
 Use source/broker timestamps exactly as stored.
-
-Do not convert timezones for replay logic.
-
+Do not timezone-convert replay logic.
 Do not synthesize missing minutes.
 
-2025 M1 is descriptive price authority, not exact Bid/Ask tick execution authority.
+2025 M1 is descriptive price authority, not exact Bid/Ask/tick fill authority.
 
----
+## 3. Fail-closed causal prefix
 
-## 3. Hard causal-prefix boundary
+Official replay streams the raw file chronologically and stops at the revealed cutoff.
 
-Official replay must stream the raw file chronologically and stop at the revealed cutoff.
+Do not preload the full future file into an active dataframe and filter afterward.
 
-Do not preload the complete future file into an active dataframe and later filter by cutoff.
+The helper may inspect only the next row timestamp to test cutoff.
+Do not expose that row's future OHLC when it lies beyond cutoff.
 
-The helper may inspect only the next row timestamp to determine whether it exceeds the target cutoff; if so, it must not expose that row's future OHLC.
-
-State must contain at minimum:
+State must retain at minimum:
 
 ```text
 source path/hash
 revealed cutoff
 source byte offset
-revealed cache
+revealed-prefix hash
 position state
 Hard SL / fixed destination if open
-review mode
+active map/event version
 known contamination intervals
-runtime/structure version
+runtime/object-engine version
 ```
 
-Any accidental future reveal contaminates the exposed interval. Never backfill a trade inside it.
-
----
+Accidental reveal contaminates the exposed interval.
+Never backfill a trade into it.
 
 ## 4. Higher-timeframe construction
 
-Reconstruct completed bars from revealed M1 only.
+Reconstruct from revealed M1.
 
 ```text
+M5:  hh:mm buckets of 5 minutes
 M15: hh:00-14, 15-29, 30-44, 45-59
 H1:  hh:00-59
 H4:  00-03, 04-07, 08-11, ...
 ```
 
-Use completed bars only for normal discretionary review.
+Use completed bars for normal AI decisions unless a frozen runtime event explicitly requires an intrabar fact.
 
-Uploaded higher-timeframe files are parity/acceleration aids only after the complete bar lies behind cutoff. Raw M1 wins disputes.
+Uploaded H1/H4/M15/M5 files are parity/visual acceleration aids only after the entire referenced bar lies behind cutoff.
+Raw M1 wins disputes.
 
----
+## 5. Chart-native packet
 
-## 5. Numeric context windows
-
-Recommended display windows remain bounded perception aids, not trading thresholds:
-
-```text
-H4 last 20 completed
-H1 last 24 completed
-M15 last 16 in candidate/event mode
-M5 last 12 only when exact detail is useful
-M1 exact local rows for guards/order-of-events
-```
-
-The deterministic structure packet may preserve older objective structures outside the visible recent window.
-
----
-
-## 6. Runtime-derived facts vs AI interpretation
-
-Tooling supplies facts such as:
-
-- exact highs/lows/closes;
-- defined structure ranges;
-- touch/cross/close state relative to those structures;
-- deterministic breakout/retracement labels only when versioned;
-- distances in points/R/S.
-
-AI interpretation such as `Parent bullish`, `good pitch`, or `campaign damaged` remains discretionary.
-
-Do not allow discretionary language to alter the causal data boundary.
-
----
-
-## 7. Replay / AI-call state machine
-
-The causal tool must represent eventual live deployment: the runtime watches price continuously; the AI does not.
-
-### PLANNING / FLAT
-
-An authorized planning call uses completed H4/H1 context plus the deterministic structure packet.
-
-The AI may return:
+AI-facing research uses two chart roles:
 
 ```text
-NO SETUP
-or
-PRECOMMITTED SETUP(S)
+MAP
+TRIGGER
 ```
 
-Do not call the AI on every completed H1 merely to search for a trade.
+MAP:
 
-A later planning/replanning call requires a frozen planning event or maximum-staleness boundary defined by the active scheduler version.
+- H1 main chart;
+- selected H4/H1 object overlays;
+- enough history for the active multi-day map;
+- roughly 7-15 trading days as a display default, not a rule.
 
-### SETUP ARMED
+TRIGGER:
 
-Once a setup is armed, advance raw M1 chronologically **without discretionary AI inspection** until the first relevant event:
+- M5 default;
+- M15 when justified by trigger scale;
+- local window only after HTF authorization.
+
+Code may generate additional H4 or debug charts for parity/tooling checks.
+Do not use them as additional discretionary charts by default.
+
+Annotations must remain concise and must not obscure the price structure.
+
+## 6. ICT candidate-object engine
+
+Official research object geometry must be versioned.
+
+Current engine:
+
+`scripts/v9_ict_object_engine.py`
+
+It reads an already-revealed prefix only.
+It never opens future source data.
+
+Current candidate families:
+
+### FVG
+
+Three completed candles.
 
 ```text
-ENTRY FILLED
-SETUP CANCELLED
-SETUP EXPIRED
-SETUP INVALIDATED BEFORE FILL
-REPLANNING BOUNDARY
+bull: C1.high < C3.low
+bear: C1.low > C3.high
 ```
 
-Intermediate M15/H1 candles are processed locally but are not automatically shown to the AI.
+Store exact gap edges and source triplet.
+`BORN_AT` is C3 completion.
+Use M1 after birth for exact first touch and full-fill timestamp.
 
-If the entry rule itself requires completed-bar confirmation, reveal only the exact completed bar needed by the frozen rule.
+### Swing/liquidity candidate
 
-### OPEN PARENT-JOURNEY
+Current geometric candidate uses two left and two right bars.
+The swing becomes known only after the second right bar completes.
 
-Local runtime scans M1 continuously for Hard SL and preselected review events.
+This is a candidate source only.
+It has no deterministic major/minor importance.
 
-The next large-model call is the earliest of:
+Use M1 after birth for exact BSL/SSL raid timestamp.
+
+### OB candidate
+
+Current research candidate rule:
+
+- completed bar closes through a confirmed swing candidate;
+- last opposite-color candle before that break becomes source-candle candidate.
+
+Store full wick range, body range, Mean Threshold, break reference, break bar, first mitigation, and distal-edge invalidation.
+
+This is a reproducible candidate definition, not proof that every candidate is a meaningful ICT OB.
+
+## 7. Object lifecycle
+
+Code owns geometric state.
 
 ```text
-precommitted discretionary review event
-maximum-staleness replanning/review boundary
+FVG: ACTIVE / TOUCHED / FULLY_FILLED
+LIQUIDITY: ACTIVE / RAIDED
+OB: ACTIVE / MITIGATED / INVALIDATED
 ```
 
-A mapped intrahour event may schedule a next-completed-M15 packet when the frozen event rule requires bar completion.
+Store exact geometric end timestamp.
+Do not extend a consumed geometric object beyond that timestamp in rendered charts.
 
-Ordinary M15/H1 completion does not itself require a call.
-
-### OPEN LOCAL BRIDGE
-
-Local runtime guards Hard SL and fixed destination chronologically.
-
-Default behavior is no discretionary AI call between fill and mechanical resolution.
-
-An earlier discretionary review is allowed only if the pre-entry Local-Bridge setup explicitly froze such a review condition.
-
----
-
-## 8. Heartbeat / maximum-staleness rule
-
-A heartbeat is a fail-safe against an indefinitely stale plan, not the primary observation cadence.
-
-The exact maximum-staleness boundary must be part of the versioned scheduler and justified by the lifecycle scale.
-
-The runtime may cheaply update completed H1/H4 facts without invoking the large model.
-
-The model is called only when:
+AI owns strategic role/state.
 
 ```text
-a precommitted event requires discretionary judgment
-or
-the frozen maximum-staleness boundary requires replanning
+SELECTED
+SECONDARY
+TRANSIT
+STALE
+RETIRED
+DESTINATION
+REVIEW
 ```
 
-This prevents two opposite failures:
+Geometric state and strategic state must not be conflated.
 
-- minute/candle polling that manufactures marginal opportunities;
-- an old plan remaining armed after its context is no longer valid.
+## 8. AI selection and exact coordinates
 
-## 9. Mechanical guarded advance
+AI selects important objects from the candidate ledger after reading MAP.
 
-For open positions, already-frozen mechanical events are monitored sequentially in M1 before the requested discretionary review time.
+Official object geometry is referenced by `OBJECT_ID`.
+AI cannot change its stored price range.
 
-### Hard SL
+If AI identifies an important semantic structure not covered by an existing candidate family, record exact source timestamps and objective coordinates before giving it runtime authority.
+Do not use an unversioned freehand box as an executable structure.
 
-If Hard SL is first touched before the next review, halt immediately at the first touch M1. Do not reveal later rows in that review interval.
+## 9. Map ledger
 
-### Local Bridge destination
+Persist the previous AI map between calls.
 
-Guard fixed destination the same way.
+Minimum research state:
 
-If SL and destination occur in the same M1 bar, mark:
+```text
+MAP_VERSION
+ASOF
+SELECTED_OBJECT_IDS + strategic roles
+LONG_SCENARIO
+SHORT_SCENARIO
+PREFERRED_PITCH / WAIT
+ACTIVE_WAIT_EVENT
+TRIGGER_STATE
+CHILD / POSITION STATE
+REVIEW_ROUTE
+MAP_CHANGES
+```
+
+Every update must state what changed.
+Do not silently rewrite old object roles or geometry.
+
+## 10. Event-driven replay
+
+The runtime watches price continuously; AI does not.
+
+### FLAT / PLANNING
+
+AI builds MAP and freezes the next wake event.
+
+### WAITING FOR HTF EVENT
+
+Use `v9_replay_event_runner.py` to advance to the first frozen event.
+
+Supported research events include:
+
+- price threshold;
+- zone touch;
+- Hard SL / destination;
+- frozen completed M5/M15/H1 close condition.
+
+Intermediate rows remain runtime-only until the event.
+
+### TRIGGER ACTIVE
+
+At selected HTF event, render MAP + TRIGGER.
+AI may return:
+
+```text
+NO ENTRY
+WAIT FOR FROZEN TRIGGER
+ENTER / ARM CHILD
+REMAP
+```
+
+If waiting, freeze the trigger before advance.
+
+### OPEN POSITION
+
+Runtime guards Hard SL and selected review/destination events in chronological M1 order.
+
+Ordinary M5/M15/H1 completion does not itself authorize a discretionary call.
+
+At a mapped discretionary review, AI returns:
+
+```text
+HOLD
+EXIT
+REMAP
+```
+
+## 11. Mechanical guards
+
+Hard SL first touch halts the Child immediately.
+Do not reveal later rows in that guarded interval before recording resolution.
+
+Guard fixed destination the same way when used.
+
+If Hard SL and destination touch inside the same M1 row:
 
 ```text
 INTRAMINUTE_EXECUTION_AMBIGUOUS
@@ -214,42 +272,17 @@ INTRAMINUTE_EXECUTION_AMBIGUOUS
 
 Do not invent tick order.
 
----
+## 12. Entry references
 
-## 10. Structural review events
+Do not assume current M1 close entry.
 
-Only structures already present in the deterministic packet may create official structural event triggers.
+A setup freezes an objective trigger/order rule first.
+Runtime advances until that condition occurs or is cancelled/invalidated.
 
-Typical runtime-detectable states include:
+For completed-bar confirmation, the descriptive entry reference may be the confirming completed-bar close when that is the frozen research rule.
+Do not use hindsight best prices or future opens.
 
-```text
-zone touched/entered
-zone boundary crossed
-completed M15 close across configured boundary
-selected review structure consumed according to frozen definition
-```
-
-The exact event definitions belong to the frozen runtime/structure version.
-
-An AI-only phrase such as `important memory is being tested` cannot itself fire an official event unless it resolves to a mapped `STRUCTURE_ID`.
-
----
-
-## 11. Entry / pending-order reference
-
-Post-June V9 no longer assumes that entry occurs at the current M1 close when the AI makes a decision.
-
-For a precommitted setup, the planning packet freezes a deterministic `ENTRY_TRIGGER_RULE` and the runtime derives the associated planned order/trigger price according to the frozen execution version.
-
-Replay then advances causally until that condition first occurs. The descriptive fill reference follows the frozen order-simulation rule; it is not hindsight-selected after seeing the move.
-
-For an immediate-entry setup explicitly allowed by a future runtime version, the latest fully revealed M1 close may still be used, but immediate entry is not the default architecture.
-
-Do not use future next-bar opens or hindsight best prices.
-
----
-
-## 12. S coordinate
+## 13. S coordinate
 
 Retain:
 
@@ -257,39 +290,29 @@ Retain:
 S(t) = previous fully completed H4 Wilder ATR14
 ```
 
-S is a distance coordinate only.
+Use S for distance/scale measurement only.
+No S threshold creates entry/exit authority.
 
-Runtime computes:
+## 14. Parity
 
-- SL distance in S;
-- each forward structure distance in S;
-- realized/MFE/MAE distance in S when useful.
+Two implementations with the same revealed prefix and frozen versions must agree on:
 
-No S threshold creates automatic entry/exit authority.
+- completed bars;
+- object IDs / source / ranges;
+- geometric lifecycle timestamps;
+- R/S arithmetic;
+- frozen event timestamps;
+- Hard SL/destination chronology.
 
----
+Different AI strategic selections are allowed.
+Different factual object packets are not.
 
-## 13. Parity requirement
-
-Two implementations given the same cutoff and frozen versions must match on:
-
-```text
-revealed bars
-structure IDs/ranges/provenance
-R/S geometry
-event timestamps
-next authorized review boundary
-mechanical guard chronology
-```
-
-Different AI trade decisions are allowed. Different factual packets are not.
-
-Label failures specifically:
+Label failures:
 
 ```text
 TOOLING NON-PARITY
-STRUCTURE NON-PARITY
+OBJECT NON-PARITY
 GEOMETRY NON-PARITY
-EVENT-SCHEDULER NON-PARITY
+EVENT NON-PARITY
 CAUSAL REVEAL INCIDENT
 ```

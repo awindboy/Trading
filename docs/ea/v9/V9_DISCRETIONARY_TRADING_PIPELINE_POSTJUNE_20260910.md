@@ -1,4 +1,4 @@
-# V9 Discretionary Trading Pipeline — HTF Market Map
+# V9 Discretionary Trading Pipeline — Sequential Map + Trigger
 
 Date: `2026-09-10`
 Status: `ACTIVE RESEARCH PIPELINE`
@@ -6,83 +6,149 @@ Market: `GOLD# ONLY`
 Production authority: `NONE`
 EA authority: `NONE`
 
-## 1. Build the chart packet
+## 1. Start causally
 
-Show:
+Start from a preselected replay cutoff and FLAT state.
+
+Use `v9_causal_m1.py`.
+Build only the revealed chronological prefix.
+
+Do not preload or inspect future OHLC for active decisions.
+
+## 2. Build exact ICT candidate universe
+
+Run `v9_ict_object_engine.py` on the revealed prefix.
+
+Generate H4/H1 candidates:
 
 ```text
-H4 broader context
-H1 multi-day chart
-numeric scale facts
+FVG
+OB
+SWING / LIQUIDITY
 ```
 
-Show enough history to contain the active major legs.
+Candidate object output includes exact geometry, provenance, and lifecycle facts.
 
-Do not begin with LTF.
+Code does not decide importance.
 
-## 2. Build the market map
+## 3. Render MAP
 
-AI marks:
+Use H1 as the main AI-facing map.
+Overlay selected H4/H1 objects.
 
-- major legs;
-- major highs/lows;
-- major POIs;
-- external liquidity candidates;
-- range/compression boundaries;
-- consumed structure;
-- large directional routes.
+Map should show only what matters:
 
-State both LONG and SHORT scenarios.
+- major leg(s);
+- selected POI(s);
+- selected liquidity;
+- large route;
+- Entry/SL/review levels when relevant.
 
-## 3. Decide WAIT or PITCH
+Keep annotations short.
+
+## 4. AI updates the market-map ledger
+
+AI outputs:
+
+```text
+MAP_VERSION
+SELECTED_OBJECT_IDS + ROLES
+LONG_SCENARIO
+SHORT_SCENARIO
+PREFERRED_PITCH / WAIT
+ACTIVE_WAIT_EVENT
+MAP_CHANGES
+```
+
+Do not rebuild the story from scratch.
+Explain any strategic object-role change.
+
+## 5. WAIT
 
 Default to WAIT.
 
-A pitch exists when a meaningful HTF scenario has become actionable near a selected POI or structural transition.
+Freeze the event that is allowed to wake AI again.
+Examples:
 
-Do not trade because a local pattern appeared.
+```text
+selected POI touch
+selected liquidity raid
+selected POI geometric end
+frozen completed-bar condition
+explicit remap event
+```
 
-## 4. Open LTF only when needed
+Use `v9_replay_event_runner.py` to advance to the first frozen event.
 
-After the HTF scenario is clear, inspect H1/M15/M5 for execution.
+No AI inspection of ordinary intermediate candles.
 
-Use LTF for:
+## 6. Update objects at event
 
-- better entry location;
-- trigger timing;
-- reduced execution risk.
+Rebuild the candidate ledger from the newly revealed prefix.
 
-Do not let LTF redefine the Parent map.
+Code updates exact lifecycle:
 
-## 5. Freeze the Child
+- FVG touch/full fill;
+- liquidity raid;
+- OB mitigation/invalidation.
 
-Before entry record:
+AI updates strategic roles.
+
+## 7. Open TRIGGER chart only when authorized
+
+If an HTF event creates an actionable pitch, open M5 trigger chart.
+Use M15 instead when the active structure is M15-scale.
+
+Show:
+
+- active HTF POI;
+- selected local liquidity;
+- sweep/raid when relevant;
+- selected structural reference;
+- trigger state.
+
+Do not search the whole LTF chart for unrelated trades.
+
+## 8. Freeze the LTF trigger
+
+Before advancing again record one objective trigger condition.
+
+Examples can include a selected M5/M15 close across a frozen structural reference.
+The exact trigger is discretionary and research-stage.
+
+Do not add a mandatory trigger chain.
+
+If the POI is consumed/invalidated before trigger, cancel the Child candidate.
+Do not backfill.
+
+## 9. Freeze Child before entry
+
+Record:
 
 ```text
 SIDE
 ATTEMPT_THESIS
-ENTRY
+ENTRY / ENTRY_TRIGGER
 HARD_SL
 WHY_SL_INVALIDATES_THIS_CHILD
 PARENT_ROUTE
-MAJOR_DESTINATION / REVIEW_STRUCTURE
+DESTINATION / REVIEW_OBJECT_IDS
 ```
 
 Set Hard SL before entry.
-Never widen it.
+Never widen.
 
-## 6. Hold at the intended scale
+## 10. Manage open position at HTF scale
 
-Do not manage a multi-hour Parent-Journey from every M5/M15 fluctuation.
+Runtime scans M1 for:
 
-Review when:
+- Hard SL;
+- fixed destination when used;
+- selected HTF review object/event.
 
-- Hard SL is touched;
-- a major mapped HTF structure is reached;
-- progression is materially damaged;
-- a predeclared remap event occurs.
+Do not manage a multi-hour journey from every M5/M15 fluctuation.
 
-At review answer:
+At authorized review show updated MAP + TRIGGER/resolution chart and answer:
 
 ```text
 HOLD
@@ -90,42 +156,38 @@ EXIT
 REMAP
 ```
 
-## 7. Destination
+## 11. Child resolution and retry
 
-Use major HTF structure and external-liquidity candidates.
+Child ends at Hard SL or authorized exit/destination.
 
-Do not use the nearest local high/low as automatic TP.
+Do not rescue it later.
 
-Parent-Journey may use `FIXED TP = NONE`.
-
-## 8. Retry
-
-After a stopped Child ask:
+If Parent survives, a new Child requires:
 
 ```text
 WHAT OBJECTIVE FACT CHANGED?
-IS THE NEW PITCH WORTH PAYING RISK FOR?
+IS THIS A GOOD PITCH?
 ```
 
-Do not use retry counts or cooldown.
+No retry count or cooldown.
 
-## 9. Journal
+## 12. Journal
 
-Record:
+Record every AI call and runtime event:
 
-- chart cutoff;
-- market map image;
-- selected POIs;
-- selected liquidity/route;
+- cutoff/as-of;
+- call reason;
+- MAP image;
+- TRIGGER image/state;
+- candidate-engine version;
+- selected object IDs and roles;
+- geometric object state changes;
 - LONG/SHORT scenarios;
-- entry;
-- Hard SL;
-- exit/review;
-- points;
-- R;
-- S;
-- MFE/MAE;
-- hold time;
-- execution-quality review.
+- frozen wait/trigger event;
+- Entry / Hard SL;
+- review/destination;
+- HOLD/EXIT/REMAP;
+- R/S/MFE/MAE/hold time;
+- process-quality review.
 
-Judge process before outcome.
+Outcome is secondary to execution/process quality during current research.

@@ -1,7 +1,7 @@
 # V9 Research Instructions — Current Authority
 
 Last synchronized: `2026-09-10`
-Status: `ACTIVE / CHART-NATIVE HTF MARKET-MAP RESEARCH`
+Status: `ACTIVE / SEQUENTIAL CHART-NATIVE MAP-TRIGGER-POSITION RESEARCH`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
@@ -12,7 +12,7 @@ Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f
 
 ## Resume order
 
-Start from latest GitHub HEAD.
+Start from latest GitHub `main` HEAD.
 
 Read:
 
@@ -21,95 +21,124 @@ Read:
 3. `RESEARCH_STATE_V9.md`
 4. `V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md`
 5. `DECISIONS_V9_POSTJUNE_SIMPLIFICATION_AND_RUNTIME_ADDENDUM_20260910.md`
-6. `V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
-7. `V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md`
-8. `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
+6. `V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
+7. `V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
+8. `V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md`
+9. `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
+10. current code/tool parity state before any new future-hidden reveal.
 
-Treat June postmortems as historical evidence.
-Treat deterministic-structure-runtime and precommitted-scheduler documents as deferred implementation references.
+Use `results/V9_ICT_OBJECT_ENGINE_AND_MTF_TRIGGER_CALIBRATION_20260910.md` as current consumed-data evidence.
+Treat older postmortems and pipelines as historical evidence when they do not conflict with current authority.
+Treat deterministic-order/scheduler documents as deferred implementation references.
 
-Do not open July before the active research contract passes.
+Do not open July before the active contract passes.
 
 ## Strategy identity
 
 Use:
 
 ```text
-HTF MARKET MAP
--> MAJOR POI / EXTERNAL LIQUIDITY
--> LONG / SHORT SCENARIOS
+CAUSAL HTF MARKET MAP
+-> MECHANICAL ICT CANDIDATE UNIVERSE
+-> AI SELECTS MAJOR POI / LIQUIDITY / ROUTE
 -> WAIT
--> LTF EXECUTION
--> HTF-ALIGNED HARD SL
+-> SELECTED HTF EVENT
+-> LTF TRIGGER MANAGEMENT
+-> CHILD ENTRY + HARD SL
 -> MULTI-HOUR / MULTI-S JOURNEY
+-> HOLD / EXIT / REMAP
 ```
 
 Read the large structure first.
-Do not start from the current candle or nearest setup.
+Do not start from the current candle or nearest LTF setup.
 
-## Chart-native analysis
+## Object authority
 
-Use chart images as a primary AI input.
-Use raw OHLC and numeric packets as supporting facts.
+Code creates exact candidate geometry and lifecycle.
 
-Default research view:
+Current candidate families:
 
-- H1: show enough history to contain the active multi-day legs. Use about 7-15 trading days as a display default, not a trade filter.
-- H4: show broader context when earlier structure matters.
-- LTF: open only after the HTF map and scenario are clear.
+- H4/H1 FVG;
+- H4/H1 OB candidate;
+- H4/H1 swing/liquidity candidate.
 
-Mark:
+Code records source candle(s), exact price range, born time, touch/mitigation/fill/raid/invalidation time.
 
-- major directional legs;
-- major swing highs/lows;
-- external liquidity candidates;
-- major POIs;
-- range edges;
-- compression boundaries;
-- displacement origins;
-- consumed and still-relevant structure;
-- large routes in both directions.
+Code does not decide strategic importance.
 
-Do not force a deterministic swing algorithm to decide which structure matters.
+AI selects which objects matter in the current H1/H4 map.
+AI must select existing object IDs for official POI/liquidity coordinates whenever an applicable candidate exists.
+Do not let AI silently move an object's geometry.
+
+Keep geometric lifecycle separate from strategic lifecycle.
+
+```text
+geometrically active != strategically important
+Child stop != HTF object death
+FVG full fill -> FVG geometric end
+liquidity raid -> liquidity geometric end
+```
+
+## Two-chart research packet
+
+Use exactly two AI-facing chart roles:
+
+```text
+MAP
+TRIGGER
+```
+
+MAP:
+
+- H1 main chart;
+- selected H4/H1 objects overlaid;
+- major liquidity and route;
+- Entry/SL/review levels when relevant.
+
+TRIGGER:
+
+- M5 by default;
+- M15 when the active trigger is clearly M15-scale;
+- open only after an HTF POI/liquidity event makes LTF relevant;
+- otherwise treat trigger state as `INACTIVE`.
+
+Keep chart annotations short and out of the price structure.
 
 ## AI role
 
 AI decides:
 
-1. the large H1/H4 market structure;
-2. which highs/lows and zones matter now;
-3. major POIs;
-4. meaningful external liquidity candidates;
-5. expansion, pullback, range, edge, or compression state;
-6. LONG scenario;
-7. SHORT scenario;
-8. which scenario offers a good pitch;
-9. which structure invalidates the Child at the intended scale;
-10. which HTF structures are destination or review points.
+1. large H1/H4 market structure;
+2. which candidate objects matter now;
+3. major POIs and external liquidity;
+4. LONG scenario and strongest SHORT scenario;
+5. `WAIT`, trigger preparation, entry, or remap;
+6. which objective LTF event is worth using as a trigger;
+7. which structure invalidates the Child at the intended scale;
+8. which HTF structures are destination or review points;
+9. at authorized review: `HOLD / EXIT / REMAP`.
 
-Do not turn every swing, FVG, OB, sweep, BOS, or CHOCH into a signal.
+Do not turn every FVG, OB, swing, sweep, BOS, or CHOCH into a signal.
 
-## Code/runtime role
+## Runtime/code role
 
 Code handles:
 
-- causal chart construction;
-- exact coordinates after AI selection;
-- Entry/SL distance;
-- R and S;
-- prepared-order monitoring;
+- fail-closed causal M1 reveal;
+- H4/H1/M15/M5 construction;
+- ICT candidate object generation;
+- exact coordinates and lifecycle timestamps;
+- chart rendering;
+- frozen event monitoring;
+- Entry/SL/R/S arithmetic;
 - Hard SL guards;
 - selected destination/review touches;
-- MFE/MAE;
-- timestamps;
-- replay state.
-
-Code does not assign strategic importance because a mechanical swing rule detected a structure.
+- MFE/MAE and journal timestamps.
 
 ## Parent and Child
 
-Parent is the large working market map and journey.
-Child is one paid attempt inside that map.
+Parent is the large working map and journey.
+Child is one paid attempt.
 
 Retain:
 
@@ -122,21 +151,24 @@ later movement cannot rescue a stopped Child
 
 For retry ask:
 
-`WHAT OBJECTIVE FACT CHANGED?`
+```text
+WHAT OBJECTIVE FACT CHANGED?
+IS THIS A GOOD PITCH?
+```
 
-Then ask:
+## Entry and trigger
 
-`IS THIS A GOOD PITCH?`
+Prioritize HTF map and POI quality over LTF precision.
 
-## Entry
+Do not enter because price touched a POI.
+Observe the selected POI interaction.
+Freeze the objective LTF trigger condition before advancing to it.
 
-Prioritize HTF structure quality over LTF entry precision.
+LTF improves execution.
+LTF does not create an unrelated Parent thesis.
 
-Do not optimize LTF entry until HTF mapping is reliable.
-
-After the HTF map matures, use H1/M15/M5 to improve execution location and timing.
-
-Do not chase a missed entry.
+Do not chase a missed move.
+`NO TRADE` because the selected POI never arrived is a valid outcome.
 
 ## Hard SL
 
@@ -145,40 +177,44 @@ Never widen it.
 
 Place SL where the current Child is actually wrong at the intended scale.
 
-Do not give a tiny LTF fluctuation full stop authority unless losing it invalidates the Child.
-Do not use the full Parent failure level when a nearer structure already invalidates the Child.
-
-Do not derive SL from fixed points, ATR, R, S, or a desired payoff multiple.
+Do not select SL from fixed points, ATR, R, S, or desired payoff.
+Do not use a tiny LTF structure merely because it improves R.
+Do not use the full Parent failure level merely to survive noise.
 
 ## TP and journey
 
-Aim to capture meaningful market movement.
-
-Use major HTF structure and external-liquidity candidates for destination and review planning.
-Treat nearby LTF structure as transit unless it resolves the thesis.
+Use major HTF structures and external liquidity for route and review.
 
 Parent-Journey may use `FIXED TP = NONE`.
-At major HTF structure decide `HOLD / EXIT / REMAP`.
+Nearby LTF structure is transit unless it resolves the thesis.
 
-Use prior completed H4 ATR14 as `S`.
-Use S as a scale measurement.
-Do not use S as a fixed target or stop formula.
+Use prior completed H4 Wilder ATR14 as `S` for scale measurement only.
+Measure meaningful `1S+`, `2S+` winner participation without making S a fixed target.
 
-Measure whether winners capture `1S+`, `2S+`, and larger journeys.
+## Sequential research behavior
 
-## Direction
+Do not reanalyze from a blank slate on every call.
+Persist the prior market-map ledger and object roles.
 
-Evaluate LONG and SHORT from the same map.
-Parent is not a direction veto.
-State the strongest opposite scenario.
+Advance price only to frozen events.
+At each event:
 
-Do not force side balance.
+```text
+update geometric object states
+show current MAP
+show TRIGGER only if relevant
+state MAP CHANGES
+then WAIT / ENTER / HOLD / EXIT / REMAP
+```
+
+Do not call AI on every candle.
+During current research, extra calls are allowed only when explicitly testing map-update behavior; label them research-only.
 
 ## Causal integrity
 
-Use only revealed chronological prefix in future-hidden replay.
+Use only revealed chronological prefix.
 Never backfill after future exposure.
-Never rescue a stopped trade with later price.
+Never rescue a stopped Child.
 
 ```text
 2025-01 through 2025-06 = CONSUMED DEVELOPMENT
@@ -191,15 +227,15 @@ Never rescue a stopped trade with later price.
 Do not add:
 
 - minimum R;
-- fixed ATR/point SL or TP;
+- fixed ATR/point/S SL or TP;
 - N-loss cooldown;
 - retry limit;
 - fixed no-chase distance;
 - forced LONG/SHORT balance;
-- fixed hold/retest bar counts;
+- fixed hold/retest counts;
 - mandatory indicator rules;
 - mandatory ICT-pattern chains;
-- deterministic major/minor labels without evidence.
+- deterministic major/minor strategic labels.
 
-Research the market map first.
-Formalize execution later.
+Do not change authority from one or two examples.
+Use consumed data for repeated replay and failure study first.

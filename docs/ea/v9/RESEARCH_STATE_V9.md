@@ -1,7 +1,7 @@
 # V9 Research State
 
 Date: `2026-09-10`
-Status: `ACTIVE / HTF MARKET-MAP RESEARCH`
+Status: `ACTIVE / SEQUENTIAL CHART-NATIVE MTF REPLAY`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
@@ -10,130 +10,134 @@ Future-hidden candidate: `2025-07 LOCKED`
 Untouched reserve: `GOLD# 2021`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
-## Current problem
+## Problem now
 
-V9 often understood local price action but mapped the market at too small a scale.
+The project has moved past the first proof that AI can draw a plausible large H1/H4 map.
 
-This produced:
+The unresolved problem is continuity:
 
-- local stop authority inside large Parent ideas;
-- local targets inside large directional legs;
-- same-auction churn;
-- repeated AI attention to small structures;
-- weak strategy identity across sessions.
+> Can AI maintain and trade one coherent market map as price evolves, while code maintains exact ICT object geometry and lifecycle?
 
-The current problem is market representation and scale.
+Do not evaluate this only from isolated screenshots or one winning trade.
 
-## Current hypothesis
+## Current architecture
 
-AI can read chart-native H1/H4 structure better than a deterministic swing/liquidity engine.
-
-Use AI to select the meaningful structure.
-Use code to execute the selected structure exactly.
-
-Research this sequence:
+Use:
 
 ```text
-large H1/H4 structure
--> major POI / external liquidity
--> scenario
--> wait
--> Child entry
--> HTF-aligned Hard SL
--> large route
+verified causal M1
+-> deterministic H4/H1 ICT candidate universe
+-> AI selects strategic objects
+-> MAP ledger
+-> frozen wait event
+-> runtime advance
+-> MAP update
+-> TRIGGER chart when authorized
+-> frozen LTF trigger
+-> Child entry + Hard SL
+-> event-driven position management
+-> HOLD / EXIT / REMAP
 ```
 
-## Evidence status
+## Candidate-object hypothesis
 
-2025 January-June is consumed development evidence.
+Mechanical ICT geometry is useful as a candidate universe.
 
-Use it for:
+Current candidates:
 
-- retrospective structure study;
-- causal sub-replay from chosen cutoffs;
-- matched-pair research;
-- AI stability tests;
-- failure taxonomy.
+- FVG from exact three-candle gaps;
+- swing/liquidity candidates from reproducible geometric pivots;
+- OB candidates from a reproducible swing-break/source-candle rule.
 
-Do not call these results validation.
+These definitions provide reproducible coordinates.
+They do not provide strategic importance.
 
-Do not use July.
-Do not use 2021.
+AI must reject most candidates.
 
-## What AI should learn to do
+## Lifecycle hypothesis
 
-AI should identify:
+Separate:
 
-- major legs;
-- meaningful swing highs/lows;
-- major POIs;
-- external liquidity candidates;
-- range and compression;
-- displacement and failed displacement;
-- consumed structure;
-- open route;
-- opposite scenario;
-- Child invalidation structure;
-- major destination/review structure.
+```text
+GEOMETRIC LIFECYCLE
+STRATEGIC / CAMPAIGN LIFECYCLE
+```
 
-AI should ignore most local structures until the large map makes them relevant.
+Code handles fill/raid/mitigation/invalidation.
+AI handles selected/secondary/transit/stale/retired/destination/review roles.
 
-## What code should do
+A geometrically active object can be strategically stale.
+A Child failure does not automatically end the Parent or HTF object.
 
-Code should:
+## Current chart contract
 
-- render causal multi-timeframe charts;
-- store selected coordinates;
-- calculate exact geometry;
-- monitor entry/SL/review events;
-- measure R, S, MFE, MAE, hold time.
+AI-facing packet has two chart roles:
 
-Do not ask code to decide which mechanical swing is strategically important.
+```text
+MAP
+TRIGGER
+```
 
-## SL research
+MAP is the H1 multi-day market view with selected H4/H1 objects overlaid.
+TRIGGER is M5 by default and appears only when LTF inspection is authorized by the HTF map.
 
-Keep Hard SL.
+Do not add a third chart to compensate for weak interpretation.
+Code may retain debug/parity charts separately.
 
-Study which structure actually kills the current Child.
+## Current research task
 
-Compare:
+Run multiple complete sequential episodes across consumed January-June.
 
-- LTF execution anchor;
-- H1 pullback structure;
-- broader H1 Child structure;
-- Parent failure structure.
+Each episode must preserve prior state.
+Do not restart interpretation at every event.
 
-Do not select the winner after seeing the outcome.
-Do not widen after entry.
+Test:
 
-## Journey research
+- map creation;
+- POI/liquidity selection;
+- waiting;
+- object creation and consumption through time;
+- trigger activation/cancellation;
+- position creation;
+- HTF review management;
+- Parent/Child continuity;
+- remapping after objective change;
+- no-trade and missed-move behavior.
 
-Measure:
+Include losses, failed triggers, ranges, trends, false breaks, and no-fill cases.
 
-- captured points;
-- captured S;
-- MFE in S;
-- MFE in R;
+## Measurement
+
+Record:
+
+- object IDs and roles;
+- object born/end timestamps;
+- map changes;
+- AI-call reason;
+- trigger state;
+- Entry / Hard SL;
+- route/review object IDs;
+- points, R, S;
+- MFE/MAE;
 - holding time;
-- distance to major destination;
-- giveback before exit.
+- process-quality review.
 
-Do not turn `1S`, `2S`, or `3S` into fixed targets.
-
-A strategy claiming HTF trend capture should produce meaningful S-scale winners.
+Do not fit fixed thresholds to these measurements.
 
 ## Current gate
 
-Do not freeze a production strategy yet.
+Do not open July until the sequential process shows all of the following:
 
-Pass the next phase when:
+- exact object geometry is reproducible;
+- object lifecycle updates do not silently rewrite history;
+- AI retains materially coherent maps between events;
+- selected POIs and liquidity remain explainable before outcomes;
+- AI can wait without manufacturing LTF trades;
+- trigger plans are frozen before subsequent price;
+- Child stops are handled without rescue;
+- position reviews operate at HTF scale;
+- remaps are tied to objective new facts;
+- strategy identity remains recognizable across different consumed episodes;
+- no hidden numeric threshold was mined from January-June.
 
-1. the chart packet is stable;
-2. repeated AI runs produce materially similar large maps;
-3. major POIs and routes are explainable before outcomes;
-4. failure examples are understood without threshold mining;
-5. SL scale matches the Child thesis;
-6. large-winner management is defined at HTF scale;
-7. LTF entry can be added without changing the market thesis.
-
-Only then design the final deterministic runtime and open a new future-hidden period.
+After that, freeze the analysis protocol, then design live API/MT5 calling semantics and runtime parity before July.

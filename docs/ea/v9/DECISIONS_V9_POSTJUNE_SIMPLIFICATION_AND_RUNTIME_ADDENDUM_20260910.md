@@ -1,119 +1,147 @@
-# V9 Decision Authority — Chart-Native HTF Market Map
+# V9 Decision Authority — Chart-Native ICT Candidate Map + MTF Trigger
 
 Date: `2026-09-10`
 Status: `ACTIVE V9 DECISION AUTHORITY`
 Market: `GOLD# ONLY`
+Production authority: `NONE`
+EA authority: `NONE`
 
 ## Decision
 
-Make chart-native HTF market mapping the primary V9 research problem.
-
-Use AI to decide which structures matter.
-Use code to execute selected structures exactly.
-
-Defer deterministic major-structure extraction.
-
-## Market scale
-
-Read H1 over multi-day structure.
-Use H4 for broader context.
-
-Start with:
-
-- major legs;
-- major highs/lows;
-- major POIs;
-- external liquidity candidates;
-- range edges;
-- compression;
-- displacement origins;
-- large route.
-
-Do not start with the nearest M15/M5 setup.
-
-## V3 transfer
-
-Retain this V3 lesson:
+Use a hybrid architecture:
 
 ```text
-detected ICT object != meaningful market structure
+mechanical ICT candidate geometry
++ AI strategic selection
++ causal event runtime
 ```
 
-A swing, sweep, FVG, OB, BOS, or CHOCH may exist without being a good trade object.
+Do not return to V3-style mechanical importance classification.
+Do not return to freehand AI price zones with no provenance.
 
-Do not rebuild V3 by turning those labels into another mandatory chain.
+## Mechanical object authority
+
+Code may create reproducible H4/H1 candidate objects for:
+
+- FVG;
+- OB;
+- swing/liquidity.
+
+Code records exact source candle(s), range, born time, and lifecycle timestamps.
+
+Candidate detection is not trade authority.
+
+Current swing/OB candidate algorithms are research versions and may be replaced after consumed-data evidence.
+Exact object definitions must be versioned.
 
 ## AI authority
 
-AI may identify and select major semantic structures from standardized charts.
+AI decides which detected objects matter in the current H1/H4 map.
 
-Require concise outputs:
+AI decides:
 
 ```text
-MARKET_MAP
-MAJOR_POIS
-EXTERNAL_LIQUIDITY
-LONG_SCENARIO
-SHORT_SCENARIO
-GOOD_PITCH / WAIT
-CHILD_INVALIDATION
-DESTINATION / REVIEW_ROUTE
+MAJOR MAP
+SELECTED POI
+EXTERNAL LIQUIDITY
+LONG SCENARIO
+SHORT SCENARIO
+WAIT / PITCH
+TRIGGER CONTEXT
+CHILD INVALIDATION
+DESTINATION / REVIEW ROUTE
+HOLD / EXIT / REMAP
 ```
 
-Do not require long taxonomies.
+AI must use objective object IDs for official candidate geometry where available.
+AI may not silently move an existing object's boundaries.
 
-## Runtime authority
+## Lifecycle decision
 
-Runtime handles exact arithmetic and execution after AI selection.
+Keep two states:
 
-It does not decide major/minor importance.
+```text
+GEOMETRIC STATE = code
+STRATEGIC STATE = AI
+```
 
-## Entry
+A filled FVG and raided liquidity candidate end geometrically.
+An OB can remain geometrically present while strategically stale.
+A Child stop does not itself destroy the Parent or HTF object.
 
-Wait for the large scenario first.
-Study LTF entry later.
+## Two-chart decision
 
-Use LTF to improve price and timing.
-Do not let LTF create an unrelated trade thesis.
+Use exactly two AI-facing chart roles:
+
+```text
+MAP
+TRIGGER
+```
+
+MAP is H1 with selected H4/H1 objects and route.
+TRIGGER is M5 by default, M15 when justified by trigger scale.
+
+Do not open LTF until the HTF map authorizes it.
+Keep chart labels concise.
+
+## Entry decision
+
+Price touching a POI is not entry permission.
+
+Use:
+
+```text
+selected HTF POI
+-> observe response
+-> select/freeze objective LTF event
+-> runtime waits
+-> Child entry if event occurs first
+```
+
+If the POI fills/invalidates before the trigger, `NO TRADE` is valid.
+Do not chase the missed move.
 
 ## Hard SL
 
-Set Hard SL before entry.
-Never widen it.
+Set before entry.
+Never widen.
 
-Place SL at actual Child invalidation for the intended scale.
+Use actual Child invalidation at the intended scale.
+Do not choose SL from desired R/S or arbitrary fixed distance.
 
-Do not use a tiny local structure only because it gives a good R.
-Do not use a distant Parent failure level only to survive noise.
+## Position management
 
-## TP and route
+Runtime guards Hard SL and frozen mapped events.
+AI does not inspect every candle.
 
-Use major HTF structure and external-liquidity candidates.
+At an authorized review answer:
 
-Parent-Journey may have no fixed TP.
+```text
+HOLD
+EXIT
+REMAP
+```
 
-Treat intermediate structure as review or transit unless it resolves the thesis.
-
-Use S for scale measurement.
-Do not use S as a fixed TP.
+Use major HTF structure and external liquidity for journey management.
 
 ## Research order
 
-Use consumed January-June.
+Current order:
 
-Research:
+1. exact candidate-object engine;
+2. AI object selection and map continuity;
+3. sequential wait/event handling;
+4. LTF trigger management without optimization;
+5. position management;
+6. repeated consumed-data episodes;
+7. repeated-run stability;
+8. freeze analysis schema;
+9. live API / MT5 screenshot / runtime design;
+10. future-hidden replay.
 
-1. market map;
-2. POI selection;
-3. route selection;
-4. SL authority;
-5. winner management;
-6. LTF execution;
-7. runtime implementation.
+Do not open July before the current sequential-replay contract passes.
 
-Do not open July before this research phase passes.
-
-## Retained V9 rules
+## Retained rules
 
 Keep:
 
@@ -123,8 +151,9 @@ Keep:
 - no widening;
 - no hindsight rescue;
 - no minimum R;
-- no fixed ATR stop;
+- no fixed ATR/S stop or TP;
 - no cooldown;
 - no retry cap;
 - no forced side balance;
+- no mandatory ICT pattern chain;
 - large-winner participation.

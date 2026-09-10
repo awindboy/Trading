@@ -1,8 +1,8 @@
 # V9 Development Handoff
 
 Last updated: `2026-09-10`
-Status: `ACTIVE / CHART-NATIVE HTF MARKET-MAP RESEARCH`
-Current phase: `HTF MAP DISCOVERY -> CONSUMED-DATA REPLAY -> LTF EXECUTION RESEARCH`
+Status: `ACTIVE / SEQUENTIAL MAP-TRIGGER-POSITION RESEARCH`
+Current phase: `ICT OBJECT ENGINE -> AI HTF MAP -> EVENT-DRIVEN TRIGGER -> LIVE-LIKE CONSUMED REPLAY`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
@@ -11,98 +11,114 @@ Future-hidden: `2025-07 LOCKED`
 Untouched reserve: `GOLD# 2021`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
-## Why the phase changed
+## Current direction
 
-V3 failed to identify important market structure reliably with mechanical swing/liquidity/ICT rules.
+V3 showed that mechanically detected ICT objects are not automatically meaningful market structure.
+Earlier V9 showed that free-form AI analysis can drift to structures that are too local or geometrically inconsistent.
 
-V9 improved discretionary reasoning but often worked at too small a scale.
-
-The repeated problem was:
-
-```text
-large Parent idea
--> local structure search
--> local stop
--> local target
--> repeated small decisions
-```
-
-Strategy changes had limited effect because the market map remained too local.
-
-Use AI for the part that V3 could not encode well:
+Current solution:
 
 ```text
-which structure actually matters?
+code = exact candidate geometry / lifecycle
+AI = strategic selection / MTF interpretation
+runtime = causal event monitoring
 ```
-
-## Current strategy direction
 
 Use:
 
 ```text
 multi-day H1/H4 map
--> major POI
--> external liquidity / route
--> scenario
+-> mechanical FVG / OB / liquidity candidates
+-> AI-selected major POI / route
 -> wait
--> LTF execution later
--> HTF-aligned Hard SL
--> multi-hour Parent-Journey
+-> selected HTF event
+-> M5/M15 trigger chart
+-> Child
+-> HTF journey
+-> review / remap
 ```
 
-The intended winner is a meaningful market leg.
-Do not design V9 as a small H1 bridge system.
+## Current tooling
 
-## Current research priority
+Active V9 research tools:
 
-Study market mapping before entry optimization.
+- `scripts/v9_causal_m1.py`
+  - verified fail-closed M1 reveal and H4/H1/M15/M5 snapshots;
+- `scripts/v9_ict_object_engine.py`
+  - exact H4/H1 ICT candidate object geometry and lifecycle;
+- `scripts/v9_chart_native_packet.py`
+  - standardized two-chart `MAP + TRIGGER` renderer from selected object IDs;
+- `scripts/v9_replay_event_runner.py`
+  - advance to first frozen price/bar-confirmation event without showing intermediate market action to AI;
+- `scripts/v9_hard_stop_guard.py`
+  - independent Hard SL touch guard on already-revealed M1.
 
-Test:
+Current object engine is a research candidate engine, not a proven ICT classifier.
 
-- major-leg recognition;
-- major POI selection;
-- external-liquidity selection;
-- range/compression recognition;
-- LONG/SHORT scenario construction;
-- Child falsification scale;
-- destination hierarchy;
-- winner capture in S;
-- repeated-run AI map stability.
+## Current evidence
 
-Use 2025 January-June only.
+Read:
 
-## Immediate tasks
+`results/V9_ICT_OBJECT_ENGINE_AND_MTF_TRIGGER_CALIBRATION_20260910.md`
 
-1. Build a standardized H1/H4 chart packet.
-2. Replay consumed periods with large-map analysis.
-3. Record the map before inspecting the continuation of each research episode.
-4. Compare good and failed map decisions.
-5. Repeat the same cutoffs and test AI selection stability.
-6. Study SL authority at HTF Child scale.
-7. Study destination and HOLD/EXIT/REMAP at major HTF structures.
-8. Study LTF entry only after the HTF process becomes stable.
-9. Formalize runtime only after the market-analysis method is mature.
+Key evidence:
 
-Do not open July.
+- freehand POI boxes were replaced by exact mechanical candidate objects;
+- FVG and liquidity lifecycle can be terminated at exact M1 fill/raid times;
+- multiple POI touches correctly produced `NO TRADE` when the frozen trigger did not occur;
+- a later H4 OB + M5 sweep/MSS Child lost `-1R`;
+- Child failure did not automatically invalidate the larger HTF object;
+- geometric presence and strategic freshness must remain separate.
 
-## Deferred work
+These are consumed-data development findings, not validation.
+
+## Immediate next research
+
+Do not optimize another trigger pattern yet.
+
+Run complete consumed-data episodes like live discretionary trading.
+
+For each episode:
+
+1. preselect starting cutoff without looking ahead;
+2. start FLAT;
+3. build exact object universe;
+4. AI creates MAP and selects POI/liquidity/route;
+5. persist map ledger;
+6. runtime advances only to frozen event;
+7. update geometric lifecycle;
+8. open TRIGGER chart only when authorized;
+9. freeze trigger before advancing;
+10. if filled, freeze Child + Hard SL + HTF route;
+11. runtime guards SL and review events;
+12. at review decide `HOLD / EXIT / REMAP`;
+13. continue until the episode is naturally resolved/remapped.
+
+Evaluate whether AI can keep one coherent market map through time rather than winning one trade.
+
+## What to score
+
+- selected-object consistency;
+- correct object creation/end handling;
+- map continuity;
+- unexplained object disappearance or geometry drift;
+- appropriate `WAIT / NO TRADE` behavior;
+- trigger discipline;
+- Child/Parent separation;
+- Hard SL authority;
+- HTF journey management;
+- unnecessary AI-call frequency;
+- process quality before outcome.
+
+## Deferred
 
 Defer:
 
-- universal deterministic structure registry;
-- deterministic major/minor swing classification;
-- detailed pending-order runtime;
-- AI-call scheduler parity;
-- LTF trigger optimization.
+- production API architecture;
+- MT5 screenshot capture integration;
+- final AI-call scheduler cadence;
+- final order simulator / broker fill semantics;
+- LTF trigger optimization;
+- July future-hidden replay.
 
-Retain useful execution principles from those documents for later implementation.
-
-## Permanent rules
-
-Set Hard SL before entry.
-Never widen it.
-Keep Parent and Child separate.
-Do not rescue stopped trades.
-Evaluate both directions.
-Do not invent fixed R, ATR, cooldown, retry, or side-balance rules.
-Let large winners travel.
+The sequential research should approximate the future live process so these can be formalized after the analysis method stabilizes.
