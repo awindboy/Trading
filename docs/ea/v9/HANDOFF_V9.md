@@ -1,124 +1,125 @@
 # V9 Development Handoff
 
-Last updated: `2026-09-10`
-Status: `ACTIVE / SEQUENTIAL MAP-TRIGGER-POSITION RESEARCH`
-Current phase: `ICT OBJECT ENGINE -> AI HTF MAP -> EVENT-DRIVEN TRIGGER -> LIVE-LIKE CONSUMED REPLAY`
+Last updated: `2026-09-11`
+Status: `ACTIVE / MARKET-FLOW ATLAS + REVERSE ENGINEERING`
+Current phase: `ANSWER-SHEET FLOW STUDY -> MINIMAL GRAMMAR -> STRATEGY EXTRACTION`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
-Consumed: `2025-01 through 2025-06`
+Consumed: `2025-01 through 2025-06`, `2026-01 through 2026-02`
 Future-hidden: `2025-07 LOCKED`
 Untouched reserve: `GOLD# 2021`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
+## Why the phase changed
+
+The project repeatedly fell into:
+
+```text
+trade fails
+-> diagnose one issue
+-> add/refine one rule
+-> new failure
+-> refine again
+```
+
+That loop risks reproducing the V3-to-V9 overfit pattern before the underlying market grammar is understood.
+
+Jan-Feb research also showed:
+
+- H1 opportunity objects are frequent;
+- higher frequency alone did not improve results;
+- better LTF execution geometry alone did not solve pitch quality;
+- one-object-at-a-time tuning moved the bottleneck without solving strategy identity.
+
+Therefore pause trade-by-trade optimization.
+
 ## Current direction
 
-V3 showed that mechanically detected ICT objects are not automatically meaningful market structure.
-Earlier V9 showed that free-form AI analysis can drift to structures that are too local or geometrically inconsistent.
+Use consumed data as an answer sheet.
 
-Current solution:
-
-```text
-code = exact candidate geometry / lifecycle
-AI = strategic selection / MTF interpretation
-runtime = causal event monitoring
-```
-
-Use:
+Study:
 
 ```text
-multi-day H1/H4 map
--> mechanical FVG / OB / liquidity candidates
--> AI-selected major POI / route
--> wait
--> selected HTF event
--> M5/M15 trigger chart
--> Child
--> HTF journey
--> review / remap
+arrival / reaction
+-> delivery
+-> next arrival / reaction
+-> delivery
+-> ...
 ```
 
-## Current tooling
+Include trends, ranges, compression, repair, false breaks, liquidity sweeps, shakeout-like moves, POI failures, acceptance through old structure, and ambiguous transitions.
 
-Active V9 research tools:
+## Current analytical architecture
+
+```text
+RAW / H4 / H1 CHART
++ EXACT ICT OBJECT LEDGER
++ OPTIONAL INDICATOR / VOLATILITY LENSES
+-> CONTINUOUS FLOW ATLAS
+-> REPEATED RELATIONSHIPS
+-> MINIMAL MARKET-FLOW GRAMMAR
+```
+
+Existing object tools remain useful for exact provenance.
+AI decides semantic relationships and whether a lens is actually useful.
+
+MACD, Bollinger Bands, MA, ATR/volatility, momentum, and session context are permitted as research lenses.
+They are not automatic signals.
+
+## Current tooling retained
 
 - `scripts/v9_causal_m1.py`
-  - verified fail-closed M1 reveal and H4/H1/M15/M5 snapshots;
 - `scripts/v9_ict_object_engine.py`
-  - exact H4/H1 ICT candidate object geometry and lifecycle;
 - `scripts/v9_chart_native_packet.py`
-  - standardized two-chart `MAP + TRIGGER` renderer from selected object IDs;
 - `scripts/v9_replay_event_runner.py`
-  - advance to first frozen price/bar-confirmation event without showing intermediate market action to AI;
 - `scripts/v9_hard_stop_guard.py`
-  - independent Hard SL touch guard on already-revealed M1.
 
-Current object engine is a research candidate engine, not a proven ICT classifier.
-
-## Current evidence
-
-Read:
-
-`results/V9_ICT_OBJECT_ENGINE_AND_MTF_TRIGGER_CALIBRATION_20260910.md`
-
-Key evidence:
-
-- freehand POI boxes were replaced by exact mechanical candidate objects;
-- FVG and liquidity lifecycle can be terminated at exact M1 fill/raid times;
-- multiple POI touches correctly produced `NO TRADE` when the frozen trigger did not occur;
-- a later H4 OB + M5 sweep/MSS Child lost `-1R`;
-- Child failure did not automatically invalidate the larger HTF object;
-- geometric presence and strategic freshness must remain separate.
-
-These are consumed-data development findings, not validation.
+Causal/event tools are retained for downstream testing.
+Current atlas research may inspect full future on consumed data only.
 
 ## Immediate next research
 
-Do not optimize another trigger pattern yet.
+Build the Market Flow Atlas across:
 
-Run complete consumed-data episodes like live discretionary trading.
+- `2025-01 through 2025-06`;
+- `2026-01 through 2026-02`.
 
-For each episode:
+For each contiguous period:
 
-1. preselect starting cutoff without looking ahead;
-2. start FLAT;
-3. build exact object universe;
-4. AI creates MAP and selects POI/liquidity/route;
-5. persist map ledger;
-6. runtime advances only to frozen event;
-7. update geometric lifecycle;
-8. open TRIGGER chart only when authorized;
-9. freeze trigger before advancing;
-10. if filled, freeze Child + Hard SL + HTF route;
-11. runtime guards SL and review events;
-12. at review decide `HOLD / EXIT / REMAP`;
-13. continue until the episode is naturally resolved/remapped.
+1. map H4/H1 flow;
+2. identify reaction/arrival events;
+3. identify directional legs and range states;
+4. attach exact FVG/OB/liquidity objects;
+5. measure distance, duration, S, volatility;
+6. test useful analytical lenses;
+7. record destination and state transition;
+8. cluster repeated relationships;
+9. retain counterexamples;
+10. simplify rather than add exceptions.
 
-Evaluate whether AI can keep one coherent market map through time rather than winning one trade.
+## Outputs
 
-## What to score
+```text
+FLOW_LEG_LEDGER.csv
+FLOW_STATE_LEDGER.csv
+FLOW_ARCHETYPE_CATALOG.md
+LENS_EVIDENCE_LEDGER.csv
+ATLAS_CHARTS/
+```
 
-- selected-object consistency;
-- correct object creation/end handling;
-- map continuity;
-- unexplained object disappearance or geometry drift;
-- appropriate `WAIT / NO TRADE` behavior;
-- trigger discipline;
-- Child/Parent separation;
-- Hard SL authority;
-- HTF journey management;
-- unnecessary AI-call frequency;
-- process quality before outcome.
+Do not optimize P/L in this phase.
 
-## Deferred
+## Downstream
 
-Defer:
+After a compact grammar is stable:
 
-- production API architecture;
-- MT5 screenshot capture integration;
-- final AI-call scheduler cadence;
-- final order simulator / broker fill semantics;
-- LTF trigger optimization;
-- July future-hidden replay.
+1. extract what is knowable in real time;
+2. define the tradable subset;
+3. map H4 Parent / H1 auction roles;
+4. define LTF execution and Hard SL;
+5. resume causal sequential replay;
+6. design live AI-call / MT5 runtime;
+7. only then consider future-hidden replay.
 
-The sequential research should approximate the future live process so these can be formalized after the analysis method stabilizes.
+Do not open July.

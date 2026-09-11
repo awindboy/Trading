@@ -1,12 +1,12 @@
 # V9 Research Instructions — Current Authority
 
-Last synchronized: `2026-09-10`
-Status: `ACTIVE / SEQUENTIAL CHART-NATIVE MAP-TRIGGER-POSITION RESEARCH`
+Last synchronized: `2026-09-11`
+Status: `ACTIVE / MARKET-FLOW ATLAS + REVERSE ENGINEERING`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
-Consumed development data: `2025-01 through 2025-06`
-Next future-hidden candidate: `2025-07 — LOCKED`
+Consumed development data: `2025-01 through 2025-06`, `2026-01 through 2026-02`
+Future-hidden: `2025-07 LOCKED`
 Untouched final reserve: `GOLD# 2021`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
@@ -21,221 +21,151 @@ Read:
 3. `RESEARCH_STATE_V9.md`
 4. `V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md`
 5. `DECISIONS_V9_POSTJUNE_SIMPLIFICATION_AND_RUNTIME_ADDENDUM_20260910.md`
-6. `V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
-7. `V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
-8. `V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md`
-9. `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
-10. current code/tool parity state before any new future-hidden reveal.
+6. `V9_MARKET_FLOW_ATLAS_AND_REVERSE_ENGINEERING_CONTRACT_20260911.md`
+7. `V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
+8. `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
+9. `V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
+10. `V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md`
+11. current code/tool parity state.
 
-Use `results/V9_ICT_OBJECT_ENGINE_AND_MTF_TRIGGER_CALIBRATION_20260910.md` as current consumed-data evidence.
-Treat older postmortems and pipelines as historical evidence when they do not conflict with current authority.
-Treat deterministic-order/scheduler documents as deferred implementation references.
+The Market Flow Atlas contract is the active research contract.
+Sequential causal trading is downstream until strategy extraction.
 
-Do not open July before the active contract passes.
+## Current research identity
 
-## Strategy identity
-
-Use:
+Use consumed data as an answer sheet:
 
 ```text
-CAUSAL HTF MARKET MAP
--> MECHANICAL ICT CANDIDATE UNIVERSE
--> AI SELECTS MAJOR POI / LIQUIDITY / ROUTE
--> WAIT
--> SELECTED HTF EVENT
--> LTF TRIGGER MANAGEMENT
--> CHILD ENTRY + HARD SL
--> MULTI-HOUR / MULTI-S JOURNEY
--> HOLD / EXIT / REMAP
+REACTION / ARRIVAL
+-> PRICE DELIVERY
+-> NEXT REACTION / ARRIVAL
+-> PRICE DELIVERY
+-> ...
 ```
 
-Read the large structure first.
-Do not start from the current candle or nearest LTF setup.
+Study continuous H4/H1 flow before optimizing trades.
 
-## Object authority
-
-Code creates exact candidate geometry and lifecycle.
-
-Current candidate families:
-
-- H4/H1 FVG;
-- H4/H1 OB candidate;
-- H4/H1 swing/liquidity candidate.
-
-Code records source candle(s), exact price range, born time, touch/mitigation/fill/raid/invalidation time.
-
-Code does not decide strategic importance.
-
-AI selects which objects matter in the current H1/H4 map.
-AI must select existing object IDs for official POI/liquidity coordinates whenever an applicable candidate exists.
-Do not let AI silently move an object's geometry.
-
-Keep geometric lifecycle separate from strategic lifecycle.
+Primary research units:
 
 ```text
-geometrically active != strategically important
-Child stop != HTF object death
-FVG full fill -> FVG geometric end
-liquidity raid -> liquidity geometric end
+FLOW LEG
+AUCTION CYCLE
+BALANCE / RANGE STATE
+DELIVERY PATH
+DESTINATION / NEXT STATE
 ```
 
-## Two-chart research packet
+Ranges, compression, false breaks, liquidity raids, and noisy transitions are first-class states.
 
-Use exactly two AI-facing chart roles:
+## Analysis toolkit
+
+Code owns exact FVG / OB / swing-liquidity geometry and lifecycle.
+AI owns semantic market interpretation.
+
+Allowed research lenses include:
+
+- ICT POI / FVG / OB / liquidity;
+- displacement / acceptance / rejection;
+- balance / range / compression / expansion;
+- MACD;
+- Bollinger Bands;
+- moving averages;
+- ATR / volatility;
+- momentum / rate-of-change;
+- session/time context.
+
+These are lenses, not automatic signals.
+
+Keep only concepts that repeatedly help explain many flows.
+Do not attach a different story or indicator to every move.
+
+## Current research mode
+
+Full future-visible analysis is allowed only on already-consumed development data.
+
+This mode is noncausal.
+Do not present it as validation or strategy performance.
+Do not backfill hindsight trades.
+
+Never use `2025-07` or `2021`.
+
+Preserve exact timestamps and object provenance so the candidate grammar can later be tested causally.
+
+## Research objective
+
+Build a `V9 Market Flow Atlas`.
+
+Map long contiguous windows and record:
+
+- where price arrived;
+- what it consumed;
+- what state preceded the move;
+- where price delivered;
+- what objects were created;
+- what changed the state;
+- what the next leg did.
+
+Search for the smallest reusable market-flow grammar.
+
+Prefer:
 
 ```text
-MAP
-TRIGGER
+many flows -> few reusable relationships
 ```
 
-MAP:
+over:
 
-- H1 main chart;
-- selected H4/H1 objects overlaid;
-- major liquidity and route;
-- Entry/SL/review levels when relevant.
+```text
+one special explanation per chart
+```
 
-TRIGGER:
+Keep ambiguous and contradictory cases.
 
-- M5 by default;
-- M15 when the active trigger is clearly M15-scale;
-- open only after an HTF POI/liquidity event makes LTF relevant;
-- otherwise treat trigger state as `INACTIVE`.
+## Indicators
 
-Keep chart annotations short and out of the price structure.
+Do not promote MACD, Bollinger Bands, or another indicator into authority because a few examples fit.
 
-## AI role
+No fixed indicator threshold is authorized.
 
-AI decides:
+## Strategy extraction
 
-1. large H1/H4 market structure;
-2. which candidate objects matter now;
-3. major POIs and external liquidity;
-4. LONG scenario and strongest SHORT scenario;
-5. `WAIT`, trigger preparation, entry, or remap;
-6. which objective LTF event is worth using as a trigger;
-7. which structure invalidates the Child at the intended scale;
-8. which HTF structures are destination or review points;
-9. at authorized review: `HOLD / EXIT / REMAP`.
+Do not optimize Entry, SL, TP, trigger, trade frequency, or AI-call cadence while the market-flow grammar is unstable.
 
-Do not turn every FVG, OB, swing, sweep, BOS, or CHOCH into a signal.
+After the atlas phase:
 
-## Runtime/code role
-
-Code handles:
-
-- fail-closed causal M1 reveal;
-- H4/H1/M15/M5 construction;
-- ICT candidate object generation;
-- exact coordinates and lifecycle timestamps;
-- chart rendering;
-- frozen event monitoring;
-- Entry/SL/R/S arithmetic;
-- Hard SL guards;
-- selected destination/review touches;
-- MFE/MAE and journal timestamps.
-
-## Parent and Child
-
-Parent is the large working map and journey.
-Child is one paid attempt.
+```text
+FLOW GRAMMAR
+-> REAL-TIME KNOWABLE STATE
+-> TRADABLE SUBSET
+-> H4 PARENT / H1 AUCTION
+-> LTF EXECUTION
+-> HARD SL / JOURNEY
+-> CAUSAL REPLAY
+```
 
 Retain:
 
-```text
-Child stop != Parent death
-Child win != Parent proof
-Parent survival != automatic re-entry
-later movement cannot rescue a stopped Child
-```
-
-For retry ask:
-
-```text
-WHAT OBJECTIVE FACT CHANGED?
-IS THIS A GOOD PITCH?
-```
-
-## Entry and trigger
-
-Prioritize HTF map and POI quality over LTF precision.
-
-Do not enter because price touched a POI.
-Observe the selected POI interaction.
-Freeze the objective LTF trigger condition before advancing to it.
-
-LTF improves execution.
-LTF does not create an unrelated Parent thesis.
-
-Do not chase a missed move.
-`NO TRADE` because the selected POI never arrived is a valid outcome.
-
-## Hard SL
-
-Set Hard SL before entry.
-Never widen it.
-
-Place SL where the current Child is actually wrong at the intended scale.
-
-Do not select SL from fixed points, ATR, R, S, or desired payoff.
-Do not use a tiny LTF structure merely because it improves R.
-Do not use the full Parent failure level merely to survive noise.
-
-## TP and journey
-
-Use major HTF structures and external liquidity for route and review.
-
-Parent-Journey may use `FIXED TP = NONE`.
-Nearby LTF structure is transit unless it resolves the thesis.
-
-Use prior completed H4 Wilder ATR14 as `S` for scale measurement only.
-Measure meaningful `1S+`, `2S+` winner participation without making S a fixed target.
-
-## Sequential research behavior
-
-Do not reanalyze from a blank slate on every call.
-Persist the prior market-map ledger and object roles.
-
-Advance price only to frozen events.
-At each event:
-
-```text
-update geometric object states
-show current MAP
-show TRIGGER only if relevant
-state MAP CHANGES
-then WAIT / ENTER / HOLD / EXIT / REMAP
-```
-
-Do not call AI on every candle.
-During current research, extra calls are allowed only when explicitly testing map-update behavior; label them research-only.
+- Parent / Child separation when trading research resumes;
+- Hard SL before entry;
+- no widening;
+- no hindsight rescue;
+- no minimum-R;
+- no fixed ATR/S stop or TP;
+- no cooldown;
+- no retry cap;
+- no forced side balance;
+- no mandatory ICT pattern chain;
+- no fixed trade-frequency target.
 
 ## Causal integrity
 
-Use only revealed chronological prefix.
-Never backfill after future exposure.
-Never rescue a stopped Child.
+Current atlas work is intentionally noncausal on consumed data.
 
-```text
-2025-01 through 2025-06 = CONSUMED DEVELOPMENT
-2025-07 = FUTURE-HIDDEN / LOCKED
-2021 = UNTOUCHED FINAL RESERVE
-```
+When causal replay resumes:
 
-## Anti-overfit
+- use only revealed chronological prefix;
+- freeze events before resolution;
+- never rescue a stopped Child;
+- record accidental reveal and never backfill.
 
-Do not add:
-
-- minimum R;
-- fixed ATR/point/S SL or TP;
-- N-loss cooldown;
-- retry limit;
-- fixed no-chase distance;
-- forced LONG/SHORT balance;
-- fixed hold/retest counts;
-- mandatory indicator rules;
-- mandatory ICT-pattern chains;
-- deterministic major/minor strategic labels.
-
-Do not change authority from one or two examples.
-Use consumed data for repeated replay and failure study first.
+Do not open July before the downstream causal gate passes.

@@ -1,143 +1,151 @@
 # V9 Research State
 
-Date: `2026-09-10`
-Status: `ACTIVE / SEQUENTIAL CHART-NATIVE MTF REPLAY`
+Date: `2026-09-11`
+Status: `ACTIVE / ANSWER-SHEET MARKET-FLOW ATLAS`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
-Consumed development data: `2025-01 through 2025-06`
+Consumed development data: `2025-01 through 2025-06`, `2026-01 through 2026-02`
 Future-hidden candidate: `2025-07 LOCKED`
 Untouched reserve: `GOLD# 2021`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 
 ## Problem now
 
-The project has moved past the first proof that AI can draw a plausible large H1/H4 map.
+The main problem is no longer candidate-object scarcity.
 
-The unresolved problem is continuity:
+Jan-Feb research showed many H1 FVG/liquidity/trigger candidates, but increasing frequency and improving LTF execution did not reliably improve strategy quality.
 
-> Can AI maintain and trade one coherent market map as price evolves, while code maintains exact ICT object geometry and lifecycle?
+The project risks repeating:
 
-Do not evaluate this only from isolated screenshots or one winning trade.
+```text
+failure
+-> local diagnosis
+-> local fix
+-> new failure
+```
 
-## Current architecture
+before understanding the market process being traded.
+
+## Active hypothesis
+
+Price should be studied as a continuous delivery process, not as isolated setups.
 
 Use:
 
 ```text
-verified causal M1
--> deterministic H4/H1 ICT candidate universe
--> AI selects strategic objects
--> MAP ledger
--> frozen wait event
--> runtime advance
--> MAP update
--> TRIGGER chart when authorized
--> frozen LTF trigger
--> Child entry + Hard SL
--> event-driven position management
--> HOLD / EXIT / REMAP
+REACTION / ARRIVAL
+-> MIGRATION / REPAIR / BALANCE
+-> NEXT DESTINATION
+-> NEXT STATE
 ```
 
-## Candidate-object hypothesis
+The strategy should later be reverse-engineered from repeated market-flow relationships.
 
-Mechanical ICT geometry is useful as a candidate universe.
+## Current research unit
 
-Current candidates:
+Use:
 
-- FVG from exact three-candle gaps;
-- swing/liquidity candidates from reproducible geometric pivots;
-- OB candidates from a reproducible swing-break/source-candle rule.
+- flow leg;
+- auction cycle;
+- balance/range state;
+- liquidity-delivery event;
+- POI interaction;
+- state transition.
 
-These definitions provide reproducible coordinates.
-They do not provide strategic importance.
+A trade is not the primary research unit.
 
-AI must reject most candidates.
+## Current research mode
 
-## Lifecycle hypothesis
+Use full-history / future-visible analysis on consumed development data.
 
-Separate:
+This is answer-sheet research.
 
-```text
-GEOMETRIC LIFECYCLE
-STRATEGIC / CAMPAIGN LIFECYCLE
-```
+It is not validation and does not authorize hindsight trades.
 
-Code handles fill/raid/mitigation/invalidation.
-AI handles selected/secondary/transit/stale/retired/destination/review roles.
+Keep `2025-07` and `2021` unopened.
 
-A geometrically active object can be strategically stale.
-A Child failure does not automatically end the Parent or HTF object.
+## Current tools
 
-## Current chart contract
+Use exact mechanical candidate objects for factual geometry:
 
-AI-facing packet has two chart roles:
+- FVG;
+- OB candidate;
+- swing/liquidity;
+- lifecycle timestamps.
 
-```text
-MAP
-TRIGGER
-```
+Use additional lenses when useful:
 
-MAP is the H1 multi-day market view with selected H4/H1 objects overlaid.
-TRIGGER is M5 by default and appears only when LTF inspection is authorized by the HTF map.
+- displacement;
+- acceptance/rejection;
+- balance/compression;
+- MACD;
+- Bollinger Bands;
+- moving averages;
+- ATR/volatility;
+- momentum;
+- session/time context.
 
-Do not add a third chart to compensate for weak interpretation.
-Code may retain debug/parity charts separately.
+No lens is automatically strategy authority.
 
 ## Current research task
 
-Run multiple complete sequential episodes across consumed January-June.
-
-Each episode must preserve prior state.
-Do not restart interpretation at every event.
-
-Test:
-
-- map creation;
-- POI/liquidity selection;
-- waiting;
-- object creation and consumption through time;
-- trigger activation/cancellation;
-- position creation;
-- HTF review management;
-- Parent/Child continuity;
-- remapping after objective change;
-- no-trade and missed-move behavior.
-
-Include losses, failed triggers, ranges, trends, false breaks, and no-fill cases.
-
-## Measurement
+Build long contiguous flow maps across consumed periods.
 
 Record:
 
-- object IDs and roles;
-- object born/end timestamps;
-- map changes;
-- AI-call reason;
-- trigger state;
-- Entry / Hard SL;
-- route/review object IDs;
-- points, R, S;
-- MFE/MAE;
-- holding time;
-- process-quality review.
+```text
+origin
+pre-leg state
+delivery leg
+objects created / consumed
+liquidity events
+destination
+end-state
+next leg
+useful lenses
+ambiguity
+```
 
-Do not fit fixed thresholds to these measurements.
+Then cluster repeated relationships and reduce them to a small grammar.
+
+Do not invent a unique explanation for every move.
+
+## Measurement
+
+Measure descriptive facts:
+
+- points;
+- S;
+- duration;
+- volatility;
+- range width;
+- object lifecycle;
+- liquidity sequence;
+- indicator state where tested.
+
+Do not fit fixed thresholds from these measurements yet.
 
 ## Current gate
 
-Do not open July until the sequential process shows all of the following:
+Do not return to strategy-performance optimization until:
 
-- exact object geometry is reproducible;
-- object lifecycle updates do not silently rewrite history;
-- AI retains materially coherent maps between events;
-- selected POIs and liquidity remain explainable before outcomes;
-- AI can wait without manufacturing LTF trades;
-- trigger plans are frozen before subsequent price;
-- Child stops are handled without rescue;
-- position reviews operate at HTF scale;
-- remaps are tied to objective new facts;
-- strategy identity remains recognizable across different consumed episodes;
-- no hidden numeric threshold was mined from January-June.
+- long contiguous periods are mapped;
+- trends and ranges are both represented;
+- false breaks and sweep-heavy periods are represented;
+- repeated relationships survive across different months;
+- useful indicators provide stable added discrimination;
+- counterexamples are retained;
+- the grammar remains compact;
+- the grammar can be translated into real-time knowable states.
 
-After that, freeze the analysis protocol, then design live API/MT5 calling semantics and runtime parity before July.
+After that:
+
+```text
+FLOW GRAMMAR
+-> STRATEGY EXTRACTION
+-> CAUSAL SEQUENTIAL REPLAY
+-> LIVE RUNTIME
+```
+
+Do not open July before the downstream causal gate passes.
