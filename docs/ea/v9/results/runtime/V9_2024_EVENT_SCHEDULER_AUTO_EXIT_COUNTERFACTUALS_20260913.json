@@ -1,0 +1,32 @@
+{
+  "actual_total_r": 20.50598275589143,
+  "fixed_tp_counterfactuals": {
+    "1R": {
+      "hit_trades": 109,
+      "counterfactual_total_r": -31.87716254897241,
+      "delta_vs_actual": -52.383145304863845
+    },
+    "2R": {
+      "hit_trades": 65,
+      "counterfactual_total_r": -8.47174197589944,
+      "delta_vs_actual": -28.97772473179087
+    },
+    "3R": {
+      "hit_trades": 38,
+      "counterfactual_total_r": -4.97742197610899,
+      "delta_vs_actual": -25.48340473200042
+    }
+  },
+  "post_delivery_m15_nonsupport_auto_exit": {
+    "event_trades": 165,
+    "actual_sum_r_on_event_trades": 88.46898047366975,
+    "auto_exit_counterfactual_sum_r": 44.36193157200001,
+    "delta": -44.107048901669735,
+    "winner_event_trades": 79,
+    "winner_actual_sum_r": 150.97527688181248,
+    "winner_auto_exit_counterfactual_sum_r": 42.391346063,
+    "loss_event_trades": 86,
+    "loss_actual_sum_r": -62.50629640814268,
+    "loss_auto_exit_counterfactual_sum_r": 1.9705855090000002
+  }
+}

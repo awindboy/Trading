@@ -30,15 +30,17 @@ Read in this order:
 11. `docs/ea/v9/V9_AI_REVIEW_REMAP_PACKET_AND_SCHEDULER_PROTOCOL_20260912.md`
 12. `docs/ea/v9/V9_AI_EXTERNAL_DECISION_AND_2024_TICK_VALIDATION_CHECKPOINT_20260912.md`
 13. `docs/ea/v9/V9_2024_TICK_AI_TRADING_AND_LOSS_POSTMORTEM_CHECKPOINT_20260913.md`
-14. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md`
-15. `docs/ea/v9/results/V9_MARKET_FLOW_ATLAS_MASTER_LEDGER_20260912.md`
-16. `docs/ea/v9/results/V9_MARKET_FLOW_GRAMMAR_RESEARCH_CHRONICLE_20260912.md`
-17. `docs/ea/v9/results/V9_DIFFICULT_MONTH_AND_AMBIGUITY_RESOLUTION_STUDY_20260912.md`
-18. `docs/ea/v9/V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
-19. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
-20. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
-21. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md` (historical; newer contract wins where conflicting)
-22. current code/tool parity state.
+14. `docs/ea/v9/V9_EVENT_DRIVEN_AI_ENTRY_AND_POSITION_REVIEW_CHECKPOINT_20260913.md`
+15. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_AI_TRADE_DESIGN_AND_EVENT_SCHEDULER_20260913.md`
+16. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md` (historical semantic questions; newer contract wins where conflicting)
+17. `docs/ea/v9/results/V9_MARKET_FLOW_ATLAS_MASTER_LEDGER_20260912.md`
+18. `docs/ea/v9/results/V9_MARKET_FLOW_GRAMMAR_RESEARCH_CHRONICLE_20260912.md`
+19. `docs/ea/v9/results/V9_DIFFICULT_MONTH_AND_AMBIGUITY_RESOLUTION_STUDY_20260912.md`
+20. `docs/ea/v9/V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
+21. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
+22. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
+23. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md` (historical; newer contract wins where conflicting)
+24. current code/tool parity state.
 
 If older postmortems/pipeline documents conflict with the current Market Flow Grammar authority, the current authority wins.
 
@@ -203,24 +205,28 @@ This is implementation causality, not future edge. Production authority and EA a
 
 ## What to research next
 
-Do not open July and do not turn the 2024 postmortem into fixed filters.
+Do not open July. The exploratory ML direction/scheduler is retired from the active path.
 
-2024 is now consumed postmortem data. The next research target is **Grammar-driven loss conversion while preserving large winners**.
+2024 is consumed postmortem data. The current target is **AI trade design at every deterministic entry candidate + deterministic event-driven AI position review**.
 
 Current order:
 
-1. `ENTRY ARRIVAL / ACCEPTANCE`: paired chart study of fast/no-progress losses versus robust winners. Determine whether price actually accepts the Child side at the execution location; do not convert M5 consensus into a mandatory gate.
-2. `DELIVERY / JOURNEY REVIEW`: compare +1R-or-more giveback losses with large winners after favorable liquidity/landmark delivery. Delivery is a review-context candidate, not TP/trailing authority.
-3. `FRESH REAUTH / CAMPAIGN EXHAUSTION`: distinguish genuinely new auction/route information from repeated oscillation inside an exhausted Parent campaign; no retry count/cooldown.
-4. compress branch-specific semantics for `COUNTER Local-Bridge` and `WITH_PARENT repair/continuation`.
-5. freeze the causal chart-native attachment and AI model-role/prompt only after those paired studies.
-6. if evidence supports new `ENTRY_CONTEXT_REVIEW` or `DELIVERY/PROGRESSION_REVIEW` events, implement them as research-only candidates and replay all consumed data.
-7. freeze implementation/packet/chart/prompt/model-role versions and hashes.
-8. only then explicitly decide again whether future-hidden `2025-07` can be unlocked.
+1. treat deterministic Counter/With-Parent authorization as a **candidate generator**, not automatic order authority for the next research phase;
+2. freeze the chart-native AI entry packet and model-role for `TRADE / WAIT / NO TRADE`, including meaningful code-owned Entry / structural Hard SL / route / destination / risk rationale;
+3. implement research scheduler-v2 wake reasons: positive integer-R first crossings, first favorable liquidity delivery, first post-delivery completed-M15 non-support, and the existing structural REVIEW/REMAP reasons;
+4. events are attention only: no automatic TP / BE / trailing / exit from any wake reason;
+5. batch same-Child same-causal-batch reasons into one request and consumed-test pending-request stale/supersede/rebuild behavior;
+6. run causal paired AI review on all 21 `MFE>=1R -> Hard SL` givebacks versus long-tail winners;
+7. run entry-AI review on all 45 fast/no-progress Hard-SL trades versus comparable winners;
+8. replay full 2024 consumed period with the real AI entry + management contract, then 2025H1 + 2026JF for semantic/runtime robustness;
+9. freeze packet/chart/prompt/model-role/runtime versions and hashes only after counterexample review;
+10. only then explicitly reconsider future-hidden `2025-07`.
 
 The current future-hidden gate decision is `NOT SATISFIED`.
 
-2024 must never again be cited as untouched/OOS validation after this postmortem.
+ML direction prediction and ML AI-call sentinel work are not current authority and should not be continued unless deterministic event scheduling later proves operationally insufficient.
+
+2024 must never again be cited as untouched/OOS validation after the postmortem.
 
 ## Do not do
 

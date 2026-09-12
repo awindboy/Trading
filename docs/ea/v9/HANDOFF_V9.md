@@ -2,7 +2,7 @@
 
 Last updated: `2026-09-13`
 Status: `ACTIVE / CONTINUOUS HIERARCHICAL MARKET-FLOW GRAMMAR`
-Current phase: `2024 LOSS POSTMORTEM COMPLETE -> GRAMMAR LOSS-CONVERSION RESEARCH`
+Current phase: `AI TRADE DESIGN + DETERMINISTIC EVENT-DRIVEN POSITION REVIEW RESEARCH`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
@@ -11,7 +11,7 @@ Consumed postmortem: `2024-01 through 2024-12`
 Future-hidden: `2025-07 LOCKED`
 Untouched reserve: `GOLD# 2021`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
-GitHub base HEAD for this handoff bundle: `55fca94794e00cdb3b83d410f3d71143f9beb171`
+GitHub base HEAD for this handoff bundle: `ce9ab2651cf6112e36aebbf1fb549f7a5f3e7b8f`
 
 ## Why the project pivoted
 
@@ -366,3 +366,21 @@ Read next:
 - `V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md`
 
 `2025-07` remains LOCKED. `GOLD# 2021` remains untouched.
+
+## 2026-09-13 event-driven AI scheduler handoff update
+
+<!-- V9_EVENT_DRIVEN_AI_SCHEDULER_20260913 -->
+
+Read `V9_EVENT_DRIVEN_AI_ENTRY_AND_POSITION_REVIEW_CHECKPOINT_20260913.md` and `V9_NEXT_RESEARCH_CONTRACT_AI_TRADE_DESIGN_AND_EVENT_SCHEDULER_20260913.md` before resuming research.
+
+Key decisions:
+
+- exploratory ML direction/sentinel track is retired;
+- every deterministic entry candidate should receive chart-native AI trade-design review in the next research harness;
+- while OPEN, deterministic review events wake AI rather than directly changing the position;
+- candidate wake reasons are integer-R progression, first favorable delivery, first post-delivery M15 non-support, and existing structural review/remap;
+- 2024 feasibility: 798 minute-batched management calls, 21/21 1R+ giveback losses reached, 0/45 fast/no-progress losses reached post-entry;
+- fixed TP / automatic event exits were counterproductive because they cut the long-tail winners;
+- Hard SL remains independent and never widened;
+- same-batch reasons must be coalesced and pending-request supersession must preserve exact-staleness authority;
+- `2025-07` remains LOCKED and `2021` remains untouched.

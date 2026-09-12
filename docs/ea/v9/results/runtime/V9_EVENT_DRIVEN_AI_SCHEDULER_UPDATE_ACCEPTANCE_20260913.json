@@ -1,0 +1,19 @@
+{
+  "scenario_rows": 5,
+  "event_rows": 829,
+  "giveback_rows": 21,
+  "top_winner_rows": 20,
+  "closed_trades": 305,
+  "fast_no_progress_hard_sl": 45,
+  "fast_no_progress_with_management_event": 0,
+  "giveback_1Rplus_hardsl": 21,
+  "r_milestone_reasons": 314,
+  "all_favorable_liquidity_deliveries": 2716,
+  "proposed_minimal_batched_management_calls": 798,
+  "proposed_total_including_filled_entry_lower_bound": 1103,
+  "giveback_coverage_n": 21,
+  "py_compile": "PASS",
+  "future_hidden_opened": "NO",
+  "ml_authority_added": "NO",
+  "status": "PASS"
+}

@@ -1,0 +1,29 @@
+{
+  "version": "v9-event-driven-ai-scheduler-feasibility-1",
+  "scope": "2024 consumed postmortem; scheduler feasibility only; no new trade action authority",
+  "closed_trades": 305,
+  "fast_no_progress_hard_sl": 45,
+  "fast_no_progress_with_management_event": 0,
+  "giveback_1Rplus_hardsl": 21,
+  "r_milestone_reasons": 314,
+  "all_favorable_liquidity_deliveries": 2716,
+  "proposed_minimal_batched_management_calls": 798,
+  "proposed_total_including_filled_entry_lower_bound": 1103,
+  "proposed_calls_per_252day_proxy": 4.376984126984127,
+  "giveback_first_review_lead_minutes": {
+    "count": 21.0,
+    "mean": 127.69545476190474,
+    "std": 161.3787182424796,
+    "min": 0.21005,
+    "25%": 9.268400000000002,
+    "50%": 37.85746666666667,
+    "75%": 236.48416666666665,
+    "max": 539.5914833333334
+  },
+  "notes": [
+    "filled-entry count is a lower bound for future candidate-level entry AI calls",
+    "same-child same-minute reasons are coalesced",
+    "an in-flight AI request should coalesce later non-Hard-SL reasons rather than spawn parallel calls",
+    "Hard SL remains independent"
+  ]
+}

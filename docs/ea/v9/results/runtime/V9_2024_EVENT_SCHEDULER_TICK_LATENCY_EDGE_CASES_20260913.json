@@ -1,0 +1,26 @@
+{
+  "scope": "Exact tick timing check for the two 1R->Hard-SL giveback trades whose M1 proxy placed both events inside the same minute. Research evidence only; no service-latency threshold authority.",
+  "tick_archive": "Desktop(3).zip",
+  "tick_archive_sha256": "aab45d9509198b0172857ea9bf45ed7a230d3dcf5b039075925fd0007a1b69c2",
+  "cases": [
+    {
+      "child_id": "2024OOS-COU0063",
+      "side": "DOWN",
+      "one_r_at": "2024-03-08 15:30:03.611",
+      "one_r_ask": 2161.90,
+      "hard_sl_at": "2024-03-08 15:30:51.013",
+      "hard_sl_ask": 2171.12,
+      "seconds_between": 47.402
+    },
+    {
+      "child_id": "2024OOS-WIT0065",
+      "side": "DOWN",
+      "one_r_at": "2024-10-10 15:30:01.648",
+      "one_r_ask": 2608.87,
+      "hard_sl_at": "2024-10-10 15:30:12.603",
+      "hard_sl_ask": 2619.17,
+      "seconds_between": 10.955
+    }
+  ],
+  "interpretation": "Event-driven review provides a causal opportunity, not a guarantee that a remote AI call can respond before Hard SL. Hard SL remains independent and wins priority. No fixed timeout threshold is authorized from these two examples."
+}

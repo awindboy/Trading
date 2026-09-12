@@ -266,3 +266,26 @@ Do not promote the following descriptive 2024 differences into mechanical rules:
 - repeated losses inside one Parent.
 
 The active research decision is to improve **Grammar interpretation**, not add thresholds. Study entry acceptance, delivery meaning, and campaign exhaustion using paired loss/winner charts and causal state/object context. Only after compact semantics are supported may any new AI scheduler gate be proposed and consumed-tested.
+
+## 2026-09-13 event-driven AI entry / position-review decision update
+
+<!-- V9_EVENT_DRIVEN_AI_SCHEDULER_20260913 -->
+
+Decision:
+
+```text
+exploratory ML direction/scheduler track = RETIRED
+deterministic strategy authorization       = candidate generation for next research
+entry candidate                            = AI trade-design review required in research harness
+management events                          = AI wake reasons only
+automatic event action                     = NONE
+Hard SL                                    = unchanged / independent / never widened
+2025-07                                    = LOCKED
+2021                                       = UNTOUCHED
+```
+
+Consumed 2024 feasibility supports simple deterministic scheduling without ML. Candidate review reasons are positive integer-R first crossings, first favorable liquidity delivery, first post-delivery M15 non-support, plus the existing structural REVIEW/REMAP reasons.
+
+Do not interpret R milestones as minimum-R, TP, BE, or trailing authority. Do not interpret delivery or M15 non-support as automatic exit. Counterfactuals show those automatic rules cut more winner value than they save.
+
+The exact entry action schema, chart packet, prompt/model role, event-packet version, and pending-request supersession mechanics remain unfrozen and require consumed causal testing.

@@ -128,3 +128,22 @@ REAUTH: is fresh objective information opening a new auction or repeating an exh
 ```
 
 These are research questions, not new live action authority. Exact scheduler events and action schemas remain unfrozen until paired-case and consumed replay work is complete.
+
+## 2026-09-13 event-driven discretionary extension
+
+<!-- V9_EVENT_DRIVEN_AI_SCHEDULER_20260913 -->
+
+The next research activation path is now:
+
+```text
+Grammar / objects
+-> deterministic candidate
+-> chart-native AI TRADE / WAIT / NO TRADE
+-> code-owned execution + fixed Hard SL
+-> deterministic progression/structure wake events
+-> chart-native AI HOLD / EXIT / REMAP
+```
+
+Candidate progression wake reasons are integer-R first crossings, first favorable delivery, first post-delivery completed-M15 non-support, and the existing structural review/remap reasons. They do not directly move stops or close positions.
+
+The exploratory ML scheduler/direction track is retired. Do not reopen it before this simpler architecture has been consumed-tested.

@@ -329,3 +329,38 @@ The postmortem does not authorize new trade filters. It identifies three semanti
 3. fresh reauthorization: genuinely new auction versus exhausted-campaign oscillation.
 
 The detailed contract is `V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md`.
+
+## 2026-09-13 active research direction — AI trade design + event-driven review
+
+<!-- V9_EVENT_DRIVEN_AI_SCHEDULER_20260913 -->
+
+This section supersedes older current-task text where it conflicts.
+
+The 2024 postmortem plus scheduler feasibility study supports the following architecture:
+
+```text
+Grammar / deterministic objects
+-> Child candidate
+-> AI entry trade-design call
+-> runtime / Hard SL
+-> deterministic wake event
+-> AI HOLD / EXIT / REMAP
+```
+
+The exploratory ML research track is retired.
+
+Research scheduler-v2 candidates are review-only: positive integer-R first crossings, first favorable liquidity delivery, first post-delivery M15 non-support, and existing structural review/remap.
+
+2024 feasibility:
+
+```text
+305 resolved trades
+45 fast/no-progress Hard SL; management wake before stop = 0
+21 MFE>=1R then Hard SL; proposed wake coverage = 21/21
+798 minute-batched management calls
+305 filled-entry calls as lower-bound entry workload
+1,103 total lower-bound calls/year
+~4.38 calls per 252-day proxy
+```
+
+Events have no automatic trade authority. Hard SL remains fixed and independent. The next work is causal chart-native AI decision research, not threshold mining. `2025-07` remains LOCKED.

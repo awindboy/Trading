@@ -436,3 +436,24 @@ DELIVERY/PROGRESSION_REVIEW (candidate only)
 ```
 
 Neither is authorized yet. Their event authority, exact causal chart attachment, action schema, and winner-preservation behavior must first be demonstrated on consumed data.
+
+## 2026-09-13 scheduler-v2 research extension — not yet frozen
+
+<!-- V9_EVENT_DRIVEN_AI_SCHEDULER_20260913 -->
+
+The v1 REVIEW/REMAP packet and exact-staleness mechanics remain valid historical/mechanical authority. The active research scope is now broader and must not be confused with a frozen v2 protocol.
+
+Candidate v2 routing under study:
+
+```text
+ENTRY_CANDIDATE_REVIEW -> AI trade design
+R_MILESTONE_REVIEW -> AI position review
+FIRST_DELIVERY_REVIEW -> AI position review
+POST_DELIVERY_M15_REVIEW -> AI position review
+existing REVIEW_REQUIRED / REMAP_REQUIRED -> AI position review
+Hard SL -> deterministic runtime, no AI wait
+```
+
+All wake events are attention only. Same Child / same causal information batch should produce one request with multiple reason codes. If new material information arrives while an AI request is pending, the implementation must preserve the existing exact structural-staleness rule and avoid parallel conflicting decisions; stale/supersede/rebuild behavior remains to be frozen.
+
+Do not add ML gating in front of these calls in the current phase.

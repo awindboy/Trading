@@ -281,3 +281,15 @@ REAUTH: 이것은 genuinely new auction인가, exhausted campaign oscillation인
 - consumed replay에서 implementation parity가 유지된다.
 
 그 뒤에만 `2025-07` unlock 여부를 다시 결정한다.
+
+## 2026-09-13 supersession note
+
+<!-- V9_EVENT_DRIVEN_AI_SCHEDULER_20260913 -->
+
+The semantic questions in this document remain useful evidence, especially arrival/acceptance, delivery/role-completion, and campaign exhaustion.
+
+However, the active next-work sequence is superseded by:
+
+`docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_AI_TRADE_DESIGN_AND_EVENT_SCHEDULER_20260913.md`
+
+Current architecture is direct AI review at every deterministic entry candidate plus deterministic event-driven AI position review. The exploratory ML direction/sentinel track is retired.

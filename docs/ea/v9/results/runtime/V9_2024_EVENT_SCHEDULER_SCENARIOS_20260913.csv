@@ -1,0 +1,6 @@
+scenario,raw_event_reasons,batched_management_calls,called_trades,giveback_1Rplus_hardsl_total,giveback_trades_with_review_opportunity,giveback_coverage,winner_trades_called,hard_sl_trades_called,entry_ai_calls_if_every_filled_entry,total_calls_including_entry,calls_per_252day_proxy
+CURRENT_EXISTING_ONLY,154,154,153,21,1,0.047619047619047616,103,1,305,459,1.8214285714285714
+R_MILESTONES_ONLY,314,305,109,21,21,1.0,79,21,305,610,2.4206349206349205
+FIRST_DELIVERY_ONLY,195,195,195,21,14,0.6666666666666666,101,56,305,500,1.9841269841269842
+POST_DELIVERY_M15_NONSUPPORT_ONLY,166,166,166,21,10,0.47619047619047616,80,49,305,471,1.869047619047619
+PROPOSED_MINIMAL,829,798,215,21,21,1.0,103,63,305,1103,4.376984126984127
