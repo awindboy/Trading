@@ -266,3 +266,47 @@ Until then:
 2025-07 = LOCKED
 2021 = UNTOUCHED
 ```
+
+## 12. 2026-09-12 implementation proof
+
+<!-- V9_CAUSAL_STATE_MACHINE_IMPL_20260912 -->
+
+The dual-clock design is now implemented in the versioned state-v2 runtime.
+
+Normal strategy runtime requires the frozen source-range manifest:
+
+`docs/ea/v9/results/runtime/V9_GOLD_CONSUMED_SOURCE_RANGES_20260912.json`
+
+It does not infer consumed ranges by scanning through future-hidden source data.
+
+Fresh consumed acceptance:
+
+```text
+revealed M1 rows: 229,861
+future-hidden July-Dec rows revealed: 0
+semantic events: 4,254
+M5 OBJECT_KNOWN candidates: 27,899
+split/resume parity: byte-identical core ledgers
+action/restart parity: byte-identical core ledgers
+gate-driven mechanical replay: PASS
+```
+
+The information-batch barrier is mandatory:
+
+```text
+read next-row timestamp only
+-> emit every due completed state at INFORMATION_KNOWN_AT
+-> finish same-known-at semantic batch
+-> resolve strategy authorization/gates
+-> only then decode/reveal current-row OHLC
+```
+
+This preserves the required distinction:
+
+```text
+SEMANTIC EVENT AUTHORITY != EXECUTION PRICE AUTHORITY
+```
+
+See `V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md` for hashes and full acceptance evidence.
+
+This consumed-data proof is not permission to open future-hidden July.

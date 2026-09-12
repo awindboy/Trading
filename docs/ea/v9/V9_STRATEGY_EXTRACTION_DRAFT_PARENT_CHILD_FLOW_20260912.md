@@ -473,3 +473,46 @@ Before `2025-07` can be considered for unlock:
 ```
 
 `2025-07` remains locked at this checkpoint.
+
+## 9. 2026-09-12 causal implementation clarification
+
+<!-- V9_CAUSAL_STATE_MACHINE_IMPL_20260912 -->
+
+The first strategy draft has now been implemented without conditioning live authorization on future H1-cycle membership.
+
+Retain the older answer-sheet counts for their original descriptive question:
+
+```text
+Counter fresh transition inside later resolved cycle context: 141
+With-Parent first reauthorization inside later resolved cycle context: 94
+```
+
+Runtime authority must use only contemporaneously knowable context:
+
+```text
+live-safe first Counter authorization: 149
+live-safe first With-Parent authorization: 95
+```
+
+This distinction is not a new strategy filter. It removes a hidden future-cycle conditioning dependency.
+
+Additional implementation semantics now frozen for testing:
+
+```text
+H1 strategy context: ALIGNED / INTERRUPT
+Atlas gap segmentation != trade timeout
+full same-known-at batch before authorization
+M5 object SOURCE_LAST_M1_AT != OBJECT_KNOWN_AT
+zone touch -> ENTRY_EXECUTION_REQUIRED
+review EXIT -> EXIT_EXECUTION_REQUIRED
+Parent loss on alive paid Child -> REMAP_REQUIRED
+cross-lane conflict -> fail-closed review
+```
+
+No fill, exit, hedge, remap, or AI decision is invented from an old completed-bar price.
+
+The full implementation checkpoint and unresolved items are in:
+
+`V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md`
+
+This does not authorize `2025-07`.

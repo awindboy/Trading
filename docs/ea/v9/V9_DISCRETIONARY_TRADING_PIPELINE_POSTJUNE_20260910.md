@@ -87,3 +87,22 @@ The remaining resume gate is implementation/parity under:
 
 The runtime must reproduce the consumed-data decision process causally before this downstream pipeline becomes active.
 
+
+## 2026-09-12 causal runtime checkpoint
+
+<!-- V9_CAUSAL_STATE_MACHINE_IMPL_20260912 -->
+
+The deterministic causal state-machine mechanics gate has passed on consumed data.
+
+This downstream discretionary pipeline is still not live/production authority. Its next activation dependency is narrower now:
+
+```text
+accepted deterministic runtime
+-> freeze AI review/remap packet + scheduler + staleness/outage behavior
+-> consumed causal external-decision dry-run
+-> explicit future-hidden gate decision
+```
+
+When this pipeline resumes, use `run-until-gate` and deterministic request packets. Do not bypass an execution/review/remap gate by reading ahead or filling from stale completed-bar prices.
+
+`2025-07` remains LOCKED.

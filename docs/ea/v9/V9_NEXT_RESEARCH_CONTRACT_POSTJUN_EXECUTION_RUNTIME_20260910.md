@@ -1,7 +1,7 @@
 # V9 Next Research Contract — Sequential Live-Like Map / Trigger / Position Replay
 
 Date: `2026-09-12`
-Status: `ACTIVE IMPLEMENTATION GATE / STRATEGY-EXTRACTION DRAFT FROZEN / NO HIDDEN REPLAY YET`
+Status: `CAUSAL IMPLEMENTATION CHECKPOINT PASSED / AI PACKET + SCHEDULER GATE ACTIVE / NO HIDDEN REPLAY YET`
 Market: `GOLD# ONLY`
 Production authority: `NONE`
 EA authority: `NONE`
@@ -84,3 +84,43 @@ Until then:
 2021 = UNTOUCHED
 ```
 
+
+## 2026-09-12 causal implementation gate passed
+
+<!-- V9_CAUSAL_STATE_MACHINE_IMPL_20260912 -->
+
+The deterministic runtime requirements in the previous activation update have been implemented and accepted on consumed data.
+
+Accepted:
+
+```text
+dual-clock state-v2
+same-known-at information-batch barrier
+M15/M5 information-known object timing
+live-safe strategy authorization
+pending / fill-report / Hard-SL / review / remap lifecycle
+restart-safe gate queue and external action log
+consumed source-range isolation
+split/restart exact parity
+```
+
+The next research contract is now the external-decision layer:
+
+```text
+1. freeze AI review/remap request packet;
+2. freeze allowed AI response semantics and deterministic validation;
+3. freeze AI-call scheduler / meaningful-structure triggers;
+4. freeze maximum-staleness and service-outage fail-safe;
+5. run consumed causal decision dry-run through the exact packet/scheduler protocol;
+6. freeze implementation + packet + scheduler hashes;
+7. explicitly decide whether 2025-07 can be unlocked.
+```
+
+Do not use the mechanical gate harness's synthetic actions as strategy performance or decision authority.
+
+Until the explicit gate decision:
+
+```text
+2025-07 = LOCKED
+2021 = UNTOUCHED
+```

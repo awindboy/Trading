@@ -1,0 +1,120 @@
+{
+  "actions": {
+    "CONFLICT_DECISION": 162,
+    "ENTRY_FILL": 213,
+    "EXIT_FILL": 109,
+    "REVIEW_DECISION": 109
+  },
+  "first_price_gate": {
+    "allowed_actions": [
+      {
+        "kind": "ENTRY_FILL",
+        "requires": [
+          "child_id",
+          "at",
+          "block",
+          "price"
+        ]
+      },
+      {
+        "kind": "ENTRY_NO_FILL",
+        "requires": [
+          "child_id",
+          "at",
+          "block"
+        ]
+      },
+      {
+        "kind": "ENTRY_CANCEL",
+        "requires": [
+          "child_id",
+          "at",
+          "block"
+        ]
+      }
+    ],
+    "block": "2025H1",
+    "branch": "COUNTER",
+    "child_id": "2025H1-COU0001",
+    "event_sequence": 4,
+    "gate_id": "2b5cfdd37cc630e2abe00757",
+    "information_known_at": "2025-01-16 07:34:00",
+    "kind": "ENTRY_EXECUTION_REQUIRED",
+    "known_at": "2025-01-16 07:34:00",
+    "market_snapshot": {
+      "h1_consensus": "UP",
+      "last_revealed_m1": "2025-01-16 07:34:00",
+      "m15_consensus": "DOWN",
+      "parent_id": "2025H1-MP001",
+      "parent_side": "UP"
+    },
+    "parent_id": "2025H1-MP001",
+    "payload": {
+      "zone_id": "M5_OB_BEAR_20250116_0715_VIA_20250116_0720"
+    },
+    "price_revealed_cutoff": "2025-01-16 07:34:00",
+    "side": "DOWN"
+  },
+  "first_semantic_gate": {
+    "allowed_actions": [
+      {
+        "decision": [
+          "SKIP_NEW_PITCH"
+        ],
+        "kind": "CONFLICT_DECISION",
+        "requires": [
+          "at",
+          "block",
+          "decision"
+        ]
+      }
+    ],
+    "block": "2025H1",
+    "branch": "WITH_PARENT",
+    "child_id": null,
+    "event_sequence": 5,
+    "gate_id": "d206bd5d94fcf799efaa3250",
+    "information_known_at": "2025-01-17 14:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "known_at": "2025-01-17 14:30:00",
+    "market_snapshot": {
+      "h1_consensus": "DOWN",
+      "last_revealed_m1": "2025-01-17 14:29:00",
+      "m15_consensus": "UP",
+      "parent_id": "2025H1-MP001",
+      "parent_side": "UP"
+    },
+    "parent_id": "2025H1-MP001",
+    "payload": {
+      "conflict_scope": "EXISTING_OPPOSITE_CHILD",
+      "origin": 2702.84,
+      "other_child": "2025H1-COU0003",
+      "other_side": "DOWN",
+      "zone_id": "M5_FVG_BULL_20250117_1425_C3"
+    },
+    "price_revealed_cutoff": "2025-01-17 14:29:00",
+    "side": "UP"
+  },
+  "gates": {
+    "CROSS_LANE_CONFLICT_REVIEW": 162,
+    "ENTRY_EXECUTION_REQUIRED": 213,
+    "EXIT_EXECUTION_REQUIRED": 109,
+    "REMAP_REQUIRED": 28,
+    "REVIEW_REQUIRED": 81
+  },
+  "information_known_at": "2026-02-28 00:00:00",
+  "note": "Synthetic execution prices/decisions are interface-mechanics test data only; no P/L or strategy-performance meaning.",
+  "pending_gates": [],
+  "price_revealed_cutoff": "2026-02-27 23:57:00",
+  "range_index": 2,
+  "restart_points_exercised": [
+    1,
+    25,
+    100,
+    250,
+    500
+  ],
+  "revealed_rows": 229861,
+  "segments": 594,
+  "status": "PASS"
+}

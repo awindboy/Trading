@@ -25,14 +25,15 @@ Read in this order:
 7. `docs/ea/v9/V9_MARKET_FLOW_GRAMMAR_CONTINUOUS_HIERARCHY_AUTHORITY_20260912.md`
 8. `docs/ea/v9/V9_STRATEGY_EXTRACTION_DRAFT_PARENT_CHILD_FLOW_20260912.md`
 9. `docs/ea/v9/V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
-10. `docs/ea/v9/results/V9_MARKET_FLOW_ATLAS_MASTER_LEDGER_20260912.md`
-11. `docs/ea/v9/results/V9_MARKET_FLOW_GRAMMAR_RESEARCH_CHRONICLE_20260912.md`
-12. `docs/ea/v9/results/V9_DIFFICULT_MONTH_AND_AMBIGUITY_RESOLUTION_STUDY_20260912.md`
-13. `docs/ea/v9/V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
-14. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
-15. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
-16. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md`
-17. current code/tool parity state.
+10. `docs/ea/v9/V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md`
+11. `docs/ea/v9/results/V9_MARKET_FLOW_ATLAS_MASTER_LEDGER_20260912.md`
+12. `docs/ea/v9/results/V9_MARKET_FLOW_GRAMMAR_RESEARCH_CHRONICLE_20260912.md`
+13. `docs/ea/v9/results/V9_DIFFICULT_MONTH_AND_AMBIGUITY_RESOLUTION_STUDY_20260912.md`
+14. `docs/ea/v9/V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
+15. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
+16. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
+17. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md`
+18. current code/tool parity state.
 
 If older postmortems/pipeline documents conflict with the current Market Flow Grammar authority, the current authority wins.
 
@@ -150,8 +151,10 @@ ACTIVE-Parent H1 cycles: 171
   SAME_PARENT_REALIGN: 120
   PARENT_LOSS_FIRST:    51
 
-first with-Parent M15 reauthorization: 94
-strict fresh counter M15 reauthorization before H1 interrupt: 141
+first with-Parent M15 reauthorization (cycle-conditioned research): 94
+live-safe first with-Parent runtime authorization: 95
+strict fresh counter M15 reauthorization before H1 interrupt (cycle-conditioned research): 141
+live-safe first Counter runtime authorization: 149
 
 same-Parent post-realign routes:
   launch anchor no-touch:             63
@@ -165,18 +168,46 @@ This is consumed-data reproducibility, not future edge.
 
 `2025-07` remains locked.
 
+## Causal state-machine implementation checkpoint — 2026-09-12
+
+<!-- V9_CAUSAL_STATE_MACHINE_IMPL_20260912 -->
+
+The deterministic consumed-data causal mechanics gate has passed.
+
+Read:
+
+`docs/ea/v9/V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md`
+
+Key implementation facts:
+
+```text
+revealed consumed M1 rows: 229,861
+future-hidden July-Dec rows revealed: 0
+semantic events: 4,254
+M5 OBJECT_KNOWN candidates: 27,899
+live-safe first Counter authorizations: 149
+live-safe first With-Parent authorizations: 95
+split/resume parity: exact
+external-action restart parity: exact
+gate-driven mechanical replay: PASS
+```
+
+This is implementation causality, not future edge. Production authority and EA authority remain NONE.
+
+`2025-07` remains LOCKED.
+
 ## What to research next
 
-Do not resume setup mining.
+Do not resume setup mining and do not open July yet.
 
 Current order:
 
-1. implement a versioned dual-clock semantic runtime with separate `PRICE_REVEALED_CUTOFF` and `INFORMATION_KNOWN_AT`;
-2. implement M15/M5 object availability using information-known time without changing geometric source coordinates;
-3. replay the frozen strategy-extraction draft sequentially through the actual implementation on consumed periods;
-4. verify deterministic priority for pending-order cancellation, fill, Hard SL, launch-anchor review/damage, Parent loss, and remap;
-5. freeze implementation versions / hashes and document remaining unresolved execution ambiguity;
-6. only then decide whether the future-hidden `2025-07` gate is satisfied.
+1. freeze the AI review/remap request + response packet and the semantic decision contract;
+2. freeze the AI-call scheduler, maximum-staleness behavior, and service-outage fail-safe without inventing market thresholds;
+3. run the consumed periods through the exact external-decision protocol while preserving the accepted deterministic runtime;
+4. verify no semantic decision can bypass pending execution/review/remap gates or continuous Hard-SL guards;
+5. freeze the implementation/packet/scheduler versions and hashes;
+6. only then explicitly decide whether the future-hidden `2025-07` replay gate is satisfied.
 
 ## Do not do
 

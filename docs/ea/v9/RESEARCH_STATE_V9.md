@@ -243,3 +243,38 @@ FUTURE-HIDDEN JULY = LOCKED
 PRODUCTION / EA AUTHORITY = NONE
 ```
 
+
+## 2026-09-12 causal state-machine implementation accepted
+
+<!-- V9_CAUSAL_STATE_MACHINE_IMPL_20260912 -->
+
+The frozen strategy-extraction draft has been reproduced as a resumable raw-M1 causal state machine on consumed periods.
+
+Acceptance summary:
+
+```text
+revealed consumed rows: 229,861
+future-hidden rows revealed: 0
+semantic events: 4,254
+M5 object-known candidates: 27,899
+first Counter runtime authorizations: 149
+first With-Parent runtime authorizations: 95
+split/resume exact parity: PASS
+external-action restart exact parity: PASS
+gate-driven mechanical replay: PASS
+```
+
+The live-safe authorization universe is intentionally larger than the older cycle-conditioned `141 / 94` research counts. Future H1 resolution is not available to the runtime and is not used to select signals.
+
+Current state:
+
+```text
+MARKET-FLOW GRAMMAR = FROZEN FIRST DRAFT
+STRATEGY EXTRACTION = FROZEN FIRST DRAFT
+DETERMINISTIC CAUSAL MECHANICS = ACCEPTED ON CONSUMED DATA
+AI REVIEW/REMAP PACKET + SCHEDULER = NEXT GATE
+FUTURE-HIDDEN JULY = LOCKED
+PRODUCTION / EA AUTHORITY = NONE
+```
+
+Remaining unresolved issues are explicitly listed in `V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md`; do not mine hidden thresholds to remove them.

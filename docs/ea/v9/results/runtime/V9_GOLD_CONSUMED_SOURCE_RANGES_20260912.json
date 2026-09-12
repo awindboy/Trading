@@ -1,0 +1,22 @@
+{
+  "ranges": [
+    {
+      "block": "2025H1",
+      "end": "2025-07-01 00:00:00",
+      "end_offset": 75912993,
+      "start": "2025-01-01 00:00:00",
+      "start_offset": 65173328
+    },
+    {
+      "block": "2026JF",
+      "end": "2026-03-01 00:00:00",
+      "end_offset": 90428045,
+      "start": "2026-01-01 00:00:00",
+      "start_offset": 86972434
+    }
+  ],
+  "source_basename": "GOLD#_M1_202201030100_202608282357(5).csv",
+  "source_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+  "source_size": 101405198,
+  "version": "v9-consumed-byte-range-index-1"
+}

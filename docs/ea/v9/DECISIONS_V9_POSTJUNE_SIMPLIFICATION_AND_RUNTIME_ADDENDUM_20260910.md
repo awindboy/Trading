@@ -190,3 +190,37 @@ Retain:
 
 `2025-07` remains locked.
 
+
+## 2026-09-12 causal implementation decision update
+
+<!-- V9_CAUSAL_STATE_MACHINE_IMPL_20260912 -->
+
+The deterministic consumed-data implementation mechanics gate is accepted.
+
+Retain these implementation decisions:
+
+- strategy-time H1 role is `ALIGNED` versus `INTERRUPT`; internal `COUNTERFLOW <-> LOCAL_BALANCE` changes do not restart Child context;
+- Atlas `>2h` gap segmentation is research bookkeeping, not a trade timeout or Child invalidation;
+- full same-known-at information batches complete before strategy authorization is resolved;
+- semantic gate time is not execution-price authority;
+- zone touch requires execution reporting rather than invented fill;
+- completed M15 launch-anchor damage creates review authority, not an automatic stale-price exit;
+- Hard-SL / structural origin has deterministic priority over discretionary review;
+- Parent loss cancels pre-fill Child or requires remap of an alive paid Child; it does not fabricate a Child result;
+- cross-lane hedge/netting/replacement is not frozen and therefore remains fail-closed review;
+- simultaneous opposite authorization receives no code-order priority;
+- live-safe first authorization counts are `149 Counter / 95 With-Parent`; `141 / 94` remain cycle-conditioned research statistics only;
+- hidden-safe normal runtime uses the frozen consumed byte-range manifest and does not discover hidden ranges by scanning the strategy source.
+
+Current order:
+
+```text
+accepted deterministic causal mechanics
+-> freeze AI review/remap packet
+-> freeze scheduler + max-staleness/service-outage behavior
+-> consumed causal external-decision dry-run
+-> freeze implementation/packet/scheduler commit + hashes
+-> explicit future-hidden gate decision
+```
+
+`2025-07` remains LOCKED.

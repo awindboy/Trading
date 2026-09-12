@@ -2,7 +2,7 @@
 
 Last updated: `2026-09-12`
 Status: `ACTIVE / CONTINUOUS HIERARCHICAL MARKET-FLOW GRAMMAR`
-Current phase: `STRATEGY-EXTRACTION DRAFT FROZEN -> DUAL-CLOCK RUNTIME IMPLEMENTATION GATE`
+Current phase: `CAUSAL STATE MACHINE IMPLEMENTED -> AI REVIEW/REMAP PACKET + SCHEDULER GATE`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
@@ -268,3 +268,50 @@ Current next task is implementation/parity, not adding more setup filters.
 
 `2025-07` remains locked; production authority and EA authority remain NONE.
 
+
+## 2026-09-12 causal state-machine implementation checkpoint
+
+<!-- V9_CAUSAL_STATE_MACHINE_IMPL_20260912 -->
+
+The deterministic implementation gate described by the earlier dual-clock addendum has now passed on consumed data.
+
+Primary checkpoint:
+
+`V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md`
+
+Frozen runtime scripts:
+
+```text
+scripts/v9_semantic_runtime.py
+scripts/v9_execution_state_machine.py
+scripts/v9_strategy_state_machine.py
+scripts/v9_runtime_state_v2.py
+scripts/validate_v9_causal_state_machine.py
+```
+
+Critical runtime distinction:
+
+```text
+141 Counter / 94 With-Parent
+= cycle-conditioned research statistics
+
+149 Counter / 95 With-Parent
+= live-safe first-authorization runtime universe
+```
+
+Do not condition the live runtime on future H1-cycle membership.
+
+The runtime now has:
+
+- frozen consumed byte-range isolation tied to the authoritative source hash;
+- full same-known-at information-batch barrier before strategy decisions;
+- exact M5 `OBJECT_KNOWN_AT` geometry/lifecycle;
+- versioned state-v2 checkpoint/resume;
+- `run-until-gate -> action -> resume` flow;
+- fail-closed execution/reporting for fills, exits, remaps, and cross-lane conflicts;
+- deterministic Hard-SL / review / Parent-loss priority tests;
+- exact split/restart parity.
+
+Next work is the external AI review/remap packet, scheduler, and maximum-staleness/service-outage policy. Do not reopen setup mining.
+
+`2025-07` remains LOCKED. `2021` remains UNTOUCHED. Production authority and EA authority remain NONE.

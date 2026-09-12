@@ -349,3 +349,47 @@ anchor-price mismatch: 0
 
 This is an implementation gate, not hidden-data permission.
 
+
+## 2026-09-12 accepted causal runtime implementation
+
+<!-- V9_CAUSAL_STATE_MACHINE_IMPL_20260912 -->
+
+Current consumed-data causal runtime files:
+
+```text
+scripts/v9_semantic_runtime.py
+scripts/v9_execution_state_machine.py
+scripts/v9_strategy_state_machine.py
+scripts/v9_runtime_state_v2.py
+scripts/validate_v9_causal_state_machine.py
+```
+
+Normal hidden-safe strategy replay uses the frozen byte-range manifest rather than source-range discovery.
+
+External decision gates are now explicit:
+
+```text
+ENTRY_EXECUTION_REQUIRED
+REVIEW_REQUIRED
+REMAP_REQUIRED
+EXIT_EXECUTION_REQUIRED
+CROSS_LANE_CONFLICT_REVIEW
+```
+
+Live-like replay must use:
+
+```text
+run-until-gate
+-> pending_request.json
+-> exact matching external action
+-> state persistence
+-> resume
+```
+
+A semantic gate fires after its full information batch and before same-time M1 OHLC reveal. A price gate fires after only its triggering M1 row has been revealed.
+
+The current implementation is fail-closed where M1 OHLC cannot prove broker/tick ordering. It does not infer an entry or exit fill from a semantic close event.
+
+Deterministic priority and gate edge tests are included under `scripts/tests/`.
+
+Implementation hashes and acceptance results are authority in `V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md` for this checkpoint.

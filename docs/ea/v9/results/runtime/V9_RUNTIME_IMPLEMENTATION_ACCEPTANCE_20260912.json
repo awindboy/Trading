@@ -1,0 +1,101 @@
+{
+  "status": "PASS",
+  "date": "2026-09-12",
+  "base_github_head": "d3e62d1733a626f2814d7e720a82c453f36be16e",
+  "market": "GOLD#",
+  "source_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+  "production_authority": "NONE",
+  "ea_authority": "NONE",
+  "future_hidden_2025_07": "LOCKED",
+  "untouched_reserve_2021": "UNTOUCHED",
+  "implementation": {
+    "v9_semantic_runtime.py": "92f8ab602ca81dff881cb78ee4084664c0c8847fa1948f998bee81158c408c2d",
+    "v9_execution_state_machine.py": "8a5430bcecdaad36f47bf63be60fd9f069ed31565037fb025ea4b07fb300fd09",
+    "v9_strategy_state_machine.py": "3f7bd38cc17f30409a330b7b357a03685fbf3c05473cc00c9ca536f34136070e",
+    "v9_runtime_state_v2.py": "45086e53d34d0c9f247b746ebfbece7ca7e75a453dd888ec1064538527a441cb",
+    "validate_v9_causal_state_machine.py": "c3dc7c564251163e14742b0d4acbe676a381446bd4c373f42392f04ab8d5da4b"
+  },
+  "consumed_source_range_manifest_sha256": "529f206c717f0f2842cc18ee66b6105fcaae1fd58931227aaed8a6ebd2ef9a03",
+  "revealed_consumed_rows": 229861,
+  "future_hidden_rows_revealed": 0,
+  "semantic_events": 4254,
+  "m5_object_known": {
+    "SWING": 12408,
+    "FVG": 10163,
+    "OB": 5328,
+    "TOTAL": 27899,
+    "geometry_mismatch": 0,
+    "object_known_at_mismatch": 0
+  },
+  "live_safe_first_authorizations": {
+    "COUNTER": 149,
+    "WITH_PARENT": 95,
+    "first_origin_mismatch": 0,
+    "first_zone_mismatch": 0,
+    "note": "141 counter / 94 with-Parent remain cycle-conditioned research statistics, not the live runtime authorization universe."
+  },
+  "uninterrupted_full_ledger_sha256": {
+    "revealed_consumed.tsv": "ddc7e6d8a280a0e14258dbfe5e891caf816d85f42bf60d87db4b1855b640334a",
+    "semantic_events.jsonl": "6844da62c01f70f609f305040712f174fa1f432164d13f5e6109ad4a296e1506",
+    "counter_events.jsonl": "1925b55c1e3ec196fbe81fd9056b67d72a210023340b767fe7859a41384f95b8",
+    "with_parent_events.jsonl": "19141ebaaca7620c9c34001f854951cc5cf35f925e7b1c683ca5c70161d58427",
+    "object_known.jsonl": "ffaae63cc13a3a981ab587b22b36c2e882bc2bb086f766dff537f8fd0b98d326"
+  },
+  "split_resume_parity": {
+    "status": "PASS",
+    "ledger_sha256_identical": true,
+    "final_market_strategy_bucket_state_identical": true,
+    "checkpoints": [
+      "2025-03-05 12:34:00",
+      "2025-06-30 23:57:00",
+      "2026-02-12 12:34:00"
+    ]
+  },
+  "external_action_restart_parity": {
+    "status": "PASS",
+    "ledger_sha256_identical": true,
+    "final_relevant_state_identical": true
+  },
+  "gate_driven_mechanical_replay": {
+    "status": "PASS",
+    "segments": 594,
+    "gates": {
+      "CROSS_LANE_CONFLICT_REVIEW": 162,
+      "ENTRY_EXECUTION_REQUIRED": 213,
+      "EXIT_EXECUTION_REQUIRED": 109,
+      "REMAP_REQUIRED": 28,
+      "REVIEW_REQUIRED": 81
+    },
+    "restart_points_exercised": [1, 25, 100, 250, 500],
+    "revealed_rows": 229861,
+    "pending_gates_at_end": 0,
+    "first_semantic_gate": {
+      "known_at": "2025-01-17 14:30:00",
+      "price_revealed_cutoff": "2025-01-17 14:29:00",
+      "kind": "CROSS_LANE_CONFLICT_REVIEW"
+    },
+    "note": "Synthetic execution prices/decisions are interface-mechanics test data only and have no P/L or strategy-performance authority."
+  },
+  "deterministic_tests": {
+    "strategy_priority_cases": 6,
+    "gate_runtime_edge_cases": 3,
+    "status": "PASS"
+  },
+  "implementation_gate_conclusion": "Causal runtime mechanics accepted on consumed data. Future-hidden replay is not authorized yet.",
+  "remaining_gates_before_future_hidden_decision": [
+    "freeze AI review/remap packet schema and semantic decision contract",
+    "freeze AI-call scheduler and maximum-staleness/service-outage fail-safe",
+    "run consumed causal decision dry-run through that exact external-decision protocol",
+    "freeze implementation bundle/commit and hashes",
+    "then explicitly decide whether 2025-07 may be unlocked"
+  ],
+  "explicitly_unresolved": [
+    "exact broker/tick intraminute fill ordering and execution price",
+    "final discretionary HOLD/EXIT/REMAP policy after review",
+    "cross-lane hedge/netting/replacement policy beyond fail-closed conflict review",
+    "four observed surviving Counter-Child same-side Parent re-earn handoffs",
+    "maximum-staleness / AI service-outage fail-safe",
+    "costs, spread, slippage and live execution effects",
+    "future-hidden validation"
+  ]
+}
