@@ -1,7 +1,7 @@
 # V9 Next Research Contract — Sequential Live-Like Map / Trigger / Position Replay
 
 Date: `2026-09-12`
-Status: `CAUSAL IMPLEMENTATION CHECKPOINT PASSED / AI PACKET + SCHEDULER GATE ACTIVE / NO HIDDEN REPLAY YET`
+Status: `AI EXTERNAL-DECISION MECHANICS PASSED / CHART-NATIVE AI DECISION CONTRACT ACTIVE / NO HIDDEN REPLAY YET`
 Market: `GOLD# ONLY`
 Production authority: `NONE`
 EA authority: `NONE`
@@ -124,3 +124,21 @@ Until the explicit gate decision:
 2025-07 = LOCKED
 2021 = UNTOUCHED
 ```
+
+## 2026-09-12 external-decision mechanics passed
+
+<!-- V9_AI_EXTERNAL_DECISION_VALIDATED_20260912 -->
+
+The exact consumed gate-driven replay through the AI envelope/scheduler path passed and preserved the accepted combined mechanical baseline byte-for-byte.
+
+Active contract now:
+
+```text
+1. freeze causal chart-native MAP attachment for review/remap;
+2. freeze actual AI semantic decision instruction/model-role contract;
+3. consumed real-input AI decision dry-run;
+4. freeze all packet/chart/prompt/model-role hashes;
+5. explicitly decide future-hidden July again.
+```
+
+Synthetic EXIT mechanics are not strategy-performance authority.

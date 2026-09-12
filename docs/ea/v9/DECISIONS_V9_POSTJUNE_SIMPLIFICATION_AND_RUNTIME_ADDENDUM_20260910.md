@@ -224,3 +224,19 @@ accepted deterministic causal mechanics
 ```
 
 `2025-07` remains LOCKED.
+
+## 2026-09-12 validated AI external-decision decision update
+
+<!-- V9_AI_EXTERNAL_DECISION_VALIDATED_20260912 -->
+
+Retain:
+
+- `REVIEW_REQUIRED` / `REMAP_REQUIRED` are the only AI semantic gates in the current runtime;
+- entry/exit fill reports remain execution-adapter authority;
+- cross-lane conflict remains deterministic fail-closed `SKIP_NEW_PITCH`;
+- AI response staleness is exact causal-structure mismatch, not an elapsed-minute threshold;
+- AI outage creates no implicit HOLD/EXIT/REMAP and no new risk;
+- the Hard-SL structural origin remains authoritative during review/remap/outage;
+- 2024 tick data is execution validation only and cannot retune strategy grammar.
+
+The packet/scheduler mechanics gate has passed. Future-hidden replay is still blocked until chart-native AI semantic input and the actual AI review instruction/model-role contract are frozen and consumed-tested.

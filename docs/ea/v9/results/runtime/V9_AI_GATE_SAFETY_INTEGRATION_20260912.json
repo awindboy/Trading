@@ -1,0 +1,34 @@
+{
+  "outage_staleness": {
+    "expected_gate_id": "b0d82335f3929e41f25e7c95",
+    "gate_id": "b0d82335f3929e41f25e7c95",
+    "gate_kind": "REVIEW_REQUIRED",
+    "gates_seen": 7,
+    "hard_guard_origin_boundary": 2712.45,
+    "hard_guard_state": "REVIEW_REQUIRED",
+    "outage_advance_semantic_replay": false,
+    "outage_allow_new_risk": false,
+    "outage_no_state_mutation": true,
+    "outage_runtime_action": null,
+    "restart_request_exact": true,
+    "stale_response_rejected": true
+  },
+  "remap_path": {
+    "child_state_after": "OPEN",
+    "expected_gate_id": "33457bd70777a180dcc24aec",
+    "gate_id": "33457bd70777a180dcc24aec",
+    "gates_seen": 23,
+    "journey_role": "WITH_NEW_PARENT_JOURNEY",
+    "new_parent": {
+      "block": "2025H1",
+      "parent_id": "2025H1-MP004",
+      "side": "UP",
+      "start": "2025-01-28 20:00:00"
+    },
+    "old_parent_id": "2025H1-MP003",
+    "origin_unchanged": true,
+    "pending_gates_after": []
+  },
+  "scope": "consumed AI gate safety interface only; synthetic outage/remap have no strategy-performance authority",
+  "status": "PASS"
+}

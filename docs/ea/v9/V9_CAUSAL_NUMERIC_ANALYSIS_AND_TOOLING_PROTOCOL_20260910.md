@@ -393,3 +393,11 @@ The current implementation is fail-closed where M1 OHLC cannot prove broker/tick
 Deterministic priority and gate edge tests are included under `scripts/tests/`.
 
 Implementation hashes and acceptance results are authority in `V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md` for this checkpoint.
+
+## 2026-09-12 validated AI-envelope + 2024 tick tooling update
+
+<!-- V9_AI_EXTERNAL_DECISION_VALIDATED_20260912 -->
+
+2024 supplied tick data passed exact authoritative-M1 reconstruction across `344,185` minutes (`OHLC/TICKVOL mismatch = 0`). Use it as lower-resolution execution evidence for intraminute ordering and historical BID/ASK spread; do not derive a new spread threshold from it.
+
+The deterministic AI gate envelope is now versioned and consumed-tested. However, because this protocol states that chart images are a primary AI semantic input, the next packet revision/attachment layer must bind the causal MAP render identity/hash to the same request fingerprint before a real AI semantic response can receive future-hidden authority.

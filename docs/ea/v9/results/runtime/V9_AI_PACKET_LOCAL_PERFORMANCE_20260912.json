@@ -1,0 +1,11 @@
+{
+  "elapsed_seconds": 0.4977668419996917,
+  "iterations": 10000,
+  "mean_microseconds_per_packet": 49.77668419996917,
+  "packets_per_second": 20089.727069458342,
+  "python": "3.13.5",
+  "sample_packet_bytes": 6046,
+  "sample_packet_sha256": "d912d429b9d12861f055dda9eed813dbcf13406b5c59f38d71b7a5a030760b14",
+  "scope": "local serialization/hash microbenchmark only; not model/API latency",
+  "status": "PASS"
+}

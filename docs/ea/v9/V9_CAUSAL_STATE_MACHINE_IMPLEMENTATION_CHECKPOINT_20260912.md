@@ -462,3 +462,21 @@ Until that explicit decision:
 Production authority = NONE
 EA authority         = NONE
 ```
+
+## 16. 2026-09-12 AI external-decision validation follow-up
+
+<!-- V9_AI_EXTERNAL_DECISION_VALIDATED_20260912 -->
+
+The next-layer packet/scheduler mechanics have now passed consumed validation without modifying this checkpoint's frozen causal core.
+
+```text
+segments: 594
+AI requests: 109
+revealed rows: 229,861
+pending gates: 0
+gate-driven ledger/action parity: exact
+outage/staleness integration: PASS
+REMAP action integration: PASS
+```
+
+This does not resolve final AI `HOLD / EXIT / REMAP` judgment. The validated request is a causal gate envelope; the chart-native MAP attachment and real semantic decision instruction remain open. `2025-07` stays locked.

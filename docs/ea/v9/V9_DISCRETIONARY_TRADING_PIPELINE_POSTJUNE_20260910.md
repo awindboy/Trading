@@ -106,3 +106,9 @@ accepted deterministic runtime
 When this pipeline resumes, use `run-until-gate` and deterministic request packets. Do not bypass an execution/review/remap gate by reading ahead or filling from stale completed-bar prices.
 
 `2025-07` remains LOCKED.
+
+## 2026-09-12 validated external-decision mechanics
+
+<!-- V9_AI_EXTERNAL_DECISION_VALIDATED_20260912 -->
+
+`run-until-gate -> versioned gate envelope -> validated action -> resume` has passed the full consumed mechanical replay. The next activation blocker is not another setup filter; it is the chart-native MAP attachment plus the actual AI semantic review instruction/model-role contract. Future-hidden July remains locked.

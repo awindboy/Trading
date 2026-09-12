@@ -2,7 +2,7 @@
 
 Last updated: `2026-09-12`
 Status: `ACTIVE / CONTINUOUS HIERARCHICAL MARKET-FLOW GRAMMAR`
-Current phase: `CAUSAL STATE MACHINE IMPLEMENTED -> AI REVIEW/REMAP PACKET + SCHEDULER GATE`
+Current phase: `AI GATE-ENVELOPE/SCHEDULER MECHANICS ACCEPTED -> CHART-NATIVE AI DECISION CONTRACT GATE`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
@@ -315,3 +315,13 @@ The runtime now has:
 Next work is the external AI review/remap packet, scheduler, and maximum-staleness/service-outage policy. Do not reopen setup mining.
 
 `2025-07` remains LOCKED. `2021` remains UNTOUCHED. Production authority and EA authority remain NONE.
+
+## 2026-09-12 validated AI external-decision mechanics
+
+<!-- V9_AI_EXTERNAL_DECISION_VALIDATED_20260912 -->
+
+The AI gate-envelope/scheduler mechanics passed the complete consumed 594-gate replay without changing the accepted gate-driven factual/action ledgers. Actual consumed outage/staleness and REMAP action paths also passed.
+
+2024 tick execution-source audit passed exact M1 OHLC/TICKVOL parity across `344,185` covered minutes.
+
+This does **not** freeze the real discretionary AI semantic path: chart-native MAP attachment + actual AI review instruction/model-role contract remain the next gate. Future-hidden July remains locked.

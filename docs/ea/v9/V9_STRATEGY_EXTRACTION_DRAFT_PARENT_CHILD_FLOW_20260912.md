@@ -516,3 +516,11 @@ The full implementation checkpoint and unresolved items are in:
 `V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md`
 
 This does not authorize `2025-07`.
+
+## 10. 2026-09-12 validated AI interface clarification
+
+<!-- V9_AI_EXTERNAL_DECISION_VALIDATED_20260912 -->
+
+The earlier unresolved `AI call/remap packet format` is resolved only at the deterministic gate-envelope / scheduler / response-validation level. The consumed 594-gate path passed exactly.
+
+The strategy-quality choice among `HOLD / EXIT / REMAP` remains unresolved, and the chart-native AI MAP input remains to be frozen. No strategy threshold was added and the `149 Counter / 95 With-Parent` live-safe authorization universe is unchanged.

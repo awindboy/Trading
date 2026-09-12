@@ -1,0 +1,172 @@
+{
+  "actual_gate_safety_integration": {
+    "outage_staleness": {
+      "expected_gate_id": "b0d82335f3929e41f25e7c95",
+      "gate_id": "b0d82335f3929e41f25e7c95",
+      "gate_kind": "REVIEW_REQUIRED",
+      "gates_seen": 7,
+      "hard_guard_origin_boundary": 2712.45,
+      "hard_guard_state": "REVIEW_REQUIRED",
+      "outage_advance_semantic_replay": false,
+      "outage_allow_new_risk": false,
+      "outage_no_state_mutation": true,
+      "outage_runtime_action": null,
+      "restart_request_exact": true,
+      "stale_response_rejected": true
+    },
+    "remap_path": {
+      "child_state_after": "OPEN",
+      "expected_gate_id": "33457bd70777a180dcc24aec",
+      "gate_id": "33457bd70777a180dcc24aec",
+      "gates_seen": 23,
+      "journey_role": "WITH_NEW_PARENT_JOURNEY",
+      "new_parent": {
+        "block": "2025H1",
+        "parent_id": "2025H1-MP004",
+        "side": "UP",
+        "start": "2025-01-28 20:00:00"
+      },
+      "old_parent_id": "2025H1-MP003",
+      "origin_unchanged": true,
+      "pending_gates_after": []
+    },
+    "scope": "consumed AI gate safety interface only; synthetic outage/remap have no strategy-performance authority",
+    "status": "PASS"
+  },
+  "authoritative_m1": {
+    "sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+    "size": 101405198
+  },
+  "authority_conclusion": {
+    "accepted": [
+      "AI gate routing mechanics",
+      "deterministic request fingerprinting",
+      "strict response schema",
+      "structural staleness rejection",
+      "AI outage fail-stop",
+      "actual REMAP action path",
+      "consumed 594-gate mechanical parity",
+      "2024 tick-to-M1 execution-source parity"
+    ],
+    "future_hidden_gate_decision": "NOT SATISFIED YET",
+    "not_yet_accepted": [
+      "final AI HOLD/EXIT/REMAP strategy-quality judgment",
+      "chart-native AI MAP attachment contract bound to causal prefix",
+      "actual AI prompt/model-role contract for semantic review",
+      "future-hidden strategy performance",
+      "production/live cost model"
+    ],
+    "reason": "Current chart-native tooling authority says chart images are a primary AI semantic input. The validated v1 packet freezes the causal semantic envelope but not the chart attachment or actual semantic-decision instruction. Synthetic EXIT dry-run proves mechanics only."
+  },
+  "base_github_head": "395cef95046226d1814466475dda200901e0046d",
+  "consumed_external_decision_mechanics": {
+    "ai_requests": 109,
+    "expected_gate_driven_hashes": {
+      "counter_events.jsonl": "e6a26ef44acac1078d9dd496f591ffc1c17896b264d4e07adb7ebb28d63e9932",
+      "external_actions.jsonl": "236809d1566033419600528bb131d9ba3de81779dbc0150b560ff855311ce218",
+      "object_known.jsonl": "ffaae63cc13a3a981ab587b22b36c2e882bc2bb086f766dff537f8fd0b98d326",
+      "revealed_consumed.tsv": "ddc7e6d8a280a0e14258dbfe5e891caf816d85f42bf60d87db4b1855b640334a",
+      "semantic_events.jsonl": "6844da62c01f70f609f305040712f174fa1f432164d13f5e6109ad4a296e1506",
+      "with_parent_events.jsonl": "6bdf8152a12b2c5342f8ff7aa04c1b7d46c57a437279ca83f52e2b681991bff2"
+    },
+    "gate_counts_match": true,
+    "gates": {
+      "CROSS_LANE_CONFLICT_REVIEW": 162,
+      "ENTRY_EXECUTION_REQUIRED": 213,
+      "EXIT_EXECUTION_REQUIRED": 109,
+      "REMAP_REQUIRED": 28,
+      "REVIEW_REQUIRED": 81
+    },
+    "ledger_hashes": {
+      "counter_events.jsonl": "e6a26ef44acac1078d9dd496f591ffc1c17896b264d4e07adb7ebb28d63e9932",
+      "external_actions.jsonl": "236809d1566033419600528bb131d9ba3de81779dbc0150b560ff855311ce218",
+      "object_known.jsonl": "ffaae63cc13a3a981ab587b22b36c2e882bc2bb086f766dff537f8fd0b98d326",
+      "revealed_consumed.tsv": "ddc7e6d8a280a0e14258dbfe5e891caf816d85f42bf60d87db4b1855b640334a",
+      "semantic_events.jsonl": "6844da62c01f70f609f305040712f174fa1f432164d13f5e6109ad4a296e1506",
+      "with_parent_events.jsonl": "6bdf8152a12b2c5342f8ff7aa04c1b7d46c57a437279ca83f52e2b681991bff2"
+    },
+    "ledger_hashes_match": true,
+    "pending_gates": [],
+    "request_restart_exact": true,
+    "revealed_rows": 229861,
+    "routes": {
+      "AI_DECISION": 109,
+      "DETERMINISTIC_FAIL_CLOSED": 162,
+      "EXECUTION_ADAPTER": 322
+    },
+    "scope": "packet/scheduler/external-decision contract mechanics only; synthetic decisions have no strategy-performance authority",
+    "segments": 594,
+    "status": "PASS"
+  },
+  "date": "2026-09-12",
+  "ea_authority": "NONE",
+  "frozen_core_sha256": {
+    "scripts/v9_execution_state_machine.py": "8a5430bcecdaad36f47bf63be60fd9f069ed31565037fb025ea4b07fb300fd09",
+    "scripts/v9_runtime_state_v2.py": "45086e53d34d0c9f247b746ebfbece7ca7e75a453dd888ec1064538527a441cb",
+    "scripts/v9_semantic_runtime.py": "92f8ab602ca81dff881cb78ee4084664c0c8847fa1948f998bee81158c408c2d",
+    "scripts/v9_strategy_state_machine.py": "3f7bd38cc17f30409a330b7b357a03685fbf3c05473cc00c9ca536f34136070e"
+  },
+  "future_hidden_2025_07": "LOCKED",
+  "market": "GOLD#",
+  "new_protocol_sha256": {
+    "scripts/tests/test_v9_ai_decision_protocol.py": "9b6fb459f4743369e556eea0f93aaf4db5e4cfa5eca6de1971d19a7b5b32a8d1",
+    "scripts/v9_ai_decision_protocol.py": "4f7232a097dc076094c7c435aa483c47aa551a7c6e24df62b25f4350ee39279f",
+    "scripts/v9_tick_execution_audit.py": "9f5a682e285b662bad30525b1b99b5da3f0b7b47e94e72501f2f74e641a36196",
+    "scripts/validate_v9_ai_decision_protocol.py": "db9b93168add31b1ad88007eb194d3a0a0d37710a824fc40ead0526c09e05a25",
+    "scripts/validate_v9_ai_gate_safety.py": "4d49094cf6c92a5738fe7c7c7df63ed5ddb0fc8cd33af78e4d6d3a722eafb555"
+  },
+  "packet_microbenchmark": {
+    "elapsed_seconds": 0.4977668419996917,
+    "iterations": 10000,
+    "mean_microseconds_per_packet": 49.77668419996917,
+    "packets_per_second": 20089.727069458342,
+    "python": "3.13.5",
+    "sample_packet_bytes": 6046,
+    "sample_packet_sha256": "d912d429b9d12861f055dda9eed813dbcf13406b5c59f38d71b7a5a030760b14",
+    "scope": "local serialization/hash microbenchmark only; not model/API latency",
+    "status": "PASS"
+  },
+  "production_authority": "NONE",
+  "status": "PASS_MECHANICS_ONLY",
+  "tests": {
+    "ai_protocol_unit": "8/8 PASS",
+    "gate_runtime_edge_cases": "3/3 PASS",
+    "strategy_priority_cases": "6/6 PASS"
+  },
+  "tick_2024_execution_audit": {
+    "bid_updates": 41254944,
+    "intraminute_final_extrema_order": {
+      "FLAT": 141,
+      "HIGH_BEFORE_LOW": 170555,
+      "LOW_BEFORE_HIGH": 173489
+    },
+    "m1_missing_tick_minute": 0,
+    "ohlc_tickvol_mismatch": 0,
+    "reconstructed_m1": 344185,
+    "report_sha256": "234d0c57de52989d5e378a240619164ac853702e7ccf64cc8b69cfa38b33bb97",
+    "status": "PASS",
+    "throughput_uncompressed_MB_s_weighted": 11.023789558654455,
+    "tick_minute_missing_m1": 0,
+    "tick_zip": {
+      "basename": "Desktop(3).zip",
+      "sha256": "aab45d9509198b0172857ea9bf45ed7a230d3dcf5b039075925fd0007a1b69c2",
+      "size": 430255283
+    },
+    "ticks": 51063932,
+    "timestamp_backward": 0,
+    "timestamp_duplicates": 632,
+    "uncompressed_tick_GB": 2.0976911149919033
+  },
+  "validation_correction": {
+    "issue": "initial new validator compared combined gate-driven lane logs against independent-lanes full-run hashes",
+    "mechanical_baseline_hashes": {
+      "counter_events.jsonl": "e6a26ef44acac1078d9dd496f591ffc1c17896b264d4e07adb7ebb28d63e9932",
+      "external_actions.jsonl": "236809d1566033419600528bb131d9ba3de81779dbc0150b560ff855311ce218",
+      "object_known.jsonl": "ffaae63cc13a3a981ab587b22b36c2e882bc2bb086f766dff537f8fd0b98d326",
+      "revealed_consumed.tsv": "ddc7e6d8a280a0e14258dbfe5e891caf816d85f42bf60d87db4b1855b640334a",
+      "semantic_events.jsonl": "6844da62c01f70f609f305040712f174fa1f432164d13f5e6109ad4a296e1506",
+      "with_parent_events.jsonl": "6bdf8152a12b2c5342f8ff7aa04c1b7d46c57a437279ca83f52e2b681991bff2"
+    },
+    "resolution": "reran the accepted 594-gate mechanical baseline and froze its combined gate-driven hashes; AI-layer run is byte-identical to that baseline including external_actions.jsonl"
+  }
+}

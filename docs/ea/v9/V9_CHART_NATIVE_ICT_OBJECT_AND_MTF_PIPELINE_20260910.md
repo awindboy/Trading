@@ -169,3 +169,11 @@ Do not resume this loop until the Market Flow Atlas strategy-extraction gate pas
 - object existence is not strategic importance;
 - Child stop does not automatically invalidate Parent or HTF object;
 - do not create a mandatory pattern chain.
+
+## 2026-09-12 next chart-native gate after AI-envelope validation
+
+<!-- V9_AI_EXTERNAL_DECISION_VALIDATED_20260912 -->
+
+The causal gate envelope / scheduler mechanics are accepted. The remaining chart task is now concrete: freeze the review/remap `MAP` attachment so every AI semantic decision is bound to an exact causal prefix and render identity/hash.
+
+Do not add extra discretionary charts or new indicator confirmations. The chart attachment must preserve the existing MAP/TRIGGER role separation and exact code-owned coordinates.

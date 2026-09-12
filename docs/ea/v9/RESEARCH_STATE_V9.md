@@ -278,3 +278,20 @@ PRODUCTION / EA AUTHORITY = NONE
 ```
 
 Remaining unresolved issues are explicitly listed in `V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md`; do not mine hidden thresholds to remove them.
+
+## 2026-09-12 AI external-decision validation checkpoint
+
+<!-- V9_AI_EXTERNAL_DECISION_VALIDATED_20260912 -->
+
+```text
+DETERMINISTIC CAUSAL CORE = ACCEPTED
+AI GATE-ENVELOPE / SCHEDULER MECHANICS = ACCEPTED
+CONSUMED 594-GATE MECHANICAL PARITY = PASS
+ACTUAL OUTAGE / STALE RESPONSE SAFETY = PASS
+ACTUAL REMAP ACTION PATH = PASS
+2024 TICK EXECUTION-SOURCE PARITY = PASS
+CHART-NATIVE AI DECISION INPUT = NEXT GATE
+FUTURE-HIDDEN JULY = LOCKED
+```
+
+The packet/scheduler result is an interface-mechanics result. Synthetic EXIT decisions do not establish the strategy-quality choice among `HOLD / EXIT / REMAP`.

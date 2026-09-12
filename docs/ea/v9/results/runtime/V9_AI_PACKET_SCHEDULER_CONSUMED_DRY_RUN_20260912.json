@@ -1,0 +1,39 @@
+{
+  "ai_requests": 109,
+  "expected_gate_driven_hashes": {
+    "counter_events.jsonl": "e6a26ef44acac1078d9dd496f591ffc1c17896b264d4e07adb7ebb28d63e9932",
+    "external_actions.jsonl": "236809d1566033419600528bb131d9ba3de81779dbc0150b560ff855311ce218",
+    "object_known.jsonl": "ffaae63cc13a3a981ab587b22b36c2e882bc2bb086f766dff537f8fd0b98d326",
+    "revealed_consumed.tsv": "ddc7e6d8a280a0e14258dbfe5e891caf816d85f42bf60d87db4b1855b640334a",
+    "semantic_events.jsonl": "6844da62c01f70f609f305040712f174fa1f432164d13f5e6109ad4a296e1506",
+    "with_parent_events.jsonl": "6bdf8152a12b2c5342f8ff7aa04c1b7d46c57a437279ca83f52e2b681991bff2"
+  },
+  "gate_counts_match": true,
+  "gates": {
+    "CROSS_LANE_CONFLICT_REVIEW": 162,
+    "ENTRY_EXECUTION_REQUIRED": 213,
+    "EXIT_EXECUTION_REQUIRED": 109,
+    "REMAP_REQUIRED": 28,
+    "REVIEW_REQUIRED": 81
+  },
+  "ledger_hashes": {
+    "counter_events.jsonl": "e6a26ef44acac1078d9dd496f591ffc1c17896b264d4e07adb7ebb28d63e9932",
+    "external_actions.jsonl": "236809d1566033419600528bb131d9ba3de81779dbc0150b560ff855311ce218",
+    "object_known.jsonl": "ffaae63cc13a3a981ab587b22b36c2e882bc2bb086f766dff537f8fd0b98d326",
+    "revealed_consumed.tsv": "ddc7e6d8a280a0e14258dbfe5e891caf816d85f42bf60d87db4b1855b640334a",
+    "semantic_events.jsonl": "6844da62c01f70f609f305040712f174fa1f432164d13f5e6109ad4a296e1506",
+    "with_parent_events.jsonl": "6bdf8152a12b2c5342f8ff7aa04c1b7d46c57a437279ca83f52e2b681991bff2"
+  },
+  "ledger_hashes_match": true,
+  "pending_gates": [],
+  "request_restart_exact": true,
+  "revealed_rows": 229861,
+  "routes": {
+    "AI_DECISION": 109,
+    "DETERMINISTIC_FAIL_CLOSED": 162,
+    "EXECUTION_ADAPTER": 322
+  },
+  "scope": "packet/scheduler/external-decision contract mechanics only; synthetic decisions have no strategy-performance authority",
+  "segments": 594,
+  "status": "PASS"
+}
