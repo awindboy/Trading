@@ -1,275 +1,293 @@
 # V9 Market Flow Atlas + Reverse-Engineering Contract
 
-Date: `2026-09-11`
-Status: `ACTIVE NEXT V9 CONTRACT / ANSWER-SHEET MARKET-FLOW RESEARCH`
+Date: `2026-09-12`
+Status: `ACTIVE CONTRACT / CONTINUOUS HIERARCHICAL MARKET-FLOW RESEARCH`
 Market: `GOLD# ONLY`
 Production authority: `NONE`
 EA authority: `NONE`
 
-Consumed development data:
+Consumed answer-sheet data:
 
 - `2025-01 through 2025-06`
 - `2026-01 through 2026-02`
 
-Future-hidden:
+Locked / untouched:
 
 - `2025-07 LOCKED`
-
-Untouched final reserve:
-
-- `GOLD# 2021`
+- `GOLD# 2021 untouched reserve`
 
 ## Purpose
 
-Stop improving one trade at a time before the strategy grammar is understood.
+Use consumed data as an answer sheet to understand the continuous price process before extracting trading rules.
 
-Use already-consumed data as an answer sheet and study the continuous market flow:
+The research target is not a final deterministic law and not a rare high-probability setup.
+
+Target:
 
 ```text
-reaction / arrival
--> price delivery
--> next reaction / arrival
--> price delivery
--> ...
+many hours / many cycles
+-> few reusable state relationships
+-> explicit ambiguous remainder
 ```
 
-Do not search for a perfect deterministic market law.
-Build a small reusable analysis grammar that remains useful across trends, ranges, repairs, false breaks, liquidity raids, and noisy transitions.
+Current companion authority:
+
+`V9_MARKET_FLOW_GRAMMAR_CONTINUOUS_HIERARCHY_AUTHORITY_20260912.md`
 
 ## Research mode
 
-Full-history / future-visible analysis is allowed on consumed development data only.
+Full future-visible analysis is permitted only on consumed development data.
 
-This phase is noncausal research.
+This is noncausal answer-sheet research.
 
 Therefore:
 
 - do not call results validation;
-- do not report hindsight trades as strategy performance;
-- do not backfill the official trading record;
-- do not use `2025-07` or `2021`;
-- preserve timestamps and object provenance so the extracted grammar can later be tested causally.
+- do not report descriptive flow percentages as strategy WR/expectancy;
+- do not backfill trades;
+- do not open July;
+- do not use 2021;
+- preserve exact timestamps / object IDs / lifecycle;
+- make all causal-vs-answer-sheet distinctions explicit.
 
-Causal replay returns only after the flow grammar and strategy extraction are stable enough to test.
+## Strict boundary rule
 
-## Research unit
+Information-known time is authoritative:
+
+```text
+2025 known_at < 2025-07-01 00:00
+2026 Jan-Feb known_at < 2026-03-01 00:00
+```
+
+A source bar dated June 30 but only known at July 1 is outside the consumed research boundary.
+
+## Primary research unit
 
 The primary unit is not a trade.
 
 Use:
 
 ```text
-FLOW LEG
-AUCTION CYCLE
-REACTION / ARRIVAL EVENT
+H4 MACRO AUTHORITY
+H4 PHASE
+H1 AUCTION CYCLE
+LANDMARK ARRIVAL
 DELIVERY PATH
-DESTINATION / NEXT STATE
+NEUTRALIZATION / RESET
+NEXT STATE
 ```
 
-Price does not need to move vertex-to-vertex.
+Ranges, balance, uncertainty, false breaks, sweeps, repairs, and transitions remain first-class market behavior.
 
-Treat these as first-class states:
+## Current hierarchical grammar
 
-- directional migration;
-- repair;
-- balance / range;
-- compression;
-- expansion;
-- false break;
-- liquidity sweep / raid;
-- shakeout / stop-run-like behavior;
-- failed POI response;
-- acceptance through an old POI;
-- transition into a new auction.
+### H4 authority
+
+```text
+STRONG DIRECTIONAL
+WEAK DIRECTIONAL
+NEUTRAL / AMBIGUOUS
+```
+
+### H4 phase
+
+```text
+MIGRATION
+LOCAL_INTERRUPT
+NEUTRAL
+```
+
+### H1 role
+
+```text
+ALIGNED
+H1_INTERRUPT
+```
+
+### Uncertainty
+
+```text
+UNRESOLVED_SIDE
+AMBIGUOUS
+```
+
+Do not eliminate uncertainty by adding more indicators.
 
 ## Analysis lenses
 
-Use tools to make the chart legible.
-Do not convert every tool into a signal.
+### Exact deterministic objects
 
-### Deterministic market objects
-
-Continue using exact mechanical candidates for:
+Continue using code for exact:
 
 - FVG;
 - OB candidate;
-- swing / liquidity candidate;
-- object birth, touch, fill, raid, mitigation, invalidation.
+- swing/liquidity candidate;
+- birth/touch/fill/raid/mitigation/invalidation.
 
-These provide coordinates and lifecycle.
-They do not provide strategic importance.
+These are factual landmarks, not automatic signals.
 
-### Structural / auction lenses
+### State / auction lenses
 
 Study:
 
-- displacement;
-- acceptance / rejection;
-- range boundaries;
-- compression / expansion;
-- liquidity delivery;
-- failed breaks;
-- sweep / shakeout behavior;
-- fresh versus stale campaign structures;
-- internal versus external destination;
-- migration versus repair versus balance.
+- directional authority agreement;
+- migration versus local interruption;
+- H1 alignment versus H1 interruption;
+- authority erosion;
+- neutralization;
+- route continuation;
+- state reset.
 
-### Indicator / statistical lenses
+### Optional lenses
 
-Indicators may be used as research lenses, including:
+Generic indicators/patterns may only be reopened if they add stable explanatory power to the continuous grammar.
+
+Current de-prioritized lenses include:
 
 - MACD;
 - Bollinger Bands;
-- moving-average structure;
-- ATR / volatility;
-- momentum / rate-of-change;
-- session / time-of-day context.
+- session label alone;
+- generic MSS;
+- generic fresh-FVG confirmation;
+- breaker/inversion auto-flip;
+- premium/discount alone;
+- fixed sweep counts.
 
-No indicator has authority merely because it is familiar.
+Do not keep testing them by default.
 
-Keep an indicator only when it repeatedly helps distinguish or compress market flows across many examples.
-Reject explanations that work only after the outcome is known.
-Do not build an indicator stack that gives every move a different story.
+## Describe before explaining
 
-## Atlas record
-
-For every meaningful continuous leg record:
+For every continuous segment first record:
 
 ```text
-LEG_ID
-START_TIME / START_PRICE
-END_TIME / END_PRICE
-DIRECTION / STATE
-ORIGIN EVENT
-ORIGIN OBJECT IDS
-PRE-LEG MARKET STATE
-MOVEMENT POINTS / S / DURATION
-INTERMEDIATE OBJECTS CREATED
-INTERMEDIATE LIQUIDITY EVENTS
-DESTINATION / ARRIVAL EVENT
-END-STATE
-NEXT LEG ID
-USEFUL ANALYSIS LENSES
-AMBIGUITY / COUNTEREXAMPLE NOTES
+current larger authority
+current H4 phase
+current H1 role
+where price arrived
+what object/liquidity was consumed
+what state changed
+where price delivered next
 ```
 
-Ranges and balances may be recorded as time-spanning states rather than a single directional leg.
+Only then propose semantic roles.
 
-## Research process
+Do not invent a special explanation for every leg.
 
-1. Build long contiguous H4/H1 maps. Include trends, ranges, noise, false breaks, and ambiguous periods.
-2. Overlay deterministic FVG / OB / liquidity objects.
-3. Describe what price did before explaining why.
-4. Add indicator/statistical lenses only when they materially clarify repeated flows.
-5. Cluster many legs into a small number of reusable flow archetypes.
-6. Merge archetypes when one broader relationship explains both.
-7. Stress the same grammar across different market conditions.
-8. Keep counterexamples and unresolved remainder visible.
+## Robustness method
 
-Possible archetypes are hypotheses, not preset truth:
+A useful grammar should survive alternate reasonable causal state views.
+
+Current state research intentionally uses multiple H4 and H1 representations and consensus.
+
+Do not optimize a single lookback for maximum historical accuracy.
+
+Preserve:
 
 ```text
-liquidity delivery -> opposing POI response -> repair
-displacement -> fresh continuation POI -> retracement -> further delivery
-POI failure / acceptance -> old thesis retired -> next array
-liquidity raid -> weak rejection -> continuation to next external liquidity
-balance -> liquidity probe -> acceptance / failed breakout -> expansion
+STRONG
+WEAK
+UNRESOLVED
+AMBIGUOUS
 ```
 
-Prefer:
+as legitimate outputs.
+
+## Difficult-period method
+
+When one month performs differently, first ask:
 
 ```text
-many flows -> small reusable grammar + explicit ambiguous remainder
+Did the grammar fail?
+or
+did the market spend more time in weak / interrupted / transition states?
 ```
 
-over:
+2025-05 supports the second interpretation.
+
+Do not create month-specific exceptions without strong repeated evidence.
+
+## Atlas outputs
+
+Current core outputs:
 
 ```text
-100 moves -> 100 special explanations
+CONTINUOUS_H4_FLOW_STATE_LEDGER.csv
+CONTINUOUS_H4_FLOW_RUN_LEDGER.csv
+CONTINUOUS_H1_NESTED_STATE_LEDGER.csv
+HIERARCHICAL_FLOW_STATE_LEDGER.csv
+H1_AUCTION_INTERRUPTION_LEDGER.csv
+MIGRATION_INTERRUPTION_LEDGER.csv
+DIRECTIONAL_TRANSITION_BUFFER_LEDGER.csv
+H4_UNRESOLVED_RESOLUTION_LEDGER.csv
+H4_AMBIGUOUS_RESOLUTION_LEDGER.csv
+H4_H1_MONTHLY_STATE_STRESS_PROFILE.csv
 ```
 
-## Outputs
-
-Build a `V9 Market Flow Atlas` containing:
-
-- continuous annotated H4/H1 flow maps;
-- exact object-ledger links;
-- leg / state table;
-- repeated-flow archetype catalogue;
-- representative examples and counterexamples;
-- indicator-lens usefulness notes;
-- unresolved ambiguous flows;
-- candidate market-flow grammar.
-
-Suggested artifacts:
+Research tables include:
 
 ```text
-FLOW_LEG_LEDGER.csv
-FLOW_STATE_LEDGER.csv
-FLOW_ARCHETYPE_CATALOG.md
-LENS_EVIDENCE_LEDGER.csv
-ATLAS_CHARTS/
+H4_H1_CROSS_VIEW_NESTED_CYCLE_ROBUSTNESS.csv
+H1_CYCLE_STATE_CONFIDENCE_MONTHLY.csv
+HIERARCHICAL_STATE_COMPRESSION_COVERAGE.csv
+DIFFICULT_MONTH_2025_05_COMPARISON.csv
+H4_UNRESOLVED_RESOLUTION_SUMMARY.csv
+H4_AMBIGUOUS_RESOLUTION_SUMMARY.csv
+DIRECTIONAL_TRANSITION_ANATOMY.csv
 ```
 
-Trade count, win rate, and R are not the optimization target in this phase.
+## Current research order
+
+```text
+CONTINUOUS HIERARCHY
+-> ROUTE / DESTINATION SEMANTICS
+-> PARENT CONTINUITY / AUTHORITY LOSS
+-> EXACT LANDMARK ROLE MAPPING
+-> STRATEGY EXTRACTION DRAFT
+-> CAUSAL SEQUENTIAL REPLAY
+-> LIVE RUNTIME DESIGN
+-> FUTURE-HIDDEN REPLAY
+```
 
 ## Strategy extraction comes later
 
-After the atlas stabilizes, reverse-engineer the tradable subset.
-
-Ask:
+After the grammar is stable ask:
 
 ```text
-Which flow state is knowable in real time?
-Which arrival can be planned before it happens?
-Which response is observable before paying risk?
-Which Child invalidation is objective?
-Which part of the next delivery is realistically capturable?
-Which flows should be ignored?
+Which state is knowable in real time?
+Which H1 interruption is a tradable Child opportunity?
+Which landmark is an objective Child invalidation?
+Which delivery is realistic to capture?
+When does Parent authority survive Child resolution?
+When has Parent authority actually reset?
 ```
 
-Only then define H4 Parent, H1 auction loop, trigger, LTF execution, Hard SL, journey review, trailing/exit, and AI-call events.
+Only then define trading policy.
 
 ## Anti-overfit
 
 Do not create:
 
 - one rule per chart example;
-- fixed indicator thresholds because they explain a few moves;
-- mandatory FVG + OB + sweep + BOS chains;
+- rare-subset optimization;
+- month-specific filters;
+- ambiguity tiebreakers;
+- fixed event counts;
+- fixed timeouts;
 - fixed retracement depth;
 - fixed trade-frequency targets;
-- fixed R / S targets;
-- hindsight-only object labels;
-- special exceptions that only rescue failed examples.
+- mandatory pattern chains;
+- hindsight-only labels;
+- special exceptions that rescue failed cases.
 
-The target is a robust discretionary analysis grammar, not perfect prediction.
-
-## Exit criteria
+## Exit criteria for Atlas phase
 
 Do not return to strategy-performance optimization until:
 
-1. long contiguous consumed periods are mapped rather than cherry-picked;
-2. trends, ranges, repairs, sweeps, and failures are represented;
-3. a small set of flow relationships explains a meaningful share of the atlas;
-4. the same relationship is recognizable across different months without changing its definition;
-5. useful indicators add stable discrimination rather than post-hoc stories;
-6. object provenance and lifecycle remain exact;
-7. contradictions and ambiguous flows are retained;
-8. the candidate grammar is simple enough to convert into a real-time decision process.
-
-Then freeze a strategy-extraction draft and return to causal replay.
-
-## Research order
-
-```text
-CONSUMED FULL-HISTORY FLOW ATLAS
--> REPEATED FLOW RELATIONSHIPS
--> MINIMAL MARKET-FLOW GRAMMAR
--> STRATEGY EXTRACTION
--> CAUSAL SEQUENTIAL REPLAY
--> LIVE AI-CALL / MT5 / RUNTIME DESIGN
--> FUTURE-HIDDEN REPLAY
-```
-
-Do not open July before the downstream causal gate passes.
+1. long contiguous consumed periods are represented by the hierarchy;
+2. difficult months are explained without special exceptions;
+3. ambiguity remains explicit rather than hidden;
+4. route/destination semantics are compact;
+5. Parent continuity versus reset is defined independently of Child P/L;
+6. exact landmarks map to object IDs/lifecycle;
+7. the grammar can be translated into causal real-time inputs;
+8. a strategy-extraction draft is frozen before hidden replay.

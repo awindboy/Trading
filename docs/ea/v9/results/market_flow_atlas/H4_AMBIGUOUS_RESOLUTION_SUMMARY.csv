@@ -1,0 +1,4 @@
+block,outcome,n,median_hours_to_next_migration,block_total,share
+2025H1,OPPOSITE_NEXT_MIGRATION,11,4.0,22,0.5
+2025H1,SAME_NEXT_MIGRATION,11,8.0,22,0.5
+2026JF,OPPOSITE_NEXT_MIGRATION,3,4.0,3,1.0

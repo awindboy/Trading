@@ -1,143 +1,156 @@
-# V9 Decision Authority — Market-Flow Atlas First
+# V9 Decision Authority — Continuous Market-Flow Grammar First
 
-Date: `2026-09-11`
+Date: `2026-09-12`
 Status: `ACTIVE V9 DECISION AUTHORITY`
 Market: `GOLD# ONLY`
 Production authority: `NONE`
 EA authority: `NONE`
 
-## Decision
+## Current decision
 
-Pause trade-by-trade strategy optimization.
+Continue the Market Flow Atlas phase.
 
-First build a continuous Market Flow Atlas on consumed data and derive a compact market-flow grammar.
-
-Use:
-
-```text
-exact market objects
-+ AI chart interpretation
-+ optional indicator/statistical lenses
--> continuous flow atlas
--> repeated relationships
--> minimal grammar
--> strategy extraction
-```
-
-Do not assume a universal deterministic market law exists.
-
-## Mechanical object authority
-
-Code may create reproducible candidates for:
-
-- FVG;
-- OB;
-- swing / liquidity.
-
-Code owns exact geometry and lifecycle.
-
-Candidate detection is not strategic importance.
-
-## AI authority in the atlas phase
-
-AI identifies:
-
-- meaningful flow legs;
-- balance/range states;
-- migration / repair / transition;
-- origin and destination relationships;
-- POI/liquidity roles;
-- repeated flow archetypes;
-- counterexamples and ambiguity.
-
-AI must prefer reusable relationships over one-off explanations.
-
-## Analysis lenses
-
-ICT objects are not the only allowed research lens.
-
-May also study:
-
-- MACD;
-- Bollinger Bands;
-- moving averages;
-- ATR / volatility;
-- momentum;
-- session/time context;
-- range/compression measures.
-
-No indicator threshold is strategy authority.
-
-A lens stays only if it repeatedly improves discrimination across diverse consumed periods.
-
-## Full-history decision
-
-Future-visible research is allowed on consumed development data only.
-
-Purpose:
-
-```text
-observe the answer sheet
--> understand repeated flow
--> reverse-engineer the tradable subset later
-```
-
-Do not call this validation.
-Do not backfill hindsight trades.
-Do not reveal `2025-07` or `2021`.
-
-## Research unit
-
-The primary unit is:
-
-```text
-FLOW LEG / AUCTION CYCLE / RANGE STATE
-```
-
-not one trade.
-
-Include sideways and noisy periods rather than forcing directional legs.
-
-## Research order
+Do not return to trade-by-trade optimization yet.
+Do not search for a rare high-win-rate setup as the research target.
 
 Current order:
 
-1. continuous consumed-data Market Flow Atlas;
-2. repeated relationship discovery;
-3. compact market-flow grammar;
-4. strategy extraction;
-5. H4 Parent / H1 auction design;
-6. LTF execution / Hard SL / journey design;
-7. causal sequential replay;
-8. repeated-run stability;
-9. live API / MT5 / runtime design;
-10. future-hidden replay.
+```text
+continuous hierarchical grammar
+-> route / destination semantics
+-> Parent continuity / authority-loss semantics
+-> strategy extraction draft
+-> causal sequential replay
+-> live runtime design
+-> future-hidden replay
+```
 
-The prior sequential trading contract is downstream, not the current optimization loop.
+## Current market representation
 
-## Retained absolute rules
+Use the smallest current hierarchy:
 
-Keep:
+```text
+H4 AUTHORITY
+  STRONG DIRECTIONAL / WEAK DIRECTIONAL / NEUTRAL
 
-- Parent/Child separation when trading research resumes;
-- Hard SL before entry;
-- no widening;
-- no hindsight rescue;
-- no minimum R;
-- no fixed ATR/S stop or TP;
-- no cooldown;
-- no retry cap;
-- no forced side balance;
-- no fixed trade-frequency target;
-- no mandatory ICT-pattern chain;
-- no indicator-as-signal authority without evidence;
-- large-winner participation.
+H4 PHASE
+  MIGRATION / LOCAL_INTERRUPT / NEUTRAL
 
-## Anti-overfit
+H1 AUCTION
+  ALIGNED / H1_INTERRUPT
 
-Do not add one rule for each failed example.
+UNCERTAINTY
+  UNRESOLVED / AMBIGUOUS
 
-Do not explain every historical move with a different combination of objects and indicators.
+LANDMARKS
+  exact POI / FVG / OB / liquidity objects
+```
 
-Prefer fewer concepts with broader explanatory coverage.
-Retain unexplained remainder instead of forcing fit.
+Do not create a new strategy branch for every descriptive subtype.
+
+## Why confidence is explicit
+
+When the three causal H4 state views agree strongly, H1 interruptions usually behave differently from interruptions under weak/disputed H4 authority.
+
+Therefore:
+
+> lack of consensus is information.
+
+Do not add a tiebreaker indicator merely to eliminate WEAK / UNRESOLVED / AMBIGUOUS states.
+
+## Object decision
+
+Code owns exact object geometry and lifecycle.
+
+AI may later assign strategic roles such as:
+
+```text
+ORIGIN
+TRANSIT
+DELIVERY
+CAMPAIGN-CHANGING
+RETIRED
+```
+
+Object existence does not imply strategic importance.
+
+## Difficult-period decision
+
+2025-05 is not a special regime that requires its own rule.
+It is represented by more weak H4 authority, more interruption, more neutralization/side-change activity, and slower nested-auction resolution.
+
+Do not create month-specific exceptions.
+
+## Ambiguity decision
+
+Keep `AMBIGUOUS` as a first-class state.
+
+2025 consumed ambiguous episodes split 11 / 11 between same-direction and opposite-direction next migration.
+
+Do not force a directional answer where the current representation has none.
+
+## Research boundary decision
+
+Use information-known time, not source-bar date, as the strict boundary.
+
+```text
+2025 known_at < 2025-07-01 00:00
+2026 Jan-Feb known_at < 2026-03-01 00:00
+```
+
+No July warmup.
+No Dec-2025 warmup for Jan-2026.
+No 2021.
+
+## Retired active research directions
+
+Do not continue stacking:
+
+- session label alone;
+- generic London/NY sweep-reclaim-body-break;
+- generic MSS;
+- generic fresh-FVG confirmation;
+- breaker/inversion automatic role flip;
+- premium/discount alone;
+- MACD/Bollinger confirmation;
+- fixed sweep counts;
+- rare repair-resumption subsets;
+- fixed duration/event-count rules.
+
+If one of these is ever reopened, it must add new explanatory power to the continuous grammar, not merely fit a few examples.
+
+## Research-quality decision
+
+Prefer:
+
+```text
+many hours / many cycles explained by few states
+```
+
+over:
+
+```text
+few historical examples with very high conditional percentages
+```
+
+Always preserve counterexamples and explicit unresolved remainder.
+
+## Retained absolute trading rules for downstream work
+
+When trading research resumes:
+
+- Parent/Child separation remains mandatory.
+- Parent is not a direction veto.
+- Hard SL is fixed before entry and never widened.
+- exact Entry/SL/TP/review coordinates come from code/runtime.
+- no fixed minimum-R rule.
+- no fixed ATR/S stop or TP rule.
+- no cooldown.
+- no retry cap.
+- no fixed no-chase rule.
+- no forced LONG/SHORT balance.
+- no fixed minimum trades/day.
+- no mandatory ICT pattern chain.
+- Child outcome does not automatically validate/invalidate Parent.
+- no hindsight rescue/backfill.
+- winner participation remains important when the journey stays coherent.
