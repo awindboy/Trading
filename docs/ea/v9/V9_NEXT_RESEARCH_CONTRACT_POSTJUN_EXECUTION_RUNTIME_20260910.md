@@ -1,7 +1,7 @@
 # V9 Next Research Contract — Sequential Live-Like Map / Trigger / Position Replay
 
 Date: `2026-09-12`
-Status: `DEFERRED / DOWNSTREAM CAUSAL CONTRACT`
+Status: `ACTIVE IMPLEMENTATION GATE / STRATEGY-EXTRACTION DRAFT FROZEN / NO HIDDEN REPLAY YET`
 Market: `GOLD# ONLY`
 Production authority: `NONE`
 EA authority: `NONE`
@@ -51,3 +51,36 @@ When resumed:
 `2021` remains untouched.
 
 Do not open either because the consumed-data grammar looks promising.
+
+## 2026-09-12 activation update
+
+The prerequisite first strategy-extraction draft is now frozen:
+
+`V9_STRATEGY_EXTRACTION_DRAFT_PARENT_CHILD_FLOW_20260912.md`
+
+The immediate runtime contract is now governed by:
+
+`V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
+
+The next work is to implement and verify the frozen decision process on the consumed periods, not to open hidden data.
+
+Required consumed replay gate:
+
+```text
+1. versioned dual-clock replay state;
+2. deterministic M15/H1/H4 semantic event scheduler;
+3. M15/M5 OBJECT_KNOWN_AT convention;
+4. Child pending/fill/Hard-SL/review/remap event priority;
+5. exact consumed-period parity through actual merged implementation;
+6. frozen implementation commit and hashes.
+```
+
+Only after these pass may the project decide whether `2025-07` can be unlocked.
+
+Until then:
+
+```text
+2025-07 = LOCKED
+2021 = UNTOUCHED
+```
+

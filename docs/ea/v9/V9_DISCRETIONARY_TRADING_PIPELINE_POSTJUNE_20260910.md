@@ -72,3 +72,18 @@ Do not reactivate this pipeline until the Atlas provides:
 3. explicit Parent-continuity versus reset semantics;
 4. exact landmark-role mapping;
 5. frozen strategy-extraction draft that says what is knowable before risk is paid.
+
+## 2026-09-12 upstream checkpoint
+
+A first strategy-extraction draft now exists:
+
+`V9_STRATEGY_EXTRACTION_DRAFT_PARENT_CHILD_FLOW_20260912.md`
+
+Do not reactivate discretionary/live use yet.
+
+The remaining resume gate is implementation/parity under:
+
+`V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
+
+The runtime must reproduce the consumed-data decision process causally before this downstream pipeline becomes active.
+

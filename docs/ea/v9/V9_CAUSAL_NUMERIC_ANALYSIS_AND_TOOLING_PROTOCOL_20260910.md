@@ -316,3 +316,36 @@ GEOMETRY NON-PARITY
 EVENT NON-PARITY
 CAUSAL REVEAL INCIDENT
 ```
+
+## 2026-09-12 dual-clock amendment authority
+
+For semantic strategy/runtime work, also read:
+
+`V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
+
+Where this older protocol's single-cutoff assumptions conflict with that addendum, the dual-clock addendum controls.
+
+Runtime must separate:
+
+```text
+PRICE_REVEALED_CUTOFF
+INFORMATION_KNOWN_AT
+```
+
+A next M1 row timestamp may prove earlier M15/H1/H4 buckets complete without exposing the next row's OHLC. Due semantic events must be emitted in deterministic `INFORMATION_KNOWN_AT` order before current-row OHLC is exposed to instant price guards.
+
+Object geometry/source time and object semantic availability time must also be separate. The current H1/H4 object engine's last-M1 label is not by itself sufficient as a strategy `OBJECT_KNOWN_AT`.
+
+Consumed-data research prototype parity:
+
+```text
+M15/H1/H4 OHLC mismatch: 0
+M15/H1/H4 state mismatch: 0
+strategy semantic events: 718
+missing: 0
+timestamp mismatch: 0
+anchor-price mismatch: 0
+```
+
+This is an implementation gate, not hidden-data permission.
+

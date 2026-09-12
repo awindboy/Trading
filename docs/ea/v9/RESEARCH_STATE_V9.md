@@ -196,3 +196,50 @@ FLOW GRAMMAR
 -> LIVE RUNTIME
 -> FUTURE-HIDDEN REPLAY
 ```
+
+## 2026-09-12 strategy-extraction freeze checkpoint
+
+This checkpoint supersedes older "Current research task" / "gate to strategy extraction" text above where they conflict.
+
+The first strategy-extraction draft is frozen in:
+
+`V9_STRATEGY_EXTRACTION_DRAFT_PARENT_CHILD_FLOW_20260912.md`
+
+The current implementation gate is:
+
+`V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
+
+The market remains represented continuously rather than as a rare accepted-setup funnel.
+
+```text
+171 active-Parent H1 cycles
+  120 same-Parent realign
+   51 Parent-loss-first
+
+120 same-Parent routes
+   63 H1 launch-anchor no-touch
+   26 touch without completed M15 close damage
+   31 completed M15 close damage
+```
+
+Counter-Parent flow is retained as a first-class Child branch:
+
+```text
+141 strict fresh M15 counter transitions before H1 interrupt
+17  already-counter at aligned-run start
+13  no counter condition in that aligned run
+```
+
+This does not predict Parent reversal. It maps a Counter Local-Bridge branch inside the slower Parent context.
+
+The raw-M1 dual-clock prototype reproduced 718 strategy semantic events exactly on consumed data.
+
+Current research state:
+
+```text
+STRATEGY EXTRACTION DRAFT = FROZEN FOR IMPLEMENTATION TEST
+DUAL-CLOCK RUNTIME = REQUIRED NEXT
+FUTURE-HIDDEN JULY = LOCKED
+PRODUCTION / EA AUTHORITY = NONE
+```
+

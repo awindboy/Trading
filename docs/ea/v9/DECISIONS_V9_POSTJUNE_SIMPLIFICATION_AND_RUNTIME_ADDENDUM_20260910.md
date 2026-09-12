@@ -154,3 +154,39 @@ When trading research resumes:
 - Child outcome does not automatically validate/invalidate Parent.
 - no hindsight rescue/backfill.
 - winner participation remains important when the journey stays coherent.
+
+## 2026-09-12 strategy-extraction decision update
+
+This is the newer decision sequence and supersedes earlier "Current order" text where they conflict.
+
+The continuous hierarchy and Parent/route semantics are sufficiently stable for a first strategy-extraction freeze.
+
+Current order is now:
+
+```text
+continuous hierarchy / route semantics
+-> first strategy-extraction draft FROZEN
+-> dual-clock runtime implementation
+-> M15/M5 information-known object timing
+-> consumed-period sequential replay through actual implementation
+-> freeze implementation version + hashes
+-> decide whether future-hidden replay gate is satisfied
+```
+
+Do not return to trade-by-trade rule mining during this implementation phase.
+
+Retain:
+
+- with-Parent repair / continuation Child branch;
+- Counter-Parent Local-Bridge Child branch;
+- Parent/Child separation;
+- Parent is not a direction veto;
+- structural origin falsification before risk;
+- M5 as execution geometry rather than direction authority;
+- H1 launch anchor as journey/bridge review structure;
+- completed M15 close beyond launch anchor as material Child-damage evidence, not automatic Parent death;
+- delivery and counter landmarks as progression/review context, not automatic TP/exit;
+- fresh objective reauthorization may create a new independent Child; stopped Child is never rescued.
+
+`2025-07` remains locked.
+

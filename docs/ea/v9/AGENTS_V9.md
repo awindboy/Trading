@@ -23,14 +23,16 @@ Read in this order:
 5. `docs/ea/v9/DECISIONS_V9_POSTJUNE_SIMPLIFICATION_AND_RUNTIME_ADDENDUM_20260910.md`
 6. `docs/ea/v9/V9_MARKET_FLOW_ATLAS_AND_REVERSE_ENGINEERING_CONTRACT_20260911.md`
 7. `docs/ea/v9/V9_MARKET_FLOW_GRAMMAR_CONTINUOUS_HIERARCHY_AUTHORITY_20260912.md`
-8. `docs/ea/v9/results/V9_MARKET_FLOW_ATLAS_MASTER_LEDGER_20260912.md`
-9. `docs/ea/v9/results/V9_MARKET_FLOW_GRAMMAR_RESEARCH_CHRONICLE_20260912.md`
-10. `docs/ea/v9/results/V9_DIFFICULT_MONTH_AND_AMBIGUITY_RESOLUTION_STUDY_20260912.md`
-11. `docs/ea/v9/V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
-12. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
-13. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
-14. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md`
-15. current code/tool parity state.
+8. `docs/ea/v9/V9_STRATEGY_EXTRACTION_DRAFT_PARENT_CHILD_FLOW_20260912.md`
+9. `docs/ea/v9/V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
+10. `docs/ea/v9/results/V9_MARKET_FLOW_ATLAS_MASTER_LEDGER_20260912.md`
+11. `docs/ea/v9/results/V9_MARKET_FLOW_GRAMMAR_RESEARCH_CHRONICLE_20260912.md`
+12. `docs/ea/v9/results/V9_DIFFICULT_MONTH_AND_AMBIGUITY_RESOLUTION_STUDY_20260912.md`
+13. `docs/ea/v9/V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
+14. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
+15. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
+16. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md`
+17. current code/tool parity state.
 
 If older postmortems/pipeline documents conflict with the current Market Flow Grammar authority, the current authority wins.
 
@@ -137,13 +139,44 @@ Prefer compression over fit.
 Do not explain every move with a different pattern.
 Do not optimize one state definition for maximum historical accuracy.
 
+## Strategy-extraction checkpoint — 2026-09-12
+
+The first consumed-data strategy-extraction draft is now frozen for implementation testing.
+
+Current descriptive hierarchy:
+
+```text
+ACTIVE-Parent H1 cycles: 171
+  SAME_PARENT_REALIGN: 120
+  PARENT_LOSS_FIRST:    51
+
+first with-Parent M15 reauthorization: 94
+strict fresh counter M15 reauthorization before H1 interrupt: 141
+
+same-Parent post-realign routes:
+  launch anchor no-touch:             63
+  touch without M15 close damage:     26
+  completed M15 close damage:         31
+```
+
+The raw-M1 dual-clock research prototype reproduced `718` frozen semantic events with zero missing events, zero timestamp mismatch, and zero anchor-price mismatch.
+
+This is consumed-data reproducibility, not future edge.
+
+`2025-07` remains locked.
+
 ## What to research next
 
-1. `MIGRATION -> H1_INTERRUPT -> REALIGN -> NEXT DELIVERY` route/destination behavior.
-2. Explicit ledger for `SAME PARENT / NEXT H1 AUCTION` versus `PARENT AUTHORITY LOST / AUCTION RESET`.
-3. Exact POI/liquidity object IDs as `ORIGIN / TRANSIT / DELIVERY / CAMPAIGN-CHANGING` landmarks.
-4. Continue checking that difficult/ambiguous intervals are explained without special rules.
-5. Only after route/Parent semantics stabilize, freeze a strategy-extraction draft.
+Do not resume setup mining.
+
+Current order:
+
+1. implement a versioned dual-clock semantic runtime with separate `PRICE_REVEALED_CUTOFF` and `INFORMATION_KNOWN_AT`;
+2. implement M15/M5 object availability using information-known time without changing geometric source coordinates;
+3. replay the frozen strategy-extraction draft sequentially through the actual implementation on consumed periods;
+4. verify deterministic priority for pending-order cancellation, fill, Hard SL, launch-anchor review/damage, Parent loss, and remap;
+5. freeze implementation versions / hashes and document remaining unresolved execution ambiguity;
+6. only then decide whether the future-hidden `2025-07` gate is satisfied.
 
 ## Do not do
 

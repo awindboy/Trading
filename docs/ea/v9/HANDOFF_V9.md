@@ -2,7 +2,7 @@
 
 Last updated: `2026-09-12`
 Status: `ACTIVE / CONTINUOUS HIERARCHICAL MARKET-FLOW GRAMMAR`
-Current phase: `ANSWER-SHEET FLOW GRAMMAR -> ROUTE/PARENT SEMANTICS -> STRATEGY EXTRACTION`
+Current phase: `STRATEGY-EXTRACTION DRAFT FROZEN -> DUAL-CLOCK RUNTIME IMPLEMENTATION GATE`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
@@ -232,3 +232,39 @@ When strategy extraction begins again:
 - no cooldown/retry cap/trade quota;
 - runtime guards, AI plans/reviews;
 - no hindsight rescue.
+
+## 2026-09-12 first strategy-extraction checkpoint
+
+This section is newer than earlier "Immediate next research" text in this file and supersedes it where they conflict.
+
+Frozen consumed-data strategy draft:
+
+`V9_STRATEGY_EXTRACTION_DRAFT_PARENT_CHILD_FLOW_20260912.md`
+
+Active implementation gate:
+
+`V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
+
+Key checkpoint:
+
+```text
+ACTIVE Parent H1 cycles: 171
+same-Parent realign:      120
+Parent-loss-first:         51
+
+with-Parent M15 reauth:    94
+strict pre-H1 counter reauth: 141
+
+semantic runtime research parity:
+718 events
+missing 0
+timestamp mismatch 0
+anchor mismatch 0
+```
+
+The strategy draft preserves both with-Parent repair/journey participation and Counter-Parent Local-Bridge participation. Parent remains scale/context authority, not a direction veto.
+
+Current next task is implementation/parity, not adding more setup filters.
+
+`2025-07` remains locked; production authority and EA authority remain NONE.
+
