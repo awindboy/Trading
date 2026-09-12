@@ -480,3 +480,41 @@ REMAP action integration: PASS
 ```
 
 This does not resolve final AI `HOLD / EXIT / REMAP` judgment. The validated request is a causal gate envelope; the chart-native MAP attachment and real semantic decision instruction remain open. `2025-07` stays locked.
+
+## 2026-09-13 strategy runtime v5 REMAP correctness update
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+2024 replay revealed an implementation mismatch in the accepted REMAP path: a Counter Child reclassified as `WITH_NEW_PARENT_JOURNEY` still used Counter-branch launch/damage orientation after the new same-direction Parent was earned.
+
+Current strategy runtime:
+
+```text
+STRATEGY_RUNTIME_VERSION = v9-strategy-state-machine-5
+SHA256 = 5728c013f5c650a8e21c607112c1391b4ce1254234199380df08ac0042f91436
+```
+
+The original structural origin remains unchanged through REMAP. Only the post-remap same-direction journey interpretation was corrected.
+
+Regression test:
+
+`scripts/tests/test_v9_remap_parent_journey.py`
+
+After the fix, the complete consumed packet/scheduler replay remains exact:
+
+```text
+segments                  594
+AI requests               109
+revealed rows          229,861
+gate counts              exact
+revealed ledger          exact
+semantic ledger          exact
+Counter ledger           exact
+With-Parent ledger       exact
+object ledger            exact
+external actions         exact
+pending gates                0
+status                    PASS
+```
+
+This is a runtime correctness fix, not a strategy-authority change.

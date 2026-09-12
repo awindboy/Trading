@@ -25,7 +25,7 @@ from v9_semantic_runtime import (
 )
 from v9_execution_state_machine import M5ObjectBook, M5Object
 
-STRATEGY_RUNTIME_VERSION="v9-strategy-state-machine-4"
+STRATEGY_RUNTIME_VERSION="v9-strategy-state-machine-5"
 AUTHORIZATION_VERSION="v9-live-safe-continuous-context-2"
 
 INTERRUPT_REL={"COUNTERFLOW","LOCAL_BALANCE"}
@@ -212,10 +212,10 @@ class Lane:
         if self.active is not None and any(e.parent_id==self.active.parent_id for e in lost):
             c=self.active
             if c.state in ('PENDING','AWAITING_EXECUTION'):
-                self._archive(c,'CHILD_CANCELLED',at,'PARENT_AUTHORITY_LOST_PREFILL',c.authorized_at.strftime('%Y')=='2025' and '2025H1' or '2026JF',cutoff)
+                self._archive(c,'CHILD_CANCELLED',at,'PARENT_AUTHORITY_LOST_PREFILL',lost[0].block,cutoff)
             elif c.state in ('OPEN','REVIEW_REQUIRED'):
                 c.state='REMAP_REQUIRED';c.review_reason='PARENT_AUTHORITY_LOST'
-                self.emit('REMAP_REQUIRED',at,c.authorized_at.strftime('%Y')=='2025' and '2025H1' or '2026JF',c,cutoff=cutoff,reason='PARENT_AUTHORITY_LOST')
+                self.emit('REMAP_REQUIRED',at,lost[0].block,c,cutoff=cutoff,reason='PARENT_AUTHORITY_LOST')
 
         if parent_changed:
             if self.context:self._end_context(at,self.context.block,'PARENT_CHANGED')
@@ -231,17 +231,21 @@ class Lane:
         if pid is not None and h1!=prev_h1:
             if self.context:self._end_context(at,self.context.block,'H1_RELATION_CHANGED')
             if h1=='ALIGNED':
-                # With-Parent Child surviving the realign earns journey review anchor.
-                if self.branch=='WITH_PARENT' and self.active is not None and self.active.parent_id==pid:
-                    c=self.active
+                # With-Parent Child, including a Counter-origin Child explicitly remapped
+                # into WITH_NEW_PARENT_JOURNEY, follows same-direction Parent-journey
+                # semantics after the new Parent has been accepted. Historical branch
+                # identity must not invert later H1/M15 damage logic.
+                c=self.active
+                remapped_parent_journey=(c is not None and c.journey_role=='WITH_NEW_PARENT_JOURNEY')
+                if (self.branch=='WITH_PARENT' or remapped_parent_journey) and c is not None and c.parent_id==pid:
                     if c.state in ('PENDING','AWAITING_EXECUTION'):
                         self._archive(c,'CHILD_CANCELLED',at,'H1_REALIGN_PREFILL',m.parent.block,cutoff)
                     elif c.state=='OPEN' and h1bar is not None:
-                        c.journey_role='PARENT_JOURNEY';c.launch_anchor=(h1bar.low if pside=='UP' else h1bar.high);c.launch_anchor_at=at
+                        if c.journey_role!='WITH_NEW_PARENT_JOURNEY': c.journey_role='PARENT_JOURNEY'
+                        c.launch_anchor=(h1bar.low if pside=='UP' else h1bar.high);c.launch_anchor_at=at
                         c.launch_touch_at=None;c.launch_damage_at=None;c.launch_damage_reviewed=False
                         self.emit('CHILD_PROMOTED_PARENT_JOURNEY',at,m.parent.block,c,cutoff=cutoff,anchor=c.launch_anchor)
-                if self.branch=='COUNTER' and self.active is not None and self.active.parent_id==pid:
-                    c=self.active
+                if self.branch=='COUNTER' and not remapped_parent_journey and c is not None and c.parent_id==pid:
                     if c.state in ('PENDING','AWAITING_EXECUTION'):
                         self._archive(c,'CHILD_CANCELLED',at,'H1_REALIGN_LOCAL_BRIDGE_TERMINAL_PREFILL',m.parent.block,cutoff)
                     elif c.state=='OPEN':
@@ -249,9 +253,13 @@ class Lane:
                         self.emit('REVIEW_REQUIRED',at,m.parent.block,c,cutoff=cutoff,reason=c.review_reason)
                 self._start_context('ALIGNED',at,m.parent.block,pid,pside,m15)
             elif h1=='INTERRUPT':
-                # Counter Child gets H1 interrupt launch anchor; pending remains valid unless later damaged.
-                if self.branch=='COUNTER' and self.active is not None and self.active.parent_id==pid and h1bar is not None:
-                    c=self.active;c.launch_anchor=(h1bar.high if pside=='UP' else h1bar.low);c.launch_anchor_at=at
+                # Counter Local-Bridge gets the H1 interruption anchor. A Counter-origin
+                # Child already remapped into the new Parent journey no longer uses the
+                # old counter-bridge progression semantics.
+                c=self.active
+                remapped_parent_journey=(c is not None and c.journey_role=='WITH_NEW_PARENT_JOURNEY')
+                if self.branch=='COUNTER' and not remapped_parent_journey and c is not None and c.parent_id==pid and h1bar is not None:
+                    c.launch_anchor=(h1bar.high if pside=='UP' else h1bar.low);c.launch_anchor_at=at
                     c.launch_touch_at=None;c.launch_damage_at=None;c.launch_damage_reviewed=False
                     self.emit('H1_INTERRUPT_PROGRESS',at,m.parent.block,c,cutoff=cutoff,anchor=c.launch_anchor)
                 self._start_context('INTERRUPT',at,m.parent.block,pid,pside,m15)
@@ -275,7 +283,8 @@ class Lane:
         # M15 close damage is evaluated after same-time H1 anchor creation and authorization semantics.
         c=self.active
         if c is not None and c.launch_anchor is not None and m15bar is not None and c.state in ('PENDING','AWAITING_EXECUTION','OPEN') and c.launch_damage_at is None:
-            if c.branch=='WITH_PARENT': damage=(m15bar.close<c.launch_anchor) if c.parent_side=='UP' else (m15bar.close>c.launch_anchor)
+            same_parent_journey=(c.branch=='WITH_PARENT' or c.journey_role=='WITH_NEW_PARENT_JOURNEY')
+            if same_parent_journey: damage=(m15bar.close<c.launch_anchor) if c.parent_side=='UP' else (m15bar.close>c.launch_anchor)
             else: damage=(m15bar.close>c.launch_anchor) if c.parent_side=='UP' else (m15bar.close<c.launch_anchor)
             if damage:
                 c.launch_damage_at=at

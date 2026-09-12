@@ -177,3 +177,29 @@ Do not resume this loop until the Market Flow Atlas strategy-extraction gate pas
 The causal gate envelope / scheduler mechanics are accepted. The remaining chart task is now concrete: freeze the review/remap `MAP` attachment so every AI semantic decision is bound to an exact causal prefix and render identity/hash.
 
 Do not add extra discretionary charts or new indicator confirmations. The chart attachment must preserve the existing MAP/TRIGGER role separation and exact code-owned coordinates.
+
+## 2026-09-13 chart-native loss-conversion research requirements
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+The next chart-native studies must make the following causally visible without future bars:
+
+```text
+H4 authority / phase / agreement
+H1 auction role
+M15 local transition
+M5 execution geometry + local flow
+Parent / Child branch and side
+structural origin / launch anchor
+known liquidity / POI / FVG / OB objects
+route/destination landmarks already earned
+price-revealed cutoff and information-known timestamp
+```
+
+The purpose is not to add visual confirmation patterns. It is to let AI distinguish:
+
+- arrival with acceptance versus arrival with rejection / unresolved repair;
+- delivery with continuing acceptance versus delivery with role completion;
+- genuinely new reauthorization versus exhausted-campaign oscillation.
+
+Executable coordinates remain code-owned.

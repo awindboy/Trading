@@ -1,0 +1,3112 @@
+[
+  {
+    "gate_no": null,
+    "at": "2024-01-17 15:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 1,
+    "at": "2024-01-17 15:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0004",
+    "decision": "EXIT",
+    "reason": "큰 흐름 하락이 유지되고 M15/M5가 하락으로 재정렬되며 counter launch anchor 아래 M15 마감으로 단기 반등 논리가 훼손됨",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 2,
+    "at": "2024-01-18 10:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0005",
+    "decision": "EXIT",
+    "reason": "Counter 매매인데 H1이 다시 Parent 하락 방향으로 정렬되어 Local-Bridge 목적이 종료됨. M15/M5 반등은 남아 있으나 상위 하락 구조와 충돌하므로 수익/잔존 이익을 보호하고 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-01-22 15:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-01-23 02:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-01-23 04:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-01-23 05:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 3,
+    "at": "2024-01-23 05:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0003",
+    "decision": "EXIT",
+    "reason": "Parent/H1 하락은 유지되지만 M15/M5 상승 전환과 launch anchor 상향 마감으로 현재 short Child journey가 물질적으로 손상됨. Parent를 뒤집지 않고 현재 Child만 청산 후 fresh reauthorization 대기",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-01-23 15:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 4,
+    "at": "2024-01-23 16:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0007",
+    "decision": "EXIT",
+    "reason": "기존 Parent 권위가 사라졌고 새 Parent가 아직 없어 재분류할 근거가 없음. short 자체는 수익권이지만 Parent 없는 상태에서 Local-Bridge를 계속 보유하지 않고 청산",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 5,
+    "at": "2024-01-24 04:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0008",
+    "decision": "EXIT",
+    "reason": "Parent가 소멸했고 H4 자체가 AMBIGUOUS라 현재 short를 새 구조에 재분류할 근거가 없음. M15/M5 하락만으로 상위 불확실성을 덮지 않고 청산",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-01-25 14:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 6,
+    "at": "2024-01-25 15:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0010",
+    "decision": "EXIT",
+    "reason": "Counter long의 목적 구간이 끝났고 H1/M15/M5가 모두 Parent 하락 방향으로 재정렬됨. 반등 지속 근거가 사라져 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-01-25 18:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 7,
+    "at": "2024-01-25 20:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0011",
+    "decision": "EXIT",
+    "reason": "Counter long인데 H1/M15/M5가 모두 Parent DOWN으로 재정렬되어 bridge 역할 종료. 잔여 반등을 기대해 버티지 않고 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 8,
+    "at": "2024-01-29 02:15:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0013",
+    "decision": "EXIT",
+    "reason": "Counter long이 한때 크게 진행됐지만 H1은 BALANCE에 머물고 Parent는 DOWN. M15이 launch anchor 아래로 되밀리며 M5도 하락해 되돌림이 material damage로 확인되어 남은 수익을 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-01-29 20:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 9,
+    "at": "2024-01-29 20:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0004",
+    "decision": "EXIT",
+    "reason": "Parent/H1 상승은 유지되지만 진입 직후 유리한 진행이 거의 없었고 M15/M5 하락으로 launch anchor 아래 마감. 현재 long Child가 손상됐다고 보고 청산, Parent 상승은 유지",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-01-31 03:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 10,
+    "at": "2024-01-31 03:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0005",
+    "decision": "EXIT",
+    "reason": "Parent/H1 상승은 유지되지만 이전 상승 진행을 거의 전부 반납했고 M15이 launch anchor 아래 마감, M5도 하락. 현재 long Child의 구조 손상으로 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-01-31 13:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 11,
+    "at": "2024-02-02 16:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0018",
+    "decision": "EXIT",
+    "reason": "기존 Parent가 사라지고 H4가 BALANCE라 새 Parent로 재분류할 수 없음. short는 +2R 이상 진행됐지만 Parent 없는 상태에서 계속 보유할 권위가 없어 수익 확정",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 12,
+    "at": "2024-02-03 00:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0019",
+    "decision": "EXIT",
+    "reason": "기존 Parent가 사라지고 H4가 AMBIGUOUS라 새 상위 구조로 재분류할 근거가 없음. 단기 M15/M5 상승만으로 계속 보유하지 않고 청산",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-06 13:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 13,
+    "at": "2024-02-06 14:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0009",
+    "decision": "EXIT",
+    "reason": "Parent 하락은 유지되지만 H1이 BALANCE이고 M15/M5가 상승해 launch anchor 위로 회복. short Child가 수익 진행을 반납하며 구조 손상되어 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 14,
+    "at": "2024-02-07 22:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0024",
+    "decision": "EXIT",
+    "reason": "Counter short인데 H1이 Parent UP으로 재정렬되어 Local-Bridge 목적 종료. M5도 상승 전환해 잔여 short 보유 근거가 약해 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 15,
+    "at": "2024-02-08 08:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0025",
+    "decision": "EXIT",
+    "reason": "Parent 소멸 후 H4 BALANCE라 새 Parent로 재분류 불가. short는 충분히 진행했으므로 Parent 없는 상태에서 추가 보유하지 않고 수익 확정",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 16,
+    "at": "2024-02-12 11:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0027",
+    "decision": "EXIT",
+    "reason": "Counter long인데 H1/M15/M5가 모두 Parent DOWN으로 재정렬되어 bridge 역할 종료. 반등 지속 근거보다 상위 하락 정렬이 우선되어 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 17,
+    "at": "2024-02-12 22:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0029",
+    "decision": "EXIT",
+    "reason": "Counter long인데 H1이 Parent DOWN으로 재정렬되었고 M5도 하락. M15은 애매하지만 bridge 역할 종료가 우선이라 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 18,
+    "at": "2024-02-14 21:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0035",
+    "decision": "EXIT",
+    "reason": "Counter long인데 H1이 Parent DOWN으로 재정렬되고 M5도 하락. M15은 애매하지만 상위 하락 정렬이 우세해 bridge 종료로 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-15 18:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-16 02:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-16 06:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-16 08:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-16 15:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 19,
+    "at": "2024-02-16 17:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0037",
+    "decision": "EXIT",
+    "reason": "Counter long이 +10R 이상 진행했지만 H1/M15/M5가 모두 Parent DOWN으로 재정렬되고 고점에서 크게 되밀림. Local-Bridge 역할 종료로 남은 큰 수익을 확정",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 20,
+    "at": "2024-02-16 20:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0038",
+    "decision": "EXIT",
+    "reason": "local 상승은 강하지만 기존 Parent가 소멸했고 H4가 BALANCE라 새 Parent가 없음. REMAP의 상위 권위가 없으므로 counter long을 청산하고 새 Parent 형성을 기다림",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-19 20:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-20 18:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-20 19:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-20 21:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-21 09:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-21 13:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-21 16:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 21,
+    "at": "2024-02-21 18:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0013",
+    "decision": "EXIT",
+    "reason": "With-Parent long이 +8R 가까이 진행했지만 H1/M15/M5가 모두 하락 전환되고 launch anchor 아래 M15 마감. Parent UP은 유지하되 현재 Child journey는 손상되어 큰 잔여 수익을 확정",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-22 12:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-22 12:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-22 14:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 22,
+    "at": "2024-02-22 16:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0014",
+    "decision": "EXIT",
+    "reason": "Parent UP은 남아 있으나 H4가 REPAIR_UP이고 H1/M15/M5가 모두 하락. +2R 이상 진행 후 launch anchor 아래로 되밀려 현재 long Child가 손상되어 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 23,
+    "at": "2024-02-23 16:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0041",
+    "decision": "EXIT",
+    "reason": "H4는 UP 다수지만 UNRESOLVED이고 migration Parent가 아직 없음. H1/M15 상승만으로 Parent를 임의 생성하지 않고, REMAP 근거 부재로 long 청산",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 24,
+    "at": "2024-02-26 14:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0043",
+    "decision": "EXIT",
+    "reason": "Counter short인데 Parent는 UP, H1/M15은 BALANCE이고 M5는 상승. launch anchor 위 M15 마감으로 counter Child가 손상되어 청산",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-26 20:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-26 22:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-27 20:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-28 03:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 25,
+    "at": "2024-02-28 04:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0045",
+    "decision": "EXIT",
+    "reason": "Counter short가 +2.5R까지 진행했지만 H1/M15/M5가 모두 Parent UP으로 재정렬. Local-Bridge 종료로 남은 수익을 확정",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-02-28 08:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 26,
+    "at": "2024-02-28 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0046",
+    "decision": "REMAP",
+    "reason": "기존 counter short 방향과 새로 형성된 MIG_DOWN Parent가 일치하고 H1/M15/M5도 DOWN. 원래 structural origin은 유지한 채 WITH_NEW_PARENT_JOURNEY로 재분류해 보유",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "OPEN"
+  },
+  {
+    "gate_no": 27,
+    "at": "2024-03-06 12:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0058",
+    "decision": "EXIT",
+    "reason": "Counter short인데 Parent/H1/M15/M5가 모두 UP으로 재정렬되어 Local-Bridge 역할 종료. 유리한 진행도 작아 현재 short를 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 28,
+    "at": "2024-03-08 06:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0062",
+    "decision": "EXIT",
+    "reason": "Counter short가 +0.52R 진행했지만 H1이 Parent UP으로 재정렬되고 M5도 상승, M15은 균형. Local-Bridge 종료로 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-03-11 15:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 29,
+    "at": "2024-03-11 15:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0064",
+    "decision": "EXIT",
+    "reason": "Parent UP 유지, H1 BALANCE지만 M15/M5가 UP으로 전환하고 counter launch anchor 위 M15 마감. 현재 short 구조 손상으로 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-03-12 11:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 30,
+    "at": "2024-03-12 16:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0065",
+    "decision": "EXIT",
+    "reason": "Short가 +8.73R까지 진행했고 H1/M15/M5는 DOWN이지만 기존 Parent 소멸 후 H4 BALANCE로 새 Parent가 없음. 임의 재분류하지 않고 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 31,
+    "at": "2024-03-13 04:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0066",
+    "decision": "EXIT",
+    "reason": "Parent가 사라지고 H4가 AMBIGUOUS라 long을 새 구조로 재분류할 근거가 없음. H1 DOWN/M15 BALANCE/M5 UP 혼재 상태에서 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-03-14 11:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-03-14 12:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 32,
+    "at": "2024-03-14 16:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0068",
+    "decision": "EXIT",
+    "reason": "Short가 +7.27R 진행했지만 Parent가 사라지고 H4 AMBIGUOUS로 새 하락 Parent가 아직 없음. 하위시간 하락만으로 재분류하지 않고 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 33,
+    "at": "2024-03-15 08:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0069",
+    "decision": "EXIT",
+    "reason": "Long 방향은 H1/M15/M5와 맞고 +3.26R 진행했지만 H4 PAUSE_UP이며 활성 Parent가 없음. 새 Parent를 임의 생성하지 않고 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-03-18 15:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-03-18 18:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 34,
+    "at": "2024-03-18 20:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0070",
+    "decision": "EXIT",
+    "reason": "Long이 +3.86R 진행했지만 Parent가 사라지고 H4 AMBIGUOUS로 새 Parent가 없음. H1/M15/M5 상승만으로 재분류하지 않고 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-03-22 02:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 35,
+    "at": "2024-03-22 04:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0071",
+    "decision": "EXIT",
+    "reason": "REMAP_REQUIRED이나 causally active한 새 Parent가 없어 재분류 불가. 하위시간 방향만으로 Parent를 임의 생성하지 않고 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-03-27 00:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-01 22:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-03 16:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 36,
+    "at": "2024-04-04 14:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0083",
+    "decision": "EXIT",
+    "reason": "Counter short가 +1.54R 진행했지만 H1이 Parent UP으로 재정렬되고 M15/M5는 균형. Local-Bridge 종료로 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-04 22:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-08 01:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-08 09:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-08 15:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-09 22:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-10 04:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-10 11:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 37,
+    "at": "2024-04-10 15:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0022",
+    "decision": "EXIT",
+    "reason": "With-Parent long이 +7.55R까지 진행했지만 H1/M15/M5가 모두 DOWN으로 전환하고 launch anchor 아래 M15 마감. Parent UP은 유지하되 현재 Child journey 손상으로 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 38,
+    "at": "2024-04-11 07:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0023",
+    "decision": "EXIT",
+    "reason": "Parent/H1/M15 상승은 유지되지만 진입 후 MFE +0.05R에 불과하고 MAE 0.76R, launch anchor 아래 M15 close damage와 M5 DOWN. Parent는 유지하되 현재 Child만 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 39,
+    "at": "2024-04-11 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0085",
+    "decision": "EXIT",
+    "reason": "REMAP_REQUIRED이나 causally active한 새 Parent가 없어 재분류 불가. 하위시간 방향만으로 Parent를 임의 생성하지 않고 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-16 15:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-16 15:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-16 16:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-17 15:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 40,
+    "at": "2024-04-17 15:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0024",
+    "decision": "EXIT",
+    "reason": "With-Parent long이 +2.74R까지 진행했지만 M15/M5 DOWN, launch anchor 아래 M15 close damage. Parent/H1 UP은 유지하되 현재 Child를 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-19 10:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 41,
+    "at": "2024-04-22 01:15:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0028",
+    "decision": "EXIT",
+    "reason": "With-Parent long이 +3.59R까지 진행했지만 MAE 0.96R까지 반납했고 M15/M5 DOWN, launch anchor 아래 M15 close damage. Parent/H1 UP은 유지하되 Child 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-23 22:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-24 02:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-24 03:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-04-25 16:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 42,
+    "at": "2024-04-25 17:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0098",
+    "decision": "EXIT",
+    "reason": "Counter long이 +0.74R 진행했지만 H1/M15/M5가 모두 DOWN으로 재정렬되고 H4도 UNRESOLVED_DOWN. Local-Bridge 종료로 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 43,
+    "at": "2024-04-26 00:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0099",
+    "decision": "EXIT",
+    "reason": "REMAP_REQUIRED이나 causally active한 새 Parent가 없어 재분류 불가. 하위시간 방향만으로 Parent를 임의 생성하지 않고 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 44,
+    "at": "2024-04-26 20:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0100",
+    "decision": "EXIT",
+    "reason": "REMAP_REQUIRED이나 causally active한 새 Parent가 없어 재분류 불가. 하위시간 방향만으로 Parent를 임의 생성하지 않고 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-02 22:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 45,
+    "at": "2024-05-03 00:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0103",
+    "decision": "EXIT",
+    "reason": "Counter long인데 H1이 Parent DOWN으로 재정렬되어 Local-Bridge 역할 종료. M15 BALANCE/M5 UP 잔여 반등보다 상위 역할 종료가 우선이라 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-03 09:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 46,
+    "at": "2024-05-03 09:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0106",
+    "decision": "EXIT",
+    "reason": "Counter long은 H1 UP이지만 M15/M5가 DOWN으로 전환하고 launch anchor 아래 M15 close damage. +2.36R 진행을 대부분 반납해 현재 Child 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-03 22:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-06 02:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 47,
+    "at": "2024-05-06 02:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0108",
+    "decision": "EXIT",
+    "reason": "Counter long은 H1 UP이지만 M15/M5 DOWN, launch anchor 아래 M15 close damage. MFE +0.87R 이후 반등 구조 약화로 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 48,
+    "at": "2024-05-06 08:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0109",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 49,
+    "at": "2024-05-07 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0111",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-08 03:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 50,
+    "at": "2024-05-08 03:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0112",
+    "decision": "EXIT",
+    "reason": "Counter long의 completed M15 close가 launch anchor를 훼손하고 M15/M5가 DOWN. 현재 Child 구조 손상으로 청산.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 51,
+    "at": "2024-05-09 08:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0114",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 52,
+    "at": "2024-05-13 02:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0116",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-13 15:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-16 18:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-17 02:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-17 05:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-17 07:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 53,
+    "at": "2024-05-17 09:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0122",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-20 18:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-20 19:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 54,
+    "at": "2024-05-20 20:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0123",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-21 02:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 55,
+    "at": "2024-05-21 03:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0034",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-05-21 19:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 56,
+    "at": "2024-05-22 06:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0035",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 57,
+    "at": "2024-05-30 15:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0131",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 58,
+    "at": "2024-06-03 15:15:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0134",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 59,
+    "at": "2024-06-04 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0135",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 60,
+    "at": "2024-06-05 08:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0136",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-06-06 16:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 61,
+    "at": "2024-06-06 17:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0138",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 62,
+    "at": "2024-06-07 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0140",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-06-11 02:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-06-11 04:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-06-11 04:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 63,
+    "at": "2024-06-11 05:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0141",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-06-11 12:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 64,
+    "at": "2024-06-11 12:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0142",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-06-12 12:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-06-12 15:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 65,
+    "at": "2024-06-14 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0143",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-06-17 12:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-06-17 13:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 66,
+    "at": "2024-06-17 16:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0145",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 67,
+    "at": "2024-06-18 20:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0147",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-06-19 19:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 68,
+    "at": "2024-06-19 20:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0150",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 69,
+    "at": "2024-06-24 13:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0154",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 70,
+    "at": "2024-06-24 19:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0155",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 71,
+    "at": "2024-06-27 16:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0161",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 72,
+    "at": "2024-06-28 19:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0162",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-01 21:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-02 06:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 73,
+    "at": "2024-07-02 07:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0042",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-02 16:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 74,
+    "at": "2024-07-02 20:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0166",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-05 03:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 75,
+    "at": "2024-07-05 03:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0168",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-08 17:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 76,
+    "at": "2024-07-08 20:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0170",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 77,
+    "at": "2024-07-11 04:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0172",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 78,
+    "at": "2024-07-12 12:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0174",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-12 16:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 79,
+    "at": "2024-07-15 03:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0176",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-15 20:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-15 23:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-15 23:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-16 01:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-16 03:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-16 16:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-17 06:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-17 07:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-17 08:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-17 08:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-17 10:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-17 10:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-17 14:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-17 15:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-17 17:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-18 12:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 80,
+    "at": "2024-07-18 19:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0044",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-23 06:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-26 08:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-26 09:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-07-26 10:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 81,
+    "at": "2024-07-29 04:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0181",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 82,
+    "at": "2024-07-30 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0183",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-08-01 22:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 83,
+    "at": "2024-08-06 05:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0193",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-08-07 18:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-08-07 20:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-08-08 12:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 84,
+    "at": "2024-08-08 16:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0197",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 85,
+    "at": "2024-08-09 10:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0199",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-08-12 07:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 86,
+    "at": "2024-08-12 07:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0200",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 87,
+    "at": "2024-08-14 02:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0201",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 88,
+    "at": "2024-08-16 08:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0203",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-08-19 17:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 89,
+    "at": "2024-08-19 17:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0204",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 90,
+    "at": "2024-08-21 04:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0052",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-08-21 23:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-08-22 03:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-08-22 04:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 91,
+    "at": "2024-08-22 05:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0054",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 92,
+    "at": "2024-08-26 20:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0210",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 93,
+    "at": "2024-08-27 08:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0211",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-08-28 12:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 94,
+    "at": "2024-08-29 16:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0213",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 95,
+    "at": "2024-08-30 15:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0215",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 96,
+    "at": "2024-09-02 13:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0217",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 97,
+    "at": "2024-09-02 19:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0218",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-03 20:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-03 21:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-03 22:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-04 13:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-04 17:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 98,
+    "at": "2024-09-04 17:15:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0055",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 99,
+    "at": "2024-09-06 20:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0220",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-09 17:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 100,
+    "at": "2024-09-09 17:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0222",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 101,
+    "at": "2024-09-11 16:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0225",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-12 14:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 102,
+    "at": "2024-09-12 15:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0226",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 103,
+    "at": "2024-09-16 15:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0230",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-16 19:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-16 20:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 104,
+    "at": "2024-09-16 21:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0232",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-17 15:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-17 17:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-17 21:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-18 01:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-18 04:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-18 11:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-18 13:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 105,
+    "at": "2024-09-19 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0236",
+    "decision": "REMAP",
+    "reason": "Precommitted AI policy: 새 causal Parent 방향이 살아있는 Child 방향과 일치하므로 원래 structural origin을 유지한 채 새 Parent journey로 재분류.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "OPEN"
+  },
+  {
+    "gate_no": 106,
+    "at": "2024-09-26 03:15:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0236",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 107,
+    "at": "2024-09-26 03:15:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0061",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-27 14:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-09-27 15:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 108,
+    "at": "2024-09-27 15:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0238",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-10-02 10:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 109,
+    "at": "2024-10-02 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0243",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-10-03 09:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 110,
+    "at": "2024-10-03 09:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0244",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 111,
+    "at": "2024-10-04 14:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0248",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 112,
+    "at": "2024-10-05 00:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0249",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-10-08 09:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 113,
+    "at": "2024-10-08 09:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0251",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-10-08 16:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 114,
+    "at": "2024-10-08 16:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0252",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 115,
+    "at": "2024-10-10 07:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0253",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 116,
+    "at": "2024-10-14 05:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0255",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-10-15 06:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 117,
+    "at": "2024-10-15 06:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0068",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-10-22 02:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-10-23 06:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 118,
+    "at": "2024-10-23 07:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0271",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 119,
+    "at": "2024-10-23 20:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0272",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 120,
+    "at": "2024-10-28 01:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0274",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-10-28 05:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 121,
+    "at": "2024-10-28 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0277",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-10-31 14:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 122,
+    "at": "2024-11-04 13:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0285",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-04 18:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 123,
+    "at": "2024-11-04 18:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0286",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 124,
+    "at": "2024-11-05 10:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0287",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-05 13:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-05 15:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-05 17:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-05 18:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 125,
+    "at": "2024-11-05 19:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0288",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-05 21:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 126,
+    "at": "2024-11-06 00:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0289",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-07 21:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 127,
+    "at": "2024-11-08 00:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0290",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-13 07:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 128,
+    "at": "2024-11-13 09:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0294",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-13 15:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 129,
+    "at": "2024-11-13 17:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0296",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-14 22:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 130,
+    "at": "2024-11-15 07:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0299",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 131,
+    "at": "2024-11-15 12:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0300",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-18 01:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 132,
+    "at": "2024-11-18 01:15:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0074",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-11-20 14:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 133,
+    "at": "2024-11-20 15:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0304",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 134,
+    "at": "2024-11-25 08:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0308",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 135,
+    "at": "2024-11-26 15:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0309",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 136,
+    "at": "2024-11-28 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0310",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 137,
+    "at": "2024-11-29 18:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0312",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 138,
+    "at": "2024-12-02 16:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0314",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 139,
+    "at": "2024-12-03 03:30:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0315",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 140,
+    "at": "2024-12-03 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0077",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-03 18:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 141,
+    "at": "2024-12-03 18:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0316",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 142,
+    "at": "2024-12-04 00:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0317",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-05 06:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-05 07:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 143,
+    "at": "2024-12-05 07:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0319",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-06 12:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-06 15:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-06 20:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-06 21:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 144,
+    "at": "2024-12-09 04:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0325",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 145,
+    "at": "2024-12-11 08:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0327",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 146,
+    "at": "2024-12-12 20:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0330",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-16 16:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 147,
+    "at": "2024-12-16 18:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0331",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-17 05:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 148,
+    "at": "2024-12-17 05:15:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0332",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-18 05:00:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-18 05:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 149,
+    "at": "2024-12-18 06:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0336",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-18 09:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 150,
+    "at": "2024-12-18 10:00:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0337",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-19 03:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-19 07:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-19 08:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-19 20:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-19 22:15:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-20 03:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "COUNTER",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 151,
+    "at": "2024-12-20 08:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "WITH_PARENT",
+    "child_id": "2024OOS-WIT0080",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 152,
+    "at": "2024-12-24 08:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0338",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": 153,
+    "at": "2024-12-27 12:00:00",
+    "kind": "REMAP_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0343",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: 새 causal Parent가 없어 재분류 불가, 청산.",
+    "state_before": "REMAP_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-30 15:45:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  },
+  {
+    "gate_no": 154,
+    "at": "2024-12-30 15:45:00",
+    "kind": "REVIEW_REQUIRED",
+    "branch": "COUNTER",
+    "child_id": "2024OOS-COU0346",
+    "decision": "EXIT",
+    "reason": "Precommitted AI policy: H1 Local-Bridge 종료 또는 completed M15 launch-anchor damage는 현재 Child 종료. Parent 자체는 별도 유지/재평가.",
+    "state_before": "REVIEW_REQUIRED",
+    "state_after": "EXIT_REQUESTED"
+  },
+  {
+    "gate_no": null,
+    "at": "2024-12-31 13:30:00",
+    "kind": "CROSS_LANE_CONFLICT_REVIEW",
+    "branch": "WITH_PARENT",
+    "decision": "SKIP_NEW_PITCH",
+    "reason": "current authority deterministic fail-closed"
+  }
+]

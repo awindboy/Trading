@@ -421,3 +421,18 @@ Until then:
 Production authority = NONE
 EA authority         = NONE
 ```
+
+## 2026-09-13 scheduler research extension from 2024 loss postmortem
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+The accepted v1 `REVIEW_REQUIRED / REMAP_REQUIRED` envelope remains mechanically valid. 2024 losses show, however, that most Hard-SL failures occur before those semantic gates can act (`152 / 153` Hard-SL trades had no prior AI semantic review).
+
+Therefore the next research may evaluate **candidate** chart-native semantic events before changing scheduler authority:
+
+```text
+ENTRY_CONTEXT_REVIEW     (candidate only)
+DELIVERY/PROGRESSION_REVIEW (candidate only)
+```
+
+Neither is authorized yet. Their event authority, exact causal chart attachment, action schema, and winner-preservation behavior must first be demonstrated on consumed data.

@@ -524,3 +524,24 @@ This does not authorize `2025-07`.
 The earlier unresolved `AI call/remap packet format` is resolved only at the deterministic gate-envelope / scheduler / response-validation level. The consumed 594-gate path passed exactly.
 
 The strategy-quality choice among `HOLD / EXIT / REMAP` remains unresolved, and the chart-native AI MAP input remains to be frozen. No strategy threshold was added and the `149 Counter / 95 With-Parent` live-safe authorization universe is unchanged.
+
+## 2026-09-13 2024 postmortem research gap — no strategy-rule promotion yet
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+The 2024 causal tick/AI replay supports keeping the current Parent/Child philosophy, Hard-SL discipline, Counter Local-Bridge branch, and With-Parent repair/continuation branch. It does **not** authorize an immediate Entry/SL/TP rewrite.
+
+New research questions:
+
+```text
+M15 authorization + M5 location
+-> did price actually accept the Child side at arrival?
+
+delivery achieved
+-> is the Child opening a new destination, or has its local role completed?
+
+fresh reauthorization
+-> genuinely new auction, or oscillation inside an exhausted campaign?
+```
+
+These questions must be solved as compact market-flow semantics, not new fixed thresholds.

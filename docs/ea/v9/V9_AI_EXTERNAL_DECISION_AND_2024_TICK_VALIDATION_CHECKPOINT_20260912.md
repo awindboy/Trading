@@ -315,3 +315,21 @@ Until that later explicit decision:
 Production authority = NONE
 EA authority         = NONE
 ```
+
+## 2026-09-13 2024 status after causal trading replay and postmortem
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+The 2024 tick source remains accepted execution evidence. In addition, 2024 has now been used for a full causal trading replay and detailed loss postmortem.
+
+Consequently:
+
+```text
+2024 execution-source validation evidence = retained
+2024 strategy-performance future/OOS status = retired
+2024 current classification = CONSUMED POSTMORTEM DATA
+```
+
+Do not use the 2024 `+20.51R` checkpoint as a second untouched validation after changing the strategy from its postmortem. Any future strategy change informed by this postmortem must be treated as trained/researched on 2024.
+
+The external-decision mechanics remain accepted; actual semantic research now focuses on entry acceptance, delivery meaning, and reauthorization/campaign exhaustion before the final chart/prompt/model-role contract is frozen.

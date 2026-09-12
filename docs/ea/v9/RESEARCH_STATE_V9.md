@@ -1,11 +1,12 @@
 # V9 Research State
 
-Date: `2026-09-12`
+Date: `2026-09-13`
 Status: `ACTIVE / CONTINUOUS HIERARCHICAL MARKET-FLOW GRAMMAR`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
 Consumed answer-sheet data: `2025-01 through 2025-06`, `2026-01 through 2026-02`
+Consumed postmortem data: `2024-01 through 2024-12`
 Future-hidden candidate: `2025-07 LOCKED`
 Untouched reserve: `GOLD# 2021`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
@@ -295,3 +296,36 @@ FUTURE-HIDDEN JULY = LOCKED
 ```
 
 The packet/scheduler result is an interface-mechanics result. Synthetic EXIT decisions do not establish the strategy-quality choice among `HOLD / EXIT / REMAP`.
+
+## 2026-09-13 2024 consumed postmortem research state
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+2024 causal tick/AI replay has completed and its outcomes have now been consumed for loss postmortem research.
+
+```text
+2024-01..12 = CONSUMED POSTMORTEM DATA
+2025-01..06 = CONSUMED ANSWER-SHEET DATA
+2026-01..02 = CONSUMED ANSWER-SHEET DATA
+2025-07     = FUTURE-HIDDEN LOCKED
+GOLD# 2021  = UNTOUCHED FINAL RESERVE
+```
+
+Measured 2024 checkpoint:
+
+```text
+305 closed
+103 wins / 202 losses
++20.51R
+PF 1.118
+COUNTER      +12.26R / 256 trades
+WITH_PARENT   +8.25R / 49 trades
+```
+
+The postmortem does not authorize new trade filters. It identifies three semantic gaps to research causally:
+
+1. execution-location `arrival -> reaction -> acceptance/rejection`;
+2. delivery aftercare: expansion versus role-completion / Parent-side re-acceptance;
+3. fresh reauthorization: genuinely new auction versus exhausted-campaign oscillation.
+
+The detailed contract is `V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md`.

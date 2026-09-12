@@ -240,3 +240,29 @@ Retain:
 - 2024 tick data is execution validation only and cannot retune strategy grammar.
 
 The packet/scheduler mechanics gate has passed. Future-hidden replay is still blocked until chart-native AI semantic input and the actual AI review instruction/model-role contract are frozen and consumed-tested.
+
+## 2026-09-13 2024 loss-postmortem decision update
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+Decision:
+
+```text
+2024 causal replay result = useful research checkpoint
+2024 future validation status = RETIRED / now consumed
+new strategy rule authority = NONE
+v9-strategy-state-machine-5 REMAP bugfix = ACCEPTED after exact consumed parity
+2025-07 = LOCKED
+2021 = UNTOUCHED
+```
+
+Do not promote the following descriptive 2024 differences into mechanical rules:
+
+- M5 side agreement;
+- +1R/+2R/+3R buckets;
+- favorable liquidity delivery;
+- post-delivery M15 non-support;
+- FIRST versus FRESH_REAUTH aggregate P/L;
+- repeated losses inside one Parent.
+
+The active research decision is to improve **Grammar interpretation**, not add thresholds. Study entry acceptance, delivery meaning, and campaign exhaustion using paired loss/winner charts and causal state/object context. Only after compact semantics are supported may any new AI scheduler gate be proposed and consumed-tested.

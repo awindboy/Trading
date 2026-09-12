@@ -1,0 +1,635 @@
+{
+  "version": "v9-2024-loss-postmortem-1",
+  "source_identity": {
+    "trades_sha256": "21d0d0f304249223768dffe8a69cecd691d9cd4b9455513b26a49609dae501dc",
+    "state_sha256": "e37b1ef6cd5dc232e154714cd41d9a38a27e8b8d097cf48d6786589782e5c958",
+    "minute_quotes_sha256": "9902bd5285ac121dc393f83fa3299e4dfb59ced2255e23d91c0dc47bae6fa525"
+  },
+  "scope": "2024 is now CONSUMED POSTMORTEM DATA; statistics are research evidence, not future-hidden validation or production authority.",
+  "all_closed": {
+    "n": 305,
+    "sum_r": 20.505982755891434,
+    "avg_r": 0.06723273034718504,
+    "wins": 103,
+    "losses": 202
+  },
+  "wins": {
+    "n": 103,
+    "sum_r": 193.67684893945523,
+    "avg_r": 1.8803577566937402,
+    "wins": 103,
+    "losses": 0
+  },
+  "losses": {
+    "n": 202,
+    "sum_r": -173.1708661835638,
+    "avg_r": -0.8572815157602168,
+    "wins": 0,
+    "losses": 202
+  },
+  "hard_sl_losses": {
+    "n": 153,
+    "sum_r": -158.9223798794967,
+    "avg_r": -1.0387083652254687,
+    "wins": 0,
+    "losses": 153
+  },
+  "ai_early_loss_exits": {
+    "n": 49,
+    "sum_r": -14.248486304067091,
+    "avg_r": -0.2907854347768794,
+    "wins": 0,
+    "losses": 49
+  },
+  "loss_classes": {
+    "AI_EARLY_LOSS_EXIT": {
+      "n": 49,
+      "sum_r": -14.248486304067091,
+      "avg_r": -0.2907854347768794,
+      "wins": 0,
+      "losses": 49,
+      "by_branch": {
+        "COUNTER": {
+          "n": 38,
+          "sum_r": -10.777095515545634,
+          "avg_r": -0.2836077767248851,
+          "wins": 0,
+          "losses": 38
+        },
+        "WITH_PARENT": {
+          "n": 11,
+          "sum_r": -3.471390788521458,
+          "avg_r": -0.315580980774678,
+          "wins": 0,
+          "losses": 11
+        }
+      }
+    },
+    "FAST_NO_PROGRESS_HARD_SL": {
+      "n": 45,
+      "sum_r": -46.60932699564492,
+      "avg_r": -1.0357628221254427,
+      "wins": 0,
+      "losses": 45,
+      "by_branch": {
+        "COUNTER": {
+          "n": 36,
+          "sum_r": -37.47291433220598,
+          "avg_r": -1.0409142870057218,
+          "wins": 0,
+          "losses": 36
+        },
+        "WITH_PARENT": {
+          "n": 9,
+          "sum_r": -9.136412663438941,
+          "avg_r": -1.0151569626043269,
+          "wins": 0,
+          "losses": 9
+        }
+      }
+    },
+    "NO_PROGRESS_HARD_SL": {
+      "n": 23,
+      "sum_r": -23.65478517094749,
+      "avg_r": -1.0284689204759778,
+      "wins": 0,
+      "losses": 23,
+      "by_branch": {
+        "COUNTER": {
+          "n": 20,
+          "sum_r": -20.631438004231885,
+          "avg_r": -1.0315719002115942,
+          "wins": 0,
+          "losses": 20
+        },
+        "WITH_PARENT": {
+          "n": 3,
+          "sum_r": -3.0233471667156078,
+          "avg_r": -1.0077823889052027,
+          "wins": 0,
+          "losses": 3
+        }
+      }
+    },
+    "PARTIAL_PROGRESS_HARD_SL": {
+      "n": 64,
+      "sum_r": -66.68061466697824,
+      "avg_r": -1.041884604171535,
+      "wins": 0,
+      "losses": 64,
+      "by_branch": {
+        "COUNTER": {
+          "n": 53,
+          "sum_r": -54.1484141129725,
+          "avg_r": -1.0216681908108018,
+          "wins": 0,
+          "losses": 53
+        },
+        "WITH_PARENT": {
+          "n": 11,
+          "sum_r": -12.532200554005744,
+          "avg_r": -1.1392909594550675,
+          "wins": 0,
+          "losses": 11
+        }
+      }
+    },
+    "PROFITABLE_1R_PLUS_THEN_HARD_SL": {
+      "n": 21,
+      "sum_r": -21.97765304592604,
+      "avg_r": -1.046554906948859,
+      "wins": 0,
+      "losses": 21,
+      "by_branch": {
+        "COUNTER": {
+          "n": 17,
+          "sum_r": -17.844652400382557,
+          "avg_r": -1.049685435316621,
+          "wins": 0,
+          "losses": 17
+        },
+        "WITH_PARENT": {
+          "n": 4,
+          "sum_r": -4.13300064554348,
+          "avg_r": -1.03325016138587,
+          "wins": 0,
+          "losses": 4
+        }
+      }
+    }
+  },
+  "branches": {
+    "COUNTER": {
+      "n": 256,
+      "sum_r": 12.257179350788999,
+      "avg_r": 0.047879606839019526,
+      "wins": 92,
+      "losses": 164
+    },
+    "WITH_PARENT": {
+      "n": 49,
+      "sum_r": 8.248803405102434,
+      "avg_r": 0.16834292663474354,
+      "wins": 11,
+      "losses": 38
+    }
+  },
+  "hard_sl_by_branch": {
+    "COUNTER": {
+      "n": 126,
+      "sum_r": -130.09741884979292,
+      "avg_r": -1.0325191972205787,
+      "wins": 0,
+      "losses": 126
+    },
+    "WITH_PARENT": {
+      "n": 27,
+      "sum_r": -28.824961029703772,
+      "avg_r": -1.067591149248288,
+      "wins": 0,
+      "losses": 27
+    }
+  },
+  "fast_no_progress_by_branch": {
+    "COUNTER": {
+      "n": 36,
+      "sum_r": -37.47291433220598,
+      "avg_r": -1.0409142870057218,
+      "wins": 0,
+      "losses": 36
+    },
+    "WITH_PARENT": {
+      "n": 9,
+      "sum_r": -9.136412663438941,
+      "avg_r": -1.0151569626043269,
+      "wins": 0,
+      "losses": 9
+    }
+  },
+  "one_r_plus_giveback_by_branch": {
+    "COUNTER": {
+      "n": 17,
+      "sum_r": -17.844652400382557,
+      "avg_r": -1.049685435316621,
+      "wins": 0,
+      "losses": 17
+    },
+    "WITH_PARENT": {
+      "n": 4,
+      "sum_r": -4.13300064554348,
+      "avg_r": -1.03325016138587,
+      "wins": 0,
+      "losses": 4
+    }
+  },
+  "fast_no_progress": {
+    "n": 45,
+    "sum_r": -46.60932699564492,
+    "avg_r": -1.0357628221254427,
+    "wins": 0,
+    "losses": 45,
+    "definition": "HARD_SL within 60 minutes of fill and MFE < 0.25R (postmortem stratification only; not a live threshold)",
+    "h4_macro_3of3": 37,
+    "m5_support_counts": {
+      "False": 23,
+      "True": 22
+    },
+    "m15_support_counts": {
+      "False": 9,
+      "True": 36
+    }
+  },
+  "one_r_plus_then_hard_sl": {
+    "n": 21,
+    "sum_r": -21.97765304592604,
+    "avg_r": -1.046554906948859,
+    "wins": 0,
+    "losses": 21,
+    "definition": "HARD_SL after MFE >= 1R (postmortem stratification only; never a live TP/trailing threshold)",
+    "two_r_plus": 10,
+    "three_r_plus": 5,
+    "favorable_liquidity_delivery": 14,
+    "post_delivery_m15_nonsupport": 10,
+    "still_profitable_at_first_nonsupport": 9,
+    "counterfactual_subset_final_sum_r": -9.206024628383288,
+    "counterfactual_subset_exit_at_nonsupport_sum_r": 4.428603657,
+    "counterfactual_difference_r": 13.634628285383288,
+    "counterfactual_warning": "Descriptive hindsight comparison only. It does not authorize delivery->exit or M15 non-support->exit."
+  },
+  "winner_same_event_warning": {
+    "winners": 103,
+    "winners_with_favorable_liquidity_delivery": 101,
+    "winners_with_post_delivery_m15_nonsupport": 80,
+    "interpretation": "The same delivery + M15 wobble appears in many winners, so it cannot be promoted to an automatic exit rule."
+  },
+  "m5_support_at_entry": {
+    "COUNTER": {
+      "True": {
+        "n": 181,
+        "sum_r": 14.149118830006124,
+        "avg_r": 0.0781719272376029,
+        "wins": 69,
+        "losses": 112,
+        "hard_sl": 78,
+        "hard_sl_rate": 0.430939226519337
+      },
+      "False": {
+        "n": 75,
+        "sum_r": -1.8919394792171262,
+        "avg_r": -0.025225859722895018,
+        "wins": 23,
+        "losses": 52,
+        "hard_sl": 48,
+        "hard_sl_rate": 0.64
+      }
+    },
+    "WITH_PARENT": {
+      "True": {
+        "n": 31,
+        "sum_r": 21.092392447386644,
+        "avg_r": 0.6803997563673111,
+        "wins": 7,
+        "losses": 24,
+        "hard_sl": 15,
+        "hard_sl_rate": 0.4838709677419355
+      },
+      "False": {
+        "n": 18,
+        "sum_r": -12.843589042284208,
+        "avg_r": -0.7135327245713449,
+        "wins": 4,
+        "losses": 14,
+        "hard_sl": 12,
+        "hard_sl_rate": 0.6666666666666666
+      }
+    }
+  },
+  "authorization_class": {
+    "FIRST": {
+      "n": 203,
+      "sum_r": 38.24401422750549,
+      "avg_r": 0.18839415875618468,
+      "wins": 70,
+      "losses": 133,
+      "by_branch": {
+        "COUNTER": {
+          "n": 169,
+          "sum_r": 21.197486406957623,
+          "avg_r": 0.12542891365063683,
+          "wins": 62,
+          "losses": 107
+        },
+        "WITH_PARENT": {
+          "n": 34,
+          "sum_r": 17.04652782054787,
+          "avg_r": 0.5013684653102315,
+          "wins": 8,
+          "losses": 26
+        }
+      }
+    },
+    "FRESH_REAUTH": {
+      "n": 102,
+      "sum_r": -17.738031471614057,
+      "avg_r": -0.17390226932954958,
+      "wins": 33,
+      "losses": 69,
+      "by_branch": {
+        "COUNTER": {
+          "n": 87,
+          "sum_r": -8.940307056168624,
+          "avg_r": -0.10276215007090372,
+          "wins": 30,
+          "losses": 57
+        },
+        "WITH_PARENT": {
+          "n": 15,
+          "sum_r": -8.797724415445435,
+          "avg_r": -0.5865149610296957,
+          "wins": 3,
+          "losses": 12
+        }
+      }
+    }
+  },
+  "monthly": {
+    "2024-01": {
+      "n": 13,
+      "sum_r": -2.677441179946222,
+      "avg_r": -0.20595701384201706,
+      "wins": 4,
+      "losses": 9,
+      "hard_sl": 3
+    },
+    "2024-02": {
+      "n": 28,
+      "sum_r": 0.6227218096995188,
+      "avg_r": 0.02224006463212567,
+      "wins": 13,
+      "losses": 15,
+      "hard_sl": 13
+    },
+    "2024-03": {
+      "n": 23,
+      "sum_r": 5.856526182718186,
+      "avg_r": 0.25463157316166024,
+      "wins": 6,
+      "losses": 17,
+      "hard_sl": 14
+    },
+    "2024-04": {
+      "n": 20,
+      "sum_r": -1.923510060797202,
+      "avg_r": -0.0961755030398601,
+      "wins": 7,
+      "losses": 13,
+      "hard_sl": 11
+    },
+    "2024-05": {
+      "n": 28,
+      "sum_r": 4.685499699841226,
+      "avg_r": 0.1673392749943295,
+      "wins": 8,
+      "losses": 20,
+      "hard_sl": 15
+    },
+    "2024-06": {
+      "n": 29,
+      "sum_r": 9.761653224752877,
+      "avg_r": 0.33660873188803025,
+      "wins": 13,
+      "losses": 16,
+      "hard_sl": 14
+    },
+    "2024-07": {
+      "n": 21,
+      "sum_r": 9.427790422747739,
+      "avg_r": 0.44894240108322564,
+      "wins": 8,
+      "losses": 13,
+      "hard_sl": 11
+    },
+    "2024-08": {
+      "n": 21,
+      "sum_r": 2.70201116831414,
+      "avg_r": 0.12866719849114952,
+      "wins": 11,
+      "losses": 10,
+      "hard_sl": 8
+    },
+    "2024-09": {
+      "n": 25,
+      "sum_r": 5.162707009300248,
+      "avg_r": 0.2065082803720099,
+      "wins": 8,
+      "losses": 17,
+      "hard_sl": 13
+    },
+    "2024-10": {
+      "n": 39,
+      "sum_r": -20.66604209344247,
+      "avg_r": -0.5298985152164736,
+      "wins": 7,
+      "losses": 32,
+      "hard_sl": 26
+    },
+    "2024-11": {
+      "n": 29,
+      "sum_r": -5.219110214454096,
+      "avg_r": -0.1799693177397964,
+      "wins": 9,
+      "losses": 20,
+      "hard_sl": 13
+    },
+    "2024-12": {
+      "n": 29,
+      "sum_r": 12.773176787157489,
+      "avg_r": 0.4404543719709479,
+      "wins": 9,
+      "losses": 20,
+      "hard_sl": 12
+    }
+  },
+  "worst_parents": [
+    {
+      "n": 19,
+      "sum_r": -10.056186486719268,
+      "avg_r": -0.5292729729852246,
+      "wins": 3,
+      "losses": 16,
+      "parent_id": "2024OOS-MP098",
+      "hard_sl": 15,
+      "fresh_reauth": 11
+    },
+    {
+      "n": 12,
+      "sum_r": -8.638626706377542,
+      "avg_r": -0.7198855588647951,
+      "wins": 1,
+      "losses": 11,
+      "parent_id": "2024OOS-MP107",
+      "hard_sl": 7,
+      "fresh_reauth": 6
+    },
+    {
+      "n": 10,
+      "sum_r": -7.937958862265856,
+      "avg_r": -0.7937958862265856,
+      "wins": 0,
+      "losses": 10,
+      "parent_id": "2024OOS-MP087",
+      "hard_sl": 7,
+      "fresh_reauth": 5
+    },
+    {
+      "n": 10,
+      "sum_r": -4.248852740577206,
+      "avg_r": -0.4248852740577206,
+      "wins": 2,
+      "losses": 8,
+      "parent_id": "2024OOS-MP043",
+      "hard_sl": 6,
+      "fresh_reauth": 5
+    },
+    {
+      "n": 5,
+      "sum_r": -4.119442420854173,
+      "avg_r": -0.8238884841708346,
+      "wins": 1,
+      "losses": 4,
+      "parent_id": "2024OOS-MP059",
+      "hard_sl": 4,
+      "fresh_reauth": 3
+    },
+    {
+      "n": 6,
+      "sum_r": -4.115375998353769,
+      "avg_r": -0.6858959997256281,
+      "wins": 0,
+      "losses": 6,
+      "parent_id": "2024OOS-MP097",
+      "hard_sl": 3,
+      "fresh_reauth": 2
+    },
+    {
+      "n": 4,
+      "sum_r": -4.038873228620136,
+      "avg_r": -1.009718307155034,
+      "wins": 0,
+      "losses": 4,
+      "parent_id": "2024OOS-MP102",
+      "hard_sl": 4,
+      "fresh_reauth": 3
+    },
+    {
+      "n": 5,
+      "sum_r": -3.610147288733844,
+      "avg_r": -0.7220294577467687,
+      "wins": 1,
+      "losses": 4,
+      "parent_id": "2024OOS-MP033",
+      "hard_sl": 3,
+      "fresh_reauth": 2
+    },
+    {
+      "n": 14,
+      "sum_r": -3.3029811963443727,
+      "avg_r": -0.23592722831031235,
+      "wins": 2,
+      "losses": 12,
+      "parent_id": "2024OOS-MP020",
+      "hard_sl": 10,
+      "fresh_reauth": 9
+    },
+    {
+      "n": 3,
+      "sum_r": -3.234626428621011,
+      "avg_r": -1.078208809540337,
+      "wins": 0,
+      "losses": 3,
+      "parent_id": "2024OOS-MP070",
+      "hard_sl": 3,
+      "fresh_reauth": 1
+    },
+    {
+      "n": 3,
+      "sum_r": -3.0199840473582817,
+      "avg_r": -1.0066613491194272,
+      "wins": 0,
+      "losses": 3,
+      "parent_id": "2024OOS-MP066",
+      "hard_sl": 3,
+      "fresh_reauth": 1
+    },
+    {
+      "n": 3,
+      "sum_r": -3.014878350519841,
+      "avg_r": -1.0049594501732804,
+      "wins": 0,
+      "losses": 3,
+      "parent_id": "2024OOS-MP044",
+      "hard_sl": 3,
+      "fresh_reauth": 2
+    }
+  ],
+  "top_winner_dependence": {
+    "top_realized_r": [
+      16.102564102568707,
+      13.59609120521093,
+      7.802083333333971,
+      7.483346872461437,
+      7.318936877075797,
+      7.179687499999832,
+      6.877697841726825,
+      5.638671875000187,
+      5.529616724738848,
+      5.518181818182216
+    ],
+    "total_r": 20.505982755891434,
+    "total_r_after_removing_top_winners": {
+      "1": 4.403418653322728,
+      "3": -16.994755885222173,
+      "5": -31.797039634759404,
+      "10": -62.540895394407315
+    }
+  },
+  "remap_decisions": [
+    {
+      "gate_no": 26,
+      "at": "2024-02-28 12:00:00",
+      "kind": "REMAP_REQUIRED",
+      "branch": "COUNTER",
+      "child_id": "2024OOS-COU0046",
+      "decision": "REMAP",
+      "reason": "기존 counter short 방향과 새로 형성된 MIG_DOWN Parent가 일치하고 H1/M15/M5도 DOWN. 원래 structural origin은 유지한 채 WITH_NEW_PARENT_JOURNEY로 재분류해 보유",
+      "state_before": "REMAP_REQUIRED",
+      "state_after": "OPEN"
+    },
+    {
+      "gate_no": 105,
+      "at": "2024-09-19 12:00:00",
+      "kind": "REMAP_REQUIRED",
+      "branch": "COUNTER",
+      "child_id": "2024OOS-COU0236",
+      "decision": "REMAP",
+      "reason": "Precommitted AI policy: 새 causal Parent 방향이 살아있는 Child 방향과 일치하므로 원래 structural origin을 유지한 채 새 Parent journey로 재분류.",
+      "state_before": "REMAP_REQUIRED",
+      "state_after": "OPEN"
+    }
+  ],
+  "research_conclusions": [
+    "Primary loss-conversion opportunity is not wider SL or fixed TP; it is better causal interpretation before/around entry and after meaningful delivery.",
+    "Fast no-progress losses are mostly an entry-arrival/acceptance problem: H4 can be strong while the local price response at the execution location is not accepting the Child side.",
+    "Counter losses include both bridge-never-opened failures and successful local bridges that completed meaningful delivery before later giving everything back.",
+    "With-Parent losses more often indicate premature continuation entry while the H1/M15 repair is not actually finished.",
+    "Fresh reauthorization underperformed first authorization in aggregate, but profitable months contain large reauthorization winners; do not add retry limits. Research new-auction versus exhausted-campaign semantics instead.",
+    "Favorable liquidity delivery is a candidate AI review event, not TP authority. The AI must distinguish continued acceptance/expansion from Parent-side re-acceptance."
+  ],
+  "next_research_contract": [
+    "ENTRY ARRIVAL/ACCEPTANCE: compare fast no-progress losses against robust winners at the same causal chart inputs; study whether price accepts/rejects the M5 execution location without converting M5 consensus into a mandatory filter.",
+    "DELIVERY/JOURNEY REVIEW: compare 1R+ giveback losses against large winners after favorable liquidity/landmark delivery; identify chart-native semantics of expansion versus role-completion, without fixed R/TP/trailing rules.",
+    "REAUTH/CAMPAIGN EXHAUSTION: distinguish genuinely new auction information from repeated oscillation inside an exhausted Parent campaign; no retry counts/cooldowns.",
+    "BRANCH-SPECIFIC SEMANTICS: Counter asks whether local bridge actually opened / completed; With-Parent asks whether repair truly ended and Parent-side acceptance re-emerged.",
+    "Only after those studies, freeze any new ENTRY_REVIEW or PROGRESSION_REVIEW AI scheduler event and rerun all consumed data. Do not open 2025-07 yet."
+  ]
+}

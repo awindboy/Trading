@@ -1,11 +1,12 @@
 # V9 Research Instructions — Current Authority
 
-Last synchronized: `2026-09-12`
+Last synchronized: `2026-09-13`
 Status: `ACTIVE / CONTINUOUS HIERARCHICAL MARKET-FLOW GRAMMAR`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
 Consumed answer-sheet data: `2025-01 through 2025-06`, `2026-01 through 2026-02`
+Consumed postmortem data: `2024-01 through 2024-12` (`tick-AI causal replay`; no longer OOS/future-hidden)
 Future-hidden: `2025-07 LOCKED`
 Untouched final reserve: `GOLD# 2021`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
@@ -28,14 +29,16 @@ Read in this order:
 10. `docs/ea/v9/V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md`
 11. `docs/ea/v9/V9_AI_REVIEW_REMAP_PACKET_AND_SCHEDULER_PROTOCOL_20260912.md`
 12. `docs/ea/v9/V9_AI_EXTERNAL_DECISION_AND_2024_TICK_VALIDATION_CHECKPOINT_20260912.md`
-13. `docs/ea/v9/results/V9_MARKET_FLOW_ATLAS_MASTER_LEDGER_20260912.md`
-14. `docs/ea/v9/results/V9_MARKET_FLOW_GRAMMAR_RESEARCH_CHRONICLE_20260912.md`
-15. `docs/ea/v9/results/V9_DIFFICULT_MONTH_AND_AMBIGUITY_RESOLUTION_STUDY_20260912.md`
-16. `docs/ea/v9/V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
-17. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
-18. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
-19. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md`
-20. current code/tool parity state.
+13. `docs/ea/v9/V9_2024_TICK_AI_TRADING_AND_LOSS_POSTMORTEM_CHECKPOINT_20260913.md`
+14. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md`
+15. `docs/ea/v9/results/V9_MARKET_FLOW_ATLAS_MASTER_LEDGER_20260912.md`
+16. `docs/ea/v9/results/V9_MARKET_FLOW_GRAMMAR_RESEARCH_CHRONICLE_20260912.md`
+17. `docs/ea/v9/results/V9_DIFFICULT_MONTH_AND_AMBIGUITY_RESOLUTION_STUDY_20260912.md`
+18. `docs/ea/v9/V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
+19. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
+20. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
+21. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md` (historical; newer contract wins where conflicting)
+22. current code/tool parity state.
 
 If older postmortems/pipeline documents conflict with the current Market Flow Grammar authority, the current authority wins.
 
@@ -200,20 +203,24 @@ This is implementation causality, not future edge. Production authority and EA a
 
 ## What to research next
 
-Do not resume setup mining and do not open July yet.
+Do not open July and do not turn the 2024 postmortem into fixed filters.
 
-The deterministic causal core and AI gate-envelope/scheduler mechanics have passed consumed-data validation. The 2024 tick archive has also passed exact M1 execution-source parity.
+2024 is now consumed postmortem data. The next research target is **Grammar-driven loss conversion while preserving large winners**.
 
 Current order:
 
-1. freeze the chart-native AI review/remap attachment contract and bind its MAP identity/hash to the same causal request fingerprint;
-2. freeze the actual AI semantic review instruction / model-role contract for `HOLD / EXIT / REMAP` without adding market thresholds;
-3. run consumed periods through that exact real AI input contract rather than the synthetic-EXIT mechanics harness;
-4. verify semantic decisions cannot bypass pending execution/review/remap gates or the continuous Hard-SL guard;
-5. freeze packet/chart/prompt/model-role versions and hashes;
-6. only then explicitly decide again whether future-hidden `2025-07` can be unlocked.
+1. `ENTRY ARRIVAL / ACCEPTANCE`: paired chart study of fast/no-progress losses versus robust winners. Determine whether price actually accepts the Child side at the execution location; do not convert M5 consensus into a mandatory gate.
+2. `DELIVERY / JOURNEY REVIEW`: compare +1R-or-more giveback losses with large winners after favorable liquidity/landmark delivery. Delivery is a review-context candidate, not TP/trailing authority.
+3. `FRESH REAUTH / CAMPAIGN EXHAUSTION`: distinguish genuinely new auction/route information from repeated oscillation inside an exhausted Parent campaign; no retry count/cooldown.
+4. compress branch-specific semantics for `COUNTER Local-Bridge` and `WITH_PARENT repair/continuation`.
+5. freeze the causal chart-native attachment and AI model-role/prompt only after those paired studies.
+6. if evidence supports new `ENTRY_CONTEXT_REVIEW` or `DELIVERY/PROGRESSION_REVIEW` events, implement them as research-only candidates and replay all consumed data.
+7. freeze implementation/packet/chart/prompt/model-role versions and hashes.
+8. only then explicitly decide again whether future-hidden `2025-07` can be unlocked.
 
-The current future-hidden gate decision is `NOT SATISFIED YET`.
+The current future-hidden gate decision is `NOT SATISFIED`.
+
+2024 must never again be cited as untouched/OOS validation after this postmortem.
 
 ## Do not do
 
@@ -264,3 +271,24 @@ actual REMAP action path: PASS
 The validated v1 AI request is the deterministic causal **gate envelope**. It does not yet freeze the chart-native MAP attachment or the actual AI semantic decision instruction/model role. Because chart images remain primary AI semantic input under current tooling authority, synthetic EXIT decisions cannot authorize hidden strategy validation.
 
 `2025-07` remains LOCKED.
+
+## 2026-09-13 2024 tick-AI trading / loss postmortem checkpoint
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+```text
+2024 closed trades            305
+2024 total R               +20.51R
+2024 profit factor           1.118
+2024 losses                   202
+Hard SL                       153
+AI loss exits                  49
+fast/no-progress Hard SL       45
+MFE>=1R then Hard SL           21
+strategy runtime              v9-strategy-state-machine-5
+consumed 594-gate parity      PASS / exact hashes
+```
+
+No new strategy threshold is authorized. The current research contract is `V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md`.
+
+`2025-07` remains LOCKED; `2021` remains untouched.

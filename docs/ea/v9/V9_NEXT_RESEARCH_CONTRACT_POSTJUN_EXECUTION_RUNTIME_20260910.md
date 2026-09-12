@@ -142,3 +142,13 @@ Active contract now:
 ```
 
 Synthetic EXIT mechanics are not strategy-performance authority.
+
+## 2026-09-13 superseding next-research contract
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+This document remains historical/runtime evidence. Where its "next research" sequence conflicts with the newer postmortem contract, the current authority is:
+
+`docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md`
+
+The deterministic runtime, dual-clock, Hard-SL, and fail-closed requirements remain fully retained.

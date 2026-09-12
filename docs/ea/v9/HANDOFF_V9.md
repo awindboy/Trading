@@ -1,16 +1,17 @@
 # V9 Development Handoff
 
-Last updated: `2026-09-12`
+Last updated: `2026-09-13`
 Status: `ACTIVE / CONTINUOUS HIERARCHICAL MARKET-FLOW GRAMMAR`
-Current phase: `AI GATE-ENVELOPE/SCHEDULER MECHANICS ACCEPTED -> CHART-NATIVE AI DECISION CONTRACT GATE`
+Current phase: `2024 LOSS POSTMORTEM COMPLETE -> GRAMMAR LOSS-CONVERSION RESEARCH`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
 Consumed: `2025-01 through 2025-06`, `2026-01 through 2026-02`
+Consumed postmortem: `2024-01 through 2024-12`
 Future-hidden: `2025-07 LOCKED`
 Untouched reserve: `GOLD# 2021`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
-GitHub base HEAD for this handoff bundle: `b7ad4da10383699a38434a163a5e8e72db15b5d5`
+GitHub base HEAD for this handoff bundle: `55fca94794e00cdb3b83d410f3d71143f9beb171`
 
 ## Why the project pivoted
 
@@ -325,3 +326,43 @@ The AI gate-envelope/scheduler mechanics passed the complete consumed 594-gate r
 2024 tick execution-source audit passed exact M1 OHLC/TICKVOL parity across `344,185` covered minutes.
 
 This does **not** freeze the real discretionary AI semantic path: chart-native MAP attachment + actual AI review instruction/model-role contract remain the next gate. Future-hidden July remains locked.
+
+## 2026-09-13 2024 tick-AI trading / loss postmortem handoff
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+2024 GOLD# was replayed causally with historical BID/ASK tick execution and manual chart-native AI decisions. The measured checkpoint was `305` closed trades, `+20.51R`, `33.77%` win rate, and `PF 1.118`.
+
+Because 2024 outcomes have now been opened and used for postmortem research, **2024 is CONSUMED POSTMORTEM DATA from this checkpoint forward**. Do not cite it again as untouched/OOS/future-hidden validation.
+
+Loss decomposition showed:
+
+```text
+202 losses total
+153 Hard SL
+49 AI loss exits
+45 fast/no-progress Hard SL (<=60m and MFE<0.25R, postmortem bucket only)
+21 Hard SL after MFE>=1R
+```
+
+The most important gap is not a new fixed exit rule. `152 / 153` Hard-SL trades ended before an AI semantic review could act. Current research therefore moves to Grammar-driven loss conversion:
+
+```text
+ENTRY ARRIVAL / ACCEPTANCE
+-> DELIVERY / JOURNEY REVIEW
+-> FRESH REAUTH / CAMPAIGN EXHAUSTION
+-> branch-specific semantic compression
+-> chart-native input + AI model-role freeze
+-> consumed causal replay
+```
+
+No `M5` mandatory filter, fixed-R management, delivery TP, retry cap, cooldown, or Parent-specific trade cap is authorized.
+
+2024 replay also exposed a runtime REMAP bug. `v9-strategy-state-machine-5` makes `WITH_NEW_PARENT_JOURNEY` use same-direction new-Parent journey damage orientation while preserving the original structural origin. The v5 consumed `2025H1 + 2026JF` 594-gate replay remains byte-identical to the accepted gate-driven ledgers.
+
+Read next:
+
+- `V9_2024_TICK_AI_TRADING_AND_LOSS_POSTMORTEM_CHECKPOINT_20260913.md`
+- `V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md`
+
+`2025-07` remains LOCKED. `GOLD# 2021` remains untouched.

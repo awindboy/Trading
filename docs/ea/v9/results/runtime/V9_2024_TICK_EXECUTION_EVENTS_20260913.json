@@ -1,0 +1,3692 @@
+[
+  {
+    "at": "2024-01-17 04:35:54.817000",
+    "child_id": "2024OOS-COU0003",
+    "kind": "ENTRY_FILL",
+    "price": 2028.27
+  },
+  {
+    "at": "2024-01-17 05:43:59.511000",
+    "child_id": "2024OOS-COU0003",
+    "kind": "HARD_SL",
+    "price": 2024.13
+  },
+  {
+    "at": "2024-01-17 10:40:26.720000",
+    "child_id": "2024OOS-COU0004",
+    "kind": "ENTRY_FILL",
+    "price": 2023.51
+  },
+  {
+    "at": "2024-01-17 15:45:00.097000",
+    "child_id": "2024OOS-COU0004",
+    "kind": "AI_EXIT",
+    "price": 2022.32
+  },
+  {
+    "at": "2024-01-18 04:49:33.169000",
+    "child_id": "2024OOS-COU0005",
+    "kind": "ENTRY_FILL",
+    "price": 2008.31
+  },
+  {
+    "at": "2024-01-18 10:00:00.066000",
+    "child_id": "2024OOS-COU0005",
+    "kind": "AI_EXIT",
+    "price": 2012.29
+  },
+  {
+    "at": "2024-01-19 08:26:16.285000",
+    "child_id": "2024OOS-WIT0002",
+    "kind": "ENTRY_FILL",
+    "price": 2023.01
+  },
+  {
+    "at": "2024-01-19 09:18:09.958000",
+    "child_id": "2024OOS-WIT0002",
+    "kind": "HARD_SL",
+    "price": 2025.47
+  },
+  {
+    "at": "2024-01-22 15:50:06.358000",
+    "child_id": "2024OOS-COU0006",
+    "kind": "ENTRY_FILL",
+    "price": 2022.17
+  },
+  {
+    "at": "2024-01-22 16:06:54.101000",
+    "child_id": "2024OOS-COU0006",
+    "kind": "HARD_SL",
+    "price": 2020.98
+  },
+  {
+    "at": "2024-01-22 18:17:38.516000",
+    "child_id": "2024OOS-WIT0003",
+    "kind": "ENTRY_FILL",
+    "price": 2022.45
+  },
+  {
+    "at": "2024-01-23 05:45:00.254000",
+    "child_id": "2024OOS-WIT0003",
+    "kind": "AI_EXIT",
+    "price": 2025.32
+  },
+  {
+    "at": "2024-01-23 11:17:05.484000",
+    "child_id": "2024OOS-COU0007",
+    "kind": "ENTRY_FILL",
+    "price": 2029.54
+  },
+  {
+    "at": "2024-01-23 16:00:00.060000",
+    "child_id": "2024OOS-COU0007",
+    "kind": "AI_EXIT",
+    "price": 2025.14
+  },
+  {
+    "at": "2024-01-24 02:49:55.759000",
+    "child_id": "2024OOS-COU0008",
+    "kind": "ENTRY_FILL",
+    "price": 2027.52
+  },
+  {
+    "at": "2024-01-24 04:00:00.122000",
+    "child_id": "2024OOS-COU0008",
+    "kind": "AI_EXIT",
+    "price": 2027.39
+  },
+  {
+    "at": "2024-01-25 02:10:35.926000",
+    "child_id": "2024OOS-COU0010",
+    "kind": "ENTRY_FILL",
+    "price": 2015.47
+  },
+  {
+    "at": "2024-01-25 15:00:00.100000",
+    "child_id": "2024OOS-COU0010",
+    "kind": "AI_EXIT",
+    "price": 2013.55
+  },
+  {
+    "at": "2024-01-25 15:49:21.824000",
+    "child_id": "2024OOS-COU0011",
+    "kind": "ENTRY_FILL",
+    "price": 2017.58
+  },
+  {
+    "at": "2024-01-25 20:00:00.361000",
+    "child_id": "2024OOS-COU0011",
+    "kind": "AI_EXIT",
+    "price": 2014.88
+  },
+  {
+    "at": "2024-01-26 23:32:00.627000",
+    "child_id": "2024OOS-COU0013",
+    "kind": "ENTRY_FILL",
+    "price": 2018.41
+  },
+  {
+    "at": "2024-01-29 02:15:00.181000",
+    "child_id": "2024OOS-COU0013",
+    "kind": "AI_EXIT",
+    "price": 2020.84
+  },
+  {
+    "at": "2024-01-29 19:49:15.169000",
+    "child_id": "2024OOS-WIT0004",
+    "kind": "ENTRY_FILL",
+    "price": 2029.36
+  },
+  {
+    "at": "2024-01-29 20:30:00.091000",
+    "child_id": "2024OOS-WIT0004",
+    "kind": "AI_EXIT",
+    "price": 2026.15
+  },
+  {
+    "at": "2024-01-30 22:08:37.945000",
+    "child_id": "2024OOS-WIT0005",
+    "kind": "ENTRY_FILL",
+    "price": 2035.83
+  },
+  {
+    "at": "2024-01-31 03:45:01.192000",
+    "child_id": "2024OOS-WIT0005",
+    "kind": "AI_EXIT",
+    "price": 2035.24
+  },
+  {
+    "at": "2024-01-31 08:15:33.447000",
+    "child_id": "2024OOS-WIT0006",
+    "kind": "ENTRY_FILL",
+    "price": 2035.02
+  },
+  {
+    "at": "2024-02-02 03:32:10.307000",
+    "child_id": "2024OOS-COU0018",
+    "kind": "ENTRY_FILL",
+    "price": 2054.05
+  },
+  {
+    "at": "2024-02-02 16:00:00.015000",
+    "child_id": "2024OOS-COU0018",
+    "kind": "AI_EXIT",
+    "price": 2031.9
+  },
+  {
+    "at": "2024-02-02 22:01:44.093000",
+    "child_id": "2024OOS-COU0019",
+    "kind": "ENTRY_FILL",
+    "price": 2037.37
+  },
+  {
+    "at": "2024-02-05 01:00:05.066000",
+    "child_id": "2024OOS-COU0019",
+    "kind": "AI_EXIT",
+    "price": 2039.58
+  },
+  {
+    "at": "2024-02-05 14:30:50.472000",
+    "child_id": "2024OOS-COU0020",
+    "kind": "ENTRY_FILL",
+    "price": 2024.91
+  },
+  {
+    "at": "2024-02-05 15:21:24.902000",
+    "child_id": "2024OOS-COU0020",
+    "kind": "HARD_SL",
+    "price": 2020.57
+  },
+  {
+    "at": "2024-02-06 10:15:33.803000",
+    "child_id": "2024OOS-WIT0009",
+    "kind": "ENTRY_FILL",
+    "price": 2026.04
+  },
+  {
+    "at": "2024-02-06 14:00:00.045000",
+    "child_id": "2024OOS-WIT0009",
+    "kind": "AI_EXIT",
+    "price": 2026.91
+  },
+  {
+    "at": "2024-02-07 13:15:16.155000",
+    "child_id": "2024OOS-COU0022",
+    "kind": "ENTRY_FILL",
+    "price": 2033.72
+  },
+  {
+    "at": "2024-02-07 13:16:35.052000",
+    "child_id": "2024OOS-COU0022",
+    "kind": "HARD_SL",
+    "price": 2034.47
+  },
+  {
+    "at": "2024-02-07 13:41:35.494000",
+    "child_id": "2024OOS-WIT0010",
+    "kind": "ENTRY_FILL",
+    "price": 2034.67
+  },
+  {
+    "at": "2024-02-07 14:12:27.631000",
+    "child_id": "2024OOS-WIT0010",
+    "kind": "HARD_SL",
+    "price": 2032.69
+  },
+  {
+    "at": "2024-02-07 14:41:34.956000",
+    "child_id": "2024OOS-COU0023",
+    "kind": "ENTRY_FILL",
+    "price": 2032.94
+  },
+  {
+    "at": "2024-02-07 15:20:23.389000",
+    "child_id": "2024OOS-COU0023",
+    "kind": "HARD_SL",
+    "price": 2034.18
+  },
+  {
+    "at": "2024-02-07 19:17:33.861000",
+    "child_id": "2024OOS-COU0024",
+    "kind": "ENTRY_FILL",
+    "price": 2036.44
+  },
+  {
+    "at": "2024-02-07 22:00:00.097000",
+    "child_id": "2024OOS-COU0024",
+    "kind": "AI_EXIT",
+    "price": 2035.65
+  },
+  {
+    "at": "2024-02-08 05:00:00.198000",
+    "child_id": "2024OOS-COU0025",
+    "kind": "ENTRY_FILL",
+    "price": 2036.18
+  },
+  {
+    "at": "2024-02-08 08:00:00.092000",
+    "child_id": "2024OOS-COU0025",
+    "kind": "AI_EXIT",
+    "price": 2033.67
+  },
+  {
+    "at": "2024-02-09 21:55:07.100000",
+    "child_id": "2024OOS-COU0027",
+    "kind": "ENTRY_FILL",
+    "price": 2024.6
+  },
+  {
+    "at": "2024-02-12 11:00:00.081000",
+    "child_id": "2024OOS-COU0027",
+    "kind": "AI_EXIT",
+    "price": 2023.63
+  },
+  {
+    "at": "2024-02-12 15:23:20.024000",
+    "child_id": "2024OOS-COU0028",
+    "kind": "ENTRY_FILL",
+    "price": 2023.98
+  },
+  {
+    "at": "2024-02-12 15:49:01.846000",
+    "child_id": "2024OOS-COU0028",
+    "kind": "HARD_SL",
+    "price": 2019.95
+  },
+  {
+    "at": "2024-02-12 19:46:05.609000",
+    "child_id": "2024OOS-COU0029",
+    "kind": "ENTRY_FILL",
+    "price": 2017.52
+  },
+  {
+    "at": "2024-02-12 22:00:00.385000",
+    "child_id": "2024OOS-COU0029",
+    "kind": "AI_EXIT",
+    "price": 2019.02
+  },
+  {
+    "at": "2024-02-13 04:17:34.029000",
+    "child_id": "2024OOS-COU0031",
+    "kind": "ENTRY_FILL",
+    "price": 2019.42
+  },
+  {
+    "at": "2024-02-13 05:07:09.537000",
+    "child_id": "2024OOS-COU0031",
+    "kind": "HARD_SL",
+    "price": 2018.11
+  },
+  {
+    "at": "2024-02-14 08:47:09.273000",
+    "child_id": "2024OOS-COU0033",
+    "kind": "ENTRY_FILL",
+    "price": 1991.84
+  },
+  {
+    "at": "2024-02-14 10:06:06.675000",
+    "child_id": "2024OOS-COU0033",
+    "kind": "HARD_SL",
+    "price": 1988.83
+  },
+  {
+    "at": "2024-02-14 14:33:09.874000",
+    "child_id": "2024OOS-COU0034",
+    "kind": "ENTRY_FILL",
+    "price": 1990.1
+  },
+  {
+    "at": "2024-02-14 17:01:22.749000",
+    "child_id": "2024OOS-COU0034",
+    "kind": "HARD_SL",
+    "price": 1985.93
+  },
+  {
+    "at": "2024-02-14 18:47:03.404000",
+    "child_id": "2024OOS-COU0035",
+    "kind": "ENTRY_FILL",
+    "price": 1990.49
+  },
+  {
+    "at": "2024-02-14 21:00:00.081000",
+    "child_id": "2024OOS-COU0035",
+    "kind": "AI_EXIT",
+    "price": 1991.67
+  },
+  {
+    "at": "2024-02-15 07:56:20.896000",
+    "child_id": "2024OOS-COU0037",
+    "kind": "ENTRY_FILL",
+    "price": 1991.97
+  },
+  {
+    "at": "2024-02-16 17:00:00.048000",
+    "child_id": "2024OOS-COU0037",
+    "kind": "AI_EXIT",
+    "price": 1997.96
+  },
+  {
+    "at": "2024-02-16 17:55:30.593000",
+    "child_id": "2024OOS-COU0038",
+    "kind": "ENTRY_FILL",
+    "price": 2007.26
+  },
+  {
+    "at": "2024-02-16 20:00:00.346000",
+    "child_id": "2024OOS-COU0038",
+    "kind": "AI_EXIT",
+    "price": 2013.37
+  },
+  {
+    "at": "2024-02-20 03:29:10.579000",
+    "child_id": "2024OOS-COU0040",
+    "kind": "ENTRY_FILL",
+    "price": 2017.76
+  },
+  {
+    "at": "2024-02-20 03:29:14.042000",
+    "child_id": "2024OOS-COU0040",
+    "kind": "HARD_SL",
+    "price": 2018.14
+  },
+  {
+    "at": "2024-02-20 03:56:09.837000",
+    "child_id": "2024OOS-WIT0013",
+    "kind": "ENTRY_FILL",
+    "price": 2016.87
+  },
+  {
+    "at": "2024-02-21 18:00:00.123000",
+    "child_id": "2024OOS-WIT0013",
+    "kind": "AI_EXIT",
+    "price": 2024.16
+  },
+  {
+    "at": "2024-02-21 22:20:28.175000",
+    "child_id": "2024OOS-WIT0014",
+    "kind": "ENTRY_FILL",
+    "price": 2024.57
+  },
+  {
+    "at": "2024-02-22 16:30:00.069000",
+    "child_id": "2024OOS-WIT0014",
+    "kind": "AI_EXIT",
+    "price": 2025.22
+  },
+  {
+    "at": "2024-02-23 13:02:53.341000",
+    "child_id": "2024OOS-COU0041",
+    "kind": "ENTRY_FILL",
+    "price": 2022.54
+  },
+  {
+    "at": "2024-02-23 16:00:00.139000",
+    "child_id": "2024OOS-COU0041",
+    "kind": "AI_EXIT",
+    "price": 2025.26
+  },
+  {
+    "at": "2024-02-26 12:07:42.302000",
+    "child_id": "2024OOS-COU0043",
+    "kind": "ENTRY_FILL",
+    "price": 2034.4
+  },
+  {
+    "at": "2024-02-26 14:30:00.204000",
+    "child_id": "2024OOS-COU0043",
+    "kind": "AI_EXIT",
+    "price": 2033.3
+  },
+  {
+    "at": "2024-02-26 15:56:15.303000",
+    "child_id": "2024OOS-WIT0015",
+    "kind": "ENTRY_FILL",
+    "price": 2032.62
+  },
+  {
+    "at": "2024-02-26 16:12:13.101000",
+    "child_id": "2024OOS-WIT0015",
+    "kind": "HARD_SL",
+    "price": 2030.68
+  },
+  {
+    "at": "2024-02-26 22:08:52.463000",
+    "child_id": "2024OOS-COU0044",
+    "kind": "ENTRY_FILL",
+    "price": 2031.57
+  },
+  {
+    "at": "2024-02-26 22:25:39.050000",
+    "child_id": "2024OOS-COU0044",
+    "kind": "HARD_SL",
+    "price": 2032.88
+  },
+  {
+    "at": "2024-02-27 15:47:18.651000",
+    "child_id": "2024OOS-COU0045",
+    "kind": "ENTRY_FILL",
+    "price": 2036.43
+  },
+  {
+    "at": "2024-02-28 04:00:00.150000",
+    "child_id": "2024OOS-COU0045",
+    "kind": "AI_EXIT",
+    "price": 2033.57
+  },
+  {
+    "at": "2024-02-28 05:36:40.150000",
+    "child_id": "2024OOS-COU0046",
+    "kind": "ENTRY_FILL",
+    "price": 2031.76
+  },
+  {
+    "at": "2024-02-28 15:21:35.489000",
+    "child_id": "2024OOS-COU0046",
+    "kind": "HARD_SL",
+    "price": 2033.59
+  },
+  {
+    "at": "2024-02-29 07:24:07.750000",
+    "child_id": "2024OOS-COU0047",
+    "kind": "ENTRY_FILL",
+    "price": 2035.16
+  },
+  {
+    "at": "2024-02-29 08:36:03.629000",
+    "child_id": "2024OOS-COU0047",
+    "kind": "HARD_SL",
+    "price": 2037.08
+  },
+  {
+    "at": "2024-03-04 03:15:43.151000",
+    "child_id": "2024OOS-COU0053",
+    "kind": "ENTRY_FILL",
+    "price": 2081.51
+  },
+  {
+    "at": "2024-03-04 09:48:00.051000",
+    "child_id": "2024OOS-COU0053",
+    "kind": "HARD_SL",
+    "price": 2088.27
+  },
+  {
+    "at": "2024-03-04 12:47:53.875000",
+    "child_id": "2024OOS-COU0054",
+    "kind": "ENTRY_FILL",
+    "price": 2084.42
+  },
+  {
+    "at": "2024-03-04 15:55:22.104000",
+    "child_id": "2024OOS-COU0054",
+    "kind": "HARD_SL",
+    "price": 2088.26
+  },
+  {
+    "at": "2024-03-05 03:40:40.451000",
+    "child_id": "2024OOS-COU0055",
+    "kind": "ENTRY_FILL",
+    "price": 2112.55
+  },
+  {
+    "at": "2024-03-05 07:58:41.905000",
+    "child_id": "2024OOS-COU0055",
+    "kind": "HARD_SL",
+    "price": 2119.91
+  },
+  {
+    "at": "2024-03-05 10:06:26.805000",
+    "child_id": "2024OOS-COU0056",
+    "kind": "ENTRY_FILL",
+    "price": 2116.64
+  },
+  {
+    "at": "2024-03-05 10:27:20.405000",
+    "child_id": "2024OOS-COU0056",
+    "kind": "HARD_SL",
+    "price": 2119.88
+  },
+  {
+    "at": "2024-03-05 14:45:03.937000",
+    "child_id": "2024OOS-COU0057",
+    "kind": "ENTRY_FILL",
+    "price": 2122.34
+  },
+  {
+    "at": "2024-03-05 15:09:45.452000",
+    "child_id": "2024OOS-COU0057",
+    "kind": "HARD_SL",
+    "price": 2127.28
+  },
+  {
+    "at": "2024-03-05 18:30:47.351000",
+    "child_id": "2024OOS-COU0058",
+    "kind": "ENTRY_FILL",
+    "price": 2127.05
+  },
+  {
+    "at": "2024-03-06 12:00:00.051000",
+    "child_id": "2024OOS-COU0058",
+    "kind": "AI_EXIT",
+    "price": 2128.85
+  },
+  {
+    "at": "2024-03-06 13:03:50.652000",
+    "child_id": "2024OOS-COU0059",
+    "kind": "ENTRY_FILL",
+    "price": 2126.56
+  },
+  {
+    "at": "2024-03-06 13:35:47.445000",
+    "child_id": "2024OOS-COU0059",
+    "kind": "HARD_SL",
+    "price": 2128.64
+  },
+  {
+    "at": "2024-03-06 23:46:14.162000",
+    "child_id": "2024OOS-COU0060",
+    "kind": "ENTRY_FILL",
+    "price": 2148.03
+  },
+  {
+    "at": "2024-03-07 04:35:50.471000",
+    "child_id": "2024OOS-COU0060",
+    "kind": "HARD_SL",
+    "price": 2152.17
+  },
+  {
+    "at": "2024-03-07 13:32:30.902000",
+    "child_id": "2024OOS-COU0061",
+    "kind": "ENTRY_FILL",
+    "price": 2154.67
+  },
+  {
+    "at": "2024-03-07 15:05:52.704000",
+    "child_id": "2024OOS-COU0061",
+    "kind": "HARD_SL",
+    "price": 2161.41
+  },
+  {
+    "at": "2024-03-07 18:28:30.904000",
+    "child_id": "2024OOS-COU0062",
+    "kind": "ENTRY_FILL",
+    "price": 2157.79
+  },
+  {
+    "at": "2024-03-08 06:00:00.162000",
+    "child_id": "2024OOS-COU0062",
+    "kind": "AI_EXIT",
+    "price": 2157.78
+  },
+  {
+    "at": "2024-03-08 15:21:21.152000",
+    "child_id": "2024OOS-COU0063",
+    "kind": "ENTRY_FILL",
+    "price": 2166.55
+  },
+  {
+    "at": "2024-03-08 15:30:51.013000",
+    "child_id": "2024OOS-COU0063",
+    "kind": "HARD_SL",
+    "price": 2171.12
+  },
+  {
+    "at": "2024-03-08 21:00:26.404000",
+    "child_id": "2024OOS-COU0064",
+    "kind": "ENTRY_FILL",
+    "price": 2175.15
+  },
+  {
+    "at": "2024-03-11 15:45:00.052000",
+    "child_id": "2024OOS-COU0064",
+    "kind": "AI_EXIT",
+    "price": 2183.76
+  },
+  {
+    "at": "2024-03-11 19:01:44.219000",
+    "child_id": "2024OOS-COU0065",
+    "kind": "ENTRY_FILL",
+    "price": 2182.62
+  },
+  {
+    "at": "2024-03-12 16:00:00.042000",
+    "child_id": "2024OOS-COU0065",
+    "kind": "AI_EXIT",
+    "price": 2160.59
+  },
+  {
+    "at": "2024-03-13 00:17:59.204000",
+    "child_id": "2024OOS-COU0066",
+    "kind": "ENTRY_FILL",
+    "price": 2158.89
+  },
+  {
+    "at": "2024-03-13 04:00:00.052000",
+    "child_id": "2024OOS-COU0066",
+    "kind": "AI_EXIT",
+    "price": 2158.52
+  },
+  {
+    "at": "2024-03-13 22:29:47.551000",
+    "child_id": "2024OOS-COU0067",
+    "kind": "ENTRY_FILL",
+    "price": 2173.9
+  },
+  {
+    "at": "2024-03-14 02:56:08.251000",
+    "child_id": "2024OOS-COU0067",
+    "kind": "HARD_SL",
+    "price": 2176.52
+  },
+  {
+    "at": "2024-03-14 03:59:58.402000",
+    "child_id": "2024OOS-COU0068",
+    "kind": "ENTRY_FILL",
+    "price": 2174.73
+  },
+  {
+    "at": "2024-03-14 16:00:00.079000",
+    "child_id": "2024OOS-COU0068",
+    "kind": "AI_EXIT",
+    "price": 2162.59
+  },
+  {
+    "at": "2024-03-15 03:45:51.050000",
+    "child_id": "2024OOS-COU0069",
+    "kind": "ENTRY_FILL",
+    "price": 2162.59
+  },
+  {
+    "at": "2024-03-15 08:00:00.101000",
+    "child_id": "2024OOS-COU0069",
+    "kind": "AI_EXIT",
+    "price": 2169.14
+  },
+  {
+    "at": "2024-03-18 09:30:21.653000",
+    "child_id": "2024OOS-COU0070",
+    "kind": "ENTRY_FILL",
+    "price": 2149.65
+  },
+  {
+    "at": "2024-03-18 20:00:00.351000",
+    "child_id": "2024OOS-COU0070",
+    "kind": "AI_EXIT",
+    "price": 2159.85
+  },
+  {
+    "at": "2024-03-21 11:22:20.553000",
+    "child_id": "2024OOS-COU0071",
+    "kind": "ENTRY_FILL",
+    "price": 2204.54
+  },
+  {
+    "at": "2024-03-22 04:00:00.051000",
+    "child_id": "2024OOS-COU0071",
+    "kind": "AI_EXIT",
+    "price": 2173.58
+  },
+  {
+    "at": "2024-03-27 02:30:01.199000",
+    "child_id": "2024OOS-COU0073",
+    "kind": "ENTRY_FILL",
+    "price": 2177.8
+  },
+  {
+    "at": "2024-03-27 03:05:36.172000",
+    "child_id": "2024OOS-COU0073",
+    "kind": "HARD_SL",
+    "price": 2180.25
+  },
+  {
+    "at": "2024-03-27 14:45:06.681000",
+    "child_id": "2024OOS-COU0074",
+    "kind": "ENTRY_FILL",
+    "price": 2186.92
+  },
+  {
+    "at": "2024-03-28 07:43:10.160000",
+    "child_id": "2024OOS-COU0074",
+    "kind": "HARD_SL",
+    "price": 2197.77
+  },
+  {
+    "at": "2024-03-28 10:26:15.499000",
+    "child_id": "2024OOS-COU0075",
+    "kind": "ENTRY_FILL",
+    "price": 2195.35
+  },
+  {
+    "at": "2024-03-28 12:17:37.901000",
+    "child_id": "2024OOS-COU0075",
+    "kind": "HARD_SL",
+    "price": 2200.84
+  },
+  {
+    "at": "2024-03-28 16:31:42.151000",
+    "child_id": "2024OOS-COU0076",
+    "kind": "ENTRY_FILL",
+    "price": 2207.84
+  },
+  {
+    "at": "2024-03-28 17:26:52.899000",
+    "child_id": "2024OOS-COU0076",
+    "kind": "HARD_SL",
+    "price": 2217.11
+  },
+  {
+    "at": "2024-04-02 05:34:35.004000",
+    "child_id": "2024OOS-COU0079",
+    "kind": "ENTRY_FILL",
+    "price": 2249.61
+  },
+  {
+    "at": "2024-04-02 07:43:12.801000",
+    "child_id": "2024OOS-COU0079",
+    "kind": "HARD_SL",
+    "price": 2255.85
+  },
+  {
+    "at": "2024-04-02 14:45:00.575000",
+    "child_id": "2024OOS-COU0080",
+    "kind": "ENTRY_FILL",
+    "price": 2258.56
+  },
+  {
+    "at": "2024-04-02 16:48:55.003000",
+    "child_id": "2024OOS-COU0080",
+    "kind": "HARD_SL",
+    "price": 2266.85
+  },
+  {
+    "at": "2024-04-02 18:47:22.859000",
+    "child_id": "2024OOS-COU0081",
+    "kind": "ENTRY_FILL",
+    "price": 2258.13
+  },
+  {
+    "at": "2024-04-02 22:48:28.650000",
+    "child_id": "2024OOS-COU0081",
+    "kind": "HARD_SL",
+    "price": 2277.0
+  },
+  {
+    "at": "2024-04-04 08:01:41.415000",
+    "child_id": "2024OOS-COU0083",
+    "kind": "ENTRY_FILL",
+    "price": 2299.37
+  },
+  {
+    "at": "2024-04-04 14:00:00.040000",
+    "child_id": "2024OOS-COU0083",
+    "kind": "AI_EXIT",
+    "price": 2294.65
+  },
+  {
+    "at": "2024-04-04 17:02:36.306000",
+    "child_id": "2024OOS-COU0084",
+    "kind": "ENTRY_FILL",
+    "price": 2293.69
+  },
+  {
+    "at": "2024-04-04 17:27:53.251000",
+    "child_id": "2024OOS-COU0084",
+    "kind": "HARD_SL",
+    "price": 2295.52
+  },
+  {
+    "at": "2024-04-04 17:55:25.801000",
+    "child_id": "2024OOS-WIT0021",
+    "kind": "ENTRY_FILL",
+    "price": 2294.79
+  },
+  {
+    "at": "2024-04-04 22:46:55.251000",
+    "child_id": "2024OOS-WIT0021",
+    "kind": "HARD_SL",
+    "price": 2282.7
+  },
+  {
+    "at": "2024-04-05 08:56:49.851000",
+    "child_id": "2024OOS-WIT0022",
+    "kind": "ENTRY_FILL",
+    "price": 2279.11
+  },
+  {
+    "at": "2024-04-10 15:45:00.001000",
+    "child_id": "2024OOS-WIT0022",
+    "kind": "AI_EXIT",
+    "price": 2338.56
+  },
+  {
+    "at": "2024-04-10 17:59:31.712000",
+    "child_id": "2024OOS-WIT0023",
+    "kind": "ENTRY_FILL",
+    "price": 2346.18
+  },
+  {
+    "at": "2024-04-11 07:45:01.153000",
+    "child_id": "2024OOS-WIT0023",
+    "kind": "AI_EXIT",
+    "price": 2341.55
+  },
+  {
+    "at": "2024-04-11 09:39:02.204000",
+    "child_id": "2024OOS-COU0085",
+    "kind": "ENTRY_FILL",
+    "price": 2338.5
+  },
+  {
+    "at": "2024-04-11 12:00:00.053000",
+    "child_id": "2024OOS-COU0085",
+    "kind": "AI_EXIT",
+    "price": 2328.15
+  },
+  {
+    "at": "2024-04-12 15:25:58.251000",
+    "child_id": "2024OOS-COU0086",
+    "kind": "ENTRY_FILL",
+    "price": 2397.33
+  },
+  {
+    "at": "2024-04-12 16:42:44.202000",
+    "child_id": "2024OOS-COU0086",
+    "kind": "HARD_SL",
+    "price": 2400.53
+  },
+  {
+    "at": "2024-04-17 10:37:41.503000",
+    "child_id": "2024OOS-WIT0024",
+    "kind": "ENTRY_FILL",
+    "price": 2378.47
+  },
+  {
+    "at": "2024-04-17 15:45:00.174000",
+    "child_id": "2024OOS-WIT0024",
+    "kind": "AI_EXIT",
+    "price": 2380.56
+  },
+  {
+    "at": "2024-04-18 17:56:26.751000",
+    "child_id": "2024OOS-COU0091",
+    "kind": "ENTRY_FILL",
+    "price": 2380.34
+  },
+  {
+    "at": "2024-04-19 04:13:23.306000",
+    "child_id": "2024OOS-COU0091",
+    "kind": "HARD_SL",
+    "price": 2392.86
+  },
+  {
+    "at": "2024-04-19 11:40:03.705000",
+    "child_id": "2024OOS-COU0093",
+    "kind": "ENTRY_FILL",
+    "price": 2384.27
+  },
+  {
+    "at": "2024-04-19 11:48:42.563000",
+    "child_id": "2024OOS-COU0093",
+    "kind": "HARD_SL",
+    "price": 2385.37
+  },
+  {
+    "at": "2024-04-19 16:07:47.116000",
+    "child_id": "2024OOS-WIT0028",
+    "kind": "ENTRY_FILL",
+    "price": 2379.12
+  },
+  {
+    "at": "2024-04-22 01:15:00.052000",
+    "child_id": "2024OOS-WIT0028",
+    "kind": "AI_EXIT",
+    "price": 2382.78
+  },
+  {
+    "at": "2024-04-23 04:30:12.951000",
+    "child_id": "2024OOS-COU0094",
+    "kind": "ENTRY_FILL",
+    "price": 2329.56
+  },
+  {
+    "at": "2024-04-23 04:36:47.252000",
+    "child_id": "2024OOS-COU0094",
+    "kind": "HARD_SL",
+    "price": 2322.32
+  },
+  {
+    "at": "2024-04-23 11:37:10",
+    "child_id": "2024OOS-COU0095",
+    "kind": "ENTRY_FILL",
+    "price": 2304.49
+  },
+  {
+    "at": "2024-04-23 12:17:26.259000",
+    "child_id": "2024OOS-COU0095",
+    "kind": "HARD_SL",
+    "price": 2294.75
+  },
+  {
+    "at": "2024-04-25 04:09:08.752000",
+    "child_id": "2024OOS-COU0097",
+    "kind": "ENTRY_FILL",
+    "price": 2318.16
+  },
+  {
+    "at": "2024-04-25 06:10:10.704000",
+    "child_id": "2024OOS-COU0097",
+    "kind": "HARD_SL",
+    "price": 2313.54
+  },
+  {
+    "at": "2024-04-25 16:15:23.809000",
+    "child_id": "2024OOS-COU0098",
+    "kind": "ENTRY_FILL",
+    "price": 2316.43
+  },
+  {
+    "at": "2024-04-25 17:00:00.055000",
+    "child_id": "2024OOS-COU0098",
+    "kind": "AI_EXIT",
+    "price": 2319.05
+  },
+  {
+    "at": "2024-04-25 17:52:51.651000",
+    "child_id": "2024OOS-COU0099",
+    "kind": "ENTRY_FILL",
+    "price": 2337.03
+  },
+  {
+    "at": "2024-04-26 01:00:05.115000",
+    "child_id": "2024OOS-COU0099",
+    "kind": "AI_EXIT",
+    "price": 2331.93
+  },
+  {
+    "at": "2024-04-26 15:02:50.752000",
+    "child_id": "2024OOS-COU0100",
+    "kind": "ENTRY_FILL",
+    "price": 2345.83
+  },
+  {
+    "at": "2024-04-26 20:00:00.050000",
+    "child_id": "2024OOS-COU0100",
+    "kind": "AI_EXIT",
+    "price": 2333.74
+  },
+  {
+    "at": "2024-05-01 21:00:13.171000",
+    "child_id": "2024OOS-WIT0031",
+    "kind": "ENTRY_FILL",
+    "price": 2302.99
+  },
+  {
+    "at": "2024-05-01 21:29:00.512000",
+    "child_id": "2024OOS-WIT0031",
+    "kind": "HARD_SL",
+    "price": 2310.53
+  },
+  {
+    "at": "2024-05-02 18:14:21.402000",
+    "child_id": "2024OOS-COU0103",
+    "kind": "ENTRY_FILL",
+    "price": 2302.44
+  },
+  {
+    "at": "2024-05-03 01:00:05.099000",
+    "child_id": "2024OOS-COU0103",
+    "kind": "AI_EXIT",
+    "price": 2303.87
+  },
+  {
+    "at": "2024-05-03 01:51:15.925000",
+    "child_id": "2024OOS-COU0104",
+    "kind": "ENTRY_FILL",
+    "price": 2304.01
+  },
+  {
+    "at": "2024-05-03 02:05:34.153000",
+    "child_id": "2024OOS-COU0104",
+    "kind": "HARD_SL",
+    "price": 2303.37
+  },
+  {
+    "at": "2024-05-03 04:56:57.875000",
+    "child_id": "2024OOS-COU0105",
+    "kind": "ENTRY_FILL",
+    "price": 2302.32
+  },
+  {
+    "at": "2024-05-03 05:19:53.151000",
+    "child_id": "2024OOS-COU0105",
+    "kind": "HARD_SL",
+    "price": 2300.11
+  },
+  {
+    "at": "2024-05-03 07:23:11.803000",
+    "child_id": "2024OOS-COU0106",
+    "kind": "ENTRY_FILL",
+    "price": 2302.5
+  },
+  {
+    "at": "2024-05-03 09:30:00.154000",
+    "child_id": "2024OOS-COU0106",
+    "kind": "AI_EXIT",
+    "price": 2301.4
+  },
+  {
+    "at": "2024-05-03 19:16:08.309000",
+    "child_id": "2024OOS-COU0108",
+    "kind": "ENTRY_FILL",
+    "price": 2295.25
+  },
+  {
+    "at": "2024-05-06 02:45:01.194000",
+    "child_id": "2024OOS-COU0108",
+    "kind": "AI_EXIT",
+    "price": 2295.18
+  },
+  {
+    "at": "2024-05-06 04:30:01.707000",
+    "child_id": "2024OOS-COU0109",
+    "kind": "ENTRY_FILL",
+    "price": 2307.69
+  },
+  {
+    "at": "2024-05-06 08:00:00.352000",
+    "child_id": "2024OOS-COU0109",
+    "kind": "AI_EXIT",
+    "price": 2309.04
+  },
+  {
+    "at": "2024-05-06 15:21:02.207000",
+    "child_id": "2024OOS-COU0110",
+    "kind": "ENTRY_FILL",
+    "price": 2317.44
+  },
+  {
+    "at": "2024-05-06 15:40:03.502000",
+    "child_id": "2024OOS-COU0110",
+    "kind": "HARD_SL",
+    "price": 2322.54
+  },
+  {
+    "at": "2024-05-07 05:02:10.453000",
+    "child_id": "2024OOS-COU0111",
+    "kind": "ENTRY_FILL",
+    "price": 2323.66
+  },
+  {
+    "at": "2024-05-07 12:00:00.052000",
+    "child_id": "2024OOS-COU0111",
+    "kind": "AI_EXIT",
+    "price": 2315.82
+  },
+  {
+    "at": "2024-05-08 01:38:55.902000",
+    "child_id": "2024OOS-COU0112",
+    "kind": "ENTRY_FILL",
+    "price": 2315.43
+  },
+  {
+    "at": "2024-05-08 03:45:00.025000",
+    "child_id": "2024OOS-COU0112",
+    "kind": "AI_EXIT",
+    "price": 2313.84
+  },
+  {
+    "at": "2024-05-09 05:09:25.052000",
+    "child_id": "2024OOS-COU0114",
+    "kind": "ENTRY_FILL",
+    "price": 2308.21
+  },
+  {
+    "at": "2024-05-09 08:00:00.155000",
+    "child_id": "2024OOS-COU0114",
+    "kind": "AI_EXIT",
+    "price": 2314.49
+  },
+  {
+    "at": "2024-05-10 17:05:45.801000",
+    "child_id": "2024OOS-COU0116",
+    "kind": "ENTRY_FILL",
+    "price": 2373.02
+  },
+  {
+    "at": "2024-05-13 02:00:00.104000",
+    "child_id": "2024OOS-COU0116",
+    "kind": "AI_EXIT",
+    "price": 2361.74
+  },
+  {
+    "at": "2024-05-14 15:08:21.300000",
+    "child_id": "2024OOS-COU0118",
+    "kind": "ENTRY_FILL",
+    "price": 2345.51
+  },
+  {
+    "at": "2024-05-14 15:15:22.049000",
+    "child_id": "2024OOS-COU0118",
+    "kind": "HARD_SL",
+    "price": 2347.59
+  },
+  {
+    "at": "2024-05-15 03:32:41.249000",
+    "child_id": "2024OOS-COU0119",
+    "kind": "ENTRY_FILL",
+    "price": 2356.71
+  },
+  {
+    "at": "2024-05-15 06:11:01.856000",
+    "child_id": "2024OOS-COU0119",
+    "kind": "HARD_SL",
+    "price": 2359.68
+  },
+  {
+    "at": "2024-05-15 08:33:20.749000",
+    "child_id": "2024OOS-COU0120",
+    "kind": "ENTRY_FILL",
+    "price": 2357.24
+  },
+  {
+    "at": "2024-05-15 10:05:27.048000",
+    "child_id": "2024OOS-COU0120",
+    "kind": "HARD_SL",
+    "price": 2361.52
+  },
+  {
+    "at": "2024-05-15 14:16:05.398000",
+    "child_id": "2024OOS-COU0121",
+    "kind": "ENTRY_FILL",
+    "price": 2365.43
+  },
+  {
+    "at": "2024-05-15 15:30:06.907000",
+    "child_id": "2024OOS-COU0121",
+    "kind": "HARD_SL",
+    "price": 2374.78
+  },
+  {
+    "at": "2024-05-16 08:30:12.148000",
+    "child_id": "2024OOS-COU0122",
+    "kind": "ENTRY_FILL",
+    "price": 2392.56
+  },
+  {
+    "at": "2024-05-17 09:00:00.057000",
+    "child_id": "2024OOS-COU0122",
+    "kind": "AI_EXIT",
+    "price": 2381.46
+  },
+  {
+    "at": "2024-05-20 13:45:00.503000",
+    "child_id": "2024OOS-COU0123",
+    "kind": "ENTRY_FILL",
+    "price": 2437.42
+  },
+  {
+    "at": "2024-05-20 20:30:00.003000",
+    "child_id": "2024OOS-COU0123",
+    "kind": "AI_EXIT",
+    "price": 2434.42
+  },
+  {
+    "at": "2024-05-21 01:47:28.313000",
+    "child_id": "2024OOS-WIT0034",
+    "kind": "ENTRY_FILL",
+    "price": 2427.79
+  },
+  {
+    "at": "2024-05-21 03:30:00.553000",
+    "child_id": "2024OOS-WIT0034",
+    "kind": "AI_EXIT",
+    "price": 2425.87
+  },
+  {
+    "at": "2024-05-21 10:52:35.152000",
+    "child_id": "2024OOS-WIT0035",
+    "kind": "ENTRY_FILL",
+    "price": 2417.82
+  },
+  {
+    "at": "2024-05-22 06:45:00.151000",
+    "child_id": "2024OOS-WIT0035",
+    "kind": "AI_EXIT",
+    "price": 2416.25
+  },
+  {
+    "at": "2024-05-22 10:21:37.154000",
+    "child_id": "2024OOS-WIT0036",
+    "kind": "ENTRY_FILL",
+    "price": 2416.71
+  },
+  {
+    "at": "2024-05-22 11:27:09.309000",
+    "child_id": "2024OOS-WIT0036",
+    "kind": "HARD_SL",
+    "price": 2411.47
+  },
+  {
+    "at": "2024-05-22 13:29:19.503000",
+    "child_id": "2024OOS-WIT0037",
+    "kind": "ENTRY_FILL",
+    "price": 2415.85
+  },
+  {
+    "at": "2024-05-22 14:38:20.152000",
+    "child_id": "2024OOS-WIT0037",
+    "kind": "HARD_SL",
+    "price": 2410.55
+  },
+  {
+    "at": "2024-05-23 03:16:03.503000",
+    "child_id": "2024OOS-COU0124",
+    "kind": "ENTRY_FILL",
+    "price": 2382.0
+  },
+  {
+    "at": "2024-05-23 04:11:14.551000",
+    "child_id": "2024OOS-COU0124",
+    "kind": "HARD_SL",
+    "price": 2377.61
+  },
+  {
+    "at": "2024-05-23 13:20:50.451000",
+    "child_id": "2024OOS-COU0125",
+    "kind": "ENTRY_FILL",
+    "price": 2365.02
+  },
+  {
+    "at": "2024-05-23 16:49:14.952000",
+    "child_id": "2024OOS-COU0125",
+    "kind": "HARD_SL",
+    "price": 2354.87
+  },
+  {
+    "at": "2024-05-24 05:01:09.953000",
+    "child_id": "2024OOS-COU0126",
+    "kind": "ENTRY_FILL",
+    "price": 2332.93
+  },
+  {
+    "at": "2024-05-24 05:29:52.452000",
+    "child_id": "2024OOS-COU0126",
+    "kind": "HARD_SL",
+    "price": 2326.64
+  },
+  {
+    "at": "2024-05-29 18:06:39.551000",
+    "child_id": "2024OOS-COU0129",
+    "kind": "ENTRY_FILL",
+    "price": 2339.9
+  },
+  {
+    "at": "2024-05-30 03:37:02.655000",
+    "child_id": "2024OOS-COU0129",
+    "kind": "HARD_SL",
+    "price": 2334.15
+  },
+  {
+    "at": "2024-05-30 07:32:09.405000",
+    "child_id": "2024OOS-COU0130",
+    "kind": "ENTRY_FILL",
+    "price": 2335.15
+  },
+  {
+    "at": "2024-05-30 08:32:43.752000",
+    "child_id": "2024OOS-COU0130",
+    "kind": "HARD_SL",
+    "price": 2327.7
+  },
+  {
+    "at": "2024-05-30 10:17:15.704000",
+    "child_id": "2024OOS-COU0131",
+    "kind": "ENTRY_FILL",
+    "price": 2335.65
+  },
+  {
+    "at": "2024-05-30 15:00:00.055000",
+    "child_id": "2024OOS-COU0131",
+    "kind": "AI_EXIT",
+    "price": 2335.84
+  },
+  {
+    "at": "2024-06-03 05:53:05.648000",
+    "child_id": "2024OOS-COU0133",
+    "kind": "ENTRY_FILL",
+    "price": 2326.17
+  },
+  {
+    "at": "2024-06-03 07:02:17.291000",
+    "child_id": "2024OOS-COU0133",
+    "kind": "HARD_SL",
+    "price": 2320.52
+  },
+  {
+    "at": "2024-06-03 10:38:15.150000",
+    "child_id": "2024OOS-COU0134",
+    "kind": "ENTRY_FILL",
+    "price": 2323.52
+  },
+  {
+    "at": "2024-06-03 15:15:00.055000",
+    "child_id": "2024OOS-COU0134",
+    "kind": "AI_EXIT",
+    "price": 2326.1
+  },
+  {
+    "at": "2024-06-04 05:12:02.149000",
+    "child_id": "2024OOS-COU0135",
+    "kind": "ENTRY_FILL",
+    "price": 2349.42
+  },
+  {
+    "at": "2024-06-04 12:00:00.026000",
+    "child_id": "2024OOS-COU0135",
+    "kind": "AI_EXIT",
+    "price": 2333.55
+  },
+  {
+    "at": "2024-06-04 21:32:01.912000",
+    "child_id": "2024OOS-COU0136",
+    "kind": "ENTRY_FILL",
+    "price": 2326.98
+  },
+  {
+    "at": "2024-06-05 08:00:00.004000",
+    "child_id": "2024OOS-COU0136",
+    "kind": "AI_EXIT",
+    "price": 2337.92
+  },
+  {
+    "at": "2024-06-05 15:18:48.404000",
+    "child_id": "2024OOS-COU0137",
+    "kind": "ENTRY_FILL",
+    "price": 2332.93
+  },
+  {
+    "at": "2024-06-05 15:18:50.948000",
+    "child_id": "2024OOS-COU0137",
+    "kind": "HARD_SL",
+    "price": 2332.35
+  },
+  {
+    "at": "2024-06-06 09:42:56.249000",
+    "child_id": "2024OOS-COU0138",
+    "kind": "ENTRY_FILL",
+    "price": 2366.07
+  },
+  {
+    "at": "2024-06-06 17:00:00.051000",
+    "child_id": "2024OOS-COU0138",
+    "kind": "AI_EXIT",
+    "price": 2360.76
+  },
+  {
+    "at": "2024-06-07 05:39:47.199000",
+    "child_id": "2024OOS-COU0139",
+    "kind": "ENTRY_FILL",
+    "price": 2373.48
+  },
+  {
+    "at": "2024-06-07 06:41:11.749000",
+    "child_id": "2024OOS-COU0139",
+    "kind": "HARD_SL",
+    "price": 2380.03
+  },
+  {
+    "at": "2024-06-07 09:15:01.149000",
+    "child_id": "2024OOS-COU0140",
+    "kind": "ENTRY_FILL",
+    "price": 2377.67
+  },
+  {
+    "at": "2024-06-07 12:00:00.041000",
+    "child_id": "2024OOS-COU0140",
+    "kind": "AI_EXIT",
+    "price": 2347.51
+  },
+  {
+    "at": "2024-06-10 05:25:39.705000",
+    "child_id": "2024OOS-COU0141",
+    "kind": "ENTRY_FILL",
+    "price": 2298.33
+  },
+  {
+    "at": "2024-06-11 05:00:00.030000",
+    "child_id": "2024OOS-COU0141",
+    "kind": "AI_EXIT",
+    "price": 2302.8
+  },
+  {
+    "at": "2024-06-11 10:32:59.003000",
+    "child_id": "2024OOS-COU0142",
+    "kind": "ENTRY_FILL",
+    "price": 2303.98
+  },
+  {
+    "at": "2024-06-11 12:30:00.001000",
+    "child_id": "2024OOS-COU0142",
+    "kind": "AI_EXIT",
+    "price": 2302.45
+  },
+  {
+    "at": "2024-06-11 21:25:43.506000",
+    "child_id": "2024OOS-WIT0038",
+    "kind": "ENTRY_FILL",
+    "price": 2315.01
+  },
+  {
+    "at": "2024-06-12 15:30:09.103000",
+    "child_id": "2024OOS-WIT0038",
+    "kind": "HARD_SL",
+    "price": 2326.51
+  },
+  {
+    "at": "2024-06-13 14:15:04.852000",
+    "child_id": "2024OOS-WIT0039",
+    "kind": "ENTRY_FILL",
+    "price": 2314.06
+  },
+  {
+    "at": "2024-06-13 15:31:40.368000",
+    "child_id": "2024OOS-WIT0039",
+    "kind": "HARD_SL",
+    "price": 2320.07
+  },
+  {
+    "at": "2024-06-14 04:00:32.651000",
+    "child_id": "2024OOS-COU0143",
+    "kind": "ENTRY_FILL",
+    "price": 2304.37
+  },
+  {
+    "at": "2024-06-14 12:00:00.053000",
+    "child_id": "2024OOS-COU0143",
+    "kind": "AI_EXIT",
+    "price": 2317.32
+  },
+  {
+    "at": "2024-06-14 19:00:05.903000",
+    "child_id": "2024OOS-COU0144",
+    "kind": "ENTRY_FILL",
+    "price": 2326.51
+  },
+  {
+    "at": "2024-06-14 20:36:18.851000",
+    "child_id": "2024OOS-COU0144",
+    "kind": "HARD_SL",
+    "price": 2335.58
+  },
+  {
+    "at": "2024-06-14 23:37:00.102000",
+    "child_id": "2024OOS-COU0145",
+    "kind": "ENTRY_FILL",
+    "price": 2332.03
+  },
+  {
+    "at": "2024-06-17 16:00:00.249000",
+    "child_id": "2024OOS-COU0145",
+    "kind": "AI_EXIT",
+    "price": 2319.76
+  },
+  {
+    "at": "2024-06-18 15:48:53.849000",
+    "child_id": "2024OOS-COU0147",
+    "kind": "ENTRY_FILL",
+    "price": 2319.96
+  },
+  {
+    "at": "2024-06-18 20:00:00.151000",
+    "child_id": "2024OOS-COU0147",
+    "kind": "AI_EXIT",
+    "price": 2330.25
+  },
+  {
+    "at": "2024-06-19 03:36:43.198000",
+    "child_id": "2024OOS-COU0148",
+    "kind": "ENTRY_FILL",
+    "price": 2329.01
+  },
+  {
+    "at": "2024-06-19 04:44:51.448000",
+    "child_id": "2024OOS-COU0148",
+    "kind": "HARD_SL",
+    "price": 2330.21
+  },
+  {
+    "at": "2024-06-19 08:18:11.100000",
+    "child_id": "2024OOS-COU0149",
+    "kind": "ENTRY_FILL",
+    "price": 2328.48
+  },
+  {
+    "at": "2024-06-19 10:05:12.101000",
+    "child_id": "2024OOS-COU0149",
+    "kind": "HARD_SL",
+    "price": 2331.77
+  },
+  {
+    "at": "2024-06-19 14:41:04.204000",
+    "child_id": "2024OOS-COU0150",
+    "kind": "ENTRY_FILL",
+    "price": 2330.14
+  },
+  {
+    "at": "2024-06-19 20:00:00.003000",
+    "child_id": "2024OOS-COU0150",
+    "kind": "AI_EXIT",
+    "price": 2329.66
+  },
+  {
+    "at": "2024-06-20 01:00:15.149000",
+    "child_id": "2024OOS-COU0151",
+    "kind": "ENTRY_FILL",
+    "price": 2329.36
+  },
+  {
+    "at": "2024-06-20 01:00:28.248000",
+    "child_id": "2024OOS-COU0151",
+    "kind": "HARD_SL",
+    "price": 2331.23
+  },
+  {
+    "at": "2024-06-20 03:55:32.649000",
+    "child_id": "2024OOS-COU0152",
+    "kind": "ENTRY_FILL",
+    "price": 2329.31
+  },
+  {
+    "at": "2024-06-20 04:00:29.648000",
+    "child_id": "2024OOS-COU0152",
+    "kind": "HARD_SL",
+    "price": 2330.97
+  },
+  {
+    "at": "2024-06-24 04:57:03.804000",
+    "child_id": "2024OOS-COU0154",
+    "kind": "ENTRY_FILL",
+    "price": 2323.49
+  },
+  {
+    "at": "2024-06-24 13:00:00.058000",
+    "child_id": "2024OOS-COU0154",
+    "kind": "AI_EXIT",
+    "price": 2325.02
+  },
+  {
+    "at": "2024-06-24 16:15:01.103000",
+    "child_id": "2024OOS-COU0155",
+    "kind": "ENTRY_FILL",
+    "price": 2327.89
+  },
+  {
+    "at": "2024-06-24 19:00:00.116000",
+    "child_id": "2024OOS-COU0155",
+    "kind": "AI_EXIT",
+    "price": 2327.59
+  },
+  {
+    "at": "2024-06-26 01:37:57.288000",
+    "child_id": "2024OOS-COU0157",
+    "kind": "ENTRY_FILL",
+    "price": 2320.38
+  },
+  {
+    "at": "2024-06-26 04:38:58.253000",
+    "child_id": "2024OOS-COU0157",
+    "kind": "HARD_SL",
+    "price": 2315.11
+  },
+  {
+    "at": "2024-06-26 08:47:15.002000",
+    "child_id": "2024OOS-COU0158",
+    "kind": "ENTRY_FILL",
+    "price": 2313.37
+  },
+  {
+    "at": "2024-06-26 09:04:19.303000",
+    "child_id": "2024OOS-COU0158",
+    "kind": "HARD_SL",
+    "price": 2310.52
+  },
+  {
+    "at": "2024-06-26 13:12:38.709000",
+    "child_id": "2024OOS-COU0159",
+    "kind": "ENTRY_FILL",
+    "price": 2314.16
+  },
+  {
+    "at": "2024-06-26 13:22:48.500000",
+    "child_id": "2024OOS-COU0159",
+    "kind": "HARD_SL",
+    "price": 2309.54
+  },
+  {
+    "at": "2024-06-26 15:53:33.450000",
+    "child_id": "2024OOS-COU0160",
+    "kind": "ENTRY_FILL",
+    "price": 2312.07
+  },
+  {
+    "at": "2024-06-26 16:11:20.951000",
+    "child_id": "2024OOS-COU0160",
+    "kind": "HARD_SL",
+    "price": 2304.32
+  },
+  {
+    "at": "2024-06-27 03:49:18.252000",
+    "child_id": "2024OOS-COU0161",
+    "kind": "ENTRY_FILL",
+    "price": 2298.36
+  },
+  {
+    "at": "2024-06-27 16:00:00.066000",
+    "child_id": "2024OOS-COU0161",
+    "kind": "AI_EXIT",
+    "price": 2322.81
+  },
+  {
+    "at": "2024-06-28 17:00:16.505000",
+    "child_id": "2024OOS-COU0162",
+    "kind": "ENTRY_FILL",
+    "price": 2332.24
+  },
+  {
+    "at": "2024-06-28 19:00:00.051000",
+    "child_id": "2024OOS-COU0162",
+    "kind": "AI_EXIT",
+    "price": 2328.84
+  },
+  {
+    "at": "2024-06-28 20:47:00.445000",
+    "child_id": "2024OOS-COU0163",
+    "kind": "ENTRY_FILL",
+    "price": 2328.27
+  },
+  {
+    "at": "2024-07-01 19:03:41.103000",
+    "child_id": "2024OOS-WIT0042",
+    "kind": "ENTRY_FILL",
+    "price": 2327.56
+  },
+  {
+    "at": "2024-07-02 07:00:00.256000",
+    "child_id": "2024OOS-WIT0042",
+    "kind": "AI_EXIT",
+    "price": 2326.02
+  },
+  {
+    "at": "2024-07-02 09:21:33.701000",
+    "child_id": "2024OOS-WIT0043",
+    "kind": "ENTRY_FILL",
+    "price": 2329.71
+  },
+  {
+    "at": "2024-07-02 10:16:12.053000",
+    "child_id": "2024OOS-WIT0043",
+    "kind": "HARD_SL",
+    "price": 2324.8
+  },
+  {
+    "at": "2024-07-02 16:33:32.651000",
+    "child_id": "2024OOS-COU0165",
+    "kind": "ENTRY_FILL",
+    "price": 2329.64
+  },
+  {
+    "at": "2024-07-02 16:42:32.053000",
+    "child_id": "2024OOS-COU0165",
+    "kind": "HARD_SL",
+    "price": 2332.45
+  },
+  {
+    "at": "2024-07-02 17:58:24.253000",
+    "child_id": "2024OOS-COU0166",
+    "kind": "ENTRY_FILL",
+    "price": 2326.22
+  },
+  {
+    "at": "2024-07-02 20:00:00.307000",
+    "child_id": "2024OOS-COU0166",
+    "kind": "AI_EXIT",
+    "price": 2323.01
+  },
+  {
+    "at": "2024-07-03 05:00:31.751000",
+    "child_id": "2024OOS-COU0167",
+    "kind": "ENTRY_FILL",
+    "price": 2329.57
+  },
+  {
+    "at": "2024-07-03 06:50:33.301000",
+    "child_id": "2024OOS-COU0167",
+    "kind": "HARD_SL",
+    "price": 2332.16
+  },
+  {
+    "at": "2024-07-03 21:15:46.366000",
+    "child_id": "2024OOS-COU0168",
+    "kind": "ENTRY_FILL",
+    "price": 2357.82
+  },
+  {
+    "at": "2024-07-05 03:45:00.060000",
+    "child_id": "2024OOS-COU0168",
+    "kind": "AI_EXIT",
+    "price": 2358.5
+  },
+  {
+    "at": "2024-07-05 13:04:15.403000",
+    "child_id": "2024OOS-COU0169",
+    "kind": "ENTRY_FILL",
+    "price": 2363.14
+  },
+  {
+    "at": "2024-07-05 15:04:54.751000",
+    "child_id": "2024OOS-COU0169",
+    "kind": "HARD_SL",
+    "price": 2367.96
+  },
+  {
+    "at": "2024-07-08 04:09:23.702000",
+    "child_id": "2024OOS-COU0170",
+    "kind": "ENTRY_FILL",
+    "price": 2387.78
+  },
+  {
+    "at": "2024-07-08 20:00:00.104000",
+    "child_id": "2024OOS-COU0170",
+    "kind": "AI_EXIT",
+    "price": 2358.91
+  },
+  {
+    "at": "2024-07-10 19:12:59.324000",
+    "child_id": "2024OOS-COU0172",
+    "kind": "ENTRY_FILL",
+    "price": 2380.98
+  },
+  {
+    "at": "2024-07-11 04:00:00.204000",
+    "child_id": "2024OOS-COU0172",
+    "kind": "AI_EXIT",
+    "price": 2374.39
+  },
+  {
+    "at": "2024-07-12 01:57:03.202000",
+    "child_id": "2024OOS-COU0174",
+    "kind": "ENTRY_FILL",
+    "price": 2413.17
+  },
+  {
+    "at": "2024-07-12 12:00:00.003000",
+    "child_id": "2024OOS-COU0174",
+    "kind": "AI_EXIT",
+    "price": 2407.62
+  },
+  {
+    "at": "2024-07-12 12:51:00.302000",
+    "child_id": "2024OOS-COU0175",
+    "kind": "ENTRY_FILL",
+    "price": 2404.81
+  },
+  {
+    "at": "2024-07-12 17:05:29.050000",
+    "child_id": "2024OOS-COU0175",
+    "kind": "HARD_SL",
+    "price": 2408.26
+  },
+  {
+    "at": "2024-07-15 01:00:14.702000",
+    "child_id": "2024OOS-COU0176",
+    "kind": "ENTRY_FILL",
+    "price": 2413.34
+  },
+  {
+    "at": "2024-07-15 03:00:00.106000",
+    "child_id": "2024OOS-COU0176",
+    "kind": "AI_EXIT",
+    "price": 2408.9
+  },
+  {
+    "at": "2024-07-15 11:31:04.502000",
+    "child_id": "2024OOS-WIT0044",
+    "kind": "ENTRY_FILL",
+    "price": 2408.24
+  },
+  {
+    "at": "2024-07-18 19:45:00.202000",
+    "child_id": "2024OOS-WIT0044",
+    "kind": "AI_EXIT",
+    "price": 2456.04
+  },
+  {
+    "at": "2024-07-22 09:00:20.655000",
+    "child_id": "2024OOS-COU0177",
+    "kind": "ENTRY_FILL",
+    "price": 2402.39
+  },
+  {
+    "at": "2024-07-22 15:15:48.950000",
+    "child_id": "2024OOS-COU0177",
+    "kind": "HARD_SL",
+    "price": 2393.74
+  },
+  {
+    "at": "2024-07-23 17:33:16.450000",
+    "child_id": "2024OOS-WIT0045",
+    "kind": "ENTRY_FILL",
+    "price": 2406.59
+  },
+  {
+    "at": "2024-07-24 04:14:38.102000",
+    "child_id": "2024OOS-WIT0045",
+    "kind": "HARD_SL",
+    "price": 2412.04
+  },
+  {
+    "at": "2024-07-24 05:06:51.120000",
+    "child_id": "2024OOS-WIT0046",
+    "kind": "ENTRY_FILL",
+    "price": 2408.87
+  },
+  {
+    "at": "2024-07-24 05:17:45.401000",
+    "child_id": "2024OOS-WIT0046",
+    "kind": "HARD_SL",
+    "price": 2412.18
+  },
+  {
+    "at": "2024-07-25 15:00:46.504000",
+    "child_id": "2024OOS-COU0180",
+    "kind": "ENTRY_FILL",
+    "price": 2367.96
+  },
+  {
+    "at": "2024-07-25 15:04:42.679000",
+    "child_id": "2024OOS-COU0180",
+    "kind": "HARD_SL",
+    "price": 2365.76
+  },
+  {
+    "at": "2024-07-25 22:59:12.579000",
+    "child_id": "2024OOS-COU0181",
+    "kind": "ENTRY_FILL",
+    "price": 2362.14
+  },
+  {
+    "at": "2024-07-29 04:00:00.051000",
+    "child_id": "2024OOS-COU0181",
+    "kind": "AI_EXIT",
+    "price": 2399.95
+  },
+  {
+    "at": "2024-07-29 23:33:35.149000",
+    "child_id": "2024OOS-COU0182",
+    "kind": "ENTRY_FILL",
+    "price": 2382.19
+  },
+  {
+    "at": "2024-07-30 04:30:37.349000",
+    "child_id": "2024OOS-COU0182",
+    "kind": "HARD_SL",
+    "price": 2376.81
+  },
+  {
+    "at": "2024-07-30 06:19:40.750000",
+    "child_id": "2024OOS-COU0183",
+    "kind": "ENTRY_FILL",
+    "price": 2382.36
+  },
+  {
+    "at": "2024-07-30 12:00:00.050000",
+    "child_id": "2024OOS-COU0183",
+    "kind": "AI_EXIT",
+    "price": 2389.39
+  },
+  {
+    "at": "2024-07-31 05:58:05.350000",
+    "child_id": "2024OOS-COU0184",
+    "kind": "ENTRY_FILL",
+    "price": 2407.64
+  },
+  {
+    "at": "2024-07-31 06:11:59.950000",
+    "child_id": "2024OOS-COU0184",
+    "kind": "HARD_SL",
+    "price": 2412.76
+  },
+  {
+    "at": "2024-07-31 11:46:53.351000",
+    "child_id": "2024OOS-COU0185",
+    "kind": "ENTRY_FILL",
+    "price": 2420.09
+  },
+  {
+    "at": "2024-08-02 04:59:05.605000",
+    "child_id": "2024OOS-COU0189",
+    "kind": "ENTRY_FILL",
+    "price": 2447.5
+  },
+  {
+    "at": "2024-08-02 05:17:23.002000",
+    "child_id": "2024OOS-COU0189",
+    "kind": "HARD_SL",
+    "price": 2452.39
+  },
+  {
+    "at": "2024-08-02 14:51:08.203000",
+    "child_id": "2024OOS-COU0190",
+    "kind": "ENTRY_FILL",
+    "price": 2460.6
+  },
+  {
+    "at": "2024-08-02 15:30:03.711000",
+    "child_id": "2024OOS-COU0190",
+    "kind": "HARD_SL",
+    "price": 2470.02
+  },
+  {
+    "at": "2024-08-05 18:31:36.104000",
+    "child_id": "2024OOS-COU0193",
+    "kind": "ENTRY_FILL",
+    "price": 2404.42
+  },
+  {
+    "at": "2024-08-06 05:00:00.014000",
+    "child_id": "2024OOS-COU0193",
+    "kind": "AI_EXIT",
+    "price": 2412.32
+  },
+  {
+    "at": "2024-08-06 21:30:32.601000",
+    "child_id": "2024OOS-COU0194",
+    "kind": "ENTRY_FILL",
+    "price": 2393.9
+  },
+  {
+    "at": "2024-08-07 03:08:17.603000",
+    "child_id": "2024OOS-COU0194",
+    "kind": "HARD_SL",
+    "price": 2381.15
+  },
+  {
+    "at": "2024-08-08 04:15:44.605000",
+    "child_id": "2024OOS-COU0197",
+    "kind": "ENTRY_FILL",
+    "price": 2387.07
+  },
+  {
+    "at": "2024-08-08 16:00:00.015000",
+    "child_id": "2024OOS-COU0197",
+    "kind": "AI_EXIT",
+    "price": 2408.01
+  },
+  {
+    "at": "2024-08-09 04:21:26.203000",
+    "child_id": "2024OOS-COU0198",
+    "kind": "ENTRY_FILL",
+    "price": 2422.67
+  },
+  {
+    "at": "2024-08-09 05:00:19.005000",
+    "child_id": "2024OOS-COU0198",
+    "kind": "HARD_SL",
+    "price": 2427.97
+  },
+  {
+    "at": "2024-08-09 07:43:48.903000",
+    "child_id": "2024OOS-COU0199",
+    "kind": "ENTRY_FILL",
+    "price": 2423.63
+  },
+  {
+    "at": "2024-08-09 10:00:00.105000",
+    "child_id": "2024OOS-COU0199",
+    "kind": "AI_EXIT",
+    "price": 2420.86
+  },
+  {
+    "at": "2024-08-09 21:55:41.603000",
+    "child_id": "2024OOS-COU0200",
+    "kind": "ENTRY_FILL",
+    "price": 2429.72
+  },
+  {
+    "at": "2024-08-12 07:45:00.125000",
+    "child_id": "2024OOS-COU0200",
+    "kind": "AI_EXIT",
+    "price": 2432.11
+  },
+  {
+    "at": "2024-08-13 15:30:02.110000",
+    "child_id": "2024OOS-COU0201",
+    "kind": "ENTRY_FILL",
+    "price": 2470.97
+  },
+  {
+    "at": "2024-08-14 02:00:00.102000",
+    "child_id": "2024OOS-COU0201",
+    "kind": "AI_EXIT",
+    "price": 2465.68
+  },
+  {
+    "at": "2024-08-16 05:36:35.703000",
+    "child_id": "2024OOS-COU0203",
+    "kind": "ENTRY_FILL",
+    "price": 2455.3
+  },
+  {
+    "at": "2024-08-16 08:00:02.077000",
+    "child_id": "2024OOS-COU0203",
+    "kind": "AI_EXIT",
+    "price": 2452.88
+  },
+  {
+    "at": "2024-08-19 04:01:16.703000",
+    "child_id": "2024OOS-COU0204",
+    "kind": "ENTRY_FILL",
+    "price": 2502.84
+  },
+  {
+    "at": "2024-08-19 17:45:00.121000",
+    "child_id": "2024OOS-COU0204",
+    "kind": "AI_EXIT",
+    "price": 2502.79
+  },
+  {
+    "at": "2024-08-20 01:51:02.004000",
+    "child_id": "2024OOS-COU0205",
+    "kind": "ENTRY_FILL",
+    "price": 2503.97
+  },
+  {
+    "at": "2024-08-20 04:05:43.305000",
+    "child_id": "2024OOS-COU0205",
+    "kind": "HARD_SL",
+    "price": 2507.45
+  },
+  {
+    "at": "2024-08-20 08:33:03.702000",
+    "child_id": "2024OOS-WIT0051",
+    "kind": "ENTRY_FILL",
+    "price": 2501.67
+  },
+  {
+    "at": "2024-08-20 08:55:23.104000",
+    "child_id": "2024OOS-WIT0051",
+    "kind": "HARD_SL",
+    "price": 2500.63
+  },
+  {
+    "at": "2024-08-20 09:56:35.119000",
+    "child_id": "2024OOS-WIT0052",
+    "kind": "ENTRY_FILL",
+    "price": 2502.22
+  },
+  {
+    "at": "2024-08-21 04:30:00.205000",
+    "child_id": "2024OOS-WIT0052",
+    "kind": "AI_EXIT",
+    "price": 2512.38
+  },
+  {
+    "at": "2024-08-21 15:06:43.704000",
+    "child_id": "2024OOS-WIT0053",
+    "kind": "ENTRY_FILL",
+    "price": 2510.58
+  },
+  {
+    "at": "2024-08-21 16:32:08.406000",
+    "child_id": "2024OOS-WIT0053",
+    "kind": "HARD_SL",
+    "price": 2504.17
+  },
+  {
+    "at": "2024-08-21 19:10:17.107000",
+    "child_id": "2024OOS-WIT0054",
+    "kind": "ENTRY_FILL",
+    "price": 2504.64
+  },
+  {
+    "at": "2024-08-22 05:00:00.115000",
+    "child_id": "2024OOS-WIT0054",
+    "kind": "AI_EXIT",
+    "price": 2507.59
+  },
+  {
+    "at": "2024-08-26 04:45:51.001000",
+    "child_id": "2024OOS-COU0209",
+    "kind": "ENTRY_FILL",
+    "price": 2512.12
+  },
+  {
+    "at": "2024-08-26 10:13:09.106000",
+    "child_id": "2024OOS-COU0209",
+    "kind": "HARD_SL",
+    "price": 2516.93
+  },
+  {
+    "at": "2024-08-26 17:09:53.504000",
+    "child_id": "2024OOS-COU0210",
+    "kind": "ENTRY_FILL",
+    "price": 2517.27
+  },
+  {
+    "at": "2024-08-26 20:00:00.105000",
+    "child_id": "2024OOS-COU0210",
+    "kind": "AI_EXIT",
+    "price": 2520.45
+  },
+  {
+    "at": "2024-08-26 22:00:42.404000",
+    "child_id": "2024OOS-COU0211",
+    "kind": "ENTRY_FILL",
+    "price": 2517.63
+  },
+  {
+    "at": "2024-08-27 08:00:02.110000",
+    "child_id": "2024OOS-COU0211",
+    "kind": "AI_EXIT",
+    "price": 2507.43
+  },
+  {
+    "at": "2024-08-29 15:30:01.204000",
+    "child_id": "2024OOS-COU0213",
+    "kind": "ENTRY_FILL",
+    "price": 2519.04
+  },
+  {
+    "at": "2024-08-29 16:00:00.004000",
+    "child_id": "2024OOS-COU0213",
+    "kind": "AI_EXIT",
+    "price": 2509.35
+  },
+  {
+    "at": "2024-08-30 14:21:40.401000",
+    "child_id": "2024OOS-COU0215",
+    "kind": "ENTRY_FILL",
+    "price": 2520.0
+  },
+  {
+    "at": "2024-08-30 15:00:00.112000",
+    "child_id": "2024OOS-COU0215",
+    "kind": "AI_EXIT",
+    "price": 2519.63
+  },
+  {
+    "at": "2024-09-02 01:33:13.999000",
+    "child_id": "2024OOS-COU0216",
+    "kind": "ENTRY_FILL",
+    "price": 2503.9
+  },
+  {
+    "at": "2024-09-02 05:07:27.707000",
+    "child_id": "2024OOS-COU0216",
+    "kind": "HARD_SL",
+    "price": 2493.78
+  },
+  {
+    "at": "2024-09-02 09:57:05.002000",
+    "child_id": "2024OOS-COU0217",
+    "kind": "ENTRY_FILL",
+    "price": 2496.83
+  },
+  {
+    "at": "2024-09-02 13:00:00.002000",
+    "child_id": "2024OOS-COU0217",
+    "kind": "AI_EXIT",
+    "price": 2498.89
+  },
+  {
+    "at": "2024-09-02 16:00:02.704000",
+    "child_id": "2024OOS-COU0218",
+    "kind": "ENTRY_FILL",
+    "price": 2500.96
+  },
+  {
+    "at": "2024-09-02 19:00:00.108000",
+    "child_id": "2024OOS-COU0218",
+    "kind": "AI_EXIT",
+    "price": 2501.56
+  },
+  {
+    "at": "2024-09-03 13:52:33.105000",
+    "child_id": "2024OOS-WIT0055",
+    "kind": "ENTRY_FILL",
+    "price": 2496.53
+  },
+  {
+    "at": "2024-09-04 17:15:00.007000",
+    "child_id": "2024OOS-WIT0055",
+    "kind": "AI_EXIT",
+    "price": 2491.7
+  },
+  {
+    "at": "2024-09-04 22:47:58.502000",
+    "child_id": "2024OOS-WIT0056",
+    "kind": "ENTRY_FILL",
+    "price": 2492.66
+  },
+  {
+    "at": "2024-09-05 04:20:26.704000",
+    "child_id": "2024OOS-WIT0056",
+    "kind": "HARD_SL",
+    "price": 2498.3
+  },
+  {
+    "at": "2024-09-05 08:24:21.702000",
+    "child_id": "2024OOS-WIT0057",
+    "kind": "ENTRY_FILL",
+    "price": 2495.5
+  },
+  {
+    "at": "2024-09-05 08:49:10.303000",
+    "child_id": "2024OOS-WIT0057",
+    "kind": "HARD_SL",
+    "price": 2499.32
+  },
+  {
+    "at": "2024-09-05 17:15:00.404000",
+    "child_id": "2024OOS-COU0219",
+    "kind": "ENTRY_FILL",
+    "price": 2513.71
+  },
+  {
+    "at": "2024-09-06 15:30:52.213000",
+    "child_id": "2024OOS-COU0219",
+    "kind": "HARD_SL",
+    "price": 2523.46
+  },
+  {
+    "at": "2024-09-06 16:31:26.703000",
+    "child_id": "2024OOS-COU0220",
+    "kind": "ENTRY_FILL",
+    "price": 2511.18
+  },
+  {
+    "at": "2024-09-06 20:00:00.106000",
+    "child_id": "2024OOS-COU0220",
+    "kind": "AI_EXIT",
+    "price": 2489.19
+  },
+  {
+    "at": "2024-09-09 04:34:52.205000",
+    "child_id": "2024OOS-COU0221",
+    "kind": "ENTRY_FILL",
+    "price": 2496.26
+  },
+  {
+    "at": "2024-09-09 08:39:28.909000",
+    "child_id": "2024OOS-COU0221",
+    "kind": "HARD_SL",
+    "price": 2494.49
+  },
+  {
+    "at": "2024-09-09 11:25:06.607000",
+    "child_id": "2024OOS-COU0222",
+    "kind": "ENTRY_FILL",
+    "price": 2490.71
+  },
+  {
+    "at": "2024-09-09 17:45:00.003000",
+    "child_id": "2024OOS-COU0222",
+    "kind": "AI_EXIT",
+    "price": 2494.24
+  },
+  {
+    "at": "2024-09-10 17:56:53.305000",
+    "child_id": "2024OOS-COU0224",
+    "kind": "ENTRY_FILL",
+    "price": 2508.41
+  },
+  {
+    "at": "2024-09-10 18:35:31.506000",
+    "child_id": "2024OOS-COU0224",
+    "kind": "HARD_SL",
+    "price": 2515.38
+  },
+  {
+    "at": "2024-09-11 13:37:24.604000",
+    "child_id": "2024OOS-COU0225",
+    "kind": "ENTRY_FILL",
+    "price": 2522.09
+  },
+  {
+    "at": "2024-09-11 16:00:00.003000",
+    "child_id": "2024OOS-COU0225",
+    "kind": "AI_EXIT",
+    "price": 2508.39
+  },
+  {
+    "at": "2024-09-12 10:30:04.413000",
+    "child_id": "2024OOS-COU0226",
+    "kind": "ENTRY_FILL",
+    "price": 2516.52
+  },
+  {
+    "at": "2024-09-12 15:00:00.004000",
+    "child_id": "2024OOS-COU0226",
+    "kind": "AI_EXIT",
+    "price": 2519.67
+  },
+  {
+    "at": "2024-09-13 10:30:35.506000",
+    "child_id": "2024OOS-COU0227",
+    "kind": "ENTRY_FILL",
+    "price": 2565.85
+  },
+  {
+    "at": "2024-09-13 10:46:59.137000",
+    "child_id": "2024OOS-COU0227",
+    "kind": "HARD_SL",
+    "price": 2570.27
+  },
+  {
+    "at": "2024-09-13 15:37:27.205000",
+    "child_id": "2024OOS-COU0228",
+    "kind": "ENTRY_FILL",
+    "price": 2570.84
+  },
+  {
+    "at": "2024-09-13 15:49:16.104000",
+    "child_id": "2024OOS-COU0228",
+    "kind": "HARD_SL",
+    "price": 2572.96
+  },
+  {
+    "at": "2024-09-13 23:49:32.404000",
+    "child_id": "2024OOS-COU0229",
+    "kind": "ENTRY_FILL",
+    "price": 2580.54
+  },
+  {
+    "at": "2024-09-16 05:57:08.302000",
+    "child_id": "2024OOS-COU0229",
+    "kind": "HARD_SL",
+    "price": 2586.03
+  },
+  {
+    "at": "2024-09-16 10:25:35.229000",
+    "child_id": "2024OOS-COU0230",
+    "kind": "ENTRY_FILL",
+    "price": 2583.17
+  },
+  {
+    "at": "2024-09-16 15:00:00.206000",
+    "child_id": "2024OOS-COU0230",
+    "kind": "AI_EXIT",
+    "price": 2583.3
+  },
+  {
+    "at": "2024-09-16 15:53:30.700000",
+    "child_id": "2024OOS-COU0231",
+    "kind": "ENTRY_FILL",
+    "price": 2582.13
+  },
+  {
+    "at": "2024-09-16 15:56:32.802000",
+    "child_id": "2024OOS-COU0231",
+    "kind": "HARD_SL",
+    "price": 2583.23
+  },
+  {
+    "at": "2024-09-16 17:50:23.702000",
+    "child_id": "2024OOS-COU0232",
+    "kind": "ENTRY_FILL",
+    "price": 2580.42
+  },
+  {
+    "at": "2024-09-16 21:00:00.027000",
+    "child_id": "2024OOS-COU0232",
+    "kind": "AI_EXIT",
+    "price": 2582.79
+  },
+  {
+    "at": "2024-09-18 13:01:31.901000",
+    "child_id": "2024OOS-COU0235",
+    "kind": "ENTRY_FILL",
+    "price": 2572.52
+  },
+  {
+    "at": "2024-09-18 13:31:19.203000",
+    "child_id": "2024OOS-COU0235",
+    "kind": "HARD_SL",
+    "price": 2576.52
+  },
+  {
+    "at": "2024-09-18 20:12:36.408000",
+    "child_id": "2024OOS-WIT0059",
+    "kind": "ENTRY_FILL",
+    "price": 2573.4
+  },
+  {
+    "at": "2024-09-18 20:50:28.301000",
+    "child_id": "2024OOS-WIT0059",
+    "kind": "HARD_SL",
+    "price": 2567.89
+  },
+  {
+    "at": "2024-09-18 21:43:13.200000",
+    "child_id": "2024OOS-WIT0060",
+    "kind": "ENTRY_FILL",
+    "price": 2582.64
+  },
+  {
+    "at": "2024-09-18 22:01:26.308000",
+    "child_id": "2024OOS-WIT0060",
+    "kind": "HARD_SL",
+    "price": 2566.27
+  },
+  {
+    "at": "2024-09-19 06:01:11.005000",
+    "child_id": "2024OOS-COU0236",
+    "kind": "ENTRY_FILL",
+    "price": 2563.34
+  },
+  {
+    "at": "2024-09-19 17:46:16.809000",
+    "child_id": "2024OOS-WIT0061",
+    "kind": "ENTRY_FILL",
+    "price": 2581.94
+  },
+  {
+    "at": "2024-09-26 03:15:00.102000",
+    "child_id": "2024OOS-COU0236",
+    "kind": "AI_EXIT",
+    "price": 2655.46
+  },
+  {
+    "at": "2024-09-26 03:15:00.102000",
+    "child_id": "2024OOS-WIT0061",
+    "kind": "AI_EXIT",
+    "price": 2655.46
+  },
+  {
+    "at": "2024-09-27 15:36:44.008000",
+    "child_id": "2024OOS-COU0238",
+    "kind": "ENTRY_FILL",
+    "price": 2671.37
+  },
+  {
+    "at": "2024-09-27 15:45:00.402000",
+    "child_id": "2024OOS-COU0238",
+    "kind": "AI_EXIT",
+    "price": 2671.93
+  },
+  {
+    "at": "2024-10-01 21:20:40.612000",
+    "child_id": "2024OOS-COU0243",
+    "kind": "ENTRY_FILL",
+    "price": 2660.57
+  },
+  {
+    "at": "2024-10-02 12:00:00.111000",
+    "child_id": "2024OOS-COU0243",
+    "kind": "AI_EXIT",
+    "price": 2652.59
+  },
+  {
+    "at": "2024-10-03 04:16:46.702000",
+    "child_id": "2024OOS-COU0244",
+    "kind": "ENTRY_FILL",
+    "price": 2658.24
+  },
+  {
+    "at": "2024-10-03 09:45:00.007000",
+    "child_id": "2024OOS-COU0244",
+    "kind": "AI_EXIT",
+    "price": 2657.33
+  },
+  {
+    "at": "2024-10-03 15:33:32.804000",
+    "child_id": "2024OOS-COU0245",
+    "kind": "ENTRY_FILL",
+    "price": 2649.57
+  },
+  {
+    "at": "2024-10-03 17:00:00.814000",
+    "child_id": "2024OOS-COU0245",
+    "kind": "HARD_SL",
+    "price": 2638.91
+  },
+  {
+    "at": "2024-10-04 03:07:22.313000",
+    "child_id": "2024OOS-COU0247",
+    "kind": "ENTRY_FILL",
+    "price": 2656.78
+  },
+  {
+    "at": "2024-10-04 05:39:41.304000",
+    "child_id": "2024OOS-COU0247",
+    "kind": "HARD_SL",
+    "price": 2662.23
+  },
+  {
+    "at": "2024-10-04 10:26:50.141000",
+    "child_id": "2024OOS-COU0248",
+    "kind": "ENTRY_FILL",
+    "price": 2662.28
+  },
+  {
+    "at": "2024-10-04 14:00:00.004000",
+    "child_id": "2024OOS-COU0248",
+    "kind": "AI_EXIT",
+    "price": 2658.47
+  },
+  {
+    "at": "2024-10-04 23:03:35.022000",
+    "child_id": "2024OOS-COU0249",
+    "kind": "ENTRY_FILL",
+    "price": 2650.94
+  },
+  {
+    "at": "2024-10-07 01:00:05.029000",
+    "child_id": "2024OOS-COU0249",
+    "kind": "AI_EXIT",
+    "price": 2650.9
+  },
+  {
+    "at": "2024-10-08 06:50:09.205000",
+    "child_id": "2024OOS-COU0251",
+    "kind": "ENTRY_FILL",
+    "price": 2643.1
+  },
+  {
+    "at": "2024-10-08 09:30:00.405000",
+    "child_id": "2024OOS-COU0251",
+    "kind": "AI_EXIT",
+    "price": 2641.01
+  },
+  {
+    "at": "2024-10-08 13:00:28.908000",
+    "child_id": "2024OOS-COU0252",
+    "kind": "ENTRY_FILL",
+    "price": 2641.19
+  },
+  {
+    "at": "2024-10-08 16:30:00.005000",
+    "child_id": "2024OOS-COU0252",
+    "kind": "AI_EXIT",
+    "price": 2639.19
+  },
+  {
+    "at": "2024-10-08 23:02:58.403000",
+    "child_id": "2024OOS-COU0253",
+    "kind": "ENTRY_FILL",
+    "price": 2621.61
+  },
+  {
+    "at": "2024-10-10 07:00:00.005000",
+    "child_id": "2024OOS-COU0253",
+    "kind": "AI_EXIT",
+    "price": 2611.77
+  },
+  {
+    "at": "2024-10-10 10:30:44.709000",
+    "child_id": "2024OOS-WIT0064",
+    "kind": "ENTRY_FILL",
+    "price": 2614.85
+  },
+  {
+    "at": "2024-10-10 10:35:37.209000",
+    "child_id": "2024OOS-WIT0064",
+    "kind": "HARD_SL",
+    "price": 2616.35
+  },
+  {
+    "at": "2024-10-10 15:04:03.306000",
+    "child_id": "2024OOS-WIT0065",
+    "kind": "ENTRY_FILL",
+    "price": 2614.29
+  },
+  {
+    "at": "2024-10-10 15:30:12.603000",
+    "child_id": "2024OOS-WIT0065",
+    "kind": "HARD_SL",
+    "price": 2619.17
+  },
+  {
+    "at": "2024-10-10 20:20:18.377000",
+    "child_id": "2024OOS-WIT0066",
+    "kind": "ENTRY_FILL",
+    "price": 2620.08
+  },
+  {
+    "at": "2024-10-10 22:07:17.050000",
+    "child_id": "2024OOS-WIT0066",
+    "kind": "HARD_SL",
+    "price": 2629.8
+  },
+  {
+    "at": "2024-10-11 10:15:13.996000",
+    "child_id": "2024OOS-COU0254",
+    "kind": "ENTRY_FILL",
+    "price": 2641.58
+  },
+  {
+    "at": "2024-10-11 15:20:03.292000",
+    "child_id": "2024OOS-COU0254",
+    "kind": "HARD_SL",
+    "price": 2647.22
+  },
+  {
+    "at": "2024-10-11 23:17:53.268000",
+    "child_id": "2024OOS-COU0255",
+    "kind": "ENTRY_FILL",
+    "price": 2655.59
+  },
+  {
+    "at": "2024-10-14 05:45:00.236000",
+    "child_id": "2024OOS-COU0255",
+    "kind": "AI_EXIT",
+    "price": 2652.7
+  },
+  {
+    "at": "2024-10-14 17:02:45.375000",
+    "child_id": "2024OOS-WIT0067",
+    "kind": "ENTRY_FILL",
+    "price": 2654.66
+  },
+  {
+    "at": "2024-10-14 17:20:01.923000",
+    "child_id": "2024OOS-WIT0067",
+    "kind": "HARD_SL",
+    "price": 2647.12
+  },
+  {
+    "at": "2024-10-14 21:48:24.487000",
+    "child_id": "2024OOS-WIT0068",
+    "kind": "ENTRY_FILL",
+    "price": 2650.05
+  },
+  {
+    "at": "2024-10-15 06:30:00.096000",
+    "child_id": "2024OOS-WIT0068",
+    "kind": "AI_EXIT",
+    "price": 2647.44
+  },
+  {
+    "at": "2024-10-15 14:47:10.448000",
+    "child_id": "2024OOS-COU0257",
+    "kind": "ENTRY_FILL",
+    "price": 2650.81
+  },
+  {
+    "at": "2024-10-15 15:29:01.992000",
+    "child_id": "2024OOS-COU0257",
+    "kind": "HARD_SL",
+    "price": 2656.9
+  },
+  {
+    "at": "2024-10-15 15:52:46.572000",
+    "child_id": "2024OOS-WIT0070",
+    "kind": "ENTRY_FILL",
+    "price": 2649.81
+  },
+  {
+    "at": "2024-10-15 15:56:53.054000",
+    "child_id": "2024OOS-WIT0070",
+    "kind": "HARD_SL",
+    "price": 2647.51
+  },
+  {
+    "at": "2024-10-15 23:33:02.183000",
+    "child_id": "2024OOS-COU0258",
+    "kind": "ENTRY_FILL",
+    "price": 2661.38
+  },
+  {
+    "at": "2024-10-16 05:00:57.264000",
+    "child_id": "2024OOS-COU0258",
+    "kind": "HARD_SL",
+    "price": 2669.05
+  },
+  {
+    "at": "2024-10-16 14:10:18.286000",
+    "child_id": "2024OOS-COU0259",
+    "kind": "ENTRY_FILL",
+    "price": 2675.62
+  },
+  {
+    "at": "2024-10-16 16:00:24.026000",
+    "child_id": "2024OOS-COU0259",
+    "kind": "HARD_SL",
+    "price": 2682.76
+  },
+  {
+    "at": "2024-10-16 22:15:08.807000",
+    "child_id": "2024OOS-COU0261",
+    "kind": "ENTRY_FILL",
+    "price": 2673.7
+  },
+  {
+    "at": "2024-10-17 03:30:57.613000",
+    "child_id": "2024OOS-COU0261",
+    "kind": "HARD_SL",
+    "price": 2676.62
+  },
+  {
+    "at": "2024-10-17 06:49:25.992000",
+    "child_id": "2024OOS-COU0262",
+    "kind": "ENTRY_FILL",
+    "price": 2676.5
+  },
+  {
+    "at": "2024-10-17 09:40:06.415000",
+    "child_id": "2024OOS-COU0262",
+    "kind": "HARD_SL",
+    "price": 2684.92
+  },
+  {
+    "at": "2024-10-17 12:30:44.258000",
+    "child_id": "2024OOS-COU0263",
+    "kind": "ENTRY_FILL",
+    "price": 2677.82
+  },
+  {
+    "at": "2024-10-17 13:23:50.259000",
+    "child_id": "2024OOS-COU0263",
+    "kind": "HARD_SL",
+    "price": 2685.69
+  },
+  {
+    "at": "2024-10-17 15:20:28.394000",
+    "child_id": "2024OOS-COU0264",
+    "kind": "ENTRY_FILL",
+    "price": 2680.54
+  },
+  {
+    "at": "2024-10-17 16:54:03.193000",
+    "child_id": "2024OOS-COU0264",
+    "kind": "HARD_SL",
+    "price": 2689.16
+  },
+  {
+    "at": "2024-10-18 10:14:54.207000",
+    "child_id": "2024OOS-COU0265",
+    "kind": "ENTRY_FILL",
+    "price": 2708.77
+  },
+  {
+    "at": "2024-10-18 15:27:55.477000",
+    "child_id": "2024OOS-COU0265",
+    "kind": "HARD_SL",
+    "price": 2714.03
+  },
+  {
+    "at": "2024-10-18 16:24:14.426000",
+    "child_id": "2024OOS-COU0266",
+    "kind": "ENTRY_FILL",
+    "price": 2708.1
+  },
+  {
+    "at": "2024-10-18 17:19:26.645000",
+    "child_id": "2024OOS-COU0266",
+    "kind": "HARD_SL",
+    "price": 2717.01
+  },
+  {
+    "at": "2024-10-21 08:45:22.602000",
+    "child_id": "2024OOS-COU0267",
+    "kind": "ENTRY_FILL",
+    "price": 2727.49
+  },
+  {
+    "at": "2024-10-21 11:21:18.132000",
+    "child_id": "2024OOS-COU0267",
+    "kind": "HARD_SL",
+    "price": 2732.84
+  },
+  {
+    "at": "2024-10-21 14:05:09.349000",
+    "child_id": "2024OOS-COU0268",
+    "kind": "ENTRY_FILL",
+    "price": 2734.67
+  },
+  {
+    "at": "2024-10-21 14:22:09.133000",
+    "child_id": "2024OOS-COU0268",
+    "kind": "HARD_SL",
+    "price": 2736.89
+  },
+  {
+    "at": "2024-10-22 13:00:45.796000",
+    "child_id": "2024OOS-COU0270",
+    "kind": "ENTRY_FILL",
+    "price": 2732.06
+  },
+  {
+    "at": "2024-10-22 13:36:44.601000",
+    "child_id": "2024OOS-COU0270",
+    "kind": "HARD_SL",
+    "price": 2738.37
+  },
+  {
+    "at": "2024-10-23 04:10:27.172000",
+    "child_id": "2024OOS-COU0271",
+    "kind": "ENTRY_FILL",
+    "price": 2747.18
+  },
+  {
+    "at": "2024-10-23 07:00:00.803000",
+    "child_id": "2024OOS-COU0271",
+    "kind": "AI_EXIT",
+    "price": 2746.28
+  },
+  {
+    "at": "2024-10-23 13:02:03.846000",
+    "child_id": "2024OOS-COU0272",
+    "kind": "ENTRY_FILL",
+    "price": 2751.58
+  },
+  {
+    "at": "2024-10-23 20:00:00.155000",
+    "child_id": "2024OOS-COU0272",
+    "kind": "AI_EXIT",
+    "price": 2719.47
+  },
+  {
+    "at": "2024-10-28 00:35:08.058000",
+    "child_id": "2024OOS-COU0274",
+    "kind": "ENTRY_FILL",
+    "price": 2736.06
+  },
+  {
+    "at": "2024-10-28 01:30:00.137000",
+    "child_id": "2024OOS-COU0274",
+    "kind": "AI_EXIT",
+    "price": 2738.38
+  },
+  {
+    "at": "2024-10-28 02:17:03.272000",
+    "child_id": "2024OOS-COU0275",
+    "kind": "ENTRY_FILL",
+    "price": 2734.45
+  },
+  {
+    "at": "2024-10-28 02:32:33.411000",
+    "child_id": "2024OOS-COU0275",
+    "kind": "HARD_SL",
+    "price": 2736.36
+  },
+  {
+    "at": "2024-10-28 02:46:50.994000",
+    "child_id": "2024OOS-COU0276",
+    "kind": "ENTRY_FILL",
+    "price": 2734.14
+  },
+  {
+    "at": "2024-10-28 07:27:29.264000",
+    "child_id": "2024OOS-COU0276",
+    "kind": "HARD_SL",
+    "price": 2736.36
+  },
+  {
+    "at": "2024-10-28 10:46:12.151000",
+    "child_id": "2024OOS-COU0277",
+    "kind": "ENTRY_FILL",
+    "price": 2733.99
+  },
+  {
+    "at": "2024-10-28 12:00:00.164000",
+    "child_id": "2024OOS-COU0277",
+    "kind": "AI_EXIT",
+    "price": 2729.45
+  },
+  {
+    "at": "2024-10-29 00:20:37.548000",
+    "child_id": "2024OOS-COU0278",
+    "kind": "ENTRY_FILL",
+    "price": 2741.23
+  },
+  {
+    "at": "2024-10-29 02:31:06.880000",
+    "child_id": "2024OOS-COU0278",
+    "kind": "HARD_SL",
+    "price": 2746.0
+  },
+  {
+    "at": "2024-10-29 08:02:10.730000",
+    "child_id": "2024OOS-COU0279",
+    "kind": "ENTRY_FILL",
+    "price": 2751.11
+  },
+  {
+    "at": "2024-10-29 15:36:24.717000",
+    "child_id": "2024OOS-COU0279",
+    "kind": "HARD_SL",
+    "price": 2757.68
+  },
+  {
+    "at": "2024-10-30 12:03:19.171000",
+    "child_id": "2024OOS-COU0280",
+    "kind": "ENTRY_FILL",
+    "price": 2784.65
+  },
+  {
+    "at": "2024-10-30 20:06:52.154000",
+    "child_id": "2024OOS-COU0280",
+    "kind": "HARD_SL",
+    "price": 2789.81
+  },
+  {
+    "at": "2024-10-31 02:13:36.259000",
+    "child_id": "2024OOS-COU0281",
+    "kind": "ENTRY_FILL",
+    "price": 2786.35
+  },
+  {
+    "at": "2024-10-31 03:05:28.191000",
+    "child_id": "2024OOS-COU0281",
+    "kind": "HARD_SL",
+    "price": 2789.98
+  },
+  {
+    "at": "2024-10-31 04:00:07.394000",
+    "child_id": "2024OOS-COU0282",
+    "kind": "ENTRY_FILL",
+    "price": 2785.1
+  },
+  {
+    "at": "2024-11-04 01:45:59.916000",
+    "child_id": "2024OOS-COU0285",
+    "kind": "ENTRY_FILL",
+    "price": 2739.04
+  },
+  {
+    "at": "2024-11-04 13:00:00.132000",
+    "child_id": "2024OOS-COU0285",
+    "kind": "AI_EXIT",
+    "price": 2738.55
+  },
+  {
+    "at": "2024-11-04 15:23:34.503000",
+    "child_id": "2024OOS-COU0286",
+    "kind": "ENTRY_FILL",
+    "price": 2740.69
+  },
+  {
+    "at": "2024-11-04 18:00:00.064000",
+    "child_id": "2024OOS-COU0286",
+    "kind": "AI_EXIT",
+    "price": 2738.44
+  },
+  {
+    "at": "2024-11-05 06:33:36.712000",
+    "child_id": "2024OOS-COU0287",
+    "kind": "ENTRY_FILL",
+    "price": 2733.29
+  },
+  {
+    "at": "2024-11-05 10:00:00.052000",
+    "child_id": "2024OOS-COU0287",
+    "kind": "AI_EXIT",
+    "price": 2736.45
+  },
+  {
+    "at": "2024-11-05 12:10:54.073000",
+    "child_id": "2024OOS-COU0288",
+    "kind": "ENTRY_FILL",
+    "price": 2738.05
+  },
+  {
+    "at": "2024-11-05 19:00:00.089000",
+    "child_id": "2024OOS-COU0288",
+    "kind": "AI_EXIT",
+    "price": 2738.86
+  },
+  {
+    "at": "2024-11-05 20:28:26.597000",
+    "child_id": "2024OOS-COU0289",
+    "kind": "ENTRY_FILL",
+    "price": 2740.15
+  },
+  {
+    "at": "2024-11-06 01:00:05.103000",
+    "child_id": "2024OOS-COU0289",
+    "kind": "AI_EXIT",
+    "price": 2742.83
+  },
+  {
+    "at": "2024-11-07 06:05:33.648000",
+    "child_id": "2024OOS-COU0290",
+    "kind": "ENTRY_FILL",
+    "price": 2658.03
+  },
+  {
+    "at": "2024-11-08 01:00:05.605000",
+    "child_id": "2024OOS-COU0290",
+    "kind": "AI_EXIT",
+    "price": 2705.64
+  },
+  {
+    "at": "2024-11-08 22:37:28.023000",
+    "child_id": "2024OOS-COU0291",
+    "kind": "ENTRY_FILL",
+    "price": 2687.05
+  },
+  {
+    "at": "2024-11-08 23:23:30.557000",
+    "child_id": "2024OOS-COU0291",
+    "kind": "HARD_SL",
+    "price": 2683.09
+  },
+  {
+    "at": "2024-11-11 09:04:00.473000",
+    "child_id": "2024OOS-COU0292",
+    "kind": "ENTRY_FILL",
+    "price": 2672.9
+  },
+  {
+    "at": "2024-11-11 11:20:59.733000",
+    "child_id": "2024OOS-COU0292",
+    "kind": "HARD_SL",
+    "price": 2666.18
+  },
+  {
+    "at": "2024-11-11 23:41:44.749000",
+    "child_id": "2024OOS-COU0293",
+    "kind": "ENTRY_FILL",
+    "price": 2621.42
+  },
+  {
+    "at": "2024-11-12 07:30:21.698000",
+    "child_id": "2024OOS-COU0293",
+    "kind": "HARD_SL",
+    "price": 2610.55
+  },
+  {
+    "at": "2024-11-12 14:31:33.484000",
+    "child_id": "2024OOS-COU0294",
+    "kind": "ENTRY_FILL",
+    "price": 2601.17
+  },
+  {
+    "at": "2024-11-13 09:00:00.059000",
+    "child_id": "2024OOS-COU0294",
+    "kind": "AI_EXIT",
+    "price": 2605.36
+  },
+  {
+    "at": "2024-11-13 09:45:28.181000",
+    "child_id": "2024OOS-COU0295",
+    "kind": "ENTRY_FILL",
+    "price": 2606.6
+  },
+  {
+    "at": "2024-11-13 10:04:04.805000",
+    "child_id": "2024OOS-COU0295",
+    "kind": "HARD_SL",
+    "price": 2604.19
+  },
+  {
+    "at": "2024-11-13 10:51:16.697000",
+    "child_id": "2024OOS-COU0296",
+    "kind": "ENTRY_FILL",
+    "price": 2608.41
+  },
+  {
+    "at": "2024-11-13 17:00:00.001000",
+    "child_id": "2024OOS-COU0296",
+    "kind": "AI_EXIT",
+    "price": 2601.97
+  },
+  {
+    "at": "2024-11-15 03:19:36.489000",
+    "child_id": "2024OOS-COU0298",
+    "kind": "ENTRY_FILL",
+    "price": 2569.67
+  },
+  {
+    "at": "2024-11-15 03:43:56.626000",
+    "child_id": "2024OOS-COU0298",
+    "kind": "HARD_SL",
+    "price": 2565.85
+  },
+  {
+    "at": "2024-11-15 04:19:54.015000",
+    "child_id": "2024OOS-COU0299",
+    "kind": "ENTRY_FILL",
+    "price": 2567.61
+  },
+  {
+    "at": "2024-11-15 07:00:00.044000",
+    "child_id": "2024OOS-COU0299",
+    "kind": "AI_EXIT",
+    "price": 2567.05
+  },
+  {
+    "at": "2024-11-15 10:15:22.607000",
+    "child_id": "2024OOS-COU0300",
+    "kind": "ENTRY_FILL",
+    "price": 2565.06
+  },
+  {
+    "at": "2024-11-15 12:00:00.001000",
+    "child_id": "2024OOS-COU0300",
+    "kind": "AI_EXIT",
+    "price": 2563.95
+  },
+  {
+    "at": "2024-11-15 15:32:22.272000",
+    "child_id": "2024OOS-COU0301",
+    "kind": "ENTRY_FILL",
+    "price": 2564.86
+  },
+  {
+    "at": "2024-11-15 15:32:40.875000",
+    "child_id": "2024OOS-COU0301",
+    "kind": "HARD_SL",
+    "price": 2562.87
+  },
+  {
+    "at": "2024-11-15 16:07:02.716000",
+    "child_id": "2024OOS-WIT0073",
+    "kind": "ENTRY_FILL",
+    "price": 2570.66
+  },
+  {
+    "at": "2024-11-15 16:52:23.105000",
+    "child_id": "2024OOS-WIT0073",
+    "kind": "HARD_SL",
+    "price": 2575.78
+  },
+  {
+    "at": "2024-11-15 17:47:09.717000",
+    "child_id": "2024OOS-WIT0074",
+    "kind": "ENTRY_FILL",
+    "price": 2567.69
+  },
+  {
+    "at": "2024-11-18 01:15:00.020000",
+    "child_id": "2024OOS-WIT0074",
+    "kind": "AI_EXIT",
+    "price": 2573.57
+  },
+  {
+    "at": "2024-11-19 09:39:08.127000",
+    "child_id": "2024OOS-COU0302",
+    "kind": "ENTRY_FILL",
+    "price": 2620.33
+  },
+  {
+    "at": "2024-11-19 10:43:45.293000",
+    "child_id": "2024OOS-COU0302",
+    "kind": "HARD_SL",
+    "price": 2626.62
+  },
+  {
+    "at": "2024-11-19 19:24:06.138000",
+    "child_id": "2024OOS-COU0303",
+    "kind": "ENTRY_FILL",
+    "price": 2632.3
+  },
+  {
+    "at": "2024-11-20 03:01:05.235000",
+    "child_id": "2024OOS-COU0303",
+    "kind": "HARD_SL",
+    "price": 2639.43
+  },
+  {
+    "at": "2024-11-20 07:39:56.819000",
+    "child_id": "2024OOS-COU0304",
+    "kind": "ENTRY_FILL",
+    "price": 2637.77
+  },
+  {
+    "at": "2024-11-20 15:30:00.077000",
+    "child_id": "2024OOS-COU0304",
+    "kind": "AI_EXIT",
+    "price": 2637.71
+  },
+  {
+    "at": "2024-11-21 14:54:38.850000",
+    "child_id": "2024OOS-COU0305",
+    "kind": "ENTRY_FILL",
+    "price": 2666.03
+  },
+  {
+    "at": "2024-11-21 21:09:41.661000",
+    "child_id": "2024OOS-COU0305",
+    "kind": "HARD_SL",
+    "price": 2673.66
+  },
+  {
+    "at": "2024-11-22 02:10:09.477000",
+    "child_id": "2024OOS-COU0306",
+    "kind": "ENTRY_FILL",
+    "price": 2670.6
+  },
+  {
+    "at": "2024-11-22 02:18:02.857000",
+    "child_id": "2024OOS-COU0306",
+    "kind": "HARD_SL",
+    "price": 2673.5
+  },
+  {
+    "at": "2024-11-22 14:47:01.457000",
+    "child_id": "2024OOS-COU0307",
+    "kind": "ENTRY_FILL",
+    "price": 2704.56
+  },
+  {
+    "at": "2024-11-22 20:20:53.302000",
+    "child_id": "2024OOS-COU0307",
+    "kind": "HARD_SL",
+    "price": 2710.2
+  },
+  {
+    "at": "2024-11-25 03:15:35.497000",
+    "child_id": "2024OOS-COU0308",
+    "kind": "ENTRY_FILL",
+    "price": 2705.09
+  },
+  {
+    "at": "2024-11-25 08:00:00.007000",
+    "child_id": "2024OOS-COU0308",
+    "kind": "AI_EXIT",
+    "price": 2664.89
+  },
+  {
+    "at": "2024-11-26 07:30:37.364000",
+    "child_id": "2024OOS-COU0309",
+    "kind": "ENTRY_FILL",
+    "price": 2621.42
+  },
+  {
+    "at": "2024-11-26 15:00:00.057000",
+    "child_id": "2024OOS-COU0309",
+    "kind": "AI_EXIT",
+    "price": 2630.97
+  },
+  {
+    "at": "2024-11-27 03:21:11.962000",
+    "child_id": "2024OOS-WIT0075",
+    "kind": "ENTRY_FILL",
+    "price": 2630.65
+  },
+  {
+    "at": "2024-11-27 04:10:13.951000",
+    "child_id": "2024OOS-WIT0075",
+    "kind": "HARD_SL",
+    "price": 2634.07
+  },
+  {
+    "at": "2024-11-28 06:36:36.320000",
+    "child_id": "2024OOS-COU0310",
+    "kind": "ENTRY_FILL",
+    "price": 2632.74
+  },
+  {
+    "at": "2024-11-28 12:00:00.210000",
+    "child_id": "2024OOS-COU0310",
+    "kind": "AI_EXIT",
+    "price": 2646.28
+  },
+  {
+    "at": "2024-11-29 10:28:05.022000",
+    "child_id": "2024OOS-COU0312",
+    "kind": "ENTRY_FILL",
+    "price": 2659.02
+  },
+  {
+    "at": "2024-11-29 18:00:00.198000",
+    "child_id": "2024OOS-COU0312",
+    "kind": "AI_EXIT",
+    "price": 2659.12
+  },
+  {
+    "at": "2024-12-02 09:52:43.787000",
+    "child_id": "2024OOS-COU0314",
+    "kind": "ENTRY_FILL",
+    "price": 2629.72
+  },
+  {
+    "at": "2024-12-02 16:00:00.078000",
+    "child_id": "2024OOS-COU0314",
+    "kind": "AI_EXIT",
+    "price": 2646.95
+  },
+  {
+    "at": "2024-12-02 22:48:05.977000",
+    "child_id": "2024OOS-COU0315",
+    "kind": "ENTRY_FILL",
+    "price": 2640.78
+  },
+  {
+    "at": "2024-12-03 03:30:00.076000",
+    "child_id": "2024OOS-COU0315",
+    "kind": "AI_EXIT",
+    "price": 2637.96
+  },
+  {
+    "at": "2024-12-03 07:17:10.538000",
+    "child_id": "2024OOS-WIT0076",
+    "kind": "ENTRY_FILL",
+    "price": 2638.22
+  },
+  {
+    "at": "2024-12-03 08:02:12.513000",
+    "child_id": "2024OOS-WIT0076",
+    "kind": "HARD_SL",
+    "price": 2642.95
+  },
+  {
+    "at": "2024-12-03 10:31:31.546000",
+    "child_id": "2024OOS-WIT0077",
+    "kind": "ENTRY_FILL",
+    "price": 2641.41
+  },
+  {
+    "at": "2024-12-03 12:00:00.040000",
+    "child_id": "2024OOS-WIT0077",
+    "kind": "AI_EXIT",
+    "price": 2644.11
+  },
+  {
+    "at": "2024-12-03 17:56:04.078000",
+    "child_id": "2024OOS-COU0316",
+    "kind": "ENTRY_FILL",
+    "price": 2642.24
+  },
+  {
+    "at": "2024-12-03 18:45:00.051000",
+    "child_id": "2024OOS-COU0316",
+    "kind": "AI_EXIT",
+    "price": 2647.25
+  },
+  {
+    "at": "2024-12-03 20:48:13.747000",
+    "child_id": "2024OOS-COU0317",
+    "kind": "ENTRY_FILL",
+    "price": 2644.68
+  },
+  {
+    "at": "2024-12-04 01:00:05.029000",
+    "child_id": "2024OOS-COU0317",
+    "kind": "AI_EXIT",
+    "price": 2643.7
+  },
+  {
+    "at": "2024-12-04 22:51:32.818000",
+    "child_id": "2024OOS-COU0319",
+    "kind": "ENTRY_FILL",
+    "price": 2650.01
+  },
+  {
+    "at": "2024-12-05 07:45:00.149000",
+    "child_id": "2024OOS-COU0319",
+    "kind": "AI_EXIT",
+    "price": 2652.89
+  },
+  {
+    "at": "2024-12-06 02:27:49.258000",
+    "child_id": "2024OOS-COU0321",
+    "kind": "ENTRY_FILL",
+    "price": 2631.53
+  },
+  {
+    "at": "2024-12-06 03:08:29.668000",
+    "child_id": "2024OOS-COU0321",
+    "kind": "HARD_SL",
+    "price": 2623.36
+  },
+  {
+    "at": "2024-12-09 01:15:00.449000",
+    "child_id": "2024OOS-COU0324",
+    "kind": "ENTRY_FILL",
+    "price": 2642.36
+  },
+  {
+    "at": "2024-12-09 02:29:53.305000",
+    "child_id": "2024OOS-COU0324",
+    "kind": "HARD_SL",
+    "price": 2630.85
+  },
+  {
+    "at": "2024-12-09 03:31:09.904000",
+    "child_id": "2024OOS-COU0325",
+    "kind": "ENTRY_FILL",
+    "price": 2647.85
+  },
+  {
+    "at": "2024-12-09 04:00:00.106000",
+    "child_id": "2024OOS-COU0325",
+    "kind": "AI_EXIT",
+    "price": 2646.64
+  },
+  {
+    "at": "2024-12-10 03:00:04.670000",
+    "child_id": "2024OOS-COU0326",
+    "kind": "ENTRY_FILL",
+    "price": 2665.97
+  },
+  {
+    "at": "2024-12-10 12:52:46.917000",
+    "child_id": "2024OOS-COU0326",
+    "kind": "HARD_SL",
+    "price": 2676.46
+  },
+  {
+    "at": "2024-12-11 05:48:30.903000",
+    "child_id": "2024OOS-COU0327",
+    "kind": "ENTRY_FILL",
+    "price": 2698.09
+  },
+  {
+    "at": "2024-12-11 08:00:00.082000",
+    "child_id": "2024OOS-COU0327",
+    "kind": "AI_EXIT",
+    "price": 2688.52
+  },
+  {
+    "at": "2024-12-11 11:16:46.344000",
+    "child_id": "2024OOS-COU0328",
+    "kind": "ENTRY_FILL",
+    "price": 2690.2
+  },
+  {
+    "at": "2024-12-11 12:12:16.676000",
+    "child_id": "2024OOS-COU0328",
+    "kind": "HARD_SL",
+    "price": 2698.17
+  },
+  {
+    "at": "2024-12-12 11:47:31.517000",
+    "child_id": "2024OOS-COU0330",
+    "kind": "ENTRY_FILL",
+    "price": 2716.51
+  },
+  {
+    "at": "2024-12-12 20:00:00.002000",
+    "child_id": "2024OOS-COU0330",
+    "kind": "AI_EXIT",
+    "price": 2686.55
+  },
+  {
+    "at": "2024-12-16 04:55:53.387000",
+    "child_id": "2024OOS-COU0331",
+    "kind": "ENTRY_FILL",
+    "price": 2651.68
+  },
+  {
+    "at": "2024-12-16 18:00:00.082000",
+    "child_id": "2024OOS-COU0331",
+    "kind": "AI_EXIT",
+    "price": 2654.37
+  },
+  {
+    "at": "2024-12-16 21:20:00.497000",
+    "child_id": "2024OOS-COU0332",
+    "kind": "ENTRY_FILL",
+    "price": 2654.82
+  },
+  {
+    "at": "2024-12-17 05:15:00.093000",
+    "child_id": "2024OOS-COU0332",
+    "kind": "AI_EXIT",
+    "price": 2652.65
+  },
+  {
+    "at": "2024-12-17 09:53:11.680000",
+    "child_id": "2024OOS-COU0333",
+    "kind": "ENTRY_FILL",
+    "price": 2654.26
+  },
+  {
+    "at": "2024-12-17 10:37:06.838000",
+    "child_id": "2024OOS-COU0333",
+    "kind": "HARD_SL",
+    "price": 2646.28
+  },
+  {
+    "at": "2024-12-17 15:20:32.626000",
+    "child_id": "2024OOS-COU0334",
+    "kind": "ENTRY_FILL",
+    "price": 2642.95
+  },
+  {
+    "at": "2024-12-17 15:52:20.213000",
+    "child_id": "2024OOS-COU0334",
+    "kind": "HARD_SL",
+    "price": 2636.06
+  },
+  {
+    "at": "2024-12-18 01:45:06.040000",
+    "child_id": "2024OOS-COU0336",
+    "kind": "ENTRY_FILL",
+    "price": 2645.51
+  },
+  {
+    "at": "2024-12-18 06:00:00.057000",
+    "child_id": "2024OOS-COU0336",
+    "kind": "AI_EXIT",
+    "price": 2645.64
+  },
+  {
+    "at": "2024-12-18 08:14:26.666000",
+    "child_id": "2024OOS-COU0337",
+    "kind": "ENTRY_FILL",
+    "price": 2646.22
+  },
+  {
+    "at": "2024-12-18 10:00:00.022000",
+    "child_id": "2024OOS-COU0337",
+    "kind": "AI_EXIT",
+    "price": 2644.66
+  },
+  {
+    "at": "2024-12-18 14:13:00.070000",
+    "child_id": "2024OOS-WIT0080",
+    "kind": "ENTRY_FILL",
+    "price": 2646.35
+  },
+  {
+    "at": "2024-12-20 08:45:00.182000",
+    "child_id": "2024OOS-WIT0080",
+    "kind": "AI_EXIT",
+    "price": 2604.61
+  },
+  {
+    "at": "2024-12-20 13:56:23.569000",
+    "child_id": "2024OOS-WIT0081",
+    "kind": "ENTRY_FILL",
+    "price": 2604.42
+  },
+  {
+    "at": "2024-12-20 15:31:43.615000",
+    "child_id": "2024OOS-WIT0081",
+    "kind": "HARD_SL",
+    "price": 2607.7
+  },
+  {
+    "at": "2024-12-23 23:46:54.119000",
+    "child_id": "2024OOS-COU0338",
+    "kind": "ENTRY_FILL",
+    "price": 2613.03
+  },
+  {
+    "at": "2024-12-24 08:00:00.077000",
+    "child_id": "2024OOS-COU0338",
+    "kind": "AI_EXIT",
+    "price": 2619.19
+  },
+  {
+    "at": "2024-12-24 16:32:46.457000",
+    "child_id": "2024OOS-COU0339",
+    "kind": "ENTRY_FILL",
+    "price": 2615.04
+  },
+  {
+    "at": "2024-12-24 16:48:48.681000",
+    "child_id": "2024OOS-COU0339",
+    "kind": "HARD_SL",
+    "price": 2611.32
+  },
+  {
+    "at": "2024-12-26 14:31:16.759000",
+    "child_id": "2024OOS-COU0341",
+    "kind": "ENTRY_FILL",
+    "price": 2626.48
+  },
+  {
+    "at": "2024-12-26 15:02:42.282000",
+    "child_id": "2024OOS-COU0341",
+    "kind": "HARD_SL",
+    "price": 2629.96
+  },
+  {
+    "at": "2024-12-26 16:00:35.589000",
+    "child_id": "2024OOS-COU0342",
+    "kind": "ENTRY_FILL",
+    "price": 2624.31
+  },
+  {
+    "at": "2024-12-26 17:04:15.951000",
+    "child_id": "2024OOS-COU0342",
+    "kind": "HARD_SL",
+    "price": 2631.16
+  },
+  {
+    "at": "2024-12-26 19:34:23.991000",
+    "child_id": "2024OOS-COU0343",
+    "kind": "ENTRY_FILL",
+    "price": 2629.12
+  },
+  {
+    "at": "2024-12-27 12:00:00.081000",
+    "child_id": "2024OOS-COU0343",
+    "kind": "AI_EXIT",
+    "price": 2624.22
+  },
+  {
+    "at": "2024-12-27 22:08:21.090000",
+    "child_id": "2024OOS-COU0344",
+    "kind": "ENTRY_FILL",
+    "price": 2617.19
+  },
+  {
+    "at": "2024-12-27 22:13:40.549000",
+    "child_id": "2024OOS-COU0344",
+    "kind": "HARD_SL",
+    "price": 2615.23
+  },
+  {
+    "at": "2024-12-30 13:56:02.981000",
+    "child_id": "2024OOS-COU0346",
+    "kind": "ENTRY_FILL",
+    "price": 2616.97
+  },
+  {
+    "at": "2024-12-30 15:45:00.231000",
+    "child_id": "2024OOS-COU0346",
+    "kind": "AI_EXIT",
+    "price": 2613.26
+  },
+  {
+    "at": "2024-12-31 01:08:05.129000",
+    "child_id": "2024OOS-COU0347",
+    "kind": "ENTRY_FILL",
+    "price": 2605.04
+  }
+]

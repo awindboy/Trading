@@ -1,0 +1,40 @@
+{
+  "date": "2026-09-13",
+  "base_github_head": "55fca94794e00cdb3b83d410f3d71143f9beb171",
+  "status": "PASS / DOCUMENT UPDATE READY / FUTURE-HIDDEN STILL LOCKED",
+  "strategy_runtime_version": "v9-strategy-state-machine-5",
+  "strategy_state_machine_sha256": "5728c013f5c650a8e21c607112c1391b4ce1254234199380df08ac0042f91436",
+  "remap_regression_test_sha256": "52199c2c1825d55a1be68e3758cd1d791cd523b7dfa18ff430db6f3cc325120d",
+  "loss_analyzer_sha256": "72c5fe6888e83990b490cc51bcfa3a8bdb5feec7a2eef2b795e3f4c317ca1c0c",
+  "reproducibility": {
+    "all_trades_enriched_sha256": "5c523fcfdfd0096eb240e5a65085cdb9c5fd476aad6392744b6fd9ebaf7cee0c",
+    "loss_ledger_sha256": "53fd6b118aaff2df40f11535b7ba58645ef639a7ea5143827709e18a26894d1f",
+    "loss_summary_sha256": "6eb1c9ba971d288e77201297415984c871019a915bf84972b13fbc8538f17f54"
+  },
+  "2024_checkpoint": {
+    "closed": 305,
+    "wins": 103,
+    "losses": 202,
+    "sum_r": 20.505982755891434,
+    "hard_sl_losses": 153,
+    "ai_early_loss_exits": 49,
+    "fast_no_progress_hard_sl": 45,
+    "one_r_plus_then_hard_sl": 21
+  },
+  "tests": {
+    "ai_protocol_plus_remap_pytest": "PASS (8 passed)",
+    "strategy_priority_cases": "PASS (6)",
+    "gate_runtime_edge_cases": "PASS (3)",
+    "v5_consumed_594_gate_parity": "PASS",
+    "ledger_hashes_match": true,
+    "gate_counts_match": true,
+    "restart_exact": true
+  },
+  "authority_decisions": {
+    "2024": "CONSUMED POSTMORTEM DATA",
+    "new_strategy_thresholds": "NONE",
+    "2025-07": "LOCKED",
+    "2021": "UNTOUCHED FINAL RESERVE",
+    "next_contract": "V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md"
+  }
+}

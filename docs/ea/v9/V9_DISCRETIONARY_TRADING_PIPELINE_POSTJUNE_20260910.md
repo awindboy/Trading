@@ -112,3 +112,19 @@ When this pipeline resumes, use `run-until-gate` and deterministic request packe
 <!-- V9_AI_EXTERNAL_DECISION_VALIDATED_20260912 -->
 
 `run-until-gate -> versioned gate envelope -> validated action -> resume` has passed the full consumed mechanical replay. The next activation blocker is not another setup filter; it is the chart-native MAP attachment plus the actual AI semantic review instruction/model-role contract. Future-hidden July remains locked.
+
+## 2026-09-13 discretionary AI research extension
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+The 2024 postmortem expands the AI research question beyond late `HOLD / EXIT / REMAP` review.
+
+Research questions now include:
+
+```text
+ENTRY: at the execution location, is the Child side actually being accepted?
+PROGRESSION: after meaningful delivery, is the Child still expanding or has its local role completed?
+REAUTH: is fresh objective information opening a new auction or repeating an exhausted campaign oscillation?
+```
+
+These are research questions, not new live action authority. Exact scheduler events and action schemas remain unfrozen until paired-case and consumed replay work is complete.

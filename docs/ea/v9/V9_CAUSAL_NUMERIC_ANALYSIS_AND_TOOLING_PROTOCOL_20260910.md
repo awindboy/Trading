@@ -401,3 +401,22 @@ Implementation hashes and acceptance results are authority in `V9_CAUSAL_STATE_M
 2024 supplied tick data passed exact authoritative-M1 reconstruction across `344,185` minutes (`OHLC/TICKVOL mismatch = 0`). Use it as lower-resolution execution evidence for intraminute ordering and historical BID/ASK spread; do not derive a new spread threshold from it.
 
 The deterministic AI gate envelope is now versioned and consumed-tested. However, because this protocol states that chart images are a primary AI semantic input, the next packet revision/attachment layer must bind the causal MAP render identity/hash to the same request fingerprint before a real AI semantic response can receive future-hidden authority.
+
+## 2026-09-13 2024 postmortem data-classification rule
+
+<!-- V9_2024_LOSS_POSTMORTEM_20260913 -->
+
+2024 was replayed causally before outcomes were reviewed, but the full 2024 outcome set is now consumed for postmortem research.
+
+From this checkpoint forward:
+
+```text
+2024 = answer-sheet/postmortem research allowed
+2024 = NOT future-hidden/OOS validation
+2025-07 = still future-hidden
+2021 = still untouched reserve
+```
+
+R-based buckets (`<0.25R`, `>=1R`, `>=2R`, `>=3R`) are postmortem stratification tools only. They must not silently become live thresholds.
+
+Likewise, M5 side agreement, delivery count, retry count, elapsed time, or Parent trade count remain descriptive unless a later preregistered causal study earns explicit authority.
