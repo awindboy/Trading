@@ -402,3 +402,14 @@ No hidden-data status changes in this contract.
 ```
 
 The gate remains `NOT SATISFIED` until the AI entry trade-design contract, event-driven position-management contract, chart attachment, action semantics, and consumed replay are frozen and validated.
+
+## 2026-09-13 superseded active scope
+
+<!-- V9_CONTINUOUS_STATE_ACTION_POLICY_PIVOT_20260913 -->
+
+This contract is retained as historical/downstream research evidence. Its active-next-work sequence is superseded by:
+
+`V9_NEXT_RESEARCH_CONTRACT_CONTINUOUS_STATE_ACTION_POLICY_20260913.md`
+
+Entry/management blind studies, event coalescing, stale-request safety, and Hard-SL independence remain useful inputs to the newer policy work. Do not continue setup-centric optimization before the unified policy decision-sufficiency study.
+

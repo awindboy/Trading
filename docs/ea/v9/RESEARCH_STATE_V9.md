@@ -364,3 +364,33 @@ Research scheduler-v2 candidates are review-only: positive integer-R first cross
 ```
 
 Events have no automatic trade authority. Hard SL remains fixed and independent. The next work is causal chart-native AI decision research, not threshold mining. `2025-07` remains LOCKED.
+
+## 2026-09-13 active research pivot — unified Grammar policy
+
+<!-- V9_CONTINUOUS_STATE_ACTION_POLICY_PIVOT_20260913 -->
+
+The active research question is now whether the continuous Grammar is **decision-sufficient**, not whether the existing two setup branches can be tuned further.
+
+Research representation:
+
+```text
+MARKET STATE
++ TRANSITION
++ ROUTE / LANDMARK STAGE
++ POSITION STATE
++ CAUSAL CHART / OBJECT CONTEXT
+-> ACTION
+```
+
+The preliminary branch evidence suggests a compact candidate representation (`9` state combinations and `8` dominant transition primitives), but those counts must be reproduced from current-main consumed ledgers before authority.
+
+Current actions are research vocabulary only:
+
+```text
+WAIT / ARM_PARENT / ARM_COUNTER / ENTER / HOLD / EXIT / REMAP / RESET
+```
+
+Existing COUNTER/WITH_PARENT and event-driven scheduler work are retained as historical baselines/downstream infrastructure. H1-native execution is a controlled comparison hypothesis. M15/M5 are not deleted; their correct role must be tested.
+
+Future-hidden status is unchanged.
+

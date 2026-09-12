@@ -2,7 +2,7 @@
 
 Last updated: `2026-09-13`
 Status: `ACTIVE / CONTINUOUS HIERARCHICAL MARKET-FLOW GRAMMAR`
-Current phase: `AI TRADE DESIGN + DETERMINISTIC EVENT-DRIVEN POSITION REVIEW RESEARCH`
+Current phase: `CONTINUOUS GRAMMAR -> UNIFIED STATE-ACTION POLICY RESEARCH`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
@@ -384,3 +384,27 @@ Key decisions:
 - Hard SL remains independent and never widened;
 - same-batch reasons must be coalesced and pending-request supersession must preserve exact-staleness authority;
 - `2025-07` remains LOCKED and `2021` remains untouched.
+
+## 2026-09-13 continuous Grammar -> unified state-action policy handoff
+
+<!-- V9_CONTINUOUS_STATE_ACTION_POLICY_PIVOT_20260913 -->
+
+This section supersedes older immediate-next-work text where it conflicts.
+
+Current phase:
+
+```text
+CONTINUOUS GRAMMAR
+-> STATE / TRANSITION / ROUTE / POSITION POLICY
+-> H1-NATIVE EXECUTION COMPARISON
+-> CAUSAL POLICY REPLAY
+```
+
+The separate branch supplied important preliminary evidence that the continuous Grammar can remain compact while the first strategy extraction used only a narrow subset of it. Preserve the reported `9-state / 8-transition` result, H1 route-event density, and `WITH_PARENT FIRST` proxy as preliminary evidence only; reproduce them from current `main` before freezing counts.
+
+Do not continue optimizing the existing 45 fast-loss / 21 giveback candidate universe as the top-level research loop. Those studies remain useful counterexamples and scheduler evidence.
+
+Retain all accepted dual-clock, object, Hard-SL, external-action, request-fingerprint, and restart-safety mechanics.
+
+`2025-07` stays LOCKED. `2021` stays UNTOUCHED.
+

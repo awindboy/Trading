@@ -147,3 +147,25 @@ Grammar / objects
 Candidate progression wake reasons are integer-R first crossings, first favorable delivery, first post-delivery completed-M15 non-support, and the existing structural review/remap reasons. They do not directly move stops or close positions.
 
 The exploratory ML scheduler/direction track is retired. Do not reopen it before this simpler architecture has been consumed-tested.
+
+## 2026-09-13 unified-policy upstream revision
+
+<!-- V9_CONTINUOUS_STATE_ACTION_POLICY_PIVOT_20260913 -->
+
+The future discretionary pipeline should now expect one continuous policy upstream rather than two independent setup branches as the complete strategy surface.
+
+Target conceptual flow:
+
+```text
+revealed causal M1
+-> H4/H1 Grammar state
+-> transition / route / landmark event batch
+-> position state
+-> AI policy action
+-> code-owned execution / Hard SL
+-> next causal market event
+-> policy update
+```
+
+Whether M15/M5 remain as execution aids is an explicit A/B/C research question. Do not remove them from tooling before comparison.
+

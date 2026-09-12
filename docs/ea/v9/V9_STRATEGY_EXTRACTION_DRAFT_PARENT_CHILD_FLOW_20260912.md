@@ -545,3 +545,14 @@ fresh reauthorization
 ```
 
 These questions must be solved as compact market-flow semantics, not new fixed thresholds.
+
+## 2026-09-13 scope update — historical first extraction baseline
+
+<!-- V9_CONTINUOUS_STATE_ACTION_POLICY_PIVOT_20260913 -->
+
+This first COUNTER/WITH_PARENT strategy extraction remains valid as a frozen historical implementation baseline and causal comparator.
+
+It is no longer assumed to be the complete strategy universe implied by the continuous Grammar. Current research has moved upstream to unified state-action policy extraction.
+
+Do not delete or retroactively rewrite this draft. Future policy variants must be compared against it under the same causal/risk accounting.
+

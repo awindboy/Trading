@@ -24,23 +24,26 @@ Read in this order:
 5. `docs/ea/v9/DECISIONS_V9_POSTJUNE_SIMPLIFICATION_AND_RUNTIME_ADDENDUM_20260910.md`
 6. `docs/ea/v9/V9_MARKET_FLOW_ATLAS_AND_REVERSE_ENGINEERING_CONTRACT_20260911.md`
 7. `docs/ea/v9/V9_MARKET_FLOW_GRAMMAR_CONTINUOUS_HIERARCHY_AUTHORITY_20260912.md`
-8. `docs/ea/v9/V9_STRATEGY_EXTRACTION_DRAFT_PARENT_CHILD_FLOW_20260912.md`
+8. `docs/ea/v9/V9_STRATEGY_EXTRACTION_DRAFT_PARENT_CHILD_FLOW_20260912.md` (historical first strategy-extraction baseline; current policy research may supersede its candidate-universe assumption)
 9. `docs/ea/v9/V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
 10. `docs/ea/v9/V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md`
 11. `docs/ea/v9/V9_AI_REVIEW_REMAP_PACKET_AND_SCHEDULER_PROTOCOL_20260912.md`
 12. `docs/ea/v9/V9_AI_EXTERNAL_DECISION_AND_2024_TICK_VALIDATION_CHECKPOINT_20260912.md`
 13. `docs/ea/v9/V9_2024_TICK_AI_TRADING_AND_LOSS_POSTMORTEM_CHECKPOINT_20260913.md`
-14. `docs/ea/v9/V9_EVENT_DRIVEN_AI_ENTRY_AND_POSITION_REVIEW_CHECKPOINT_20260913.md`
-15. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_AI_TRADE_DESIGN_AND_EVENT_SCHEDULER_20260913.md`
-16. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md` (historical semantic questions; newer contract wins where conflicting)
-17. `docs/ea/v9/results/V9_MARKET_FLOW_ATLAS_MASTER_LEDGER_20260912.md`
-18. `docs/ea/v9/results/V9_MARKET_FLOW_GRAMMAR_RESEARCH_CHRONICLE_20260912.md`
-19. `docs/ea/v9/results/V9_DIFFICULT_MONTH_AND_AMBIGUITY_RESOLUTION_STUDY_20260912.md`
-20. `docs/ea/v9/V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
-21. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
-22. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
-23. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md` (historical; newer contract wins where conflicting)
-24. current code/tool parity state.
+14. `docs/ea/v9/V9_CONTINUOUS_GRAMMAR_STATE_ACTION_POLICY_PIVOT_CHECKPOINT_20260913.md`
+15. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_CONTINUOUS_STATE_ACTION_POLICY_20260913.md`
+16. `docs/ea/v9/results/V9_CONTINUOUS_GRAMMAR_POLICY_PRELIMINARY_EVIDENCE_20260913.md` (preliminary branch evidence; reproduce before freezing counts)
+17. `docs/ea/v9/V9_EVENT_DRIVEN_AI_ENTRY_AND_POSITION_REVIEW_CHECKPOINT_20260913.md` (historical/downstream scheduler evidence)
+18. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_AI_TRADE_DESIGN_AND_EVENT_SCHEDULER_20260913.md` (historical/subordinate; newer policy contract wins)
+19. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md` (historical semantic questions)
+20. `docs/ea/v9/results/V9_MARKET_FLOW_ATLAS_MASTER_LEDGER_20260912.md`
+21. `docs/ea/v9/results/V9_MARKET_FLOW_GRAMMAR_RESEARCH_CHRONICLE_20260912.md`
+22. `docs/ea/v9/results/V9_DIFFICULT_MONTH_AND_AMBIGUITY_RESOLUTION_STUDY_20260912.md`
+23. `docs/ea/v9/V9_CHART_NATIVE_ICT_OBJECT_AND_MTF_PIPELINE_20260910.md`
+24. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
+25. `docs/ea/v9/V9_DISCRETIONARY_TRADING_PIPELINE_POSTJUNE_20260910.md`
+26. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POSTJUN_EXECUTION_RUNTIME_20260910.md` (historical; newer contract wins where conflicting)
+27. current code/tool parity state.
 
 If older postmortems/pipeline documents conflict with the current Market Flow Grammar authority, the current authority wins.
 
@@ -205,26 +208,28 @@ This is implementation causality, not future edge. Production authority and EA a
 
 ## What to research next
 
-Do not open July. The exploratory ML direction/scheduler is retired from the active path.
+Do not open July. ML remains retired from the active path.
 
-2024 is consumed postmortem data. The current target is **AI trade design at every deterministic entry candidate + deterministic event-driven AI position review**.
+The active top-level research target is now **Continuous Grammar -> Unified State-Action Policy**.
+
+The existing COUNTER / WITH_PARENT strategy extraction and event-driven entry/management scheduler remain implemented causal baselines and downstream infrastructure, but they no longer define the complete candidate universe for current research.
 
 Current order:
 
-1. treat deterministic Counter/With-Parent authorization as a **candidate generator**, not automatic order authority for the next research phase;
-2. freeze the chart-native AI entry packet and model-role for `TRADE / WAIT / NO TRADE`, including meaningful code-owned Entry / structural Hard SL / route / destination / risk rationale;
-3. implement research scheduler-v2 wake reasons: positive integer-R first crossings, first favorable liquidity delivery, first post-delivery completed-M15 non-support, and the existing structural REVIEW/REMAP reasons;
-4. events are attention only: no automatic TP / BE / trailing / exit from any wake reason;
-5. batch same-Child same-causal-batch reasons into one request and consumed-test pending-request stale/supersede/rebuild behavior;
-6. run causal paired AI review on all 21 `MFE>=1R -> Hard SL` givebacks versus long-tail winners;
-7. run entry-AI review on all 45 fast/no-progress Hard-SL trades versus comparable winners;
-8. replay full 2024 consumed period with the real AI entry + management contract, then 2025H1 + 2026JF for semantic/runtime robustness;
-9. freeze packet/chart/prompt/model-role/runtime versions and hashes only after counterexample review;
-10. only then explicitly reconsider future-hidden `2025-07`.
+1. reproduce the separate-branch consumed findings on the current `main` path before freezing any new counts: compact H1-hour states, run transitions, landmark/event batches, authority-strength topology, and unexplained remainder;
+2. build a causal policy-event ledger over `2025H1 + 2026JF` with `Market State + Transition + Route/Landmark Stage + Position State + causal chart/object context`;
+3. compress the smallest reusable policy vocabulary; the preliminary `9 states / 8 transition primitives` are hypotheses to reproduce, not constants to force;
+4. use a small common action vocabulary such as `WAIT / ARM_PARENT / ARM_COUNTER / ENTER / HOLD / EXIT / REMAP / RESET`; every state needs an action meaning, not necessarily a trade;
+5. run a decision-sufficiency study: if the same causal state/route context cannot support a repeatable action, classify it as genuine `WAIT/UNRESOLVED` or identify a missing causal variable without threshold mining;
+6. elevate Grammar/route event batches as the primary AI wake candidates; retain same-batch coalescing, stale/supersede safety, exact request fingerprints, and independent Hard SL;
+7. treat `R_MILESTONE`, first favorable delivery, and post-delivery M15 non-support as downstream review candidates rather than the top-level market policy definition;
+8. once policy semantics are stable, compare execution variants: `PURE H1 NATIVE`, `H1 AUTHORITY + LTF EXECUTION AID`, and the current `M15 authorization + M5 execution` baseline;
+9. if a forming H1 candle is used, freeze a causal partial-H1 contract built only from revealed M1 before any performance comparison;
+10. only after consumed policy semantics, H1-native comparison, 2024 consumed replay, and implementation/parity freeze may the future-hidden gate be reconsidered.
 
-The current future-hidden gate decision is `NOT SATISFIED`.
+The current future-hidden gate decision remains `NOT SATISFIED`.
 
-ML direction prediction and ML AI-call sentinel work are not current authority and should not be continued unless deterministic event scheduling later proves operationally insufficient.
+Do not infer from preliminary branch evidence that one H1 cycle must equal one trade, that M15/M5 should be deleted, or that the nine preliminary state labels are final trade rules.
 
 2024 must never again be cited as untouched/OOS validation after the postmortem.
 
@@ -298,3 +303,18 @@ consumed 594-gate parity      PASS / exact hashes
 No new strategy threshold is authorized. The current research contract is `V9_NEXT_RESEARCH_CONTRACT_GRAMMAR_LOSS_CONVERSION_20260913.md`.
 
 `2025-07` remains LOCKED; `2021` remains untouched.
+
+## 2026-09-13 continuous Grammar -> unified policy pivot
+
+<!-- V9_CONTINUOUS_STATE_ACTION_POLICY_PIVOT_20260913 -->
+
+Current active checkpoint:
+
+`V9_CONTINUOUS_GRAMMAR_STATE_ACTION_POLICY_PIVOT_CHECKPOINT_20260913.md`
+
+Current active next-research contract:
+
+`V9_NEXT_RESEARCH_CONTRACT_CONTINUOUS_STATE_ACTION_POLICY_20260913.md`
+
+The first COUNTER/WITH_PARENT strategy extraction remains a historical causal baseline, not the assumed complete policy universe. H1-native execution is a comparison hypothesis, not accepted strategy authority. Preliminary branch counts must be reproduced on current `main` before they become factual authority.
+

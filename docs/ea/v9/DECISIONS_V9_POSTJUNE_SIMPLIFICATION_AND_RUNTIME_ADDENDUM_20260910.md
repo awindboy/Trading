@@ -289,3 +289,27 @@ Consumed 2024 feasibility supports simple deterministic scheduling without ML. C
 Do not interpret R milestones as minimum-R, TP, BE, or trailing authority. Do not interpret delivery or M15 non-support as automatic exit. Counterfactuals show those automatic rules cut more winner value than they save.
 
 The exact entry action schema, chart packet, prompt/model role, event-packet version, and pending-request supersession mechanics remain unfrozen and require consumed causal testing.
+
+## 2026-09-13 continuous Grammar state-action policy decision update
+
+<!-- V9_CONTINUOUS_STATE_ACTION_POLICY_PIVOT_20260913 -->
+
+Decision:
+
+```text
+active top-level research frame = CONTINUOUS STATE-ACTION POLICY
+setup-centric COUNTER/WITH_PARENT optimization = SUBORDINATE / BASELINE
+event-driven R/delivery scheduler = DOWNSTREAM INFRASTRUCTURE / REVIEW CANDIDATE
+H1-native execution = HIGH-PRIORITY COMPARISON HYPOTHESIS
+M15/M5 deletion = NOT AUTHORIZED
+ML = RETIRED FROM ACTIVE PATH
+2025-07 = LOCKED
+2021 = UNTOUCHED
+```
+
+The separate research branch suggests that the Grammar may be compact enough to support a unified policy and that lower-timeframe reauthorization may fragment larger H1 theses. These are research motivations, not automatic rules.
+
+The project must first reproduce the branch evidence on current `main`, then build a causal `State + Transition + Route + Position -> Action` ledger over consumed 2025H1 + 2026JF.
+
+Do not convert state base rates into deterministic direction, do not impose one-trade-per-H1-cycle, and do not remove M15/M5 before controlled H1-native A/B/C comparison.
+

@@ -428,3 +428,12 @@ No future-hidden data was opened for this study.
 ```
 
 The future-hidden gate remains `NOT SATISFIED`.
+
+## 2026-09-13 scope update — scheduler evidence retained downstream
+
+<!-- V9_CONTINUOUS_STATE_ACTION_POLICY_PIVOT_20260913 -->
+
+The findings in this checkpoint remain valid evidence that `event != action`, that automatic R/delivery exits destroy large-winner value, and that deterministic batching/Hard-SL independence are useful runtime properties.
+
+However, this scheduler is no longer the top-level definition of when the market should request a policy decision. Current research first evaluates continuous Grammar/route event batches as the upstream AI wake framework. R milestones and trade-specific progression events remain downstream review candidates.
+
