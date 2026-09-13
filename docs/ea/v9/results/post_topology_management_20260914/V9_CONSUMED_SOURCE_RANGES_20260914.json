@@ -1,0 +1,20 @@
+{
+  "version": "v9-consumed-topology-journey-ranges-1",
+  "source_basename": "GOLD#_M1_202201030100_202608282357(5).csv",
+  "source_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+  "ranges": {
+    "2024": {
+      "start_offset": 43348274,
+      "end_offset": 65173328
+    },
+    "2025H1": {
+      "start_offset": 65173328,
+      "end_offset": 75912993
+    },
+    "2026JF": {
+      "start_offset": 86972434,
+      "end_offset": 90428045
+    }
+  },
+  "safety_note": "Only these consumed byte ranges are authorized. 2025-07 remains locked; 2021 remains untouched."
+}

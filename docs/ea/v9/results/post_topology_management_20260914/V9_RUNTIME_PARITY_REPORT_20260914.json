@@ -1,0 +1,105 @@
+{
+  "runtime_version": "v9-arrival-delivery-runtime-1",
+  "runtime_sha256": "2fe5246cf867bb119eedf8aaa506776786cbe59cee9d7dbb2b3479aee1b1355a",
+  "authoritative_full_m1_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+  "source_ranges": {
+    "2024": {
+      "start_offset": 43348274,
+      "end_offset": 65173328
+    },
+    "2025H1": {
+      "start_offset": 65173328,
+      "end_offset": 75912993
+    },
+    "2026JF": {
+      "start_offset": 86972434,
+      "end_offset": 90428045
+    }
+  },
+  "one_position": {
+    "2024": {
+      "arrival_core_parity": true,
+      "trade_core_parity": true,
+      "arrivals": 372,
+      "trade_records": 88,
+      "resolved": 75,
+      "total_R": 43.84282284128094,
+      "PF": 2.4068209242887106,
+      "restart_byte_identical": true,
+      "hashes": {
+        "ARRIVALS": "a2f15d3fad90923fa9cd06922e53cf8900b86d8fb15b25105ddc7f570cfcfda8",
+        "OBJECTS": "f9a4a90c50fae744b78290cae4632ea02f5430efb460ba0d917e1c8e3aae3d9b",
+        "TRADES": "28114bb6a7d3d4ce0766fd5ee5f514acd2f547229c0a404248483bc6c6ca4abb"
+      }
+    },
+    "2025H1": {
+      "arrival_core_parity": true,
+      "trade_core_parity": true,
+      "arrivals": 157,
+      "trade_records": 34,
+      "resolved": 31,
+      "total_R": 20.28991783045644,
+      "PF": 3.204410856685875,
+      "restart_byte_identical": true,
+      "hashes": {
+        "ARRIVALS": "8b493cb7c823fcefe9b27cef0242a65e5e31e28e5f9a12bed7cccbea26011bdd",
+        "OBJECTS": "a6fff3dca4906edb75780f5cc78d3e78aec55e7674030c07faa4f4ee810944eb",
+        "TRADES": "1693f2a5a6375c181a743b36f0991ea38d7364824dc491e43cb5039df1f280d7"
+      }
+    },
+    "2026JF": {
+      "arrival_core_parity": true,
+      "trade_core_parity": true,
+      "arrivals": 52,
+      "trade_records": 11,
+      "resolved": 9,
+      "total_R": 8.079143135523763,
+      "PF": 3.084687102458782,
+      "restart_byte_identical": true,
+      "hashes": {
+        "ARRIVALS": "e0276edb13f48a6cd99627b4be100cd142f5b8302ef2022ab7545605ee0e7211",
+        "OBJECTS": "b5ae30bb7ed69f7da7709c1ef5406863a5c427ca0dfd422649e08836f4ea2a5d",
+        "TRADES": "f38abb93faaaf813e362c8bcb03066be567958229077a46c0f443dd615354754"
+      }
+    }
+  },
+  "replace": {
+    "2024": {
+      "trade_records": 284,
+      "resolved": 260,
+      "total_R": 48.623518971965424,
+      "PF": 1.8471971167350532,
+      "restart_byte_identical": true,
+      "hashes": {
+        "ARRIVALS": "a2f15d3fad90923fa9cd06922e53cf8900b86d8fb15b25105ddc7f570cfcfda8",
+        "OBJECTS": "f9a4a90c50fae744b78290cae4632ea02f5430efb460ba0d917e1c8e3aae3d9b",
+        "TRADES": "dd3394678e06b1186c2b30177a549fd08888e23f1d3468416dd27e085f63f5d4"
+      }
+    },
+    "2025H1": {
+      "trade_records": 125,
+      "resolved": 118,
+      "total_R": 25.911784054584615,
+      "PF": 2.104393953871878,
+      "restart_byte_identical": true,
+      "hashes": {
+        "ARRIVALS": "8b493cb7c823fcefe9b27cef0242a65e5e31e28e5f9a12bed7cccbea26011bdd",
+        "OBJECTS": "a6fff3dca4906edb75780f5cc78d3e78aec55e7674030c07faa4f4ee810944eb",
+        "TRADES": "eeba9f1b0d0ba975f7d4842d74949f1177e7a0dc425184989d9a0dbf0587e21c"
+      }
+    },
+    "2026JF": {
+      "trade_records": 41,
+      "resolved": 36,
+      "total_R": 16.128894325496795,
+      "PF": 3.1870154385730634,
+      "restart_byte_identical": true,
+      "hashes": {
+        "ARRIVALS": "e0276edb13f48a6cd99627b4be100cd142f5b8302ef2022ab7545605ee0e7211",
+        "OBJECTS": "b5ae30bb7ed69f7da7709c1ef5406863a5c427ca0dfd422649e08836f4ea2a5d",
+        "TRADES": "692ddfce136ef87981c76d01b7f82c97f91a785f9cb2c1649ab67126ee505ee8"
+      }
+    }
+  },
+  "range_replay_matches_safe_block_replay": true
+}

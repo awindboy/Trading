@@ -1,0 +1,8 @@
+{
+  "h1_structural_coverage": {
+    "valid": 450,
+    "opportunities": 452
+  },
+  "challenge_topology_combined_accuracy": 0.6055045871559633,
+  "replace_records": 450
+}
