@@ -1,7 +1,7 @@
 # V9 Research Instructions — Current Authority
 
 Last synchronized: `2026-09-13`
-Status: `ACTIVE / FLOW-ROUTE MARKET GRAMMAR RECONSTRUCTION`
+Status: `ACTIVE / ARRIVAL-DELIVERY GRAMMAR / TRADING EXTRACTION PREP`
 Production authority: `NONE`
 EA authority: `NONE`
 Market authority: `GOLD# ONLY`
@@ -22,235 +22,178 @@ Before any V9 research, read the current documents in this exact order:
 3. `docs/ea/v9/HANDOFF_V9.md`
 4. `docs/ea/v9/RESEARCH_STATE_V9.md`
 5. `docs/ea/v9/V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md`
-6. `docs/ea/v9/V9_FLOW_ROUTE_GRAMMAR_CORE_AUTHORITY_20260913.md`
-7. `docs/ea/v9/V9_FLOW_ROUTE_RESEARCH_RECOVERY_CHECKPOINT_20260913.md`
-8. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_FLOW_ROUTE_RECONSTRUCTION_20260913.md`
+6. `docs/ea/v9/V9_ARRIVAL_DELIVERY_GRAMMAR_CORE_AUTHORITY_20260913.md`
+7. `docs/ea/v9/V9_ARRIVAL_DELIVERY_GRAMMAR_AND_SIMPLE_BASELINE_CHECKPOINT_20260913.md`
+8. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_ARRIVAL_DELIVERY_TRADING_REFINEMENT_20260913.md`
 9. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
 10. `docs/ea/v9/V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
 11. current code/tool parity state.
 
-Read older strategy, scheduler, state-action, H1-native, COUNTER/WITH_PARENT, or postmortem documents only when historical evidence is specifically needed. They do **not** define current research direction.
+Older FLOW_ROUTE reconstruction, state-action, scheduler, H1-native, COUNTER/WITH_PARENT, or postmortem documents are historical evidence unless explicitly retained by the authority map. They do not override the documents above.
 
-## 1. What V9 Grammar means now
+## 1. Current V9 Grammar
 
-The core Grammar is a **continuous price-flow process**, not an H4/H1 alignment classifier.
-
-Canonical semantic sequence:
+The top-level market description is intentionally simple:
 
 ```text
-ORIGIN
--> ACTIVE MOVEMENT / DELIVERY
--> LANDMARK ARRIVAL
--> RESPONSE
--> ACCEPTANCE / REJECTION / FAILURE / RESOLUTION
--> NEXT DELIVERY or ROUTE COMPLETE / RESET
--> NEXT ROUTE
-```
-
-The primary semantic unit is:
-
-```text
-FLOW_ROUTE / FLOW_LEG
-```
-
-not:
-
-```text
-one H1 candle
-one H4 bar
-one alignment label
-one H1 interrupt
-one H1 realign
-one setup
-```
-
-The research goal is to explain long contiguous price paths as a small number of meaningful routes that persist through local candle noise.
-
-## 2. H4/H1 labels are context observations, not the Grammar itself
-
-Retain these observations because they are useful context:
-
-```text
-H4 authority: STRONG / WEAK / NEUTRAL-AMBIGUOUS
-H4 phase: MIGRATION / LOCAL_INTERRUPT / NEUTRAL
-H1 local relation: ALIGNED / H1_INTERRUPT / UNRESOLVED
-```
-
-But treat them as **observations about an active route**, not as standalone route identities or trade signals.
-
-Critical interpretation:
-
-```text
-H1_REALIGN
-= price has already moved enough for the H1 classification to align again
-!= forecast that the next movement must continue
-!= proof a new FLOW_ROUTE began
-!= automatic entry authorization
-```
-
-Likewise:
-
-```text
-H1_INTERRUPT
-= local counterflow / balance observation inside the current context
-!= automatic counter route
-!= automatic exit
-```
-
-A route may remain the same while H1 alignment changes several times.
-A new route must be earned by route/landmark resolution, not by a candle-state flip alone.
-
-## 3. Landmarks and destinations are first-class Grammar semantics
-
-Code owns exact object geometry and lifecycle for available candidate families.
-AI/research assigns strategic meaning.
-
-Keep separate:
-
-```text
-GEOMETRIC FACT
-vs
-FLOW / ROUTE ROLE
-```
-
-Candidate flow roles include:
-
-```text
-ORIGIN
-TRANSIT LANDMARK
-ACTIVE DESTINATION
+MOVING
 ARRIVAL
-RESPONSE AREA
-DELIVERY / CONSUMED DESTINATION
-ROUTE-COMPLETE / CAMPAIGN-CHANGING LANDMARK
-UNRESOLVED ROLE
 ```
 
-Object existence never equals strategic importance.
+`MOVING` means price is between meaningful arrivals. Do not split MOVING into new market states because price accelerates, slows, pulls back, temporarily trends the other way, H1 interrupts, or H4/H1 labels change.
 
-## 4. Recovered research that remains usable
-
-The 2026-09-13 research recovery audit found that the useful pre-drift Atlas direction was already present before H4/H1 labels became the semantic center.
-
-Keep these historical ideas/assets:
+`ARRIVAL` is a factual event with attributes:
 
 ```text
-Stage 1: FLOW LEG / DELIVERY PATH / ARRIVAL / NEXT STATE as the research unit
-Stage 2: exact code-owned POI / FVG / OB / swing-liquidity geometry and lifecycle
-Stage 3: arrival -> response -> next delivery as the right structural question
-Later hierarchy work: H4/H1 topology, uncertainty and neutralization as route context only
+SIDE
+  UP
+  DOWN
+  OVERLAP / UNRESOLVED
+
+ROLE
+  H4 LIQUIDITY -> DELIVERY / PROGRESSION evidence
+  H4 FVG / OB  -> RESPONSE / INTERACTION evidence
 ```
 
-Use existing strict consumed evidence as raw material:
+Arrival direction is an event attribute, not a new market state.
+
+## 2. Slow semantic route status
+
+The current compact semantic layer is:
 
 ```text
-docs/ea/v9/results/market_flow_atlas/MARKET_FLOW_EVENT_LEDGER.csv
-docs/ea/v9/results/market_flow_atlas/POI_INTERACTION_CLUSTER_STUDY_STRICT.csv
-docs/ea/v9/results/market_flow_atlas/LIQUIDITY_DELIVERY_CLUSTER_STUDY_STRICT.csv
+PRIMARY_ACTIVE(side)
+        |
+        | opposite H4 liquidity arrival
+        v
+CHALLENGED / UNRESOLVED
+        |
+        | next meaningful H4 liquidity arrival
+        +-- old side        -> PRIMARY_CONTINUES
+        +-- challenger side -> CHALLENGER_EARNED
 ```
 
-Do **not** resurrect:
+Important interpretation:
 
-- the early 80-90% response/acceptance figures as forward edge;
-- `last accepted probe before next state` or any future-selected last-event logic;
-- H1/H4 state flips as FLOW_ROUTE boundaries;
-- `H1_REALIGN -> continuation` as Grammar authority.
+- one opposite arrival does not automatically reverse the route;
+- POI arrival does not automatically complete a route;
+- `CHALLENGED` is explicit uncertainty, not a direction that must be guessed;
+- no fixed event count, duration, R threshold, ATR threshold, cooldown, retry limit, or timeout is part of this semantic resolver;
+- the consumed study seeded its initial primary from the first available H4-liquidity delivery in the research block. A production/live initialization contract is still unfrozen.
 
-Read `V9_FLOW_ROUTE_RESEARCH_RECOVERY_CHECKPOINT_20260913.md` for the exact carry-forward boundary.
+## 3. POI and liquidity roles are separate
 
-## 5. Current research question
-
-Do **not** ask first:
+Current evidence supports keeping both as arrivals while assigning different research roles:
 
 ```text
-Should H1 realign be bought/sold?
-Which state has the best R?
-Should AI filter this candidate?
-Should M15/M5 be removed?
+LIQUIDITY ARRIVAL
+= what price actually delivered into / consumed
+= primary progression evidence
+
+POI ARRIVAL
+= where price interacted / responded
+= context for the journey
+!= automatic continuation signal
+!= automatic reversal signal
 ```
 
-Ask:
+H4/H1 authority, phase, alignment, interrupt, realign, and similar labels remain context observations only. They cannot silently become route identity or entry authority.
+
+## 4. Active destinations are dynamic
+
+Do not model a route as one fixed origin-to-one-fixed-target path.
+
+Current consumed research showed that the next same-side H4 liquidity destination is often created after the previous destination has already been consumed. Therefore:
 
 ```text
-Where did the current flow originate?
-What is the active delivery side?
-What meaningful destination is price moving toward?
-What did price arrive at?
-What response occurred there?
-Was the destination accepted, rejected, consumed, or unresolved?
-Did the old route continue, complete, or remap?
-What is the next route?
+ACTIVE_DESTINATION_SET = dynamic
+DESTINATION_CONSUMED != ROUTE_COMPLETE
+NO CURRENT KNOWN SAME-SIDE TARGET != ROUTE_COMPLETE
 ```
 
-Only after this route language is compact and causal should trading policy be extracted again.
+New destinations may open while the same delivery journey remains alive.
 
-## 6. Immediate next work — do this before any trading study
+## 5. Current structural evidence — research only
 
-Start from the chronological strict arrival stream, not from a trade and not from an H1 realign.
+Consumed `2025H1 + 2026JF` research currently supports these descriptive facts:
+
+- `PRIMARY_ACTIVE` H4-liquidity delivery was followed by another same-side H4-liquidity delivery in roughly `73%` of the studied active delivery-to-next-delivery windows;
+- the result was similar across the two consumed blocks and both directions, but varied materially month to month;
+- `CHALLENGER_EARNED` was followed by another same-side H4-liquidity delivery in roughly `82%` of the small consumed sample (`22` events);
+- POI touch/orientation alone did not provide a stable continuation/reversal classifier;
+- `CHALLENGED` POI structure did not reliably identify which side would resolve first;
+- explicit `CHALLENGED / UNRESOLVED` materially reduced forced semantic disagreement in difficult periods.
+
+These percentages are **not trade win rates** and are not live thresholds.
+
+## 6. Simple trading baseline — checkpoint only
+
+A deliberately primitive consumed-data baseline was used only to confirm that the simplified Grammar can be translated into trades at all.
+
+Prototype family:
 
 ```text
-1. build FLOW_ROUTE_EVENT_STREAM from strict POI/liquidity events + authoritative price
-2. build ANSWER_SHEET_FLOW_ROUTE_LEDGER over 2025H1 + 2026JF
-3. use same-side liquidity deliveries as candidate evidence of an ongoing delivery path, not as a fixed route rule
-4. study opposite-side raids/POI responses inside an active path and distinguish local response from genuine route completion
-5. attach H4/H1 observations only after route identity has been reconstructed
-6. audit H1/H4 observation flips that occur inside one persistent route
-7. test the same vocabulary on difficult/transition-heavy periods
-8. only then freeze a causal prefix-only FLOW_ROUTE contract
+state       = PRIMARY_ACTIVE
+entry       = next H1 open after a causally confirmed active H4-liquidity delivery event
+TP          = nearest causally known same-side H4 liquidity destination
+Hard SL     = structural opposite H1 swing comparator
+positioning = one-position comparator was tested separately
 ```
 
-No new quantitative route-count authority was established in the recovery session. The next session must create the first actual FLOW_ROUTE ledger rather than inventing counts from the old state ledgers.
-
-## 7. Active research order
-
-Current order:
+The exploratory H1-structural-SL one-position baseline produced approximately:
 
 ```text
-1. answer-sheet FLOW_ROUTE reconstruction on consumed periods
-2. route/origin/destination/arrival/response vocabulary compression
-3. difficult-period and counterexample review
-4. distinguish route persistence from local H4/H1 observation changes
-5. freeze causal FLOW_ROUTE reconstruction contract
-6. replay causal prefix-only flow maps
-7. freeze AI semantic packet for route interpretation if needed
-8. only then extract trading policy / compare mechanical vs AI vs human-discretion research
-9. consumed execution/performance replay
-10. implementation/parity freeze
-11. only then reconsider future-hidden 2025-07
+resolved win rate: about 70%
+net result: about +8R to +9R over the consumed study, depending on still-unfrozen execution/warm-up convention
+max drawdown: about 4.4R in the tested comparator
 ```
 
-## 8. Explicitly retired as current research directions
+The `CHALLENGER_EARNED` subset was stronger in the small sample, approximately `75-79%` resolved win rate and roughly `+5.6R to +6.6R` depending on convention.
 
-The following are historical evidence or infrastructure only and must not be resumed as the active research program:
+Do not freeze these exact P&L numbers yet. The baseline reproduction script and execution convention must be versioned before exact performance receives authority.
 
-- `COUNTER / WITH_PARENT` as the assumed complete candidate universe;
-- direct `H1_REALIGN -> ENTER` research;
-- `PURE H1 NATIVE` as a presumed solution;
-- the `9-state / 8-transition -> unified state-action policy` pivot as the top-level semantic model;
-- entry-AI filtering of existing setup candidates as the main problem;
-- R-milestone / first-delivery scheduler as the top-level market model;
-- ML direction or AI-call sentinel research;
-- state-by-state LONG/SHORT policy tables.
+The one-position comparator is not a hidden retry limit, trade quota, or final position policy.
 
-These may be used as comparators after FLOW_ROUTE semantics are stable.
+## 7. Immediate next work
 
-## 9. Permanent causal and trading guardrails
+The next research phase is trading refinement **inside the simplified Grammar**, not another attempt to classify every market fluctuation.
 
-Retain:
+Order:
+
+```text
+1. freeze a versioned reproduction script for the simple Entry/SL/TP baseline
+2. freeze exact entry-price, object-known-at, target-selection, Hard-SL, spread/tick and intraminute conventions
+3. compare PRIMARY_DELIVERY / PRIMARY_CONTINUES / CHALLENGER_EARNED as distinct causal entry contexts
+4. study entry geometry during PRIMARY_ACTIVE, especially counter-move / POI-response structures
+5. study structural Hard SL placement without widening after entry
+6. study destination/journey handling and whether TP should remain nearest-known destination or become a managed journey
+7. study existing-Child behavior when PRIMARY_ACTIVE becomes CHALLENGED; do not assume automatic exit
+8. quantify payoff, loss containment, overlapping Child behavior, and route-level exposure on consumed data
+9. freeze the simplest policy that survives counterexamples without hidden thresholds
+10. only then implement/replay through the deterministic runtime and satisfy parity gates
+11. only after all gates are explicitly satisfied may future-hidden `2025-07` be reconsidered
+```
+
+Do not optimize for a target win rate or minimum R.
+
+## 8. Permanent causal and trading guardrails
+
+Retain without exception:
 
 - no future peek;
 - no hindsight backfill;
 - stopped Child is dead and never rescued by later price;
 - Parent and Child remain separate;
-- Hard SL fixed before entry and never widened;
-- exact executable prices/objects come from code/runtime;
-- no hidden minimum-R, cooldown, retry cap, fixed no-chase, fixed TP, forced LONG/SHORT balance, or trade/day quota;
-- do not turn one/two examples into authority;
+- Hard SL is fixed before entry and never widened;
+- code/runtime owns exact price, object geometry, known-at time, fill chronology and R arithmetic;
+- AI/human research may interpret semantic role/context but cannot change code-owned geometry;
+- no hidden minimum-R, cooldown, retry cap, fixed no-chase, fixed numeric TP, forced LONG/SHORT balance, trade/day quota, or duration threshold;
+- do not change authority from one or two examples;
 - explicit uncertainty is valid information;
-- chart semantics and numeric execution authority remain separate;
-- `PRICE_REVEALED_CUTOFF <= INFORMATION_KNOWN_AT` and dual-clock rules remain binding.
+- `PRICE_REVEALED_CUTOFF <= INFORMATION_KNOWN_AT` remains binding;
+- accidental future reveal contaminates the interval; never backfill a trade into it.
 
-## 10. Data boundary
+## 9. Data boundary
 
 ```text
 2024        = CONSUMED POSTMORTEM / RESEARCH DATA
@@ -260,18 +203,16 @@ Retain:
 2021        = UNTOUCHED FINAL RESERVE
 ```
 
-Do not open July or 2021.
+Future-hidden gate: `NOT SATISFIED`.
 
-## 11. What counts as progress now
+## 10. What counts as progress now
 
-Progress is **not** a new profitable H1 rule.
+Progress is no longer a more detailed state taxonomy.
 
 Progress is:
 
-- a route ledger that explains long contiguous periods without bar-by-bar route flipping;
-- exact origin/destination/arrival links to code-owned facts;
-- compact response/resolution semantics that survive difficult periods;
-- a causal version that can preserve route identity from revealed data only;
-- explicit unresolved cases rather than invented certainty.
-
-If a future session starts optimizing H1 realign trades or state-action tables before these gates, it is off-contract.
+- a causal, compact arrival/delivery representation that remains stable through local noise;
+- explicit `CHALLENGED / UNRESOLVED` rather than forced direction;
+- a reproducible baseline that shows whether the representation can support good attempts under uncertainty;
+- Entry / Hard-SL / journey logic that contains losses without hindsight repair;
+- a simple policy whose edge survives consumed counterexamples and implementation parity.
