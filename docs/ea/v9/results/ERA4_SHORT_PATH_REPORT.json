@@ -1,0 +1,52 @@
+{
+  "runtime_policy": "MULTI_CHILD_ERA4",
+  "era_scale": "previous-completed H4 Wilder ATR180",
+  "eligibility": "valid causal H1 structural SL and SL_distance/ATR180 <= 4.0",
+  "entries": 1250,
+  "resolved": 1101,
+  "ambiguous": 148,
+  "gross": {
+    "entries": 1250,
+    "resolved_or_wc": 1101,
+    "pnl": 10968.570000000005,
+    "PF": 1.8871039357125705,
+    "WR": 0.4396003633060854,
+    "maxDD": 1085.5799999999945,
+    "avg_win": 48.208760330578514,
+    "avg_loss": -20.072191558441553
+  },
+  "ambiguous_worst": {
+    "entries": 1250,
+    "resolved_or_wc": 1249,
+    "pnl": 6792.310000000007,
+    "PF": 1.410641489220851,
+    "WR": 0.3875100080064051,
+    "maxDD": 1713.8599999999951,
+    "avg_win": 48.208760330578514,
+    "avg_loss": -21.650170157068057
+  },
+  "direction": {
+    "DOWN": {
+      "entries": 547,
+      "resolved_or_wc": 489,
+      "pnl": -787.3499999999954,
+      "PF": 0.8891635497507647,
+      "WR": 0.3619631901840491,
+      "maxDD": 1684.820000000001,
+      "avg_win": 35.685649717514146,
+      "avg_loss": -22.76830128205128
+    },
+    "UP": {
+      "entries": 703,
+      "resolved_or_wc": 612,
+      "pnl": 11755.920000000002,
+      "PF": 3.2346429033067485,
+      "WR": 0.5016339869281046,
+      "maxDD": 1028.4999999999982,
+      "avg_win": 55.42892508143323,
+      "avg_loss": -17.305131578947357
+    }
+  },
+  "positive_months": 33,
+  "months": 55
+}

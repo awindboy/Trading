@@ -1,0 +1,59 @@
+{
+  "date": "2026-09-14",
+  "base_github_main_head": "4d40f095d8a7e0ccbdd74ac380d8ac29411cbc03",
+  "source_m1_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+  "source_rows": 1648545,
+  "source_range": [
+    "2022-01-03 01:00:00",
+    "2026-08-28 23:57:00"
+  ],
+  "h4_reconstruction": {
+    "bars": 7199,
+    "open_mismatch": 0,
+    "high_mismatch": 0,
+    "low_mismatch": 0,
+    "close_mismatch": 0
+  },
+  "runtime_version": "v9-arrival-delivery-multichild-era-runtime-1",
+  "runtime_sha256": "dee31f146823a78cf137d64c022a9271777bb9977c79bc48db27806589e6b4b7",
+  "split_resume_stops": [
+    300000,
+    600000,
+    900000,
+    1200000,
+    1300000,
+    1400000,
+    1500000,
+    1600000,
+    1648545
+  ],
+  "final": {
+    "entries": 1250,
+    "rejections": 116,
+    "arrivals": 1733,
+    "objects": 9397
+  },
+  "eligibility_rejections": {
+    "SL_ERA_GT_4": 85,
+    "ATR180_WARMUP": 29,
+    "NO_VALID_H1_STRUCT_SL": 2
+  },
+  "independent_reference_core_mismatch": {
+    "entry_ts": 0,
+    "direction": 0,
+    "entry": 0,
+    "sl": 0,
+    "sl_dist": 0,
+    "status": 0,
+    "exit_ts": 0,
+    "exit_price": 0,
+    "R": 0,
+    "ATR180": 0
+  },
+  "ledgers": {
+    "FULL_2022_202608_MULTI_CHILD_ARRIVALS.csv": "2ac64c70b4520e128364208c06aa8347bc34ddb21db57fb3a8d214f2f58f6523",
+    "FULL_2022_202608_MULTI_CHILD_TRADES.csv": "decf8ed05f1bee08dd53f6cf2ebb58907229eaed8c78fc7f3ab1409c00c22983",
+    "FULL_2022_202608_MULTI_CHILD_REJECTIONS.csv": "1d9bb45de2dca97de121a458499171c982a16b4c222d6ceadd1d9ef4cd51e329",
+    "FULL_2022_202608_MULTI_CHILD_OBJECTS.csv": "160d8b22f6c2ff9db9ca60f5fc172120aa7e8f6323c7cbd5e1da452a97870d01"
+  }
+}
