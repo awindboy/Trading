@@ -1,7 +1,7 @@
 # V9 Research Instructions — Current Authority
 
 Last synchronized: `2026-09-13`
-Status: `ACTIVE / ARRIVAL-DELIVERY GRAMMAR / TRADING EXTRACTION PREP`
+Status: `ACTIVE / ARRIVAL-DELIVERY GRAMMAR / MECHANICAL EDGE REFINEMENT / IMMEDIATE ENTRY`
 Production authority: `NONE`
 EA authority: `NONE`
 Market authority: `GOLD# ONLY`
@@ -24,10 +24,12 @@ Before any V9 research, read the current documents in this exact order:
 5. `docs/ea/v9/V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md`
 6. `docs/ea/v9/V9_ARRIVAL_DELIVERY_GRAMMAR_CORE_AUTHORITY_20260913.md`
 7. `docs/ea/v9/V9_ARRIVAL_DELIVERY_GRAMMAR_AND_SIMPLE_BASELINE_CHECKPOINT_20260913.md`
-8. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_ARRIVAL_DELIVERY_TRADING_REFINEMENT_20260913.md`
-9. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
-10. `docs/ea/v9/V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
-11. current code/tool parity state.
+8. `docs/ea/v9/V9_MECHANICAL_EDGE_AND_IMMEDIATE_ENTRY_AUTHORITY_20260913.md`
+9. `docs/ea/v9/V9_IMMEDIATE_ENTRY_AND_LTF_NOISE_RESEARCH_CHECKPOINT_20260913.md`
+10. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_MECHANICAL_EDGE_REFINEMENT_20260913.md`
+11. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
+12. `docs/ea/v9/V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
+13. current code/tool parity state.
 
 Older FLOW_ROUTE reconstruction, state-action, scheduler, H1-native, COUNTER/WITH_PARENT, or postmortem documents are historical evidence unless explicitly retained by the authority map. They do not override the documents above.
 
@@ -154,28 +156,63 @@ Do not freeze these exact P&L numbers yet. The baseline reproduction script and 
 
 The one-position comparator is not a hidden retry limit, trade quota, or final position policy.
 
+## 6A. Mechanical edge / immediate-entry research correction
+
+For the active refinement phase:
+
+```text
+MEANINGFUL CAUSAL ARRIVAL / DELIVERY
+-> Grammar update
+-> if mechanically authorized, IMMEDIATE ENTRY
+```
+
+Do not require a separate M1/M5/M15 entry pattern.
+
+LTF data is currently authorized for exact first-touch chronology, executable-price evidence, Hard-SL/TP ordering, spread/tick evidence where available, and intraminute ambiguity only. It is **not** the active edge-discovery layer.
+
+Research priority is:
+
+```text
+exact arrival clock
+-> immediate-entry baseline
+-> mechanical Grammar edge
+-> Hard SL
+-> TP / journey
+-> multi-Child / exposure
+-> consumed-period robustness
+-> freeze mechanical policy
+-> AI additive-value study later
+-> optional LTF-entry study even later
+```
+
+AI must not be used to create the baseline edge. It may be reconsidered only after a strong mechanical policy exists.
+
+Do not improve apparent performance mainly by collapsing the opportunity universe with filters.
+
 ## 7. Immediate next work
 
-The next research phase is trading refinement **inside the simplified Grammar**, not another attempt to classify every market fluctuation.
+The active next contract is now:
+
+`V9_NEXT_RESEARCH_CONTRACT_MECHANICAL_EDGE_REFINEMENT_20260913.md`
 
 Order:
 
 ```text
-1. freeze a versioned reproduction script for the simple Entry/SL/TP baseline
-2. freeze exact entry-price, object-known-at, target-selection, Hard-SL, spread/tick and intraminute conventions
-3. compare PRIMARY_DELIVERY / PRIMARY_CONTINUES / CHALLENGER_EARNED as distinct causal entry contexts
-4. study entry geometry during PRIMARY_ACTIVE, especially counter-move / POI-response structures
-5. study structural Hard SL placement without widening after entry
-6. study destination/journey handling and whether TP should remain nearest-known destination or become a managed journey
-7. study existing-Child behavior when PRIMARY_ACTIVE becomes CHALLENGED; do not assume automatic exit
-8. quantify payoff, loss containment, overlapping Child behavior, and route-level exposure on consumed data
-9. freeze the simplest policy that survives counterexamples without hidden thresholds
-10. only then implement/replay through the deterministic runtime and satisfy parity gates
-11. only after all gates are explicitly satisfied may future-hidden `2025-07` be reconsidered
+1. freeze exact H4-liquidity first-touch / execution clock
+2. freeze immediate-entry baseline; do not add an LTF trigger
+3. characterize the broad mechanical Grammar edge without starving opportunity count
+4. refine structural Hard SL with entry held fixed
+5. refine TP / dynamic destination / journey management
+6. study repeated Child / exposure mechanics without retry caps or trade quotas
+7. validate separately on 2024, 2025H1 and 2026JF consumed data
+8. freeze the simplest surviving mechanical policy
+9. implement and prove deterministic runtime parity
+10. review the future-hidden gate only after all mechanical/runtime gates pass
+11. only then test whether AI adds stable incremental value
+12. only after mechanical maturity may optional LTF entry refinement be reconsidered
 ```
 
 Do not optimize for a target win rate or minimum R.
-
 ## 8. Permanent causal and trading guardrails
 
 Retain without exception:

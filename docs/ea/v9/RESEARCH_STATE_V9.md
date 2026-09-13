@@ -1,10 +1,51 @@
 # V9 Research State
 
 Date: `2026-09-13`
-Status: `ACTIVE / ARRIVAL-DELIVERY GRAMMAR / SIMPLE BASELINE COMPLETE / REFINEMENT NEXT`
+Status: `ACTIVE / ARRIVAL-DELIVERY GRAMMAR / MECHANICAL EDGE REFINEMENT / IMMEDIATE ENTRY FIXED`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
+
+## Current priority correction — mechanical first, immediate entry fixed
+
+The active project is no longer searching for an LTF entry trigger or an AI-created edge.
+
+For current research:
+
+```text
+ENTRY
+= immediate at the causal meaningful Arrival / Delivery event
+  when the mechanical Grammar authorizes the Child
+
+LTF
+= exact chronology / execution evidence
+!= required entry pattern
+
+AI
+= deferred until after mechanical-policy freeze
+```
+
+This deliberately removes entry-trigger optimization as a degree of freedom.
+
+The main research axes are now:
+
+```text
+1. exact-arrival clock / immediate-entry reproduction
+2. broad mechanical Grammar edge
+3. structural fixed Hard SL
+4. TP / dynamic destination / journey management
+5. repeated Child / exposure mechanics
+6. robustness across 2024, 2025H1 and 2026JF consumed periods
+7. simplest mechanical policy freeze
+8. deterministic runtime parity
+9. future-hidden gate review
+10. AI additive-value study only later
+11. optional LTF-entry study only after mechanical maturity
+```
+
+Do not interpret rare semantic mismatches as a requirement to add special cases. If the broad strategy remains profitable and the Child dies cleanly at its precommitted Hard SL, some irreducible uncertainty is acceptable.
+
+Do not create a visually impressive result by filtering most opportunities away.
 
 ## Current research thesis
 

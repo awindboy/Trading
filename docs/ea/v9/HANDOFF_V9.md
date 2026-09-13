@@ -1,14 +1,41 @@
 # V9 Development Handoff
 
 Last updated: `2026-09-13`
-Status: `ACTIVE / ARRIVAL-DELIVERY GRAMMAR / TRADING EXTRACTION PREP`
+Status: `ACTIVE / ARRIVAL-DELIVERY GRAMMAR / MECHANICAL EDGE REFINEMENT / IMMEDIATE ENTRY`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
 Future-hidden: `2025-07 LOCKED`
 Untouched reserve: `GOLD# 2021`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
-GitHub HEAD used for this document update: `ad8bc8efc47cd9478e1b7f7e8d5bfbba398218ce`
+GitHub HEAD used for latest mechanical-entry correction: `4707ac6993a9288afdbff6ae127074bbcd11d3a7`
+
+## Mechanical-edge / immediate-entry correction — current priority
+
+This section supersedes any lower older continuation point that still suggests optimizing entry geometry or using AI early.
+
+Current project order:
+
+```text
+mechanical edge first
+-> exact arrival clock
+-> immediate entry
+-> Hard SL
+-> TP / journey
+-> multi-Child / exposure
+-> cross-period robustness
+-> frozen mechanical policy
+-> AI later
+-> optional LTF entry refinement last
+```
+
+Immediate entry means the Child is entered as soon as the causal meaningful Arrival / Delivery event is known and the mechanical Grammar authorizes it. Do not wait for a separately optimized M1/M5/M15 trigger.
+
+LTF data remains important for exact first-touch chronology, executable-price evidence, spread/tick chronology, and Hard-SL / TP ordering. It is not the active entry-edge search space.
+
+Do not improve results by layering conditions until only a small setup subset remains. Preserve the broad `PRIMARY_ACTIVE` opportunity universe wherever possible and judge refinements by expectancy, total R, drawdown, participation, period stability, and distance distributions.
+
+AI is deferred. It may be tested only after a strong mechanical policy is frozen, and only as an additive comparison against that frozen baseline.
 
 ## Current correction
 
