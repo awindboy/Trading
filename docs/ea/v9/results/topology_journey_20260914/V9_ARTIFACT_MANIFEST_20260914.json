@@ -1,0 +1,149 @@
+{
+  "date": "2026-09-14",
+  "base_github_head": "753fb412a7e87b2e329ac9462107c1bad07b5e6d",
+  "authoritative_m1_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+  "data_status": {
+    "2024": "consumed",
+    "2025H1": "consumed",
+    "2026JF": "consumed",
+    "2025-07": "LOCKED",
+    "2021": "UNTOUCHED"
+  },
+  "files": [
+    {
+      "path": "PATCH_NOTES_20260914.md",
+      "size": 826,
+      "sha256": "0d757595bf456ef3540859d64bf0679ddd78978a20411da0ef39a6ac3267b005"
+    },
+    {
+      "path": "README.md",
+      "size": 1968,
+      "sha256": "f262cc2054c5660b23ab0b64453b1187b2faa6705170b96be81c25ac589167be"
+    },
+    {
+      "path": "docs/ea/v9/AGENTS_V9.md",
+      "size": 5798,
+      "sha256": "9d13255972c432671c101a508567fb4ba1a17d439eab7a7e0466994eb9fdd993"
+    },
+    {
+      "path": "docs/ea/v9/HANDOFF_V9.md",
+      "size": 2569,
+      "sha256": "6785ce1f644ec518c87f15b87a8d2d81cbfc41744cf84316a297623470829809"
+    },
+    {
+      "path": "docs/ea/v9/RESEARCH_STATE_V9.md",
+      "size": 2760,
+      "sha256": "3e5e8761fbb495c26df5f3301e1e5b5fc416e541ba59ed29f8ad46912e371bc0"
+    },
+    {
+      "path": "docs/ea/v9/V9_DOCUMENT_AUTHORITY_MAP_20260913.md",
+      "size": 2349,
+      "sha256": "146cd49ba7411d92d86e4f96ce749b18dc0a146341e52b87028644afb6e16c07"
+    },
+    {
+      "path": "docs/ea/v9/V9_LIQUIDITY_TOPOLOGY_AND_JOURNEY_VALIDATION_CHECKPOINT_20260914.md",
+      "size": 8408,
+      "sha256": "8ecc55e3e295cf623ad35d95ead749da114dbb8a9da316e394d7bc41c7a5c787"
+    },
+    {
+      "path": "docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_POST_TOPOLOGY_JOURNEY_VALIDATION_20260914.md",
+      "size": 2088,
+      "sha256": "dd26a7d0346932c459e8a2787c621e6cc1a7491e3d79a0caf6d8397aec5824dc"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_2026JF_REPRODUCTION_VERIFICATION.json",
+      "size": 952,
+      "sha256": "f9f04081ec40091ae0dcdfd196c3dfedcf58583da715b3b680c6176dc0ba7d80"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_ARRIVAL_LEDGER_2024_2025H1_2026JF.csv",
+      "size": 101883,
+      "sha256": "bcce1a9a90323595da3e04564db23b71c859894a16e0e83948021e1660a65fbc"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_ARRIVAL_LEDGER_2026JF.csv",
+      "size": 9045,
+      "sha256": "6afd062703c2073128a8af7fc53cd94773bb4f25b266e01bfc1029f53ff3ffe2"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_H1_LIQUIDITY_OBJECTS_2026JF.csv",
+      "size": 22636,
+      "sha256": "c00f05c5e7d3d685496d14c413aa7c8995897cd72cf9ac3b38a774a5ed7b9605"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_H1_STRUCT_CHALLENGE_SPLITS.csv",
+      "size": 11032,
+      "sha256": "3dbcbe22aaa40a05689c09dde82a13128c17bffe21f5607064525134d2572de1"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_H4_LIQUIDITY_OBJECTS_2026JF.csv",
+      "size": 5794,
+      "sha256": "5bc3ce5221e73e1a390f96addee9d4dfbc9d09dc0c21a0a0616b0c881a636cd3"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_JOURNEY_AMBIGUITY_WORST_CASE_2024_2025H1_2026JF.csv",
+      "size": 8078,
+      "sha256": "1758af209d888f9935203924343e335e01f53f25ef2b778e5f0f34aa0261cc24"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_JOURNEY_LEDGER_2024_2025H1_2026JF.csv",
+      "size": 3820086,
+      "sha256": "6b3650edc23b2f788d587a8fbaa9785c709b596ddf7d1d1a23ba1bed8e5bfd4e"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_JOURNEY_ONE_POSITION_LEDGER_2024_2025H1_2026JF.csv",
+      "size": 1101399,
+      "sha256": "1160d0c821b58fa3b930a07b8b7d321b0677ac1bb1cf8cddbe530a6670c2b4ff"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_JOURNEY_SUMMARY_2024_2025H1_2026JF.csv",
+      "size": 91759,
+      "sha256": "2ec172015b605928343a84f61ff00d0f511bbab4f90ee19ddfbf567742440bc8"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_KEY_VALIDATION_SUMMARY.csv",
+      "size": 5993,
+      "sha256": "73d12226c0b3360bb448b4037b66e0bc3348ddeb54146933d1b5ba7e9d823812"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_TOPOLOGY_LEDGER_2024_2025H1_2026JF.csv",
+      "size": 90706,
+      "sha256": "c0882dbce1db72e069b3570f65a14e136f4754ee55aba01e2f765834a908952b"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_TOPOLOGY_RATIO_QUARTILES_2024_2025H1_2026JF.csv",
+      "size": 993,
+      "sha256": "c2e74dde4001ee0c72c7a0bf155dc1db813efad571dbf13ff1a464e7a634af4e"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_TOPOLOGY_SUMMARY_2024_2025H1_2026JF.csv",
+      "size": 536,
+      "sha256": "533fd3d5023d55864e8f6c587620649d258daa5742230e229116b7a3aa9284a9"
+    },
+    {
+      "path": "docs/ea/v9/results/topology_journey_20260914/V9_TRADE_BASE_2026JF.csv",
+      "size": 87876,
+      "sha256": "91536ae9fd81f7efec9e1ed3871c7c6922c00c94d81e2cc823adc05672f8e841"
+    },
+    {
+      "path": "scripts/v9_same_nearest_test.py",
+      "size": 7732,
+      "sha256": "71a5481f25a2772bc11a53690ed3a7a60ac0b6528812890de52b1aa473907d20"
+    },
+    {
+      "path": "scripts/v9_trade_backtest.py",
+      "size": 11360,
+      "sha256": "d256553a40974e7b9e1e987c0b3f6b132088866c050d871e72c2176a3eac394d"
+    },
+    {
+      "path": "scripts/v9_validate_2026jf_topology_journey.py",
+      "size": 9730,
+      "sha256": "8493c8066b0a3e7eef0e7734092f77f255b5af631a0dbccef630485e96380821"
+    },
+    {
+      "path": "scripts/v9_vector_topology.py",
+      "size": 6368,
+      "sha256": "178212638e201a14878a740cd114a75135e8392a9bc89ccebcdf92c06bc02d6c"
+    }
+  ]
+}

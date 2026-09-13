@@ -1,0 +1,44 @@
+{
+  "same_nearest": {
+    "n": 20,
+    "hits": 18,
+    "rate": 0.9
+  },
+  "not_same": {
+    "n": 20,
+    "hits": 12,
+    "rate": 0.6
+  },
+  "summary": [
+    {
+      "n": 11,
+      "resolved": 9,
+      "wins": 4,
+      "losses": 5,
+      "wr": 0.4444444444444444,
+      "total_R": 8.079143135523763,
+      "mean_R": 0.8976825706137515,
+      "PF": 3.084687102458782,
+      "maxDD": 2.0491212315551737,
+      "avg_win_R": 2.9886533810847165,
+      "avg_loss_R": -0.7750940777630204,
+      "universe": "CONTROL",
+      "position_mode": "ONE_POSITION"
+    },
+    {
+      "n": 6,
+      "resolved": 5,
+      "wins": 2,
+      "losses": 3,
+      "wr": 0.4,
+      "total_R": 2.0384877598264253,
+      "mean_R": 0.40769755196528507,
+      "PF": 1.7843355231062812,
+      "maxDD": 2.598999662482711,
+      "avg_win_R": 2.318743711154568,
+      "avg_loss_R": -0.8663332208275704,
+      "universe": "SAME_NEAREST",
+      "position_mode": "ONE_POSITION"
+    }
+  ]
+}

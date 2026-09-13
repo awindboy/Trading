@@ -1,226 +1,120 @@
 # V9 Research State
 
-Date: `2026-09-13`
-Status: `ACTIVE / ARRIVAL-DELIVERY GRAMMAR / MECHANICAL EDGE REFINEMENT / IMMEDIATE ENTRY FIXED`
+Date: `2026-09-14`
+Status: `ACTIVE / MECHANICAL TOPOLOGY + JOURNEY PAYOFF VALIDATED ON CONSUMED BLOCKS`
 Production authority: `NONE`
 EA authority: `NONE`
 Market: `GOLD# ONLY`
 
-## Current priority correction — mechanical first, immediate entry fixed
+## Current thesis
 
-The active project is no longer searching for an LTF entry trigger or an AI-created edge.
-
-For current research:
+The useful mechanical edge is increasingly concentrated in:
 
 ```text
-ENTRY
-= immediate at the causal meaningful Arrival / Delivery event
-  when the mechanical Grammar authorizes the Child
-
-LTF
-= exact chronology / execution evidence
-!= required entry pattern
-
-AI
-= deferred until after mechanical-policy freeze
+Arrival / Delivery Grammar
++
+relative H4-liquidity topology
++
+structural bounded risk
++
+semantic journey harvesting
 ```
 
-This deliberately removes entry-trigger optimization as a degree of freedom.
+not in LTF trigger mining or AI selection.
 
-The main research axes are now:
+## Directional topology result
+
+Current exact block-internal dual-clock study:
 
 ```text
-1. exact-arrival clock / immediate-entry reproduction
-2. broad mechanical Grammar edge
-3. structural fixed Hard SL
-4. TP / dynamic destination / journey management
-5. repeated Child / exposure mechanics
-6. robustness across 2024, 2025H1 and 2026JF consumed periods
-7. simplest mechanical policy freeze
-8. deterministic runtime parity
-9. future-hidden gate review
-10. AI additive-value study only later
-11. optional LTF-entry study only after mechanical maturity
+2024
+  SAME_NEAREST     163/216 = 75.5%
+  NOT SAME          37/69  = 53.6%
+
+2025H1
+  SAME_NEAREST      76/90  = 84.4%
+  NOT SAME          17/34  = 50.0%
+
+2026JF
+  SAME_NEAREST      18/20  = 90.0%
+  NOT SAME          12/20  = 60.0%
+
+combined
+  SAME_NEAREST     257/326 = 78.8%
+  NOT SAME          66/123 = 53.7%
 ```
 
-Do not interpret rare semantic mismatches as a requirement to add special cases. If the broad strategy remains profitable and the Child dies cleanly at its precommitted Hard SL, some irreducible uncertainty is acceptable.
+The continuous `D_same / D_opposite` relationship is also monotonic across pooled quartiles.
 
-Do not create a visually impressive result by filtering most opportunities away.
+No ratio threshold is authority.
 
-## Current research thesis
+## Payoff correction
 
-The useful V9 hypothesis has become simpler:
+Nearest-known same-side full TP gave high WR but small winners.
+
+The strongest current consumed journey comparator is:
 
 ```text
-price spends most of its time MOVING between meaningful arrivals;
-meaningful ARRIVAL events reveal delivery/progression or response/interaction;
-route uncertainty does not need to be forced into a direction;
-trading edge should be extracted only where the semantic state is clear enough.
+entry = immediate PRIMARY_ACTIVE arrival
+SL    = causal active H1 structural swing
+exit  = first opposite H4-liquidity Arrival opening CHALLENGED
 ```
 
-The project no longer aims to classify every local price fluctuation.
-
-## Current compact Grammar
-
-### Top-level
+One-position cross-period result:
 
 ```text
-MOVING
-ARRIVAL
+CONTROL / all PRIMARY_ACTIVE
+
+2024      +43.84R  PF 2.41
+2025H1    +20.29R  PF 3.20
+2026JF     +8.08R  PF 3.08
+combined  +72.21R  PF 2.63
 ```
 
-### Arrival attributes
+SAME_NEAREST-only also remains positive in every block, but broad participation currently produces more total opportunity and similar or better robustness.
+
+## Current interpretation of CHALLENGED
+
+For a flat/new-entry decision:
 
 ```text
-SIDE
-  UP / DOWN / OVERLAP-UNRESOLVED
-
-ROLE
-  H4 LIQUIDITY -> DELIVERY / PROGRESSION
-  H4 FVG / OB  -> RESPONSE / INTERACTION
+CHALLENGED = UNRESOLVED / NO NEW DIRECTIONAL EDGE
 ```
 
-### Slow route status
+For an existing Child:
 
 ```text
-PRIMARY_ACTIVE(side)
-CHALLENGED / UNRESOLVED
-PRIMARY_CONTINUES
-CHALLENGER_EARNED
+CHALLENGED = strongest current management-boundary candidate
 ```
 
-Candidate causal resolver:
+Final action is not frozen.
+
+## Hard SL
+
+Current leading candidate:
 
 ```text
-opposite H4 LIQ arrival opens CHALLENGED;
-next H4 LIQ old-side -> PRIMARY_CONTINUES;
-next H4 LIQ challenger-side -> CHALLENGER_EARNED.
+nearest causally known still-active opposite H1 swing liquidity
 ```
 
-This resolver has no fixed time/count/R/ATR rule.
+Fixed numeric SL optimization is not stable enough for promotion.
 
-## What has been retired from the top-level model
+## Main unresolved questions
 
-These remain contextual or historical only:
-
-- STRONG / WEAK / alignment state as the Grammar itself;
-- H1 interrupt / realign as automatic route changes;
-- 9-state / 8-transition policy tables;
-- FLOW_ROUTE boundaries forced from H1/H4 state-run boundaries;
-- POI touch as automatic route-completion or reversal evidence.
-
-H4/H1 labels remain useful observations inside a route.
-
-## Current consumed evidence
-
-Primary evidence sources:
-
-```text
-docs/ea/v9/results/market_flow_atlas/MARKET_FLOW_EVENT_LEDGER.csv
-docs/ea/v9/results/market_flow_atlas/POI_INTERACTION_CLUSTER_STUDY_STRICT.csv
-docs/ea/v9/results/market_flow_atlas/LIQUIDITY_DELIVERY_CLUSTER_STUDY_STRICT.csv
-docs/ea/v9/results/market_flow_atlas/CONTINUOUS_H1_NESTED_STATE_LEDGER.csv
-scripts/v9_ict_object_engine.py
-```
-
-Latest findings:
-
-1. `PRIMARY_ACTIVE` H4-liquidity delivery -> next H4 liquidity same side was about `72.9%` across `144` active delivery windows.
-2. The two consumed blocks were similar (`~72.5%` and `~74.3%`), and UP/DOWN were also similar overall, but monthly results varied materially.
-3. `CHALLENGER_EARNED` -> next H4 liquidity same side was about `81.8%` in only `22` consumed events. This is promising but small-sample.
-4. POI orientation/touch alone did not provide a stable next-direction edge.
-5. POI activity inside `CHALLENGED` did not reliably resolve uncertainty.
-6. Delivery-to-next-delivery time distributions overlapped heavily; no timeout was earned.
-7. Explicit unresolved state is useful: difficult periods become `CHALLENGED` rather than requiring special labels.
-
-These are structural event statistics, not trade win rates.
-
-## Dynamic destination result
-
-The consumed H4 swing-liquidity reconstruction reproduced all `220` strict H4 liquidity object IDs used in the audit.
-
-For `122` same-primary continuation pairs:
-
-```text
-next actual same-side target already known at current delivery: 61
-next actual same-side target born only after current delivery:   61
-```
-
-There were `31` continuation pairs where no known active same-side H4 liquidity destination remained immediately after the current delivery, yet the route later continued after new liquidity formed. In that subset, new target birth occurred roughly `35h` after the prior delivery at the median in the exploratory audit.
-
-Interpretation:
-
-```text
-ACTIVE_DESTINATION_SET must be dynamic.
-A route is not one fixed destination.
-Current destination exhaustion alone cannot close a route.
-```
-
-## Simple trading baseline completed
-
-The project has now done enough deliberately simple trading work to justify moving into refinement.
-
-Baseline family:
-
-```text
-PRIMARY_ACTIVE
--> causal H4-liquidity delivery confirmed on H1
--> enter at next H1 open comparator
--> TP nearest known same-side H4 liquidity
--> structural Hard SL comparator
-```
-
-SL comparison qualitatively showed:
-
-```text
-signal-H1 extreme -> too tight / too many normal-noise stops
-H4 swing          -> too wide / high hit rate but weak R efficiency
-H1 swing          -> best simple balance in this preliminary study
-```
-
-The H1-swing one-position exploratory result was around `70%` resolved win rate and roughly `+8R to +9R` in the consumed study, with maximum drawdown around `4.4R` in the tested comparator.
-
-The `CHALLENGER_EARNED` subset was stronger but small, around `75-79%` resolved wins.
-
-Exact P&L is **not frozen** because the baseline reproduction script, warm-up/object availability convention, spread/tick convention, and all execution details have not yet been committed as one versioned study.
-
-No minimum-R rule or performance target was adopted.
-
-## Current primary unknowns
-
-The highest-value unknowns are now trading-policy questions inside the simplified Grammar:
-
-1. what is the cleanest causal entry geometry inside `PRIMARY_ACTIVE`;
-2. whether `PRIMARY_DELIVERY`, `PRIMARY_CONTINUES`, and `CHALLENGER_EARNED` deserve different entry handling;
-3. where the structurally correct Child Hard SL belongs without becoming unnecessarily wide;
-4. how to use dynamic destinations for TP/journey management;
-5. whether and how repeated Child attempts inside one primary journey add edge without hindsight or hidden retry caps;
-6. how an already-open Child should behave when `PRIMARY_ACTIVE` becomes `CHALLENGED`;
-7. whether the preliminary `CHALLENGER_EARNED` advantage survives a frozen reproduction and larger consumed review;
-8. whether AI adds value beyond the simple semantic resolver once the mechanical baseline is frozen.
-
-## Immediate outputs to build next
-
-```text
-versioned simple-baseline reproduction script
-simple-baseline exact result ledger
-entry-context comparison: PRIMARY_DELIVERY vs PRIMARY_CONTINUES vs CHALLENGER_EARNED
-structural Hard-SL audit
-journey / destination-management audit
-open-Child-under-CHALLENGED audit
-unresolved / no-edge case ledger
-```
-
-Do not add a new state merely to improve coverage.
+1. At CHALLENGED, should the Child fully exit, partially realize, or enter a mandatory review state?
+2. How should repeated/overlapping Children be handled without retry caps or trade quotas?
+3. What survives realistic spread/cost sensitivity?
+4. Can the exact candidate be reproduced through the accepted dual-clock runtime with restart parity?
+5. Does the candidate remain intact after the implementation is frozen, before any hidden replay?
 
 ## Data classification
 
 ```text
-2024         consumed postmortem/research
-2025 Jan-Jun consumed answer-sheet
-2026 Jan-Feb consumed answer-sheet
+2024         consumed
+2025 Jan-Jun consumed
+2026 Jan-Feb consumed
 2025-07      future-hidden LOCKED
-2021         untouched final reserve
+2021         untouched reserve
 ```
 
-Future-hidden gate: `NOT SATISFIED`.
+Future-hidden gate remains `NOT SATISFIED`.
