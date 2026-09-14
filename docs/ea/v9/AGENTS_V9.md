@@ -1,11 +1,11 @@
 # V9 Research Instructions — Current Authority
 
 Last synchronized: `2026-09-15`
-Status: `ACTIVE / PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL-STAGE SHADOW RESEARCH NEXT`
+Status: `ACTIVE / PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL-ORACLE REPLICATION SHADOW RESEARCH NEXT`
 Production authority: `NONE`
 EA authority: `RESEARCH / DEMO ONLY`
 Market authority: `GOLD# ONLY`
-Base GitHub HEAD for this update packet: `da0bf0592f1d5d447f224803182dec57fcf5d8b7`
+Base GitHub HEAD before this update packet: `d123ea1e9e40ad388cf107b3d3a4d08386877b6b`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 Actual-tick event ledger SHA256: `c6e4a1117c1c0b8b073b09caaa433d940eae858dea1d9f9bc8c63fc95ab1c37c`
 Actual-tick trade ledger SHA256: `bb4167b9c53ba3c73320f7dc032acc83f9d97bc6898aa04818947e167dc16bce`
@@ -27,9 +27,11 @@ Read in this order:
 10. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
 11. `docs/ea/v9/V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
 12. `docs/ea/v9/V9_TERMINAL_STAGE_HEIKIN_ASHI_RESEARCH_CHECKPOINT_20260915.md`
-13. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_TERMINAL_STAGE_CAUSAL_DETECTION_20260915.md`
-14. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_FORWARD_DEMO_20260914.md`
-15. current EA/runtime/code state.
+13. `docs/ea/v9/V9_TERMINAL_STAGE_CAUSAL_COMBINATION_RESEARCH_CHECKPOINT_20260915.md`
+14. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_ORACLE_LEDGER_REPLICATION_20260915.md`
+15. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_TERMINAL_STAGE_CAUSAL_DETECTION_20260915.md` — supporting predecessor contract; where evaluation objectives conflict, item 14 controls.
+16. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_FORWARD_DEMO_20260914.md`
+17. current EA/runtime/code state.
 
 Older one-active-Child, hidden-gate, fixed-GOLD-SL, M1-only ambiguity, and pre-ERA4 documents remain historical evidence only when they conflict with current prototype authority.
 
@@ -61,77 +63,131 @@ No day/session/hour filter.
 No duration timeout.
 ```
 
-The 2026-09-15 Heikin-Ashi work is **shadow research only**. It does not replace any current exit authority.
+The terminal-stage / Heikin-Ashi work is **shadow research only** and does not replace current prototype exits.
 
-## 2. Latest shadow research finding
+## 2. Research answer sheet / oracle
 
-The strongest new finding is not `HA1 is an exit rule`.
-It is:
+For terminal-stage research only, the answer-sheet ledger is:
 
 ```text
-HA signal quality depends strongly on when HA monitoring is activated.
+TRUE LAST ACCEPTED CHILD of route
+-> first completed opposite-color H4 Heikin-Ashi (HA1) after that Child
+-> close every still-open Child in the route at that HA1 research close
 ```
 
-If H4 Heikin-Ashi is monitored from Anchor entry, opposite-color HA frequently cuts normal pullbacks inside large multi-Child journeys and materially reduces the right tail.
+This is deliberately non-causal because `TRUE LAST ACCEPTED CHILD` is future information. It is an **ORACLE / UPPER BOUND / ANSWER SHEET**, never a live rule or input feature.
 
-A hindsight oracle experiment then activated HA only after the **true last accepted Child of the route**. This is future information and therefore cannot be used live, but it measures an upper bound for the activation-timing idea.
-
-On the deterministic role-based M1 population of `1,139` resolved Children:
+Full deterministic M1 research population:
 
 ```text
 BASE role policy
+1,139 resolved Children
 PnL +8,530.74 / PF 2.023 / WR 65.58% / DD 440.35
 
-oracle LAST-CHILD -> HA1 -> close all still-open Children
+ORACLE last-Child -> HA1 -> close all still-open Children
+1,139 resolved Children
 PnL +13,863.22 / PF 3.475 / WR 70.41% / DD 288.75
 
-oracle LAST-CHILD -> HA2 -> close all still-open Children
-PnL +12,102.57 / PF 2.853 / WR 68.83% / DD 289.85
+Oracle improvement over BASE = +5,332.48
 ```
 
-This is `HINDSIGHT ORACLE / UPPER BOUND ONLY`, not strategy evidence eligible for direct promotion.
+## 3. Primary evaluation rule from this checkpoint forward
 
-## 3. Current strategy-research question
+Do not call a terminal detector successful merely because it beats BASE.
+The primary research objective is **causal replication of the oracle ledger**.
 
-The next strategy-research problem is now:
+For any candidate evaluated on period `P`, compare BASE, candidate, and ORACLE on exactly the same `P`.
 
-> Can V9 recognize, using only causally known information, that the active route has entered a terminal-participation stage in which no further accepted Child is likely to be earned, so that H4 HA can be armed as a profit-protection event without cutting normal mid-journey pullbacks?
+```text
+ORACLE_IMPROVEMENT_RECOVERY(P)
+= (PnL_candidate(P) - PnL_BASE(P))
+  / (PnL_ORACLE(P) - PnL_BASE(P))
+```
 
-Do **not** turn this into a fitted Child-count rule such as `third Child`, `fourth Child`, `after N hours`, or similar.
+BASE is the `0% recovery` reference; ORACLE is the `100% answer-sheet` reference.
 
-Candidate causal information may include:
+Also report:
 
-- remaining same-side H4 liquidity distance normalized by previous-completed H4 ATR180;
-- opposite-side H4 liquidity distance and topology;
-- active H4 liquidity counts and ages;
-- route-relative movement-capacity change;
-- Anchor MFE / giveback / realized expansion in ATR180 coordinates;
-- H1 completed-bar state and volatility/range summaries;
-- current accepted-Child/position state as descriptive context, not an optimized count threshold.
+- oracle PnL gap;
+- exact / same-HA exit matches;
+- EARLY exits relative to oracle terminal HA1;
+- LATE exits / giveback relative to oracle;
+- MISSED oracle terminal HA1 opportunities;
+- route-level and Child-level oracle regret;
+- PF/DD gap to oracle;
+- right-tail preservation.
 
-The target and evaluation must remain route-sequential. Checkpoint AUC alone is insufficient: the final test is whether an armed HA policy improves the chronological route/trade ledger without destroying the right tail.
+Checkpoint AUC and BASE delta are secondary diagnostics only.
 
-## 4. Data governance
+## 4. Latest causal-combination result
 
-By explicit user override, all supplied V9 GOLD# periods are research-consumable. No supplied period remains hidden/OOS.
+A broad consumed-data screen combined H4 HA information with H4 liquidity geometry, range/location indicators, H1 indicators, Ichimoku, and simple ML.
 
-This does **not** permit hindsight repair. Every causal replay must use only information known at the decision point. The last-Child oracle is permitted only as a labeled upper-bound diagnostic and must never be presented as a causal strategy result.
+The current most interesting **research candidate**, not authority, is a high-precision mechanical rank using the same causal event timestamp:
 
-## 5. Evidence hierarchy
+```text
+first opposite H4 HA event
++
+Child-relative opposite-H4-liquidity pressure
++
+H4 Donchian primary-direction location loss
++
+opposite HA body strength / ATR180
+```
 
-1. MT5 actual real-tick chronology and Bid/Ask fills for execution questions.
-2. Authoritative raw M1 for long-span bar/object reconstruction and parity.
-3. Uploaded H1/H4/M15/M5 only as parity/visual acceleration aids after their bars are fully known.
-4. Consumed-data shadow/oracle studies may define research targets but cannot change current strategy authority by themselves.
+On the 2024-2026 evaluation slice:
 
-## 6. Permanent guardrails
+```text
+BASE      +7,428.37
+ORACLE    +11,625.62
+CANDIDATE +7,869.42
 
-- no future peek or hindsight trade insertion;
-- stopped Child is dead;
+candidate improvement over BASE = +441.05
+available oracle improvement    = +4,197.25
+oracle improvement recovery     = 10.51%
+remaining oracle PnL gap        = 3,756.20
+```
+
+The candidate emitted `12` selected route events in that slice, with `0` events before the route's true last Child in the answer-sheet diagnostic; route delta was positive on `9` and unchanged on `3`.
+
+This is promising only as a precision-first proof of concept. **10.5% recovery is still far from the oracle.**
+
+Using the same three-variable information, fixed Logistic / shallow Tree / HGB variants did not beat the mechanical combination economically and produced more false-early interventions in the tested slice.
+
+## 5. Important new timing evidence
+
+The exact last Child does not appear to require instantaneous identification.
+In the oracle diagnostic, delaying HA1 activation after the true last Child retained substantial economics:
+
+```text
+BASE                 +8,530.74 / PF 2.023
+last Child + 0 H4    +13,863.22 / PF 3.475
+last Child + 1 H4    +13,839.03 / PF 3.464
+last Child + 2 H4    +13,715.95 / PF 3.407
+last Child + 3 H4    +13,471.13 / PF 3.272
+last Child + 4 H4    +12,608.38 / PF 2.927
+```
+
+Therefore research may use causal information that arrives during the H4 bars after the final accepted Child, as long as it is available before the terminal HA exit event. Do not require a classifier to identify the last Child at its entry timestamp.
+
+## 6. Active research objective
+
+> Using only causally known information, reproduce as much of the oracle terminal-HA1 ledger as possible while minimizing early exits that destroy normal multi-Child right-tail journeys.
+
+The next session should prioritize explaining and recovering the **remaining oracle gap**, not broad indicator mining for its own sake.
+
+## 7. Data governance and guardrails
+
+All supplied V9 GOLD# periods are research-consumable by explicit user override. No supplied period remains hidden/OOS.
+
+This does **not** permit hindsight repair.
+
+- `TRUE LAST CHILD` is label/answer-sheet information only;
+- never use future route count, later price, final PnL, eventual challenge, or oracle exit as causal inputs;
+- stopped Child stays dead;
 - Parent/route and Child remain separate;
-- Hard SL is fixed before entry and never widened;
-- do not invent SHORT bans, session filters, duration filters, cooldowns, retry limits, trade quotas, fixed TP, or forced side balance;
-- do not promote `last Child` itself, Child-count thresholds, or oracle activation timestamps into live rules;
-- do not interpret HA opposite color as objective trend end;
-- tick chronology outranks M1 intraminute guesses;
-- current prototype remains research/demo authority, not production/live-capital authority.
+- Hard SL remains fixed before entry and never widens;
+- do not create fitted `Nth Child`, duration, fixed-MFE, direction-specific, cooldown, retry, or trade-quota rules;
+- do not interpret opposite HA as objective trend end;
+- use actual-tick chronology as higher authority for execution questions;
+- no terminal-stage candidate changes strategy authority until separate causal, actual-tick, and forward evidence earns it.

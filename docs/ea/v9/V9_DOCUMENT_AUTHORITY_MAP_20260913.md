@@ -1,9 +1,9 @@
 # V9 Document Authority Map
 
 Date: `2026-09-15`
-Status: `ACTIVE / PROTOTYPE AUTHORITY UNCHANGED / TERMINAL-STAGE SHADOW RESEARCH SYNC`
+Status: `ACTIVE / PROTOTYPE AUTHORITY UNCHANGED / TERMINAL-ORACLE REPLICATION RESEARCH SYNC`
 
-## A. Current strategy authority chain
+## A. Current strategy authority
 
 Use the exact resume order in `AGENTS_V9.md`.
 
@@ -32,56 +32,65 @@ Generic causal mechanics remain in:
 - `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
 - `V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
 
-## B. Latest supporting research evidence
+No 2026-09-15 terminal-stage study changes prototype authority.
 
-New consumed-data research checkpoint:
+## B. Terminal-stage research evidence
+
+Supporting consumed-data checkpoint:
 
 `V9_TERMINAL_STAGE_HEIKIN_ASHI_RESEARCH_CHECKPOINT_20260915.md`
 
-This document records:
+It establishes the non-causal last-Child -> HA1 all-open oracle upper bound.
 
-- standalone H4 Heikin-Ashi exit screening;
-- failure of HA when armed from Anchor entry on large multi-Child journeys;
-- hindsight last-accepted-Child activation oracle;
-- all-open HA1/HA2 upper-bound economics;
-- the resulting causal terminal-stage research question.
+Latest causal-combination checkpoint:
 
-It is **supporting evidence only**. It is not strategy authority.
+`V9_TERMINAL_STAGE_CAUSAL_COMBINATION_RESEARCH_CHECKPOINT_20260915.md`
+
+It records:
+
+- delayed-oracle timing tolerance;
+- broad HA / indicator / liquidity / structure screening;
+- failure of many simple indicator gates;
+- the high-precision three-factor mechanical candidate;
+- mechanical-vs-ML comparison;
+- the corrected same-period oracle-recovery framing.
+
+Both are supporting research only.
 
 ## C. Active strategy-research contract
 
+Primary next contract:
+
+`V9_NEXT_RESEARCH_CONTRACT_ORACLE_LEDGER_REPLICATION_20260915.md`
+
+This contract makes the last-Child -> HA1 all-open oracle ledger the answer-sheet reference for terminal-stage research and requires same-period `ORACLE_IMPROVEMENT_RECOVERY` plus ledger-regret analysis.
+
+The earlier:
+
 `V9_NEXT_RESEARCH_CONTRACT_TERMINAL_STAGE_CAUSAL_DETECTION_20260915.md`
 
-This contract governs the next shadow strategy-research lane: causally detect terminal participation and test whether arming HA after that state can reproduce part of the oracle benefit.
+remains useful background for feature families and causal restrictions, but its evaluation objective is refined by the oracle-replication contract where they differ.
 
-The existing:
+The execution lane remains separately governed by:
 
 `V9_NEXT_RESEARCH_CONTRACT_FORWARD_DEMO_20260914.md`
 
-remains the execution/runtime forward-demo contract for the currently frozen prototype. It is not superseded by the terminal-stage research contract; the two lanes must not be conflated.
+## D. Result folders
 
-## D. Superseded as current authority
+Retain as research evidence:
 
-The following remain historical evidence only:
+- `docs/ea/v9/results/terminal_ha_20260915/`
+- `docs/ea/v9/results/terminal_detector_20260915/`
+- `docs/ea/v9/results/terminal_ha_combo_20260915/`
+- existing V9 result ledgers and ERA4/runtime analysis evidence.
 
-- `V9_MECHANICAL_POLICY_FREEZE_CANDIDATE_20260914.md`
-- `V9_NEXT_RESEARCH_CONTRACT_EXECUTION_FREEZE_AND_HIDDEN_GATE_20260914.md`
-- `V9_NEXT_RESEARCH_CONTRACT_POST_ERA4_ROLE_CHILD_20260914.md`
-- `V9_CHALLENGE_EXIT_EXPOSURE_COST_RUNTIME_CHECKPOINT_20260914.md`
-- older FLOW_ROUTE, H1 alignment-state, COUNTER/WITH_PARENT, scheduler, AI-direction, and LTF-trigger programs.
+## E. Superseded/historical documents
 
-## E. Evidence retained
-
-Retain as supporting research evidence:
-
-- `V9_ERA4_MULTICHILD_RUNTIME_CHECKPOINT_20260914.md`
-- `V9_SHORT_PATH_ASYMMETRY_AND_ROLE_CHILD_DIAGNOSTIC_20260914.md`
-- existing result ledgers under `docs/ea/v9/results/`
-- terminal-HA result ledgers under `docs/ea/v9/results/terminal_ha_20260915/`
-- current ERA4/runtime/role-management analysis scripts.
+Older one-active-Child, hidden-gate, fixed-GOLD-SL, FLOW_ROUTE, H1 alignment-state, scheduler, AI-direction, LTF-trigger, and pre-current-prototype documents remain historical evidence only when they conflict with current authority.
 
 ## F. Data status
 
-All supplied GOLD# periods are research-consumable by explicit user instruction. No old hidden gate has authority.
+All supplied GOLD# periods are consumed/research-available by explicit user instruction.
+No historical result in the terminal program is untouched OOS.
 
-This changes validation governance, not causal replay rules. Hindsight rescue remains prohibited. The last-Child activation study is explicitly an oracle upper bound and cannot be treated as causal validation.
+The oracle uses future information and is permitted **only as an answer sheet / upper bound**. Causal candidates must never use its future fields as inputs.

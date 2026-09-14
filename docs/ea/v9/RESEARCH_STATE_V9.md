@@ -1,12 +1,12 @@
 # V9 Research State
 
 Date: `2026-09-15`
-Status: `PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL-STAGE SHADOW RESEARCH ACTIVE`
+Status: `PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL-ORACLE REPLICATION SHADOW RESEARCH ACTIVE`
 Market: `GOLD# ONLY`
 
-## Current mechanical thesis
+## 1. Current mechanical authority
 
-The current prototype remains:
+The prototype remains:
 
 ```text
 Arrival / Delivery Grammar
@@ -17,25 +17,11 @@ Arrival / Delivery Grammar
 + tick-native execution
 ```
 
-No latest shadow result changes strategy authority.
+No terminal-stage result changes current strategy authority.
 
-## Current validated baseline
+## 2. Validated execution baseline
 
-### M1 role-based research population
-
-Deterministic resolved role-based population used for the latest exit studies:
-
-```text
-1,139 resolved Children
-BASE PnL +8,530.74
-PF 2.023
-WR 65.58%
-DD 440.35
-```
-
-This is consumed-data M1/H4 screening, not the actual-tick production comparator.
-
-### Actual MT5 real ticks
+Actual MT5 real ticks remain higher authority for execution questions.
 
 Reference through `2026-08-28`:
 
@@ -55,191 +41,188 @@ PF 1.412
 WR 60.14%
 ```
 
-By direction in that actual-tick ledger:
+The terminal-stage studies below are consumed-data M1/H4 screening, not production/forward evidence.
+
+## 3. Terminal HA answer sheet
+
+The current research oracle is:
 
 ```text
-UP    +4,836.20 / PF 1.832
-DOWN    +118.41 / PF 1.019
+true last accepted Child
+-> first opposite completed H4 HA1
+-> close all still-open route Children
 ```
 
-SHORT weakness remains diagnostic, not permission for a SHORT ban.
+This uses future information only to define the answer sheet.
 
-## Research progression leading to the current question
-
-### A. HTF movement-capacity shadow research
-
-V8-style directionless movement probability transferred to H4 reasonably well when targets/distances were normalized with the V9 long-era coordinate. The most useful form was not an absolute probability threshold but route-relative movement-capacity change.
-
-It did not become exit authority. Directional continuation models remained much weaker and unstable.
-
-### B. Journey-end shadow classification
-
-The question `is this the final same-side H4 liquidity before challenge?` showed usable but imperfect information.
-
-The strongest simple feature was the remaining nearest same-side H4 liquidity distance normalized by previous-completed H4 ATR180. Complex H1-chart ML did not consistently beat simple H4 liquidity geometry.
-
-This classification was not sufficient as a direct first-trigger exit because checkpoint false positives accumulate inside long journeys and cut the right tail.
-
-### C. Heikin-Ashi from Anchor entry
-
-H4 Heikin-Ashi did what the chart intuition suggested: it smoothed ordinary candle-color noise and reduced peak-to-exit giveback.
-
-However, arming it from Anchor entry cut normal pullbacks inside large journeys.
-
-On `295` deterministic Anchors:
+Full deterministic research population:
 
 ```text
-BASE CHALLENGE  +4,194.36 / PF 2.331
-HA1 from entry  +2,089.18 / PF 1.965
-HA2 from entry  +2,490.10 / PF 2.013
+BASE
+N 1,139 / PnL +8,530.74 / PF 2.023 / WR 65.58% / DD 440.35
+
+ORACLE
+N 1,139 / PnL +13,863.22 / PF 3.475 / WR 70.41% / DD 288.75
+
+full-history oracle improvement = +5,332.48
 ```
 
-Median giveback nevertheless improved:
+## 4. Evaluation authority for terminal research
+
+The primary target is no longer `beat BASE`.
+It is **oracle ledger replication without future leakage**.
+
+For the same evaluated period:
 
 ```text
-BASE 2.20 ATR180
-HA1  1.25 ATR180
-HA2  1.52 ATR180
+ORACLE_RECOVERY
+= (candidate PnL - BASE PnL)
+  / (ORACLE PnL - BASE PnL)
 ```
 
-Therefore HA contains useful weakening information but lacks the correct activation context.
+Also measure exact/near-exit matching, EARLY/LATE/MISS counts, route regret, right-tail preservation, PF gap, and DD gap.
 
-## Terminal-stage last-Child oracle
+Do not compare a partial-period candidate to the full-history oracle.
 
-A hindsight upper-bound experiment arms HA only after the route's **true last accepted Child**. This is explicitly non-causal and cannot be traded as written.
+## 5. Timing result
 
-### Strategy-wide result — all still-open Children closed on terminal HA
-
-| Policy | N | PnL | PF | WR | DD |
-|---|---:|---:|---:|---:|---:|
-| BASE | 1,139 | +8,530.74 | 2.023 | 65.58% | 440.35 |
-| terminal oracle HA1 | 1,139 | **+13,863.22** | **3.475** | **70.41%** | **288.75** |
-| terminal oracle HA2 | 1,139 | +12,102.57 | 2.853 | 68.83% | 289.85 |
-
-HA1 changed `320` deterministic Child exits:
+Terminal detection has usable latency.
+Delaying oracle activation by completed H4 bars after the true last Child gave:
 
 ```text
-211 ANCHOR
-109 CONTINUATION
+0 H4: +13,863.22 / PF 3.475
+1 H4: +13,839.03 / PF 3.464
+2 H4: +13,715.95 / PF 3.407
+3 H4: +13,471.13 / PF 3.272
+4 H4: +12,608.38 / PF 2.927
 ```
 
-HA2 changed `247`:
+Therefore a causal detector can gather evidence after the final Child; it does not have to identify the final Child exactly at entry time.
+
+## 6. Broad HA + indicator + structure exploration
+
+Explored causal information at opposite-H4-HA events included:
+
+- HA body/range/wick morphology and persistence;
+- H1/H4 HA context;
+- H4 remaining same/opposite liquidity geometry and Child-relative changes;
+- H1/H4 range, efficiency and volatility context;
+- RSI, EMA, MACD, DMI/ADX, Bollinger, Donchian;
+- H1/H4 Ichimoku location;
+- Anchor MFE/giveback and route state;
+- prior movement-capacity context;
+- Logistic, shallow Tree and HGB controls.
+
+### Main qualitative findings
+
+1. **HA alone is not enough.** HA body strength has some information, but HA is best interpreted as the momentum-reversal event, not the whole terminal-state detector.
+2. **H4 liquidity geometry remains central.** Same/opposite distances and their Child-relative changes repeatedly survive across tests.
+3. **Location matters.** H1/H4 range-location, Donchian, Kijun/cloud and similar coordinates contain information, but simple single-indicator exits usually over-trigger.
+4. **Duration is weak.** `hours since Child` is not a useful standalone terminal rule.
+5. **ML complexity is not currently an advantage.** On the same small feature set, mechanical combinations gave better sequential economics and fewer early interventions than Logistic/Tree/HGB in the current slice.
+
+## 7. Current best proof-of-concept candidate
+
+Current research candidate at the first opposite H4 HA uses a high-precision mechanical combination of:
 
 ```text
-168 ANCHOR
-79 CONTINUATION
+Child-relative opposite-H4-liquidity pressure
+H4 Donchian primary-direction location
+opposite HA body strength / ATR180
 ```
 
-### Year robustness of HA1 oracle
+The operating point is exploratory and not strategy authority.
+
+### Same-period 2024-2026 comparison
 
 ```text
-2022  +234.66 ->   +914.82
-2023  +867.71 -> +1,322.78
-2024 +1,287.89 -> +2,001.39
-2025 +2,711.21 -> +4,244.12
-2026 +3,429.27 -> +5,380.11
+BASE      +7,428.37
+CANDIDATE +7,869.42
+ORACLE    +11,625.62
 ```
 
-All five entry years improve in the oracle screen.
-
-### Role effect
+Therefore:
 
 ```text
-ANCHOR
-+4,194.36 -> +7,837.46
-PF 2.331 -> 5.254
-
-CONTINUATION
-+4,336.38 -> +6,025.76
-PF 1.836 -> 2.603
+BASE -> candidate gain  = +441.05
+BASE -> oracle gain     = +4,197.25
+Oracle recovery        = 10.51%
+Candidate -> oracle gap = 3,756.20
 ```
 
-This means the potential benefit is not limited to Anchor profit protection. Once the route is truly terminal, the final still-open Continuation can also benefit from the same HA event.
+Selected route events: `12`.
+Answer-sheet early events: `0`.
+Positive route delta: `9`.
+Unchanged route delta: `3`.
 
-### Direction effect
+This result is **not close to the oracle**. It only proves that a precision-first causal mechanical filter can recover a small piece of the oracle value without observed early cuts in that consumed slice.
+
+## 8. Mechanical versus ML on the same three variables
+
+2024-2026 exploratory economic comparison at the fixed high-precision screen:
 
 ```text
-UP
-+6,969.65 -> +9,904.71
-PF 2.826 -> 4.938
-
-DOWN
-+1,561.09 -> +3,958.51
-PF 1.345 -> 2.283
+MECH   delta +441.05 / early 0
+LOGIT  delta +234.60 / early 4
+TREE2  delta +110.20 / early 12
+TREE3  delta +182.90 / early 4
+HGB    delta +140.64 / early 3
 ```
 
-The oracle benefit exists on both sides; do not turn it into a direction-specific rule.
+AUCs were broadly similar for MECH / LOGIT / HGB, so classification AUC did not explain the economic difference. False-early cost is the key issue.
 
-### Journey type
+## 9. Natural mechanical rule evidence
 
-Using the full accepted-Child count per route on the deterministic resolved ledger:
+A more literal semantic rule using:
 
 ```text
-SINGLE routes: 65
-BASE -952.33 -> HA1 -281.54
-
-MULTI routes: 237
-BASE +9,483.07 -> HA1 +14,144.76
+HA1
++ opposite liquidity closer than at Child entry
++ weak H4 Donchian primary location
++ current HA body stronger than recent HA bodies
 ```
 
-The crucial reversal versus HA-from-entry is that terminal activation no longer destroys multi-Child right-tail journeys.
+produced `+268.90` BASE delta over 2024-2026 with `17` event routes and `0` answer-sheet early routes in that slice.
 
-## What the oracle does and does not prove
+This is supporting evidence for the three-part decomposition, not a frozen rule or threshold.
 
-It supports this hypothesis:
+## 10. Current interpretation
 
-> HA may be a strong termination/profit-protection mechanism **after** V9 has entered a terminal-participation state.
-
-It does not prove:
-
-- that the last accepted Child can be known live;
-- that any fixed Child number defines terminal state;
-- that HA1 should replace current exits now;
-- that M1/H4 close-price economics survive real Bid/Ask and actual-tick execution;
-- that historical oracle improvements are forward edge.
-
-## Active research question
-
-The next problem is:
+The most useful working decomposition is:
 
 ```text
-CAUSAL TERMINAL-STAGE DETECTION
+LIQUIDITY / PARTICIPATION STATE
+-> is the route exhausting viable additional participation?
+
+LOCATION / STRUCTURE
+-> has price lost favorable primary-side location?
+
+HA REVERSAL
+-> has H4 momentum actually reversed now?
 ```
 
-At each newly accepted Child / same-side H4 Arrival, estimate whether the current route has likely reached the stage where no additional accepted Child will be earned before challenge.
+The research problem is not `find a better indicator`.
+It is to determine which causal combination best reproduces the oracle terminal HA ledger with minimal early regret.
 
-Candidate inputs must already be known:
+## 11. Next research target
 
-- nearest remaining same-side H4 liquidity distance / ATR180;
-- opposite H4 liquidity distance / ATR180;
-- same/opposite distance ratio and topology;
-- active H4 liquidity counts/ages;
-- consumed-liquidity age and route delivery history;
-- Anchor MFE, giveback, realized expansion / ATR180;
-- route-relative movement-capacity level/change;
-- completed H1 range/volatility/efficiency context;
-- current position/role state.
+The next session must decompose the **remaining oracle gap**.
 
-Do not use future `last Child`, later price path, eventual challenge, or final PnL as features.
+Primary work:
 
-## Required evaluation
+- Oracle Gain Attribution by route and Child.
+- MATCH / EARLY / LATE / MISS decomposition.
+- Oracle-regret ranking of missed journeys.
+- Causal chart reconstruction of the largest missed oracle gains.
+- Identify whether misses arise from missing variables, insufficient state history, or overly conservative intervention rate.
+- Explore HA + H4 liquidity + range/location/Ichimoku/structure interactions mechanically before adding ML.
+- Use route-relative depletion/replenishment and state transitions rather than fitted Nth-Child or duration rules.
+- Re-run all candidates as chronological route policies against the same-period oracle.
 
-The next study must distinguish:
+## 12. Open risks
 
-```text
-checkpoint classification quality
-!=
-sequential exit-policy quality
-```
-
-A candidate succeeds only if a causal arming policy followed by frozen HA1/HA2 logic improves the route/trade ledger without destroying large-winner capture.
-
-Primary economic comparison remains BASE role policy on the same causal population.
-
-## Open risks
-
-- every supplied historical period is consumed; future proof must ultimately be prospective;
-- actual-tick sequencing/fills are higher authority than H4 close-price screening;
-- terminal-stage model selection can easily overfit Child count, route age, or 2026 large moves;
-- HA close execution around market gaps requires separate actual-tick/forward validation;
-- existing forward-demo execution contract remains necessary even if a shadow exit candidate looks strong.
+- every supplied historical period is consumed;
+- current candidate feature selection is postmortem research, not untouched validation;
+- actual-tick Bid/Ask fills and H4-close execution are not yet validated for a promoted HA candidate;
+- an apparently strong terminal classifier can still be economically bad if a few false-early signals cut major right-tail journeys;
+- forward/demo evidence remains mandatory before any authority change.
