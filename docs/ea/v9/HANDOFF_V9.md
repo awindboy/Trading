@@ -1,89 +1,157 @@
 # V9 Development Handoff
 
-Last updated: `2026-09-14`
-Status: `PROTOTYPE COMPLETE / ACTUAL-TICK VALIDATED / FORWARD-DEMO NEXT`
+Last updated: `2026-09-15`
+Status: `PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL-STAGE SHADOW RESEARCH NEXT`
 Production authority: `NONE`
 EA authority: `RESEARCH / DEMO ONLY`
 
 ## Resume point
 
-Do not return to broad entry-feature mining. The V9 prototype is mechanically coherent enough to move into execution/runtime and forward-demo work.
+Do not return to broad entry-feature mining.
+Do not alter the current prototype from the new Heikin-Ashi research.
 
-Current chain:
+There are now two separate lanes:
 
 ```text
-H4 liquidity Arrival / Delivery Grammar
-+ causal H1 structural invalidation
-+ ERA4 structural-risk eligibility
-+ ANCHOR / CONTINUATION Child role split
-+ tick-native Bid/Ask chronology
-+ MT5 EA execution ledger
+A. execution lane
+current frozen prototype -> EA R1 -> forward demo
+
+B. strategy-research lane
+terminal-stage causal detection -> HA arming study -> sequential economic validation
 ```
 
-## Current prototype
+The strategy-research lane is the immediate research focus requested by the user.
 
-- H1/H4 liquidity geometry: 2-left / 2-right.
+## Current prototype remains unchanged
+
+- H1/H4 liquidity geometry: causal 2-left / 2-right.
 - Entry authorization: causal PRIMARY_ACTIVE H4-liquidity Arrival.
 - H1 Hard SL: nearest active opposite H1 swing liquidity.
-- Era normalization: previous-completed H4 Wilder ATR180.
-- Entry eligibility: `ERA_RISK <= 4`; do not clip the structural SL.
-- First accepted Child in route: ANCHOR; exits at CHALLENGE_OPENS unless own SL first.
-- Later accepted Children: CONTINUATION; exit at next H4-liquidity Arrival unless own SL first.
-- No fixed TP.
-- Tick chronology resolves M1 ambiguity.
+- ERA scale: previous-completed H4 Wilder ATR180.
+- Eligibility: `ERA_RISK <= 4`; never clip/move structural SL inward.
+- First accepted Child in route: ANCHOR; current exit at CHALLENGE_OPENS unless own SL first.
+- Later accepted Children: CONTINUATION; current exit at next H4-liquidity Arrival unless own SL first.
+- No fixed TP, SHORT ban, Child-count cap, day/session/hour filter, or duration timeout.
 
-## Actual-tick validation
+## Current validated execution baseline
 
-MT5 real-tick tester run validated the prototype from 2022 onward.
-
-Reference interval through `2026-08-28`:
+MT5 actual-tick reference through `2026-08-28`:
 
 ```text
-closed trades  1,316
-wins              792
-losses            524
-WR               60.18%
-PnL           +5,028.62
-PF                1.425
+1,316 closed
++5,028.62
+PF 1.425
+WR 60.18%
 ```
 
 Full uploaded closed ledger through September:
 
 ```text
-closed trades  1,322
-PnL           +4,954.61
-PF                1.412
-WR               60.14%
+1,322 closed
++4,954.61
+PF 1.412
+WR 60.14%
 ```
 
-LONG remains the main economic engine; SHORT is near breakeven. This is evidence, not permission to ban SHORT.
+Actual-tick execution remains higher authority than M1 for chronology/fills.
 
-## Important tick discoveries
+## Latest consumed-data exit research
 
-1. H4-liquidity geometry itself matched the M1 reference minute/side/extreme on all 1,733 reference Arrival minutes.
-2. Tick replay produced additional sequential Arrivals inside individual M1 minutes: 87 minutes had multiple H4-liquidity raids, up to 5 in one minute.
-3. M1 `AMBIGUOUS` cases were mostly adverse when tick order was revealed; actual tick economics sit close to prior ambiguity-worst-case stress.
-4. `market closed` caused 10 entry failures and 16 close failures; close retries succeeded later but gap risk is real.
+### 1. HA from Anchor entry
 
-## Money management
+H4 Heikin-Ashi opposite-color exits reduce giveback but cut the Anchor right tail when armed immediately after Anchor entry.
 
-Keep fixed 0.01 lot as the primary strategy-validation baseline.
+On the deterministic `295`-Anchor common population:
 
-Sizing simulations are research only:
+```text
+BASE CHALLENGE
++4,194.36 / PF 2.331 / median hold 70.6h / median giveback 2.20 ATR180
 
-- Full-history $1,000 / 1% target: `$5,876.54`, DD `36.77%`, but 80.66% of entries cannot be reduced enough because 0.01 lot already exceeds 1% planned risk.
-- 2025+ $1,000 / 10% per Child: `$21,172.22` realized, but DD `85.47%`; overlap makes combined planned exposure approach 20%.
+HA1 from entry
++2,089.18 / PF 1.965 / median hold 19.2h / median giveback 1.25 ATR180
 
-Do not promote 10% sizing to live authority.
+HA2 from entry
++2,490.10 / PF 2.013 / median hold 27.9h / median giveback 1.52 ATR180
+```
 
-## Next work
+HA itself is not the main failure. Activation from the beginning of a long multi-Child journey is too early.
 
-Use `V9_NEXT_RESEARCH_CONTRACT_FORWARD_DEMO_20260914.md`.
+### 2. Hindsight terminal activation oracle
 
-Priority:
+A deliberately non-causal oracle then arms HA only after the route's **true last accepted Child**.
 
-1. merge/compile the tick-native EA under the current prototype semantics;
-2. freeze restart/state recovery and client-side structural-SL behavior;
-3. forward-demo on a hedging account with event/trade logs retained;
-4. measure real spread, slippage, rejected/partial fills, terminal disconnect/restart behavior, margin requirements, and session-close gaps;
-5. only after stable demo evidence, decide a conservative capital-risk policy.
+On the deterministic role-based population of `1,139` resolved Children:
+
+| Policy | PnL | PF | WR | DD |
+|---|---:|---:|---:|---:|
+| BASE role policy | +8,530.74 | 2.023 | 65.58% | 440.35 |
+| last-Child oracle -> HA1, Anchor only | +12,173.84 | 2.732 | 68.83% | 328.57 |
+| last-Child oracle -> HA2, Anchor only | +11,167.85 | 2.505 | 67.52% | 355.54 |
+| **last-Child oracle -> HA1, all still-open Children** | **+13,863.22** | **3.475** | **70.41%** | **288.75** |
+| last-Child oracle -> HA2, all still-open Children | +12,102.57 | 2.853 | 68.83% | 289.85 |
+
+For HA1 all-open, all five entry years improved versus BASE:
+
+```text
+2022 +234.66 ->   +914.82
+2023 +867.71 -> +1,322.78
+2024 +1,287.89 -> +2,001.39
+2025 +2,711.21 -> +4,244.12
+2026 +3,429.27 -> +5,380.11
+```
+
+By role under HA1 all-open:
+
+```text
+ANCHOR        +4,194.36 -> +7,837.46
+CONTINUATION  +4,336.38 -> +6,025.76
+```
+
+By direction:
+
+```text
+UP    +6,969.65 -> +9,904.71
+DOWN  +1,561.09 -> +3,958.51
+```
+
+This is an oracle upper bound only. `true last Child` is future information.
+
+## Interpretation
+
+The research question is no longer `Is HA a good exit?`.
+
+Current evidence supports:
+
+```text
+mid-journey opposite HA
+= often normal pullback
+= dangerous hard exit
+
+terminal-participation opposite HA
+= potentially strong profit-protection event
+```
+
+The difficult problem is the **activation state**, not the HA formula.
+
+## Next research
+
+Use:
+
+`V9_NEXT_RESEARCH_CONTRACT_TERMINAL_STAGE_CAUSAL_DETECTION_20260915.md`
+
+Primary objective:
+
+> Estimate terminal participation with only causally known information, then arm H4 HA1/HA2 and test the resulting policy sequentially.
+
+Required comparisons:
+
+1. mechanical H4-liquidity baselines;
+2. simple logistic / shallow tree;
+3. nonlinear model only if it adds stable information;
+4. final route-sequential PnL/PF/DD/right-tail comparison, not checkpoint AUC alone.
+
+Do not create `N-th Child`, elapsed-time, fixed-distance, or direction-specific rules from the oracle slices.
+
+## Execution lane remains open
+
+The existing forward-demo contract remains valid for the unchanged prototype. Any terminal-stage/HA candidate must remain shadow-only until it earns separate causal evidence and then actual-tick/forward validation.

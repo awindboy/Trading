@@ -1,11 +1,11 @@
 # V9 Research Instructions — Current Authority
 
-Last synchronized: `2026-09-14`
-Status: `ACTIVE / PROTOTYPE COMPLETE / ACTUAL-TICK VALIDATED / FORWARD-DEMO NEXT`
+Last synchronized: `2026-09-15`
+Status: `ACTIVE / PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL-STAGE SHADOW RESEARCH NEXT`
 Production authority: `NONE`
 EA authority: `RESEARCH / DEMO ONLY`
 Market authority: `GOLD# ONLY`
-Base GitHub HEAD before this sync packet: `60d95493a5607c0fc288eb4194505fa2c1a56656`
+Base GitHub HEAD for this update packet: `da0bf0592f1d5d447f224803182dec57fcf5d8b7`
 Authoritative M1 SHA256: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
 Actual-tick event ledger SHA256: `c6e4a1117c1c0b8b073b09caaa433d940eae858dea1d9f9bc8c63fc95ab1c37c`
 Actual-tick trade ledger SHA256: `bb4167b9c53ba3c73320f7dc032acc83f9d97bc6898aa04818947e167dc16bce`
@@ -26,20 +26,14 @@ Read in this order:
 9. `docs/ea/v9/V9_ACTUAL_TICK_EXECUTION_AND_ERA_SCALE_ADDENDUM_20260914.md`
 10. `docs/ea/v9/V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
 11. `docs/ea/v9/V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
-12. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_FORWARD_DEMO_20260914.md`
-13. current EA/runtime/code state.
+12. `docs/ea/v9/V9_TERMINAL_STAGE_HEIKIN_ASHI_RESEARCH_CHECKPOINT_20260915.md`
+13. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_TERMINAL_STAGE_CAUSAL_DETECTION_20260915.md`
+14. `docs/ea/v9/V9_NEXT_RESEARCH_CONTRACT_FORWARD_DEMO_20260914.md`
+15. current EA/runtime/code state.
 
-Older one-active-Child, hidden-gate, fixed-GOLD-SL, M1-only ambiguity, and pre-ERA4 documents remain historical evidence only when they conflict with the current prototype authority.
+Older one-active-Child, hidden-gate, fixed-GOLD-SL, M1-only ambiguity, and pre-ERA4 documents remain historical evidence only when they conflict with current prototype authority.
 
-## 1. Data governance
-
-By explicit user override, all supplied V9 GOLD# data are research-consumable. The old `2025-07 LOCKED` and `2021 untouched reserve` governance is superseded.
-
-Current supplied authoritative M1 spans `2022-01-03 01:00` through `2026-08-28 23:57`. MT5 actual-tick validation continued through `2026-09-11 23:57:59` using broker tester history. No remaining supplied period is treated as hidden/OOS.
-
-This does **not** permit hindsight repair: every replay must remain causal and stopped Children remain dead.
-
-## 2. Current prototype in one block
+## 1. Current prototype authority remains unchanged
 
 ```text
 H1/H4 swing liquidity: causal 2-left / 2-right
@@ -67,33 +61,68 @@ No day/session/hour filter.
 No duration timeout.
 ```
 
-Distinct H4 liquidity raids on distinct ticks are distinct Arrivals. M1 aggregation is no longer execution authority for intraminute ordering.
+The 2026-09-15 Heikin-Ashi work is **shadow research only**. It does not replace any current exit authority.
 
-## 3. Current evidence hierarchy
+## 2. Latest shadow research finding
 
-1. Actual MT5 real-tick chronology and Bid/Ask fills for execution questions.
+The strongest new finding is not `HA1 is an exit rule`.
+It is:
+
+```text
+HA signal quality depends strongly on when HA monitoring is activated.
+```
+
+If H4 Heikin-Ashi is monitored from Anchor entry, opposite-color HA frequently cuts normal pullbacks inside large multi-Child journeys and materially reduces the right tail.
+
+A hindsight oracle experiment then activated HA only after the **true last accepted Child of the route**. This is future information and therefore cannot be used live, but it measures an upper bound for the activation-timing idea.
+
+On the deterministic role-based M1 population of `1,139` resolved Children:
+
+```text
+BASE role policy
+PnL +8,530.74 / PF 2.023 / WR 65.58% / DD 440.35
+
+oracle LAST-CHILD -> HA1 -> close all still-open Children
+PnL +13,863.22 / PF 3.475 / WR 70.41% / DD 288.75
+
+oracle LAST-CHILD -> HA2 -> close all still-open Children
+PnL +12,102.57 / PF 2.853 / WR 68.83% / DD 289.85
+```
+
+This is `HINDSIGHT ORACLE / UPPER BOUND ONLY`, not strategy evidence eligible for direct promotion.
+
+## 3. Current strategy-research question
+
+The next strategy-research problem is now:
+
+> Can V9 recognize, using only causally known information, that the active route has entered a terminal-participation stage in which no further accepted Child is likely to be earned, so that H4 HA can be armed as a profit-protection event without cutting normal mid-journey pullbacks?
+
+Do **not** turn this into a fitted Child-count rule such as `third Child`, `fourth Child`, `after N hours`, or similar.
+
+Candidate causal information may include:
+
+- remaining same-side H4 liquidity distance normalized by previous-completed H4 ATR180;
+- opposite-side H4 liquidity distance and topology;
+- active H4 liquidity counts and ages;
+- route-relative movement-capacity change;
+- Anchor MFE / giveback / realized expansion in ATR180 coordinates;
+- H1 completed-bar state and volatility/range summaries;
+- current accepted-Child/position state as descriptive context, not an optimized count threshold.
+
+The target and evaluation must remain route-sequential. Checkpoint AUC alone is insufficient: the final test is whether an armed HA policy improves the chronological route/trade ledger without destroying the right tail.
+
+## 4. Data governance
+
+By explicit user override, all supplied V9 GOLD# periods are research-consumable. No supplied period remains hidden/OOS.
+
+This does **not** permit hindsight repair. Every causal replay must use only information known at the decision point. The last-Child oracle is permitted only as a labeled upper-bound diagnostic and must never be presented as a causal strategy result.
+
+## 5. Evidence hierarchy
+
+1. MT5 actual real-tick chronology and Bid/Ask fills for execution questions.
 2. Authoritative raw M1 for long-span bar/object reconstruction and parity.
-3. Uploaded H1/H4/M15/M5 only as parity/visual acceleration aids.
-4. R-normalized results are secondary; fixed-size money/price PnL is the primary economic comparator unless a money-risk sizing policy is explicitly being studied.
-
-## 4. Actual-tick status
-
-Reference-period actual-tick run (`2022` through `2026-08-28`) produced `1,316` closed Children, `+5,028.62`, PF `1.425`, WR `60.18%` at fixed `0.01 lot`.
-
-Full uploaded closed ledger through `2026-09-09` contains `1,322` closed Children, `+4,954.61`, PF `1.412`, WR `60.14%`; two Children remained open at tester end.
-
-Actual tick validation confirmed that M1 ambiguity was materially optimistic: tick-collision cases were overwhelmingly adverse. It also revealed sequential multiple H4-liquidity Arrivals inside one M1 minute.
-
-## 5. Money management status
-
-Money management is **not frozen strategy authority**.
-
-Canonical replay uses entry-time equity, actual executable entry-to-structural-SL distance, 0.01-lot steps, and the uploaded actual-tick PnL path.
-
-- Full 2022-2026, 1% target from $1,000: realized `$5,876.54`, max realized balance DD `36.77%`; minimum-lot oversizing occurs on `80.66%` of entries.
-- 2025-2026 only, 10% target per Child from $1,000: realized `$21,172.22`, marked equity `$21,852.95`, peak balance `$106,529.39`, max realized balance DD `85.47%`, max lot `2.76`.
-
-Do not call the latter a safe 10% strategy: ANCHOR + CONTINUATION can overlap, producing near-20% combined planned structural exposure.
+3. Uploaded H1/H4/M15/M5 only as parity/visual acceleration aids after their bars are fully known.
+4. Consumed-data shadow/oracle studies may define research targets but cannot change current strategy authority by themselves.
 
 ## 6. Permanent guardrails
 
@@ -101,6 +130,8 @@ Do not call the latter a safe 10% strategy: ANCHOR + CONTINUATION can overlap, p
 - stopped Child is dead;
 - Parent/route and Child remain separate;
 - Hard SL is fixed before entry and never widened;
-- do not invent SHORT bans, session filters, duration filters, cooldowns, retry limits, trade quotas, forced side balance, or fixed TP from postmortem slices;
+- do not invent SHORT bans, session filters, duration filters, cooldowns, retry limits, trade quotas, fixed TP, or forced side balance;
+- do not promote `last Child` itself, Child-count thresholds, or oracle activation timestamps into live rules;
+- do not interpret HA opposite color as objective trend end;
 - tick chronology outranks M1 intraminute guesses;
-- current prototype is research/demo authority, not production/live-capital authority.
+- current prototype remains research/demo authority, not production/live-capital authority.

@@ -1,0 +1,16 @@
+{
+  "source_main_head": "da0bf0592f1d5d447f224803182dec57fcf5d8b7",
+  "arrivals_accepted_sha256": "c401e410914d76f8a976fe7ed0d508de483aa026cccc8875b99c91a98739be87",
+  "h4_sha256": "5e12fa91f974c0f15e340ea8116bd9168fc6821e6309592cee1a7e197675de09",
+  "authoritative_m1_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+  "status": "CONSUMED-DATA HINDSIGHT ORACLE / UPPER BOUND ONLY / NOT STRATEGY AUTHORITY",
+  "base_population": "1139 deterministic role-based resolved Children from 1250 accepted Children",
+  "terminal_oracle": "true last accepted Child in each route, known only with hindsight",
+  "HA1": "after oracle arm time, first completed opposite-color H4 Heikin-Ashi candle; close at that source H4 close if before existing role exit",
+  "HA2": "after oracle arm time, second consecutive completed opposite-color H4 Heikin-Ashi candle; same exit convention",
+  "ALL_OPEN": "HA event closes every still-open deterministic Child in the route; existing role exit wins if earlier",
+  "ANCHOR_ONLY": "same HA event only replaces Anchor exit; Continuation remains current NEXT_H4_LIQ/SL policy",
+  "hard_sl": "existing role-based structural SL/base exit remains authoritative whenever earlier than HA close",
+  "execution_caveat": "gross M1/H4 close-price screening; HA-close execution has not been revalidated with MT5 actual ticks/Bid-Ask",
+  "no_authority_change": true
+}

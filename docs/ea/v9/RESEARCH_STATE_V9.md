@@ -1,110 +1,245 @@
 # V9 Research State
 
-Date: `2026-09-14`
-Status: `PROTOTYPE COMPLETE / ACTUAL-TICK VALIDATION COMPLETE / LIVE-RISK POLICY UNFROZEN`
+Date: `2026-09-15`
+Status: `PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL-STAGE SHADOW RESEARCH ACTIVE`
 Market: `GOLD# ONLY`
 
-## Current thesis
+## Current mechanical thesis
 
-V9 no longer depends on predicting every destination. The active mechanical thesis is:
+The current prototype remains:
 
 ```text
 Arrival / Delivery Grammar
 + H1 structural invalidation
-+ long-era volatility normalization (H4 ATR180)
-+ role-separated Children
++ H4 ATR180 long-era normalization
++ ERA_RISK <= 4
++ ANCHOR / CONTINUATION role split
 + tick-native execution
 ```
 
-## Prototype performance hierarchy
+No latest shadow result changes strategy authority.
 
-### M1 research prototype
+## Current validated baseline
 
-ERA4 + role-based management showed strong fixed-size gross performance and bounded natural overlap.
+### M1 role-based research population
+
+Deterministic resolved role-based population used for the latest exit studies:
+
+```text
+1,139 resolved Children
+BASE PnL +8,530.74
+PF 2.023
+WR 65.58%
+DD 440.35
+```
+
+This is consumed-data M1/H4 screening, not the actual-tick production comparator.
 
 ### Actual MT5 real ticks
 
-Actual execution materially reduced the M1 result but did not erase the aggregate edge.
+Reference through `2026-08-28`:
 
 ```text
-2022 through 2026-08-28
 1,316 closed
 +5,028.62
 PF 1.425
 WR 60.18%
+```
 
-full uploaded closed ledger through 2026-09-09
+Full uploaded closed ledger through September:
+
+```text
 1,322 closed
 +4,954.61
 PF 1.412
 WR 60.14%
 ```
 
-By direction across the full closed ledger:
+By direction in that actual-tick ledger:
 
 ```text
-UP    731 trades / +4,836.20 / PF 1.832
-DOWN  591 trades /   +118.41 / PF 1.019
+UP    +4,836.20 / PF 1.832
+DOWN    +118.41 / PF 1.019
 ```
 
-By role:
+SHORT weakness remains diagnostic, not permission for a SHORT ban.
+
+## Research progression leading to the current question
+
+### A. HTF movement-capacity shadow research
+
+V8-style directionless movement probability transferred to H4 reasonably well when targets/distances were normalized with the V9 long-era coordinate. The most useful form was not an absolute probability threshold but route-relative movement-capacity change.
+
+It did not become exit authority. Directional continuation models remained much weaker and unstable.
+
+### B. Journey-end shadow classification
+
+The question `is this the final same-side H4 liquidity before challenge?` showed usable but imperfect information.
+
+The strongest simple feature was the remaining nearest same-side H4 liquidity distance normalized by previous-completed H4 ATR180. Complex H1-chart ML did not consistently beat simple H4 liquidity geometry.
+
+This classification was not sufficient as a direct first-trigger exit because checkpoint false positives accumulate inside long journeys and cut the right tail.
+
+### C. Heikin-Ashi from Anchor entry
+
+H4 Heikin-Ashi did what the chart intuition suggested: it smoothed ordinary candle-color noise and reduced peak-to-exit giveback.
+
+However, arming it from Anchor entry cut normal pullbacks inside large journeys.
+
+On `295` deterministic Anchors:
 
 ```text
-ANCHOR        355 / +2,439.43 / PF 1.498 / WR 37.2%
-CONTINUATION  967 / +2,515.18 / PF 1.353 / WR 68.6%
+BASE CHALLENGE  +4,194.36 / PF 2.331
+HA1 from entry  +2,089.18 / PF 1.965
+HA2 from entry  +2,490.10 / PF 2.013
 ```
 
-This supports the intended role split: Anchor preserves the right tail; Continuation harvests local delivery.
-
-## Exit evidence
+Median giveback nevertheless improved:
 
 ```text
-CHALLENGE_OPENS                  232 / +5,529.48 / PF 4.06
-NEXT_H4_LIQ                     761 / +7,901.62 / PF 5.56
-STRUCTURAL_SL                   255 / -6,324.70
-TICK_COLLISION_STOP_CHALLENGE    30 /   -978.86
-TICK_COLLISION_STOP_NEXT_LIQ     44 / -1,172.93
+BASE 2.20 ATR180
+HA1  1.25 ATR180
+HA2  1.52 ATR180
 ```
 
-There is no fixed TP. Semantic exits are part of the Grammar/Child-role contract.
+Therefore HA contains useful weakening information but lacks the correct activation context.
 
-## Structural-risk evidence
+## Terminal-stage last-Child oracle
 
-Actual-entry-to-Hard-SL distance over 1,322 closed trades:
+A hindsight upper-bound experiment arms HA only after the route's **true last accepted Child**. This is explicitly non-causal and cannot be traded as written.
+
+### Strategy-wide result — all still-open Children closed on terminal HA
+
+| Policy | N | PnL | PF | WR | DD |
+|---|---:|---:|---:|---:|---:|
+| BASE | 1,139 | +8,530.74 | 2.023 | 65.58% | 440.35 |
+| terminal oracle HA1 | 1,139 | **+13,863.22** | **3.475** | **70.41%** | **288.75** |
+| terminal oracle HA2 | 1,139 | +12,102.57 | 2.853 | 68.83% | 289.85 |
+
+HA1 changed `320` deterministic Child exits:
 
 ```text
-median 22.56 GOLD
-P75    36.97
-P90    65.44
-P95    91.72
-P99   164.19
-max   225.65
+211 ANCHOR
+109 CONTINUATION
 ```
 
-After ERA4 eligibility, wide absolute stops are not automatically poor trades. In the actual-tick ledger, the 3-4 ATR180 bucket remained strongly positive. Do not reintroduce a fixed-GOLD stop cap.
+HA2 changed `247`:
 
-## Time slices are descriptive, not rules
+```text
+168 ANCHOR
+79 CONTINUATION
+```
 
-All weekdays and all four broad source-time session buckets were gross-positive, but substantial hour/day/direction interactions exist. No session, weekday, hour, or duration filter is current authority.
+### Year robustness of HA1 oracle
 
-Long-held surviving Anchors create a large right tail; negative 4h-3d cohorts contain survivorship/path-selection effects and must not become a duration timeout.
+```text
+2022  +234.66 ->   +914.82
+2023  +867.71 -> +1,322.78
+2024 +1,287.89 -> +2,001.39
+2025 +2,711.21 -> +4,244.12
+2026 +3,429.27 -> +5,380.11
+```
 
-## Money management
+All five entry years improve in the oracle screen.
 
-Fixed 0.01 lot remains the primary validation comparator.
+### Role effect
 
-Canonical sizing research:
+```text
+ANCHOR
++4,194.36 -> +7,837.46
+PF 2.331 -> 5.254
 
-- 1% target on full history from $1,000: end `$5,876.54`, max balance DD `36.77%`, minimum-lot oversize on `80.66%` of entries.
-- 2025+ risk grid shows rapidly rising drawdown above 3-5% Child risk.
-- 10% per Child from $1,000: end `$21,172.22`, marked equity `$21,852.95`, peak `$106,529.39`, max balance DD `85.47%`, max lot `2.76`.
+CONTINUATION
++4,336.38 -> +6,025.76
+PF 1.836 -> 2.603
+```
 
-These are sizing experiments, not production recommendations.
+This means the potential benefit is not limited to Anchor profit protection. Once the route is truly terminal, the final still-open Continuation can also benefit from the same HA event.
 
-## Open research risks
+### Direction effect
 
-- SHORT expectancy is marginal under actual ticks.
-- session-close/reopen gaps can materially worsen fills.
-- client-side structural SL requires robust restart/disconnect handling.
-- large-lot replay assumes linear fills and ignores size-dependent market impact/margin constraints.
-- current actual-tick forward-like post-2026-08-28 sample is too small for statistical conclusions.
+```text
+UP
++6,969.65 -> +9,904.71
+PF 2.826 -> 4.938
+
+DOWN
++1,561.09 -> +3,958.51
+PF 1.345 -> 2.283
+```
+
+The oracle benefit exists on both sides; do not turn it into a direction-specific rule.
+
+### Journey type
+
+Using the full accepted-Child count per route on the deterministic resolved ledger:
+
+```text
+SINGLE routes: 65
+BASE -952.33 -> HA1 -281.54
+
+MULTI routes: 237
+BASE +9,483.07 -> HA1 +14,144.76
+```
+
+The crucial reversal versus HA-from-entry is that terminal activation no longer destroys multi-Child right-tail journeys.
+
+## What the oracle does and does not prove
+
+It supports this hypothesis:
+
+> HA may be a strong termination/profit-protection mechanism **after** V9 has entered a terminal-participation state.
+
+It does not prove:
+
+- that the last accepted Child can be known live;
+- that any fixed Child number defines terminal state;
+- that HA1 should replace current exits now;
+- that M1/H4 close-price economics survive real Bid/Ask and actual-tick execution;
+- that historical oracle improvements are forward edge.
+
+## Active research question
+
+The next problem is:
+
+```text
+CAUSAL TERMINAL-STAGE DETECTION
+```
+
+At each newly accepted Child / same-side H4 Arrival, estimate whether the current route has likely reached the stage where no additional accepted Child will be earned before challenge.
+
+Candidate inputs must already be known:
+
+- nearest remaining same-side H4 liquidity distance / ATR180;
+- opposite H4 liquidity distance / ATR180;
+- same/opposite distance ratio and topology;
+- active H4 liquidity counts/ages;
+- consumed-liquidity age and route delivery history;
+- Anchor MFE, giveback, realized expansion / ATR180;
+- route-relative movement-capacity level/change;
+- completed H1 range/volatility/efficiency context;
+- current position/role state.
+
+Do not use future `last Child`, later price path, eventual challenge, or final PnL as features.
+
+## Required evaluation
+
+The next study must distinguish:
+
+```text
+checkpoint classification quality
+!=
+sequential exit-policy quality
+```
+
+A candidate succeeds only if a causal arming policy followed by frozen HA1/HA2 logic improves the route/trade ledger without destroying large-winner capture.
+
+Primary economic comparison remains BASE role policy on the same causal population.
+
+## Open risks
+
+- every supplied historical period is consumed; future proof must ultimately be prospective;
+- actual-tick sequencing/fills are higher authority than H4 close-price screening;
+- terminal-stage model selection can easily overfit Child count, route age, or 2026 large moves;
+- HA close execution around market gaps requires separate actual-tick/forward validation;
+- existing forward-demo execution contract remains necessary even if a shadow exit candidate looks strong.
