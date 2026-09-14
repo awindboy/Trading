@@ -1,91 +1,55 @@
 # V9 Document Authority Map
 
 Date: `2026-09-14`
-Status: `ACTIVE AUTHORITY MAP / CONSUMED MECHANICAL POLICY FREEZE CANDIDATE`
+Status: `ACTIVE / PROTOTYPE AUTHORITY SYNC`
 
-## A. Resume authority order
+## A. Current authority chain
 
-Read in the exact order defined by `AGENTS_V9.md`.
+Use the exact resume order in `AGENTS_V9.md`.
 
-Current semantic/research chain:
+The current strategy-semantic authority is:
 
-1. `AGENTS_V9.md`
-2. `HANDOFF_V9.md`
-3. `RESEARCH_STATE_V9.md`
-4. `V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md`
-5. `V9_ARRIVAL_DELIVERY_GRAMMAR_CORE_AUTHORITY_20260913.md`
-6. `V9_MECHANICAL_EDGE_AND_IMMEDIATE_ENTRY_AUTHORITY_20260913.md`
-7. `V9_LIQUIDITY_TOPOLOGY_AND_JOURNEY_VALIDATION_CHECKPOINT_20260914.md`
-8. `V9_CHALLENGE_EXIT_EXPOSURE_COST_RUNTIME_CHECKPOINT_20260914.md`
-9. `V9_MECHANICAL_POLICY_FREEZE_CANDIDATE_20260914.md`
-10. `V9_NEXT_RESEARCH_CONTRACT_EXECUTION_FREEZE_AND_HIDDEN_GATE_20260914.md`
+`V9_PROTOTYPE_AUTHORITY_20260914.md`
 
-The checkpoint and freeze-candidate documents are consumed-data research authority for continuation of work. They are **not production strategy authority and not future-hidden permission**.
+Actual execution evidence is:
 
-## B. Causal/tooling authority
+`V9_MT5_ACTUAL_TICK_VALIDATION_20260914.md`
 
-Retain:
+Money-management research is:
 
-- `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
-- `V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
-- `V9_CAUSAL_STATE_MACHINE_IMPLEMENTATION_CHECKPOINT_20260912.md` for retained generic dual-clock/restart mechanics
-- `scripts/v9_arrival_delivery_runtime.py` and its manifest/hash for the current Arrival/Delivery candidate after this packet is merged
+`V9_MONEY_MANAGEMENT_STUDY_20260914.md`
 
-When an older runtime strategy semantic conflicts with the current Arrival/Delivery policy, current semantic authority wins; retained older runtime documents govern mechanics only.
+Tick/ERA implementation precedence is:
 
-## C. Current mechanical distinction
+`V9_ACTUAL_TICK_EXECUTION_AND_ERA_SCALE_ADDENDUM_20260914.md`
 
-```text
-Grammar
-  MOVING / ARRIVAL
-  PRIMARY_ACTIVE / CHALLENGED
+Philosophy/guardrails remain:
 
-Topology
-  SAME_NEAREST = continuation-quality context
-  NOT SAME != FLIP
+`V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md`
 
-Child entry
-  immediate PRIMARY_ACTIVE Arrival when flat
+Generic causal mechanics remain in `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md` and `V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`, except where the 2026-09-14 addendum explicitly supersedes older M1-execution, ATR14-only, or data-lock statements.
 
-Hard SL
-  causal active opposite H1 swing liquidity
+## B. Superseded as current authority
 
-Journey
-  same-side H4 LIQ -> HOLD
-  first opposite H4 LIQ -> CHALLENGED -> FULL EXIT
+The following remain historical evidence, but are not current strategy authority:
 
-Exposure baseline
-  ONE ACTIVE CHILD
-```
+- `V9_MECHANICAL_POLICY_FREEZE_CANDIDATE_20260914.md` — old ONE ACTIVE CHILD candidate.
+- `V9_NEXT_RESEARCH_CONTRACT_EXECUTION_FREEZE_AND_HIDDEN_GATE_20260914.md` — hidden gate completed/superseded by explicit data-scope override and actual-tick work.
+- `V9_NEXT_RESEARCH_CONTRACT_POST_ERA4_ROLE_CHILD_20260914.md` — completed/superseded.
+- `V9_CHALLENGE_EXIT_EXPOSURE_COST_RUNTIME_CHECKPOINT_20260914.md` — pre-role-child checkpoint.
+- older FLOW_ROUTE, H1 alignment-state, COUNTER/WITH_PARENT, scheduler, AI-direction, and LTF-trigger programs.
 
-None of these create live/production authority yet.
+## C. Evidence retained
 
-## D. Superseded next-contract history
+Retain as supporting research evidence:
 
-Superseded for next-work priority:
+- `V9_ERA4_MULTICHILD_RUNTIME_CHECKPOINT_20260914.md`
+- `V9_SHORT_PATH_ASYMMETRY_AND_ROLE_CHILD_DIAGNOSTIC_20260914.md`
+- existing result ledgers under `docs/ea/v9/results/`
+- current ERA4 runtime and role-management analysis scripts.
 
-- `V9_NEXT_RESEARCH_CONTRACT_ARRIVAL_DELIVERY_TRADING_REFINEMENT_20260913.md`
-- `V9_NEXT_RESEARCH_CONTRACT_MECHANICAL_EDGE_REFINEMENT_20260913.md`
-- `V9_NEXT_RESEARCH_CONTRACT_POST_TOPOLOGY_JOURNEY_VALIDATION_20260914.md`
+## D. Data status
 
-Current next contract:
+All supplied GOLD# periods are now consumed/research-available by explicit user instruction. No old hidden gate has authority.
 
-`V9_NEXT_RESEARCH_CONTRACT_EXECUTION_FREEZE_AND_HIDDEN_GATE_20260914.md`
-
-## E. Historical evidence only
-
-FLOW_ROUTE, H1 alignment-state, COUNTER/WITH_PARENT, scheduler, AI-direction, and LTF-entry programs remain historical evidence unless explicitly reactivated.
-
-Do not use them to override the current Arrival/Delivery Grammar or current mechanical freeze candidate.
-
-## F. Data locks
-
-```text
-2024        consumed
-2025-01..06 consumed
-2026-01..02 consumed
-2025-07     future-hidden LOCKED
-2021        untouched final reserve
-```
-
-The deterministic consumed runtime parity result does not by itself unlock July. Exact execution/fill semantics and the final freeze manifest must be completed first.
+This changes validation governance, not causal replay rules. Hindsight rescue remains prohibited.

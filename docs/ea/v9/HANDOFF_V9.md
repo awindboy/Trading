@@ -1,159 +1,89 @@
 # V9 Development Handoff
 
 Last updated: `2026-09-14`
-Status: `ACTIVE / CONSUMED MECHANICAL POLICY FREEZE CANDIDATE / EXECUTION FREEZE NEXT`
+Status: `PROTOTYPE COMPLETE / ACTUAL-TICK VALIDATED / FORWARD-DEMO NEXT`
 Production authority: `NONE`
-EA authority: `NONE`
-Base GitHub HEAD before packet: `925368270b8bf91ba70936e8b3a1c1832813091a`
-Future-hidden: `2025-07 LOCKED`
-Untouched reserve: `GOLD# 2021`
+EA authority: `RESEARCH / DEMO ONLY`
 
-## Current resume point
+## Resume point
 
-Do not return to AI direction selection, LTF entry-pattern optimization, fixed-GOLD stop selection, or new feature mining.
+Do not return to broad entry-feature mining. The V9 prototype is mechanically coherent enough to move into execution/runtime and forward-demo work.
 
-The consumed mechanical research has converged on a simple candidate:
+Current chain:
 
 ```text
-PRIMARY_ACTIVE H4-liquidity Arrival
--> immediate entry if flat and H1 structural SL exists
--> H1 structural Hard SL fixed before entry
--> same-side H4 liquidity arrivals: HOLD
--> first opposite H4 liquidity Arrival: CHALLENGED
--> FULL EXIT Child
--> no new Child while CHALLENGED
--> after H4-liquidity resolution returns PRIMARY_ACTIVE,
-   a later/current resolving Arrival may authorize a fresh Child
+H4 liquidity Arrival / Delivery Grammar
++ causal H1 structural invalidation
++ ERA4 structural-risk eligibility
++ ANCHOR / CONTINUATION Child role split
++ tick-native Bid/Ask chronology
++ MT5 EA execution ledger
 ```
 
-`SAME_NEAREST` remains useful continuation-quality context, not a mandatory entry filter.
+## Current prototype
 
-## Why CHALLENGED full exit currently wins
+- H1/H4 liquidity geometry: 2-left / 2-right.
+- Entry authorization: causal PRIMARY_ACTIVE H4-liquidity Arrival.
+- H1 Hard SL: nearest active opposite H1 swing liquidity.
+- Era normalization: previous-completed H4 Wilder ATR180.
+- Entry eligibility: `ERA_RISK <= 4`; do not clip the structural SL.
+- First accepted Child in route: ANCHOR; exits at CHALLENGE_OPENS unless own SL first.
+- Later accepted Children: CONTINUATION; exit at next H4-liquidity Arrival unless own SL first.
+- No fixed TP.
+- Tick chronology resolves M1 ambiguity.
 
-Holding beyond challenge was period-unstable:
+## Actual-tick validation
+
+MT5 real-tick tester run validated the prototype from 2022 onward.
+
+Reference interval through `2026-08-28`:
 
 ```text
-mean incremental R from holding past CHALLENGED
-2024     -0.092R
-2025H1   +0.876R
-2026JF   -1.029R
-combined +0.124R
-median combined -0.235R
-hold better only 18.9% of comparable cases
+closed trades  1,316
+wins              792
+losses            524
+WR               60.18%
+PnL           +5,028.62
+PF                1.425
 ```
 
-The pooled positive mean was driven by the 2025H1 right tail. Partial-exit fractions merely interpolate between unstable behaviors and add a numeric parameter. A topology resolver at challenge was only about `60.6%` accurate where usable and had no usable two-sided 2026JF cases.
-
-Therefore current consumed freeze candidate:
+Full uploaded closed ledger through September:
 
 ```text
-CHALLENGED -> FULL EXIT
+closed trades  1,322
+PnL           +4,954.61
+PF                1.412
+WR               60.14%
 ```
 
-This is a Child resolution rule, not proof the Parent Journey permanently reversed.
+LONG remains the main economic engine; SHORT is near breakeven. This is evidence, not permission to ban SHORT.
 
-## Exposure result
+## Important tick discoveries
 
-Blind full stacking is not acceptable as the core baseline:
+1. H4-liquidity geometry itself matched the M1 reference minute/side/extreme on all 1,733 reference Arrival minutes.
+2. Tick replay produced additional sequential Arrivals inside individual M1 minutes: 87 minutes had multiple H4-liquidity raids, up to 5 in one minute.
+3. M1 `AMBIGUOUS` cases were mostly adverse when tick order was revealed; actual tick economics sit close to prior ambiguity-worst-case stress.
+4. `market closed` caused 10 entry failures and 16 close failures; close retries succeeded later but gap risk is real.
 
-```text
-max simultaneous Children
-2024    11
-2025H1  10
-2026JF   8
-```
+## Money management
 
-The threshold-free `REPLACE_CHILD` comparator stayed positive and increased gross total R, but it cut the right tail back down:
+Keep fixed 0.01 lot as the primary strategy-validation baseline.
 
-```text
-combined +90.66R / PF 2.03
-avg winner ~0.59R
-payoff ~0.75
-```
+Sizing simulations are research only:
 
-The user's current problem is improving payoff, so the freeze baseline remains:
+- Full-history $1,000 / 1% target: `$5,876.54`, DD `36.77%`, but 80.66% of entries cannot be reduced enough because 0.01 lot already exceeds 1% planned risk.
+- 2025+ $1,000 / 10% per Child: `$21,172.22` realized, but DD `85.47%`; overlap makes combined planned exposure approach 20%.
 
-```text
-ONE ACTIVE CHILD
-```
+Do not promote 10% sizing to live authority.
 
-Combined gross:
+## Next work
 
-```text
-resolved 115
-WR 46.1%
-Total +72.21R
-Mean +0.628R
-PF 2.63
-Max DD 4.43R
-Avg winner +2.20R
-Avg loser -0.71R
-Payoff ~3.08
-```
+Use `V9_NEXT_RESEARCH_CONTRACT_FORWARD_DEMO_20260914.md`.
 
-## Structural SL status
+Priority:
 
-Exact current selector:
-
-```text
-LONG  -> highest active known H1 SSL below entry
-SHORT -> lowest active known H1 BSL above entry
-```
-
-H1 swing geometry is causal two-left / two-right. The structural scale changed materially across periods, so fixed 15/30/50 GOLD values remain rejected as authority.
-
-## Cost sensitivity
-
-ONE_POSITION result under observed M1-spread proxy:
-
-```text
-0x +72.21R / PF 2.63
-1x +71.16R / PF 2.59
-2x +70.11R / PF 2.54
-3x +69.06R / PF 2.50
-```
-
-This is encouraging robustness evidence, but exact broker Bid/Ask entry/exit fill, commission and slippage are still unfrozen.
-
-## Runtime result
-
-`scripts/v9_arrival_delivery_runtime.py` now reproduces the policy sequentially from authoritative full-M1 byte ranges with source-hash checking and dual clocks.
-
-Frozen consumed ranges in the packet:
-
-```text
-2024   start 43348274  end 65173328
-2025H1 start 65173328  end 75912993
-2026JF start 86972434  end 90428045
-```
-
-The 2025H1 range ends exactly before future-hidden July.
-
-Exact one-position totals reproduced:
-
-```text
-2024      +43.8428228413R
-2025H1    +20.2899178305R
-2026JF     +8.0791431355R
-```
-
-Mid-open-position serialize/resume replay produced byte-identical Arrival/Object/Trade ledgers for all consumed blocks. `REPLACE_CHILD` restart parity also passed.
-
-## Immediate next work
-
-The edge-search phase is paused. Next contract is execution freeze only:
-
-1. freeze exact immediate-entry executable-price rule;
-2. freeze Hard-SL fill semantics;
-3. freeze CHALLENGED exit executable-price rule;
-4. freeze gap-cross and same-M1 ambiguity handling;
-5. freeze official cost convention;
-6. freeze source/runtime/ledger hashes into one manifest;
-7. rerun all consumed ranges and require exact parity;
-8. only then explicitly review the `2025-07` gate;
-9. if hidden data is opened, no retuning after seeing it;
-10. `2021` remains untouched.
-
-## Permanent guardrails
-
-No future peek, hindsight rescue, hidden minimum-R, ratio threshold, cooldown, retry cap, no-chase, duration timeout, forced direction balance, or trade quota.
+1. merge/compile the tick-native EA under the current prototype semantics;
+2. freeze restart/state recovery and client-side structural-SL behavior;
+3. forward-demo on a hedging account with event/trade logs retained;
+4. measure real spread, slippage, rejected/partial fills, terminal disconnect/restart behavior, margin requirements, and session-close gaps;
+5. only after stable demo evidence, decide a conservative capital-risk policy.
