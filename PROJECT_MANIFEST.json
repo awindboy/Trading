@@ -41,6 +41,17 @@
       "parityReference": "ledgers/v8/V8MovementProbabilityParityReference.csv",
       "directionAuthority": "NONE",
       "productionAuthority": "NONE"
+    },
+    "v10HAOracleResearch": {
+      "status": "ACTIVE_SHADOW_RESEARCH",
+      "authority": "docs/ea/v10/AGENTS_V10.md",
+      "handoff": "docs/ea/v10/HANDOFF_V10.md",
+      "researchState": "docs/ea/v10/RESEARCH_STATE_V10.md",
+      "checkpoint": "docs/ea/v10/V10_HA_PRIMARY_RESEARCH_CHECKPOINT_20260916.md",
+      "nextContract": "docs/ea/v10/V10_NEXT_RESEARCH_CONTRACT_ORACLE_PARTICIPATION_20260916.md",
+      "predecessorClosure": "docs/ea/v9/V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md",
+      "market": "GOLD#",
+      "productionAuthority": "NONE"
     }
   },
   "artifactPolicy": {

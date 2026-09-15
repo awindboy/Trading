@@ -1,7 +1,16 @@
 # V9 Research Instructions — Current Authority
 
+<!-- V10_TRANSITION_NOTICE_START -->
+> **V9 ACTIVE RESEARCH GENERATION CLOSED — 2026-09-16**
+> V9 prototype semantics and evidence remain preserved as historical controls.
+> Active HA-primary research has moved to V10.
+> Read `docs/ea/v9/V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md`, then resume from `docs/ea/v10/AGENTS_V10.md`.
+> The V9 resume order below remains the correct order only when auditing or reproducing V9 history.
+<!-- V10_TRANSITION_NOTICE_END -->
+
+
 Last synchronized: `2026-09-16`
-Status: `ACTIVE / PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL STATE-TABLE SHADOW RESEARCH ACTIVE`
+Status: `CLOSED RESEARCH GENERATION / PROTOTYPE FROZEN HISTORICAL CONTROL / V10 ACTIVE`
 Production authority: `NONE`
 EA authority: `RESEARCH / DEMO ONLY`
 Market authority: `GOLD# ONLY`

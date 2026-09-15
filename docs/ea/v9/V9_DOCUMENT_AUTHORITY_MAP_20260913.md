@@ -1,7 +1,14 @@
 # V9 Document Authority Map
 
+<!-- V10_TRANSITION_NOTICE_START -->
+> **Generation status update — 2026-09-16:** this map is the final V9 authority map.
+> V9 remains the predecessor / historical comparator. Active research routing moved to `../v10/AGENTS_V10.md`.
+> Transition record: `V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md`.
+<!-- V10_TRANSITION_NOTICE_END -->
+
+
 Date: `2026-09-16`
-Status: `ACTIVE / PROTOTYPE AUTHORITY UNCHANGED / TERMINAL STATE-TABLE RESEARCH SYNC`
+Status: `FINAL V9 MAP / FROZEN PREDECESSOR / V10 ACTIVE`
 
 ## A. Current strategy authority
 

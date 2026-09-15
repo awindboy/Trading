@@ -10,6 +10,22 @@ Mentor AI 재생 파이프라인을 함께 관리합니다.
 3. `docs/architecture/MENTOR_AI_GROUND_TRUTH_V2.md`: 현재 파이프라인 경계
 4. 작업 대상 하위 폴더의 `README.md`
 
+<!-- V10_RESEARCH_ROUTING_START -->
+## 현재 전략 연구 라우팅 — V10
+
+- 활성 연구 세대: `V10`
+- 시작 문서: `docs/ea/v10/AGENTS_V10.md`
+- 현재 연구 주제: `HA-primary participation / Oracle replication`
+- 핵심 구조: `FAST HA execution + STD/SLOW context + H1 structural risk + bounded exposure`
+- V9 상태: active research 종료, frozen predecessor / comparator
+- V9→V10 전환 기록: `docs/ea/v9/V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md`
+- V10 production authority: `NONE`
+
+V10은 V9 문서를 덮어쓰는 패치가 아니라 연구 질문 자체가 바뀐 새 세대입니다.
+V9는 Grammar-primary entry와 terminal-state 연구까지의 증거를 보존하고, V10은 HA가 participation clock을 맡는 구조를 별도로 연구합니다.
+
+<!-- V10_RESEARCH_ROUTING_END -->
+
 ## 현재 승인 상태
 
 - 전략 권한: `AGENTS.md`

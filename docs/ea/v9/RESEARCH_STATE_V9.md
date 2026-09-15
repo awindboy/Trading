@@ -1,7 +1,14 @@
 # V9 Research State
 
+<!-- V10_TRANSITION_NOTICE_START -->
+> **Generation status update — 2026-09-16:** V9 active research is closed.
+> The state below is the final V9 terminal-research checkpoint and remains historical evidence.
+> Active HA-primary research continues in `../v10/RESEARCH_STATE_V10.md`.
+<!-- V10_TRANSITION_NOTICE_END -->
+
+
 Date: `2026-09-16`
-Status: `PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL STATE-TABLE SHADOW RESEARCH ACTIVE`
+Status: `CLOSED / FROZEN HISTORICAL CONTROL / V10 SUCCESSOR ACTIVE`
 Market: `GOLD# ONLY`
 
 ## 1. Mechanical authority

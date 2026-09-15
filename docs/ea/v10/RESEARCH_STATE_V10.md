@@ -1,335 +1,236 @@
 # V10 Research State
 
-Date: `2026-09-08`
-Status: `ACTIVE / INITIAL GEMINI CAUSAL REPLAY STARTED`
+Date: `2026-09-16`
+Status: `ACTIVE HA-PRIMARY SHADOW RESEARCH / NO PRODUCTION AUTHORITY`
 Market: `GOLD# ONLY`
-Replay period: `2025-01 ONLY`
-Production authority: `NONE`
-EA authority: `NONE`
 
-## Purpose
+## 1. Generation boundary
 
-V10 is an isolated experiment measuring whether Gemini can perform analysis and discretionary decisions comparable to V9 when it receives only causally available GOLD# data and a clean V9-derived behavior contract.
+V9 is closed as an active research generation.
 
-V10 does not modify or extend V9 research state.
+V10 exists because the primary research authority changed from Grammar-centric entry with HA terminal research to HA-centric participation with Grammar / STD / SLOW / liquidity as context.
 
-## Pipeline status
+See:
 
-- Independent runner: `scripts/v10_gemini_jan2025.py`
-- Behavior contract: `V10_GEMINI_BEHAVIOR_CONTRACT.md`
-- Output root: `output/v10_gemini_jan2025/`
-- Source SHA256 verified: `626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2`
-- Causal packet tests: `6 PASS`
-- V9 January decisions, outcomes, and checkpoint notes are excluded from Gemini context.
+`../v9/V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md`
 
-## Causal replay performance optimization
+## 2. Current baseline clock
 
-The local packet builder was optimized without changing Gemini's system instruction,
-prompt construction, chart dimensions, visible bars, model settings, or review cadence.
+Current shadow execution representation:
 
 ```text
-first cutoff in a run:
-full source SHA256 verification + causal cache initialization
+FAST H4 HA
+w=2
+alpha=0.25
 
-later cutoff in the same run:
-validate immutable source metadata/header
-seek to the saved byte offset
-read only newly revealed M1 rows
-update bounded D1/H4/H1/M15/M5/M1 rolling bars
-
-same-cutoff retry:
-reuse the causal market cache and existing chart PNGs
+HC = (O+H+L+2C)/5
+HO_t = 0.25*HO_(t-1) + 0.75*HC_(t-1)
 ```
 
-Safety behavior:
+This is not promoted authority.
 
-- The cache is monotonic and refuses a cutoff earlier than its saved causal boundary.
-- The exact requested M1 cutoff row must exist; no rounding is allowed.
-- A source size or modification-time change triggers a full SHA256 recheck and fails closed on mismatch.
-- Cache initialization still performs the authoritative full SHA256 verification once per run.
-- Timing and cache/render actions are recorded in every packet and decision artifact.
-
-Measured local packet preparation on the current machine:
+Default shadow exit comparator:
 
 ```text
-2025-01-02 12:00 initial cache + charts: 10,846.77 ms internal
-                                            11.50 s wall
-2025-01-02 12:15 incremental + charts:         494.56 ms internal
-                                             1.12 s wall
-2025-01-02 12:15 same-cutoff retry:              16.77 ms internal
-                                             0.68 s wall
+first completed opposite-color FAST H4 HA
 ```
 
-Equivalence evidence:
-
-- At `12:00`, revealed-row count, all three PNG SHA256 values, prompt SHA256, and contract SHA256 match the pre-optimization Flash packet exactly.
-- At `12:15`, revealed-row count and all three PNG SHA256 values match the pre-optimization Flash Lite packet exactly.
-- At `12:30`, revealed-row count and all three PNG SHA256 values match the pre-optimization Flash packet exactly.
-- Unit coverage verifies that incrementally maintained timeframe bars equal a full source rescan and that source mutation is rejected.
-
-The approximately `0.44-0.60 s` chart render is not the dominant delay. A changed cutoff still receives newly rendered, byte-identical chart construction; chart reuse is limited to an exact-cutoff retry. Gemini API inference remains the dominant per-decision latency and was not altered because changing its inputs or thinking settings could change analysis quality.
-
-## Active run
+Individual Child risk:
 
 ```text
-runId: v10_jan2025_gemini_001
-model: gemini-3.5-flash-lite
-thinking: high
-current cutoff: 2025-01-02 12:30
-state: FLAT / prior child resolved
-next model-requested review: +60 minutes
+causal H1 structural SL
+ERA_RISK <= 4 screening
+M1 first-touch stop screening
 ```
 
-## First causal sequence
+## 3. Current benchmark universe
 
-### 2025-01-02 12:00
+2025-2026 H1-eligible FAST participation opportunities:
 
 ```text
-ARMED
-NOT_YET
-LONG observational direction
-next review: 15 minutes
+2,489
+ALL1 PnL +10,007.27
+PF 1.368
+DD 2,034.28
++253.72R
 ```
 
-Gemini considered the parent and child route bullish but waited for local repair evidence.
-
-### 2025-01-02 12:15
+Future-only early-third answer sheet:
 
 ```text
-TRADEABLE
-ENTER_LONG
-entry reference: 2638.41 current M1 close
-falsification anchor: 2631.09
-destination: 2639.87, then 2645
-next review: 15 minutes
+567 Oracle bars
+PnL +23,344.73
+PF 15.157
+DD 148.81
++733.18R
 ```
 
-### 2025-01-02 12:30
+## 4. Current representation findings
+
+Early-third predictability:
 
 ```text
-RESOLVED
-EXIT
-exit reference: 2644.43 current M1 close
-observed high: 2646.29
-next review: 60 minutes
+STD H4 HA          mean AUC 0.850
+Smooth STD H4 HA   mean AUC 0.849
+SLOW H4 HA         mean AUC 0.847
+FAST H4 HA         mean AUC 0.822
 ```
 
-Descriptive price change:
+Strongest current single LTF families:
 
 ```text
-2644.43 - 2638.41 = +6.02 points
+M15 FAST HA body flow ~0.64 AUC
+M30 FAST HA body flow ~0.63 AUC
+H1 standard HA body  ~0.62 AUC
 ```
 
-This is not execution-valid P/L.
+H4 FAST clock + compact MTF phase information improves the weaker 2026 early-zone AUC modestly.
 
-## Initial process audit
+## 5. Current probability decomposition
 
-Positive:
+Current useful conceptual heads:
 
-- The model used Parent Journey, child route, active memory, anchor, destination, and `NOT_YET` language coherently.
-- It waited at 12:00, requested a tighter checkpoint, entered later, and resolved at its stated destination.
-- It did not receive any V9 January answer or future row.
-
-Concern:
-
-- Entry reference to anchor distance was approximately `7.32` points.
-- Room to the first stated destination `2639.87` was only approximately `1.46` points.
-- Room to `2645` was approximately `6.59` points.
-- Therefore the claimed attractive structural asymmetry was not supported by the model's own selected geometry, even though the trade outcome was positive.
-- The response used `genuineRestorationBehavior` partly as entry confirmation rather than clearly stating future invalidation behavior.
+```text
+P_EARLY / P_RUNWAY
+P_WIN
+P_STD_SUPPORT
+```
 
 Interpretation:
 
-```text
-positive outcome
-!=
-V9-quality attempt proven
-```
+- `P_EARLY / P_RUNWAY`: is the current FAST run still early enough / capable of substantial further extension?
+- `P_WIN`: does a new Child look economically healthy under structural risk?
+- `P_STD_SUPPORT`: does standard H4 HA support the current FAST direction, accounting for its own early-run state?
 
-The first sequence shows that Gemini can imitate much of the V9 vocabulary and lifecycle, but semantic consistency must be evaluated separately from realized direction/outcome.
-
-Do not repair or relabel this frozen sequence after seeing the result.
-
-## Next task
-
-Continue the same frozen run from:
+Diagnostic unbounded product:
 
 ```text
-2025-01-02 12:30
-FLAT
-next causal cutoff: 2025-01-02 13:30
+P_EARLY * P_WIN * P_STD_SUPPORT
 ```
 
-Keep the current behavior contract unchanged for this run so its evidence remains internally consistent.
-
----
-
-## Gemini 3.5 Flash high comparison run
+with normalized / rounded sizing reached:
 
 ```text
-runId: v10_jan2025_gemini35flash_001
-model: gemini-3.5-flash
-thinking: high
-temperature: 0.0
-contract: unchanged
-start cutoff: 2025-01-02 12:00
-resolved cutoff: 2025-01-03 05:00
+PnL +18,316.55
+PF 1.676
++517.17R
 ```
 
-### Decision chronology
+but allowed orders up to 12 units and therefore is not an acceptable final policy.
+
+## 6. Current bounded research candidate
+
+Consumed-data research diagnostic:
 
 ```text
-2025-01-02 12:00  ARMED / NOT_YET / LONG bias
-2025-01-02 12:30  ENTER_LONG at current close ~2644.43
-2025-01-02 13:00  HOLD
-2025-01-02 13:30  HOLD
-2025-01-02 14:00  HOLD
-2025-01-02 15:00  HOLD
-2025-01-02 16:00  HOLD
-2025-01-02 17:00  HOLD
-2025-01-02 18:00  HOLD
-2025-01-02 19:00  HOLD
-2025-01-02 19:30  HOLD
-2025-01-02 20:00  HOLD
-2025-01-02 20:30  HOLD
-2025-01-02 21:00  HOLD
-2025-01-02 22:00  HOLD
-2025-01-03 01:00  HOLD
-2025-01-03 04:00  HOLD
-2025-01-03 05:00  EXIT / destination resolved
+score = P_RUNWAY(3x) * P_WIN * P_STD_SUPPORT
+
+prior-history quartile mapping
+bottom 50% -> 0
+50-75%    -> 1 unit
+top 25%   -> 3 units
 ```
 
-Frozen trade thesis:
+2025-2026:
 
 ```text
-entry reference: 2644.43
-falsification anchor: 2638.05
-invalidation: sustained M5/M15 close below 2638.05
-destination: 2663.40 H4 memory
-planned risk: ~6.38 points
-planned reward: ~18.97 points
-planned geometry: ~2.97R
+entries 1,159
+lot-units 2,313
+PnL +14,827.57
+PF 1.553
+DD 2,638.04
++388.88R
+max order 3 units
+max concurrent 12 units
 ```
 
-Observed lifecycle:
-
-- Price briefly wicked to approximately `2636.00`, but Gemini retained the position because its frozen invalidation required sustained M5/M15 acceptance below `2638.05`, not a wick.
-- The anchor, invalidation behavior, destination, and Parent Journey description remained stable throughout the open trade.
-- The destination was first reached during the 2025-01-03 04:15 M15 bar with a high around `2664.05`.
-- The next scheduled review was 05:00, where Gemini returned `EXIT`.
-- The 05:00 current M1 close was approximately `2661.94`.
-
-Descriptive captured result at the decision checkpoint:
+Oracle-bar classification:
 
 ```text
-2661.94 - 2644.43 = +17.51 points
-+17.51 / 6.38 = approximately +2.74R
+true Oracle bars 567
+captured 456
+recall 80.4%
+precision 39.3%
 ```
 
-This is not exact execution P/L.
+The main remaining problem is false-positive reduction without destroying Oracle recall or trend right tail.
 
-### Initial comparison with Flash Lite
+## 7. Runway result
 
-Flash Lite:
+Relative runway labels:
 
 ```text
-entered earlier at ~2638.41
-used 2631.09 anchor
-resolved at ~2644.43
-captured ~+6.02 points
-geometry from its own stated levels was weaker than claimed
+L >= m*k
 ```
 
-Flash:
+become easier to classify as `m` becomes extreme, but economic value does not monotonically follow AUC.
+
+Examples under the same bounded diagnostic:
 
 ```text
-waited until 12:30
-entered at ~2644.43 after local breakout confirmation
-used a new 2638.05 breakout-base anchor
-kept the 2663.40 destination unchanged
-captured ~+17.51 points / ~+2.74R descriptively
+m=2  PnL +15,020.83 / PF 1.592 / DD 3,777.67
+m=3  PnL +14,827.57 / PF 1.553 / DD 2,638.04
+m=4  PnL +13,576.33 / PF 1.562 / DD 2,373.42
+m=8  PnL +11,241.12 / PF 1.497 / DD 1,637.43
 ```
 
-On this single sequence, Flash showed materially better internal consistency with the V9 Decision Corridor principle than Flash Lite. This is one diagnostic trade and is not sufficient to establish model superiority.
+Do not convert one `m` into a hidden rule.
 
-### API use
+## 8. Current state-machine hypothesis
+
+The emerging semantic structure is:
 
 ```text
-calls: 18
-prompt tokens: 141,203
-total tokens: 188,970
+FAST PHA begins
+-> Oracle-like score rises
+-> FRONT-LOAD exposure
+-> score remains strong
+-> CONTINUATION state
+-> add only if runway / economic quality still justify it
+-> score deteriorates
+-> STOP-ADDING
+-> first opposite FAST HA
+-> EXIT
 ```
 
-The large call count reflects model-selected 30/60/180-minute management checkpoints during one open trade.
-
----
-
-## Second completed Flash trade
-
-The optimized runner continued the same frozen Flash run after the first trade
-resolved. No V9 answer or later market row was supplied.
+Observed score transition:
 
 ```text
-2025-01-03 06:00  NOT_YET
-2025-01-03 07:00  NOT_YET
-2025-01-03 08:00  ENTER_LONG at current M1 close 2659.49
-2025-01-03 09:00  HOLD
-2025-01-03 10:00  EXIT / structural invalidation
+TOP_NEW
+Oracle rate ~50.9%
+average Child PnL +5.83
+
+TOP_PERSIST
+Oracle rate ~31.8%
+average Child PnL +12.24
 ```
 
-Frozen second-trade thesis:
+Therefore “early Oracle position” and “confirmed profitable continuation” are not the same state.
+
+## 9. Robustness warning
+
+Run-level bootstrap for the bounded `m=3` diagnostic vs ALL1:
 
 ```text
-entry reference: 2659.49
-falsification anchor: 2655.85
-invalidation: sustained H1 close below 2655.85
-destination: 2692.90
-initial anchor distance: 3.64 points
+observed delta +4,820.30
+pooled P(delta>0) 88.7%
+95% interval -3,207 to +12,363
+
+2025:
+95% interval +410 to +6,474
+P(delta>0) 98.6%
+
+2026:
+95% interval -6,028 to +8,112
+P(delta>0) 67.1%
 ```
 
-Observed lifecycle:
+The improvement is not yet uniformly stable.
 
-- The maximum post-entry high was `2660.29` at `08:57`, approximately `+0.80` points from the entry reference.
-- The 09:00 H1 candle closed at `2654.20`, below the frozen `2655.85` anchor.
-- Gemini returned `EXIT` at the 10:00 review immediately after that H1 close became available.
-- The 10:00 current M1 close was `2654.43`.
-- The minimum post-entry low before that decision was `2651.89` at `09:23`.
+Right-tail concentration remains material.
 
-Descriptive result at the decision checkpoint:
+## 10. Current next objective
 
-```text
-2654.43 - 2659.49 = -5.06 points
--5.06 / 3.64 = approximately -1.39R
-```
+Primary next contract:
 
-This is not exact execution P/L. The anchor represented a structural H1-close
-condition rather than a broker hard stop, so intra-hour excursion and exit price
-can exceed `-1R`.
-
-Process interpretation:
-
-- Gemini did not chase the 2663 resistance immediately after the first exit; it waited two reviews for a pullback.
-- It preserved the entry anchor, H1-close invalidation behavior, and destination throughout the trade.
-- It held at 09:00 because the frozen H1-close invalidation had not yet become available.
-- The second trade lost, but its exit followed the predeclared structural condition rather than hindsight relabeling.
-
-Continuation API and timing evidence:
-
-```text
-accepted calls: 5
-prompt tokens: 39,208
-total tokens: 58,206
-accepted-call API time: 95.36 s
-local preparation time: 12.03 s
-```
-
-The local total includes a one-time `10.21 s` cache initialization because the
-first trade predated the optimization. Later new-cutoff market updates took
-approximately `45-49 ms`; changed-cutoff chart rendering took approximately
-`0.41-0.42 s`. The exact 08:00 retry reused both cache and charts and required
-approximately `16.9 ms` locally.
-
-Two 08:00 attempts on API key slot 1 received HTTP 429 before any decision was
-accepted. State remained frozen at 07:00. The identical 08:00 packet then
-succeeded with configured API key slot 2; this changed credentials only, not the
-model, thinking level, contract, prompt, charts, or cutoff.
+`V10_NEXT_RESEARCH_CONTRACT_ORACLE_PARTICIPATION_20260916.md`

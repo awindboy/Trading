@@ -1,5 +1,25 @@
-> **V9 ACTIVE RESEARCH ROUTING — 2026-09-07 / HUMAN-LIKE MARKET REPLAY · DECISION CORRIDOR · PAPER TRADING**  
-> Current active strategy research uses `docs/ea/v9/AGENTS_V9.md` and `docs/ea/v9/HANDOFF_V9.md`.  
+<!-- V10_ACTIVE_ROUTING_START -->
+> **V10 ACTIVE RESEARCH ROUTING — 2026-09-16 / HA-PRIMARY PARTICIPATION · ORACLE REPLICATION**
+> Active strategy research now uses `docs/ea/v10/AGENTS_V10.md`.
+> V10 makes HA the primary participation / execution research clock; Grammar becomes structural context rather than assumed entry authority.
+> Current V10 work studies FAST / STD / SLOW H4 HA roles, H1/M30/M15 HA delivery, structural H1 invalidation, early-run / runway Oracle replication, economic-quality state, and bounded exposure.
+> No V10 production authority exists. Current historical periods are consumed research evidence.
+> V9 is closed as an active research generation and remains the frozen predecessor / comparator. Read `docs/ea/v9/V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md`.
+>
+> **V10 startup order:**
+> 1. refresh latest GitHub `main` HEAD;
+> 2. read `docs/ea/v10/AGENTS_V10.md`;
+> 3. read `docs/ea/v10/V10_DOCUMENT_AUTHORITY_MAP_20260916.md`;
+> 4. read `docs/ea/v9/V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md`;
+> 5. read `docs/ea/v10/HANDOFF_V10.md`;
+> 6. read `docs/ea/v10/RESEARCH_STATE_V10.md`;
+> 7. read `docs/ea/v10/V10_HA_PRIMARY_RESEARCH_CHECKPOINT_20260916.md`;
+> 8. read `docs/ea/v10/V10_NEXT_RESEARCH_CONTRACT_ORACLE_PARTICIPATION_20260916.md`.
+>
+<!-- V10_ACTIVE_ROUTING_END -->
+
+> **V9 CLOSED RESEARCH ROUTING — 2026-09-16 / FROZEN PREDECESSOR TO V10**
+> Historical V9 research uses `docs/ea/v9/AGENTS_V9.md` and `docs/ea/v9/HANDOFF_V9.md`; active research now routes to V10.
 > V9 preserves V8 and all earlier generations as historical research evidence, controls, and implementation history; it does not rewrite them as invalid.  
 > V9 changes the primary research problem from universal direction prediction toward trade decision quality under uncertainty.  
 > Core separation: `market understanding != direction prediction != good trade`.  

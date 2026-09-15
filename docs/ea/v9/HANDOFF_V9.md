@@ -1,7 +1,14 @@
 # V9 Development Handoff
 
+<!-- V10_TRANSITION_NOTICE_START -->
+> **V9 HANDOFF CLOSED — 2026-09-16**
+> This file preserves the final V9 handoff state. Active research resumes from `../v10/HANDOFF_V10.md`.
+> Transition rationale and the exact V9 stopping point are recorded in `V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md`.
+<!-- V10_TRANSITION_NOTICE_END -->
+
+
 Last updated: `2026-09-16`
-Status: `PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL STATE-TABLE SHADOW RESEARCH ACTIVE`
+Status: `FINAL V9 HANDOFF / FROZEN HISTORICAL CONTROL / V10 SUCCESSOR ACTIVE`
 Production authority: `NONE`
 EA authority: `RESEARCH / DEMO ONLY`
 
