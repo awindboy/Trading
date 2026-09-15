@@ -1,188 +1,220 @@
 # V9 Development Handoff
 
-Last updated: `2026-09-15`
-Status: `PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL-ORACLE REPLICATION SHADOW RESEARCH NEXT`
+Last updated: `2026-09-16`
+Status: `PROTOTYPE FROZEN / ACTUAL-TICK VALIDATED / TERMINAL STATE-TABLE SHADOW RESEARCH ACTIVE`
 Production authority: `NONE`
 EA authority: `RESEARCH / DEMO ONLY`
 
 ## 1. Resume point
 
-Do not return to broad entry-feature mining.
-Do not change the current prototype because of consumed-data terminal research.
+Read `AGENTS_V9.md` and follow its exact resume order.
 
-There are two lanes:
+Do not return to broad entry-feature mining.
+Do not alter the frozen prototype from consumed-data terminal research.
+
+Two lanes remain separate:
 
 ```text
 A. execution lane
 frozen BASE prototype -> EA R1 -> forward demo
 
 B. strategy-research lane
-oracle terminal-HA ledger -> causal replication -> actual-tick validation if earned
+terminal literal-oracle ledger -> causal state-table replication -> actual-tick validation if earned
 ```
 
-The user's immediate research priority is lane B.
+## 2. Frozen prototype authority
 
-## 2. Frozen BASE prototype
+Unchanged:
 
-- H1/H4 causal 2-left / 2-right liquidity.
-- Tick-native H4 Arrival chronology.
-- PRIMARY_ACTIVE / CHALLENGED Grammar.
-- Nearest active opposite H1 structural Hard SL.
-- Previous-completed H4 Wilder ATR180.
-- `ERA_RISK <= 4` eligibility.
-- First accepted Child = ANCHOR; current exit `CHALLENGE_OPENS` unless own SL first.
-- Later accepted Child = CONTINUATION; current exit next H4-liquidity Arrival unless own SL first.
-- No fixed TP, SHORT ban, Child-count cap, session/day/hour filter, or duration timeout.
+- H1/H4 causal 2-left / 2-right liquidity;
+- tick-native H4 Arrival chronology;
+- PRIMARY_ACTIVE / CHALLENGED Grammar;
+- nearest active opposite H1 structural Hard SL;
+- previous-completed H4 Wilder ATR180;
+- `ERA_RISK <= 4`;
+- ANCHOR / CONTINUATION role semantics;
+- no fixed TP, SHORT ban, Child-count cap, session/day/hour filter, or duration timeout.
 
-Actual-tick execution remains higher authority than M1 for execution chronology/fills.
+The user-requested `ALL_TO_CHALLENGE` ledger below is a terminal-research comparator only.
 
-## 3. Terminal research answer sheet
+## 3. Current actual-tick terminal research ledger
 
-The research answer sheet is deliberately non-causal:
+Uploaded tester:
+
+```text
+management=ALL_TO_CHALLENGE
+700 closed Children
+PnL +6,973.87
+PF 1.533
+DD 1,700.62
+```
+
+Common H4-covered research cohort:
+
+```text
+693 Children
+191 routes
+BASE +7,210.31
+PF 1.5655
+DD 1,700.62
+```
+
+Literal oracle:
 
 ```text
 TRUE LAST ACCEPTED CHILD
--> first opposite-color completed H4 HA (HA1)
--> close every still-open Child in that route
+-> first completed opposite-color H4 HA after that Child
+-> close all surviving Children at H4_FINALIZED Bid/Ask
 ```
 
-Full deterministic M1 population:
-
-| Ledger | N | PnL | PF | WR | DD |
-|---|---:|---:|---:|---:|---:|
-| BASE | 1,139 | +8,530.74 | 2.023 | 65.58% | 440.35 |
-| ORACLE terminal HA1 all-open | 1,139 | **+13,863.22** | **3.475** | **70.41%** | **288.75** |
-
-Available full-history oracle improvement: `+5,332.48`.
-
-The oracle is an answer sheet only. `TRUE LAST CHILD` must never become a feature or live rule.
-
-## 4. Critical change in evaluation
-
-From this checkpoint forward, **BASE-beating is not the primary success criterion**.
-
-For any evaluation period `P`:
+Correct current denominator:
 
 ```text
-Oracle recovery(P)
-= (Candidate PnL(P) - BASE PnL(P))
-  / (ORACLE PnL(P) - BASE PnL(P))
+157 Oracle routes
+ORACLE +19,827.81
+PF 3.6176
+DD 856.81
+BASE -> ORACLE opportunity +12,617.50
 ```
 
-Compare all three ledgers on the same period.
+The prior `156` transition-HA1 oracle missed one route whose final Child occurred inside an already-opposite NHA episode.
 
-Primary diagnostics:
+## 4. Main research discoveries
 
-1. Oracle improvement recovery.
-2. Remaining oracle PnL gap.
-3. Exact/same-HA oracle exit matches.
-4. EARLY interventions before oracle terminal HA.
-5. LATE exits and giveback versus oracle.
-6. MISSED oracle exits.
-7. Route/Child oracle regret.
-8. Right-tail preservation.
-9. PF/DD gap to oracle.
+### Cycle / recovery
 
-AUC and raw BASE delta are secondary.
+`CycleMin` survives the actual-tick ledger change.
+Post-HA recovery confirmation improves classification but waiting +1/+2 completed H4 loses exit economics.
 
-## 5. Latest exploratory causal result
+### Position damage
 
-A broad screen tested HA morphology and persistence, H1/H4 HA context, H4 liquidity geometry, H1/H4 range/location indicators, RSI, MACD, DMI/ADX, EMA, Bollinger, Donchian, Ichimoku, movement-capacity context, and fixed Logistic/Tree/HGB models.
+Loss depth is more useful than losing-Child count.
+A deeply underwater surviving Child makes an opposite HA more economically meaningful.
+Observed thresholds are consumed-data diagnostics only.
 
-Important findings:
+### PHA / NHA
 
-- HA morphology alone is not a strong terminal classifier; HA is more useful as a reversal event.
-- H4 liquidity geometry remains the most repeatedly useful structural family.
-- H1/H4 location measures contain additional information, but common single-indicator rules are generally too noisy as exits.
-- Fixed duration since Child is weak; terminal stage is not a simple timeout.
-- Complex ML did not show stable economic superiority over simple mechanical combinations on the same variables.
+PHA = contiguous primary-color HA run immediately before HA1.
+NHA = contiguous opposite-color run beginning at HA1.
 
-The most interesting current research candidate uses the first opposite H4 HA plus a high-precision mechanical combination of:
+Useful PHA/NHA state is primarily:
 
 ```text
-Child-relative opposite-H4-liquidity pressure
-+
-H4 Donchian primary-location loss
-+
-opposite HA body strength / ATR180
+NHA close penetration into prior PHA progress
+NHA opposite body accumulation relative to PHA
 ```
 
-On the 2024-2026 slice:
+Raw NHA high-low range is weaker.
 
-| Ledger | PnL |
-|---|---:|
-| BASE | +7,428.37 |
-| current mechanical candidate | +7,869.42 |
-| same-period ORACLE | **+11,625.62** |
+### Historical state-family rebuild
 
-Therefore:
+The strongest robust raw route-relative coordinate is same-side H4 participation loss between opposite-HA opportunities.
+
+Current strongest conceptual decomposition:
 
 ```text
-candidate BASE improvement       = +441.05
-available same-period oracle gain = +4,197.25
-oracle improvement recovery      = 10.51%
-remaining oracle gap              = 3,756.20
+same-side participation deteriorates
++ opposite structural pressure gains
++ survived-reversal cycle matures
++ current opposite delivery becomes strong
 ```
 
-The candidate selected `12` route events, with `0` answer-sheet early events; `9` route deltas were positive and `3` unchanged.
+## 5. Current repeat-state benchmarks
 
-This is only a proof of concept. The important fact is not that it beats BASE; it is that **it still leaves about 89.5% of the same-period oracle improvement unrecovered**.
-
-## 6. Timing discovery
-
-The last Child need not be recognized at its entry instant.
-Oracle delay screen:
-
-| Activation delay after true last Child | PnL | PF |
-|---|---:|---:|
-| BASE | +8,530.74 | 2.023 |
-| 0 H4 | +13,863.22 | 3.475 |
-| 1 H4 | +13,839.03 | 3.464 |
-| 2 H4 | +13,715.95 | 3.407 |
-| 3 H4 | +13,471.13 | 3.272 |
-| 4 H4 | +12,608.38 | 2.927 |
-
-This means causal evidence gathered after the last accepted Child but before terminal HA can still reproduce much of the answer sheet.
-
-## 7. Next session — exact research goal
-
-The next session must ask:
-
-> Why does the oracle earn the remaining gain that the current causal detector misses, and which part of that gain is causally recoverable without creating destructive early exits?
-
-Required first work:
-
-- build route-by-route and Child-by-Child **Oracle Gain Attribution**;
-- partition oracle gain into `MATCH / EARLY / LATE / MISS` for every causal candidate;
-- rank missed routes by oracle-regret contribution rather than by classification error count;
-- inspect the largest unrecovered oracle-gain routes causally and reconstruct H4/H1 chart states;
-- distinguish missing information from overly conservative operating points;
-- test HA + liquidity + location/structure combinations mechanically first;
-- compare ML only on exactly the same available variables/timestamps;
-- use route-relative changes and depletion/replenishment states before adding arbitrary global thresholds;
-- evaluate sequentially against the same-period oracle ledger after every experiment.
-
-Do not optimize for a particular arbitrary recovery percentage. The objective is to maximize causally recoverable oracle value while preserving the right tail and keeping early-regret low.
-
-## 8. Research philosophy for this lane
-
-The goal is not to predict the literal final top or to manufacture certainty.
-The target is to identify a state in which the next opposite HA deserves route-level profit-protection authority.
-
-Current working decomposition:
+Best discrimination pair:
 
 ```text
-LIQUIDITY / STRUCTURE
--> where is the route in its participation life cycle?
+SAME_PARTICIPATION_LOSS + RESILIENT_PRESSURE
 
-LOCATION / DEPLETION
--> has primary-side delivery space/quality materially deteriorated?
-
-HEIKIN-ASHI
--> has actual H4 momentum reversal now appeared?
+AUC 2025 0.768
+AUC 2026 0.730
+mean 0.749
 ```
 
-## 9. Execution lane
+Observed consumed-data economic best:
 
-`V9_NEXT_RESEARCH_CONTRACT_FORWARD_DEMO_20260914.md` remains valid for the unchanged BASE prototype.
-Terminal-stage shadow research must not silently alter EA R1 semantics.
+```text
+SAME_PARTICIPATION_LOSS
++ OPP_PRESSURE_GAIN
++ CYCLE_MIN
++ RESILIENT_PRESSURE
+
+2025-2026:
+BASE +5,307.95
+CANDIDATE +9,528.95
+ORACLE +16,476.18
+BASE delta +4,221.00
+Oracle recovery 37.79%
+PF 2.103
+DD 1,529.50
+
+EXACT 23 / 99
+EARLY 8
+LATE 5
+MISS 63
+FALSE 1
+```
+
+There are `43` 2025-2026 Oracle routes where repeat-cycle state is available; the observed best matches `23 / 43` exactly.
+
+## 6. Critical caution
+
+The observed best combination was selected after screening consumed data.
+
+Nested prior-only combination selection:
+
+```text
+2025 choose combination from 2024
+2026 choose combination from 2024-2025
+```
+
+produced only:
+
+```text
+PnL +6,064.84
+BASE delta +756.89
+Oracle recovery 6.78%
+PF 1.642
+DD 2,344.84
+```
+
+Therefore do **not** promote the `+4,221` combination as a live rule.
+
+The main open question is whether the four-state structure is a stable representation even though operating/combination selection is unstable.
+
+## 7. Next exact research goal
+
+Follow:
+
+`V9_NEXT_RESEARCH_CONTRACT_TERMINAL_STATE_TABLE_STABILITY_20260916.md`
+
+Required work:
+
+1. route-level oracle-regret table for the observed repeat-state best;
+2. causal reconstruction of every repeat-state EARLY route;
+3. explain remaining repeat-cycle Oracle misses;
+4. stabilize representation / operating point without test-year combination selection;
+5. separately solve FIRST-HA1 routes where no CycleMin exists;
+6. preserve exact actual-tick Bid/Ask chronology;
+7. only after stability, evaluate promotion through actual-tick EA and forward demo.
+
+## 8. Result package
+
+Current result folder:
+
+`docs/ea/v9/results/terminal_state_table_20260916/`
+
+Primary files:
+
+- `ORACLE_LITERAL_ROUTE_ANSWER_SHEET_157.csv`
+- `ORACLE_LITERAL_COMMON_693_TRADES.csv`
+- `HA1_STATE_EVENTS.csv`
+- `NHA_CAUSAL_STATE_EVENTS.csv`
+- `REPEAT_STATE_COMBINATION_SUMMARY.csv`
+- `REPEAT_STATE_COMBINATION_AUC_SCREEN.csv`
+- `TOP_REPEAT_STATE_COMBO_CHILD_LEDGER_2025_2026.csv`
+- `TOP_REPEAT_STATE_COMBO_ROUTE_DECISIONS_2025_2026.csv`
+- `NESTED_PRIOR_ONLY_COMBO_SELECTION_BY_YEAR.csv`
+- `SUMMARY_METRICS_20260916.csv`
+
+All historical periods are consumed.

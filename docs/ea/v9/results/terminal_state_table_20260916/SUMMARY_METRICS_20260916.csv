@@ -1,0 +1,9 @@
+ledger,period,N,PnL,PF,WR,DD,oracle_recovery,note
+BASE_FULL_700,2024-2026 full uploaded closed ledger,700,6973.87,1.532826,0.41,1700.62,,Raw user tester; includes routes after H4 source coverage.
+BASE_COMMON_693,common H4-covered cohort,693,7210.31,1.5655100744307895,0.4126984126984127,1700.619999999999,0.0,191 routes; comparison cohort.
+ORACLE_LITERAL_693,common H4-covered cohort,693,19827.810000000005,3.6176190633354257,0.5339105339105339,856.810000000005,1.0,157 literal oracle routes; true last Child -> first completed opposite-color H4 HA.
+CYCLEMIN_GT0_IMMEDIATE,common cohort,693,9124.82,1.87354,0.46176,1627.67,0.1517344957400435,Coefficient-free prior result; immediate HA1 screen.
+MAX_CHILD_LOSS_GE_0.75_ATR,common cohort,693,9547.0,1.866502,,1639.02,0.1851943728947889,Consumed-data threshold diagnostic only; not authority.
+TOP_DISCRIMINATION_REPEAT,2025-2026,450,7387.789999999999,1.7946158620073978,0.46,1693.6099999999988,0.18622825640231244,Same Participation Loss + ResilientPressure; best mean AUC repeat-state combination.
+TOP_ECONOMIC_REPEAT_CONSUMED,2025-2026,450,9528.95,2.1029490064262824,0.47333333333333333,1529.5000000000027,0.3779470874077628,Consumed-data best: same participation loss + opposite pressure gain + CycleMin + ResilientPressure.
+NESTED_PRIOR_ONLY_SELECTION,2025-2026,450,6064.840000000004,1.6423822471155591,0.43777777777777777,2344.8399999999956,0.06777170599101232,Combination selection itself restricted to prior history; overfit-control result.

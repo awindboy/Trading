@@ -1,7 +1,7 @@
 # V9 Document Authority Map
 
-Date: `2026-09-15`
-Status: `ACTIVE / PROTOTYPE AUTHORITY UNCHANGED / TERMINAL-ORACLE REPLICATION RESEARCH SYNC`
+Date: `2026-09-16`
+Status: `ACTIVE / PROTOTYPE AUTHORITY UNCHANGED / TERMINAL STATE-TABLE RESEARCH SYNC`
 
 ## A. Current strategy authority
 
@@ -23,74 +23,105 @@ Tick/ERA implementation precedence remains:
 
 `V9_ACTUAL_TICK_EXECUTION_AND_ERA_SCALE_ADDENDUM_20260914.md`
 
-Philosophy/guardrails remain:
+Philosophy / guardrails remain:
 
 `V9_TRADING_MINDSET_AND_RESEARCH_GUARDRAILS_20260907.md`
 
-Generic causal mechanics remain in:
+Generic causal mechanics remain:
 
 - `V9_CAUSAL_NUMERIC_ANALYSIS_AND_TOOLING_PROTOCOL_20260910.md`
 - `V9_DUAL_CLOCK_SEMANTIC_RUNTIME_ADDENDUM_20260912.md`
 
-No 2026-09-15 terminal-stage study changes prototype authority.
+No 2026-09-16 terminal-state study changes prototype authority.
 
 ## B. Terminal-stage research evidence
 
-Supporting consumed-data checkpoint:
+Historical supporting checkpoints:
 
-`V9_TERMINAL_STAGE_HEIKIN_ASHI_RESEARCH_CHECKPOINT_20260915.md`
+- `V9_TERMINAL_STAGE_HEIKIN_ASHI_RESEARCH_CHECKPOINT_20260915.md`
+- `V9_TERMINAL_STAGE_CAUSAL_COMBINATION_RESEARCH_CHECKPOINT_20260915.md`
 
-It establishes the non-causal last-Child -> HA1 all-open oracle upper bound.
+Current actual-tick research ledger checkpoint:
 
-Latest causal-combination checkpoint:
-
-`V9_TERMINAL_STAGE_CAUSAL_COMBINATION_RESEARCH_CHECKPOINT_20260915.md`
+`V9_ALL_TO_CHALLENGE_ACTUAL_TICK_LEDGER_REBUILD_20260916.md`
 
 It records:
 
-- delayed-oracle timing tolerance;
-- broad HA / indicator / liquidity / structure screening;
-- failure of many simple indicator gates;
-- the high-precision three-factor mechanical candidate;
-- mechanical-vs-ML comparison;
-- the corrected same-period oracle-recovery framing.
+- the user-requested ALL_TO_CHALLENGE shadow comparator;
+- raw 700-trade tester ledger;
+- common 693-Child H4-covered cohort;
+- causal H4 finalization mapping;
+- executable Bid/Ask research fills;
+- literal-oracle correction from 156 transition-HA1 routes to 157 literal opposite-HA routes.
 
-Both are supporting research only.
+Current state-table checkpoint:
+
+`V9_TERMINAL_STATE_TABLE_RESEARCH_CHECKPOINT_20260916.md`
+
+It records:
+
+- CycleMin / Pressure / LTF retests;
+- position-damage study;
+- PHA/NHA study;
+- reconstructed historical liquidity/location families;
+- route-relative participation-state findings;
+- state-combination screen;
+- consumed-data economic best;
+- nested prior-only overfit control.
+
+All are supporting research only.
 
 ## C. Active strategy-research contract
 
-Primary next contract:
+Primary current contract:
 
-`V9_NEXT_RESEARCH_CONTRACT_ORACLE_LEDGER_REPLICATION_20260915.md`
+`V9_NEXT_RESEARCH_CONTRACT_TERMINAL_STATE_TABLE_STABILITY_20260916.md`
 
-This contract makes the last-Child -> HA1 all-open oracle ledger the answer-sheet reference for terminal-stage research and requires same-period `ORACLE_IMPROVEMENT_RECOVERY` plus ledger-regret analysis.
+It supersedes the earlier terminal-research contracts only where it is more specific about the current state-table stability work.
 
-The earlier:
+Supporting predecessors:
 
-`V9_NEXT_RESEARCH_CONTRACT_TERMINAL_STAGE_CAUSAL_DETECTION_20260915.md`
+- `V9_NEXT_RESEARCH_CONTRACT_ORACLE_LEDGER_REPLICATION_20260915.md`
+- `V9_NEXT_RESEARCH_CONTRACT_TERMINAL_STAGE_CAUSAL_DETECTION_20260915.md`
 
-remains useful background for feature families and causal restrictions, but its evaluation objective is refined by the oracle-replication contract where they differ.
-
-The execution lane remains separately governed by:
+Execution lane remains separately governed by:
 
 `V9_NEXT_RESEARCH_CONTRACT_FORWARD_DEMO_20260914.md`
 
-## D. Result folders
+## D. Current result folder
 
-Retain as research evidence:
+Primary current research evidence:
 
-- `docs/ea/v9/results/terminal_ha_20260915/`
-- `docs/ea/v9/results/terminal_detector_20260915/`
-- `docs/ea/v9/results/terminal_ha_combo_20260915/`
-- existing V9 result ledgers and ERA4/runtime analysis evidence.
+`docs/ea/v9/results/terminal_state_table_20260916/`
 
-## E. Superseded/historical documents
+It contains:
 
-Older one-active-Child, hidden-gate, fixed-GOLD-SL, FLOW_ROUTE, H1 alignment-state, scheduler, AI-direction, LTF-trigger, and pre-current-prototype documents remain historical evidence only when they conflict with current authority.
+- BASE / literal Oracle Child ledgers;
+- literal Oracle route answer sheet;
+- HA1 / NHA / position-damage / PHA state event tables;
+- historical-state AUC tables;
+- universal and repeat-state combination screens;
+- top consumed-data combination decisions and Child ledger;
+- top discrimination combination ledger;
+- nested prior-only selection control;
+- ablations and NHA depth diagnostics.
+
+Older result folders remain historical evidence:
+
+- `results/terminal_ha_20260915/`
+- `results/terminal_detector_20260915/`
+- `results/terminal_ha_combo_20260915/`
+
+## E. Superseded / historical research numbers
+
+The previous `156` oracle denominator is superseded for current literal-oracle work by `157`.
+
+Earlier deterministic M1 role-policy oracle results remain valid as historical evidence for that separate comparator and must not be silently mixed with the current ALL_TO_CHALLENGE actual-tick comparator.
 
 ## F. Data status
 
-All supplied GOLD# periods are consumed/research-available by explicit user instruction.
-No historical result in the terminal program is untouched OOS.
+All supplied GOLD# historical periods are consumed / research-available by explicit user instruction.
+No terminal-state historical result is untouched OOS.
 
-The oracle uses future information and is permitted **only as an answer sheet / upper bound**. Causal candidates must never use its future fields as inputs.
+The oracle uses future information only as an answer sheet.
+Causal candidates must never use future oracle fields as inputs.
