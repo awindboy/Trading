@@ -5,16 +5,6 @@ Status: `ACTIVE SHADOW RESEARCH CONTRACT`
 Production authority: `NONE`
 Market: `GOLD# ONLY`
 
-<!-- V10_NEXT_CONTRACT_SUCCESSOR_20260916_START -->
-> **Successor note — 2026-09-16**
->
-> This contract remains an important predecessor for Oracle-participation research. The immediate work order is now controlled by:
->
-> `V10_NEXT_RESEARCH_CONTRACT_EXECUTION_FIDELITY_AND_DANGER_REGEN_20260916.md`
->
-> Reason: the first bounded-m3 actual-tick test found a non-persistent market-closed FAST-NHA exit, and the strongest post-HEAD danger result lacks persisted coefficients / veto-row ledger.
-<!-- V10_NEXT_CONTRACT_SUCCESSOR_20260916_END -->
-
 ## 1. Primary objective
 
 The next V10 objective is:

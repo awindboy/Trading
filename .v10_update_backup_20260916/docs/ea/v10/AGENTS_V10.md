@@ -27,54 +27,6 @@ Read in this order:
 
 V9 remains historical evidence and the principal predecessor comparator. Where V10 research documents conflict with older V9 research routing about the **active research question**, V10 controls. V10 does not retroactively rewrite V9 results.
 
-<!-- V10_POST_HEAD_20260916_START -->
-## 0A. Post-HEAD current resume addendum — 2026-09-16
-
-After completing the base Resume order above, the current V10 continuation order is:
-
-1. `V10_POST_HEAD_RESEARCH_CHECKPOINT_20260916.md`
-2. `V10_BOUNDED_M3_ACTUAL_TICK_VALIDATION_20260916.md`
-3. `V10_NEXT_RESEARCH_CONTRACT_EXECUTION_FIDELITY_AND_DANGER_REGEN_20260916.md`
-4. `results/V10_BOUNDED_M3_ACTUAL_TICK_SUMMARY_20260916.csv`
-5. `results/V10_BOUNDED_M3_ACTUAL_TICK_EVENT_COUNTS_20260916.csv`
-6. `scripts/v10_actual_tick_execution_audit.py`
-
-Current exact executable control remains the persisted bounded `m=3` ledger:
-
-```text
-1,159 selected entry events
-2,313 units
-PnL +14,827.57
-PF 1.553395
-DD 2,638.04
-+388.88R
-max order 3
-max concurrent 12
-```
-
-Post-HEAD research supports a stage-aware hypothesis:
-
-```text
-k1  -> extreme Danger / run admission
-k2  -> Persistence confirmation
-k3+ -> marginal Child economics
-FAST opposite HA -> campaign exit comparator
-```
-
-The recorded `bounded m3 + extreme NHA-shock veto` result (`+15,013.69`, PF `1.57811`, `+428.23R`) is **session-recorded consumed evidence**, not an executable benchmark, because its exact fitted coefficients and veto-row ledger were not persisted.
-
-The first bounded-m3 actual-tick run is also **not a validation pass**. It found that a market-closed `FAST_NHA_EXIT` rejection erased exit intent instead of keeping an immutable pending close. This produced stale-position holding, opposite-direction overlap, and max concurrent exposure `16` instead of the research geometry `12`.
-
-Immediate priority:
-
-```text
-repair EXIT_PENDING persistence
--> rerun exact bounded-m3 control unchanged
--> regenerate post-HEAD Danger/Persistence artifacts
--> only then test state-machine policy changes
-```
-<!-- V10_POST_HEAD_20260916_END -->
-
 ## 1. V10 research question
 
 V10 asks:

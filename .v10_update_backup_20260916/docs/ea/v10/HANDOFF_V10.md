@@ -3,44 +3,6 @@
 Date: `2026-09-16`
 Status: `ACTIVE HA-PRIMARY SHADOW RESEARCH`
 
-<!-- V10_POST_HEAD_HANDOFF_20260916_START -->
-## Current priority override — post-HEAD / actual-tick gate
-
-The earlier handoff remains historical context, but the current resume path is:
-
-1. confirm latest GitHub `main`;
-2. follow `AGENTS_V10.md`;
-3. read `V10_POST_HEAD_RESEARCH_CHECKPOINT_20260916.md`;
-4. read `V10_BOUNDED_M3_ACTUAL_TICK_VALIDATION_20260916.md`;
-5. follow `V10_NEXT_RESEARCH_CONTRACT_EXECUTION_FIDELITY_AND_DANGER_REGEN_20260916.md`.
-
-Current research thesis:
-
-```text
-Opportunity != Safety
-
-k1:
-Opportunity Head + extreme Danger Head
--> participate or abstain
-
-k2:
-Persistence Head
--> confirm / stop adding
-
-k3+:
-marginal Child economics
-
-FAST NHA:
-campaign exit
-```
-
-Current exact executable benchmark remains bounded `m=3`. The post-HEAD shock-veto result is not yet reproducible enough to embed.
-
-The first actual-tick bounded-m3 test produced raw `+$16,220.67 / PF 1.6866`, but that headline is contaminated by non-persistent market-closed FAST-NHA exits and must not be treated as validated strategy performance.
-
-Execution-fidelity repair comes before additional model tuning.
-<!-- V10_POST_HEAD_HANDOFF_20260916_END -->
-
 ## Resume first
 
 1. Confirm latest GitHub `main` HEAD.

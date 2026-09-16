@@ -33,18 +33,3 @@ These files are research artifacts for the first V10 HA-primary checkpoint.
 - `V10_HIGH_LEVEL_COMPARATORS_20260916.csv`
 
 All periods represented here are consumed research evidence. None of these files grants production authority.
-
-<!-- V10_ACTUAL_TICK_RESULTS_20260916_START -->
-## Actual-tick bounded-m3 diagnostic
-
-Added after the first Strategy Tester run:
-
-- `V10_BOUNDED_M3_ACTUAL_TICK_SUMMARY_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_EVENT_COUNTS_20260916.csv`
-
-Primary narrative:
-
-`../V10_BOUNDED_M3_ACTUAL_TICK_VALIDATION_20260916.md`
-
-The raw tester headline is diagnostic only because market-closed FAST-NHA exits were not persisted/retried. Do not treat the raw actual-tick PnL as promoted V10 performance.
-<!-- V10_ACTUAL_TICK_RESULTS_20260916_END -->

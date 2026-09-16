@@ -29,35 +29,6 @@ Primary next contract:
 
 `V10_NEXT_RESEARCH_CONTRACT_ORACLE_PARTICIPATION_20260916.md`
 
-<!-- V10_POST_HEAD_AUTHORITY_20260916_START -->
-## A2. Post-HEAD current research routing
-
-Current post-HEAD checkpoint:
-
-`V10_POST_HEAD_RESEARCH_CHECKPOINT_20260916.md`
-
-Current actual-tick diagnostic:
-
-`V10_BOUNDED_M3_ACTUAL_TICK_VALIDATION_20260916.md`
-
-Current primary next contract:
-
-`V10_NEXT_RESEARCH_CONTRACT_EXECUTION_FIDELITY_AND_DANGER_REGEN_20260916.md`
-
-Current reproducibility helper:
-
-`../../../scripts/v10_actual_tick_execution_audit.py`
-
-Current compact actual-tick result summaries:
-
-- `results/V10_BOUNDED_M3_ACTUAL_TICK_SUMMARY_20260916.csv`
-- `results/V10_BOUNDED_M3_ACTUAL_TICK_EVENT_COUNTS_20260916.csv`
-
-These additions do not grant production authority.
-
-The earlier `V10_NEXT_RESEARCH_CONTRACT_ORACLE_PARTICIPATION_20260916.md` remains a predecessor contract; where the immediate work order differs, the execution-fidelity-and-danger-regeneration contract is more specific and current.
-<!-- V10_POST_HEAD_AUTHORITY_20260916_END -->
-
 ## B. Predecessor / historical authority
 
 V9 closure and transition record:

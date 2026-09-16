@@ -4,68 +4,6 @@ Date: `2026-09-16`
 Status: `ACTIVE HA-PRIMARY SHADOW RESEARCH / NO PRODUCTION AUTHORITY`
 Market: `GOLD# ONLY`
 
-<!-- V10_POST_HEAD_STATE_20260916_START -->
-## Latest state addendum — 2026-09-16
-
-The initial V10 state below is preserved. The latest research refinement is:
-
-```text
-single Oracle-likeness scalar
--> insufficient description
-
-current working state:
-Opportunity
-+ Danger
-+ Persistence
-+ marginal Child value
-```
-
-Strong post-HEAD observations:
-
-- destructive false positives, especially very short FAST runs, explain a large part of the Oracle gap;
-- one-step FAST survival is easier to model than final run length from k1;
-- compact M15/M30/H1 body-flow + persistence is more useful than feature soup;
-- k1 and k2 have different jobs;
-- broad downside filters delete large winners;
-- only an extreme danger tail showed promising abstention behavior;
-- automatic exposure catch-up after a k1 veto was weak;
-- late non-Oracle Children in long runs can remain economically useful.
-
-Best recorded but not yet reproducible post-HEAD bounded diagnostic:
-
-```text
-bounded m3 + extreme NHA-shock veto
-PnL +15,013.69
-PF 1.57811
-DD ~2,703.62
-R +428.23R
-```
-
-Actual-tick gate:
-
-```text
-984 fills
-174 market-closed entry rejects
-1 SL-already-touched reject
-
-raw tester:
-PnL +16,220.67
-PF 1.686554
-Balance DD 8.52%
-Equity DD 15.27%
-
-critical defect:
-market-closed FAST_NHA_EXIT was not latched/retried
--> unintended holding
--> ~311h opposite-direction overlap
--> max concurrent 16 vs intended 12
-```
-
-Where exit semantics stayed comparable, the 853-position normal subset showed close M1-vs-tick parity (`+$11,618.07` M1 reference versus `+$11,478.19` actual tick).
-
-Therefore the immediate next objective is execution fidelity first, then model regeneration.
-<!-- V10_POST_HEAD_STATE_20260916_END -->
-
 ## 1. Generation boundary
 
 V9 is closed as an active research generation.

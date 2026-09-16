@@ -4,14 +4,6 @@ Date: `2026-09-16`
 Status: `CONSUMED-DATA SHADOW RESEARCH / NOT STRATEGY AUTHORITY`
 Market: `GOLD# ONLY`
 
-<!-- V10_POST_HEAD_CHECKPOINT_POINTER_20260916_START -->
-> **Continuation note — 2026-09-16**
->
-> Substantial later research is preserved in `V10_POST_HEAD_RESEARCH_CHECKPOINT_20260916.md`.
-> The first actual-tick execution diagnostic is in `V10_BOUNDED_M3_ACTUAL_TICK_VALIDATION_20260916.md`.
-> This original checkpoint remains the baseline historical V10 checkpoint.
-<!-- V10_POST_HEAD_CHECKPOINT_POINTER_20260916_END -->
-
 ## 1. Objective
 
 This checkpoint records the research performed after the HA-primary architecture became the main question.
