@@ -105,3 +105,36 @@ Integrity index:
 
 See `../V10_DATA_AND_LEDGER_MANIFEST_20260916.md` for lineage and authority boundaries.
 <!-- V10_REPRO_LEDGER_RESULTS_20260916_END -->
+
+<!-- V10_REGIME_RISK_RESULTS_20260917_START -->
+## Regime / reverse-admission / HA-risk research — 2026-09-17
+
+Narrative checkpoints:
+
+- `../V10_REGIME_REVERSE_ADMISSION_AND_MAIN_CLOCK_CHECKPOINT_20260917.md`
+- `../V10_HA_PRIMARY_RISK_ARCHITECTURE_CHECKPOINT_20260917.md`
+- `../V10_NEXT_RESEARCH_CONTRACT_REGIME_ADMISSION_AND_HA_RISK_20260917.md`
+
+New result artifacts:
+
+- `V10_REGIME_REVERSE_ADMISSION_SUMMARY_20260917.csv`
+- `V10_H4_VS_H1_MAIN_CLOCK_COMPARISON_20260917.csv`
+- `V10_HA_SL_FAMILY_SUMMARY_20260917.csv`
+- `V10_PREV_STD_HA_STOP_SIGNAL_LEDGER_20260917.csv`
+- `V10_W3_RISK_MULTIPLIER_SCAN_PREV_STD_HA_20260917.csv`
+- `V10_CAMPAIGN_RISK_CAP_SCAN_20260917.csv`
+- `V10_HA_RISK_RESEARCH_CHECKPOINT_20260917.json`
+
+Authority notes:
+
+```text
+reverse/regime indicator results
+-> consumed-data session summary; post-hoc scan, not threshold authority
+
+HA-risk results
+-> persisted selected-signal row-level stop ledger + scan summaries
+-> still consumed-data research only
+```
+
+The H1 liquidity structural stop remains in historical comparator artifacts but is no longer the preferred active V10 risk-design direction.
+<!-- V10_REGIME_RISK_RESULTS_20260917_END -->

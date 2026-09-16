@@ -368,3 +368,51 @@ entry_event_time / entry_time_actual
 
 `signal_id + effective_ts` is the exact parity key. Do not treat a one- or two-second MT5 fill/event lag as a signal mismatch, and do not solve it with an arbitrary tolerance.
 <!-- V10_DECISION_CLOCK_HOTFIX_20260916_END -->
+
+<!-- V10_REGIME_RISK_OVERRIDE_20260917_START -->
+## 0D. Current research routing override — 2026-09-17
+
+After all earlier resume material, the **current active research continuation** is:
+
+1. `V10_REGIME_REVERSE_ADMISSION_AND_MAIN_CLOCK_CHECKPOINT_20260917.md`
+2. `V10_HA_PRIMARY_RISK_ARCHITECTURE_CHECKPOINT_20260917.md`
+3. `V10_NEXT_RESEARCH_CONTRACT_REGIME_ADMISSION_AND_HA_RISK_20260917.md`
+4. the new 2026-09-17 result artifacts listed in `results/README.md`.
+
+Project direction has changed from the 2026-09-16 immediate reproducibility queue. Existing execution/reproducibility documents remain historical evidence and their caveats remain valid, but **do not spend the current research cycle rebuilding already-consumed reproducibility work** unless explicitly reopened.
+
+Current working architecture:
+
+```text
+H4 FAST HA
+-> main campaign clock
+
+FAST NHA
+-> exit old campaign
+!= automatic reverse-entry authority
+
+REGIME layer
+-> trendable vs chop-risk
+
+NEUTRAL state
+-> allowed between LONG and SHORT
+
+DIRECTION layer
+-> EMA / DI / compact HA-delivery confirmation
+
+Child Hard SL research
+-> HA-native invalidation
+-> leading clean candidate: previous completed H4 STD HA extreme
+
+Position sizing
+-> Child-level account-risk budget
+-> actual lot derived from stop distance
+
+Campaign risk
+-> aggregate committed-risk ceiling
+```
+
+Current project direction explicitly demotes V9-derived H1 liquidity SL from the preferred active V10 risk design. It remains a historical comparator only.
+
+No scanned ADX/efficiency threshold, EMA/DI rule, HA stop, W risk multiplier, base account percentage, or campaign risk cap is production authority.
+<!-- V10_REGIME_RISK_OVERRIDE_20260917_END -->

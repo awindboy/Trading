@@ -1,0 +1,9 @@
+candidate,main_clock,ha_formula,entries,pnl,pf,dd,win_rate_pct,structural_R,avg_hold_h,median_hold_h,max_concurrent,runs,L_le_2_pct,median_run_len,authority_status,notes
+H4_FAST_RECON,H4,w2/a0.25,2491,10168.07,1.375,2153,35.3,270.5,17.3,8.6,17,754,49.3,3,local reconstruction,Near GitHub ALL1 benchmark; comparator engine
+H1_FAST,H1,w2/a0.25,9477,2031,1.036,2547,34.2,29.4,4.5,2.0,24,3077,52.9,2,consumed diagnostic,Same mechanical structure with H1 main clock; quality collapses toward PF 1
+H1_FAST_K1_ONLY,H1,w2/a0.25,2954,554,1.029,,,-20.2,,,,,,,consumed diagnostic,First H1 PHA alone has almost no economic edge
+H1_STD,H1,w1/a0.50,,9241,1.147,3533,,132.8,,,,,,,consumed diagnostic,Slower H1 HA improves over H1 FAST but remains inferior to H4 main
+H1_SLOW,H1,w2/a0.75,,5533,1.069,7991,,,,,,,,,consumed diagnostic,Too slow and high DD
+H1_CLOSE_HEAVY_FAST,H1,w4/a0.25,,-917,0.984,,,,,,,,,,consumed diagnostic,Negative result
+H1_REGIME_AWARE,H1,FAST + H1-scaled regime-aware neutral,,3164,1.063,,,,,,,,,,consumed diagnostic,Regime idea helps but H1 main clock remains too noisy
+H1_EARLY_THIRD_ORACLE,H1,future-only answer sheet,2043,34373,10.65,71,74.1,1358.7,,,,,,,oracle only,Shows H1 contains large trend opportunity but causal discrimination is much harder

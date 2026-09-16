@@ -180,3 +180,39 @@ Read `V10_SIGNAL_DECISION_CLOCK_HOTFIX_20260916.md` before using the row-level e
 
 For filled rows, the EA may log the entry event one or two seconds after the H4 decision boundary. The exact intended clock is already persisted as `effective_ts`; that value must match the baseline `decision_ts` exactly. Actual event/fill time remains separate execution evidence.
 <!-- V10_DECISION_CLOCK_HOTFIX_HANDOFF_20260916_END -->
+
+<!-- V10_REGIME_RISK_HANDOFF_20260917_START -->
+## Current handoff override — regime admission + HA-primary risk, 2026-09-17
+
+Current resume target is no longer additional reproducibility regeneration.
+
+Read:
+
+1. `V10_REGIME_REVERSE_ADMISSION_AND_MAIN_CLOCK_CHECKPOINT_20260917.md`
+2. `V10_HA_PRIMARY_RISK_ARCHITECTURE_CHECKPOINT_20260917.md`
+3. `V10_NEXT_RESEARCH_CONTRACT_REGIME_ADMISSION_AND_HA_RISK_20260917.md`
+
+Key conclusions to preserve:
+
+```text
+1. H4 remains the main clock. H1-main FAST participation was too noisy.
+
+2. FAST NHA owns old-campaign exit, not automatic reverse admission.
+
+3. LONG / NEUTRAL / SHORT is the current working state topology.
+
+4. ADX / H4 path efficiency are useful as regime sensors,
+   while EMA / DI / LTF HA are better treated as directional confirmation.
+
+5. Universal hard gates delete too much trend right tail.
+   Conditional NEUTRAL is the more promising architecture.
+
+6. The inherited H1 liquidity Hard SL is no longer the preferred V10 design.
+   The clean leading HA-native stop candidate is the previous completed H4 STD HA extreme.
+
+7. Fixed-lot W1/W3 should give way to Child money-risk sizing research.
+   Campaign aggregate committed risk needs its own ceiling.
+```
+
+Do not convert consumed-data scan winners into hidden thresholds.
+<!-- V10_REGIME_RISK_HANDOFF_20260917_END -->

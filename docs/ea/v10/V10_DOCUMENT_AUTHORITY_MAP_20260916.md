@@ -140,3 +140,32 @@ The raw first-run Strategy Tester evidence is retained under `results/raw/`.
 
 The row-level ledgers and `_REGEN` model outputs are research evidence only. They do not promote a V10 threshold, model, lot map, execution policy or production EA.
 <!-- V10_REPRO_LEDGER_AUTHORITY_20260916_END -->
+
+<!-- V10_REGIME_RISK_AUTHORITY_20260917_START -->
+## A4. Current research routing — 2026-09-17
+
+Current consumed-data checkpoints:
+
+- `V10_REGIME_REVERSE_ADMISSION_AND_MAIN_CLOCK_CHECKPOINT_20260917.md`
+- `V10_HA_PRIMARY_RISK_ARCHITECTURE_CHECKPOINT_20260917.md`
+
+Current primary next contract:
+
+- `V10_NEXT_RESEARCH_CONTRACT_REGIME_ADMISSION_AND_HA_RISK_20260917.md`
+
+These documents supersede the older execution-fidelity / danger-regeneration contract **for the immediate research queue only**. The 2026-09-16 actual-tick and reproducibility documents remain historical evidence and still define the limitations of those historical results.
+
+Current active research thesis:
+
+```text
+H4 FAST main clock
+EXIT != REVERSE ADMISSION
+explicit NEUTRAL / chop-risk state
+regime layer separate from direction layer
+HA-native Child invalidation
+Child money-risk sizing
+campaign aggregate risk ceiling
+```
+
+No new production or EA authority is granted.
+<!-- V10_REGIME_RISK_AUTHORITY_20260917_END -->

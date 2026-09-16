@@ -324,3 +324,90 @@ New deterministic regeneration artifacts persist preprocessing, coefficients, sc
 
 This improves reproducibility but does not change the promotion status: V10 remains shadow research with no production authority.
 <!-- V10_REPRO_LEDGER_STATE_20260916_END -->
+
+<!-- V10_REGIME_RISK_STATE_20260917_START -->
+## Current research state — 2026-09-17
+
+The active problem has advanced again.
+
+### Main clock
+
+```text
+H4 FAST remains the campaign clock.
+H1-main was tested and rejected as the current direction because turnover/churn exploded and PF approached 1.
+```
+
+### Participation state
+
+The working topology is now:
+
+```text
+LONG
+-> FAST NHA -> EXIT
+-> either opposite campaign admission OR NEUTRAL
+
+NEUTRAL
+-> wait for causal regime/direction organization
+-> LONG or SHORT when admission is justified
+```
+
+Current evidence distinguishes:
+
+```text
+REGIME
+ADX + H4 path efficiency + flip context
+
+DIRECTION
+EMA + DI + compact M15/M30/H1 HA delivery + STD/SLOW phase
+```
+
+Post-hoc conditional-NEUTRAL scans produced roughly `+17.4k` to `+17.9k` on the consumed bounded-m3 sample while preserving October trend profits much better than universal hard gates. These values are research diagnostics, not authority.
+
+### Risk state
+
+The V9-derived nearest-active H1 liquidity stop is now a comparator rather than the preferred design direction.
+
+Leading clean HA-native Hard-SL candidate:
+
+```text
+LONG  -> previous completed H4 STD HA low
+SHORT -> previous completed H4 STD HA high
+```
+
+Local fixed-lot reconstruction:
+
+```text
++14,357.83
+PF 1.538
+DD 2,552.97
+1,158 / 1,159 valid stop rows
+median stop distance 28.85
+```
+
+Money-risk interpretation under this stop:
+
+```text
+Equal Child risk:
++170.80R / PF_R 1.382 / DD 28.67R
+
+W1=1, W3=3 risk units:
++401.88R / PF_R 1.467 / DD 60.21R
+max committed 12 risk units
+```
+
+Campaign-risk scans show substantial R can survive lower maximum committed risk, but no cap value is promoted.
+
+### Current integrated architecture hypothesis
+
+```text
+H4 FAST campaign clock
++ regime-aware reverse admission / NEUTRAL
++ compact direction confirmation
++ previous-STD H4 HA Child Hard SL
++ Child money-risk sizing
++ campaign aggregate risk ceiling
++ FAST opposite HA campaign exit
+```
+
+No production V10 strategy exists.
+<!-- V10_REGIME_RISK_STATE_20260917_END -->
