@@ -108,3 +108,35 @@ The checkpoint documents record what was tested and observed. They do not promot
 - any delayed Grammar exit.
 
 No production authority exists.
+
+<!-- V10_REPRO_LEDGER_AUTHORITY_20260916_START -->
+## A3. Reproducibility and data-lineage routing
+
+Current reproducibility checkpoint:
+
+`V10_REPRODUCIBILITY_LEDGER_AND_MODEL_REGEN_CHECKPOINT_20260916.md`
+
+Current data / ledger manifest:
+
+`V10_DATA_AND_LEDGER_MANIFEST_20260916.md`
+
+Auto-generated regeneration readout:
+
+`V10_REGENERATION_RESULTS_20260916.md`
+
+Primary reproducibility scripts:
+
+- `../../../scripts/v10_build_actual_tick_ledgers.py`
+- `../../../scripts/v10_build_actual_tick_extended_ledgers.py`
+- `../../../scripts/v10_build_post_head_feature_ledger.py`
+- `../../../scripts/v10_join_reference_execution.py`
+- `../../../scripts/v10_join_and_regen_models.py`
+- `../../../scripts/v10_regen_post_head_descriptives.py`
+- `../../../scripts/v10_write_regen_summary.py`
+- `../../../scripts/v10_write_artifact_manifest.py`
+- `../../../scripts/v10_validate_repro_pack.py`
+
+The raw first-run Strategy Tester evidence is retained under `results/raw/`.
+
+The row-level ledgers and `_REGEN` model outputs are research evidence only. They do not promote a V10 threshold, model, lot map, execution policy or production EA.
+<!-- V10_REPRO_LEDGER_AUTHORITY_20260916_END -->

@@ -296,3 +296,31 @@ Right-tail concentration remains material.
 Primary next contract:
 
 `V10_NEXT_RESEARCH_CONTRACT_ORACLE_PARTICIPATION_20260916.md`
+
+<!-- V10_REPRO_LEDGER_STATE_20260916_START -->
+## Reproducibility state — 2026-09-16
+
+The following evidence is now persisted rather than summarized only in prose:
+
+```text
+raw Strategy Tester event CSV + report XLSX
+1,159 signal-execution rows
+175 selected entry rejects
+134 rejected NHA-close requests
+84 distinct exit-reject incidents
+131 contaminated filled positions
+131 intended-vs-actual pending-exit delay rows
+1,968 normalized deals
+1,968 normalized orders
+1,968 deal-by-deal exposure states
+33 opposite-direction overlap episodes
+252 structural-SL execution rows
+1,159 causal selected-signal MTF feature rows
+```
+
+The selected-signal feature ledger is bound to exact M15/M30/H1/H4 source SHA256 values. Its future answer-sheet columns are explicitly named and prohibited as live features.
+
+New deterministic regeneration artifacts persist preprocessing, coefficients, scores and prior-percentile references. Their population is `BOUNDED_M3_SELECTED`; they are not the lost original full-universe Danger model.
+
+This improves reproducibility but does not change the promotion status: V10 remains shadow research with no production authority.
+<!-- V10_REPRO_LEDGER_STATE_20260916_END -->

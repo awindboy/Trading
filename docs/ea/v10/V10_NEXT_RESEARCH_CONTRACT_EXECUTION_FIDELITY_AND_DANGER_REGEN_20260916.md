@@ -285,3 +285,34 @@ forward-demo evidence
 ```
 
 The immediate milestone is not promotion. It is a clean, reproducible actual-tick bounded-m3 control with correct campaign-exit semantics.
+
+<!-- V10_REPRO_LEDGER_CONTRACT_20260916_START -->
+## 14. Reproducibility gate before further scans
+
+Before any new Danger / Persistence / marginal-Child scan:
+
+```text
+python scripts/v10_validate_repro_pack.py .
+```
+
+The experiment must persist at minimum:
+
+```text
+population definition
+causal feature columns
+answer-sheet-only columns
+training/evaluation timestamps
+preprocessing statistics
+model coefficients or serialized model
+per-event score
+prior-only threshold/percentile reference
+selected/vetoed row IDs
+economic outcome and regret
+run/exposure summary
+validation receipt
+```
+
+Do not allow a new result to exist only as a terminal printout or chat summary.
+
+The current `_REGEN` models are selection-conditioned diagnostics on `BOUNDED_M3_SELECTED`. A future attempt to reproduce the earlier full-universe shock-veto work must rebuild the full eligible opportunity feature population explicitly; do not silently treat the selected-signal model as equivalent.
+<!-- V10_REPRO_LEDGER_CONTRACT_20260916_END -->

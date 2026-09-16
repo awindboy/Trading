@@ -131,3 +131,52 @@ Do not describe V10 as actual-tick validated.
 - `results/V10_BOUNDED_M3_RUN_LEVEL_LEDGER_2025_2026.csv`
 - `results/V10_RUNWAY_MULTIPLE_SCAN_20260916.csv`
 - `results/V10_SIZING_COMPARISON_20260916.csv`
+
+<!-- V10_REPRO_LEDGER_HANDOFF_20260916_START -->
+## Reproducibility handoff — row-level evidence is now available
+
+The current V10 handoff now has a complete row-level research spine for the existing bounded-m3 control:
+
+```text
+1,159 selected signals
+-> exact entry fill/reject state
+-> normalized MT5 order/deal rows
+-> failed FAST-NHA exit incidents
+-> actual exit and exposure path
+-> M1-reference parity
+-> causal M15/M30/H1/H4 selected-signal state
+-> deterministic model-regeneration artifacts
+```
+
+Use `V10_DATA_AND_LEDGER_MANIFEST_20260916.md` as the data-lineage index.
+
+Important distinction:
+
+```text
+old session-recorded shock-veto result
+= historical consumed evidence
+
+new _REGEN models
+= reproducible selection-conditioned candidates
+```
+
+Do not describe the latter as recovery of the former.
+
+Before another model scan, run:
+
+```text
+python scripts/v10_validate_repro_pack.py .
+```
+
+Execution fidelity still comes first. A repaired actual-tick control must preserve immutable `EXIT_PENDING` and must be compared to the new row-level parity ledger before any strategy conclusion is drawn.
+<!-- V10_REPRO_LEDGER_HANDOFF_20260916_END -->
+
+<!-- V10_DECISION_CLOCK_HOTFIX_HANDOFF_20260916_START -->
+## Decision-clock hotfix
+
+The reproducibility pack distinguishes the signal clock from the actual tick clock.
+
+Read `V10_SIGNAL_DECISION_CLOCK_HOTFIX_20260916.md` before using the row-level execution or feature ledgers.
+
+For filled rows, the EA may log the entry event one or two seconds after the H4 decision boundary. The exact intended clock is already persisted as `effective_ts`; that value must match the baseline `decision_ts` exactly. Actual event/fill time remains separate execution evidence.
+<!-- V10_DECISION_CLOCK_HOTFIX_HANDOFF_20260916_END -->

@@ -1,0 +1,16 @@
+{
+  "rows": 1159,
+  "direction_mismatch": 0,
+  "feature_columns": 62,
+  "answer_sheet_columns": [
+    "answer_final_run_len",
+    "answer_future_remaining_h4"
+  ],
+  "hashes": {
+    "events": "eea7f54a4f0a70aa3c3ea52b38163f95fe8f79de93cdf0ccf8d73cc8fcc91f69",
+    "m15": "245902105a2c36a627768f979584984944aabc9e62dfa3cfc9acb3198544c269",
+    "m30": "8a3124d0f67ec6f8729b495011899cd4ca4fb5fd723dce7998f09614a12a1022",
+    "h1": "c1d9f63f8af4d7dddd9e20e6eb124dc71de51015384b9c61a772d5981c7be52c",
+    "h4": "5e12fa91f974c0f15e340ea8116bd9168fc6821e6309592cee1a7e197675de09"
+  }
+}

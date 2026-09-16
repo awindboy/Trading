@@ -1,0 +1,14 @@
+{
+  "selected_signals": 1159,
+  "fills": 984,
+  "entry_rejects": 174,
+  "sl_already_touched_rejects": 1,
+  "filled_pnl": 16220.67,
+  "filled_units": 1966,
+  "affected_exit_reject_positions": 131,
+  "distinct_exit_reject_timestamps": 84,
+  "raw_exit_reject_events": 134,
+  "max_actual_holding_hours": 148.0,
+  "max_unintended_hold_hours": 115.00027777777778,
+  "sum_unintended_hold_hours_positionwise": 2813.1958
+}

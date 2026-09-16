@@ -305,3 +305,66 @@ Promotion requires at minimum:
 - actual-tick executable replay;
 - structural-R and concurrent-risk accounting;
 - forward-demo evidence.
+
+<!-- V10_REPRO_LEDGER_20260916_START -->
+## 0B. Reproducibility-ledger addendum — 2026-09-16
+
+After the post-HEAD / actual-tick addendum, also read:
+
+1. `V10_REPRODUCIBILITY_LEDGER_AND_MODEL_REGEN_CHECKPOINT_20260916.md`
+2. `V10_DATA_AND_LEDGER_MANIFEST_20260916.md`
+3. `V10_REGENERATION_RESULTS_20260916.md`
+4. row-level execution, parity, feature, coefficient and score ledgers under `results/`
+
+The research-artifact requirement is now explicit:
+
+```text
+summary statistic alone
+!= reproducible research evidence
+
+serious model/policy claim
+-> source population
+-> causal feature definition
+-> train/test window
+-> preprocessing
+-> coefficients/model artifact
+-> per-event score
+-> prior-only decision reference
+-> action ledger
+-> outcome/regret ledger
+-> validation receipt
+```
+
+The newly regenerated `_REGEN` heads are **selection-conditioned on the 1,159 bounded-m3 selected signals**. They are new reproducible research candidates. They are not asserted to recover the missing full-universe coefficients of the earlier session-recorded shock-veto experiment.
+
+Current work order remains:
+
+```text
+EXIT_PENDING execution repair
+-> unchanged bounded-m3 actual-tick rerun
+-> row-level parity audit
+-> reproducible Danger/Persistence evaluation
+-> only then policy/state-machine changes
+```
+<!-- V10_REPRO_LEDGER_20260916_END -->
+
+<!-- V10_DECISION_CLOCK_HOTFIX_20260916_START -->
+## 0C. Signal decision-clock hotfix — 2026-09-16
+
+Also read:
+
+`V10_SIGNAL_DECISION_CLOCK_HOTFIX_20260916.md`
+
+Canonical timestamp semantics:
+
+```text
+decision_ts / decision_time
+= research signal clock
+= EA effective_ts when present
+
+entry_event_time / entry_time_actual
+= execution chronology
+```
+
+`signal_id + effective_ts` is the exact parity key. Do not treat a one- or two-second MT5 fill/event lag as a signal mismatch, and do not solve it with an arbitrary tolerance.
+<!-- V10_DECISION_CLOCK_HOTFIX_20260916_END -->
