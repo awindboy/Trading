@@ -1,0 +1,27 @@
+{
+  "stage": "k1",
+  "direction": "SHORT",
+  "family": "cat",
+  "preprocess": "raw",
+  "recency": "expanding",
+  "params": {
+    "iterations": 220,
+    "depth": 5,
+    "learning_rate": 0.03,
+    "l2_leaf_reg": 25,
+    "random_strength": 0.3
+  },
+  "features": [
+    "std_body_rng",
+    "fast_body_atr",
+    "m30_body_sum_atr",
+    "h1_streak",
+    "path_eff4_rel",
+    "ema8_21_signed",
+    "stop_dist_atr",
+    "m15_opp_wick"
+  ],
+  "tune": 0.12061090322669007,
+  "lift": 0.02692419672938373,
+  "prune": "top8 within .005 best 0.1206"
+}

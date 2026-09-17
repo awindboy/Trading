@@ -1,0 +1,13 @@
+stage,direction,year,spearman,family,preprocess,recency,nfeat
+k1,LONG,2025,0.03331011692424812,xgb,eng,expanding,8
+k1,LONG,2026,0.017355446950907412,xgb,eng,expanding,8
+k1,SHORT,2025,0.11287448486178553,cat,raw,expanding,8
+k1,SHORT,2026,0.15125580659005392,cat,raw,expanding,8
+k2,LONG,2025,0.18183274834918092,xgb,raw,expanding,8
+k2,LONG,2026,-0.05532443803953047,xgb,raw,expanding,8
+k2,SHORT,2025,0.15922071510009686,xgb,eng,exp365,33
+k2,SHORT,2026,0.15322898607136107,xgb,eng,exp365,33
+k3p,LONG,2025,-0.015815497785178576,lgb,eng_rank,exp730,16
+k3p,LONG,2026,0.061744209517946305,lgb,eng_rank,exp730,16
+k3p,SHORT,2025,0.17783460993736133,cat,eng_rank,expanding,8
+k3p,SHORT,2026,0.1380795142135928,cat,eng_rank,expanding,8

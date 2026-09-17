@@ -1,0 +1,68 @@
+{
+  "stage": "k3p",
+  "direction": "LONG",
+  "stop": {
+    "family": "lgb",
+    "preprocess": "eng_rank",
+    "params": {
+      "n_estimators": 140,
+      "num_leaves": 7,
+      "max_depth": 3,
+      "learning_rate": 0.04,
+      "min_child_samples": 50,
+      "reg_lambda": 10,
+      "reg_alpha": 0.5
+    },
+    "recency": "exp365",
+    "features": [
+      "e_log_stop",
+      "rk_stop_dist_atr",
+      "e_adx",
+      "rk_std_body_rng",
+      "e_opp_wick_disp",
+      "e_di_disp",
+      "e_path_ratio",
+      "rk_adx28_rel",
+      "rk_slow_body_rng",
+      "e_streak_disp",
+      "e_ema_slope",
+      "e_body_sum_disp",
+      "e_align_disp",
+      "rk_m15_body_rng",
+      "e_streak_mean",
+      "rk_di14_signed"
+    ],
+    "tune": 0.7735432634592299
+  },
+  "conditional_R": {
+    "family": "cat",
+    "preprocess": "raw",
+    "params": {
+      "iterations": 220,
+      "depth": 5,
+      "learning_rate": 0.03,
+      "l2_leaf_reg": 25,
+      "random_strength": 0.3
+    },
+    "recency": "exp730",
+    "features": [
+      "slow_body_rng",
+      "stop_dist_atr",
+      "slow_align",
+      "fast_body_rng",
+      "ema8_slope",
+      "m15_body_rng",
+      "path_eff12_rel",
+      "m30_body_rng",
+      "std_body_rng",
+      "path_eff4_rel",
+      "m15_opp_wick",
+      "di28_signed",
+      "m30_body_sum_atr",
+      "m15_body_sum_atr",
+      "adx28_rel",
+      "di14_signed"
+    ],
+    "tune": 0.15391425571811873
+  }
+}
