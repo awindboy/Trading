@@ -1,0 +1,46 @@
+{
+  "ok": true,
+  "authority": "CONSUMED-DATA SHADOW RESEARCH / NOT STRATEGY AUTHORITY",
+  "universe_sha256": "f352a99c746752ca259da33dbdaee9d8f0cb874bd01cf520a487fe1bdbf82609",
+  "r2_model_sha256": "8178886ede4ec9847d0bf449523a9c4a03c847c5148188e75e46617a4a76013d",
+  "candidate_rows": 2198,
+  "k1_training_rows": 1296,
+  "chronological_folds": 8,
+  "inner_logloss_winner_not_deployed": "robust_logit|decision|C=0.02",
+  "stable_shadow_members": {
+    "robust_c05": "robust_logit|decision|C=0.5",
+    "shallow_histgb": "histgb|decision|learning_rate=0.03|max_iter=180|max_leaf_nodes=7|min_samples_leaf=45|l2_regularization=3.0"
+  },
+  "stability_screen": "fixed spec produced positive structural-R delta in each 2024, 2025, and 2026 outer walk-forward year",
+  "primary_action_member": "robust_c05",
+  "primary_reason": "positive delta-R in every outer year and positive pooled 95% run-block bootstrap lower bound; HistGB and union lower bounds crossed zero",
+  "diagnostic_only_member": "shallow_histgb",
+  "generic_selection_objective": "minimum chronological-fold log loss; Brier then AUC tie-break",
+  "calibration": "Platt sigmoid from chronological OOF predictions only",
+  "member_q0975": {
+    "robust_c05": 0.44960023179180575,
+    "shallow_histgb": 0.4706112731375695
+  },
+  "member_oof_metrics": {
+    "robust_c05": {
+      "auc": 0.6773206912371923,
+      "logloss": 0.5149818178792256,
+      "brier": 0.16870832480428827
+    },
+    "shallow_histgb": {
+      "auc": 0.6733445480960392,
+      "logloss": 0.5146259536799008,
+      "brier": 0.16889133427558675
+    }
+  },
+  "oof_k1_rows": 659,
+  "oof_primary_tail_rows": 17,
+  "shadow_rule": "score only R2-selected K1 candidates; shadow-veto only when robust_c05 crosses calibrated OOF q97.5; log HistGB disagreement without action authority",
+  "limitations": [
+    "all 2022-2026 evidence is consumed development evidence",
+    "the q97.5 policy family was selected after a consumed-data scan",
+    "the primary member was selected with post-hoc outer-year and bootstrap stability evidence",
+    "historical meta features use their causal R2 era while future inference uses the R2 FUTURE era",
+    "no MQL export or EA integration is authorized by this shadow artifact"
+  ]
+}

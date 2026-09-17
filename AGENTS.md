@@ -1,8 +1,8 @@
 <!-- V10_ACTIVE_ROUTING_START -->
-> **V10 ACTIVE RESEARCH ROUTING — 2026-09-16 / HA-PRIMARY PARTICIPATION · ORACLE REPLICATION**
+> **V10 ACTIVE RESEARCH ROUTING — 2026-09-17 / HA-PRIMARY PARTICIPATION · CAUSAL K1 DANGER SHADOW**
 > Active strategy research now uses `docs/ea/v10/AGENTS_V10.md`.
 > V10 makes HA the primary participation / execution research clock; Grammar becomes structural context rather than assumed entry authority.
-> Current V10 work studies FAST / STD / SLOW H4 HA roles, H1/M30/M15 HA delivery, structural H1 invalidation, early-run / runway Oracle replication, economic-quality state, and bounded exposure.
+> Current V10 work keeps H4 FAST as the campaign clock and adds a raw-M1 prefix-causal, purpose-specific K1 extreme-STOP shadow model. The model is research instrumentation only; no threshold or EA action is promoted.
 > No V10 production authority exists. Current historical periods are consumed research evidence.
 > V9 is closed as an active research generation and remains the frozen predecessor / comparator. Read `docs/ea/v9/V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md`.
 >
@@ -14,7 +14,9 @@
 > 5. read `docs/ea/v10/HANDOFF_V10.md`;
 > 6. read `docs/ea/v10/RESEARCH_STATE_V10.md`;
 > 7. read `docs/ea/v10/V10_HA_PRIMARY_RESEARCH_CHECKPOINT_20260916.md`;
-> 8. read `docs/ea/v10/V10_NEXT_RESEARCH_CONTRACT_ORACLE_PARTICIPATION_20260916.md`.
+> 8. read `docs/ea/v10/V10_R3_CAUSAL_ML_AND_K1_DANGER_CHECKPOINT_20260917.md`;
+> 9. read `docs/ea/v10/V10_NEXT_RESEARCH_CONTRACT_K1_SHADOW_FORWARD_20260917.md`;
+> 10. use the older V10 checkpoint/contract documents as predecessor evidence only.
 >
 <!-- V10_ACTIVE_ROUTING_END -->
 
@@ -2505,4 +2507,3 @@ execution divergence
 ```
 
 Diagnostic log ordering for `OBJECTIVE_CANDIDATE_CONSUMED` may move to the exact causal consumption event because polling is removed; its `available_at` and downstream strategy result must remain equivalent. Any strategy/output parity mismatch invalidates the performance optimization until corrected.
-

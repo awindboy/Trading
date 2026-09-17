@@ -216,3 +216,40 @@ Key conclusions to preserve:
 
 Do not convert consumed-data scan winners into hidden thresholds.
 <!-- V10_REGIME_RISK_HANDOFF_20260917_END -->
+
+<!-- V10_R3_CAUSAL_ML_HANDOFF_20260917_START -->
+## Current handoff override — causal K1 danger shadow, 2026-09-17
+
+Resume with:
+
+1. `V10_R3_CAUSAL_ML_AND_K1_DANGER_CHECKPOINT_20260917.md`
+2. `V10_NEXT_RESEARCH_CONTRACT_K1_SHADOW_FORWARD_20260917.md`
+3. `results/r3_k1stop_20260917/V10_R3_K1STOP_POLICY_FRONTIER_20260917.csv`
+4. `results/r3_k1stop_20260917/V10_R3_REPRODUCIBILITY_RECEIPT_20260917.json`
+
+Key handoff:
+
+```text
+raw M1 single-pass causal universe
+-> exact R2 ledger parity
+-> broad REGIME and generic negative-R targets rejected
+-> selection-conditioned k1 STOP head retained
+-> fixed RobustScaler(10,90) + Logistic C=0.5
+-> prior calibrated OOF q97.5
+-> future shadow candidate only
+```
+
+Consumed 2024-2026 comparison:
+
+```text
+R2 comparator       +532.16R / PF_R 1.4525 / DD_R 52.41
+ROBUST_C05 shadow   +553.83R / PF_R 1.4813 / DD_R 45.41
+delta               +21.67R
+```
+
+Run-block bootstrap pooled 95% interval is `[+6.03R, +38.74R]`, but 2025/2026 lower quantiles touch zero and all periods are consumed. This is not independent validation.
+
+Immediate next work is parity and forward shadow collection, not another scan. Resolve the six-row R2 EA run-latch mismatch before R3 EA instrumentation.
+
+Validation boundary: the new R3 publication validator passes, while the older repository-wide `scripts/v10_validate_repro_pack.py` still fails on missing predecessor artifacts / a historical clock mismatch / an obsolete backup directory. Do not report whole-repository reproducibility as green.
+<!-- V10_R3_CAUSAL_ML_HANDOFF_20260917_END -->

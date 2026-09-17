@@ -416,3 +416,43 @@ Current project direction explicitly demotes V9-derived H1 liquidity SL from the
 
 No scanned ADX/efficiency threshold, EMA/DI rule, HA stop, W risk multiplier, base account percentage, or campaign risk cap is production authority.
 <!-- V10_REGIME_RISK_OVERRIDE_20260917_END -->
+
+<!-- V10_R3_CAUSAL_ML_OVERRIDE_20260917_START -->
+## 0E. Current causal-ML continuation — 2026-09-17
+
+After the earlier V10 material, read:
+
+1. `V10_R3_CAUSAL_ML_AND_K1_DANGER_CHECKPOINT_20260917.md`
+2. `V10_NEXT_RESEARCH_CONTRACT_K1_SHADOW_FORWARD_20260917.md`
+3. `results/r3_k1stop_20260917/V10_R3_REPRODUCIBILITY_RECEIPT_20260917.json`
+
+Current ML research conclusion:
+
+```text
+broad REGIME target
+-> rejected for admission
+
+generic negative-R target
+-> rejected
+
+R2-selected k1 population
++ purpose-specific causal features
++ RobustScaler(10, 90)
++ LogisticRegression(C=0.5)
++ calibrated prior-OOF q97.5
+-> primary future shadow hypothesis
+```
+
+The current historical result is consumed development evidence. The model has no trade, EA, threshold, or production authority.
+
+Before any EA integration:
+
+```text
+resolve six-row R2 run-latch vs per-Child policy mismatch
+-> exact Python/MQL feature parity
+-> exact Boolean action parity
+-> future-only shadow logging after 2026-08-28
+```
+
+Do not reopen hyperparameter or threshold scans while collecting forward evidence. `GOLD# 2021` remains untouched unless explicitly allocated under a separate frozen validation contract.
+<!-- V10_R3_CAUSAL_ML_OVERRIDE_20260917_END -->

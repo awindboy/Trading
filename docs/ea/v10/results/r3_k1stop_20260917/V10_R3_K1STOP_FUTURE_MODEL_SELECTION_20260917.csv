@@ -1,0 +1,15 @@
+head,spec_id,family,weight_mode,folds,eval_n,auc,logloss,brier,C,n_knots,learning_rate,max_iter,max_leaf_nodes,min_samples_leaf,l2_regularization,inner_logloss_winner,stable_shadow_member
+META_K1_STOP,robust_logit|decision|C=0.02,robust_logit,decision,8,659,0.6879237396136005,0.5158462077928003,0.1692762388940506,0.02,,,,,,,1,0
+META_K1_STOP,robust_logit|run_sqrt|C=0.02,robust_logit,run_sqrt,8,659,0.6879237396136005,0.5158462077928003,0.1692762388940506,0.02,,,,,,,0,0
+META_K1_STOP,spline_logit|decision|C=0.02|n_knots=3,spline_logit,decision,8,659,0.6907019421929959,0.5164761516944864,0.1692805737307187,0.02,3.0,,,,,,0,0
+META_K1_STOP,spline_logit|run_sqrt|C=0.02|n_knots=3,spline_logit,run_sqrt,8,659,0.6907019421929959,0.5164761516944864,0.1692805737307187,0.02,3.0,,,,,,0,0
+META_K1_STOP,spline_logit|decision|C=0.1|n_knots=3,spline_logit,decision,8,659,0.6871973288474282,0.5165325335693701,0.1704457811169007,0.1,3.0,,,,,,0,0
+META_K1_STOP,spline_logit|run_sqrt|C=0.1|n_knots=3,spline_logit,run_sqrt,8,659,0.6871973288474282,0.5165325335693701,0.1704457811169007,0.1,3.0,,,,,,0,0
+META_K1_STOP,robust_logit|decision|C=0.1,robust_logit,decision,8,659,0.6813987867665801,0.5212202797179908,0.1715671990396172,0.1,,,,,,,0,0
+META_K1_STOP,robust_logit|run_sqrt|C=0.1,robust_logit,run_sqrt,8,659,0.6813987867665801,0.5212202797179908,0.1715671990396172,0.1,,,,,,,0,0
+META_K1_STOP,robust_logit|decision|C=0.5,robust_logit,decision,8,659,0.6773206912371923,0.528787564563647,0.1735942399286023,0.5,,,,,,,0,1
+META_K1_STOP,robust_logit|run_sqrt|C=0.5,robust_logit,run_sqrt,8,659,0.6773206912371923,0.528787564563647,0.1735942399286023,0.5,,,,,,,0,0
+META_K1_STOP,histgb|decision|learning_rate=0.03|max_iter=180|max_leaf_nodes=7|min_samples_leaf=45|l2_regularization=3.0,histgb,decision,8,659,0.6733445480960392,0.5305662998675812,0.1753230159701389,,,0.03,180.0,7.0,45.0,3.0,0,1
+META_K1_STOP,histgb|run_sqrt|learning_rate=0.03|max_iter=180|max_leaf_nodes=7|min_samples_leaf=45|l2_regularization=3.0,histgb,run_sqrt,8,659,0.6733445480960392,0.5305662998675812,0.1753230159701389,,,0.03,180.0,7.0,45.0,3.0,0,0
+META_K1_STOP,histgb|decision|learning_rate=0.03|max_iter=220|max_leaf_nodes=11|min_samples_leaf=75|l2_regularization=6.0,histgb,decision,8,659,0.673752357648978,0.5348891378371358,0.1780443528979902,,,0.03,220.0,11.0,75.0,6.0,0,0
+META_K1_STOP,histgb|run_sqrt|learning_rate=0.03|max_iter=220|max_leaf_nodes=11|min_samples_leaf=75|l2_regularization=6.0,histgb,run_sqrt,8,659,0.673752357648978,0.5348891378371358,0.1780443528979902,,,0.03,220.0,11.0,75.0,6.0,0,0

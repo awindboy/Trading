@@ -1,0 +1,271 @@
+{
+  "ok": true,
+  "authority": "CONSUMED-DATA SHADOW RESEARCH / NOT STRATEGY AUTHORITY",
+  "policy": "STABLE MODEL FRONTIER",
+  "policy_algebra": "R2-selected K1 vetoed when robust-C0.5 OR shallow-HistGB score crosses its own prior-OOF q97.5",
+  "veto_summary": {
+    "rows": 43,
+    "units_removed": 87.0,
+    "wins_removed": 9,
+    "losses_removed": 34,
+    "stop_hits_removed": 28,
+    "oracle_early3_removed": 19,
+    "L6plus_positive_removed": 3,
+    "candidate_delta_pnl": 139.17000000000257,
+    "candidate_delta_R": 16.56064040634035,
+    "robust_only": 1,
+    "histgb_only": 26,
+    "both": 16
+  },
+  "frontier_veto_summaries": {
+    "ROBUST_C05": {
+      "rows": 17,
+      "units_removed": 27.0,
+      "wins_removed": 1,
+      "losses_removed": 16,
+      "stop_hits_removed": 14,
+      "oracle_early3_removed": 7,
+      "L6plus_positive_removed": 1,
+      "candidate_delta_pnl": 112.599999999999,
+      "candidate_delta_R": 21.669125831460697
+    },
+    "SHALLOW_HISTGB": {
+      "rows": 42,
+      "units_removed": 84.0,
+      "wins_removed": 9,
+      "losses_removed": 33,
+      "stop_hits_removed": 27,
+      "oracle_early3_removed": 19,
+      "L6plus_positive_removed": 3,
+      "candidate_delta_pnl": 116.85000000000241,
+      "candidate_delta_R": 13.560640406340347
+    },
+    "STABLE_INTERSECTION": {
+      "rows": 16,
+      "units_removed": 24.0,
+      "wins_removed": 1,
+      "losses_removed": 15,
+      "stop_hits_removed": 13,
+      "oracle_early3_removed": 7,
+      "L6plus_positive_removed": 1,
+      "candidate_delta_pnl": 90.27999999999884,
+      "candidate_delta_R": 18.669125831460697
+    },
+    "STABLE_UNION": {
+      "rows": 43,
+      "units_removed": 87.0,
+      "wins_removed": 9,
+      "losses_removed": 34,
+      "stop_hits_removed": 28,
+      "oracle_early3_removed": 19,
+      "L6plus_positive_removed": 3,
+      "candidate_delta_pnl": 139.17000000000257,
+      "candidate_delta_R": 16.56064040634035
+    }
+  },
+  "bootstrap_summary": [
+    {
+      "policy": "ROBUST_C05",
+      "period": "2024",
+      "runs": 476,
+      "observed_delta_R": 15.34192037470727,
+      "bootstrap_mean_delta_R": 15.332358079625305,
+      "q025_delta_R": 1.0257611241218103,
+      "q50_delta_R": 15.0,
+      "q975_delta_R": 31.0,
+      "probability_delta_R_gt_zero": 0.98295,
+      "draws": 20000
+    },
+    {
+      "policy": "ROBUST_C05",
+      "period": "2025",
+      "runs": 444,
+      "observed_delta_R": 4.454794520547956,
+      "bootstrap_mean_delta_R": 4.469951232876724,
+      "q025_delta_R": 0.0,
+      "q50_delta_R": 4.0,
+      "q975_delta_R": 12.0,
+      "probability_delta_R_gt_zero": 0.95015,
+      "draws": 20000
+    },
+    {
+      "policy": "ROBUST_C05",
+      "period": "2026",
+      "runs": 303,
+      "observed_delta_R": 1.8724109362054682,
+      "bootstrap_mean_delta_R": 1.8941560894780447,
+      "q025_delta_R": 0.0,
+      "q50_delta_R": 1.8724109362054682,
+      "q975_delta_R": 4.744821872410936,
+      "probability_delta_R_gt_zero": 0.87135,
+      "draws": 20000
+    },
+    {
+      "policy": "ROBUST_C05",
+      "period": "POOLED_STRATIFIED_2024_2026",
+      "runs": 1223,
+      "observed_delta_R": 21.669125831460697,
+      "bootstrap_mean_delta_R": 21.751746746214884,
+      "q025_delta_R": 6.025761124121811,
+      "q50_delta_R": 21.541536767666162,
+      "q975_delta_R": 38.74482187241094,
+      "probability_delta_R_gt_zero": 0.997,
+      "draws": 20000
+    },
+    {
+      "policy": "SHALLOW_HISTGB",
+      "period": "2024",
+      "runs": 476,
+      "observed_delta_R": 1.2491447363675388,
+      "bootstrap_mean_delta_R": 1.416201220473099,
+      "q025_delta_R": -46.943727032513245,
+      "q50_delta_R": 3.25410264020229,
+      "q975_delta_R": 40.896381354254096,
+      "probability_delta_R_gt_zero": 0.55375,
+      "draws": 20000
+    },
+    {
+      "policy": "SHALLOW_HISTGB",
+      "period": "2025",
+      "runs": 444,
+      "observed_delta_R": 6.732837122819662,
+      "bootstrap_mean_delta_R": 6.752663528479234,
+      "q025_delta_R": -1.3686965281631693,
+      "q50_delta_R": 6.304357985961117,
+      "q975_delta_R": 17.112413376074198,
+      "probability_delta_R_gt_zero": 0.9393,
+      "draws": 20000
+    },
+    {
+      "policy": "SHALLOW_HISTGB",
+      "period": "2026",
+      "runs": 303,
+      "observed_delta_R": 5.57865854715315,
+      "bootstrap_mean_delta_R": 5.641287491125657,
+      "q025_delta_R": -9.781618589105129,
+      "q50_delta_R": 5.706247610947683,
+      "q975_delta_R": 19.93893568341143,
+      "probability_delta_R_gt_zero": 0.7858,
+      "draws": 20000
+    },
+    {
+      "policy": "SHALLOW_HISTGB",
+      "period": "POOLED_STRATIFIED_2024_2026",
+      "runs": 1223,
+      "observed_delta_R": 13.560640406340351,
+      "bootstrap_mean_delta_R": 13.803429662993059,
+      "q025_delta_R": -37.16091449039269,
+      "q50_delta_R": 15.071936775400268,
+      "q975_delta_R": 57.170872675865596,
+      "probability_delta_R_gt_zero": 0.7339,
+      "draws": 20000
+    },
+    {
+      "policy": "STABLE_INTERSECTION",
+      "period": "2024",
+      "runs": 476,
+      "observed_delta_R": 12.34192037470727,
+      "bootstrap_mean_delta_R": 12.319758079625302,
+      "q025_delta_R": -0.9742388758781892,
+      "q50_delta_R": 12.02576112412181,
+      "q975_delta_R": 26.0,
+      "probability_delta_R_gt_zero": 0.9674,
+      "draws": 20000
+    },
+    {
+      "policy": "STABLE_INTERSECTION",
+      "period": "2025",
+      "runs": 444,
+      "observed_delta_R": 4.454794520547956,
+      "bootstrap_mean_delta_R": 4.469951232876724,
+      "q025_delta_R": 0.0,
+      "q50_delta_R": 4.0,
+      "q975_delta_R": 12.0,
+      "probability_delta_R_gt_zero": 0.95015,
+      "draws": 20000
+    },
+    {
+      "policy": "STABLE_INTERSECTION",
+      "period": "2026",
+      "runs": 303,
+      "observed_delta_R": 1.8724109362054682,
+      "bootstrap_mean_delta_R": 1.8941560894780447,
+      "q025_delta_R": 0.0,
+      "q50_delta_R": 1.8724109362054682,
+      "q975_delta_R": 4.744821872410936,
+      "probability_delta_R_gt_zero": 0.87135,
+      "draws": 20000
+    },
+    {
+      "policy": "STABLE_INTERSECTION",
+      "period": "POOLED_STRATIFIED_2024_2026",
+      "runs": 1223,
+      "observed_delta_R": 18.669125831460697,
+      "bootstrap_mean_delta_R": 18.729396746214885,
+      "q025_delta_R": 3.9588342630252247,
+      "q50_delta_R": 18.541536767666162,
+      "q975_delta_R": 34.327205456753425,
+      "probability_delta_R_gt_zero": 0.9937,
+      "draws": 20000
+    },
+    {
+      "policy": "STABLE_UNION",
+      "period": "2024",
+      "runs": 476,
+      "observed_delta_R": 4.249144736367539,
+      "bootstrap_mean_delta_R": 4.428801220473098,
+      "q025_delta_R": -44.10144733792396,
+      "q50_delta_R": 6.12840462580394,
+      "q975_delta_R": 44.36863394547175,
+      "probability_delta_R_gt_zero": 0.6019,
+      "draws": 20000
+    },
+    {
+      "policy": "STABLE_UNION",
+      "period": "2025",
+      "runs": 444,
+      "observed_delta_R": 6.732837122819662,
+      "bootstrap_mean_delta_R": 6.752663528479234,
+      "q025_delta_R": -1.3686965281631693,
+      "q50_delta_R": 6.304357985961117,
+      "q975_delta_R": 17.112413376074198,
+      "probability_delta_R_gt_zero": 0.9393,
+      "draws": 20000
+    },
+    {
+      "policy": "STABLE_UNION",
+      "period": "2026",
+      "runs": 303,
+      "observed_delta_R": 5.57865854715315,
+      "bootstrap_mean_delta_R": 5.641287491125657,
+      "q025_delta_R": -9.781618589105129,
+      "q50_delta_R": 5.706247610947683,
+      "q975_delta_R": 19.93893568341143,
+      "probability_delta_R_gt_zero": 0.7858,
+      "draws": 20000
+    },
+    {
+      "policy": "STABLE_UNION",
+      "period": "POOLED_STRATIFIED_2024_2026",
+      "runs": 1223,
+      "observed_delta_R": 16.56064040634035,
+      "bootstrap_mean_delta_R": 16.825779662993057,
+      "q025_delta_R": -34.26748034652031,
+      "q50_delta_R": 17.990165002069634,
+      "q975_delta_R": 60.58539979767897,
+      "probability_delta_R_gt_zero": 0.7699,
+      "draws": 20000
+    }
+  ],
+  "same_m1_ambiguous_rows": 20,
+  "source_hashes": {
+    "universe": "f352a99c746752ca259da33dbdaee9d8f0cb874bd01cf520a487fe1bdbf82609",
+    "action_ledger": "70af8dcc4029ae006c92ded54f131d853cb934816498b1f7406cb9684c1c43cb",
+    "r2_ledger": "56666679fe34b90b5b715570d32d9955fbbbe5e899503d20227c9891e24f7101"
+  },
+  "limitations": [
+    "member families and union policy were selected from consumed 2024-2026 development evidence",
+    "no untouched temporal or external validation exists",
+    "same-M1 NHA-versus-SL ordering remains a sensitivity bound"
+  ]
+}

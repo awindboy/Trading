@@ -1,0 +1,88 @@
+{
+  "ok": true,
+  "policy": "META_K1STOP_K1_Q0975",
+  "authority": "CONSUMED-DATA SHADOW RESEARCH / NOT STRATEGY AUTHORITY",
+  "reference_veto_counts_match": true,
+  "veto_counts_by_year": {
+    "2024": 12,
+    "2025": 5,
+    "2026": 4
+  },
+  "veto_summary": {
+    "rows": 21,
+    "units_removed": 35.0,
+    "wins_removed": 2,
+    "losses_removed": 19,
+    "flat_removed": 0,
+    "stop_hits_removed": 14,
+    "oracle_early3_removed": 10,
+    "L6plus_positive_removed": 1,
+    "baseline_weighted_pnl_removed": -134.76999999999816,
+    "baseline_weighted_R_removed": -23.691056832001063,
+    "candidate_delta_pnl": 134.76999999999816,
+    "candidate_delta_R": 23.691056832001063
+  },
+  "bootstrap_summary": [
+    {
+      "period": "2024",
+      "runs": 476,
+      "observed_delta_R": 15.34192037470727,
+      "bootstrap_mean_delta_R": 15.332358079625305,
+      "q025_delta_R": 1.0257611241218103,
+      "q50_delta_R": 15.0,
+      "q975_delta_R": 31.0,
+      "probability_delta_R_gt_zero": 0.98295,
+      "draws": 20000
+    },
+    {
+      "period": "2025",
+      "runs": 444,
+      "observed_delta_R": 7.186999599139377,
+      "bootstrap_mean_delta_R": 7.215903378971596,
+      "q025_delta_R": 1.0,
+      "q50_delta_R": 6.801846290909059,
+      "q975_delta_R": 15.566955669684148,
+      "probability_delta_R_gt_zero": 0.9938,
+      "draws": 20000
+    },
+    {
+      "period": "2026",
+      "runs": 303,
+      "observed_delta_R": 1.1621368581544156,
+      "bootstrap_mean_delta_R": 1.1818573242398343,
+      "q025_delta_R": -1.553597650514026,
+      "q50_delta_R": 1.095612110948455,
+      "q975_delta_R": 4.683757555822365,
+      "probability_delta_R_gt_zero": 0.8034,
+      "draws": 20000
+    },
+    {
+      "period": "POOLED_STRATIFIED_2024_2026",
+      "runs": 1223,
+      "observed_delta_R": 23.691056832001063,
+      "bootstrap_mean_delta_R": 23.76588631068029,
+      "q025_delta_R": 7.462822848769447,
+      "q50_delta_R": 23.521847019131123,
+      "q975_delta_R": 41.32026643155346,
+      "probability_delta_R_gt_zero": 0.99825,
+      "draws": 20000
+    }
+  ],
+  "ea_vs_research_ledger_mismatch_rows": 6,
+  "same_m1_ambiguous_rows_in_universe": 20,
+  "source_hashes": {
+    "universe": "f352a99c746752ca259da33dbdaee9d8f0cb874bd01cf520a487fe1bdbf82609",
+    "score_ledger": "cdb8dee521a377f48cd4c6468afc93b1b443c85218ebeb40d8e4471681895bea",
+    "veto_references": "7cd05303e0fd2df97c82ab4cd774cc506b0dc4a0ea8e87dc5236b8a7c2605c48",
+    "r2_ledger": "56666679fe34b90b5b715570d32d9955fbbbe5e899503d20227c9891e24f7101",
+    "r2_model_json": "8178886ede4ec9847d0bf449523a9c4a03c847c5148188e75e46617a4a76013d"
+  },
+  "bootstrap_seed": 20260917,
+  "bootstrap_draws": 20000,
+  "limitations": [
+    "q97.5 was selected after an explicit consumed-data threshold scan",
+    "2022-2026 are consumed development evidence and provide no independent validation",
+    "same-M1 NHA-versus-SL ordering is unknowable from M1 OHLC and is reported as a sensitivity bound",
+    "the current R2 EA run-latched admission differs from the committed per-Child research ledger"
+  ]
+}

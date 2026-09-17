@@ -138,3 +138,26 @@ HA-risk results
 
 The H1 liquidity structural stop remains in historical comparator artifacts but is no longer the preferred active V10 risk-design direction.
 <!-- V10_REGIME_RISK_RESULTS_20260917_END -->
+
+<!-- V10_R3_CAUSAL_ML_RESULTS_20260917_START -->
+## R3 raw-M1 causal ML / K1 danger — 2026-09-17
+
+Narrative checkpoint:
+
+- `../V10_R3_CAUSAL_ML_AND_K1_DANGER_CHECKPOINT_20260917.md`
+- `../V10_NEXT_RESEARCH_CONTRACT_K1_SHADOW_FORWARD_20260917.md`
+
+Compact auditable artifacts:
+
+- `r3_k1stop_20260917/V10_R3_CAUSAL_UNIVERSE_MANIFEST_20260917.json`
+- `r3_k1stop_20260917/V10_R3_R2_UNIVERSE_PARITY_20260917.json`
+- `r3_k1stop_20260917/V10_R3_K1STOP_POLICY_FRONTIER_20260917.csv`
+- `r3_k1stop_20260917/V10_R3_K1STOP_STABLE_FRONTIER_BOOTSTRAP_20260917.csv`
+- `r3_k1stop_20260917/V10_R3_K1STOP_FEATURE_ABLATION_POOLED_20260917.csv`
+- `r3_k1stop_20260917/V10_R3_K1STOP_FUTURE_SHADOW_MANIFEST_20260917.json`
+- `r3_k1stop_20260917/V10_R3_REPRODUCIBILITY_RECEIPT_20260917.json`
+
+The primary future shadow candidate is fixed Robust `C=0.5` on the K1 STOP population. The higher consumed-data tuned result, HistGB, intersection, and union are retained as diagnostics only.
+
+All artifacts are consumed-data research. The joblib bundle, full causal universe, per-event model score ledgers, and bootstrap draws are reproducibly generated under ignored `output/v10_r3/`; none grants trade or production authority.
+<!-- V10_R3_CAUSAL_ML_RESULTS_20260917_END -->

@@ -169,3 +169,31 @@ campaign aggregate risk ceiling
 
 No new production or EA authority is granted.
 <!-- V10_REGIME_RISK_AUTHORITY_20260917_END -->
+
+<!-- V10_R3_CAUSAL_ML_AUTHORITY_20260917_START -->
+## A5. Current causal-ML routing — 2026-09-17
+
+Current checkpoint:
+
+`V10_R3_CAUSAL_ML_AND_K1_DANGER_CHECKPOINT_20260917.md`
+
+Current next contract:
+
+`V10_NEXT_RESEARCH_CONTRACT_K1_SHADOW_FORWARD_20260917.md`
+
+Compact reproducibility pack:
+
+`results/r3_k1stop_20260917/`
+
+Current narrow hypothesis:
+
+```text
+R2-selected k1 only
+-> robust-scaled logistic extreme STOP tail
+-> future shadow instrumentation only
+```
+
+This checkpoint supersedes the earlier regime/direction model scan as the immediate ML continuation. It does not supersede the H4 FAST, HA-native risk, execution-fidelity, causal-clock, or consumed-data guardrails.
+
+No model, q97.5 reference, veto action, EA, or production strategy is promoted.
+<!-- V10_R3_CAUSAL_ML_AUTHORITY_20260917_END -->

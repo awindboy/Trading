@@ -1,0 +1,109 @@
+{
+  "reference": "research\\v10\\V10_LIVE_DEFAULT_POLICY_LEDGER_2024_2026.csv",
+  "reference_rows": 3962,
+  "candidate_rows_in_reference_years": 3962,
+  "matched_decisions": 3962,
+  "reference_only": 0,
+  "candidate_only": 0,
+  "direction_mismatches": 0,
+  "k_mismatches": 0,
+  "numeric_differences": {
+    "entry": {
+      "n": 3962,
+      "max_abs": 0.0,
+      "p99_abs": 0.0,
+      "within_1e-9": 3962
+    },
+    "stop": {
+      "n": 3962,
+      "max_abs": 1.3642420526593924e-12,
+      "p99_abs": 4.547473508864641e-13,
+      "within_1e-9": 3962
+    },
+    "stop_dist_atr": {
+      "n": 3962,
+      "max_abs": 8.881784197001252e-16,
+      "p99_abs": 4.440892098500626e-16,
+      "within_1e-9": 3962
+    },
+    "pnl": {
+      "n": 3962,
+      "max_abs": 8.526512829121202e-14,
+      "p99_abs": 1.4210854715202004e-14,
+      "within_1e-9": 3962
+    },
+    "R": {
+      "n": 3962,
+      "max_abs": 7.105427357601002e-15,
+      "p99_abs": 4.440892098500626e-16,
+      "within_1e-9": 3962
+    },
+    "fast_body_rng": {
+      "n": 3962,
+      "max_abs": 9.8879238130678e-17,
+      "p99_abs": 9.020562075079397e-17,
+      "within_1e-9": 3962
+    },
+    "std_body_rng": {
+      "n": 3962,
+      "max_abs": 1.1102230246251565e-16,
+      "p99_abs": 8.673617379884035e-17,
+      "within_1e-9": 3962
+    },
+    "adx28_rel": {
+      "n": 3962,
+      "max_abs": 8.881784197001252e-16,
+      "p99_abs": 4.440892098500626e-16,
+      "within_1e-9": 3962
+    },
+    "di14_signed": {
+      "n": 3962,
+      "max_abs": 9.974659986866641e-17,
+      "p99_abs": 9.71445146547012e-17,
+      "within_1e-9": 3962
+    },
+    "ema8_21_signed": {
+      "n": 3962,
+      "max_abs": 8.881784197001252e-16,
+      "p99_abs": 4.440892098500626e-16,
+      "within_1e-9": 3962
+    },
+    "path_eff4_rel": {
+      "n": 3962,
+      "max_abs": 6.661338147750939e-16,
+      "p99_abs": 2.220446049250313e-16,
+      "within_1e-9": 3962
+    },
+    "path_eff12_rel": {
+      "n": 3962,
+      "max_abs": 8.881784197001252e-16,
+      "p99_abs": 4.440892098500626e-16,
+      "within_1e-9": 3962
+    },
+    "flip8": {
+      "n": 3962,
+      "max_abs": 5.551115123125783e-17,
+      "p99_abs": 5.551115123125783e-17,
+      "within_1e-9": 3962
+    },
+    "m15_aligned": {
+      "n": 3962,
+      "max_abs": 5.551115123125783e-17,
+      "p99_abs": 0.0,
+      "within_1e-9": 3962
+    },
+    "m30_aligned": {
+      "n": 3962,
+      "max_abs": 5.551115123125783e-17,
+      "p99_abs": 5.551115123125783e-17,
+      "within_1e-9": 3962
+    },
+    "h1_aligned": {
+      "n": 3962,
+      "max_abs": 0.0,
+      "p99_abs": 0.0,
+      "within_1e-9": 3962
+    }
+  },
+  "note": "R3 reconstructs every timeframe from raw M1. When the first M1 of a new FAST run contains both the decision-open NHA exit and the old Child stop, exact tick order is unknowable: the primary ledger uses the conservative stop outcome and persists the NHA-open alternative."
+}

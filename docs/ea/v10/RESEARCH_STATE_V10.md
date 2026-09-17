@@ -411,3 +411,67 @@ H4 FAST campaign clock
 
 No production V10 strategy exists.
 <!-- V10_REGIME_RISK_STATE_20260917_END -->
+
+<!-- V10_R3_CAUSAL_ML_STATE_20260917_START -->
+## Current causal-ML state — 2026-09-17
+
+The ML research question is now narrower and more reproducible.
+
+### Input state
+
+```text
+official raw GOLD M1 SHA guarded
+single chronological M1 pass
+M15/M30/H1/H4 completed-bar reconstruction
+6,770 Child rows / 2,139 resolved FAST runs
+label_available_at purge
+3,962-row exact R2 decision parity for 2024-2026
+```
+
+### Model state
+
+Rejected:
+
+- broad `trendable3` REGIME admission model;
+- generic negative-R danger target;
+- treating generic log-loss winner as automatic action-model winner;
+- HistGB/union as action authority despite attractive realized DD.
+
+Primary future shadow hypothesis:
+
+```text
+R2-selected k1 population
+21 purpose-specific causal features
+RobustScaler(10,90)
+LogisticRegression C=0.5
+Platt calibration from chronological OOF predictions
+q97.5 prior-OOF extreme tail
+```
+
+Consumed result:
+
+```text
+1,573 -> 1,556 selected positions
+17 vetoes: 16 losses / 1 win
+R +532.16 -> +553.83
+PF_R 1.4525 -> 1.4813
+DD_R 52.41 -> 45.41
+pooled bootstrap delta-R 95% [6.03, 38.74]
+```
+
+### Compliance state
+
+The R2 committed ledger and current EA differ on six actions because the ledger applies conditional-NEUTRAL per Child while the EA latches run admission. R3 has not been integrated into MQL.
+
+### Authority state
+
+```text
+shadow hypothesis only
+no threshold promotion
+no EA authority
+no independent validation
+no 2021 reserve use
+```
+
+Next contract: `V10_NEXT_RESEARCH_CONTRACT_K1_SHADOW_FORWARD_20260917.md`.
+<!-- V10_R3_CAUSAL_ML_STATE_20260917_END -->
