@@ -197,26 +197,3 @@ This checkpoint supersedes the earlier regime/direction model scan as the immedi
 
 No model, q97.5 reference, veto action, EA, or production strategy is promoted.
 <!-- V10_R3_CAUSAL_ML_AUTHORITY_20260917_END -->
-
-<!-- V10_R7_AUTHORITY_MAP_ADDENDUM_20260917_START -->
-## R7 sizing / economic follow-up — current consumed-data continuation
-
-Current R7 follow-up documents:
-
-- `V10_R6_R7_ML_SIZING_AND_M1_ECONOMICS_CHECKPOINT_20260917.md`
-- `V10_NEXT_RESEARCH_CONTRACT_R7G_CAUSAL_SIZING_AND_EXECUTION_20260917.md`
-- `results/r7_sizing_20260917/`
-
-Authority boundary:
-
-```text
-These documents supersede older R4/R5 follow-up assumptions only for the current
-research continuation question.
-They do not create production strategy / EA authority.
-R4 remains the base participation research comparator.
-R7G is a sizing shadow only.
-```
-
-All 2024-2026 evidence in this branch is consumed development evidence.
-`GOLD# 2021` remains sealed unless explicitly released under a separate validation contract.
-<!-- V10_R7_AUTHORITY_MAP_ADDENDUM_20260917_END -->
