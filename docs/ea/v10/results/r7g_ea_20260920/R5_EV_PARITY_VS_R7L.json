@@ -1,0 +1,10 @@
+{
+  "rows": 926,
+  "matched": 926,
+  "EV_max_abs": 2.220446049250313e-16,
+  "EV_p99_abs": 9.71445146547012e-17,
+  "EV_mean_abs": 3.9049016506360614e-17,
+  "EV_within_1e-8": 926,
+  "EV_positive_boolean_match": 926,
+  "EV_positive_boolean_mismatch": 0
+}

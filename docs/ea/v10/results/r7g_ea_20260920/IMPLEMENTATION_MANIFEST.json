@@ -1,0 +1,27 @@
+{
+  "date": "2026-09-20",
+  "base_head": "ac001391c377341a0f9fa3513d02672c061060d3",
+  "status": "EA source implementation complete; MetaEditor/actual-tick validation pending",
+  "feature_count": 84,
+  "model_snapshots": 54,
+  "native_parity": {
+    "r4_actions": "2840/2840",
+    "r5_ev_sign": "926/926",
+    "r7_feedback": "926/926",
+    "r7_sizing": "2840/2840"
+  },
+  "generic_export_caveat": {
+    "r5_ev_sign": "925/926",
+    "r7_n": 926
+  },
+  "ea": {
+    "full_embedded": {
+      "path": "mt5/experts/V10R7G_FullEmbeddedML_EA.mq5",
+      "sha256": "419d41992979034567954e1e57e7cc78b9d842661b9ddda395e8c84bea7ff710"
+    },
+    "exact_replay": {
+      "path": "mt5/experts/V10R7G_ExactActualTickReplayEA.mq5",
+      "sha256": "1efa21a96c000b53c7b72d1769ad56dddb30bf5280d2c2d817fbed6a243aff59"
+    }
+  }
+}

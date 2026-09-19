@@ -495,33 +495,3 @@ Do not reopen next-HA / model-family / threshold scans on the same consumed 2024
 Immediate work is reproducibility, Python/MQL parity, actual-tick-compatible sizing, exact Child account-risk lot sizing, campaign committed-risk accounting, then future-only shadow collection.
 `GOLD# 2021` remains sealed unless explicitly released by a separate frozen validation contract.
 <!-- V10_R7_SIZING_SHADOW_OVERRIDE_20260917_END -->
-
-<!-- V10_R7G_EA_IMPLEMENTATION_OVERRIDE_20260920_START -->
-## 0G. Current R7G EA implementation continuation — 2026-09-20
-
-After the R7 sizing material, also read:
-
-1. `V10_R7G_EA_IMPLEMENTATION_CHECKPOINT_20260920.md`
-2. `V10_NEXT_RESEARCH_CONTRACT_R7G_EA_ACTUAL_TICK_VALIDATION_20260920.md`
-3. `results/r7g_ea_20260920/`
-4. `mt5/experts/V10R7G_ExactActualTickReplayEA.mq5`
-5. `mt5/experts/V10R7G_FullEmbeddedML_EA.mq5`
-
-Current state:
-
-```text
-raw M1 -> R3 universe reproduction: complete
-R4 native reproduction/action parity: complete (2840/2840)
-R5 native EV sign parity on R7 population: complete (926/926)
-R7G feedback/final sizing parity: complete (926/926 feedback; 2840/2840 sizing)
-exact frozen replay EA: implemented
-full embedded R4/R5/R7G EA source: implemented
-MetaEditor + actual-tick final validation: pending
-```
-
-Final embedded feature registry is `84` coordinates = 38 raw + 33 engineered + 13 causal-rank. The earlier intermediate 73-feature count is superseded.
-
-Do not call the full embedded EA production-ready. Native Python inference is exact on the frozen R7G population, but the current generic tree-export snapshot retains one R5 `EV>0` sign discrepancy (`925/926`) that must be audited in MT5 rather than tuned away on consumed data.
-
-Immediate work is compile / exact-replay actual-tick parity / full-embedded action parity. Do not reopen consumed-data model, threshold, horizon, or subgroup scans.
-<!-- V10_R7G_EA_IMPLEMENTATION_OVERRIDE_20260920_END -->

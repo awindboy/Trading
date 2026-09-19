@@ -298,29 +298,3 @@ Peak R7G simultaneous exposure reached 48 units, so account-level returns must n
 The post-hoc `no-k3p-SHORT` result remains diagnostic only.
 No V10 production strategy exists.
 <!-- V10_R7_SIZING_HANDOFF_20260917_END -->
-
-<!-- V10_R7G_EA_HANDOFF_20260920_START -->
-## R7G EA implementation handoff — 2026-09-20
-
-The R7G continuation has reached executable source implementation.
-
-Completed:
-
-```text
-1,648,545 raw M1 rows -> 6,770 causal opportunities / 2,139 runs
-R4 action parity 2840/2840
-R5 native EV>0 parity 926/926
-R7G feedback parity 926/926
-R7G final sizing parity 2840/2840
-ExactActualTickReplayEA implemented
-FullEmbeddedML_EA implemented
-```
-
-Economic reference remains R7G `+30,883.72` raw GOLD price-PnL and `+30,074.67` spread-adjusted price-PnL on the M1-verified consumed sample, versus R4 `+23,234.65` / `+22,590.76`.
-
-Use `V10R7G_ExactActualTickReplayEA.mq5` first as the frozen execution benchmark. Then test `V10R7G_FullEmbeddedML_EA.mq5` with the same historical interval and default fixed `0.01 lot/unit` sizing.
-
-Important boundary: source implementation is complete; MetaEditor compilation and Strategy Tester actual-tick validation are still external validation steps. The current generic tree-export snapshot has one remaining R5 EV-sign mismatch (925/926 on the R7 population), while native Python reproduction is 926/926. Preserve this as a parity issue; do not retune around it.
-
-Next authority: `V10_NEXT_RESEARCH_CONTRACT_R7G_EA_ACTUAL_TICK_VALIDATION_20260920.md`.
-<!-- V10_R7G_EA_HANDOFF_20260920_END -->

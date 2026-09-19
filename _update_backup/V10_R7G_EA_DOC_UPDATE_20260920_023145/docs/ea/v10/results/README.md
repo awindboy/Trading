@@ -198,19 +198,3 @@ raw pnl / price-PnL = GOLD price movement
 
 R7G and the no-k3p-SHORT refinement remain consumed-data research only.
 <!-- V10_R7_SIZING_RESULTS_20260917_END -->
-
-<!-- V10_R7G_EA_RESULTS_20260920_START -->
-## R7G EA implementation artifacts — 2026-09-20
-
-See `r7g_ea_20260920/` for:
-
-- raw-M1 universe manifest;
-- R4 action parity receipt;
-- R5 native EV parity receipt;
-- R7G runtime feedback/action parity receipt;
-- final feature registry;
-- generic model-export parity receipt;
-- implementation manifest and checksums.
-
-The exact replay and full embedded EA source files live under `mt5/experts/`.
-<!-- V10_R7G_EA_RESULTS_20260920_END -->

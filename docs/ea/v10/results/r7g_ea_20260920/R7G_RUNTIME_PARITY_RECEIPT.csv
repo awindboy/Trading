@@ -1,0 +1,2 @@
+r7g_feedback_rows_compared,max_abs_feedback_error,r7g_weight_rows_compared,weight_mismatches,lifecycle_semantics,lookback,availability
+926,2.220446049250313e-16,2840,0,"[entry_time, exit_time); CLOSE before OPEN at identical timestamp","180 completed H4 indices; prior eligible decision H4 in [current-180,current)",prior child exit_time < current decision_time

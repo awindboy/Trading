@@ -220,25 +220,3 @@ R7G is a sizing shadow only.
 All 2024-2026 evidence in this branch is consumed development evidence.
 `GOLD# 2021` remains sealed unless explicitly released under a separate validation contract.
 <!-- V10_R7_AUTHORITY_MAP_ADDENDUM_20260917_END -->
-
-<!-- V10_R7G_EA_AUTHORITY_ADDENDUM_20260920_START -->
-## R7G EA implementation / actual-tick validation routing — 2026-09-20
-
-Current implementation checkpoint:
-
-- `V10_R7G_EA_IMPLEMENTATION_CHECKPOINT_20260920.md`
-
-Current next contract:
-
-- `V10_NEXT_RESEARCH_CONTRACT_R7G_EA_ACTUAL_TICK_VALIDATION_20260920.md`
-
-Current executable research artifacts:
-
-- `../../mt5/experts/V10R7G_ExactActualTickReplayEA.mq5`
-- `../../mt5/experts/V10R7G_FullEmbeddedML_EA.mq5`
-- `results/r7g_ea_20260920/`
-
-This routing records implementation completion only. It does not promote R7G, the 180-H4 feedback horizon, fixed 0.01 lot/unit, any account-risk percentage, or any campaign cap to production authority.
-
-The immediate research gate is MT5 compile and actual-tick parity, not another consumed-data optimization pass.
-<!-- V10_R7G_EA_AUTHORITY_ADDENDUM_20260920_END -->

@@ -1,0 +1,24 @@
+{
+  "rows": 2840,
+  "matched_actions": 2840,
+  "mismatched_actions": 0,
+  "score_max_abs": 0.0,
+  "score_p99_abs": 0.0,
+  "by_year": {
+    "2024": {
+      "n": 374,
+      "match": 374,
+      "mismatch": 0
+    },
+    "2025": {
+      "n": 1486,
+      "match": 1486,
+      "mismatch": 0
+    },
+    "2026": {
+      "n": 980,
+      "match": 980,
+      "mismatch": 0
+    }
+  }
+}

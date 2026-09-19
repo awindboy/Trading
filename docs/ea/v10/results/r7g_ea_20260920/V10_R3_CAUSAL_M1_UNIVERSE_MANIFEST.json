@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "source": "/mnt/data/GOLD#_M1_202201030100_202608282357(5).csv",
+  "source_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+  "source_rows": 1648545,
+  "source_first": "2022-01-03 01:00:00",
+  "source_last": "2026-08-28 23:57:00",
+  "universe_rows": 6770,
+  "year_rows": {
+    "2022": 1320,
+    "2023": 1488,
+    "2024": 1496,
+    "2025": 1486,
+    "2026": 980
+  },
+  "resolved_runs": 2139,
+  "feature_clock": "single-pass chronological raw M1; completed bars only",
+  "label_clock": "future answers attached only after FAST run resolution; label_available_at persisted",
+  "output": "/mnt/data/v10_ea_build/universe/V10_R3_CAUSAL_M1_UNIVERSE_2022_2026.csv"
+}
