@@ -1,81 +1,59 @@
-# Trading Workspace
+# Trading workspace
 
-이 작업공간은 웹 매매일지, MT5/TradingView 도구, 스승님식 매매 연구와
-Mentor AI 재생 파이프라인을 함께 관리합니다.
+이 저장소는 V10 전략 연구, MT5 연구 EA, 웹 매매일지, 과거 Mentor/TradingView 도구를 함께 관리합니다. GitHub `main`이 프로젝트의 장기 기억입니다.
 
-새 Codex 세션은 다음 순서로 시작합니다.
+## 현재 전략 연구
 
-1. `AGENTS.md`: 유일한 전략 실행 계약
-2. `PROJECT_MANIFEST.json`: 현재 활성 코드와 검증 명령
-3. `docs/architecture/MENTOR_AI_GROUND_TRUTH_V2.md`: 현재 파이프라인 경계
-4. 작업 대상 하위 폴더의 `README.md`
+활성 세대는 `V10` 하나입니다.
 
-<!-- V10_RESEARCH_ROUTING_START -->
-## 현재 전략 연구 라우팅 — V10
+시작 순서:
 
-- 활성 연구 세대: `V10`
-- 시작 문서: `docs/ea/v10/AGENTS_V10.md`
-- 현재 연구 주제: `HA-primary participation / Oracle replication`
-- 핵심 구조: `FAST HA execution + STD/SLOW context + H1 structural risk + bounded exposure`
-- V9 상태: active research 종료, frozen predecessor / comparator
-- V9→V10 전환 기록: `docs/ea/v9/V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md`
-- V10 production authority: `NONE`
+1. `AGENTS.md`
+2. `docs/ea/v10/AGENTS_V10.md`
+3. `docs/ea/v10/V10_DOCUMENT_AUTHORITY_MAP_20260921.md`
+4. `docs/ea/v10/HANDOFF_V10.md`
+5. `docs/ea/v10/RESEARCH_STATE_V10.md`
+6. `docs/ea/v10/V10_NEXT_RESEARCH_CONTRACT_NORMALIZED_STATE_FORWARD_20260921.md`
 
-V10은 V9 문서를 덮어쓰는 패치가 아니라 연구 질문 자체가 바뀐 새 세대입니다.
-V9는 Grammar-primary entry와 terminal-state 연구까지의 증거를 보존하고, V10은 HA가 participation clock을 맡는 구조를 별도로 연구합니다.
+현재 구조:
 
-<!-- V10_RESEARCH_ROUTING_END -->
+```text
+H4 FAST HA campaign clock
++ frozen R4/R5/R7G historical comparator
++ causal ATR-normalized H4/H1/M15 shadow state
+-> future-only observation after 2026-08-28
+```
 
-## 현재 승인 상태
+목표는 단순한 다음 HA/방향 예측이 아니라, 반복 손절을 줄이면서 지속 추세의 큰 우측 꼬리를 보존하는 것입니다.
 
-- 전략 권한: `AGENTS.md`
-- 파이프라인: `4.51-ground-truth-v2`
-- Ground Truth V2: `output/ground_truth_v2_june2026_v451` 완료 판정 무효화
-- 현재 상태: 동적 objective 갱신 누락이 확인되어 `BLOCKED`; 기존 2건과
-  `+0.1293R`은 참고용 forensic 결과일 뿐 정답지가 아님
-- 최신 감사 상태: `docs/operations/GROUND_TRUTH_V2_CURRENT_STATUS.md`
-- Gemini 6월 재현: 동결 정답지 기준 비교 가능, 아직 재현 성공 판정 전
-- Live: 공통 closed-M1 엔진과 shadow 경로 검증 완료, 실제 shadow parity 미실행
-- DEMO: fake MT5 adapter 검증 완료, 실제 DEMO 체결 미실행
-- 실계좌 주문: 하드 차단
-- `archive/`와 과거 `output/`은 전략 권한이나 정답지가 아님
+V10 production authority는 `NONE`입니다. R7G 결과와 두 EA는 연구·테스터 자산이며 실거래 준비 증명이 아닙니다.
 
-## 활성 경로
+## 현재 V10 자산
 
-| 영역 | 시작 파일 |
+| 영역 | 경로 |
 | --- | --- |
-| 전략 계약 | `AGENTS.md` |
-| Ground Truth V2 | `scripts/build_ground_truth_v2.py` |
-| Gemini replay | `scripts/mentor_ai_replay_v4.py` |
-| 공통 사건 엔진 | `scripts/mentor_replay_v4_core.py` |
-| Live shadow | `scripts/mentor_ai_live_v4.py` |
-| 생성된 Gemini 계약 | `mentor_context_pack/api_contracts/` |
-| 웹 매매일지 | `src/`, `bridge/mt5_bridge.py` |
-| MT5 도구 | `mt5/` |
-| TradingView 지표 | `tradingview/` |
+| 권위/상태 | `docs/ea/v10/` |
+| compact result packs | `docs/ea/v10/results/` |
+| 연구 코드 | `research/v10/README.md` |
+| exact replay EA | `mt5/experts/V10R7G_ExactActualTickReplayEA.mq5` |
+| full embedded EA | `mt5/experts/V10R7G_FullEmbeddedML_EA.mq5` |
+| 파생 출력 | ignored `output/` |
 
-## 핵심 검증
+## 보조 시스템
 
-```powershell
-python scripts\build_mentor_api_contracts.py
-python scripts\test_mentor_ai_replay_v4.py
-python scripts\test_mentor_ai_live_v4.py
-python scripts\test_ground_truth_v2_integration.py
-python -m py_compile scripts\mentor_replay_v4_core.py scripts\mentor_ai_replay_v4.py scripts\mentor_ai_live_v4.py scripts\build_ground_truth_v2.py
-```
+- 웹 매매일지: `src/`, `bridge/mt5_bridge.py`
+- MT5 도구: `mt5/`
+- TradingView 도구: `tradingview/`
+- 과거 Mentor/Ground Truth 파이프라인: 비교·유지보수용이며 V10 전략 권위가 아님
+- V9와 이전 세대: frozen historical evidence
 
-Ground Truth discovery는 후보 원장만 생성하고 blocked 상태로 끝납니다. chronological,
-counterfactual shuffled, daily no-trade MTF, trigger-role 감사를 모두 완료한 뒤에만
-`finalize`할 수 있습니다. 현재 동결본의 완료 근거는 해당 폴더의 `manifest.json`과
-`accepted_ground_truth.jsonl`입니다.
-
-## 웹 매매일지
+## 기본 개발 검증
 
 ```powershell
-npm install
-npm run dev
+npm run check-workspace
+npm run build
 ```
 
-기본 주소는 `http://127.0.0.1:5173/`입니다.
+V10 Python 연구 코드는 `.venv` 환경에서 compile/receipt validation을 수행합니다. 구체적인 검증 명령은 `research/v10/README.md`와 해당 checkpoint를 따릅니다.
 
-API 키는 `data/mentor_ai_replay_secret.json`에만 저장하며 외부 저장소에 올리지 않습니다.
+비밀정보는 `data/mentor_ai_replay_secret.json` 등 Git 비추적 경로에만 저장합니다.

@@ -271,4 +271,4 @@ primary member and 21-feature contract checked
 0 R3 publication problems
 ```
 
-The older repository-wide command `python scripts/v10_validate_repro_pack.py .` does **not** pass on the current HEAD. It reports missing historical generated artifacts, one historical canonical-clock mismatch, and an obsolete backup directory. R3 does not conceal or repair that predecessor-pack state. Therefore this checkpoint proves the new raw-M1/R3 lineage and receipts only; it does not claim that the entire historical V10 reproducibility pack is clean.
+The predecessor repository-wide V10 pack and its validator were removed during the 2026-09-21 cleanup because they mixed obsolete bounded-m3 artifacts, a historical clock mismatch, and duplicate backup files. They remain available in Git history. This checkpoint proves only the compact raw-M1/R3 lineage and receipts; it does not revive the removed predecessor pack.

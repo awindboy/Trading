@@ -1,326 +1,66 @@
-# V10 Handoff
+# V10 handoff
 
-Date: `2026-09-16`
-Status: `ACTIVE HA-PRIMARY SHADOW RESEARCH`
+Date: `2026-09-21`
+Status: `ACTIVE RESEARCH / NORMALIZED-STATE FORWARD SHADOW`
 
-<!-- V10_POST_HEAD_HANDOFF_20260916_START -->
-## Current priority override — post-HEAD / actual-tick gate
-
-The earlier handoff remains historical context, but the current resume path is:
-
-1. confirm latest GitHub `main`;
-2. follow `AGENTS_V10.md`;
-3. read `V10_POST_HEAD_RESEARCH_CHECKPOINT_20260916.md`;
-4. read `V10_BOUNDED_M3_ACTUAL_TICK_VALIDATION_20260916.md`;
-5. follow `V10_NEXT_RESEARCH_CONTRACT_EXECUTION_FIDELITY_AND_DANGER_REGEN_20260916.md`.
-
-Current research thesis:
+## Resume in one minute
 
 ```text
-Opportunity != Safety
-
-k1:
-Opportunity Head + extreme Danger Head
--> participate or abstain
-
-k2:
-Persistence Head
--> confirm / stop adding
-
-k3+:
-marginal Child economics
-
-FAST NHA:
-campaign exit
+H4 FAST HA remains the campaign clock.
+R4/R5/R7G remains the frozen historical comparator.
+Do not retune on 2022-2026 consumed evidence.
+Do not use next-HA prediction, regime labels, progression locks, or MA line counts as trade authority.
+Observe normalized state only on future chronology after 2026-08-28.
 ```
 
-Current exact executable benchmark remains bounded `m=3`. The post-HEAD shock-veto result is not yet reproducible enough to embed.
+Read `V10_NEXT_RESEARCH_CONTRACT_NORMALIZED_STATE_FORWARD_20260921.md` before new analysis.
 
-The first actual-tick bounded-m3 test produced raw `+$16,220.67 / PF 1.6866`, but that headline is contaminated by non-persistent market-closed FAST-NHA exits and must not be treated as validated strategy performance.
+## Current factual state
 
-Execution-fidelity repair comes before additional model tuning.
-<!-- V10_POST_HEAD_HANDOFF_20260916_END -->
+- Raw-M1 R3 universe reproduction exists: 6,770 opportunities and 2,139 resolved FAST runs.
+- R4 action, R5 native EV sign, and R7G feedback/sizing parity were reproduced on the frozen historical population.
+- Historical R7G comparator: `+741.01R`, PF_R `1.682`, DD_R `59.71R`; this is consumed evidence.
+- Two research EAs exist: exact frozen replay and full embedded ML.
+- The user ran the full embedded EA in MT5 and supplied an event export. Order failures identified as market-closed incidents are deferred to the next EA lifecycle upgrade.
+- No V10 strategy or EA has production authority.
 
-## Resume first
+## Latest research conclusions
 
-1. Confirm latest GitHub `main` HEAD.
-2. Read `AGENTS_V10.md`.
-3. Read `V10_DOCUMENT_AUTHORITY_MAP_20260916.md`.
-4. Read V9 closure / transition.
-5. Read `RESEARCH_STATE_V10.md`.
-6. Read `V10_HA_PRIMARY_RESEARCH_CHECKPOINT_20260916.md`.
-7. Read `V10_NEXT_RESEARCH_CONTRACT_ORACLE_PARTICIPATION_20260916.md`.
-8. Inspect `results/` ledgers.
+### Next-HA nowcast
 
-## Current generation thesis
+Forming-H4 color is increasingly predictable, but most of that information is the provisional HA formula itself. Broad early-exit conversion lost R and did not reduce maximum stop streak.
 
-V10 is not a V9 terminal-exit tweak.
+### Seed defense
 
-The working hypothesis is:
+A narrow newest-1-unit +60m q10 shadow produced only 24 historical actions and `+4.69R`; it remains future-only observation because it was selected post hoc and did not reduce maximum stop streak.
+
+### Progression / damage repair
+
+Rejected. Stops fell, but persistent-run right-tail participation collapsed:
 
 ```text
-HA should own participation timing.
-Grammar should become context.
-H1 liquidity should retain structural invalidation / risk.
-STD / SLOW / LTF HA should describe maturity and delivery.
+progression      -250.99R
+damage repair    -320.42R
+combined         -509.22R
 ```
 
-## Current FAST / STD / SLOW roles
+### MA ribbons
 
-```text
-FAST w2/a0.25
--> execution / run clock
+Normalized H4/H1/M15 ribbon geometry contains stable STOP information, especially H1 WMA20 OC2 directional span/ATR. No fixed line count or threshold is economically stable across 2024-2026. Use it as a continuous shadow state, not a veto.
 
-STD w1/a0.50
--> strongest current early-run representation
--> directional support
+## Immediate work
 
-SLOW w2/a0.75
--> broader maturity context
--> not supported as delayed exit authority
-```
+1. freeze current code and feature definitions;
+2. log the seed-defense event and normalized MA state on chronology strictly after the consumed cutoff;
+3. do not tune from accumulating outcomes;
+4. report stop avoidance, stop streak, right-tail regret, delta R, costs, and concentration;
+5. revisit EA order-lifecycle handling separately when EA upgrade work resumes.
 
-## Current best answer sheet
+## Do not do next
 
-```text
-k = current FAST same-color HA index
-L = final FAST same-color run length
-
-TRUE EARLY THIRD:
-3*k <= L
-```
-
-`L` is answer-sheet-only.
-
-## Current best practical research direction
-
-Do not simply increase size every three HA bars.
-
-Current evidence favors:
-
-```text
-P_RUNWAY
-* P_WIN
-* P_STD_SUPPORT
-```
-
-followed by bounded exposure.
-
-The current bounded diagnostic captures about 80% of true early-third Oracle bars but has only about 39% precision. False positives are the primary research problem.
-
-## Important negative results
-
-- PURE HA participation without state filtering increases raw PnL but reduces quality.
-- delaying exit until SLOW HA confirmation is poor;
-- BASE / SLOW confirmation generally gives back too much;
-- Grammar-confirmed delayed exit can generate very large right-tail gains but uses extreme exposure and is highly concentrated;
-- adding every MTF HA feature worsens generalization;
-- high AUC on very long runway labels does not automatically produce best economics;
-- fixed bar-count pyramiding does not replicate the Oracle well.
-
-## Current execution caveat
-
-V10 hypothetical H1 stops are screened with M1 first-touch, not V10 actual-tick execution.
-
-Do not describe V10 as actual-tick validated.
-
-## Most important files
-
-- `results/V10_FAST_CHILD_ORACLE_STATE_LEDGER_2025_2026.csv`
-- `results/V10_BOUNDED_M3_ENTRY_LEDGER_2025_2026.csv`
-- `results/V10_BOUNDED_M3_RUN_LEVEL_LEDGER_2025_2026.csv`
-- `results/V10_RUNWAY_MULTIPLE_SCAN_20260916.csv`
-- `results/V10_SIZING_COMPARISON_20260916.csv`
-
-<!-- V10_REPRO_LEDGER_HANDOFF_20260916_START -->
-## Reproducibility handoff — row-level evidence is now available
-
-The current V10 handoff now has a complete row-level research spine for the existing bounded-m3 control:
-
-```text
-1,159 selected signals
--> exact entry fill/reject state
--> normalized MT5 order/deal rows
--> failed FAST-NHA exit incidents
--> actual exit and exposure path
--> M1-reference parity
--> causal M15/M30/H1/H4 selected-signal state
--> deterministic model-regeneration artifacts
-```
-
-Use `V10_DATA_AND_LEDGER_MANIFEST_20260916.md` as the data-lineage index.
-
-Important distinction:
-
-```text
-old session-recorded shock-veto result
-= historical consumed evidence
-
-new _REGEN models
-= reproducible selection-conditioned candidates
-```
-
-Do not describe the latter as recovery of the former.
-
-Before another model scan, run:
-
-```text
-python scripts/v10_validate_repro_pack.py .
-```
-
-Execution fidelity still comes first. A repaired actual-tick control must preserve immutable `EXIT_PENDING` and must be compared to the new row-level parity ledger before any strategy conclusion is drawn.
-<!-- V10_REPRO_LEDGER_HANDOFF_20260916_END -->
-
-<!-- V10_DECISION_CLOCK_HOTFIX_HANDOFF_20260916_START -->
-## Decision-clock hotfix
-
-The reproducibility pack distinguishes the signal clock from the actual tick clock.
-
-Read `V10_SIGNAL_DECISION_CLOCK_HOTFIX_20260916.md` before using the row-level execution or feature ledgers.
-
-For filled rows, the EA may log the entry event one or two seconds after the H4 decision boundary. The exact intended clock is already persisted as `effective_ts`; that value must match the baseline `decision_ts` exactly. Actual event/fill time remains separate execution evidence.
-<!-- V10_DECISION_CLOCK_HOTFIX_HANDOFF_20260916_END -->
-
-<!-- V10_REGIME_RISK_HANDOFF_20260917_START -->
-## Current handoff override — regime admission + HA-primary risk, 2026-09-17
-
-Current resume target is no longer additional reproducibility regeneration.
-
-Read:
-
-1. `V10_REGIME_REVERSE_ADMISSION_AND_MAIN_CLOCK_CHECKPOINT_20260917.md`
-2. `V10_HA_PRIMARY_RISK_ARCHITECTURE_CHECKPOINT_20260917.md`
-3. `V10_NEXT_RESEARCH_CONTRACT_REGIME_ADMISSION_AND_HA_RISK_20260917.md`
-
-Key conclusions to preserve:
-
-```text
-1. H4 remains the main clock. H1-main FAST participation was too noisy.
-
-2. FAST NHA owns old-campaign exit, not automatic reverse admission.
-
-3. LONG / NEUTRAL / SHORT is the current working state topology.
-
-4. ADX / H4 path efficiency are useful as regime sensors,
-   while EMA / DI / LTF HA are better treated as directional confirmation.
-
-5. Universal hard gates delete too much trend right tail.
-   Conditional NEUTRAL is the more promising architecture.
-
-6. The inherited H1 liquidity Hard SL is no longer the preferred V10 design.
-   The clean leading HA-native stop candidate is the previous completed H4 STD HA extreme.
-
-7. Fixed-lot W1/W3 should give way to Child money-risk sizing research.
-   Campaign aggregate committed risk needs its own ceiling.
-```
-
-Do not convert consumed-data scan winners into hidden thresholds.
-<!-- V10_REGIME_RISK_HANDOFF_20260917_END -->
-
-<!-- V10_R3_CAUSAL_ML_HANDOFF_20260917_START -->
-## Current handoff override — causal K1 danger shadow, 2026-09-17
-
-Resume with:
-
-1. `V10_R3_CAUSAL_ML_AND_K1_DANGER_CHECKPOINT_20260917.md`
-2. `V10_NEXT_RESEARCH_CONTRACT_K1_SHADOW_FORWARD_20260917.md`
-3. `results/r3_k1stop_20260917/V10_R3_K1STOP_POLICY_FRONTIER_20260917.csv`
-4. `results/r3_k1stop_20260917/V10_R3_REPRODUCIBILITY_RECEIPT_20260917.json`
-
-Key handoff:
-
-```text
-raw M1 single-pass causal universe
--> exact R2 ledger parity
--> broad REGIME and generic negative-R targets rejected
--> selection-conditioned k1 STOP head retained
--> fixed RobustScaler(10,90) + Logistic C=0.5
--> prior calibrated OOF q97.5
--> future shadow candidate only
-```
-
-Consumed 2024-2026 comparison:
-
-```text
-R2 comparator       +532.16R / PF_R 1.4525 / DD_R 52.41
-ROBUST_C05 shadow   +553.83R / PF_R 1.4813 / DD_R 45.41
-delta               +21.67R
-```
-
-Run-block bootstrap pooled 95% interval is `[+6.03R, +38.74R]`, but 2025/2026 lower quantiles touch zero and all periods are consumed. This is not independent validation.
-
-Immediate next work is parity and forward shadow collection, not another scan. Resolve the six-row R2 EA run-latch mismatch before R3 EA instrumentation.
-
-Validation boundary: the new R3 publication validator passes, while the older repository-wide `scripts/v10_validate_repro_pack.py` still fails on missing predecessor artifacts / a historical clock mismatch / an obsolete backup directory. Do not report whole-repository reproducibility as green.
-<!-- V10_R3_CAUSAL_ML_HANDOFF_20260917_END -->
-
-<!-- V10_R7_SIZING_HANDOFF_20260917_START -->
-## Current handoff override — R7 sizing shadow / M1 economics, 2026-09-17
-
-Resume with:
-
-1. `V10_R6_R7_ML_SIZING_AND_M1_ECONOMICS_CHECKPOINT_20260917.md`
-2. `V10_NEXT_RESEARCH_CONTRACT_R7G_CAUSAL_SIZING_AND_EXECUTION_20260917.md`
-3. `results/r7_sizing_20260917/V10_R7_M1_VERIFIED_ECONOMIC_AUDIT_20260917.md`
-
-What changed:
-
-```text
-R6 generic meta / right-tail / relative-rank / downgrade research
--> did not beat R4 robustly
-
-R7 role change
--> do not ask ML to predict the next HA as primary authority
--> keep H4 FAST / R4 participation structure
--> use ML + recent realized economic feedback for exposure sizing
-```
-
-Current frozen shadow candidate:
-
-```text
-R4 1-unit Child
-+ R5 EV > 0
-+ recent 180 completed-H4 prior-exited eligible Child mean R > 0
--> 3 units
-else -> keep R4 sizing
-```
-
-M1-verified diagnostic:
-
-```text
-R4    +485.07R / PF_R 1.583 / DD_R 50.32
-R7G   +741.01R / PF_R 1.682 / DD_R 59.71
-```
-
-The raw `pnl` field is GOLD price movement, not account-currency PnL.
-Peak R7G simultaneous exposure reached 48 units, so account-level returns must not be claimed before exact lot / committed-risk semantics are implemented.
-
-The post-hoc `no-k3p-SHORT` result remains diagnostic only.
-No V10 production strategy exists.
-<!-- V10_R7_SIZING_HANDOFF_20260917_END -->
-
-<!-- V10_R7G_EA_HANDOFF_20260920_START -->
-## R7G EA implementation handoff — 2026-09-20
-
-The R7G continuation has reached executable source implementation.
-
-Completed:
-
-```text
-1,648,545 raw M1 rows -> 6,770 causal opportunities / 2,139 runs
-R4 action parity 2840/2840
-R5 native EV>0 parity 926/926
-R7G feedback parity 926/926
-R7G final sizing parity 2840/2840
-ExactActualTickReplayEA implemented
-FullEmbeddedML_EA implemented
-```
-
-Economic reference remains R7G `+30,883.72` raw GOLD price-PnL and `+30,074.67` spread-adjusted price-PnL on the M1-verified consumed sample, versus R4 `+23,234.65` / `+22,590.76`.
-
-Use `V10R7G_ExactActualTickReplayEA.mq5` first as the frozen execution benchmark. Then test `V10R7G_FullEmbeddedML_EA.mq5` with the same historical interval and default fixed `0.01 lot/unit` sizing.
-
-Important boundary: source implementation is complete; MetaEditor compilation and Strategy Tester actual-tick validation are still external validation steps. The current generic tree-export snapshot has one remaining R5 EV-sign mismatch (925/926 on the R7 population), while native Python reproduction is 926/926. Preserve this as a parity issue; do not retune around it.
-
-Next authority: `V10_NEXT_RESEARCH_CONTRACT_R7G_EA_ACTUAL_TICK_VALIDATION_20260920.md`.
-<!-- V10_R7G_EA_HANDOFF_20260920_END -->
+- another model-family or threshold scan;
+- another generic regime classifier;
+- another next-HA accuracy study;
+- a fixed “N MA lines broken” rule;
+- a hidden cooldown or retry limit;
+- promotion based on pooled historical R.

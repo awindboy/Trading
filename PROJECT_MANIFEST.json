@@ -33,7 +33,7 @@
       "mt5Indicator": "mt5/indicators/ICTCockpitIndicator.mq5"
     },
     "v8MovementProbabilityShadow": {
-      "status": "SHADOW_IMPLEMENTED_AWAITING_METAEDITOR_RUNTIME_PARITY",
+      "status": "HISTORICAL_PREDECESSOR_NO_ACTIVE_AUTHORITY",
       "indicator": "mt5/indicators/V8MovementProbabilityIndicator.mq5",
       "handoff": "docs/ea/v8/HANDOFF_V8.md",
       "researchJourney": "docs/ea/v8/V8_RESEARCH_JOURNEY.md",
@@ -43,14 +43,20 @@
       "productionAuthority": "NONE"
     },
     "v10HAOracleResearch": {
-      "status": "ACTIVE_SHADOW_RESEARCH",
+      "status": "ACTIVE_HA_PRIMARY_NORMALIZED_STATE_FORWARD_SHADOW",
       "authority": "docs/ea/v10/AGENTS_V10.md",
+      "authorityMap": "docs/ea/v10/V10_DOCUMENT_AUTHORITY_MAP_20260921.md",
       "handoff": "docs/ea/v10/HANDOFF_V10.md",
       "researchState": "docs/ea/v10/RESEARCH_STATE_V10.md",
-      "checkpoint": "docs/ea/v10/V10_HA_PRIMARY_RESEARCH_CHECKPOINT_20260916.md",
-      "nextContract": "docs/ea/v10/V10_NEXT_RESEARCH_CONTRACT_ORACLE_PARTICIPATION_20260916.md",
+      "latestCheckpoint": "docs/ea/v10/V10_PROGRESSION_AND_MA_BAND_EXPLORATION_CHECKPOINT_20260921.md",
+      "decisionIndex": "docs/ea/v10/V10_RESEARCH_DECISIONS_20260921.md",
+      "nextContract": "docs/ea/v10/V10_NEXT_RESEARCH_CONTRACT_NORMALIZED_STATE_FORWARD_20260921.md",
+      "researchCodeIndex": "research/v10/README.md",
+      "exactReplayEA": "mt5/experts/V10R7G_ExactActualTickReplayEA.mq5",
+      "fullEmbeddedEA": "mt5/experts/V10R7G_FullEmbeddedML_EA.mq5",
       "predecessorClosure": "docs/ea/v9/V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md",
       "market": "GOLD#",
+      "consumedCutoff": "2026-08-28 23:57 raw M1",
       "productionAuthority": "NONE"
     }
   },

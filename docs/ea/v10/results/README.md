@@ -1,216 +1,55 @@
-# V10 Results Ledger Index
+# V10 compact result packs
 
-Date: `2026-09-16`
+Repository results are compact receipts, manifests, and decision summaries only. Large per-event ledgers, search grids, bootstrap draws, raw tester exports, and temporary model artifacts belong under ignored `output/` or in Git history.
 
-These files are research artifacts for the first V10 HA-primary checkpoint.
+## `r3_k1stop_20260917/`
 
-## Core ledgers
+Purpose: reproduce and audit the narrow K1 extreme-STOP shadow candidate.
 
-- `V10_FAST_CHILD_ORACLE_STATE_LEDGER_2025_2026.csv`
-  H1-eligible FAST participation opportunities with structural outcomes and major Oracle-state probabilities.
+Key files:
 
-- `V10_BOUNDED_M3_ENTRY_LEDGER_2025_2026.csv`
-  Entry-level ledger for the consumed-data bounded `m=3`, prior-quartile `0/0/1/3` diagnostic.
+- `V10_R3_REPRODUCIBILITY_RECEIPT_20260917.json`
+- `V10_R3_K1STOP_FUTURE_SHADOW_MANIFEST_20260917.json`
+- `V10_R3_K1STOP_POLICY_FRONTIER_20260917.csv`
+- `V10_R3_K1STOP_STABLE_FRONTIER_VALIDATION_20260917.json`
+- `V10_R3_R2_UNIVERSE_PARITY_20260917.json`
 
-- `V10_BOUNDED_M3_RUN_LEVEL_LEDGER_2025_2026.csv`
-  Run-level candidate-vs-ALL1 comparison.
+The remaining files in this pack are the fixed head metrics, tuned/stable frontier metrics, bootstrap summaries, feature/model ablations, and validation receipts named by the reproducibility receipt. None is a live ledger.
 
-## Summary studies
+Status: consumed historical research and future-shadow instrumentation only.
 
-- `V10_HA_FORMULA_ORACLE_PREDICTABILITY_20260916.csv`
-- `V10_HA_FORMULA_ECONOMICS_20260916.csv`
-- `V10_MTF_HA_SINGLE_FEATURE_AUC_20260916.csv`
-- `V10_MTF_PHASE_FAMILY_AUC_20260916.csv`
-- `V10_MTF_PHASE_SINGLE_AUC_20260916.csv`
-- `V10_RUNWAY_MULTIPLE_SCAN_20260916.csv`
-- `V10_SIZING_COMPARISON_20260916.csv`
-- `V10_EXIT_CONFIRMATION_CAMPAIGN_COMPARISON_20260916.csv`
-- `V10_SCORE_TRAJECTORY_SUMMARY_20260916.csv`
-- `V10_SCORE_TRAJECTORY_BY_YEAR_20260916.csv`
-- `V10_BOUNDED_M3_RUN_BOOTSTRAP_20260916.csv`
-- `V10_CUMULATIVE_LADDER_SCAN_20260916.csv`
-- `V10_ALWAYS_INITIAL_LADDER_SCAN_20260916.csv`
-- `V10_HIGH_LEVEL_COMPARATORS_20260916.csv`
+`V10_R3_R2_UNIVERSE_PARITY_20260917.json` preserves the original path of its R2 comparator so the immutable receipt remains hash-valid. That large comparator ledger was removed from the current tree and is recoverable from Git history at `438f6b4`.
 
-All periods represented here are consumed research evidence. None of these files grants production authority.
+## `r7_sizing_20260917/`
 
-<!-- V10_ACTUAL_TICK_RESULTS_20260916_START -->
-## Actual-tick bounded-m3 diagnostic
+Purpose: compact R6/R7G sizing and M1 economic receipts.
 
-Added after the first Strategy Tester run:
+Retained files describe overall/year economics, spread sensitivity, concurrency, feedback summary, and the M1-verified R7G audit. Row-level feedback actions, R6 search receipts, and exploratory subgroup scans were removed.
 
-- `V10_BOUNDED_M3_ACTUAL_TICK_SUMMARY_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_EVENT_COUNTS_20260916.csv`
+- `M1_DETAILED_OVERALL.csv` / `M1_DETAILED_YEAR.csv` — overall and annual R4/R7G economics;
+- `M1_POLICY_BY_YEAR_R_AND_PNL.csv` — annual structural-R and raw-price PnL;
+- `M1_CONCURRENT_RISK_UNITS.csv` — maximum simultaneous units;
+- `M1_SPREAD_ADJUSTED_RISK_SUMMARY.csv` / `M1_SPREAD_STRESS_SUMMARY.csv` — cost sensitivity;
+- `M1_UPGRADE_OVERALL.csv` — incremental upgraded-Child result;
+- `R7G_FEEDBACK_METRICS.csv` / `R7G_FEEDBACK_SUMMARY.csv` — feedback-overlay diagnostics;
+- `V10_R7_M1_VERIFIED_ECONOMIC_AUDIT_20260917.md` — interpretation and limitations.
 
-Primary narrative:
+Status: frozen historical comparator, not sizing authority.
 
-`../V10_BOUNDED_M3_ACTUAL_TICK_VALIDATION_20260916.md`
+## `r7g_ea_20260920/`
 
-The raw tester headline is diagnostic only because market-closed FAST-NHA exits were not persisted/retried. Do not treat the raw actual-tick PnL as promoted V10 performance.
-<!-- V10_ACTUAL_TICK_RESULTS_20260916_END -->
+Purpose: feature registry, model-export receipt, and R4/R5/R7G parity manifests for the two retained research EAs.
 
-<!-- V10_REPRO_LEDGER_RESULTS_20260916_START -->
-## Reproducibility / row-level ledgers — 2026-09-16
+- `FEATURE_REGISTRY.json` — final 84-coordinate registry;
+- `IMPLEMENTATION_MANIFEST.json` — implementation identity and hashes;
+- `MODEL_EXPORT_PARITY_RECEIPT.json` — exported-model caveat;
+- `R4_ACTION_PARITY.json` — R4 action parity;
+- `R5_EV_PARITY_VS_R7L.json` — R5 EV sign parity;
+- `R7G_RUNTIME_PARITY_RECEIPT.csv` — feedback/final sizing parity;
+- `V10_R3_CAUSAL_M1_UNIVERSE_MANIFEST.json` — raw-M1 universe identity.
 
-Raw first-run Strategy Tester evidence:
+Status: executable research evidence only. User MT5 execution exists, but market-closed order failures and final production lifecycle handling remain unresolved/deferred.
 
-- `raw/V10_BOUNDED_M3_ACTUAL_TICK_EVENTS_RAW_20260916.csv`
-- `raw/V10_BOUNDED_M3_ACTUAL_TICK_REPORT_RAW_20260916.xlsx`
+## Local outputs
 
-Execution / exposure ledgers:
-
-- `V10_BOUNDED_M3_ACTUAL_TICK_SIGNAL_EXECUTION_LEDGER_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_ENTRY_REJECT_LEDGER_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_EXIT_REJECT_EVENT_LEDGER_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_EXIT_REJECT_INCIDENT_LEDGER_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_EXIT_REJECT_AFFECTED_LEDGER_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_PENDING_EXIT_DELAY_LEDGER_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_DEALS_LEDGER_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_ORDERS_LEDGER_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_EXPOSURE_PATH_LEDGER_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_OVERLAP_EPISODE_LEDGER_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_SL_EXECUTION_LEDGER_20260916.csv`
-
-Research-vs-execution parity:
-
-- `V10_BOUNDED_M3_ACTUAL_TICK_REFERENCE_PARITY_LEDGER_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_PARITY_SUMMARY_20260916.csv`
-- `V10_BOUNDED_M3_ACTUAL_TICK_PARITY_VALIDATION_20260916.json`
-
-Causal selected-signal state:
-
-- `V10_POST_HEAD_SELECTED_SIGNAL_FEATURE_LEDGER_20260916.csv`
-- `V10_POST_HEAD_SELECTED_SIGNAL_FEATURE_LEDGER_20260916.validation.json`
-
-Deterministic selection-conditioned model regeneration:
-
-- `V10_POST_HEAD_MODEL_REGEN_LEDGER_20260916.csv`
-- `V10_POST_HEAD_REGEN_MODEL_COEFFICIENTS_20260916.csv`
-- `V10_POST_HEAD_REGEN_SCORE_LEDGER_20260916.csv`
-- `V10_POST_HEAD_REGEN_MODEL_METRICS_20260916.csv`
-- `V10_K1_DANGER_REGEN_TAIL_SWEEP_20260916.csv`
-- `V10_POST_HEAD_REGEN_VALIDATION_20260916.json`
-
-Descriptive regeneration:
-
-- `V10_POST_HEAD_ORACLE_NONORACLE_ECONOMICS_REGEN_20260916.csv`
-- `V10_POST_HEAD_NONORACLE_RUN_LENGTH_ECONOMICS_REGEN_20260916.csv`
-- `V10_POST_HEAD_BOUNDED_FP_FN_DECOMPOSITION_REGEN_20260916.csv`
-- `V10_POST_HEAD_BOUNDED_K1_SCALE_SCAN_REGEN_20260916.csv`
-- `V10_POST_HEAD_MORPHOLOGY_MEDIANS_REGEN_20260916.csv`
-
-Integrity index:
-
-- `V10_REPRODUCIBILITY_ARTIFACT_SHA256_20260916.csv`
-
-See `../V10_DATA_AND_LEDGER_MANIFEST_20260916.md` for lineage and authority boundaries.
-<!-- V10_REPRO_LEDGER_RESULTS_20260916_END -->
-
-<!-- V10_REGIME_RISK_RESULTS_20260917_START -->
-## Regime / reverse-admission / HA-risk research — 2026-09-17
-
-Narrative checkpoints:
-
-- `../V10_REGIME_REVERSE_ADMISSION_AND_MAIN_CLOCK_CHECKPOINT_20260917.md`
-- `../V10_HA_PRIMARY_RISK_ARCHITECTURE_CHECKPOINT_20260917.md`
-- `../V10_NEXT_RESEARCH_CONTRACT_REGIME_ADMISSION_AND_HA_RISK_20260917.md`
-
-New result artifacts:
-
-- `V10_REGIME_REVERSE_ADMISSION_SUMMARY_20260917.csv`
-- `V10_H4_VS_H1_MAIN_CLOCK_COMPARISON_20260917.csv`
-- `V10_HA_SL_FAMILY_SUMMARY_20260917.csv`
-- `V10_PREV_STD_HA_STOP_SIGNAL_LEDGER_20260917.csv`
-- `V10_W3_RISK_MULTIPLIER_SCAN_PREV_STD_HA_20260917.csv`
-- `V10_CAMPAIGN_RISK_CAP_SCAN_20260917.csv`
-- `V10_HA_RISK_RESEARCH_CHECKPOINT_20260917.json`
-
-Authority notes:
-
-```text
-reverse/regime indicator results
--> consumed-data session summary; post-hoc scan, not threshold authority
-
-HA-risk results
--> persisted selected-signal row-level stop ledger + scan summaries
--> still consumed-data research only
-```
-
-The H1 liquidity structural stop remains in historical comparator artifacts but is no longer the preferred active V10 risk-design direction.
-<!-- V10_REGIME_RISK_RESULTS_20260917_END -->
-
-<!-- V10_R3_CAUSAL_ML_RESULTS_20260917_START -->
-## R3 raw-M1 causal ML / K1 danger — 2026-09-17
-
-Narrative checkpoint:
-
-- `../V10_R3_CAUSAL_ML_AND_K1_DANGER_CHECKPOINT_20260917.md`
-- `../V10_NEXT_RESEARCH_CONTRACT_K1_SHADOW_FORWARD_20260917.md`
-
-Compact auditable artifacts:
-
-- `r3_k1stop_20260917/V10_R3_CAUSAL_UNIVERSE_MANIFEST_20260917.json`
-- `r3_k1stop_20260917/V10_R3_R2_UNIVERSE_PARITY_20260917.json`
-- `r3_k1stop_20260917/V10_R3_K1STOP_POLICY_FRONTIER_20260917.csv`
-- `r3_k1stop_20260917/V10_R3_K1STOP_STABLE_FRONTIER_BOOTSTRAP_20260917.csv`
-- `r3_k1stop_20260917/V10_R3_K1STOP_FEATURE_ABLATION_POOLED_20260917.csv`
-- `r3_k1stop_20260917/V10_R3_K1STOP_FUTURE_SHADOW_MANIFEST_20260917.json`
-- `r3_k1stop_20260917/V10_R3_REPRODUCIBILITY_RECEIPT_20260917.json`
-
-The primary future shadow candidate is fixed Robust `C=0.5` on the K1 STOP population. The higher consumed-data tuned result, HistGB, intersection, and union are retained as diagnostics only.
-
-All artifacts are consumed-data research. The joblib bundle, full causal universe, per-event model score ledgers, and bootstrap draws are reproducibly generated under ignored `output/v10_r3/`; none grants trade or production authority.
-<!-- V10_R3_CAUSAL_ML_RESULTS_20260917_END -->
-
-<!-- V10_R7_SIZING_RESULTS_20260917_START -->
-## R6/R7 ML sizing + raw-M1 economic audit — 2026-09-17
-
-Narrative:
-
-- `../V10_R6_R7_ML_SIZING_AND_M1_ECONOMICS_CHECKPOINT_20260917.md`
-- `../V10_NEXT_RESEARCH_CONTRACT_R7G_CAUSAL_SIZING_AND_EXECUTION_20260917.md`
-
-Result directory:
-
-- `r7_sizing_20260917/`
-
-Key artifacts:
-
-- `R6_CONSOLIDATED_RESEARCH_RESULT_20260917.md`
-- `R7G_FEEDBACK_SUMMARY.csv`
-- `R7M_FIXED_POLICY_QUARTER_ECONOMICS.csv`
-- `R7N_HORIZON_STRESS.csv`
-- `V10_R7_M1_VERIFIED_ECONOMIC_AUDIT_20260917.md`
-- `M1_DETAILED_OVERALL.csv`
-- `M1_DETAILED_QUARTER.csv`
-- `M1_DETAILED_STAGE_DIRECTION.csv`
-- `M1_UPGRADE_LBUCKET.csv`
-- `M1_SPREAD_ADJUSTED_RISK_SUMMARY.csv`
-- `M1_CONCURRENT_RISK_UNITS.csv`
-- `M1_AUDIT_RECEIPT.csv`
-
-Important unit note:
-
-```text
-raw pnl / price-PnL = GOLD price movement
-!= account-currency PnL
-```
-
-R7G and the no-k3p-SHORT refinement remain consumed-data research only.
-<!-- V10_R7_SIZING_RESULTS_20260917_END -->
-
-<!-- V10_R7G_EA_RESULTS_20260920_START -->
-## R7G EA implementation artifacts — 2026-09-20
-
-See `r7g_ea_20260920/` for:
-
-- raw-M1 universe manifest;
-- R4 action parity receipt;
-- R5 native EV parity receipt;
-- R7G runtime feedback/action parity receipt;
-- final feature registry;
-- generic model-export parity receipt;
-- implementation manifest and checksums.
-
-The exact replay and full embedded EA source files live under `mt5/experts/`.
-<!-- V10_R7G_EA_RESULTS_20260920_END -->
+Current scripts regenerate local evidence under ignored `output/`. Those files are intentionally not committed because they are large, derivable, and not authority.

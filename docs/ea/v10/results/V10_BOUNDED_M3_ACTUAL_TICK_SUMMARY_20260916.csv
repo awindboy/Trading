@@ -1,8 +1,0 @@
-scope,events,units,pnl,pf,structural_r,status,notes
-M1_BOUNDED_M3_ALL,1159,2313,14827.57,1.553395,388.8765,REPRODUCIBLE,"Persisted GitHub entry ledger"
-M1_REFERENCE_FILLED_SUBSET,984,1966,13495.44,1.601362,330.8422,REPRODUCIBLE,"Reference economics for actual fill signal IDs"
-ACTUAL_TICK_RAW,984,1966,16220.67,1.686554,,DIAGNOSTIC_ONLY,"Contaminated upward by non-persistent market-closed FAST-NHA exits"
-M1_REFERENCE_EXIT_AFFECTED,131,241,1877.37,1.909966,72.2951,ANALYSIS_SUBSET,"Approximate affected subset identified during execution audit"
-ACTUAL_TICK_EXIT_AFFECTED,131,241,4742.48,2.543,,DIAGNOSTIC_ONLY,"Unintended extended holding after rejected exits"
-M1_REFERENCE_NORMAL_EXECUTION,853,1725,11618.07,1.570,258.55,ANALYSIS_SUBSET,"Filled signals excluding exit-contaminated subset"
-ACTUAL_TICK_NORMAL_EXECUTION,853,1725,11478.19,1.558,252.57,ANALYSIS_SUBSET,"Shows close M1-vs-tick parity where semantics remained comparable"
