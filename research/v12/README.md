@@ -64,14 +64,15 @@ V10 replacement gate and has no trade authority.
 
 ## Next retained implementation
 
-Keep Phase 1A frozen. Any next no-ML branch must predeclare one unresolved
-structure at a time:
+Keep Phase 1A frozen. Phase 1B has predeclared the next observation pipeline:
 
-- a causal true-MSS definition; or
-- an outside-acceptance continuation destination and trigger contract.
+- `v12_phase1b_contract.json`: H4->M5 shadow CRT activations, completed-period
+  key-level lifecycle, canonical journey state, V10 Child context, and FAST-flip
+  explanation contract. It has no result or action authority yet.
 
-HA/Wave sensor ablation follows only on a frozen base ledger. ML remains later
-and shadow-only.
+The implementation must keep CRT decisions, journey outcomes, V10 decision
+context, V10 outcomes, FAST-flip context, and later run outcomes physically
+separate. HA/Wave sensor ablation and ML remain later and shadow-only.
 
 Large ledgers and diagnostics belong under ignored `output/`.
 

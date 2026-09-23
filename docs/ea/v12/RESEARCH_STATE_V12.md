@@ -4,7 +4,7 @@ Last synchronized: `2026-09-23`
 
 ## Status
 
-`PHASE 1A FIRST PROTOTYPE FROZEN / V10 REPLACEMENT GATE FAILED / NO TRADE AUTHORITY`
+`PHASE 1B H4-M5 JOURNEY CONTRACT FROZEN / IMPLEMENTATION ACTIVE / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -67,6 +67,15 @@ Last synchronized: `2026-09-23`
   forbidden until the broker timezone/DST history is independently verified.
 - Strict point-rounded C1 extreme breach creates the C2 state; equality is a
   touch, not a breach.
+- Phase 1B extends H4->M5 only as a V12 shadow lane, not a Romeo claim.
+- External key levels are causal completed H4/day/week/month highs and lows with
+  one-use consumption lifecycles. Current opens and CRT targets remain separate
+  reference types; no weighted key-level score exists.
+- One canonical CRT journey may be reinforced by same-direction activations,
+  replaced by an opposite activation, or ended by completed-H4 structural
+  failure. Milestones do not end it automatically and no timeout is used.
+- Frozen V10 Children and FAST flips are overlays. Phase 1B cannot alter their
+  admission, exit, or size.
 
 ## Closed Phase-0 result
 

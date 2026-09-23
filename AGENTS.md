@@ -55,7 +55,9 @@ Phase 0 is frozen as a reproducible observation universe: `1,459` exhaustive
 C1/C2 records (`1,215` D1->H1 and `244` W1->H4), with no Child, outcome, or
 performance authority. Phase 1A is frozen as the first rejection-only no-ML
 prototype: its two final builds are byte-identical, but it fails the V10
-replacement gate and has consumed-development diagnostic authority only.
+replacement gate and has consumed-development diagnostic authority only. Phase
+1B has a frozen H4->M5 journey/key-level/V10-overlay observation contract and is
+implementation-active; it has no result or action authority yet.
 
 ## Non-negotiable causal contract
 

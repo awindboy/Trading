@@ -4,7 +4,7 @@ Last synchronized: `2026-09-23`
 
 ## Status
 
-`PHASE 1A FIRST PROTOTYPE COMPLETE / V10 REPLACEMENT GATE FAILED / NO TRADE AUTHORITY`
+`PHASE 1B JOURNEY CONTRACT FROZEN / IMPLEMENTATION ACTIVE / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -61,14 +61,13 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 
 ## Immediate next work
 
-1. keep Phase 1A frozen; do not threshold-tune its relative-thick rank or
-   trigger-SL guard on consumed outcomes;
-2. predeclare either causal true MSS or the outside-acceptance continuation
-   branch before generating another outcome ledger;
-3. add HA/Wave coordinates only as matched sensor ablations on a frozen base
-   ledger;
-4. add ML only after features have causal and MQL5 parity specifications;
-5. preserve the post-cutoff chronology and GOLD# 2021 for later validation.
+1. implement the frozen H4->M5 shadow CRT journey and causal key-level inventory;
+2. map frozen V10 R7G Children and completed FAST flips without changing their
+   actions or sizes;
+3. separate causal decision context from journey/V10/HA outcomes;
+4. report explanation coverage, first/later participation capacity, stop and
+   right-tail morphology, and side/year/time stability;
+5. independently reproduce the pack before retaining a Phase-1B result.
 
-Do not build an optimization EA from the attractive 26-fill recent slice. The
-first prototype is a trustworthy diagnostic baseline, not a production model.
+Do not convert the new journey state into a V10 veto or sizing map during this
+phase. Phase 1B tests explanation and lifecycle structure first.

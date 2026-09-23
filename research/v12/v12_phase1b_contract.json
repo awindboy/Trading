@@ -1,0 +1,55 @@
+{
+  "contract_version": "v12-phase1b-h4m5-journey-v1",
+  "frozen_at": "2026-09-23",
+  "causal_cutoff": "2026-09-18T23:57:00",
+  "symbol": "GOLD#",
+  "lane": "H4_TO_M5_V12_SHADOW",
+  "source_attribution": "V12_EMPIRICAL_EXTENSION_NOT_ROMEO_RULE",
+  "point_size": 0.01,
+  "key_level_families": [
+    "PREVIOUS_H4",
+    "PREVIOUS_DAY",
+    "PREVIOUS_WEEK",
+    "PREVIOUS_MONTH"
+  ],
+  "reference_open_families": [
+    "CURRENT_H4_OPEN",
+    "CURRENT_DAY_OPEN",
+    "CURRENT_WEEK_OPEN",
+    "CURRENT_MONTH_OPEN"
+  ],
+  "level_consumption": "FIRST_STRICT_POINT_ROUNDED_M1_BREACH_AFTER_KNOWN_AT",
+  "equality_policy": "TOUCH_NOT_CONSUMPTION",
+  "h4_interaction_grammar": "V12_PHASE0_SEVEN_WAY",
+  "rejection_activation": "MODEL1_RELATIVE_THICK_M5_V1",
+  "rejection_confirmation_deadline": "NEXT_COMPLETED_H4_CLOSE",
+  "outside_acceptance_activation": "COMPLETED_C2_OBSERVATION_ONLY",
+  "canonical_active_journeys": 1,
+  "same_direction_activation": "REINFORCEMENT_AND_CAUSAL_BOUNDARY_UPDATE",
+  "opposite_direction_activation": "END_OLD_AND_START_NEW",
+  "fixed_timeout": false,
+  "failure_rules": {
+    "HIGH_SWEEP_RETURN_SHORT": "COMPLETED_H4_CLOSE_STRICTLY_ABOVE_C2_HIGH",
+    "LOW_SWEEP_RETURN_LONG": "COMPLETED_H4_CLOSE_STRICTLY_BELOW_C2_LOW",
+    "HIGH_OUTSIDE_ACCEPTANCE_LONG": "COMPLETED_H4_CLOSE_AT_OR_BELOW_C1_HIGH",
+    "LOW_OUTSIDE_ACCEPTANCE_SHORT": "COMPLETED_H4_CLOSE_AT_OR_ABOVE_C1_LOW"
+  },
+  "milestones": [
+    "C1_MIDPOINT",
+    "C1_OPPOSITE_EDGE",
+    "SAME_DIRECTION_EXTERNAL_LEVEL"
+  ],
+  "v10_overlay_policy": "ORIGINAL_FULL_R7G_PORTFOLIO",
+  "v10_actions_changed": false,
+  "fast_flip_states": [
+    "OPPOSITE_CRT_AUTHORIZED",
+    "OLD_JOURNEY_AFTER_KEY_ARRIVAL",
+    "OLD_JOURNEY_COUNTERFLOW",
+    "OLD_JOURNEY_FAILED_NO_OPPOSITE",
+    "NEUTRAL_ROTATION"
+  ],
+  "normalization": "CAUSAL_COMPLETED_H4_ATR180",
+  "post_cutoff_price_access": false,
+  "trade_authority": false,
+  "sizing_authority": false
+}

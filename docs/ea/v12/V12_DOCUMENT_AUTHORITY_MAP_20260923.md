@@ -20,7 +20,10 @@ As of `2026-09-23`, read V12 authority in this order:
     source, parity, event-count, ambiguity, and reproducibility receipt;
 12. `results/V12_PHASE1A_NO_ML_PROTOTYPE_AND_V10_COMPARISON_20260923.md` —
     reproducible consumed-history scorecard, mechanism audit, and failed V10
-    replacement decision.
+    replacement decision;
+13. `V12_PHASE1B_H4_M5_JOURNEY_AND_V10_OVERLAY_CONTRACT_20260923.md` — frozen
+    H4->M5 shadow journey, causal key-level, V10 Child, and FAST-transition
+    observation contract.
 
 ## Schema authority
 
@@ -39,6 +42,9 @@ As of `2026-09-23`, read V12 authority in this order:
   first no-ML prototype.
 - `../../../research/v12/v12_phase1a_release_manifest.json` is its compact
   retained hash and result receipt.
+- `../../../research/v12/v12_phase1b_contract.json` is the machine-readable
+  Phase-1B contract. No result exists until its complete pack is independently
+  reproduced and routed here.
 
 ## Predecessor routing
 
@@ -55,4 +61,5 @@ Predecessor documents cannot override V12.
 Phase 1A is the first V12 performance result, but only on consumed development
 evidence. It is reproducible and directly compared with V10; it fails the V10
 replacement gate. It is not independent validation, MQL5 parity, actual-tick
-economics, or trade authority.
+economics, or trade authority. Phase 1B is contract-frozen and implementation-
+active; it has no result yet.

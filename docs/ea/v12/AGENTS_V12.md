@@ -31,6 +31,8 @@ CRT creates the Parent journey and candidate state
 - Phase 0 has a validated, reproducible C1/C2 parent-event universe. Phase 1A
   has a reproducible rejection-only no-ML prototype and consumed-history V10
   comparison, but it failed the replacement gate.
+- Phase 1B has a frozen H4->M5 journey/key-level/V10-overlay observation
+  contract and no result yet.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -48,7 +50,8 @@ Only these mappings are official V12 research lanes at inception:
 - `D1 C1/C2 context -> H1 Model #1 or true-MSS Child`.
 
 `H4 -> M15/M5` may be logged as shadow research but cannot be attributed to
-Romeo or used for action without a new contract.
+Romeo or used for action without a new contract. Phase 1B supplies that V12
+shadow observation contract; it grants no action authority.
 
 V12 preserves both branches after a C1 extreme is traded:
 

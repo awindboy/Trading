@@ -43,6 +43,15 @@ era-unstable. Freeze this result; do not tune it on consumed outcomes. Any Phase
 1B branch must separately predeclare causal true MSS or outside-acceptance
 continuation semantics.
 
+### Phase 1B active contract
+
+Phase 1B is an observation-first journey reassembly rather than a new entry
+filter. It builds an H4->M5 empirical CRT state machine, causal completed-period
+key-level lifecycles, and unchanged V10 Child/FAST-flip overlays. The gate is
+reproducible explanation of starts, reinforcements, arrivals, failures, and
+opposite authorization with physical decision/outcome separation. No V10 veto,
+capital release, or sizing rule may be inferred in this phase.
+
 ## Phase 2 — inherited sensor ablation
 
 Add only predeclared observations:
