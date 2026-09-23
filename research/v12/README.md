@@ -90,6 +90,33 @@ Phase 1B is a consumed-history transition diagnostic. It identifies a stable
 stop-risk partition at FAST flips but grants no veto, delay, sizing, EA, or
 trade authority. HA/Wave conditional ablation and ML remain shadow-only.
 
+## Retained Phase-1C artifacts
+
+- `v12_phase1c_contract.json`: frozen Parent-clock carry, unfinished-origin-
+  target, and one-repair-Child semantics.
+- `v12_phase1c_core.py`: pure eligibility, target-state, guard, exposure, stop-
+  chain, drawdown, and scorecard helpers.
+- `build_v12_phase1c.py`: Phase-1B/V10 overlay reader plus chronological raw-M1
+  Hard-SL and Parent-terminal guard replay.
+- `test_v12_phase1c.py`: target timing, same-Parent eligibility, repair identity,
+  long/short guard, and concurrency regression tests.
+- `validate_v12_phase1c_output.py`: complete-pack, decision/outcome, prefix,
+  count, and frozen-V10 invariant validator.
+- `v12_phase1c_release_manifest.json`: compact receipt for two independently
+  rebuilt, byte-identical output packs.
+
+Run:
+
+```powershell
+python -m unittest discover -s research/v12 -p "test_v12_phase1c.py"
+python research/v12/build_v12_phase1c.py <frozen arguments>
+python research/v12/validate_v12_phase1c_output.py <output> --expected-prefix-sha256 04e074...
+```
+
+Phase 1C rejects broad active-Parent carry. Its unfinished-origin-target and
+repair subsets are sparse and concentrated, so neither has action authority.
+The next structural object is a causal rolling Parent target inventory.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

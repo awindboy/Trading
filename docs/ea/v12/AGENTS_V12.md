@@ -1,6 +1,6 @@
 # V12 research authority
 
-Last synchronized: `2026-09-23`
+Last synchronized: `2026-09-24`
 
 V12 is the active strategy-research generation. It tests a new assembly rather
 than another filter around V10:
@@ -34,6 +34,10 @@ CRT creates the Parent journey and candidate state
 - Phase 1B has a frozen and independently reproduced H4->M5 journey/key-level/
   V10-overlay result. It identifies transition stop-risk structure but grants no
   veto, delay, sizing, or trade authority.
+- Phase 1C has a frozen and independently reproduced CRT-protected Child carry
+  and repair result. Broad active-Parent carry is rejected; its narrow
+  unfinished-origin-target subset and repair candidates remain sparse,
+  concentrated diagnostics with no action authority.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -107,9 +111,10 @@ promotion contract exists.
 - GOLD# chronology through `2026-09-18 23:57` is consumed development evidence.
 - GOLD# 2021 remains sealed.
 - V12 currently has no independent validation.
-- The Phase-0 receipt has observation authority only. Phase 1A and Phase 1B have
-  consumed-development diagnostic authority only. Phase 1A fails the V10
-  replacement gate; Phase 1B separates transition risk but grants no action.
+- The Phase-0 receipt has observation authority only. Phase 1A, Phase 1B, and
+  Phase 1C have consumed-development diagnostic authority only. Phase 1A fails
+  the V10 replacement gate; Phase 1B separates transition risk; Phase 1C rejects
+  broad carry and leaves only sparse target-led evidence.
 
 ## Closed Phase-1A finding
 
@@ -124,3 +129,11 @@ key arrival, or first/later aligned status into a consumed-data V10 veto or
 sizing rule. Opposed V10 Children have higher stop burden but also substantial
 right-tail R. The retained mechanism separates interruption from independent
 opposite authorization and must be tested only in a future-frozen shadow.
+
+## Closed Phase-1C finding
+
+Do not carry a Child solely because the Phase-1B Parent remains active. The
+broad view added R only with more stops, exposure, and drawdown and became
+negative after removing its best bridge. Do not promote the 12-Child
+unfinished-origin-target subset or 31 repair Children. The next missing object
+is a causal rolling target inventory, not a carry-duration threshold.

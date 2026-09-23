@@ -1,10 +1,10 @@
 # V12 research state
 
-Last synchronized: `2026-09-23`
+Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1B COMPLETE AND REPRODUCIBLE / TRANSITION DIAGNOSTIC ONLY / NO TRADE AUTHORITY`
+`PHASE 1C COMPLETE AND REPRODUCIBLE / BROAD CARRY REJECTED / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -76,6 +76,8 @@ Last synchronized: `2026-09-23`
   failure. Milestones do not end it automatically and no timeout is used.
 - Frozen V10 Children and FAST flips are overlays. Phase 1B cannot alter their
   admission, exit, or size.
+- Phase 1C may alter the exit clock only in counterfactual output. It preserves
+  every entry, unit, and frozen Hard SL and grants no carry or repair action.
 
 ## Closed Phase-0 result
 
@@ -155,20 +157,50 @@ Do not promote these from consumed evidence:
   burden is lower;
 - describing the H4->M5 empirical lane as a Romeo rule.
 
+## Closed Phase-1C result
+
+- Contract `v12-phase1c-crt-protected-carry-repair-v1` tested selected V10
+  Children whose ordinary FAST-NHA exit occurred while the same aligned CRT
+  Parent remained active.
+- `118` Children across `60` bridges qualified for broad carry; `31` bridges
+  repaired to the original FAST direction before Parent end.
+- Broad carry raised net R by `23.19R`, but added 26 stops, 66 stopped units,
+  `5.6%` funded unit-hours, and `5.49R` grouped realized drawdown. Removing its
+  best bridge changes the delta to `-13.75R`; 2026 was `-40.18R` versus baseline.
+- Requiring the origin C1 opposite edge to remain unresolved changed 12 Children
+  and added `17.01R`, but one episode supplied `85.8%` of the gain and 2025 was
+  negative versus baseline.
+- The 31 repair Children earned `+5.12R` versus `+4.70R` under their ordinary k1
+  exit clock. Twenty-six were already selected by R7G; only five were incremental
+  candidates. Average entry improved in only five cases.
+- Two complete output packs were byte-identical, passed validation, and parsed
+  zero post-cutoff price rows.
+
+## Closed Phase-1C interpretations
+
+Do not promote or tune on consumed outcomes:
+
+- holding every aligned Child whenever the Phase-1B Parent is active;
+- using the 12-Child unfinished-origin-target slice as a carry rule;
+- adding capital at every PHA repair;
+- claiming PHA repair reliably improves average entry;
+- choosing a new liquidity family or target distance from Phase-1C outcomes.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. Can a future-frozen `authorize opposite / neutral bridge / later
-   reauthorize` lifecycle reduce immediate new-direction stops without deleting
-   the non-authorized group's later `+35.42R`?
-2. Conditional on the five frozen FAST-flip meanings, do FAST/STD/SLOW
+1. Can a causal ordered target inventory distinguish an unfinished Journey from
+   a still-active boundary whose original objectives are already consumed?
+2. After that target state is frozen, can `neutral bridge / later repair`
+   preserve right-tail exposure without the broad carry's added stop burden?
+3. Conditional on the five frozen FAST-flip meanings, do FAST/STD/SLOW
    disagreement and Wave settlement add information beyond CRT geometry?
-3. Can separate competing-risk heads rank immediate stop, later repair, and
+4. Can separate competing-risk heads rank immediate stop, later repair, and
    right-tail continuation without collapsing them into one negative-R label?
-4. Does first/later aligned status remain useful conviction information outside
+5. Does first/later aligned status remain useful conviction information outside
    consumed history and without a fixed capital ladder?
-5. Does the answer remain stable across lane, side, year, and normalized
+6. Does the answer remain stable across lane, side, year, and normalized
    liquidity era?
 
 ## Evidence boundary
@@ -176,7 +208,8 @@ These are questions, not rules:
 - All GOLD# observations through `2026-09-18 23:57` are consumed.
 - GOLD# 2021 remains sealed.
 - Phase 1A is a consumed-history structural-R backtest. Phase 1B is a
-  consumed-history journey/transition diagnostic. No V12 EA, MQL5 parity,
-  actual-tick economics, or independent future validation exists yet.
+  consumed-history journey/transition diagnostic. Phase 1C is a consumed-history
+  holding-clock and repair diagnostic. No V12 EA, MQL5 parity, actual-tick
+  economics, or independent future validation exists yet.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

@@ -1,10 +1,10 @@
 # V12 handoff
 
-Last synchronized: `2026-09-23`
+Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1B COMPLETE AND REPRODUCIBLE / TRANSITION DIAGNOSTIC ONLY / NO TRADE AUTHORITY`
+`PHASE 1C COMPLETE AND REPRODUCIBLE / BROAD CARRY REJECTED / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -65,6 +65,25 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 - A key arrival by itself did not resolve whether the flip was counterflow or a
   new journey.
 
+## Completed Phase 1C
+
+- The frozen Parent-clock experiment found `118` selected Children across `60`
+  old-journey bridge episodes; `31` episodes repaired to the original FAST
+  direction before Parent termination.
+- Broad active-Parent carry changed all 118 Children and raised R from
+  `+741.01R` to `+764.20R`, but stops rose from `232` to `258`, stopped units
+  from `486` to `552`, funded unit-hours by `5.6%`, and grouped realized DD from
+  `57.00R` to `62.49R`.
+- Its best bridge supplied `+36.94R`; without that one episode broad carry was
+  `-13.75R` versus baseline. It is rejected as a holding rule.
+- Requiring the origin C1 opposite edge to remain unresolved changed only 12
+  Children. It added `+17.01R` with slightly better PF/DD, but the best episode
+  supplied `85.8%` of the gain and 2025 was negative versus baseline.
+- The 31 repair Children added only `+0.42R` versus their ordinary k1 exit clock;
+  26 were already selected by R7G. One added repair unit improved basket average
+  entry in only `5 / 31` cases.
+- Two complete packs were byte-identical and parsed zero post-cutoff price rows.
+
 ## What is not yet known
 
 - a reproducible causal true-MSS definition that preserves the source idea
@@ -73,19 +92,20 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
   is both lower than V10 and frequent enough to carry meaningful right-tail
   capital;
 - whether HA/Wave add incremental information inside CRT states;
+- how to maintain a causal rolling target inventory after C1 midpoint and
+  opposite edge are consumed without inventing a hindsight key-level score;
 - whether any ML head is calibrated and stable across side, year, lane, and
   liquidity era;
 - whether the structure survives actual-tick costs and execution constraints.
 
 ## Immediate next work
 
-1. freeze a future-only transition shadow around `authorize opposite / neutral
-   bridge / later reauthorize`, without treating non-authorization as rejection;
-2. test FAST/STD/SLOW and Wave only conditionally inside the five Phase-1B flip
-   states;
-3. keep immediate new-direction stop, later repair, and right-tail continuation
-   as separate outcomes;
-4. test first/later aligned status as conviction information without a fixed
-   capital ladder;
-5. preserve GOLD# 2021 and post-cutoff chronology until the next contract is
-   frozen.
+1. freeze a target-first Parent inventory using the existing causal one-use
+   H4/day/week/month levels, with deterministic succession and no family score;
+2. distinguish `unfinished target`, `target complete / reframe pending`, and
+   actual Parent invalidation before retesting carry;
+3. retain the Phase-1C repair definition but do not add capital until the target
+   state exists and future evidence accumulates;
+4. test FAST/STD/SLOW and Wave only conditionally inside the frozen CRT states;
+5. preserve GOLD# 2021 and do not reinterpret the still-unread post-cutoff
+   chronology after its shadow semantics are frozen.

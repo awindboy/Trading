@@ -1,6 +1,6 @@
 # V12 document authority map
 
-As of `2026-09-23`, read V12 authority in this order:
+As of `2026-09-24`, read V12 authority in this order:
 
 1. `AGENTS_V12.md` — generation boundary and non-negotiable rules;
 2. `HANDOFF_V12.md` — shortest current handoff;
@@ -27,6 +27,12 @@ As of `2026-09-23`, read V12 authority in this order:
 14. `results/V12_PHASE1B_H4_M5_JOURNEY_AND_V10_OVERLAY_20260923.md` —
     reproducible transition-risk result, V10 relation audit, rejected veto
     interpretations, and next shadow boundary.
+15. `V12_PHASE1C_CRT_PROTECTED_CARRY_AND_REPAIR_CONTRACT_20260924.md` — frozen
+    selected-Child Parent-clock carry, unfinished-target, and one-repair-Child
+    shadow contract.
+16. `results/V12_PHASE1C_CRT_PROTECTED_CARRY_AND_REPAIR_20260924.md` —
+    reproducible carry/repair result, concentration audit, rejected broad carry,
+    and rolling-target next boundary.
 
 ## Schema authority
 
@@ -51,6 +57,12 @@ As of `2026-09-23`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1b_output.py`, and
   `../../../research/v12/v12_phase1b_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1B pack.
+- `../../../research/v12/v12_phase1c_contract.json`,
+  `../../../research/v12/build_v12_phase1c.py`,
+  `../../../research/v12/v12_phase1c_core.py`,
+  `../../../research/v12/validate_v12_phase1c_output.py`, and
+  `../../../research/v12/v12_phase1c_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1C pack.
 
 ## Predecessor routing
 
@@ -69,3 +81,6 @@ evidence. It is reproducible and directly compared with V10; it fails the V10
 replacement gate. It is not independent validation, MQL5 parity, actual-tick
 economics, or trade authority. Phase 1B is complete and reproducible on consumed
 evidence. Its stop-risk partition is diagnostic only and grants no action.
+Phase 1C is complete and reproducible on consumed evidence. Its broad carry is
+rejected and its target-led and repair subsets remain too sparse and
+concentrated for action.

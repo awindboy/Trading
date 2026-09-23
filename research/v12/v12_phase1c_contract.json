@@ -1,0 +1,39 @@
+{
+  "contract_version": "v12-phase1c-crt-protected-carry-repair-v1",
+  "frozen_at": "2026-09-24",
+  "mechanism_cutoff": "2026-09-18T23:57:00",
+  "future_shadow_starts_after": "2026-09-18T23:57:00",
+  "symbol": "GOLD#",
+  "source_journey_contract": "v12-phase1b-h4m5-journey-v1.1",
+  "selected_population": "ORIGINAL_FULL_R7G_PORTFOLIO",
+  "carry_entry_relation": "ALIGNED_ACTIVE_JOURNEY",
+  "eligible_flip_states": [
+    "OLD_JOURNEY_COUNTERFLOW",
+    "OLD_JOURNEY_AFTER_KEY_ARRIVAL"
+  ],
+  "ineligible_flip_states": [
+    "OPPOSITE_CRT_AUTHORIZED",
+    "OLD_JOURNEY_FAILED_NO_OPPOSITE",
+    "NEUTRAL_ROTATION"
+  ],
+  "carry_start": "STRICTLY_AFTER_BASELINE_FAST_NHA_EXECUTION_M1",
+  "carry_terminal": "FIRST_OF_ORIGINAL_HARD_SL_OR_CAUSAL_PARENT_END",
+  "same_m1_terminal_stop_policy": "CONSERVATIVE_HARD_SL_WITH_PARENT_OPEN_ALTERNATIVE",
+  "gap_stop_policy": "FROZEN_STOP_PRICE_WITH_GAP_FLAG",
+  "repair_definition": "FIRST_LATER_FAST_FLIP_BACK_TO_SAME_PARENT_DIRECTION_WHILE_SAME_JOURNEY_ID_ACTIVE",
+  "repair_child_coordinates": "FROZEN_V10_CAUSAL_K1_ENTRY_AND_HARD_SL",
+  "repair_children_per_bridge": 1,
+  "portfolio_views": [
+    "V10_BASELINE",
+    "CRT_ACTIVE_CARRY",
+    "CRT_UNFINISHED_TARGET_CARRY"
+  ],
+  "primary_view": "CRT_UNFINISHED_TARGET_CARRY",
+  "target_open_definition": "ORIGIN_C1_OPPOSITE_EDGE_FORWARD_ELIGIBLE_AND_NOT_TOUCHED_BEFORE_DECISION",
+  "target_substitution_after_consumption": false,
+  "decision_outcome_separation": true,
+  "post_cutoff_price_access_for_mechanism_build": false,
+  "sealed_year": 2021,
+  "trade_authority": false,
+  "sizing_authority": false
+}

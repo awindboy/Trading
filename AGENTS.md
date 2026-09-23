@@ -1,6 +1,6 @@
 # Trading repository authority
 
-Last synchronized: `2026-09-23`
+Last synchronized: `2026-09-24`
 
 ## Active generation
 
@@ -59,6 +59,10 @@ replacement gate and has consumed-development diagnostic authority only. Phase
 1B is complete and independently reproduced: it supplies a causal H4->M5
 journey/key-level/V10-overlay transition diagnostic, but no result has veto,
 delay, sizing, trade, or production authority.
+Phase 1C is complete and independently reproduced: broad active-Parent carry
+increased R but also stops, exposure, and drawdown with severe episode
+concentration; the unfinished-origin-target subset was cleaner but only 12
+Children and still concentrated. Repair mostly duplicated V10 k1 participation.
 
 ## Non-negotiable causal contract
 
@@ -108,6 +112,11 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
   authorization, static key arrival, or first/later aligned status as a
   consumed-data V10 veto or sizing rule; each retains meaningful right-tail
   capital and lacks independent future validation.
+- carrying every aligned Child merely because the Phase-1B Parent is active;
+  the consumed result added 66 stopped units and was negative without its best
+  bridge episode.
+- promoting the 12-Child unfinished-origin-target carry subset or the 31 repair
+  Children; both are sparse, concentrated, and lack future evidence.
 
 ## Historical generations
 

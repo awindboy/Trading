@@ -1,0 +1,51 @@
+{
+  "generation": "V12",
+  "phase": "PHASE_1C_CRT_PROTECTED_CARRY_AND_REPAIR",
+  "contract_version": "v12-phase1c-crt-protected-carry-repair-v1",
+  "cutoff": "2026-09-18T23:57:00",
+  "source_full_file_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+  "source_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939",
+  "phase1b_output_manifest_sha256": "0eee9bcfd7feccb4ff14c9e01fe8dff082a14509abd0f0acd5662669f5e5ac5a",
+  "v10_selected_comparator_sha256": "cfee70fa0985f5b4eac4b04357a0add5795b745ba3d95ba7be56ebd7d648c4c6",
+  "v10_full_universe_sha256": "f352a99c746752ca259da33dbdaee9d8f0cb874bd01cf520a487fe1bdbf82609",
+  "contract_sha256": "5585a7649df0f1217bb92ca51496f1b264c02c0cf3c941219c0f425efb8e3755",
+  "core_sha256": "891ea60e770fdf3da5f90217de519e220f91fada25e5d22b28f7fcad6b328c9d",
+  "builder_sha256": "3faccae5c00e153f51751d735d5ed58351a5378d4e82830674c7860157238e27",
+  "test_sha256": "8fec89504cecd69c60f218884054be757c52a53cbed11fed948ccef177df5795",
+  "validator_sha256": "c8466b2817d4bac8ab9bed527a835db74d80b99769b6581e622f0ddca655045b",
+  "primary_output_manifest_sha256": "7c172e80ac1394df17059e3a007fef2839e52583eddddebe3d11dd6c3855a5fa",
+  "scorecard_sha256": "bdd3ac532332cd91a6a2e54dbe21c8f42792a4db14fadd30bccd19c3d9c910a8",
+  "selected_v10_children": 1649,
+  "carry_eligible_children": 118,
+  "bridge_episodes": 60,
+  "repair_children": 31,
+  "unfinished_target_carry_children": 12,
+  "baseline": {
+    "funded_units": 3881,
+    "stopped_units": 486,
+    "net_R": 741.0108654450728
+  },
+  "active_parent_carry": {
+    "stopped_units": 552,
+    "net_R": 764.1992840579935
+  },
+  "unfinished_target_carry": {
+    "stopped_units": 499,
+    "net_R": 758.0246882245856
+  },
+  "repair_parent_clock": {
+    "children": 31,
+    "stops": 4,
+    "net_R": 5.122494936916702,
+    "delta_R_vs_ordinary_k1_exit": 0.4199707782956704
+  },
+  "post_cutoff_price_rows_parsed": 0,
+  "tests_passed": 5,
+  "reproducible_independent_runs": 2,
+  "all_output_hashes_identical": true,
+  "complete_output_validation": "PASS",
+  "independent_future_validation": false,
+  "mql5_parity": false,
+  "trade_authority": false,
+  "sizing_authority": false
+}
