@@ -4,7 +4,11 @@ Date frozen: `2026-09-23`
 
 Status: `DEVELOPMENT OBSERVATION CONTRACT / CONSUMED EVIDENCE ONLY / NO TRADE AUTHORITY`
 
-Contract version: `v12-phase1b-h4m5-journey-v1`
+Contract version: `v12-phase1b-h4m5-journey-v1.1`
+
+Revision note: v1.1 freezes same-timestamp activation ordering and prevents a
+later reinforcement from rewriting the origin journey's milestone targets. No
+Phase-1B result was computed before this revision.
 
 ## 1. Purpose
 
@@ -91,6 +95,13 @@ NEUTRAL
 -> source cutoff: OPEN_AT_CUTOFF
 ```
 
+Activations sharing one causal timestamp are resolved before the state changes.
+If they point in both directions, the current journey (if any) ends with
+`SIMULTANEOUS_CONFLICT`, no candidate wins by file order, and the state remains
+neutral. If all point in one direction, they are ordered by C2 source time and
+stable event ID; the latest source becomes the causal boundary and the others
+remain recorded as same-direction activations.
+
 A reinforcement is a possible new-information/Child location, not automatic
 capital. It updates the current structural boundary only when its activation is
 completed and causal.
@@ -102,7 +113,10 @@ Structural failure is frozen by activation family:
 - high outside-acceptance LONG: completed H4 close at or below C1 high;
 - low outside-acceptance SHORT: completed H4 close at or above C1 low.
 
-C1 midpoint, opposite edge, and external key-level arrivals are milestones.
+The origin activation's C1 midpoint and opposite edge remain the canonical
+episode milestones. A reinforcement records its own C1 targets and may update
+the live structural boundary, but it cannot rewrite an already-defined origin
+target or a past milestone. External key-level arrivals are also milestones.
 They do not end a journey by themselves. There is no fixed bar timeout.
 
 ## 6. Journey observations and outcomes

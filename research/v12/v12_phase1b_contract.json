@@ -1,5 +1,5 @@
 {
-  "contract_version": "v12-phase1b-h4m5-journey-v1",
+  "contract_version": "v12-phase1b-h4m5-journey-v1.1",
   "frozen_at": "2026-09-23",
   "causal_cutoff": "2026-09-18T23:57:00",
   "symbol": "GOLD#",
@@ -27,6 +27,9 @@
   "canonical_active_journeys": 1,
   "same_direction_activation": "REINFORCEMENT_AND_CAUSAL_BOUNDARY_UPDATE",
   "opposite_direction_activation": "END_OLD_AND_START_NEW",
+  "same_timestamp_same_direction": "ORDER_BY_C2_SOURCE_THEN_EVENT_ID_LATEST_SOURCE_IS_BOUNDARY",
+  "same_timestamp_conflicting_directions": "END_CURRENT_AS_SIMULTANEOUS_CONFLICT_AND_REMAIN_NEUTRAL",
+  "origin_milestone_policy": "ORIGIN_TARGETS_IMMUTABLE_REINFORCEMENT_TARGETS_OBSERVED_SEPARATELY",
   "fixed_timeout": false,
   "failure_rules": {
     "HIGH_SWEEP_RETURN_SHORT": "COMPLETED_H4_CLOSE_STRICTLY_ABOVE_C2_HIGH",
