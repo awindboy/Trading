@@ -28,8 +28,11 @@ CRT creates the Parent journey and candidate state
 ## Authority boundary
 
 - V12 has research authority only.
-- Phase 0 has a validated, reproducible C1/C2 parent-event universe. There is no
-  V12 EA, validated entry model, sizing rule, or performance result.
+- Phase 0 has a validated, reproducible C1/C2 parent-event universe. Phase 1A
+  has a reproducible rejection-only no-ML prototype and consumed-history V10
+  comparison, but it failed the replacement gate.
+- There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
+  independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
   instruction file and not proof that any claim is profitable.
 - MQL5 Reference controls platform semantics. MQL5 Articles and CodeBase are
@@ -100,5 +103,12 @@ promotion contract exists.
 - GOLD# chronology through `2026-09-18 23:57` is consumed development evidence.
 - GOLD# 2021 remains sealed.
 - V12 currently has no independent validation.
-- The Phase-0 receipt has observation authority only; its candidate counts and
-  parity do not imply edge.
+- The Phase-0 receipt has observation authority only. The Phase-1A result has
+  consumed-development diagnostic authority only and explicitly fails the V10
+  replacement gate.
+
+## Closed Phase-1A finding
+
+Do not threshold-tune the relative-thick trigger or promote the trigger-candle
+SL guard from consumed outcomes. Its attractive recent result has only 26 fills,
+higher stopped exposure per 100 units than V10, and negative 2022–2023 evidence.

@@ -1,16 +1,17 @@
 # V12 compact results and receipts
 
-There is no V12 performance result yet.
-
-The first retained numeric receipt is:
+The retained numeric receipts are:
 
 - `V12_PHASE0_CAUSAL_EVENT_UNIVERSE_20260923.md`: exhaustive W1/D1 C1/C2
   parent universe, raw-M1-to-MT5 parity, ambiguity counts, and independent
   byte-identical rerun evidence. It has observation authority only.
+- `V12_PHASE1A_NO_ML_PROTOTYPE_AND_V10_COMPARISON_20260923.md`: first causal
+  no-ML prototype, complete consumed-history scorecard, matched V10 comparison,
+  counterfactual mechanism audit, and failed replacement decision. It has
+  development-diagnostic authority only.
 
-The retained inception artifacts are architecture, source, causal-observation,
-engineering, and schema contracts. They do not prove candidate quality,
-profitability, stop reduction, Python/MQL5 parity, or production readiness.
+Neither receipt proves independent future edge, Python/MQL5 parity, actual-tick
+economics, or production readiness.
 
 Future compact receipts belong here only when they name:
 

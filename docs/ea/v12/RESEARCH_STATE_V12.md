@@ -4,7 +4,7 @@ Last synchronized: `2026-09-23`
 
 ## Status
 
-`PHASE 0 NUMERIC UNIVERSE FROZEN / PHASE 1 ACTIVE / NO PERFORMANCE RESULT`
+`PHASE 1A FIRST PROTOTYPE FROZEN / V10 REPLACEMENT GATE FAILED / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -77,13 +77,49 @@ Last synchronized: `2026-09-23`
 - This is observation and reproducibility evidence only. It says nothing yet
   about stops, R, profit, or superiority to V10.
 
-## Phase-0 hypotheses
+## Closed Phase-1A result
+
+- Contract `v12-phase1a-model1-v2` mechanically implements the rejection branch
+  only: C3-open control and relative-thick Model #1 confirmation, with C2-extreme
+  and trigger-structure Hard-SL variants.
+- The retained final pack has `1,217` family/risk decisions, `426` filled
+  variant records, separate decision/outcome ledgers, and zero post-cutoff price
+  rows parsed. Two independent builds produced all ten files byte-identically.
+- Full consumed-history T1 results were:
+  - C3-open/C2-SL: 213 fills, 41.78% stops, `-1.12R`, PF `0.99`;
+  - Model #1/C2-SL: 156 fills, 31.41% stops, `+11.68R`, PF `1.21`;
+  - Model #1/trigger-SL: 57 fills, 38.60% stops, `+2.89R`, PF `1.13`.
+- In the V10-matched window, trigger-SL showed `+8.84R`, PF `2.26`, and a
+  two-stop maximum streak, but this came from only 26 fills. Its stopped-unit
+  rate was `26.92` per 100 versus V10's `12.52`–`14.07`, and its full-history
+  annual R was negative in 2022 and 2023.
+- Confirmation blocked 13 stops and 5 targets over full history, but delayed
+  entry reduced common-fill R by `17.21R`. The trigger-stop guard was selective
+  in the recent matched window but removed net-positive capital and reduced
+  common-fill R over full history.
+- The first prototype therefore fails the V10 replacement gate. It remains a
+  no-ML mechanism baseline, not an entry, sizing, EA, or trade rule.
+
+## Closed Phase-1A interpretations
+
+Do not promote or revive these by tuning consumed outcomes:
+
+- relative-thick Model #1 confirmation plus C2-extreme SL as a robust V10
+  replacement;
+- the trigger-candle SL guard as a stable stop classifier;
+- the recent 26-fill trigger-SL slice as evidence of scalable superiority;
+- fewer absolute stops caused primarily by `84%` no execution as sufficient
+  evidence that bad trades were recognized;
+- Phase-1A realized-terminal drawdown as V10 portfolio drawdown parity.
+
+## Next hypotheses
 
 These are questions, not rules:
 
-1. Does a completed C2 rejection/acceptance state form a cleaner candidate
-   population than HA-color transitions alone?
-2. Conditional on the same CRT state, do FAST/STD/SLOW disagreement and Wave
+1. Can a predeclared causal true-MSS or outside-acceptance branch improve both
+   stopped-unit burden and right-tail participation without outcome-aware
+   relabeling?
+2. Conditional on the same frozen CRT state, do FAST/STD/SLOW disagreement and Wave
    settlement add information beyond C1/C2 price geometry?
 3. Can separate competing-risk heads rank stop-before-50%, 50%-before-stop, and
    continuation-after-50% without deleting the persistent right tail?
@@ -94,7 +130,8 @@ These are questions, not rules:
 
 - All GOLD# observations through `2026-09-18 23:57` are consumed.
 - GOLD# 2021 remains sealed.
-- No V12 backtest, performance scorecard, EA, or independent future validation
-  exists yet.
+- Phase 1A is a consumed-history structural-R backtest and performance
+  scorecard. No V12 EA, MQL5 parity, actual-tick economics, or independent
+  future validation exists yet.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

@@ -13,6 +13,7 @@ data/mentor_ai_live_v4/
 data/GOLD#/
 archive/outputs/
 output/
+tmp/
 .env
 .venv/
 __pycache__/

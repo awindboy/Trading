@@ -34,17 +34,44 @@ python research/v12/validate_v12_phase0_output.py
 Passing these validations establishes a reproducible parent-event universe. It
 does not prove CRT, HA, Wave, ML, or trading performance.
 
+## Retained Phase-1A artifacts
+
+- `v12_phase1a_contract.json`: machine-readable rejection-only entry, risk,
+  destination, expiry, ambiguity, and comparison contract.
+- `v12_phase1a_core.py`: pure trigger selection, next-parent lookup, M1 guards,
+  outcome, scorecard, and counterfactual primitives.
+- `build_v12_phase1a.py`: complete no-ML builder from the Phase-0 pack and raw
+  M1 through the frozen cutoff.
+- `test_v12_phase1a.py`: synthetic trigger, weekend C3, guard, gap, ambiguity,
+  and terminal-outcome regression tests.
+- `validate_v12_phase1a_output.py`: full output-hash, decision/outcome,
+  scorecard, counterfactual, and V10-invariant validator.
+- `render_v12_phase1a_summary.py`: deterministic summary render generated from
+  the scorecard and comparison CSVs.
+- `v12_phase1a_release_manifest.json`: compact retained receipt for two
+  independently rebuilt, byte-identical output packs.
+
+Run:
+
+```powershell
+python research/v12/test_v12_phase1a.py
+python research/v12/build_v12_phase1a.py
+python research/v12/validate_v12_phase1a_output.py
+```
+
+The Phase-1A result is a consumed-history mechanism diagnostic. It fails the
+V10 replacement gate and has no trade authority.
+
 ## Next retained implementation
 
-Phase 1 should consume the frozen parent IDs and build one no-ML mechanical C3
-trigger baseline at a time. Before any performance comparison is accepted,
-freeze:
+Keep Phase 1A frozen. Any next no-ML branch must predeclare one unresolved
+structure at a time:
 
-- trigger and confirmation definitions;
-- C2-extreme and trigger-structure risk variants;
-- first-touch and same-M1 ambiguity policy;
-- midpoint/opposite-extreme destinations and expiry;
-- cost, exposure, and matched V10 comparison policy.
+- a causal true-MSS definition; or
+- an outside-acceptance continuation destination and trigger contract.
+
+HA/Wave sensor ablation follows only on a frozen base ledger. ML remains later
+and shadow-only.
 
 Large ledgers and diagnostics belong under ignored `output/`.
 

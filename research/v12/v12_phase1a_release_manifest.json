@@ -1,0 +1,76 @@
+{
+  "generation": "V12",
+  "phase": "PHASE_1A_NO_ML_BASELINE",
+  "contract_version": "v12-phase1a-model1-v2",
+  "cutoff": "2026-09-18T23:57:00",
+  "source_full_file_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+  "phase0_decision_ledger_sha256": "4b5fe2b76d8ba6faca26b062b8caac0aa8d56bcf5e08066b8d11c7375550a33a",
+  "phase0_rich_event_ledger_sha256": "ded52cdc2b195a69dca300c1c0b38dca79cb0eb0ddd8e4f009a0b1589042fbf0",
+  "v10_comparator_sha256": "cfee70fa0985f5b4eac4b04357a0add5795b745ba3d95ba7be56ebd7d648c4c6",
+  "matched_window": {
+    "start": "2024-10-01T01:00:00",
+    "end": "2026-08-28T23:57:00"
+  },
+  "parent_records": 1459,
+  "child_decision_records": 1217,
+  "child_outcome_records": 1217,
+  "filled_variant_records": 426,
+  "post_cutoff_price_rows_parsed": 0,
+  "reproducible_independent_runs": 2,
+  "all_output_hashes_identical": true,
+  "complete_output_validation": "PASS",
+  "primary_output_manifest_sha256": "a2f1f7c10d2a0e0ccb76ffa395e6da20676bab3b3eaf3e627fabac48818e79ad",
+  "decision_ledger_sha256": "5a1e73cc9dfea3372615e161f487982dcc8ae235b75ac49566aa8b828aca0696",
+  "outcome_ledger_sha256": "43481db872d4664452e5b365b2e9bb94ca0b04af91c9b5f86e0009ccc024de0d",
+  "scorecard_sha256": "c7a19405235fa233f8050a4eee992e19d764d7d2c5c024928b25ab4564d422ac",
+  "v10_comparison_sha256": "c7803035d6b6a663efb7b27ad22733f489408fe04f21504e496a461b2edaf5ce",
+  "counterfactual_summary_sha256": "74c4e713b50e3cce793cc5b1f21dbc3a9a6e40a98a92190762451c9f34e30856",
+  "summary_render_sha256": "f2cbee9e31ba05b23bafe41ba94acc550f5d2ee8b6f48aa63571ea1ea92adf82",
+  "primary_full_history_t1": {
+    "c3_open_control_c2_stop": {
+      "decisions": 451,
+      "fills": 213,
+      "stops": 89,
+      "net_r": -1.1189810980263515,
+      "pf_r": 0.9883066718366238
+    },
+    "model1_c2_stop": {
+      "decisions": 383,
+      "fills": 156,
+      "stops": 49,
+      "net_r": 11.68139627333143,
+      "pf_r": 1.209640419384818
+    },
+    "model1_trigger_stop": {
+      "decisions": 383,
+      "fills": 57,
+      "stops": 22,
+      "net_r": 2.8917414961771737,
+      "pf_r": 1.1296897602671614
+    }
+  },
+  "matched_v10_window_t1": {
+    "v10_selected_1u": {
+      "funded_units": 1649,
+      "stopped_units_per_100": 14.06913280776228,
+      "net_r": 284.3674807164882,
+      "pf_r": 1.5760347244049848
+    },
+    "v10_r7g_actual_units": {
+      "funded_units": 3881,
+      "stopped_units_per_100": 12.522545735635147,
+      "net_r": 741.0108654450728,
+      "pf_r": 1.681639894332123
+    },
+    "v12_model1_trigger_stop": {
+      "funded_units": 26,
+      "stopped_units_per_100": 26.923076923076923,
+      "net_r": 8.840809029410224,
+      "pf_r": 2.2629727184871746
+    }
+  },
+  "replacement_gate": "FAIL",
+  "independent_future_validation": false,
+  "mql5_parity": false,
+  "trade_authority": false
+}

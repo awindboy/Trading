@@ -1,0 +1,57 @@
+{
+  "contract_version": "v12-phase1a-model1-v2",
+  "frozen_at": "2026-09-23",
+  "source_phase0_decisions_sha256": "4b5fe2b76d8ba6faca26b062b8caac0aa8d56bcf5e08066b8d11c7375550a33a",
+  "causal_cutoff": "2026-09-18T23:57:00",
+  "point_size": 0.01,
+  "official_lanes": {
+    "W1_TO_H4": {"parent_timeframe": "W1", "execution_timeframe": "H4"},
+    "D1_TO_H1": {"parent_timeframe": "D1", "execution_timeframe": "H1"}
+  },
+  "authorized_parent_interactions": {
+    "HIGH_SWEEP_RETURN": "SHORT",
+    "LOW_SWEEP_RETURN": "LONG"
+  },
+  "families": [
+    {"name": "C3_OPEN_CONTROL", "risk_variants": ["C2_EXTREME"]},
+    {
+      "name": "MODEL1_RELATIVE_THICK_V1",
+      "risk_variants": ["C2_EXTREME", "TRIGGER_STRUCTURE"],
+      "trigger_candidates": {
+        "SHORT": "execution bar high strictly above C1 high and close above open",
+        "LONG": "execution bar low strictly below C1 low and close below open"
+      },
+      "selection_order": [
+        "absolute_body_divided_by_causal_atr14_desc",
+        "body_ratio_desc",
+        "sweep_depth_desc",
+        "open_time_desc"
+      ],
+      "confirmation": {
+        "SHORT": "first later completed execution bar close strictly below trigger low",
+        "LONG": "first later completed execution bar close strictly above trigger high"
+      }
+    }
+  ],
+  "entry": "first observed M1 open at or after decision timestamp",
+  "stop_buffer_points": 1,
+  "pre_entry_guards": {
+    "C1_MIDPOINT": "from first relevant parent C1-extreme breach M1",
+    "C2_EXTREME_STOP": "from completed C2 close",
+    "TRIGGER_STRUCTURE_STOP": "from completed trigger candle close",
+    "same_m1_parent_sweep_and_midpoint": "NO_EXECUTION_AMBIGUOUS"
+  },
+  "targets": ["T1_MIDPOINT", "T2_OPPOSITE_EXTREME"],
+  "primary_score_target": "T1_MIDPOINT",
+  "expiry": "completed C3 parent close",
+  "same_m1_policy": "AMBIGUOUS",
+  "gap_stop_policy": "FIRST_OBSERVED_M1_OPEN",
+  "target_consumed_at_entry": "NO_EXECUTION",
+  "transaction_cost_mode": "SPREADLESS_STRUCTURAL_R",
+  "drawdown_method": "REALIZED_R_AGGREGATED_BY_TERMINAL_TIMESTAMP",
+  "one_child_per_parent_family_risk": true,
+  "retry_allowed": false,
+  "minimum_r_filter": false,
+  "post_cutoff_price_access": false,
+  "trade_authority": false
+}

@@ -16,7 +16,8 @@ Start every V12 session in this order:
 6. read `docs/ea/v12/V12_ORIGIN_AND_CRT_HYBRID_THESIS_20260923.md`;
 7. read `docs/ea/v12/V12_CRT_NUMERIC_OBSERVATION_CONTRACT_20260923.md`;
 8. read `docs/ea/v12/V12_MQL5_ENGINEERING_AND_VALIDATION_CONTRACT_20260923.md`;
-9. use only sources and result packs named by the authority map.
+9. read the current Phase-1 contract and result named by the authority map;
+10. use only sources and result packs named by the authority map.
 
 V12 has research authority only. No V12 candidate definition, CRT interpretation,
 HA/Wave feature, ML output, threshold, sizing map, EA, or result has trade or
@@ -52,7 +53,9 @@ Romeo rule or receive action authority without a separate V12 contract.
 
 Phase 0 is frozen as a reproducible observation universe: `1,459` exhaustive
 C1/C2 records (`1,215` D1->H1 and `244` W1->H4), with no Child, outcome, or
-performance authority. Phase 1 is the active no-ML structural baseline stage.
+performance authority. Phase 1A is frozen as the first rejection-only no-ML
+prototype: its two final builds are byte-identical, but it fails the V10
+replacement gate and has consumed-development diagnostic authority only.
 
 ## Non-negotiable causal contract
 
@@ -93,6 +96,11 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
 - arbitrary cooldown, retry, minimum-R, no-chase, or campaign-cap rules;
 - accepting or rejecting lower R solely because exposure changed, without
   auditing which stopped and right-tail capital changed.
+- relative-thick Model #1 confirmation plus a C2-extreme SL as a robust V10
+  replacement;
+- promoting the Phase-1A trigger-candle SL guard from its attractive 26-fill
+  recent slice; full history is weak, 2022–2023 are negative, and stopped
+  exposure per 100 units remains above V10.
 
 ## Historical generations
 

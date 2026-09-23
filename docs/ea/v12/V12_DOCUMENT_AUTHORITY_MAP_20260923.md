@@ -13,9 +13,14 @@ As of `2026-09-23`, read V12 authority in this order:
    parity, tester modes, order lifecycle, and evidence gates;
 7. `V12_SOURCE_REGISTER_20260923.md` — external provenance and authority levels;
 8. `V12_RESEARCH_ROADMAP_20260923.md` — staged work and promotion gates;
-9. `results/README.md` — compact result routing;
-10. `results/V12_PHASE0_CAUSAL_EVENT_UNIVERSE_20260923.md` — frozen Phase-0
-    source, parity, event-count, ambiguity, and reproducibility receipt.
+9. `V12_PHASE1A_NO_ML_BASELINE_CONTRACT_20260923.md` — frozen first-prototype
+   entry, risk, destination, expiry, and comparison contract;
+10. `results/README.md` — compact result routing;
+11. `results/V12_PHASE0_CAUSAL_EVENT_UNIVERSE_20260923.md` — frozen Phase-0
+    source, parity, event-count, ambiguity, and reproducibility receipt;
+12. `results/V12_PHASE1A_NO_ML_PROTOTYPE_AND_V10_COMPARISON_20260923.md` —
+    reproducible consumed-history scorecard, mechanism audit, and failed V10
+    replacement decision.
 
 ## Schema authority
 
@@ -28,6 +33,12 @@ As of `2026-09-23`, read V12 authority in this order:
 - `../../../research/v12/build_v12_phase0.py` and
   `../../../research/v12/validate_v12_phase0_output.py` are the Phase-0 oracle
   and complete-pack validator.
+- `../../../research/v12/v12_phase1a_contract.json`,
+  `../../../research/v12/build_v12_phase1a.py`, and
+  `../../../research/v12/validate_v12_phase1a_output.py` define and validate the
+  first no-ML prototype.
+- `../../../research/v12/v12_phase1a_release_manifest.json` is its compact
+  retained hash and result receipt.
 
 ## Predecessor routing
 
@@ -41,6 +52,7 @@ Predecessor documents cannot override V12.
 
 ## Result boundary
 
-There is no V12 performance result yet. The Phase-0 receipt establishes input and
-parent-event reproducibility only. A schema, architecture, candidate count, or
-passing parity check is not profitability or independent validation evidence.
+Phase 1A is the first V12 performance result, but only on consumed development
+evidence. It is reproducible and directly compared with V10; it fails the V10
+replacement gate. It is not independent validation, MQL5 parity, actual-tick
+economics, or trade authority.

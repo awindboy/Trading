@@ -34,6 +34,15 @@ without merging them merely to improve sample size.
 Gate: a candidate population and its failures can be explained without reference
 to future HA, outcome, or discretionary chart labels.
 
+### Phase 1A status
+
+The first rejection-only prototype is complete and reproducible. It passes the
+ledger/audit gate but fails the V10 replacement gate: confirmation removes some
+stops at a larger entry-delay cost, while trigger-SL selectivity is sparse and
+era-unstable. Freeze this result; do not tune it on consumed outcomes. Any Phase
+1B branch must separately predeclare causal true MSS or outside-acceptance
+continuation semantics.
+
 ## Phase 2 — inherited sensor ablation
 
 Add only predeclared observations:
