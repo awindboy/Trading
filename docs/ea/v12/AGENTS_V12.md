@@ -38,6 +38,9 @@ CRT creates the Parent journey and candidate state
   and repair result. Broad active-Parent carry is rejected; its narrow
   unfinished-origin-target subset and repair candidates remain sparse,
   concentrated diagnostics with no action authority.
+- Phase 1D has a frozen and independently reproduced broker-clock/economic-
+  event result. It retains time and event shock as state coordinates, rejects
+  fixed-hour/all-news shortcuts, and grants no veto, sizing, or trade authority.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -111,10 +114,10 @@ promotion contract exists.
 - GOLD# chronology through `2026-09-18 23:57` is consumed development evidence.
 - GOLD# 2021 remains sealed.
 - V12 currently has no independent validation.
-- The Phase-0 receipt has observation authority only. Phase 1A, Phase 1B, and
-  Phase 1C have consumed-development diagnostic authority only. Phase 1A fails
-  the V10 replacement gate; Phase 1B separates transition risk; Phase 1C rejects
-  broad carry and leaves only sparse target-led evidence.
+- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1D
+  have consumed-development diagnostic authority only. Phase 1A fails the V10
+  replacement gate; Phase 1B separates transition risk; Phase 1C rejects broad
+  carry; Phase 1D treats time/events as state and rejects simple vetoes.
 
 ## Closed Phase-1A finding
 
@@ -137,3 +140,11 @@ broad view added R only with more stops, exposure, and drawdown and became
 negative after removing its best bridge. Do not promote the 12-Child
 unfinished-origin-target subset or 31 repair Children. The next missing object
 is a causal rolling target inventory, not a carry-duration threshold.
+
+## Closed Phase-1D finding
+
+Do not veto broker hour 16/20, all high-importance news, or large surprise.
+Hour 16 retains substantial right-tail R and several post-event high-stop states
+remain profitable. Retain only the frozen 35-Child pre-release clock/journey
+interaction and post-release surprise-by-flip interpretation as shadow fields.
+Neither can act before independent future evidence and Python/MQL5 parity.

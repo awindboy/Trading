@@ -53,7 +53,7 @@ stop risk in every consumed year, while non-authorized and opposed populations
 retain meaningful right-tail R. The result therefore closes as a lifecycle
 diagnostic, not a V10 veto, capital release, or sizing rule.
 
-### Phase 1C next shadow
+### Phase 1C completed result
 
 Freeze before new chronology:
 
@@ -65,6 +65,19 @@ Freeze before new chronology:
 
 The bridge cannot use a tuned duration or convert missing authorization into
 permanent rejection.
+
+Phase 1C rejected broad active-Parent carry. Its target-led subset and repair
+Children were too sparse and concentrated for action. The structural next task
+is a causal rolling Parent target inventory.
+
+### Phase 1D completed temporal/event state
+
+Phase 1D independently reproduced broker-clock, MT5 economic-calendar, frozen
+V10 Child, and FAST-flip joins. It retained two shadow coordinates: one narrow
+pre-release clock/journey interaction and post-release shock magnitude inside
+the frozen flip meanings. Fixed-hour, all-news, and surprise-direction rules
+are rejected. Temporal fields must enter later target-state and sensor ablations
+as observations, never as silently tuned vetoes.
 
 ## Phase 2 — inherited sensor ablation
 

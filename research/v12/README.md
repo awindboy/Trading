@@ -117,6 +117,32 @@ Phase 1C rejects broad active-Parent carry. Its unfinished-origin-target and
 repair subsets are sparse and concentrated, so neither has action authority.
 The next structural object is a causal rolling Parent target inventory.
 
+## Retained Phase-1D artifacts
+
+- `v12_phase1d_contract.json`: frozen broker-clock, calendar-cluster, causal
+  surprise, market-window, V10 Child, and FAST-flip observation contract.
+- `build_v12_phase1d.py`: strict raw-M1 prefix reader, MT5 calendar quality
+  audit, matched-week event response, frozen-ledger join, scorecards, and Pillow
+  summary renderer.
+- `test_v12_phase1d.py`: causal event-proximity boundary and exposure/right-tail
+  metric regression tests.
+- `validate_v12_phase1d_output.py`: manifest, hash, cutoff, calendar-conflict,
+  clock-alignment, and frozen-ledger validator.
+- `v12_phase1d_release_manifest.json`: compact receipt for two independently
+  rebuilt, byte-identical packs.
+
+Run from `research/v12`:
+
+```powershell
+python -m unittest test_v12_phase1d.py
+python build_v12_phase1d.py --calendar <MT5 common snapshot> --output <output>
+python validate_v12_phase1d_output.py <output>
+```
+
+Phase 1D proves that broker clock and scheduled/realized event state are useful
+coordinates. It rejects fixed-hour, all-news, and surprise-direction shortcuts.
+Its retained interactions have no veto, sizing, EA, or trade authority.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

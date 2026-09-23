@@ -33,6 +33,10 @@ As of `2026-09-24`, read V12 authority in this order:
 16. `results/V12_PHASE1C_CRT_PROTECTED_CARRY_AND_REPAIR_20260924.md` —
     reproducible carry/repair result, concentration audit, rejected broad carry,
     and rolling-target next boundary.
+17. `V12_PHASE1D_TEMPORAL_EVENT_STATE_CONTRACT_20260924.md` — frozen broker-
+    clock, calendar-cluster, causal surprise, V10 Child, and FAST-flip contract.
+18. `results/V12_PHASE1D_TEMPORAL_AND_EVENT_STATE_20260924.md` — reproducible
+    temporal/event result, rejected shortcuts, and retained shadow interactions.
 
 ## Schema authority
 
@@ -63,6 +67,12 @@ As of `2026-09-24`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1c_output.py`, and
   `../../../research/v12/v12_phase1c_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1C pack.
+- `../../../research/v12/v12_phase1d_contract.json`,
+  `../../../research/v12/build_v12_phase1d.py`,
+  `../../../research/v12/test_v12_phase1d.py`,
+  `../../../research/v12/validate_v12_phase1d_output.py`, and
+  `../../../research/v12/v12_phase1d_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1D pack.
 
 ## Predecessor routing
 
@@ -84,3 +94,5 @@ evidence. Its stop-risk partition is diagnostic only and grants no action.
 Phase 1C is complete and reproducible on consumed evidence. Its broad carry is
 rejected and its target-led and repair subsets remain too sparse and
 concentrated for action.
+Phase 1D is complete and reproducible on consumed evidence. Time and events are
+retained as state coordinates, not a session/news veto or directional oracle.

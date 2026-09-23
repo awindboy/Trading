@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1C COMPLETE AND REPRODUCIBLE / BROAD CARRY REJECTED / NO TRADE AUTHORITY`
+`PHASE 1D COMPLETE AND REPRODUCIBLE / TIME IS STATE, NOT VETO / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -78,6 +78,9 @@ Last synchronized: `2026-09-24`
   admission, exit, or size.
 - Phase 1C may alter the exit clock only in counterfactual output. It preserves
   every entry, unit, and frozen Hard SL and grants no carry or repair action.
+- Phase 1D joins a frozen MT5 economic-calendar snapshot to the broker-label M1
+  clock. Scheduled metadata and realized surprise remain physically separate;
+  no time/event field may invent, veto, resize, or reverse a Child.
 
 ## Closed Phase-0 result
 
@@ -186,6 +189,39 @@ Do not promote or tune on consumed outcomes:
 - claiming PHA repair reliably improves average entry;
 - choosing a new liquidity family or target distance from Phase-1C outcomes.
 
+## Closed Phase-1D result
+
+- MT5 supplied `68,377` values. Eight conflicting duplicate IDs at one API
+  chunk boundary were excluded, leaving `68,361` values and `20,271` timed
+  clusters. Calendar offset zero ranked first in the frozen clock-alignment
+  audit.
+- Broker hour 16 was normalized activity rank 1 in 2022–2025 and rank 2 in
+  2026. Its V10 Children still earned `+203.53R`; fixed-hour avoidance is not a
+  viable stop-reduction rule.
+- USD-high releases produced median matched 15-minute tick-volume/range lift of
+  `1.11x/1.15x`; the incremental range effect decayed to `1.03x` by four hours.
+- All V10 Children 30–60 minutes before USD moderate/high releases formed an
+  86-Child, `-33.63R`, PF `0.51` slice with 40 stopped units and only `5.78R`
+  right tail. The hour-20 aligned subset had 35 Children and `24.73` stopped
+  units per 100 versus `3.85` for other hour-20 aligned Children.
+- The 35-Child interaction is small and event-family heterogeneous. It is a
+  frozen shadow feature, not a consumed-data veto.
+- For NHA flips within four hours after USD moderate/high events, linked-k1 stop
+  rate increased from `16.28%` to `27.11%` across causal surprise-magnitude
+  bins while mean new FAST-run length fell from `3.62` to `2.90` H4 bars.
+- Two independent packs were byte-identical, passed validation, and parsed zero
+  post-cutoff price rows.
+
+## Closed Phase-1D interpretations
+
+Do not promote or tune on consumed outcomes:
+
+- broker hour 16, hour 20, or a named session as a standalone veto;
+- avoiding all high-importance or USD events;
+- using actual/forecast surprise before release or as a direction oracle;
+- treating the 35-Child hour-20 interaction as sufficient trade authority;
+- discarding post-event high-stop states that still contain large right-tail R.
+
 ## Next hypotheses
 
 These are questions, not rules:
@@ -194,13 +230,17 @@ These are questions, not rules:
    a still-active boundary whose original objectives are already consumed?
 2. After that target state is frozen, can `neutral bridge / later repair`
    preserve right-tail exposure without the broad carry's added stop burden?
-3. Conditional on the five frozen FAST-flip meanings, do FAST/STD/SLOW
-   disagreement and Wave settlement add information beyond CRT geometry?
-4. Can separate competing-risk heads rank immediate stop, later repair, and
+3. Does the frozen Phase-1D pre-release interaction remain distinct after a
+   causal rolling Parent target state is added, or is it only a proxy for
+   unresolved target timing?
+4. Conditional on the five frozen FAST-flip meanings and realized event shock,
+   do FAST/STD/SLOW disagreement and Wave settlement add information beyond CRT
+   geometry?
+5. Can separate competing-risk heads rank immediate stop, later repair, and
    right-tail continuation without collapsing them into one negative-R label?
-5. Does first/later aligned status remain useful conviction information outside
+6. Does first/later aligned status remain useful conviction information outside
    consumed history and without a fixed capital ladder?
-6. Does the answer remain stable across lane, side, year, and normalized
+7. Does the answer remain stable across lane, side, year, and normalized
    liquidity era?
 
 ## Evidence boundary
@@ -209,7 +249,8 @@ These are questions, not rules:
 - GOLD# 2021 remains sealed.
 - Phase 1A is a consumed-history structural-R backtest. Phase 1B is a
   consumed-history journey/transition diagnostic. Phase 1C is a consumed-history
-  holding-clock and repair diagnostic. No V12 EA, MQL5 parity, actual-tick
-  economics, or independent future validation exists yet.
+  holding-clock and repair diagnostic. Phase 1D is a consumed-history temporal
+  and event-state diagnostic. No V12 EA, MQL5 parity, actual-tick economics, or
+  independent future validation exists yet.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

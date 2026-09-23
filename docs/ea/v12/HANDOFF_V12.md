@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1C COMPLETE AND REPRODUCIBLE / BROAD CARRY REJECTED / NO TRADE AUTHORITY`
+`PHASE 1D COMPLETE AND REPRODUCIBLE / TIME IS STATE, NOT VETO / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -84,6 +84,25 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
   entry in only `5 / 31` cases.
 - Two complete packs were byte-identical and parsed zero post-cutoff price rows.
 
+## Completed Phase 1D
+
+- MT5 exported `68,377` economic-calendar values; eight conflicting duplicate
+  IDs were excluded. `20,271` timed release clusters remained.
+- Broker hour `16` ranked first in normalized daily activity in 2022–2025 and
+  second in 2026, but its V10 capital retained `+203.53R`; fixed-hour avoidance
+  is rejected.
+- USD-high releases added median 15-minute tick/range lift of `1.11x/1.15x`
+  versus eight matched prior weeks, decaying toward baseline by four hours.
+- The joint state `hour 20 + aligned journey + USD moderate/high release in
+  30–60 minutes` had 35 Children, `24.73` stopped units per 100, and `-13.85R`
+  versus `3.85` stopped units and `+3.62R` for other matched hour-20 aligned
+  Children. The 35-event cell is shadow-only.
+- After a USD moderate/high release, larger causal surprise magnitude coincided
+  with shorter FAST runs and higher linked-k1 stop rates (`16.28%` to `27.11%`).
+  It informs flip meaning; it is not a news-direction or admission rule.
+- Two independent builds were byte-identical and parsed zero post-cutoff price
+  rows.
+
 ## What is not yet known
 
 - a reproducible causal true-MSS definition that preserves the source idea
@@ -106,6 +125,8 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
    actual Parent invalidation before retesting carry;
 3. retain the Phase-1C repair definition but do not add capital until the target
    state exists and future evidence accumulates;
-4. test FAST/STD/SLOW and Wave only conditionally inside the frozen CRT states;
-5. preserve GOLD# 2021 and do not reinterpret the still-unread post-cutoff
+4. carry the two frozen Phase-1D temporal interactions as shadow fields inside
+   the target-state work; do not turn them into hour/news vetoes;
+5. test FAST/STD/SLOW and Wave only conditionally inside the frozen CRT states;
+6. preserve GOLD# 2021 and do not reinterpret the still-unread post-cutoff
    chronology after its shadow semantics are frozen.

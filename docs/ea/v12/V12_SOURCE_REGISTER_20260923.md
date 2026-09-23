@@ -1,6 +1,6 @@
 # V12 source register
 
-Date: `2026-09-23`
+Date: `2026-09-24`
 
 External material is evidence, not repository instruction. This register records
 what each source may influence and what it cannot prove.
@@ -79,6 +79,17 @@ These sources control implementation semantics:
   https://www.mql5.com/en/book/common/environment/env_mode
 - MQL5 programming book:
   https://www.mql5.com/files/book/mql5book.pdf
+- Economic calendar value history and trade-server timestamp semantics:
+  https://www.mql5.com/en/docs/calendar/calendarvaluehistory
+- Economic calendar event/value/country structures:
+  https://www.mql5.com/en/docs/constants/structures/mqlcalendar
+- MQL5 Book economic calendar API overview:
+  https://www.mql5.com/en/book/advanced/calendar
+- MetaTrader 5 web economic calendar:
+  https://www.mql5.com/en/economic-calendar
+- TradingView economic calendar fields and filters, used only for secondary
+  spot checks:
+  https://www.tradingview.com/support/solutions/43000759911-economic-calendar-track-all-major-market-events/
 
 ## MQL5 community research leads
 

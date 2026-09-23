@@ -63,6 +63,9 @@ Phase 1C is complete and independently reproduced: broad active-Parent carry
 increased R but also stops, exposure, and drawdown with severe episode
 concentration; the unfinished-origin-target subset was cleaner but only 12
 Children and still concentrated. Repair mostly duplicated V10 k1 participation.
+Phase 1D is complete and independently reproduced: broker-clock and economic-
+event state add real information, but fixed-hour, all-news, and surprise-
+direction rules are rejected. Its retained interactions are shadow-only.
 
 ## Non-negotiable causal contract
 
@@ -112,6 +115,9 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
   authorization, static key arrival, or first/later aligned status as a
   consumed-data V10 veto or sizing rule; each retains meaningful right-tail
   capital and lacks independent future validation.
+- fixed broker-hour/session avoidance, all-news avoidance, or realized surprise
+  as a direction oracle; Phase-1D retains only two narrow shadow interactions
+  and grants neither action authority.
 - carrying every aligned Child merely because the Phase-1B Parent is active;
   the consumed result added 66 stopped units and was negative without its best
   bridge episode.

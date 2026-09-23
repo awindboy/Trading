@@ -16,6 +16,9 @@ The retained numeric receipts are:
   Parent-clock carry and PHA-repair study. It rejects broad active-Parent carry,
   retains a sparse target-led clue, and identifies rolling target inventory as
   the next missing object. It has development-diagnostic authority only.
+- `V12_PHASE1D_TEMPORAL_AND_EVENT_STATE_20260924.md`: reproducible broker-clock,
+  economic-event, V10 Child, and FAST-flip audit. Time is retained as state;
+  fixed-hour/news vetoes remain rejected and two interactions are shadow-only.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

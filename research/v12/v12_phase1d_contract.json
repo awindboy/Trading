@@ -1,0 +1,85 @@
+{
+  "contract_version": "v12-phase1d-temporal-event-state-v1",
+  "frozen_at": "2026-09-24",
+  "mechanism_cutoff": "2026-09-18T23:57:00",
+  "symbol": "GOLD#",
+  "market_source": "VERIFIED_RAW_M1_CHRONOLOGICAL_PREFIX",
+  "calendar_source": "MQL5_ECONOMIC_CALENDAR_TERMINAL_API",
+  "calendar_time_namespace": "TRADE_SERVER_TIME",
+  "calendar_scope": "ALL_AVAILABLE_COUNTRIES_CURRENCIES_AND_IMPORTANCE_LEVELS",
+  "calendar_snapshot_required": true,
+  "calendar_duplicate_policy": "DROP_EXACT_DUPLICATES; EXCLUDE_ALL_ROWS_FOR_A_VALUE_ID_IF_DUPLICATE_COPIES_CONFLICT",
+  "clock_alignment_audit_offsets_hours": [-1, 0, 1, 2, 3, 4],
+  "official_api_functions": [
+    "CalendarValueHistory",
+    "CalendarEventById",
+    "CalendarCountryById"
+  ],
+  "analysis_units": [
+    "M1_MARKET_MINUTE",
+    "SAME_MINUTE_EVENT_CLUSTER",
+    "FROZEN_V10_SELECTED_CHILD",
+    "PHASE1B_FAST_FLIP"
+  ],
+  "broker_clock_dimensions": [
+    "BROKER_WEEKDAY",
+    "BROKER_HOUR",
+    "BROKER_MINUTE_OF_DAY",
+    "H4_START_HOUR",
+    "DAY_BOUNDARY_CROSSING",
+    "WEEK_BOUNDARY_CROSSING"
+  ],
+  "event_windows_minutes": [15, 30, 60, 120, 240],
+  "same_minute_cluster_policy": "ONE_CLUSTER_WITH_MEMBER_COUNT_MAX_IMPORTANCE_AND_MEMBER_LEVEL_FIELDS",
+  "pre_event_available_fields": [
+    "EVENT_TIME",
+    "COUNTRY",
+    "CURRENCY",
+    "EVENT_TYPE",
+    "SECTOR",
+    "IMPORTANCE",
+    "FORECAST_VALUE",
+    "PREVIOUS_VALUE"
+  ],
+  "post_release_only_fields": [
+    "ACTUAL_VALUE",
+    "REVISED_PREVIOUS_VALUE",
+    "IMPACT_TYPE",
+    "SURPRISE"
+  ],
+  "surprise_definition": "ACTUAL_MINUS_FORECAST_IN_EVENT_NATIVE_UNITS",
+  "surprise_normalization": "CAUSAL_EXPANDING_SAME_EVENT_ID_MEDIAN_AND_MAD_USING_ONLY_PRIOR_RELEASES",
+  "minimum_prior_releases_for_normalized_surprise": 6,
+  "price_activity_normalization": "CAUSAL_ROLLING_60_TRADING_DAY_MEDIAN_AND_MAD_BY_BROKER_MINUTE_OF_DAY",
+  "primary_questions": [
+    "IS_THE_BROKER_CLOCK_ACTIVITY_PROFILE_STABLE_ACROSS_YEARS_AND_WEEKDAYS",
+    "DO_EVENT_CLUSTERS_EXPLAIN_INCREMENTAL_M1_VOLUME_AND_RANGE_BEYOND_CLOCK_TIME",
+    "ARE_V10_STOPPED_UNITS_CONCENTRATED_AROUND_SCHEDULED_OR_REALIZED_EVENT_STATES_AFTER_EXPOSURE_NORMALIZATION",
+    "DO_EVENT_STATES_SEPARATE_PHASE1B_COUNTERFLOW_FROM_OPPOSITE_AUTHORIZATION_OR_REPAIR"
+  ],
+  "economic_scorecard": [
+    "CHILDREN",
+    "FUNDED_UNITS",
+    "STOPPED_CHILDREN",
+    "STOPPED_UNITS_PER_100_FUNDED",
+    "NET_R",
+    "PROFIT_FACTOR_R",
+    "RIGHT_TAIL_GE_5R",
+    "MAX_STOP_CHAIN"
+  ],
+  "stability_dimensions": [
+    "YEAR",
+    "SIDE",
+    "BROKER_WEEKDAY",
+    "BROKER_HOUR",
+    "IMPORTANCE",
+    "CURRENCY",
+    "EVENT_SECTOR"
+  ],
+  "named_session_policy": "NO_LONDON_OR_NEW_YORK_LABEL_UNTIL_CLOCK_MAPPING_IS_INDEPENDENTLY_VERIFIED",
+  "action_policy": "OBSERVATION_AND_MECHANISM_ONLY",
+  "post_cutoff_price_access": false,
+  "sealed_year": 2021,
+  "trade_authority": false,
+  "sizing_authority": false
+}
