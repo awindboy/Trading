@@ -1,0 +1,55 @@
+{
+  "generation": "V12",
+  "phase": "PHASE_1B_H4_M5_JOURNEY_AND_V10_OVERLAY",
+  "contract_version": "v12-phase1b-h4m5-journey-v1.1",
+  "cutoff": "2026-09-18T23:57:00",
+  "source_full_file_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+  "source_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939",
+  "v10_selected_comparator_sha256": "cfee70fa0985f5b4eac4b04357a0add5795b745ba3d95ba7be56ebd7d648c4c6",
+  "v10_full_universe_sha256": "f352a99c746752ca259da33dbdaee9d8f0cb874bd01cf520a487fe1bdbf82609",
+  "builder_sha256": "b0ee602138e8cd3a56bc952e374b8d0507a825ddaee7353f1096034663a634a7",
+  "core_sha256": "370638b36ad51e395489ed2da60f7e2e8ccd7421bf8556e95cbd8b7e84d8f4bb",
+  "validator_sha256": "9b613c5579e4a8f762437b97056f804fd6d522a9c015adff9e0dda336fffb428",
+  "test_sha256": "a094446276e27e18ee937a221a40cc7be3a44a4977a8d5540ddcb93c3372b752",
+  "primary_output_manifest_sha256": "0eee9bcfd7feccb4ff14c9e01fe8dff082a14509abd0f0acd5662669f5e5ac5a",
+  "scorecard_sha256": "a6a1868558b652ef1fcf2f20255786b71469ade000d32ac485a4cbd42541a025",
+  "summary_render_sha256": "9ec024f6b306cb9ab44d56ec892a05e750f730b5544f8c7dc30ae640db059f93",
+  "h4_pair_decisions": 7287,
+  "activations": 4819,
+  "journeys": 2649,
+  "key_levels": 17610,
+  "fast_flips": 2234,
+  "selected_v10_children": 1649,
+  "v10_funded_units": 3881,
+  "v10_stopped_units": 486,
+  "v10_weighted_r": 741.0108654450728,
+  "fast_flip_linked_k1": {
+    "all": {
+      "children": 2101,
+      "stops": 636,
+      "stop_rate": 0.30271299381247024,
+      "net_r": 149.80624145358098
+    },
+    "opposite_crt_authorized": {
+      "children": 1294,
+      "stops": 338,
+      "stop_rate": 0.26120556414219476,
+      "net_r": 114.38272430720123
+    },
+    "not_authorized": {
+      "children": 807,
+      "stops": 298,
+      "stop_rate": 0.36926889714993805,
+      "net_r": 35.42351714637974
+    }
+  },
+  "post_cutoff_price_rows_parsed": 0,
+  "tests_passed": 26,
+  "reproducible_independent_runs": 2,
+  "all_output_hashes_identical": true,
+  "complete_output_validation": "PASS",
+  "independent_future_validation": false,
+  "mql5_parity": false,
+  "trade_authority": false,
+  "sizing_authority": false
+}

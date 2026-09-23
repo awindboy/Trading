@@ -31,8 +31,9 @@ CRT creates the Parent journey and candidate state
 - Phase 0 has a validated, reproducible C1/C2 parent-event universe. Phase 1A
   has a reproducible rejection-only no-ML prototype and consumed-history V10
   comparison, but it failed the replacement gate.
-- Phase 1B has a frozen H4->M5 journey/key-level/V10-overlay observation
-  contract and no result yet.
+- Phase 1B has a frozen and independently reproduced H4->M5 journey/key-level/
+  V10-overlay result. It identifies transition stop-risk structure but grants no
+  veto, delay, sizing, or trade authority.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -106,12 +107,20 @@ promotion contract exists.
 - GOLD# chronology through `2026-09-18 23:57` is consumed development evidence.
 - GOLD# 2021 remains sealed.
 - V12 currently has no independent validation.
-- The Phase-0 receipt has observation authority only. The Phase-1A result has
-  consumed-development diagnostic authority only and explicitly fails the V10
-  replacement gate.
+- The Phase-0 receipt has observation authority only. Phase 1A and Phase 1B have
+  consumed-development diagnostic authority only. Phase 1A fails the V10
+  replacement gate; Phase 1B separates transition risk but grants no action.
 
 ## Closed Phase-1A finding
 
 Do not threshold-tune the relative-thick trigger or promote the trigger-candle
 SL guard from consumed outcomes. Its attractive recent result has only 26 fills,
 higher stopped exposure per 100 units than V10, and negative 2022–2023 evidence.
+
+## Closed Phase-1B finding
+
+Do not turn `OPPOSED_ACTIVE_JOURNEY`, missing opposite CRT authorization, one
+key arrival, or first/later aligned status into a consumed-data V10 veto or
+sizing rule. Opposed V10 Children have higher stop burden but also substantial
+right-tail R. The retained mechanism separates interruption from independent
+opposite authorization and must be tested only in a future-frozen shadow.

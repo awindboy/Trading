@@ -43,14 +43,28 @@ era-unstable. Freeze this result; do not tune it on consumed outcomes. Any Phase
 1B branch must separately predeclare causal true MSS or outside-acceptance
 continuation semantics.
 
-### Phase 1B active contract
+### Phase 1B completed result
 
 Phase 1B is an observation-first journey reassembly rather than a new entry
 filter. It builds an H4->M5 empirical CRT state machine, causal completed-period
-key-level lifecycles, and unchanged V10 Child/FAST-flip overlays. The gate is
-reproducible explanation of starts, reinforcements, arrivals, failures, and
-opposite authorization with physical decision/outcome separation. No V10 veto,
-capital release, or sizing rule may be inferred in this phase.
+key-level lifecycles, and unchanged V10 Child/FAST-flip overlays. Two complete
+packs are byte-identical. Opposite CRT authorization separates FAST-transition
+stop risk in every consumed year, while non-authorized and opposed populations
+retain meaningful right-tail R. The result therefore closes as a lifecycle
+diagnostic, not a V10 veto, capital release, or sizing rule.
+
+### Phase 1C next shadow
+
+Freeze before new chronology:
+
+- `authorize opposite / neutral bridge / later reauthorize` states;
+- immediate new-direction stop, later repair, and continuation as separate
+  outcomes;
+- conditional FAST/STD/SLOW and Wave ablation inside Phase-1B states;
+- first/later aligned status as an observation without fixed size.
+
+The bridge cannot use a tuned duration or convert missing authorization into
+permanent rejection.
 
 ## Phase 2 — inherited sensor ablation
 

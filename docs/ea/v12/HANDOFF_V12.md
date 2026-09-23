@@ -4,7 +4,7 @@ Last synchronized: `2026-09-23`
 
 ## Status
 
-`PHASE 1B JOURNEY CONTRACT FROZEN / IMPLEMENTATION ACTIVE / NO TRADE AUTHORITY`
+`PHASE 1B COMPLETE AND REPRODUCIBLE / TRANSITION DIAGNOSTIC ONLY / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -47,6 +47,24 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
   Trigger-stop selectivity was recent-window-specific and failed full-history
   stability. Phase 1A therefore does not replace V10.
 
+## Completed Phase 1B
+
+- Raw M1 produced `7,287` exhaustive H4 pairs, `4,819` activations, `2,649`
+  canonical journeys, `17,610` key levels, and `2,234` FAST flips.
+- Two independent packs passed complete validation and were byte-identical;
+  zero post-cutoff price rows were parsed.
+- All `1,649` selected R7G Children remained unchanged at `3,881` units,
+  `486` stopped units, and `+741.010865R`.
+- Aligned journey Children had `10.43` stopped units per 100 funded versus
+  `20.79` when opposed, but opposed Children retained `+195.72R`; relation is
+  not a veto.
+- After a FAST flip, opposite CRT authorization had a `26.12%` linked-k1 stop
+  rate versus `36.93%` without authorization. The lower stop rate held in every
+  consumed year. The non-authorized group still earned `+35.42R`, so this is
+  transition-risk evidence, not permanent rejection authority.
+- A key arrival by itself did not resolve whether the flip was counterflow or a
+  new journey.
+
 ## What is not yet known
 
 - a reproducible causal true-MSS definition that preserves the source idea
@@ -61,13 +79,13 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 
 ## Immediate next work
 
-1. implement the frozen H4->M5 shadow CRT journey and causal key-level inventory;
-2. map frozen V10 R7G Children and completed FAST flips without changing their
-   actions or sizes;
-3. separate causal decision context from journey/V10/HA outcomes;
-4. report explanation coverage, first/later participation capacity, stop and
-   right-tail morphology, and side/year/time stability;
-5. independently reproduce the pack before retaining a Phase-1B result.
-
-Do not convert the new journey state into a V10 veto or sizing map during this
-phase. Phase 1B tests explanation and lifecycle structure first.
+1. freeze a future-only transition shadow around `authorize opposite / neutral
+   bridge / later reauthorize`, without treating non-authorization as rejection;
+2. test FAST/STD/SLOW and Wave only conditionally inside the five Phase-1B flip
+   states;
+3. keep immediate new-direction stop, later repair, and right-tail continuation
+   as separate outcomes;
+4. test first/later aligned status as conviction information without a fixed
+   capital ladder;
+5. preserve GOLD# 2021 and post-cutoff chronology until the next contract is
+   frozen.

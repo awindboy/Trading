@@ -56,8 +56,9 @@ C1/C2 records (`1,215` D1->H1 and `244` W1->H4), with no Child, outcome, or
 performance authority. Phase 1A is frozen as the first rejection-only no-ML
 prototype: its two final builds are byte-identical, but it fails the V10
 replacement gate and has consumed-development diagnostic authority only. Phase
-1B has a frozen H4->M5 journey/key-level/V10-overlay observation contract and is
-implementation-active; it has no result or action authority yet.
+1B is complete and independently reproduced: it supplies a causal H4->M5
+journey/key-level/V10-overlay transition diagnostic, but no result has veto,
+delay, sizing, trade, or production authority.
 
 ## Non-negotiable causal contract
 
@@ -103,6 +104,10 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
 - promoting the Phase-1A trigger-candle SL guard from its attractive 26-fill
   recent slice; full history is weak, 2022–2023 are negative, and stopped
   exposure per 100 units remains above V10.
+- using Phase-1B opposed/aligned journey relation, missing opposite CRT
+  authorization, static key arrival, or first/later aligned status as a
+  consumed-data V10 veto or sizing rule; each retains meaningful right-tail
+  capital and lacks independent future validation.
 
 ## Historical generations
 

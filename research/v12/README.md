@@ -62,17 +62,33 @@ python research/v12/validate_v12_phase1a_output.py
 The Phase-1A result is a consumed-history mechanism diagnostic. It fails the
 V10 replacement gate and has no trade authority.
 
-## Next retained implementation
+## Retained Phase-1B artifacts
 
-Keep Phase 1A frozen. Phase 1B has predeclared the next observation pipeline:
+- `v12_phase1b_contract.json`: frozen H4->M5 shadow journey, key-level, V10
+  overlay, simultaneous-conflict, and immutable-origin-target contract.
+- `v12_phase1b_core.py`: one-use liquidity, FAST/STD/SLOW HA, canonical journey,
+  conflict, failure, milestone-stage, and stable-ID primitives.
+- `build_v12_phase1b.py`: raw-M1 causal builder for CRT decisions, journeys,
+  unchanged V10 Children, FAST flips, scorecards, diagnostics, and render.
+- `test_v12_phase1b.py`: equality/breach, gap birth-consumption, journey ordering,
+  replacement, conflict, failure, cutoff, and HA regression tests.
+- `validate_v12_phase1b_output.py`: complete-pack hash, ID, cutoff,
+  decision/outcome, and frozen-V10 invariant validator.
+- `render_v12_phase1b_summary.py`: deterministic Pillow evidence card.
+- `v12_phase1b_release_manifest.json`: compact retained receipt for two
+  independently rebuilt, byte-identical packs.
 
-- `v12_phase1b_contract.json`: H4->M5 shadow CRT activations, completed-period
-  key-level lifecycle, canonical journey state, V10 Child context, and FAST-flip
-  explanation contract. It has no result or action authority yet.
+Run:
 
-The implementation must keep CRT decisions, journey outcomes, V10 decision
-context, V10 outcomes, FAST-flip context, and later run outcomes physically
-separate. HA/Wave sensor ablation and ML remain later and shadow-only.
+```powershell
+python -m unittest discover -s research/v12 -p "test_v12_phase*.py"
+python research/v12/build_v12_phase1b.py <frozen arguments>
+python research/v12/validate_v12_phase1b_output.py <output> --expected-prefix-sha256 04e074...
+```
+
+Phase 1B is a consumed-history transition diagnostic. It identifies a stable
+stop-risk partition at FAST flips but grants no veto, delay, sizing, EA, or
+trade authority. HA/Wave conditional ablation and ML remain shadow-only.
 
 Large ledgers and diagnostics belong under ignored `output/`.
 

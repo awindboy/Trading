@@ -4,7 +4,7 @@ Last synchronized: `2026-09-23`
 
 ## Status
 
-`PHASE 1B H4-M5 JOURNEY CONTRACT FROZEN / IMPLEMENTATION ACTIVE / NO TRADE AUTHORITY`
+`PHASE 1B COMPLETE AND REPRODUCIBLE / TRANSITION DIAGNOSTIC ONLY / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -121,26 +121,62 @@ Do not promote or revive these by tuning consumed outcomes:
   evidence that bad trades were recognized;
 - Phase-1A realized-terminal drawdown as V10 portfolio drawdown parity.
 
+## Closed Phase-1B result
+
+- Contract `v12-phase1b-h4m5-journey-v1.1` built `7,287` H4 decisions,
+  `4,819` activations, `2,649` canonical journeys, `17,610` one-use levels, and
+  `2,234` FAST flips from chronological raw M1.
+- Two independent complete packs were byte-identical and passed validation;
+  zero post-cutoff rows were parsed.
+- The unchanged selected R7G overlay preserved all `1,649` Children, `3,881`
+  funded units, `486` stopped units, and `+741.010865R`.
+- Aligned active-journey Children had `10.43` stopped units per 100 funded;
+  opposed Children had `20.79`. Opposed Children still retained `+195.72R` and
+  large positive right-tail capital, so relation cannot be a veto.
+- Linked new-direction k1 after a FAST flip stopped `26.12%` when an opposite
+  CRT journey was authorized versus `36.93%` in all other states. This ordering
+  held in every consumed year. The non-authorized group still earned `+35.42R`.
+- When the old journey remained active, linked new-direction k1 stopped
+  `42.86%`. A same-direction key arrival reduced the pooled rate only from
+  `46.94%` to `40.91%` and was not stable enough to become a rule.
+- Phase 1B therefore establishes a useful distinction between Child
+  interruption and independent opposite authorization. It does not establish
+  an entry filter, permanent rejection, delay duration, sizing map, or profit
+  oracle.
+
+## Closed Phase-1B interpretations
+
+Do not promote these from consumed evidence:
+
+- blocking every V10 Child opposed to the active CRT journey;
+- blocking every new-direction k1 without opposite CRT authorization;
+- treating one external key arrival as proof of reversal or continuation;
+- funding later aligned Children more heavily solely because their pooled stop
+  burden is lower;
+- describing the H4->M5 empirical lane as a Romeo rule.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. Can a predeclared causal true-MSS or outside-acceptance branch improve both
-   stopped-unit burden and right-tail participation without outcome-aware
-   relabeling?
-2. Conditional on the same frozen CRT state, do FAST/STD/SLOW disagreement and Wave
-   settlement add information beyond C1/C2 price geometry?
-3. Can separate competing-risk heads rank stop-before-50%, 50%-before-stop, and
-   continuation-after-50% without deleting the persistent right tail?
-4. Does the answer remain stable across W1->H4 versus D1->H1, LONG versus SHORT,
-   year, and normalized liquidity era?
+1. Can a future-frozen `authorize opposite / neutral bridge / later
+   reauthorize` lifecycle reduce immediate new-direction stops without deleting
+   the non-authorized group's later `+35.42R`?
+2. Conditional on the five frozen FAST-flip meanings, do FAST/STD/SLOW
+   disagreement and Wave settlement add information beyond CRT geometry?
+3. Can separate competing-risk heads rank immediate stop, later repair, and
+   right-tail continuation without collapsing them into one negative-R label?
+4. Does first/later aligned status remain useful conviction information outside
+   consumed history and without a fixed capital ladder?
+5. Does the answer remain stable across lane, side, year, and normalized
+   liquidity era?
 
 ## Evidence boundary
 
 - All GOLD# observations through `2026-09-18 23:57` are consumed.
 - GOLD# 2021 remains sealed.
-- Phase 1A is a consumed-history structural-R backtest and performance
-  scorecard. No V12 EA, MQL5 parity, actual-tick economics, or independent
-  future validation exists yet.
+- Phase 1A is a consumed-history structural-R backtest. Phase 1B is a
+  consumed-history journey/transition diagnostic. No V12 EA, MQL5 parity,
+  actual-tick economics, or independent future validation exists yet.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

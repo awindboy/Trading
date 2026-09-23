@@ -9,6 +9,9 @@ The retained numeric receipts are:
   no-ML prototype, complete consumed-history scorecard, matched V10 comparison,
   counterfactual mechanism audit, and failed replacement decision. It has
   development-diagnostic authority only.
+- `V12_PHASE1B_H4_M5_JOURNEY_AND_V10_OVERLAY_20260923.md`: reproducible H4->M5
+  journey/key-level state, unchanged V10 Child overlay, and FAST-transition
+  authorization diagnostic. It has development-diagnostic authority only.
 
 Neither receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.
