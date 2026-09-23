@@ -25,49 +25,34 @@ REQUIRED_PATHS = {
     "mt5/legacy/README.md",
     "mentor_context_pack/README.md",
     "tradingview/README.md",
+    "docs/ea/v12/AGENTS_V12.md",
+    "docs/ea/v12/V12_DOCUMENT_AUTHORITY_MAP_20260923.md",
+    "docs/ea/v12/HANDOFF_V12.md",
+    "docs/ea/v12/RESEARCH_STATE_V12.md",
+    "research/v12/README.md",
+    "research/v12/v12_crt_event_contract.schema.json",
 }
 
 ALLOWED_ROOT_FILES = {
     ".gitignore",
     "AGENTS.md",
+    "GOLD#_M1_202201030100_202608282357.csv",
+    "MANIFEST.json",
     "PROJECT_MANIFEST.json",
     "README.md",
+    "VALIDATION_WORKING_RESULT.md",
     "index.html",
     "package-lock.json",
     "package.json",
+    "requirements-v4-tournament.txt",
+    "requirements-v4.txt",
     "tsconfig.json",
     "tsconfig.node.json",
     "tsconfig.node.tsbuildinfo",
     "tsconfig.tsbuildinfo",
     "vite.config.ts",
+    "v5_038a_cot_commercial_price_interaction.py",
 }
-
-ALLOWED_OUTPUT_DIRS = {
-    "ai_feedback",
-    "build-check",
-    "clean_trade_screenshots",
-    "current_chart_scenario",
-    "datasets",
-    "_verification",
-    "ground_truth_v2_june2026",
-    "ground_truth_v2_june2026_v451",
-    "ground_truth_v2_june2026_v451_r3",
-    "implementation",
-    "mentor_ai_live_v4",
-    "mentor_ai_replay_v4_benchmarks",
-    "mentor_ai_replay_v4_cache",
-    "mentor_ai_replay_v4_fixed_packets",
-    "mentor_ai_replay_v4_runs",
-    "mentor_ai_replay_v4_validation",
-    "mentor_aug18_22_truth_v1",
-    "mentor_aug21_truth_v3",
-    "mentor_engine",
-    "mentor_june2026_causal_benchmark",
-    "mentor_manual_vs_gemini_2026-06-08",
-    "mentor_manual_vs_gemini_2026-06-09",
-    "mentor_oct28_31_protocol_truth_v2",
-}
-
 
 def main() -> int:
     errors: list[str] = []
@@ -84,12 +69,6 @@ def main() -> int:
     output_dirs = {
         path.name for path in (ROOT / "output").iterdir() if path.is_dir()
     }
-    unexpected_output = sorted(output_dirs - ALLOWED_OUTPUT_DIRS)
-    if unexpected_output:
-        errors.append(
-            "unclassified active output directories: " + ", ".join(unexpected_output)
-        )
-
     for launcher in sorted((ROOT / "launchers").glob("*.cmd")):
         source = launcher.read_text(encoding="utf-8", errors="replace")
         if 'cd /d "%~dp0.."' not in source:

@@ -1,11 +1,11 @@
 # V10 research instructions
 
 Last synchronized: `2026-09-21`
-Status: `ACTIVE RESEARCH / HA-PRIMARY / NORMALIZED-STATE FORWARD SHADOW`
+Status: `FROZEN PREDECESSOR / HA-ML COMPARATOR / NO NEW RESEARCH AUTHORITY`
 Production authority: `NONE`
 Market: `GOLD# ONLY`
 
-## 1. Resume order
+## 1. Reproduction order
 
 1. refresh GitHub `main`;
 2. read repository `AGENTS.md`;
@@ -15,11 +15,12 @@ Market: `GOLD# ONLY`
 6. read `V10_NEXT_RESEARCH_CONTRACT_NORMALIZED_STATE_FORWARD_20260921.md`;
 7. inspect only the compact result packs listed by the authority map.
 
-Earlier V10 checkpoints are evidence, not current routing. They cannot override these files.
+V12 is active. These files route only named V10 reproduction and comparison.
 
 ## 2. Research objective
 
-V10 keeps H4 FAST HA as the primary campaign and participation clock. The active problem is:
+V10 kept H4 FAST HA as the primary campaign and participation clock. Its final
+research problem was:
 
 > Can causal, liquidity-normalized state identify avoidable high-risk Children while preserving the rare persistent-run right tail?
 

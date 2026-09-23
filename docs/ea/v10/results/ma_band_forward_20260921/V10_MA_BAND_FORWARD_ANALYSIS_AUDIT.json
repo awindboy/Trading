@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "authority": "FORWARD DESCRIPTIVE EVIDENCE / NO THRESHOLD OR TRADE AUTHORITY",
+  "historical_cutoff": "2026-08-28 23:57:00",
+  "observed_through": "2026-09-18 23:57:00",
+  "candidates": 65,
+  "resolved_candidates": 65,
+  "runs": 25,
+  "hard_stops": 9,
+  "hard_stop_rate": 0.13846153846153847,
+  "max_hard_stop_streak": 5,
+  "feature_count": 13,
+  "threshold_scan": false,
+  "composite_score": false,
+  "order_changes": false,
+  "bootstrap_unit": "FAST run id",
+  "bootstrap_draws": 5000,
+  "trusted_prefix_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+  "extended_m1_sha256": "ebb15194e782c1265fb9eabef2b5324f9909d15b3dd9a70bf2717c5700b61817",
+  "mt5_payload_fingerprint": "b2f0ac49995c0afbd27389edd7571a60a15c41e9488dcdddc9ce6d031f0652a7",
+  "r7g_events_sha256": "c4348a34aa35d1e9793283cebbf1a028327c10e3e1c5a4fde2a9e74e3ff801a7"
+}

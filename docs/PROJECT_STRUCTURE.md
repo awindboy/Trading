@@ -1,40 +1,36 @@
-# Project Structure
+# Project structure
 
 ## Authority
 
-- Strategy contract: `AGENTS.md`
-- Project entry: `README.md`
-- Active-system registry: `PROJECT_MANIFEST.json`
-- Generated Gemini contracts: `mentor_context_pack/api_contracts/`
+- repository contract: `AGENTS.md`
+- project entry: `README.md`
+- active-system registry: `PROJECT_MANIFEST.json`
+- active strategy generation: `docs/ea/v12/`
 
-## Active Code
+## Strategy research
 
-- `scripts/mentor_replay_v4_core.py`: replay/live closed-M1 event and execution core
-- `scripts/mentor_ai_replay_v4.py`: replay orchestration and model provider routing
-- `scripts/mentor_ai_live_v4.py`: MT5 archive, clock, broker reconciliation
-- `scripts/build_ground_truth_v2.py`: raw-M1 candidate and audit-ledger builder
-- `scripts/audit_ground_truth_v2_codex.py`: independent semantic/execution audits
+- `docs/ea/v12/`: active V12 authority, source register, contracts, roadmap, and
+  compact receipts;
+- `research/v12/`: V12 schemas and reproducible research code;
+- `docs/ea/v11/`, `research/v11/`: frozen Wave Candle predecessor and diagnostics;
+- `docs/ea/v10/`, `research/v10/`: frozen HA/ML comparator and reproduction code;
+- `mt5/indicators/V11WaveCandle.mq5`: retained observation instrument;
+- `mt5/experts/`: operational journal EA and frozen research/tester EAs.
 
-## Ground Truth Status
+## Other retained systems
 
-There is currently no frozen June 2026 Ground Truth.
+- `src/`, `bridge/`: web journal and MT5 bridge;
+- `scripts/mentor_*`, `mentor_context_pack/`: historical Mentor replay tooling;
+- `tradingview/`: retained TradingView tools;
+- `archive/`: superseded outputs and legacy code that active code must not import.
 
-`output/ground_truth_v2_june2026_v451` is invalidated and contains a
-`BLOCKED_REPORT.md`. Its two trades are forensic evidence only. The defect was
-that a physical family was recorded only at its first snapshot, so a later
-legally knowable objective was omitted.
+## Artifact boundaries
 
-The replacement must be stateful: one accepted PLAN remains frozen until a
-contractual terminal event. New liquidity that matures while that PLAN remains
-valid must not create hundreds of duplicate benchmark candidates.
+- source, contracts, compact receipts, and manifests: tracked;
+- generated ledgers, model searches, tester reports, renders, and temporary
+  exports: ignored `output/`;
+- local secrets/configuration: ignored `data/` paths named by `.gitignore`;
+- external source files: referenced by URL/hash unless redistribution is allowed.
 
-## Artifact Boundaries
-
-- `output/`: active generated evidence and explicitly blocked runs
-- `archive/`: legacy code and superseded outputs; active code must not import it
-- `data/`: journal and local secret/config data
-- `research/`: mentor-video analysis and research notes
-
-Candidate counts, rendered images, compilation, or passing unit tests are not
-Ground Truth completion evidence. Completion requires the audit gates described
-in `docs/operations/GROUND_TRUTH_V2_AUDIT.md`.
+A chart, candidate count, compilation, schema check, parity test, or tester curve
+is not by itself independent validation or production readiness.

@@ -20,6 +20,8 @@ The historical training/development cutoff is:
 
 Only observations strictly after that cutoff count as new evidence.
 
+The first descriptive forward audit has now observed data through `2026-09-18 23:57`. It may evaluate the coordinates frozen in this contract, but it cannot validate a coordinate or action invented after that audit. Any later-added hypothesis starts its own future boundary after `2026-09-18 23:57`.
+
 ## 3. Frozen observations
 
 At each existing R7G-selected Child decision, log:
@@ -45,6 +47,8 @@ frozen SEED1_Q10_DEFENSE hypothetical action
 ```
 
 MA1 is excluded from support and penetration counts because it equals the current input.
+
+For WMA20 OC2, `edge = current OC2 - MA20` and `span = MA1 - MA20` are identical because `MA1 = current OC2`. Preserve at most one independent interpretation; duplicate names are not independent evidence.
 
 ## 4. Frozen seed-defense action shadow
 

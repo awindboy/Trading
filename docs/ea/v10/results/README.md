@@ -53,3 +53,13 @@ Status: executable research evidence only. User MT5 execution exists, but market
 ## Local outputs
 
 Current scripts regenerate local evidence under ignored `output/`. Those files are intentionally not committed because they are large, derivable, and not authority.
+
+## `ma_band_forward_20260921/`
+
+Purpose: compact receipt for the first causal post-cutoff normalized MA-band observation window through `2026-09-18 23:57`.
+
+- `V10_MA_BAND_FORWARD_ANALYSIS_AUDIT.json` — source identities, sample counts, and no-action boundary;
+- `V10_MA_BAND_FORWARD_FEATURE_AUDIT.csv` — fixed-coordinate STOP AUC and FAST-run bootstrap intervals;
+- `V10_MA_BAND_FORWARD_CONCENTRATION.csv` — direction/stage concentration.
+
+The row ledger and extended raw M1 remain under ignored `output/`. This pack does not contain or authorize a threshold, composite score, or trade action.

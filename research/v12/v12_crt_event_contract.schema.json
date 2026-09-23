@@ -1,0 +1,431 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/awindboy/Trading/research/v12/v12_crt_event_contract.schema.json",
+  "title": "V12 CRT causal event contract",
+  "description": "Separates causal decision-time observations from later outcomes. This schema grants no trade authority.",
+  "oneOf": [
+    { "$ref": "#/$defs/decisionRecord" },
+    { "$ref": "#/$defs/outcomeRecord" }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "price": {
+      "type": "number"
+    },
+    "bar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["open_time", "close_time", "open", "high", "low", "close", "complete"],
+      "properties": {
+        "open_time": { "$ref": "#/$defs/timestamp" },
+        "close_time": { "$ref": "#/$defs/timestamp" },
+        "open": { "$ref": "#/$defs/price" },
+        "high": { "$ref": "#/$defs/price" },
+        "low": { "$ref": "#/$defs/price" },
+        "close": { "$ref": "#/$defs/price" },
+        "complete": { "const": true },
+        "range_atr": { "type": ["number", "null"] },
+        "body_ratio": { "type": ["number", "null"], "minimum": 0.0, "maximum": 1.0 }
+      }
+    },
+    "common": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "record_type",
+        "generation",
+        "symbol",
+        "lane",
+        "source_dataset_sha256",
+        "broker_clock_spec_sha256",
+        "event_definition_version",
+        "parent_id"
+      ],
+      "properties": {
+        "schema_version": { "const": "12.0.0-phase0" },
+        "record_type": { "enum": ["decision", "outcome"] },
+        "generation": { "const": "V12" },
+        "symbol": { "type": "string", "minLength": 1 },
+        "lane": {
+          "enum": ["W1_TO_H4", "D1_TO_H1", "H4_TO_M15_M5_SHADOW"]
+        },
+        "source_dataset_sha256": { "$ref": "#/$defs/sha256" },
+        "broker_clock_spec_sha256": { "$ref": "#/$defs/sha256" },
+        "event_definition_version": { "type": "string", "minLength": 1 },
+        "parent_id": { "type": "string", "minLength": 12 },
+        "child_id": { "type": ["string", "null"], "minLength": 12 }
+      }
+    },
+    "c2Observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bar",
+        "interaction",
+        "traded_high",
+        "traded_low",
+        "sweep_depth_price",
+        "sweep_depth_c1_range",
+        "sweep_depth_atr",
+        "close_location_c1",
+        "ordering_precision"
+      ],
+      "properties": {
+        "bar": { "$ref": "#/$defs/bar" },
+        "interaction": {
+          "enum": [
+            "NO_EXTREME_TRADE",
+            "HIGH_SWEEP_RETURN",
+            "LOW_SWEEP_RETURN",
+            "HIGH_OUTSIDE_ACCEPTANCE",
+            "LOW_OUTSIDE_ACCEPTANCE",
+            "DUAL_SWEEP_INSIDE",
+            "DUAL_OR_CONFLICTED"
+          ]
+        },
+        "traded_high": { "type": "boolean" },
+        "traded_low": { "type": "boolean" },
+        "sweep_depth_price": { "type": ["number", "null"] },
+        "sweep_depth_c1_range": { "type": ["number", "null"] },
+        "sweep_depth_atr": { "type": ["number", "null"] },
+        "close_location_c1": { "type": "number" },
+        "ordering_precision": { "enum": ["M1", "TICK", "AMBIGUOUS"] }
+      }
+    },
+    "triggerObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "family", "trigger_time", "confirmation_time", "level_price", "definition_version"],
+      "properties": {
+        "status": { "enum": ["NOT_OBSERVED", "PRIMITIVES_ONLY", "CONFIRMATION_PENDING", "CONFIRMED"] },
+        "family": { "enum": ["NONE", "MODEL1", "TRUE_MSS"] },
+        "trigger_time": { "anyOf": [{ "$ref": "#/$defs/timestamp" }, { "type": "null" }] },
+        "confirmation_time": { "anyOf": [{ "$ref": "#/$defs/timestamp" }, { "type": "null" }] },
+        "level_price": { "type": ["number", "null"] },
+        "trigger_bar": { "anyOf": [{ "$ref": "#/$defs/bar" }, { "type": "null" }] },
+        "close_through_strength_atr": { "type": ["number", "null"] },
+        "fvg_present": { "type": ["boolean", "null"] },
+        "definition_version": { "type": ["string", "null"] }
+      }
+    },
+    "features": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["atr", "ha", "wave", "liquidity", "smt"],
+      "properties": {
+        "atr": {
+          "type": "object",
+          "required": ["value", "period", "source_timeframe"],
+          "properties": {
+            "value": { "type": ["number", "null"] },
+            "period": { "type": "integer", "minimum": 1 },
+            "source_timeframe": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "ha": {
+          "type": "object",
+          "required": ["fast_color", "std_color", "slow_color", "agreement", "feature_version"],
+          "properties": {
+            "fast_color": { "enum": ["POSITIVE", "NEGATIVE", "NEUTRAL", "MISSING"] },
+            "std_color": { "enum": ["POSITIVE", "NEGATIVE", "NEUTRAL", "MISSING"] },
+            "slow_color": { "enum": ["POSITIVE", "NEGATIVE", "NEUTRAL", "MISSING"] },
+            "agreement": { "type": ["integer", "null"], "minimum": -3, "maximum": 3 },
+            "feature_version": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "wave": {
+          "type": "object",
+          "required": ["available", "settlement_direction", "path_efficiency", "feature_version"],
+          "properties": {
+            "available": { "type": "boolean" },
+            "settlement_direction": { "type": ["number", "null"] },
+            "path_efficiency": { "type": ["number", "null"] },
+            "feature_version": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "liquidity": {
+          "type": "object",
+          "required": ["prior_day_high_atr", "prior_day_low_atr", "prior_week_high_atr", "prior_week_low_atr", "feature_version"],
+          "properties": {
+            "prior_day_high_atr": { "type": ["number", "null"] },
+            "prior_day_low_atr": { "type": ["number", "null"] },
+            "prior_week_high_atr": { "type": ["number", "null"] },
+            "prior_week_low_atr": { "type": ["number", "null"] },
+            "feature_version": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "smt": {
+          "type": "object",
+          "required": ["available", "paired_symbol", "state", "feature_version"],
+          "properties": {
+            "available": { "type": "boolean" },
+            "paired_symbol": { "type": ["string", "null"] },
+            "state": { "enum": ["NOT_EVALUATED", "CONFIRMING", "OPPOSING", "NONE", "MISSING"] },
+            "feature_version": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "decisionRecord": {
+      "allOf": [
+        { "$ref": "#/$defs/common" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "record_type",
+            "generation",
+            "symbol",
+            "lane",
+            "source_dataset_sha256",
+            "broker_clock_spec_sha256",
+            "event_definition_version",
+            "parent_id",
+            "child_id",
+            "decision_time",
+            "c1",
+            "c1_midpoint",
+            "c2",
+            "parent_state",
+            "hypothesis_direction",
+            "trigger",
+            "risk_variants",
+            "targets",
+            "features",
+            "compliance"
+          ],
+          "properties": {
+            "schema_version": { "const": "12.0.0-phase0" },
+            "record_type": { "const": "decision" },
+            "generation": { "const": "V12" },
+            "symbol": { "type": "string" },
+            "lane": { "enum": ["W1_TO_H4", "D1_TO_H1", "H4_TO_M15_M5_SHADOW"] },
+            "source_dataset_sha256": { "$ref": "#/$defs/sha256" },
+            "broker_clock_spec_sha256": { "$ref": "#/$defs/sha256" },
+            "event_definition_version": { "type": "string" },
+            "parent_id": { "type": "string", "minLength": 12 },
+            "child_id": { "type": ["string", "null"] },
+            "decision_time": { "$ref": "#/$defs/timestamp" },
+            "c1": { "$ref": "#/$defs/bar" },
+            "c1_midpoint": { "$ref": "#/$defs/price" },
+            "c2": { "$ref": "#/$defs/c2Observation" },
+            "parent_state": {
+              "enum": [
+                "C2_CLOSED_NO_TRADE",
+                "C2_REJECTION_OBSERVED",
+                "C2_OUTSIDE_ACCEPTANCE_OBSERVED",
+                "C2_CONFLICTED",
+                "TRIGGER_PRIMITIVES_OBSERVED",
+                "CHILD_CONFIRMATION_PENDING",
+                "CHILD_AUTHORIZED"
+              ]
+            },
+            "hypothesis_direction": { "enum": ["LONG", "SHORT", "NONE"] },
+            "trigger": { "$ref": "#/$defs/triggerObservation" },
+            "risk_variants": {
+              "type": "object",
+              "required": ["c2_extreme", "trigger_structure", "active_variant"],
+              "properties": {
+                "c2_extreme": { "type": ["number", "null"] },
+                "trigger_structure": { "type": ["number", "null"] },
+                "active_variant": { "enum": ["NONE", "C2_EXTREME", "TRIGGER_STRUCTURE"] }
+              },
+              "additionalProperties": false
+            },
+            "targets": {
+              "type": "object",
+              "required": ["c1_midpoint", "opposite_c1_extreme", "older_liquidity"],
+              "properties": {
+                "c1_midpoint": { "type": "number" },
+                "opposite_c1_extreme": { "type": ["number", "null"] },
+                "older_liquidity": { "type": ["number", "null"] }
+              },
+              "additionalProperties": false
+            },
+            "features": { "$ref": "#/$defs/features" },
+            "compliance": {
+              "type": "object",
+              "required": ["causal_prefix", "completed_c2", "future_fields_absent", "incident_codes"],
+              "properties": {
+                "causal_prefix": { "type": "boolean" },
+                "completed_c2": { "type": "boolean" },
+                "future_fields_absent": { "type": "boolean" },
+                "incident_codes": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ]
+    },
+    "outcomeRecord": {
+      "allOf": [
+        { "$ref": "#/$defs/common" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "record_type",
+            "generation",
+            "symbol",
+            "lane",
+            "source_dataset_sha256",
+            "broker_clock_spec_sha256",
+            "event_definition_version",
+            "parent_id",
+            "child_id",
+            "outcome_asof",
+            "terminal_state",
+            "first_competing_event",
+            "first_event_time",
+            "realized_r",
+            "mfe_r",
+            "mae_r",
+            "execution_state",
+            "ordering_precision"
+          ],
+          "properties": {
+            "schema_version": { "const": "12.0.0-phase0" },
+            "record_type": { "const": "outcome" },
+            "generation": { "const": "V12" },
+            "symbol": { "type": "string" },
+            "lane": { "enum": ["W1_TO_H4", "D1_TO_H1", "H4_TO_M15_M5_SHADOW"] },
+            "source_dataset_sha256": { "$ref": "#/$defs/sha256" },
+            "broker_clock_spec_sha256": { "$ref": "#/$defs/sha256" },
+            "event_definition_version": { "type": "string" },
+            "parent_id": { "type": "string", "minLength": 12 },
+            "child_id": { "type": "string", "minLength": 12 },
+            "outcome_asof": { "$ref": "#/$defs/timestamp" },
+            "terminal_state": { "enum": ["OPEN", "STOPPED", "TARGET1", "TARGET2", "EXPIRED", "AMBIGUOUS", "NO_EXECUTION"] },
+            "first_competing_event": { "enum": ["STOP", "C1_MIDPOINT", "SAME_M1_AMBIGUOUS", "NONE"] },
+            "first_event_time": { "anyOf": [{ "$ref": "#/$defs/timestamp" }, { "type": "null" }] },
+            "realized_r": { "type": ["number", "null"] },
+            "mfe_r": { "type": ["number", "null"] },
+            "mae_r": { "type": ["number", "null"] },
+            "execution_state": { "enum": ["FILLED", "EXECUTION_MARKET_CLOSED", "REJECTED", "NOT_AUTHORIZED", "PARTIAL", "UNRESOLVED"] },
+            "ordering_precision": { "enum": ["M1", "TICK", "AMBIGUOUS"] }
+          }
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "schema_version": "12.0.0-phase0",
+      "record_type": "decision",
+      "generation": "V12",
+      "symbol": "SYNTHETIC#",
+      "lane": "W1_TO_H4",
+      "source_dataset_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "broker_clock_spec_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "event_definition_version": "v12-phase0-c1c2-v1",
+      "parent_id": "synthetic-parent-0001",
+      "child_id": null,
+      "decision_time": "2026-01-19T04:00:00+00:00",
+      "c1": {
+        "open_time": "2026-01-05T00:00:00+00:00",
+        "close_time": "2026-01-12T00:00:00+00:00",
+        "open": 100.0,
+        "high": 110.0,
+        "low": 90.0,
+        "close": 104.0,
+        "complete": true,
+        "range_atr": 1.25,
+        "body_ratio": 0.2
+      },
+      "c1_midpoint": 100.0,
+      "c2": {
+        "bar": {
+          "open_time": "2026-01-12T00:00:00+00:00",
+          "close_time": "2026-01-19T00:00:00+00:00",
+          "open": 104.0,
+          "high": 112.0,
+          "low": 96.0,
+          "close": 108.0,
+          "complete": true,
+          "range_atr": 1.0,
+          "body_ratio": 0.25
+        },
+        "interaction": "HIGH_SWEEP_RETURN",
+        "traded_high": true,
+        "traded_low": false,
+        "sweep_depth_price": 2.0,
+        "sweep_depth_c1_range": 0.1,
+        "sweep_depth_atr": 0.125,
+        "close_location_c1": 0.9,
+        "ordering_precision": "M1"
+      },
+      "parent_state": "C2_REJECTION_OBSERVED",
+      "hypothesis_direction": "SHORT",
+      "trigger": {
+        "status": "PRIMITIVES_ONLY",
+        "family": "MODEL1",
+        "trigger_time": "2026-01-19T04:00:00+00:00",
+        "confirmation_time": null,
+        "level_price": 111.0,
+        "trigger_bar": null,
+        "close_through_strength_atr": null,
+        "fvg_present": null,
+        "definition_version": null
+      },
+      "risk_variants": {
+        "c2_extreme": 112.0,
+        "trigger_structure": null,
+        "active_variant": "NONE"
+      },
+      "targets": {
+        "c1_midpoint": 100.0,
+        "opposite_c1_extreme": 90.0,
+        "older_liquidity": null
+      },
+      "features": {
+        "atr": { "value": 16.0, "period": 14, "source_timeframe": "W1" },
+        "ha": { "fast_color": "NEGATIVE", "std_color": "POSITIVE", "slow_color": "POSITIVE", "agreement": 1, "feature_version": "v10-ha-v1" },
+        "wave": { "available": true, "settlement_direction": -0.2, "path_efficiency": 0.35, "feature_version": "v11-wave-v05" },
+        "liquidity": { "prior_day_high_atr": 0.4, "prior_day_low_atr": -0.9, "prior_week_high_atr": 0.125, "prior_week_low_atr": -1.125, "feature_version": "v12-liquidity-v1" },
+        "smt": { "available": false, "paired_symbol": null, "state": "NOT_EVALUATED", "feature_version": "v12-smt-v0" }
+      },
+      "compliance": {
+        "causal_prefix": true,
+        "completed_c2": true,
+        "future_fields_absent": true,
+        "incident_codes": []
+      }
+    },
+    {
+      "schema_version": "12.0.0-phase0",
+      "record_type": "outcome",
+      "generation": "V12",
+      "symbol": "SYNTHETIC#",
+      "lane": "W1_TO_H4",
+      "source_dataset_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "broker_clock_spec_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "event_definition_version": "v12-phase0-c1c2-v1",
+      "parent_id": "synthetic-parent-0001",
+      "child_id": "synthetic-child-0001",
+      "outcome_asof": "2026-01-23T00:00:00+00:00",
+      "terminal_state": "NO_EXECUTION",
+      "first_competing_event": "NONE",
+      "first_event_time": null,
+      "realized_r": null,
+      "mfe_r": null,
+      "mae_r": null,
+      "execution_state": "NOT_AUTHORIZED",
+      "ordering_precision": "M1"
+    }
+  ]
+}

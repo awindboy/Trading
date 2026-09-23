@@ -6,6 +6,18 @@
 - `indicators/ICTCockpitIndicator.mq5`: MT5 표시용 ICT 지표
 - `indicators/CleanChartTimeOverlay.mq5`: 차트 오버레이 정리 도구
 
+## Retained research indicator
+
+- `indicators/V11WaveCandle.mq5`: GOLD# H4용 frozen V11 Wave Candle 관찰
+  지표. selectable HA/raw shell과 완료된 M5 정착 분포를 함께 표시합니다.
+  V12에서 보조 관찰 도구로 재사용할 수 있지만 매매 권한은 없습니다.
+
+## Active V12 boundary
+
+V12는 아직 numeric event-definition 단계입니다. V12 EA나 주문 지표는
+없습니다. Python causal event ledger와 MQL5 parity probe가 먼저이며, 실제
+tick 경제성 검증은 그 다음 단계입니다.
+
 ## Research and legacy trading EAs
 
 - `legacy/MentorCausalStateEA.mq5`

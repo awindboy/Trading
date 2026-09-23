@@ -24,6 +24,9 @@ These scripts reproduce historical research. They do not grant action authority.
 - `analyze_v10_intrah4_action_value.py` — asymmetric action-value diagnostic; rejected.
 - `freeze_v10_intrah4_seed_defense_shadow.py` — freeze the narrow one-unit +60m future-shadow contract.
 - `explore_v10_progression_ma_bands.py` — progression/damage-repair rejection and normalized MA-ribbon study.
+- `prepare_v10_forward_m1_extension.py` — verify an MT5 M1 cache against the trusted prefix and write one chronological extended raw-M1 source.
+- `build_v10_ma_band_forward_shadow.py` — stream raw M1 once and log the frozen normalized H4/H1/M15 MA-band state on post-cutoff R7G candidates.
+- `analyze_v10_ma_band_forward_shadow.py` — audit each fixed MA coordinate on forward outcomes without fitting a threshold or composite score.
 
 These scripts are retained because their purpose is explicit and their conclusions are current. Their large outputs are local and ignored.
 

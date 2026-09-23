@@ -1,5 +1,10 @@
 # MT5 Indicators
 
+- `V11WaveCandle.mq5`: **frozen V11 observation indicator retained for V12** for
+  `GOLD# H4`. Completed M5 closes become a smooth settlement-density contour
+  around selectable FAST/STD/SLOW HA or raw OHLC shells. It does not draw an LTF
+  mini-chart and has no trade or production authority.
+- `V10HAOverlay.mq5`: frozen V10 FAST HA visual comparator.
 - `ICTCockpitIndicator.mq5`: ICT information display indicator.
 - `CleanChartTimeOverlay.mq5`: chart timer/overlay object cleanup.
 - `V8MovementProbabilityIndicator.mq5`: historical V8 movement-probability indicator.
@@ -90,3 +95,28 @@ Model pack:
 The legacy `V8ANP15ContextIndicator.mq5` remains intact for historical comparison.
 
 `.ex5` and compile logs are local build outputs of their corresponding `.mq5` sources.
+
+## V11WaveCandle
+
+Status:
+
+`FROZEN V11 OBSERVATION ASSET / NO TRADE AUTHORITY`
+
+Attach to:
+
+`GOLD# H4`
+
+Default visual behavior:
+
+```text
+1,000 recent H4 slots cached by default (configurable up to 5,000)
+48-step canvas KDE settlement-density contour
+FAST HA / STD HA / SLOW HA / RAW OHLC selectable shell
+selected-candle Open / High / Close / Low horizontal lines
+native candles hidden while attached
+refresh on each newly completed M5
+forming H4 uses completed M5 only
+pan / zoom / scale changes reuse the numeric cache and persistent canvas
+```
+
+Price geometry comes from M5/H4 data while horizontal width is normalized to the visible H4 slot. Completed M5 settlement distributions are calculated once when the cache is built; chart navigation only reprojects cached values and paints currently visible slots. FAST HA is the default. Use a clean chart without `V10HAOverlay`, which can conceal the Wave Candle. See `docs/ea/v11/V11_WAVE_CANDLE_V05_OBSERVATION_CONTRACT_20260922.md` before interpreting the display.

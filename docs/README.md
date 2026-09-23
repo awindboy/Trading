@@ -1,17 +1,25 @@
-# Documentation Index
+# Documentation index
 
-## Active
+## Active strategy research
 
-- `architecture/MENTOR_AI_GROUND_TRUTH_V2.md`: 현재 Ground Truth 및 Gemini 구조
-- `architecture/GROUND_TRUTH_V2_IMPLEMENTATION_AUDIT.md`: 최종 계획 대비 구현 누락 감사
-- `architecture/MENTOR_AI_LIVE_EVENT_DRIVEN.md`: replay/live 공통 M1 처리와 운영 경계
-- `operations/GROUND_TRUTH_V2_AUDIT.md`: 후보 생성, 4중 감사, 동결 절차
-- `PROJECT_STRUCTURE.md`: 활성 코드, 연구 자료, archive 구분
+- `ea/v12/AGENTS_V12.md`: V12 generation authority;
+- `ea/v12/V12_DOCUMENT_AUTHORITY_MAP_20260923.md`: reading and precedence map;
+- `ea/v12/HANDOFF_V12.md`: current concise handoff;
+- `ea/v12/RESEARCH_STATE_V12.md`: facts, hypotheses, and evidence boundary;
+- `ea/v12/V12_CRT_NUMERIC_OBSERVATION_CONTRACT_20260923.md`: causal CRT event contract;
+- `ea/v12/V12_MQL5_ENGINEERING_AND_VALIDATION_CONTRACT_20260923.md`: implementation and tester gates;
+- `PROJECT_STRUCTURE.md`: current repository roles and artifact policy.
 
-## Legacy Reference
+## Retained predecessor research
 
-- `architecture/MENTOR_AI_REPLAY_V4.md`: V4.49/V4.50 개발 이력
-- `architecture/MENTOR_AI_REPLAY_ARCHITECTURE.md`: 이전 설계 배경
+- `ea/v11/`: frozen Wave Candle predecessor and diagnostics;
+- `ea/v10/`: frozen HA/ML comparator and research decisions;
+- `ea/v9/` and earlier: historical evidence only.
 
-과거 문서는 현재 전략 권한이 아닙니다. 충돌 시 `AGENTS.md`와
-`PROJECT_MANIFEST.json`의 활성 경로를 따릅니다.
+## Other retained systems
+
+- `architecture/`, `operations/`: historical Mentor/Ground Truth and operational
+  documentation. Read their own status markers before use.
+
+Past documents cannot override the active V12 route in `AGENTS.md` and
+`PROJECT_MANIFEST.json`.

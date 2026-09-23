@@ -1,77 +1,28 @@
-# Scripts Index
+# Scripts index
 
-Do not select an active research path from filenames alone.
-Read the authority document for the project/version first.
+Do not infer active authority from a filename. Read `AGENTS.md` and the active
+generation map first.
 
-## V9 — active chart-native research path
+## Active V12 research
 
-V9 authority starts at:
+V12 code begins under `research/v12/`, not this directory. Phase 0 currently has
+the event schema and validator. The next accepted implementation is a causal
+raw-M1 W1->H4 and D1->H1 event-universe builder.
 
-`docs/ea/v9/AGENTS_V9.md`
+## Workspace and operations
 
-Current V9 research flow:
+- `check_workspace_structure.py`: repository structure/manifest check;
+- `trading_journal_launcher.py`: local journal launcher;
+- `install_mt5_ea.py`, `install_mt5_indicator.py`: MT5 installation helpers;
+- `check_mt5_journal_pipeline.py`, `watch_mt5_journal_pipeline.py`: journal pipeline checks;
+- `check_pine_static.py`: TradingView static check.
 
-```text
-v9_causal_m1.py
--> v9_ict_object_engine.py
--> v9_chart_native_packet.py
--> AI MAP selection
--> v9_replay_event_runner.py
--> TRIGGER / Child
--> v9_hard_stop_guard.py + mapped review events
-```
+## Historical research systems
 
-Active V9 tools:
+- `v9_*`: frozen V9 causal/chart-native tools;
+- `mentor_*`, Ground Truth builders, and their tests: separate historical
+  research lineage;
+- other `build_*`, replay, and reverse-engineering scripts: reproduction assets.
 
-- `v9_causal_m1.py`
-  - fail-closed authoritative M1 verification, reveal, advance, snapshot;
-- `v9_ict_object_engine.py`
-  - exact H4/H1 FVG, OB-candidate, swing/liquidity candidate geometry and lifecycle;
-  - candidate universe only; no strategic importance authority;
-- `v9_chart_native_packet.py`
-  - two-chart `MAP + TRIGGER` renderer using AI-selected object IDs;
-- `v9_replay_event_runner.py`
-  - advances a causal replay to the first frozen price/zone/bar-close event;
-- `v9_hard_stop_guard.py`
-  - independent Hard SL first-touch guard on an already-revealed prefix;
-- `v9_causal_numeric_replay.py`
-  - historical numeric replay helper; check current V9 authority before use;
-- `test_v9_ict_object_engine.py`
-  - geometry/lifecycle unit tests for the current candidate engine.
-
-V9 production/EA authority is `NONE`.
-Do not use these research tools for live capital deployment.
-
-## Ground Truth V2 / Mentor Replay V5
-
-This is a separate research lineage governed by its own root authority.
-
-- `build_mentor_api_contracts.py`
-- `build_ground_truth_v2.py`
-- `mentor_replay_v4_core.py`
-- `mentor_ai_replay_v4.py`
-- `mentor_ai_live_v4.py`
-- associated integration/regression tests
-
-Do not mix its strategy authority with V9.
-
-## Web journal / MT5 operations
-
-- `trading_journal_launcher.py`
-- `install_mt5_ea.py`, `install_mt5_indicator.py`
-- `check_mt5_journal_pipeline.py`, `watch_mt5_journal_pipeline.py`
-- `test_ea_event_pipeline.py`
-- `generate_ai_trade_feedback.py`, `import_mentor_feedback_to_journal.py`
-
-## TradingView
-
-- `check_pine_static.py`
-
-## Workspace maintenance
-
-- `check_workspace_structure.py`
-
-## Legacy / research reproduction
-
-Other historical `build_*`, `run_mentor_*`, replay, reverse-engineering, and manual-ground-truth scripts may be retained for reproducibility.
-Check their governing documents and archived-output paths before use.
+Historical scripts do not create V12 candidates or authority unless a V12
+contract explicitly imports their role.

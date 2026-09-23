@@ -7,6 +7,73 @@
     "structurePolicy": "docs/PROJECT_STRUCTURE.md"
   },
   "activeSystems": {
+    "v12CrtHybridResearch": {
+      "status": "ACTIVE_RESEARCH_NO_TRADE_AUTHORITY",
+      "authority": "docs/ea/v12/AGENTS_V12.md",
+      "authorityMap": "docs/ea/v12/V12_DOCUMENT_AUTHORITY_MAP_20260923.md",
+      "handoff": "docs/ea/v12/HANDOFF_V12.md",
+      "researchState": "docs/ea/v12/RESEARCH_STATE_V12.md",
+      "origin": "docs/ea/v12/V12_ORIGIN_AND_CRT_HYBRID_THESIS_20260923.md",
+      "observationContract": "docs/ea/v12/V12_CRT_NUMERIC_OBSERVATION_CONTRACT_20260923.md",
+      "engineeringContract": "docs/ea/v12/V12_MQL5_ENGINEERING_AND_VALIDATION_CONTRACT_20260923.md",
+      "sourceRegister": "docs/ea/v12/V12_SOURCE_REGISTER_20260923.md",
+      "roadmap": "docs/ea/v12/V12_RESEARCH_ROADMAP_20260923.md",
+      "researchCodeIndex": "research/v12/README.md",
+      "eventSchema": "research/v12/v12_crt_event_contract.schema.json",
+      "market": "GOLD#",
+      "officialLanes": ["W1_TO_H4", "D1_TO_H1"],
+      "consumedCutoff": "2026-09-18 23:57 raw M1",
+      "tradeAuthority": "NONE",
+      "productionAuthority": "NONE"
+    },
+    "v11WaveCandleResearch": {
+      "status": "FROZEN_PREDECESSOR_OBSERVATION_ASSET",
+      "authority": "docs/ea/v11/AGENTS_V11.md",
+      "authorityMap": "docs/ea/v11/V11_DOCUMENT_AUTHORITY_MAP_20260922.md",
+      "handoff": "docs/ea/v11/HANDOFF_V11.md",
+      "researchState": "docs/ea/v11/RESEARCH_STATE_V11.md",
+      "origin": "docs/ea/v11/V11_ORIGIN_AND_WAVE_CANDLE_THESIS_20260922.md",
+      "observationContract": "docs/ea/v11/V11_WAVE_CANDLE_V05_OBSERVATION_CONTRACT_20260922.md",
+      "latestCheckpoint": "docs/ea/v11/results/V11_NEW_SKELETON_PHASE_AND_PROGRESS_LADDER_DIAGNOSTIC_20260923.md",
+      "transitionArchitecture": "docs/ea/v11/V11_NEUTRAL_BRIDGE_ARCHITECTURE_20260922.md",
+      "researchCodeIndex": "research/v11/README.md",
+      "mt5Indicator": "mt5/indicators/V11WaveCandle.mq5",
+      "frozenComparator": "v10HAOracleResearch",
+      "market": "GOLD#",
+      "displayTimeframe": "H4",
+      "internalTimeframe": "M5",
+      "consumedCutoff": "2026-09-18 23:57 raw M1",
+      "tradeAuthority": "NONE",
+      "productionAuthority": "NONE"
+    },
+    "v10HAOracleResearch": {
+      "status": "FROZEN_PREDECESSOR_AND_TRADING_COMPARATOR",
+      "authority": "docs/ea/v10/AGENTS_V10.md",
+      "authorityMap": "docs/ea/v10/V10_DOCUMENT_AUTHORITY_MAP_20260921.md",
+      "handoff": "docs/ea/v10/HANDOFF_V10.md",
+      "researchState": "docs/ea/v10/RESEARCH_STATE_V10.md",
+      "latestCheckpoint": "docs/ea/v10/V10_MA_BAND_FORWARD_CHECKPOINT_20260921.md",
+      "decisionIndex": "docs/ea/v10/V10_RESEARCH_DECISIONS_20260921.md",
+      "nextContract": "docs/ea/v10/V10_NEXT_RESEARCH_CONTRACT_NORMALIZED_STATE_FORWARD_20260921.md",
+      "researchCodeIndex": "research/v10/README.md",
+      "exactReplayEA": "mt5/experts/V10R7G_ExactActualTickReplayEA.mq5",
+      "fullEmbeddedEA": "mt5/experts/V10R7G_FullEmbeddedML_EA.mq5",
+      "predecessorClosure": "docs/ea/v9/V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md",
+      "market": "GOLD#",
+      "consumedCutoff": "2026-08-28 23:57 raw M1",
+      "forwardObservedThrough": "2026-09-18 23:57 raw M1",
+      "productionAuthority": "NONE"
+    },
+    "v8MovementProbabilityShadow": {
+      "status": "HISTORICAL_PREDECESSOR_NO_ACTIVE_AUTHORITY",
+      "indicator": "mt5/indicators/V8MovementProbabilityIndicator.mq5",
+      "handoff": "docs/ea/v8/HANDOFF_V8.md",
+      "researchJourney": "docs/ea/v8/V8_RESEARCH_JOURNEY.md",
+      "modelContract": "docs/ea/v8/V8_005_MOVEMENT_PROBABILITY_INDICATOR.md",
+      "parityReference": "ledgers/v8/V8MovementProbabilityParityReference.csv",
+      "directionAuthority": "NONE",
+      "productionAuthority": "NONE"
+    },
     "journalWeb": {
       "source": "src",
       "bridge": "bridge/mt5_bridge.py",
@@ -31,33 +98,6 @@
     "tradingView": {
       "indicator": "tradingview/ict_cockpit_indicator.pine",
       "mt5Indicator": "mt5/indicators/ICTCockpitIndicator.mq5"
-    },
-    "v8MovementProbabilityShadow": {
-      "status": "HISTORICAL_PREDECESSOR_NO_ACTIVE_AUTHORITY",
-      "indicator": "mt5/indicators/V8MovementProbabilityIndicator.mq5",
-      "handoff": "docs/ea/v8/HANDOFF_V8.md",
-      "researchJourney": "docs/ea/v8/V8_RESEARCH_JOURNEY.md",
-      "modelContract": "docs/ea/v8/V8_005_MOVEMENT_PROBABILITY_INDICATOR.md",
-      "parityReference": "ledgers/v8/V8MovementProbabilityParityReference.csv",
-      "directionAuthority": "NONE",
-      "productionAuthority": "NONE"
-    },
-    "v10HAOracleResearch": {
-      "status": "ACTIVE_HA_PRIMARY_NORMALIZED_STATE_FORWARD_SHADOW",
-      "authority": "docs/ea/v10/AGENTS_V10.md",
-      "authorityMap": "docs/ea/v10/V10_DOCUMENT_AUTHORITY_MAP_20260921.md",
-      "handoff": "docs/ea/v10/HANDOFF_V10.md",
-      "researchState": "docs/ea/v10/RESEARCH_STATE_V10.md",
-      "latestCheckpoint": "docs/ea/v10/V10_PROGRESSION_AND_MA_BAND_EXPLORATION_CHECKPOINT_20260921.md",
-      "decisionIndex": "docs/ea/v10/V10_RESEARCH_DECISIONS_20260921.md",
-      "nextContract": "docs/ea/v10/V10_NEXT_RESEARCH_CONTRACT_NORMALIZED_STATE_FORWARD_20260921.md",
-      "researchCodeIndex": "research/v10/README.md",
-      "exactReplayEA": "mt5/experts/V10R7G_ExactActualTickReplayEA.mq5",
-      "fullEmbeddedEA": "mt5/experts/V10R7G_FullEmbeddedML_EA.mq5",
-      "predecessorClosure": "docs/ea/v9/V9_RESEARCH_CLOSURE_AND_V10_TRANSITION_20260916.md",
-      "market": "GOLD#",
-      "consumedCutoff": "2026-08-28 23:57 raw M1",
-      "productionAuthority": "NONE"
     }
   },
   "artifactPolicy": {
@@ -73,6 +113,7 @@
     "replayCore": "python scripts/test_mentor_ai_replay_v4.py",
     "liveShadow": "python scripts/test_mentor_ai_live_v4.py",
     "groundTruthIntegration": "python scripts/test_ground_truth_v2_integration.py",
-    "contracts": "python scripts/build_mentor_api_contracts.py"
+    "contracts": "python scripts/build_mentor_api_contracts.py",
+    "v12Schema": "python research/v12/validate_v12_event_schema.py"
   }
 }

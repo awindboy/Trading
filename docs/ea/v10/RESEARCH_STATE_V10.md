@@ -1,9 +1,10 @@
 # V10 compact research state
 
 Date: `2026-09-21`
-Authority: `RESEARCH ONLY`
+Authority: `FROZEN PREDECESSOR / REPRODUCTION AND COMPARISON ONLY`
 Production authority: `NONE`
 Consumed cutoff: `2026-08-28 23:57 raw M1`
+First forward observation: `2026-08-31 through 2026-09-18 23:57 raw M1`
 Final reserve: `GOLD# 2021 SEALED`
 
 ## 1. Core architecture
@@ -84,6 +85,18 @@ Retained continuous coordinates:
 
 H1 WMA20 OC2 edge/span STOP AUC remained about `0.706 / 0.737 / 0.752` in 2024/2025/2026. Stable discrimination did not produce a stable action rule.
 
+### First forward MA observation
+
+The first post-cutoff causal window contains 65 selected Children across 25 FAST runs and 9 Hard SLs. Fixed semantic STOP AUCs were:
+
+```text
+H4 WMA20 OC2 slope / ATR   0.756  run-block 95% [0.601, 0.955]
+H4 WMA20 OC2 span / ATR    0.728  run-block 95% [0.537, 0.955]
+H1 WMA20 OC2 edge / ATR    0.685  run-block 95% [0.510, 0.901]
+```
+
+The maximum stop streak was five. Several attempts in that streak occurred while the Parent band remained directionally healthy, so MA geometry has not solved repeated Child stop-outs. No threshold or action policy was applied. The window is now observed evidence, not a reserve for a newly invented rule.
+
 ## 5. Closed findings
 
 | Branch | Decision | Reason |
@@ -121,8 +134,12 @@ Therefore raw point/dollar thresholds are not portable. Use same-timeframe ATR n
 - One historical generic-export R5 EV-sign mismatch remains documented (`925/926` versus native `926/926`).
 - No live or production authority.
 
-## 8. Active next contract
+## 8. Final historical contract
 
 `V10_NEXT_RESEARCH_CONTRACT_NORMALIZED_STATE_FORWARD_20260921.md`
 
-The next valid evidence is future-only shadow logging. No further consumed-data parameter search is authorized.
+The normalized-state forward contract produced its first observation through
+`2026-09-18 23:57` and is now frozen. No further V10 parameter search or active
+shadow extension is authorized; V12 owns new research.
+
+The `2026-09-18 23:57` boundary is inherited by V12 as consumed evidence.
