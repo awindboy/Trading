@@ -4,9 +4,17 @@ Last synchronized: `2026-09-23`
 
 ## Status
 
-`ACTIVE RESEARCH / ARCHITECTURE FROZEN FOR PHASE 0 / NO RESULT`
+`PHASE 0 NUMERIC UNIVERSE FROZEN / PHASE 1 ACTIVE / NO PERFORMANCE RESULT`
 
 ## Established inputs
+
+- The supplied local timeframe files are now provenance-locked. The full M1
+  SHA-256 is
+  `fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250`;
+  the consumed causal prefix SHA-256 is
+  `04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939`.
+- Raw-M1 reconstruction matched the supplied M5, M15, M30, H1, H4, D1, and W1
+  exports exactly in coverage, OHLC, tick volume, and volume.
 
 - The supplied 28-page Korean CRT guide is a secondary synthesis of public Romeo
   material. Its SHA-256 is
@@ -55,6 +63,19 @@ Last synchronized: `2026-09-23`
   change SL/target outcomes. Faster tester modes are smoke tests only.
 - Market-closed order failures are execution states, not strategy losses; their
   lifecycle repair remains deferred to the EA implementation phase.
+- Phase-0 timestamps are offset-free MT5 broker labels. UTC conversion is
+  forbidden until the broker timezone/DST history is independently verified.
+- Strict point-rounded C1 extreme breach creates the C2 state; equality is a
+  touch, not a breach.
+
+## Closed Phase-0 result
+
+- `1,459` exhaustive parent records: `1,215` D1->H1 and `244` W1->H4.
+- `1,105` directional structural hypotheses; no Child or entry authorization.
+- One same-M1 dual-extreme ordering ambiguity is preserved.
+- Two independent builds produced identical hashes for all ten output files.
+- This is observation and reproducibility evidence only. It says nothing yet
+  about stops, R, profit, or superiority to V10.
 
 ## Phase-0 hypotheses
 
@@ -73,6 +94,7 @@ These are questions, not rules:
 
 - All GOLD# observations through `2026-09-18 23:57` are consumed.
 - GOLD# 2021 remains sealed.
-- No V12 backtest, scorecard, EA, or independent validation exists yet.
-- Phase 0 is complete only when the event definition can be independently
-  reproduced and ambiguity rates are reported.
+- No V12 backtest, performance scorecard, EA, or independent future validation
+  exists yet.
+- The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
+  official builder and reserved for a later frozen shadow.

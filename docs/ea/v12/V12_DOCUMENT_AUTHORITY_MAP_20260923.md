@@ -13,14 +13,21 @@ As of `2026-09-23`, read V12 authority in this order:
    parity, tester modes, order lifecycle, and evidence gates;
 7. `V12_SOURCE_REGISTER_20260923.md` — external provenance and authority levels;
 8. `V12_RESEARCH_ROADMAP_20260923.md` — staged work and promotion gates;
-9. `results/README.md` — compact V12 receipts when they exist.
+9. `results/README.md` — compact result routing;
+10. `results/V12_PHASE0_CAUSAL_EVENT_UNIVERSE_20260923.md` — frozen Phase-0
+    source, parity, event-count, ambiguity, and reproducibility receipt.
 
 ## Schema authority
 
 - `../../../research/v12/v12_crt_event_contract.schema.json` defines the current
   machine-readable decision/outcome record boundary.
 - `../../../research/v12/validate_v12_event_schema.py` verifies the schema and
-  its embedded examples. Passing it proves structural consistency only.
+  its embedded examples.
+- `../../../research/v12/v12_broker_clock_spec.json` freezes broker-label bucket
+  and point semantics.
+- `../../../research/v12/build_v12_phase0.py` and
+  `../../../research/v12/validate_v12_phase0_output.py` are the Phase-0 oracle
+  and complete-pack validator.
 
 ## Predecessor routing
 
@@ -34,6 +41,6 @@ Predecessor documents cannot override V12.
 
 ## Result boundary
 
-There is no V12 performance result yet. A schema, architecture, compiled EA,
-visual chart, candidate count, or passing parity check is not profitability or
-independent validation evidence.
+There is no V12 performance result yet. The Phase-0 receipt establishes input and
+parent-event reproducibility only. A schema, architecture, candidate count, or
+passing parity check is not profitability or independent validation evidence.

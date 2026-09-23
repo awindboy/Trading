@@ -10,6 +10,7 @@ vite.config.d.ts
 data/mentor_ai_replay_secret.json
 data/backups/
 data/mentor_ai_live_v4/
+data/GOLD#/
 archive/outputs/
 output/
 .env

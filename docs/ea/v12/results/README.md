@@ -2,6 +2,12 @@
 
 There is no V12 performance result yet.
 
+The first retained numeric receipt is:
+
+- `V12_PHASE0_CAUSAL_EVENT_UNIVERSE_20260923.md`: exhaustive W1/D1 C1/C2
+  parent universe, raw-M1-to-MT5 parity, ambiguity counts, and independent
+  byte-identical rerun evidence. It has observation authority only.
+
 The retained inception artifacts are architecture, source, causal-observation,
 engineering, and schema contracts. They do not prove candidate quality,
 profitability, stop reduction, Python/MQL5 parity, or production readiness.

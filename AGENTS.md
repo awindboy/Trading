@@ -50,6 +50,10 @@ Romeo material:
 H4 -> M15/M5 is exploratory shadow work only. It must not be presented as a
 Romeo rule or receive action authority without a separate V12 contract.
 
+Phase 0 is frozen as a reproducible observation universe: `1,459` exhaustive
+C1/C2 records (`1,215` D1->H1 and `244` W1->H4), with no Child, outcome, or
+performance authority. Phase 1 is the active no-ML structural baseline stage.
+
 ## Non-negotiable causal contract
 
 - Official analysis starts from verified raw M1 revealed in chronological order.

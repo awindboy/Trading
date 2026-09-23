@@ -1,0 +1,21 @@
+{
+  "generation": "V12",
+  "phase": "PHASE_0_OBSERVATION_ONLY",
+  "event_definition_version": "v12-phase0-c1c2-v1",
+  "cutoff": "2026-09-18T23:57:00",
+  "source_full_file_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+  "source_causal_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939",
+  "trusted_2022_to_20260828_prefix_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+  "broker_clock_spec_canonical_sha256": "06d5c427457ecb3dc0b11ae5b2946afd8528462c80ff2bec6babcbc7df9e1b84",
+  "decision_records": 1459,
+  "directional_hypotheses": 1105,
+  "ambiguous_extreme_order_records": 1,
+  "outcome_records": 0,
+  "reproducible_independent_runs": 2,
+  "all_output_hashes_identical": true,
+  "primary_output_manifest_sha256": "d9c616f5ad65423c29b08e14c45f6f9c870cb49d95f527852db1de0b4580c20c",
+  "decision_ledger_sha256": "4b5fe2b76d8ba6faca26b062b8caac0aa8d56bcf5e08066b8d11c7375550a33a",
+  "rich_event_ledger_sha256": "ded52cdc2b195a69dca300c1c0b38dca79cb0eb0ddd8e4f009a0b1589042fbf0",
+  "entry_authority": false,
+  "performance_claim_allowed": false
+}

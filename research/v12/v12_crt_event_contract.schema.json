@@ -14,7 +14,8 @@
     },
     "timestamp": {
       "type": "string",
-      "format": "date-time"
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$",
+      "description": "Offset-free MT5 broker-clock label. It is not UTC and must not be timezone-converted until the broker clock history is verified."
     },
     "price": {
       "type": "number"
@@ -335,10 +336,10 @@
       "event_definition_version": "v12-phase0-c1c2-v1",
       "parent_id": "synthetic-parent-0001",
       "child_id": null,
-      "decision_time": "2026-01-19T04:00:00+00:00",
+      "decision_time": "2026-01-19T04:00:00",
       "c1": {
-        "open_time": "2026-01-05T00:00:00+00:00",
-        "close_time": "2026-01-12T00:00:00+00:00",
+        "open_time": "2026-01-05T00:00:00",
+        "close_time": "2026-01-12T00:00:00",
         "open": 100.0,
         "high": 110.0,
         "low": 90.0,
@@ -350,8 +351,8 @@
       "c1_midpoint": 100.0,
       "c2": {
         "bar": {
-          "open_time": "2026-01-12T00:00:00+00:00",
-          "close_time": "2026-01-19T00:00:00+00:00",
+          "open_time": "2026-01-12T00:00:00",
+          "close_time": "2026-01-19T00:00:00",
           "open": 104.0,
           "high": 112.0,
           "low": 96.0,
@@ -374,7 +375,7 @@
       "trigger": {
         "status": "PRIMITIVES_ONLY",
         "family": "MODEL1",
-        "trigger_time": "2026-01-19T04:00:00+00:00",
+        "trigger_time": "2026-01-19T04:00:00",
         "confirmation_time": null,
         "level_price": 111.0,
         "trigger_bar": null,
@@ -417,7 +418,7 @@
       "event_definition_version": "v12-phase0-c1c2-v1",
       "parent_id": "synthetic-parent-0001",
       "child_id": "synthetic-child-0001",
-      "outcome_asof": "2026-01-23T00:00:00+00:00",
+      "outcome_asof": "2026-01-23T00:00:00",
       "terminal_state": "NO_EXECUTION",
       "first_competing_event": "NONE",
       "first_event_time": null,

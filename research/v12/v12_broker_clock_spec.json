@@ -1,0 +1,36 @@
+{
+  "spec_version": "v12-gold-mt5-clock-v1",
+  "symbol": "GOLD#",
+  "timestamp_semantics": {
+    "namespace": "MT5_BROKER_LABEL",
+    "timezone": "UNKNOWN_BROKER_LOCAL",
+    "utc_conversion_allowed": false,
+    "description": "Timestamps are the broker labels exported by MT5. They are intentionally stored without a UTC offset until the broker timezone and DST history are independently verified."
+  },
+  "price_grid": {
+    "point_size": 0.01,
+    "digits": 2,
+    "extreme_breach": "STRICTLY_GREATER_OR_LESS_AFTER_POINT_ROUNDING",
+    "equality": "TOUCH_NOT_BREACH"
+  },
+  "source_policy": {
+    "primary": "RAW_M1_CHRONOLOGICAL_PREFIX",
+    "synthetic_missing_minutes": false,
+    "terminal_open_bucket": "EXCLUDE_UNTIL_LATER_M1_ENTERS_A_LATER_BUCKET",
+    "higher_timeframe_exports": "PARITY_REFERENCE_ONLY"
+  },
+  "bucket_rules": {
+    "M5": "floor broker minute to 5-minute boundary",
+    "M15": "floor broker minute to 15-minute boundary",
+    "M30": "floor broker minute to 30-minute boundary",
+    "H1": "floor broker minute to clock hour",
+    "H4": "floor broker hour to 00/04/08/12/16/20",
+    "D1": "broker calendar day at 00:00",
+    "W1": "Sunday 00:00 broker label, seven-day buckets"
+  },
+  "development_evidence_cutoff": "2026-09-18T23:57:00",
+  "unseen_holdout_starts_after": "2026-09-18T23:57:00",
+  "sealed_periods": [
+    "GOLD# 2021"
+  ]
+}

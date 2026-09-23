@@ -22,7 +22,7 @@ def parse_timestamp(value: Any, field: str) -> datetime:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError as exc:
         raise ValueError(f"{field} is not ISO-8601: {value}") from exc
-    require(parsed.tzinfo is not None, f"{field} must include an offset")
+    require(parsed.tzinfo is None, f"{field} must be an offset-free MT5 broker-clock label")
     return parsed
 
 
