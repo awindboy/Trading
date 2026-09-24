@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1F COMPLETE AND REPRODUCIBLE / NEAREST TARGET COMPLETENESS REJECTED / NO TRADE AUTHORITY`
+`PHASE 1G COMPLETE AND REPRODUCIBLE / CONTINUOUS PATH PROMISING BUT JOINT GATE FAILED / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -291,28 +291,49 @@ Do not promote or tune on consumed outcomes:
 - treating external-target phase as a veto or size release without controlling
   branch, side, and first/later Child status.
 
+## Closed Phase-1G result
+
+- The raw-M1 causal prefix produced `4,868` completed source boxes and path
+  contexts for all `1,649` V10 rows, `2,234` FAST flips, 60 bridges, and 31
+  confirmed repairs. Two independent 14-file packs are byte-identical.
+- On `1,409` actual V10 entries, full path improved mean out-of-time stop Brier/
+  log loss/AUC from `0.1110 / 0.3747 / 0.6629` to
+  `0.1067 / 0.3577 / 0.7320`. Fold 2 calibration worsened.
+- Settlement/repair and boundary consumption carry the strongest compact stop
+  information. Static session names and event sequence alone do not explain it.
+- Full path does not consistently improve `>=5R` estimation beyond continuous
+  time, and FAST run-length mean R2 is `-0.0155`. The frozen joint success gate
+  is not met.
+- A post-contract `P(>=5R) - P(stop)` coordinate separates a high-conviction
+  quintile with `5.26%` pooled stopped units and positive R in all three folds,
+  but this is consumed-data hypothesis generation, not a sizing result.
+
+## Closed Phase-1G interpretations
+
+Do not promote:
+
+- a stop-only V10 veto; the highest stop-risk quintile retains `+135.99R` and
+  `225.08R` of `>=5R` right-tail capital;
+- the exploratory conviction score or any quintile boundary as sizing;
+- event proximity as the cause of a source-box break;
+- continuous path as a forecast of how many H4 bars the next FAST run lasts;
+- a hidden threshold selected from the favorable consumed folds.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. Conditional on the five frozen FAST-flip meanings, does origin-target versus
-   external-target lifecycle phase add information after branch, side, and
-   first/later status are controlled?
-2. Does the frozen Phase-1D/1E pre-release interaction remain distinct after
-   lifecycle phase is added? Phase 1F shows it is not explained by target
-   completeness because all 35 Children remain unfinished.
-3. Can `neutral bridge / later repair` preserve right-tail exposure only when
-   HA/Wave settlement confirms renewed delivery, without the broad carry's
-   added stop burden?
-4. Conditional on the five frozen FAST-flip meanings and realized event shock,
-   do FAST/STD/SLOW disagreement and Wave settlement add information beyond CRT
-   geometry?
-5. Can separate competing-risk heads rank immediate stop, later repair, and
-   right-tail continuation without collapsing them into one negative-R label?
-6. Does first/later aligned status remain useful conviction information outside
-   consumed history and without a fixed capital ladder?
-7. Does the answer remain stable across lane, side, year, and normalized
-   liquidity era?
+1. Can a predeclared compact head using only settlement/repair, boundary
+   consumption, and continuous clock reproduce the Phase-1G conviction
+   separation on untouched chronology?
+2. Can joint stop and right-tail calibration preserve capital better than a
+   stop-only classifier across side, year, and normalized liquidity era?
+3. Do FAST/STD/SLOW disagreement and Wave settlement add information after the
+   continuous path state is known, without becoming global gates?
+4. Can `neutral bridge / later repair` become useful only inside a high-
+   conviction path state without reviving broad Parent carry?
+5. Does origin/external lifecycle phase add anything after the continuous path
+   and CRT branch are controlled?
 
 ## Evidence boundary
 
@@ -321,9 +342,9 @@ These are questions, not rules:
 - Phase 1A is a consumed-history structural-R backtest. Phase 1B is a
   consumed-history journey/transition diagnostic. Phase 1C is a consumed-history
   holding-clock and repair diagnostic. Phase 1D is a corrected temporal/event
-  diagnostic, Phase 1E is a named-session/weekday diagnostic, and Phase 1F is a
-  consumed-history rolling-target density and lifecycle diagnostic. No V12 EA,
-  MQL5 parity, actual-tick economics, or independent future validation exists
-  yet.
+  diagnostic, Phase 1E is a named-session/weekday diagnostic, Phase 1F is a
+  consumed-history rolling-target density diagnostic, and Phase 1G is a
+  continuous-path competing-outcome diagnostic. No V12 EA, MQL5 parity,
+  actual-tick economics, or independent future validation exists yet.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

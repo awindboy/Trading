@@ -182,6 +182,34 @@ H4 objects make the inventory nearly always unfinished, including all Phase-1C
 bridges and the full H20 pre-event cell. Origin/external target kind remains an
 observation-only lifecycle coordinate for conditional HA/Wave work.
 
+## Retained Phase-1G artifacts
+
+- `v12_phase1g_contract.json`: frozen continuous clock, source-box path, event-
+  sequence, normalization, fold, and success contract.
+- `v12_phase1g_core.py`: DST-aware clock conversion, causal source-box and path
+  primitives, train-only encoder, and deterministic ridge estimators.
+- `build_v12_phase1g.py`: raw-M1 path reconstruction, V10/FAST/bridge/repair
+  joins, walk-forward competing-outcome models, mechanism ablations, and
+  capital diagnostics.
+- `test_v12_phase1g.py`: DST, strict-break, same-M1 exclusion, reentry, prior-
+  daily normalization, train-only vocabulary, and determinism tests.
+- `validate_v12_phase1g_output.py`: complete-pack, causal timestamp, frozen-
+  population, model-set, authority, and hash validator.
+- `v12_phase1g_release_manifest.json`: compact receipt for two independently
+  rebuilt, byte-identical 14-file packs.
+
+Run:
+
+```powershell
+python research/v12/test_v12_phase1g.py
+python research/v12/build_v12_phase1g.py --replace
+python research/v12/validate_v12_phase1g_output.py output/v12_phase1g_continuous_intraday_path_20260924_a
+```
+
+Phase 1G retains continuous settlement/repair and boundary-consumption paths as
+a promising stop-risk representation. It fails the joint right-tail success
+gate, cannot forecast FAST run length, and grants no veto or sizing authority.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

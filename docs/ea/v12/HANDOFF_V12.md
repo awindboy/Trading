@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1F COMPLETE AND REPRODUCIBLE / NEAREST TARGET COMPLETENESS REJECTED / NO TRADE AUTHORITY`
+`PHASE 1G COMPLETE AND REPRODUCIBLE / CONTINUOUS PATH PROMISING BUT JOINT GATE FAILED / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -140,31 +140,45 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
   high-outside LONGs are strongly positive while low-outside SHORTs are
   negative. Target kind remains descriptive only.
 
+## Completed Phase 1G
+
+- Two independent 14-file packs are byte-identical; both validators pass with
+  zero post-cutoff price rows parsed.
+- `4,868` causal Asia/London/New-York source boxes were joined to `1,649` V10
+  contexts, `2,234` FAST flips, 60 bridges, and 31 confirmed repairs.
+- For actual V10 entries, the full normalized path improved mean out-of-time
+  stop AUC from `0.6629` to `0.7320` and log loss from `0.3747` to `0.3577`.
+  Fold 2 still worsened in log loss.
+- Settlement/repair and boundary-consumption coordinates carry most of the stop
+  information. Event sequence alone is weak.
+- The right-tail head is mixed and the full path does not beat continuous time.
+  FAST run-length prediction has mean R2 `-0.0155`; the frozen success gate
+  fails.
+- The post-contract conviction coordinate has a stable low-stop Q5 (`5.05%`,
+  `5.86%`, `4.67%`) with positive R in every fold, but it has no sizing or veto
+  authority and requires a separately frozen validation.
+
 ## What is not yet known
 
 - a reproducible causal true-MSS definition that preserves the source idea
   without discretionary relabeling;
-- whether a different predeclared CRT branch can produce a stop population that
-  is both lower than V10 and frequent enough to carry meaningful right-tail
-  capital;
-- whether HA/Wave add incremental information inside CRT states;
-- whether origin-target versus external-target lifecycle phase adds information
-  after branch, side, and first/later Child are controlled;
+- whether a compact path head can jointly lower stop burden and preserve right-
+  tail capital on untouched chronology;
+- whether HA/Wave add incremental information after continuous path is known;
 - whether any ML head is calibrated and stable across side, year, lane, and
   liquidity era;
 - whether the structure survives actual-tick costs and execution constraints.
 
 ## Immediate next work
 
-1. freeze a conditional HA/Wave study inside the five Phase-1B FAST-flip
-   meanings and the Phase-1F origin/external lifecycle coordinate;
-2. control CRT branch, side, first/later aligned status, session, weekday, and
-   the retained H20 event cell before claiming incremental information;
-3. use FAST/STD/SLOW disagreement and Wave settlement as observations only;
-   do not revive a global HA or static-Wave gate;
-4. retain Phase-1C repair as a shadow outcome, but do not add capital merely
-   because a nearest external target exists;
-5. do not tune a minimum target distance or remove a level family from the
-   consumed Phase-1F result;
-6. preserve GOLD# 2021 and do not reinterpret the still-unread post-cutoff
-   chronology after its shadow semantics are frozen.
+1. freeze a compact competing-risk conviction head using Phase-1G settlement/
+   repair and boundary-consumption primitives, with continuous clock as a
+   control;
+2. predeclare stop, right-tail, capital-retention, calibration, and side/year/
+   liquidity-era stability gates before evaluating any new chronology;
+3. do not use the current stop score, conviction quintile, event proximity, or
+   FAST run-length estimate as action authority;
+4. add FAST/STD/SLOW and Wave settlement only as conditional ablations inside
+   the compact path state, not as global gates;
+5. preserve GOLD# 2021 and the unread post-cutoff chronology until the new
+   contract and preprocessing schema are frozen.

@@ -74,6 +74,12 @@ Phase 1F is complete and independently reproduced: deterministic nearest
 H4/day/week/month target succession is too dense, leaving every Phase-1C bridge
 unfinished. Target completeness is rejected as a gate; origin/external target
 phase remains observation-only.
+Phase 1G is complete and independently reproduced: a normalized continuous
+Asia-London-New-York path improves out-of-time stop-risk estimation on average,
+especially through settlement/repair and boundary-consumption coordinates, but
+fails the joint right-tail success gate. It is a promising representation only;
+its model scores and exploratory conviction quintiles have no veto or sizing
+authority.
 
 ## Non-negotiable causal contract
 
@@ -138,6 +144,12 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
   remain unfinished.
 - removing previous-H4 or tuning a minimum ATR target distance after seeing the
   Phase-1F consumed result.
+- using the Phase-1G stop score alone as a veto; its highest-risk quintile still
+  contains substantial positive R and right-tail capital.
+- promoting the post-contract Phase-1G conviction score or its quintiles as a
+  sizing map before a separately frozen compact head and untouched validation.
+- claiming that continuous time predicts FAST journey length; the out-of-time
+  run-length R2 remains approximately zero.
 
 ## Historical generations
 

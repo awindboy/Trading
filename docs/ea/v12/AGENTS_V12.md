@@ -47,6 +47,10 @@ CRT creates the Parent journey and candidate state
 - Phase 1F has a frozen and independently reproduced rolling Parent-target
   result. Nearest H4/day/week/month target completeness is too dense to select
   trustworthy bridges; target kind remains a lifecycle observation only.
+- Phase 1G has a frozen and independently reproduced continuous intraday-path
+  result. Settlement/repair and boundary-consumption coordinates improve
+  consumed-history stop-risk estimation, but the joint right-tail success gate
+  fails. Scores and conviction quintiles remain shadow-only.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -120,12 +124,13 @@ promotion contract exists.
 - GOLD# chronology through `2026-09-18 23:57` is consumed development evidence.
 - GOLD# 2021 remains sealed.
 - V12 currently has no independent validation.
-- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1F
+- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1G
   have consumed-development diagnostic authority only. Phase 1A fails the V10
   replacement gate; Phase 1B separates transition risk; Phase 1C rejects broad
   carry; Phase 1D treats time/events as state; Phase 1E rejects simple named-
   session and weekday vetoes; Phase 1F rejects nearest-target completeness as a
-  carry or admission gate.
+  carry or admission gate; Phase 1G retains continuous path as a promising
+  representation but rejects stop-only action and journey-length prediction.
 
 ## Closed Phase-1A finding
 
@@ -172,3 +177,13 @@ and every retained H20 pre-event Child remains unfinished. Do not post-hoc
 remove H4 levels or tune a minimum target distance. Origin/external phase may be
 used only as a conditional observation while branch, side, first/later Child,
 time, event, and right-tail capital remain visible.
+
+## Closed Phase-1G finding
+
+Do not use the Phase-1G stop score as a V10 veto. High predicted stop exposure
+still contains substantial right-tail capital. Do not promote the exploratory
+`P(>=5R) - P(stop)` conviction quintiles to sizing: they were inspected after
+the primary result and have no untouched validation. Continuous path did not
+predict FAST run length, and event proximity alone remained weak. Retain only
+the causal path representation and freeze any compact competing-risk head in a
+new contract before further evidence is opened.

@@ -27,6 +27,10 @@ The retained numeric receipts are:
   Parent-target inventory and target-density audit. It rejects target
   completeness as a carry/admission gate and retains origin/external phase only
   as a conditional lifecycle coordinate.
+- `V12_PHASE1G_CONTINUOUS_INTRADAY_PATH_20260924.md`: reproducible continuous
+  Asia-London-New-York path study. It retains settlement/repair as promising
+  stop-risk information, rejects stop-only action and FAST run-length claims,
+  and freezes the next compact competing-risk direction.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

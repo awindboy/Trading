@@ -48,6 +48,12 @@ As of `2026-09-24`, read V12 authority in this order:
 22. `results/V12_PHASE1F_PARENT_TARGET_SUCCESSION_20260924.md` — reproducible
     target-density audit, rejected completeness gate, and retained lifecycle
     coordinate.
+23. `V12_PHASE1G_CONTINUOUS_INTRADAY_PATH_CONTRACT_20260924.md` — frozen
+    continuous-clock, source-box handoff, event-sequence, and out-of-time model
+    contract.
+24. `results/V12_PHASE1G_CONTINUOUS_INTRADAY_PATH_20260924.md` — reproducible
+    path-state result, stop/right-tail audit, mechanism ablation, and rejected
+    action interpretations.
 
 ## Schema authority
 
@@ -98,6 +104,13 @@ As of `2026-09-24`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1f_output.py`, and
   `../../../research/v12/v12_phase1f_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1F pack.
+- `../../../research/v12/v12_phase1g_contract.json`,
+  `../../../research/v12/v12_phase1g_core.py`,
+  `../../../research/v12/build_v12_phase1g.py`,
+  `../../../research/v12/test_v12_phase1g.py`,
+  `../../../research/v12/validate_v12_phase1g_output.py`, and
+  `../../../research/v12/v12_phase1g_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1G pack.
 
 ## Predecessor routing
 
@@ -126,3 +139,7 @@ Phase 1F is complete and reproducible. The nearest rolling one-use target is
 too dense to distinguish trustworthy unfinished Parents: every Phase-1C bridge
 remains unfinished. Target completeness is rejected as a gate; target kind is
 retained only as a lifecycle coordinate.
+Phase 1G is complete and reproducible. Continuous path improves consumed-
+history stop-risk estimation on average, but does not consistently improve the
+right-tail head and cannot predict FAST run length. Its exploratory conviction
+coordinate is promising but has no veto or sizing authority.
