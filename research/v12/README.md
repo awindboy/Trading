@@ -280,6 +280,21 @@ Phase 1J finds stable early post-entry damage/progression separation but grants
 no action. Its next bounded use is a no-threshold staged-funding counterfactual,
 not another entry-time classifier.
 
+## Retained Phase-1K artifacts
+
+- `v12_phase1k_contract.json`: frozen no-threshold progression-release,
+  damage-stop, first-Child-only, and capital gate contract.
+- `v12_phase1k_core.py`: causal admission and normalized capital primitives.
+- `build_v12_phase1k.py`: all-run M15 event reconstruction and unchanged-Child
+  counterfactual scorecard builder.
+- `test_v12_phase1k.py`, `validate_v12_phase1k.py`, and
+  `v12_phase1k_release_manifest.json`: policy-boundary tests, complete-pack
+  parity validator, and compact two-build receipt.
+
+Phase 1K rejects using early M15 events as stale permission for existing later
+H4 Children. Further work, if retained, must define a genuinely event-native
+independent Child rather than another V10 admission gate.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

@@ -224,3 +224,11 @@ settlements, two opposed settlements, or repaired departure as an authorized
 funding rule. Phase 1J establishes an early within-run mechanism on consumed
 chronology, while lifetime event frequency remains censoring-sensitive. Any
 staged participation policy requires a separately frozen capital audit.
+
+## Closed Phase-1K finding
+
+Do not gate the next existing H4 Child with two favorable M15 settlements and
+do not stop all later H4 funding after two opposed settlements. The first is
+nonselective by the next capital decision; the second worsens normalized stop
+burden and loses tail. Any continuation must define an event-native independent
+Child near the M15 event, with a new structural Hard SL and contract.

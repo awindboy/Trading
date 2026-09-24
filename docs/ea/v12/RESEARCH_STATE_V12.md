@@ -400,17 +400,38 @@ Do not promote:
 - after-stop pooled AUC from only 11 tail runs as fold-stable evidence;
 - a fixed two-bar schedule or threshold tuned on this consumed result.
 
+## Closed Phase-1K result
+
+- `PROGRESSION_RELEASE` retains 97.7% of test Children and 95.9% of tail units,
+  but removes only 0.6% of stops and zero repeat stopped units. Win rate is
+  unchanged and equal-stop-budget R worsens.
+- `DAMAGE_STOP` removes 21.1% of stops only by removing 32.3% of Children and
+  22.1% of tail units. Stopped units per 100 worsen from 13.21 to 15.54.
+- First-Child-only retains 47.6% of Children and 52.9% of tail units; its
+  normalized stop burden and equal-risk economics are much worse.
+- Early M15 path separation therefore does not map onto the existing next-H4
+  Child decision. The primary gate fails.
+
+## Closed Phase-1K interpretations
+
+Do not promote:
+
+- two favorable M15 settlements as permission for the next existing H4 Child;
+- two opposed M15 settlements as a broad stop-funding rule;
+- first-Child-only as proof that lower exposure improves quality;
+- a tuned M15 threshold intended to rescue these consumed mappings.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. Can one initial Child remain active while later V10 Children are released
-   only after demonstrated favorable settlement, without cutting tail units in
-   proportion to stopped units?
-2. Does stopping later funding after persistent opposed settlement remove the
-   second/third stopped units that Phase 1I could not identify at entry?
-3. Which mechanism, progression release or damage stop, survives the full
-   stop/tail/frequency/win-rate/equal-stop-budget audit?
+1. Can a genuinely event-native M15 Child be defined as an independent attempt
+   near demonstrated progression, rather than stale permission for a later H4
+   Child?
+2. What structural M15 falsification price ends that new Child without widening
+   or rescuing the original H4 probe?
+3. Does event-native exposure add right-tail capital faster than stopped units,
+   after preserving the unchanged V10 comparator?
 4. Can normalized liquidity-era coordinates make the separation transportable
    when absolute volatility buckets drift?
 5. If staged funding fails, should V12 accept unavoidable first-Child loss and
@@ -428,7 +449,8 @@ These are questions, not rules:
   path competing-outcome diagnostic, Phase 1H is a compact-head/HA/Wave
   component-role diagnostic, and Phase 1I is a run-episode reverse-engineering
   and oracle-bound diagnostic. Phase 1J is a within-run causal-timeline and
-  early-mechanism diagnostic. No V12 EA, MQL5 parity,
+  early-mechanism diagnostic. Phase 1K is a failed staged-funding capital
+  mapping diagnostic. No V12 EA, MQL5 parity,
   actual-tick economics, or independent future validation exists yet.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

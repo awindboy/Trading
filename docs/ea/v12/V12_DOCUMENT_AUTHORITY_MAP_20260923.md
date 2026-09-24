@@ -71,6 +71,10 @@ As of `2026-09-24`, read V12 authority in this order:
 30. `results/V12_PHASE1J_WITHIN_RUN_CAUSAL_TIMELINE_20260924.md` — reproducible
     early-damage/progression result, censoring audit, and staged-funding next
     boundary.
+31. `V12_PHASE1K_STAGED_FUNDING_COUNTERFACTUAL_CONTRACT_20260924.md` — frozen
+    no-threshold existing-Child capital mapping and gates.
+32. `results/V12_PHASE1K_STAGED_FUNDING_COUNTERFACTUAL_20260924.md` —
+    reproducible failed capital mapping and event-native Child boundary.
 
 ## Schema authority
 
@@ -149,6 +153,13 @@ As of `2026-09-24`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1j.py`, and
   `../../../research/v12/v12_phase1j_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1J pack.
+- `../../../research/v12/v12_phase1k_contract.json`,
+  `../../../research/v12/v12_phase1k_core.py`,
+  `../../../research/v12/build_v12_phase1k.py`,
+  `../../../research/v12/test_v12_phase1k.py`,
+  `../../../research/v12/validate_v12_phase1k.py`, and
+  `../../../research/v12/v12_phase1k_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1K pack.
 
 ## Predecessor routing
 
@@ -192,4 +203,7 @@ loses concentrated tail capital, and fails win-rate/equal-risk gates.
 Phase 1J is complete and reproducible. Equal-horizon post-entry M15 damage and
 settlement persistence separate tail from stop-only runs consistently, but
 event frequency is censoring-sensitive and the result grants no action. The
-next object is a frozen no-threshold staged-funding counterfactual.
+Phase 1K is complete and reproducible. The frozen no-threshold mapping to
+existing H4 Children fails: progression is nonselective and damage-stop worsens
+normalized capital quality. The next object, if pursued, is an event-native
+independent Child rather than another V10 gate.

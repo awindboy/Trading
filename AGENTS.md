@@ -93,6 +93,9 @@ Phase 1J is complete and independently reproduced: equal-horizon post-entry M15
 paths separate stop-only from tail runs through early adverse damage,
 settlement persistence, and giveback. It has mechanism authority only; no
 checkpoint or event has funding, veto, exit, or sizing authority.
+Phase 1K is complete and independently reproduced: applying those events to
+existing H4-spaced V10 Children fails. Progression is too common by the next
+Child, while damage-stop removes exposure faster than stops and loses tail.
 
 ## Non-negotiable causal contract
 
@@ -145,6 +148,8 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
 - promoting Phase-1J event prevalence, second-M15 MAE, path efficiency, or
   repaired departure directly to funding; the result is consumed, tail-sparse,
   and event prevalence is exposed to unequal terminal-time censoring.
+- reusing Phase-1J progression as permission for the next H4 Child, or opposed
+  persistence as a broad funding stop; Phase 1K rejects both capital mappings.
 - fixed broker-hour/session avoidance, all-news avoidance, or realized surprise
   as a direction oracle; Phase-1D retains only two narrow shadow interactions
   and grants neither action authority.

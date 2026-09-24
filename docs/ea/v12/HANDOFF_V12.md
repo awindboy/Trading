@@ -218,13 +218,22 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 - Two independent eight-file packs are byte-identical; all 55 V12 tests and
   complete-pack validation pass with zero post-cutoff rows.
 
+## Completed Phase 1K
+
+- Progression release keeps 97.7% of test Children and removes zero repeat-stop
+  units. The event is already too common by the next H4 Child.
+- Damage stop removes 21.1% of stops, but removes 32.3% of Children and 22.1%
+  of tail units; stop/100 worsens to 15.54 from 13.21.
+- First-Child-only is worse on win rate, normalized stops, tail, and equal-risk
+  economics. The frozen primary gate fails.
+- Two independent six-file packs are byte-identical; all 58 tests and complete-
+  pack validation pass with zero post-cutoff rows.
+
 ## Immediate next work
 
-1. freeze a no-threshold staged-funding counterfactual before evaluating it;
-2. always preserve the first V10 Child;
-3. compare later-Child release after two favorable M15 settlements with a
-   damage stop after two opposed settlements and a first-Child-only comparator;
-4. audit repeat/all stopped units, tail capital, Child frequency, win rate, raw
-   R, and equal-stop-budget R together;
-5. do not convert Phase-1J checkpoints into tuned thresholds or reopen the
-   closed complete-feature-stack sequential model.
+1. do not tune the failed existing-H4-Child gates;
+2. decide whether to freeze an event-native M15 Child definition near the
+   progression event, with its own structural Hard SL and no rescue semantics;
+3. keep original V10 Children unchanged as the comparator and audit incremental
+   stopped units versus incremental tail capital;
+4. preserve GOLD# 2021 and post-cutoff chronology.
