@@ -18,6 +18,8 @@ from information that appears inside the run.
 ## Frozen population and labels
 
 - Reuse the Phase 1I funded FAST-run population without changing its run IDs.
+- Recover the exact funded Child IDs from the hash-locked Phase 1G Child path
+  ledger; do not infer funded status from all Wave-ledger rows sharing a run ID.
 - Include only `STOP_ONLY_RUN` and `TAIL_JOURNEY_RUN` in the primary contrast.
 - Keep `after_stop_candidate` as a secondary descriptive cohort. Its tail count
   is known to be too small for a policy fit.
