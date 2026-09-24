@@ -186,8 +186,6 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 - Two independent nine-file packs are byte-identical; five focused tests and
   complete-pack validation pass with zero post-cutoff price rows parsed.
 
-## Immediate next work
-
 ## Completed Phase 1I
 
 - The outcome-first ledger contains 679 funded FAST runs: 57 tail journeys,
@@ -207,16 +205,26 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 - Two independent ten-file packs are byte-identical; all 51 V12 tests and full-
   pack validation pass with zero post-cutoff price rows parsed.
 
+## Completed Phase 1J
+
+- The first-entry-to-first-stop/weighted-5R ledger covers 238 classified runs;
+  234 have at least one causal pre-terminal completed M15 bar.
+- By the second completed M15, cumulative MAE has pooled AUC 0.720 with the
+  same direction in F1/F2/F3; signed path efficiency has pooled AUC 0.673.
+- Favorable persistence is much more common in tails and opposed persistence in
+  stop-only runs, but lifetime occurrence is censored by unequal terminal time.
+- Six repaired-departure feature pairs pass a mechanism screen only. No event,
+  checkpoint, or value has action or sizing authority.
+- Two independent eight-file packs are byte-identical; all 55 V12 tests and
+  complete-pack validation pass with zero post-cutoff rows.
+
 ## Immediate next work
 
-1. freeze a within-run causal timeline contract over the fixed Phase-1I tail-
-   journey and stop-only cohorts;
-2. reveal M15 sequentially from first entry and locate the earliest event—not a
-   fixed bar number—where the cohorts diverge before meaningful stopped
-   exposure;
-3. test whether a small initial probe followed by evidence-based risk release
-   preserves journey participation while blocking second/third stopped units;
-4. do not revive fixed k2 funding, broad cooldown, or the closed complete-
-   feature-stack sequential model under new names;
-5. preserve GOLD# 2021 and post-cutoff chronology until that timeline contract
-   and success gates are frozen.
+1. freeze a no-threshold staged-funding counterfactual before evaluating it;
+2. always preserve the first V10 Child;
+3. compare later-Child release after two favorable M15 settlements with a
+   damage stop after two opposed settlements and a first-Child-only comparator;
+4. audit repeat/all stopped units, tail capital, Child frequency, win rate, raw
+   R, and equal-stop-budget R together;
+5. do not convert Phase-1J checkpoints into tuned thresholds or reopen the
+   closed complete-feature-stack sequential model.

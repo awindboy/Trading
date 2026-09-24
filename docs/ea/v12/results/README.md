@@ -38,6 +38,9 @@ The retained numeric receipts are:
 - `V12_PHASE1I_RUN_EPISODE_REVERSE_ENGINEERING_20260924.md`: reproducible
   funded-FAST-run outcome reconstruction, repeat-stop oracle bound, failed
   first-decision policy, rejected cooldown, and within-run timeline boundary.
+- `V12_PHASE1J_WITHIN_RUN_CAUSAL_TIMELINE_20260924.md`: reproducible
+  first-entry-to-terminal M15 timeline, equal-horizon early-damage separation,
+  censoring audit, and staged-funding next boundary.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

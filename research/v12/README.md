@@ -261,6 +261,25 @@ rejects the available first-decision Path+HA score. The next research object is
 the causal within-run divergence timeline, not a broader cooldown or another
 static indicator.
 
+## Retained Phase-1J artifacts
+
+- `v12_phase1j_contract.json`: frozen run population, first-stop/weighted-5R
+  terminal, completed-M15 event, equal-horizon, and promotion screen.
+- `v12_phase1j_core.py`: weighted-tail touch, causal run timeline, path-state,
+  event snapshot, effect-size, and AUC primitives.
+- `build_v12_phase1j.py`: source-verified raw-M1 timeline, terminal, event,
+  occurrence, contrast, and promotion-screen builder.
+- `test_v12_phase1j.py`: tail-price, AUC, effect-direction, and event snapshot
+  tests.
+- `validate_v12_phase1j.py`: complete-pack, causal terminal, manifest, cutoff,
+  and independent byte-parity validator.
+- `v12_phase1j_release_manifest.json`: compact receipt for two independently
+  rebuilt, byte-identical eight-file packs.
+
+Phase 1J finds stable early post-entry damage/progression separation but grants
+no action. Its next bounded use is a no-threshold staged-funding counterfactual,
+not another entry-time classifier.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

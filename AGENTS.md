@@ -89,8 +89,10 @@ Phase 1I is complete and independently reproduced: direct funded-FAST-run
 reverse engineering shows valuable repeat-stop oracle headroom, but the frozen
 first-decision Path+HA policy barely improves normalized stopped exposure,
 loses concentrated tail capital, and fails win-rate/equal-stop-budget gates.
-The next object is the causal within-run formation timeline, not another static
-admission score.
+Phase 1J is complete and independently reproduced: equal-horizon post-entry M15
+paths separate stop-only from tail runs through early adverse damage,
+settlement persistence, and giveback. It has mechanism authority only; no
+checkpoint or event has funding, veto, exit, or sizing authority.
 
 ## Non-negotiable causal contract
 
@@ -140,6 +142,9 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
   authorization, static key arrival, or first/later aligned status as a
   consumed-data V10 veto or sizing rule; each retains meaningful right-tail
   capital and lacks independent future validation.
+- promoting Phase-1J event prevalence, second-M15 MAE, path efficiency, or
+  repaired departure directly to funding; the result is consumed, tail-sparse,
+  and event prevalence is exposed to unequal terminal-time censoring.
 - fixed broker-hour/session avoidance, all-news avoidance, or realized surprise
   as a direction oracle; Phase-1D retains only two narrow shadow interactions
   and grants neither action authority.

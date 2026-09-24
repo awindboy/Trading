@@ -216,3 +216,11 @@ units mainly by reducing exposure, barely changes stopped units per 100, loses a
 large fold-1 journey, and fails equal-stop-budget economics. The perfect oracle
 shows opportunity, not identifiability. Further work must study the causal
 within-run formation timeline and cannot revive fixed-k sequential funding.
+
+## Closed Phase-1J finding
+
+Do not treat second-M15 adverse excursion, path efficiency, two favorable
+settlements, two opposed settlements, or repaired departure as an authorized
+funding rule. Phase 1J establishes an early within-run mechanism on consumed
+chronology, while lifetime event frequency remains censoring-sensitive. Any
+staged participation policy requires a separately frozen capital audit.

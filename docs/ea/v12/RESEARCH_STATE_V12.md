@@ -375,20 +375,46 @@ Do not promote:
 - descriptive London/New-York transition or HA contrasts from only 11 after-
   stop tail journeys.
 
+## Closed Phase-1J result
+
+- The fixed 181 stop-only and 57 tail-journey runs yield 6,872 causal M15 rows;
+  four runs terminate before one post-entry M15 completes.
+- At the second completed M15, cumulative MAE separates tail from stop-only
+  runs with pooled AUC 0.720 and fold AUCs 0.734, 0.681, and 0.689. Signed path
+  efficiency is directionally stable with pooled AUC 0.673.
+- Two favorable settlements occur in 96.5% of tails versus 55.2% of stop-only
+  runs; two opposed settlements occur in 50.9% versus 81.8%. These directions
+  repeat in all test folds, but lifetime event prevalence is exposed to longer
+  tail terminal times.
+- Six repaired-departure feature pairs pass the frozen mechanism screen. This
+  nominates staged participation for a capital audit; it does not authorize a
+  rule.
+
+## Closed Phase-1J interpretations
+
+Do not promote:
+
+- second-M15 MAE, path efficiency, favorable/opposed persistence, or repaired
+  departure directly to funding;
+- lifetime event occurrence as if both classes had equal observation time;
+- after-stop pooled AUC from only 11 tail runs as fold-stable evidence;
+- a fixed two-bar schedule or threshold tuned on this consumed result.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. At what causal event inside a FAST run, if any, do fixed tail-journey and
-   stop-only cohorts first become distinguishable?
-2. Does that separation occur before the first meaningful stopped exposure, or
-   only after the outcome is already economically determined?
-3. Can one small participation unit remain active until that event, with later
-   risk released only by new favorable business rather than a fixed k number?
+1. Can one initial Child remain active while later V10 Children are released
+   only after demonstrated favorable settlement, without cutting tail units in
+   proportion to stopped units?
+2. Does stopping later funding after persistent opposed settlement remove the
+   second/third stopped units that Phase 1I could not identify at entry?
+3. Which mechanism, progression release or damage stop, survives the full
+   stop/tail/frequency/win-rate/equal-stop-budget audit?
 4. Can normalized liquidity-era coordinates make the separation transportable
    when absolute volatility buckets drift?
-5. If no early separation exists, should V12 accept unavoidable first-loss
-   participation and optimize only the number of additional exposed units?
+5. If staged funding fails, should V12 accept unavoidable first-Child loss and
+   stop trying to predict the run before it forms?
 
 ## Evidence boundary
 
@@ -401,7 +427,8 @@ These are questions, not rules:
   consumed-history rolling-target density diagnostic, Phase 1G is a continuous-
   path competing-outcome diagnostic, Phase 1H is a compact-head/HA/Wave
   component-role diagnostic, and Phase 1I is a run-episode reverse-engineering
-  and oracle-bound diagnostic. No V12 EA, MQL5 parity,
+  and oracle-bound diagnostic. Phase 1J is a within-run causal-timeline and
+  early-mechanism diagnostic. No V12 EA, MQL5 parity,
   actual-tick economics, or independent future validation exists yet.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.
