@@ -31,6 +31,10 @@ The retained numeric receipts are:
   Asia-London-New-York path study. It retains settlement/repair as promising
   stop-risk information, rejects stop-only action and FAST run-length claims,
   and freezes the next compact competing-risk direction.
+- `V12_PHASE1H_COMPACT_CONVICTION_HEAD_20260924.md`: reproducible compact
+  competing-risk study. It fails the primary fold-level capital gate, finds HA
+  useful only for stop risk, rejects robust incremental Wave value, and freezes
+  asymmetric competing-head roles as the next hypothesis.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1G COMPLETE AND REPRODUCIBLE / CONTINUOUS PATH PROMISING BUT JOINT GATE FAILED / NO TRADE AUTHORITY`
+`PHASE 1H COMPLETE AND REPRODUCIBLE / COMPACT PATH PARTIAL / PRIMARY GATE FAILED / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -162,23 +162,39 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 
 - a reproducible causal true-MSS definition that preserves the source idea
   without discretionary relabeling;
-- whether a compact path head can jointly lower stop burden and preserve right-
-  tail capital on untouched chronology;
-- whether HA/Wave add incremental information after continuous path is known;
+- whether an asymmetric head using HA only for stop risk and compact path for
+  right-tail estimation can preserve capital on untouched chronology;
+- whether the Phase-1H low-stop bands survive genuinely different normalized
+  liquidity eras rather than only the highest historical absolute-range tercile;
 - whether any ML head is calibrated and stable across side, year, lane, and
   liquidity era;
 - whether the structure survives actual-tick costs and execution constraints.
 
+## Completed Phase 1H
+
+- The predeclared 50-field compact path improves mean out-of-time stop log loss
+  from `0.3952` to `0.3626` and right-tail log loss from `0.2516` to `0.2443`
+  versus continuous-clock control.
+- Its Q5 lowers stopped units in every fold (`1.19`, `4.71`, `6.93` per 100),
+  but fold-2 R/unit is `0.252` versus `0.272` for the full population. The
+  frozen primary success gate therefore fails.
+- HA improves stop log loss in all three folds and its Q5 passes every capital
+  gate, but HA slightly worsens right-tail log loss. Wave worsens stop stability
+  and adds no robust incremental value.
+- Every test row occupies the highest training-defined absolute-volatility
+  tercile, exposing liquidity-era drift rather than proving three-era stability.
+- Two independent nine-file packs are byte-identical; five focused tests and
+  complete-pack validation pass with zero post-cutoff price rows parsed.
+
 ## Immediate next work
 
-1. freeze a compact competing-risk conviction head using Phase-1G settlement/
-   repair and boundary-consumption primitives, with continuous clock as a
-   control;
-2. predeclare stop, right-tail, capital-retention, calibration, and side/year/
-   liquidity-era stability gates before evaluating any new chronology;
-3. do not use the current stop score, conviction quintile, event proximity, or
-   FAST run-length estimate as action authority;
-4. add FAST/STD/SLOW and Wave settlement only as conditional ablations inside
-   the compact path state, not as global gates;
-5. preserve GOLD# 2021 and the unread post-cutoff chronology until the new
-   contract and preprocessing schema are frozen.
+1. freeze an asymmetric competing-risk head before opening unread chronology:
+   compact path plus HA may estimate stop risk, while the right-tail head stays
+   compact-path-led;
+2. keep the joint score and allocation mapping train-only and predeclare side,
+   normalized-liquidity, calibration, stopped-exposure, and right-tail gates;
+3. do not add Wave to the primary head without a new mechanism hypothesis;
+4. do not use Phase-1H scores, Q5, or the attractive HA capital slice as a V10
+   veto or sizing map;
+5. preserve GOLD# 2021 and post-cutoff chronology until the asymmetric contract
+   and preprocessing schema are frozen.

@@ -80,6 +80,11 @@ especially through settlement/repair and boundary-consumption coordinates, but
 fails the joint right-tail success gate. It is a promising representation only;
 its model scores and exploratory conviction quintiles have no veto or sizing
 authority.
+Phase 1H is complete and independently reproduced: its frozen 50-field compact
+head improves both outcome heads versus clock control and creates low-stop
+train-calibrated bands, but fails the fold-level capital gate. HA improves only
+the stop head and Wave adds no robust incremental value. No Phase-1H score,
+band, ablation, or shadow tilt has action or sizing authority.
 
 ## Non-negotiable causal contract
 
@@ -150,6 +155,12 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
   sizing map before a separately frozen compact head and untouched validation.
 - claiming that continuous time predicts FAST journey length; the out-of-time
   run-length R2 remains approximately zero.
+- promoting the Phase-1H compact Q5, shadow tilt, or HA-enhanced Q5; the primary
+  fold-level capital gate failed and HA did not improve right-tail estimation.
+- adding Wave to the compact path head without a separately stated mechanism;
+  its Phase-1H stop and stability results are not robust.
+- treating absolute prior-range terciles as stable liquidity regimes; all
+  Phase-1H test rows migrated into the training-defined highest tercile.
 
 ## Historical generations
 

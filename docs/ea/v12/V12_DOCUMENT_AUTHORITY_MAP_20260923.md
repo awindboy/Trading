@@ -54,6 +54,12 @@ As of `2026-09-24`, read V12 authority in this order:
 24. `results/V12_PHASE1G_CONTINUOUS_INTRADAY_PATH_20260924.md` — reproducible
     path-state result, stop/right-tail audit, mechanism ablation, and rejected
     action interpretations.
+25. `V12_PHASE1H_COMPACT_CONVICTION_HEAD_CONTRACT_20260924.md` — frozen compact
+    competing-risk, train-only band, capital-preservation, and HA/Wave ablation
+    contract.
+26. `results/V12_PHASE1H_COMPACT_CONVICTION_HEAD_20260924.md` — reproducible
+    compact-head result, failed primary gate, component-role split, and next
+    asymmetric-head boundary.
 
 ## Schema authority
 
@@ -111,6 +117,13 @@ As of `2026-09-24`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1g_output.py`, and
   `../../../research/v12/v12_phase1g_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1G pack.
+- `../../../research/v12/v12_phase1h_contract.json`,
+  `../../../research/v12/v12_phase1h_core.py`,
+  `../../../research/v12/build_v12_phase1h.py`,
+  `../../../research/v12/test_v12_phase1h.py`,
+  `../../../research/v12/validate_v12_phase1h.py`, and
+  `../../../research/v12/v12_phase1h_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1H pack.
 
 ## Predecessor routing
 
@@ -143,3 +156,7 @@ Phase 1G is complete and reproducible. Continuous path improves consumed-
 history stop-risk estimation on average, but does not consistently improve the
 right-tail head and cannot predict FAST run length. Its exploratory conviction
 coordinate is promising but has no veto or sizing authority.
+Phase 1H is complete and reproducible. The predeclared compact path improves
+both heads versus clock control and creates a low-stop Q5, but fails the frozen
+fold-level capital gate. HA improves only the stop head; Wave adds no robust
+incremental value. All scores and bands remain observation-only.

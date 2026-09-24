@@ -51,6 +51,10 @@ CRT creates the Parent journey and candidate state
   result. Settlement/repair and boundary-consumption coordinates improve
   consumed-history stop-risk estimation, but the joint right-tail success gate
   fails. Scores and conviction quintiles remain shadow-only.
+- Phase 1H has a frozen and independently reproduced compact competing-risk
+  result. The primary fold-level capital gate fails. HA improves only stop-risk
+  estimation and Wave adds no robust incremental value; all scores and bands
+  remain shadow-only.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -124,13 +128,15 @@ promotion contract exists.
 - GOLD# chronology through `2026-09-18 23:57` is consumed development evidence.
 - GOLD# 2021 remains sealed.
 - V12 currently has no independent validation.
-- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1G
+- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1H
   have consumed-development diagnostic authority only. Phase 1A fails the V10
   replacement gate; Phase 1B separates transition risk; Phase 1C rejects broad
   carry; Phase 1D treats time/events as state; Phase 1E rejects simple named-
   session and weekday vetoes; Phase 1F rejects nearest-target completeness as a
   carry or admission gate; Phase 1G retains continuous path as a promising
-  representation but rejects stop-only action and journey-length prediction.
+  representation but rejects stop-only action and journey-length prediction;
+  Phase 1H rejects its compact score and HA/Wave ablations as action or sizing
+  authority while retaining asymmetric competing-head roles as a hypothesis.
 
 ## Closed Phase-1A finding
 
@@ -187,3 +193,11 @@ the primary result and have no untouched validation. Continuous path did not
 predict FAST run length, and event proximity alone remained weak. Retain only
 the causal path representation and freeze any compact competing-risk head in a
 new contract before further evidence is opened.
+
+## Closed Phase-1H finding
+
+Do not use the compact-path Q5, shadow tilt, or HA-enhanced Q5 as a V10 veto or
+sizing map. The compact head fails its frozen fold-level capital gate. HA adds
+incremental stop information but not right-tail information; Wave adds no robust
+incremental value. Any asymmetric stop/tail assembly requires a new frozen
+contract before unread chronology is opened.

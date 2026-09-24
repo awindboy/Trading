@@ -1,0 +1,134 @@
+{
+  "contract_version": "v12-phase1h-compact-conviction-head-v1",
+  "frozen_at": "2026-09-24",
+  "mechanism_cutoff": "2026-09-18T23:57:00",
+  "evidence_status": "CONSUMED_DEVELOPMENT_REASSEMBLY",
+  "primary_population": "PHASE1G_V10_ROWS_WITH_EVENT_ENTRY",
+  "primary_unit": "V10_CHILD",
+  "purpose": "FREEZE_A_SMALL_DIRECTION_SYMMETRIC_COMPETING_RISK_HEAD_BEFORE_ANY_NEW_CHRONOLOGY_IS_OPENED",
+  "source_hashes": {
+    "phase1g_manifest_sha256": "d0d0bec990a7ef8ba99618436af25096b4c5d6a20a4592656f0e823bab9f73b0",
+    "v11_completed_wave_ledger_sha256": "36233dfcfdd09439fdee538a81f573e9a035894da1dae26156a32808a58c143e",
+    "raw_m1_full_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+    "raw_m1_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939"
+  },
+  "structure_numeric_fields": [
+    "reinforcement_count_known",
+    "journey_age_hours"
+  ],
+  "structure_categorical_fields": [
+    "direction",
+    "k",
+    "relation",
+    "journey_stage",
+    "aligned_ordinal_bucket",
+    "target_parent_origin_interaction"
+  ],
+  "continuous_clock_fields": [
+    "clock_tokyo_sin",
+    "clock_tokyo_cos",
+    "clock_london_sin",
+    "clock_london_cos",
+    "clock_new_york_sin",
+    "clock_new_york_cos",
+    "clock_broker_sin",
+    "clock_broker_cos",
+    "clock_week_sin",
+    "clock_week_cos"
+  ],
+  "source_box_families": [
+    "asia",
+    "lonny",
+    "london",
+    "ny"
+  ],
+  "compact_path_fields_per_family": [
+    "favorable_broken",
+    "opposed_broken",
+    "extension_balance_norm",
+    "dwell_aligned_bias",
+    "reentry_rate_per_hour",
+    "log_minutes_since_last_transition",
+    "settlement_aligned",
+    "post_efficiency_aligned"
+  ],
+  "ha_ablation_fields": [
+    "ha_fast_body_aligned_atr180",
+    "ha_std_body_aligned_atr180",
+    "ha_slow_body_aligned_atr180",
+    "ha_fast_aligned",
+    "ha_std_aligned",
+    "ha_slow_aligned",
+    "ha_aligned_count",
+    "ha_direction_disagreement_count"
+  ],
+  "wave_ablation_fields": [
+    "wave_outer_close_location_aligned",
+    "wave_efficiency",
+    "wave_settlement_child",
+    "wave_dispersion_atr",
+    "wave_close_density_ratio",
+    "wave_peak_gap_atr",
+    "wave_density_favorable_mass",
+    "wave_entropy"
+  ],
+  "feature_set_models": [
+    "STRUCTURE_CONTROL",
+    "CLOCK_CONTROL",
+    "COMPACT_PATH",
+    "COMPACT_PATH_PLUS_HA",
+    "COMPACT_PATH_PLUS_WAVE",
+    "COMPACT_PATH_PLUS_HA_WAVE"
+  ],
+  "maximum_primary_source_fields": 50,
+  "model_family": "DETERMINISTIC_WEIGHTED_RIDGE_LOGISTIC_WITH_TRAIN_ONLY_ENCODING_AND_INNER_CHRONOLOGICAL_LAMBDA_SELECTION",
+  "regularization_grid": [0.1, 1.0, 10.0, 100.0],
+  "outer_walk_forward_folds": [
+    {
+      "train_end": "2025-03-31T23:59:59",
+      "test_start": "2025-04-01T00:00:00",
+      "test_end": "2025-09-30T23:59:59"
+    },
+    {
+      "train_end": "2025-09-30T23:59:59",
+      "test_start": "2025-10-01T00:00:00",
+      "test_end": "2026-03-31T23:59:59"
+    },
+    {
+      "train_end": "2026-03-31T23:59:59",
+      "test_start": "2026-04-01T00:00:00",
+      "test_end": "2026-09-18T23:57:00"
+    }
+  ],
+  "outcome_heads": {
+    "STOP_HIT": "stop_hit",
+    "GE5R_RIGHT_TAIL": "right_tail_ge_5R_units_gt_zero"
+  },
+  "conviction_score": "P_GE5R_RIGHT_TAIL_MINUS_P_STOP_HIT",
+  "band_policy": "TRAIN_PREDICTION_ECDF_QUINTILE_THRESHOLDS_APPLIED_UNCHANGED_TO_THE_OUTER_TEST_FOLD",
+  "shadow_tilt": {
+    "Q1": 0.75,
+    "Q2": 1.0,
+    "Q3": 1.0,
+    "Q4": 1.0,
+    "Q5": 1.25
+  },
+  "success_gates": {
+    "compactness": "COMPACT_PATH_SOURCE_FIELD_COUNT_LE_50",
+    "head_metrics": "COMPACT_PATH_MEAN_LOGLOSS_NO_WORSE_THAN_CLOCK_CONTROL_FOR_BOTH_HEADS_AND_EACH_HEAD_IMPROVES_IN_AT_LEAST_TWO_OF_THREE_FOLDS",
+    "q5_stop": "Q5_STOPPED_UNITS_PER_100_BELOW_POPULATION_IN_EVERY_FOLD",
+    "q5_economics": "Q5_NET_R_PER_FUNDED_UNIT_POSITIVE_AND_AT_LEAST_POPULATION_NET_R_PER_UNIT_IN_EVERY_FOLD",
+    "q5_coverage": "Q5_RETAINS_AT_LEAST_10_PERCENT_OF_TEST_FUNDED_UNITS_IN_EVERY_FOLD",
+    "tilt_stop": "SHADOW_TILT_STOPPED_UNITS_PER_100_BELOW_BASELINE_IN_EVERY_FOLD",
+    "tilt_economics": "SHADOW_TILT_NET_R_PER_UNIT_AT_LEAST_95_PERCENT_OF_BASELINE_IN_AT_LEAST_TWO_FOLDS_AND_POOLED",
+    "tilt_tail": "SHADOW_TILT_RIGHT_TAIL_PER_UNIT_AT_LEAST_90_PERCENT_OF_BASELINE_POOLED",
+    "side_stability": "Q5_STOP_RATE_BELOW_SIDE_BASELINE_AND_Q5_NET_R_PER_UNIT_POSITIVE_FOR_BOTH_LONG_AND_SHORT",
+    "liquidity_stability": "FOR_EACH_TEST_FOLD_LIQUIDITY_TERCILE_WITH_AT_LEAST_30_Q5_FUNDED_UNITS_Q5_STOP_RATE_IS_BELOW_ITS_TERCILE_BASELINE_AND_Q5_NET_R_IS_POSITIVE"
+  },
+  "ha_wave_incremental_gate": "AN_ABLATION_MUST_IMPROVE_MEAN_LOGLOSS_FOR_BOTH_HEADS_VERSUS_COMPACT_PATH_WITH_NO_SINGLE_FOLD_LOGLOSS_DEGRADATION_GREATER_THAN_0.02_AND_MUST_PASS_ALL_COMPACT_CAPITAL_GATES",
+  "interpretation_policy": "SAME_CONSUMED_CHRONOLOGY_CAN_REJECT_OR_SIMPLIFY_THE_HEAD_BUT_CANNOT_CONFIRM_FUTURE_EDGE",
+  "post_cutoff_price_access": false,
+  "sealed_year": 2021,
+  "trade_authority": false,
+  "sizing_authority": false
+}

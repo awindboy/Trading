@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1G COMPLETE AND REPRODUCIBLE / CONTINUOUS PATH PROMISING BUT JOINT GATE FAILED / NO TRADE AUTHORITY`
+`PHASE 1H COMPLETE AND REPRODUCIBLE / COMPACT PATH PARTIAL / PRIMARY GATE FAILED / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -319,17 +319,43 @@ Do not promote:
 - continuous path as a forecast of how many H4 bars the next FAST run lasts;
 - a hidden threshold selected from the favorable consumed folds.
 
+## Closed Phase-1H result
+
+- Two independent nine-file packs are byte-identical. All focused tests and
+  complete-pack validation pass; zero post-cutoff price rows were parsed.
+- The 50-field compact path improves both frozen outcome heads versus continuous
+  clock on mean log loss. Its train-calibrated Q5 lowers stopped exposure in all
+  folds and retains positive R, but fold-2 Q5 R/unit is below its population.
+  The frozen primary gate fails.
+- Adding FAST/STD/SLOW HA improves stop log loss in all three folds and produces
+  the cleanest Q5 capital slice, but does not improve right-tail log loss.
+- Wave alone worsens stop log loss on average and fails side/capital stability;
+  HA plus Wave also fails the two-head incremental gate.
+- Historical absolute-volatility terciles do not travel across eras: every test
+  row falls in the training-defined high tercile. Era stability is unproven.
+
+## Closed Phase-1H interpretations
+
+Do not promote:
+
+- compact Q5 or the shadow tilt as a position-size map;
+- the attractive HA Q5 as proof of future edge;
+- HA as a right-tail predictor merely because it improves stop discrimination;
+- Wave as useful after path state merely because some pooled capital rows look
+  favorable;
+- absolute prior-range terciles as stable liquidity regimes.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. Can a predeclared compact head using only settlement/repair, boundary
-   consumption, and continuous clock reproduce the Phase-1G conviction
-   separation on untouched chronology?
-2. Can joint stop and right-tail calibration preserve capital better than a
-   stop-only classifier across side, year, and normalized liquidity era?
-3. Do FAST/STD/SLOW disagreement and Wave settlement add information after the
-   continuous path state is known, without becoming global gates?
+1. Can an asymmetric, predeclared competing-risk assembly use compact path plus
+   HA for the stop head and compact path alone for the right-tail head without
+   selecting the consumed Phase-1H result?
+2. Can joint calibration preserve capital across side and normalized liquidity
+   era when absolute volatility buckets have visibly drifted?
+3. Is Wave redundant once continuous path and HA stop state are known, or does
+   a separately stated mechanism justify a narrower Wave coordinate?
 4. Can `neutral bridge / later repair` become useful only inside a high-
    conviction path state without reviving broad Parent carry?
 5. Does origin/external lifecycle phase add anything after the continuous path
@@ -343,8 +369,9 @@ These are questions, not rules:
   consumed-history journey/transition diagnostic. Phase 1C is a consumed-history
   holding-clock and repair diagnostic. Phase 1D is a corrected temporal/event
   diagnostic, Phase 1E is a named-session/weekday diagnostic, Phase 1F is a
-  consumed-history rolling-target density diagnostic, and Phase 1G is a
-  continuous-path competing-outcome diagnostic. No V12 EA, MQL5 parity,
+  consumed-history rolling-target density diagnostic, Phase 1G is a continuous-
+  path competing-outcome diagnostic, and Phase 1H is a compact-head/HA/Wave
+  component-role diagnostic. No V12 EA, MQL5 parity,
   actual-tick economics, or independent future validation exists yet.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

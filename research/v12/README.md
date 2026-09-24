@@ -210,6 +210,36 @@ Phase 1G retains continuous settlement/repair and boundary-consumption paths as
 a promising stop-risk representation. It fails the joint right-tail success
 gate, cannot forecast FAST run length, and grants no veto or sizing authority.
 
+## Retained Phase-1H artifacts
+
+- `v12_phase1h_contract.json`: frozen 50-field compact competing-risk, train-
+  only conviction-band, capital-preservation, stability, and HA/Wave ablation
+  contract.
+- `v12_phase1h_core.py`: compact path derivatives, raw-M1 H4 HA reconstruction,
+  train-only quintile, and capital-allocation primitives.
+- `build_v12_phase1h.py`: Phase-1G/Wave/raw-M1 source verification, expanding-
+  window dual-head models, train-only bands, shadow tilt, and frozen gates.
+- `test_v12_phase1h.py`: threshold, path derivative, capital, completed-H4 HA,
+  and 50-field schema regression tests.
+- `validate_v12_phase1h.py`: complete-pack, manifest, cutoff, population,
+  prediction-grain, train-band, and byte-parity validator.
+- `v12_phase1h_release_manifest.json`: compact receipt for two independently
+  rebuilt, byte-identical nine-file packs.
+
+Run:
+
+```powershell
+python -m unittest test_v12_phase1h.py
+python build_v12_phase1h.py --replace
+python validate_v12_phase1h.py ../../output/v12_phase1h_compact_conviction_head_20260924_a
+```
+
+Phase 1H confirms that compact continuous path can separate stopped exposure,
+but the frozen primary capital gate fails. HA adds incremental stop information
+without improving the right-tail head; Wave does not add robust incremental
+information. This supports separately assembled competing heads, not a veto or
+sizing map.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary
