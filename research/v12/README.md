@@ -240,6 +240,27 @@ without improving the right-tail head; Wave does not add robust incremental
 information. This supports separately assembled competing heads, not a veto or
 sizing map.
 
+## Retained Phase-1I artifacts
+
+- `v12_phase1i_contract.json`: frozen funded-FAST-run outcome classes, repeat-
+  stop target, asymmetric head, train-only threshold, and equal-risk gates.
+- `v12_phase1i_core.py`: run classification, causal prior-run state, policy,
+  retention, equal-stop-budget, and threshold-selection primitives.
+- `build_v12_phase1i.py`: raw-M1/Phase-1G/Phase-1H/Wave verified builder for run
+  episodes, walk-forward heads, policy comparators, mechanism contrasts, and
+  oracle bounds.
+- `test_v12_phase1i.py`: outcome priority, prior-state chronology, unresolved-
+  run rejection, capital tradeoff, and train-threshold tests.
+- `validate_v12_phase1i.py`: complete-pack, source, cutoff, run-grain, threshold,
+  authority, and independent byte-parity validator.
+- `v12_phase1i_release_manifest.json`: compact receipt for two independently
+  rebuilt, byte-identical ten-file packs.
+
+Phase 1I proves that the repeat-stop objective has valuable oracle headroom but
+rejects the available first-decision Path+HA score. The next research object is
+the causal within-run divergence timeline, not a broader cooldown or another
+static indicator.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1H COMPLETE AND REPRODUCIBLE / COMPACT PATH PARTIAL / PRIMARY GATE FAILED / NO TRADE AUTHORITY`
+`PHASE 1I COMPLETE AND REPRODUCIBLE / RUN-EPISODE ORACLE VALUABLE / FIRST-DECISION POLICY FAILED / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -345,21 +345,50 @@ Do not promote:
   favorable;
 - absolute prior-range terciles as stable liquidity regimes.
 
+## Closed Phase-1I result
+
+- Phase 1I is the first direct run-episode reverse engineering: 679 funded FAST
+  runs are classified after completion as 57 tail journeys, 181 stop-only runs,
+  and 441 neutral runs, then observed again at first entry using causal state.
+- Forty-six stop-only runs follow a prior funded stop-only run and carry 115
+  stopped units. The frozen policy removes 58.6% of the test repeat units but
+  lowers normalized stop burden only from 13.21 to 12.88 per 100 funded units.
+- It retains 86.8% of Children and 87.8% of tail units, but fold-1 tail retention
+  is only 65.3%. Pooled win rate improves only 0.28pp and equal-stop-budget R is
+  below V10. Tail, win-rate, and equal-risk gates fail.
+- Perfect repeat-stop removal has real value: 10.14 stopped units per 100,
+  complete tail retention, 95.3% Child retention, and +534.52R versus +446.37R.
+  It raises Child win rate only 1.58pp, so this narrow target alone cannot create
+  a dramatic win-rate change.
+- Stop-only discrimination is usable but unstable; tail-run AUC is 0.563,
+  0.693, and 0.502. Existing first-decision dimensions cannot protect rare
+  decisive journeys.
+
+## Closed Phase-1I interpretations
+
+Do not promote:
+
+- the asymmetric first-decision policy despite its repeat-unit removal;
+- absolute stopped units removed without funded-exposure normalization;
+- broad skip-after-stop or one-run cooldown;
+- the perfect oracle as evidence that the available features can identify it;
+- descriptive London/New-York transition or HA contrasts from only 11 after-
+  stop tail journeys.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. Can an asymmetric, predeclared competing-risk assembly use compact path plus
-   HA for the stop head and compact path alone for the right-tail head without
-   selecting the consumed Phase-1H result?
-2. Can joint calibration preserve capital across side and normalized liquidity
-   era when absolute volatility buckets have visibly drifted?
-3. Is Wave redundant once continuous path and HA stop state are known, or does
-   a separately stated mechanism justify a narrower Wave coordinate?
-4. Can `neutral bridge / later repair` become useful only inside a high-
-   conviction path state without reviving broad Parent carry?
-5. Does origin/external lifecycle phase add anything after the continuous path
-   and CRT branch are controlled?
+1. At what causal event inside a FAST run, if any, do fixed tail-journey and
+   stop-only cohorts first become distinguishable?
+2. Does that separation occur before the first meaningful stopped exposure, or
+   only after the outcome is already economically determined?
+3. Can one small participation unit remain active until that event, with later
+   risk released only by new favorable business rather than a fixed k number?
+4. Can normalized liquidity-era coordinates make the separation transportable
+   when absolute volatility buckets drift?
+5. If no early separation exists, should V12 accept unavoidable first-loss
+   participation and optimize only the number of additional exposed units?
 
 ## Evidence boundary
 
@@ -370,8 +399,9 @@ These are questions, not rules:
   holding-clock and repair diagnostic. Phase 1D is a corrected temporal/event
   diagnostic, Phase 1E is a named-session/weekday diagnostic, Phase 1F is a
   consumed-history rolling-target density diagnostic, Phase 1G is a continuous-
-  path competing-outcome diagnostic, and Phase 1H is a compact-head/HA/Wave
-  component-role diagnostic. No V12 EA, MQL5 parity,
+  path competing-outcome diagnostic, Phase 1H is a compact-head/HA/Wave
+  component-role diagnostic, and Phase 1I is a run-episode reverse-engineering
+  and oracle-bound diagnostic. No V12 EA, MQL5 parity,
   actual-tick economics, or independent future validation exists yet.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

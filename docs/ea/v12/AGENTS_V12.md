@@ -55,6 +55,11 @@ CRT creates the Parent journey and candidate state
   result. The primary fold-level capital gate fails. HA improves only stop-risk
   estimation and Wave adds no robust incremental value; all scores and bands
   remain shadow-only.
+- Phase 1I has a frozen and independently reproduced funded-FAST-run reverse-
+  engineering result. The repeat-stop oracle is valuable, but the first-
+  decision Path+HA policy loses concentrated tail and fails win-rate and equal-
+  risk gates. The next object is a causal within-run timeline, not another
+  start-of-run score.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -128,7 +133,7 @@ promotion contract exists.
 - GOLD# chronology through `2026-09-18 23:57` is consumed development evidence.
 - GOLD# 2021 remains sealed.
 - V12 currently has no independent validation.
-- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1H
+- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1I
   have consumed-development diagnostic authority only. Phase 1A fails the V10
   replacement gate; Phase 1B separates transition risk; Phase 1C rejects broad
   carry; Phase 1D treats time/events as state; Phase 1E rejects simple named-
@@ -136,7 +141,8 @@ promotion contract exists.
   carry or admission gate; Phase 1G retains continuous path as a promising
   representation but rejects stop-only action and journey-length prediction;
   Phase 1H rejects its compact score and HA/Wave ablations as action or sizing
-  authority while retaining asymmetric competing-head roles as a hypothesis.
+  authority; Phase 1I rejects the asymmetric first-decision policy and broad
+  cooldown while retaining only the oracle opportunity and timeline question.
 
 ## Closed Phase-1A finding
 
@@ -201,3 +207,12 @@ sizing map. The compact head fails its frozen fold-level capital gate. HA adds
 incremental stop information but not right-tail information; Wave adds no robust
 incremental value. Any asymmetric stop/tail assembly requires a new frozen
 contract before unread chronology is opened.
+
+## Closed Phase-1I finding
+
+Do not use the first-decision asymmetric run score, a skip-after-stop cooldown,
+or absolute stopped-unit reduction as authority. The policy removes many repeat
+units mainly by reducing exposure, barely changes stopped units per 100, loses a
+large fold-1 journey, and fails equal-stop-budget economics. The perfect oracle
+shows opportunity, not identifiability. Further work must study the causal
+within-run formation timeline and cannot revive fixed-k sequential funding.

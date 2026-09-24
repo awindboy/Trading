@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1H COMPLETE AND REPRODUCIBLE / COMPACT PATH PARTIAL / PRIMARY GATE FAILED / NO TRADE AUTHORITY`
+`PHASE 1I COMPLETE AND REPRODUCIBLE / RUN-EPISODE ORACLE VALUABLE / FIRST-DECISION POLICY FAILED / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -188,13 +188,35 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 
 ## Immediate next work
 
-1. freeze an asymmetric competing-risk head before opening unread chronology:
-   compact path plus HA may estimate stop risk, while the right-tail head stays
-   compact-path-led;
-2. keep the joint score and allocation mapping train-only and predeclare side,
-   normalized-liquidity, calibration, stopped-exposure, and right-tail gates;
-3. do not add Wave to the primary head without a new mechanism hypothesis;
-4. do not use Phase-1H scores, Q5, or the attractive HA capital slice as a V10
-   veto or sizing map;
-5. preserve GOLD# 2021 and post-cutoff chronology until the asymmetric contract
-   and preprocessing schema are frozen.
+## Completed Phase 1I
+
+- The outcome-first ledger contains 679 funded FAST runs: 57 tail journeys,
+  181 stop-only runs, and 441 neutral runs. Forty-six repeat stop-only runs
+  carry 115 stopped units.
+- The train-only asymmetric policy removes 58.6% of test repeat stopped units
+  and 15.8% of all stopped units, but also removes 13.2% of Children. Normalized
+  stopped exposure changes only `13.21 -> 12.88` per 100.
+- Tail retention is 87.8% pooled but only 65.3% in fold 1 because one rejected
+  journey carries 60.97 tail units and +74.26R. Win rate rises only 0.28pp and
+  equal-stop-budget R is below baseline. The frozen gate fails.
+- A perfect repeat-stop oracle lowers stop/100 to 10.14, preserves all tail,
+  retains 95.3% of Children, and raises net R to +534.52R. The objective is
+  valuable; current first-decision information does not identify it.
+- Broad skip-after-stop cooldown retains only 73.9% of Children and 80.0% of
+  tail units and remains rejected.
+- Two independent ten-file packs are byte-identical; all 51 V12 tests and full-
+  pack validation pass with zero post-cutoff price rows parsed.
+
+## Immediate next work
+
+1. freeze a within-run causal timeline contract over the fixed Phase-1I tail-
+   journey and stop-only cohorts;
+2. reveal M15 sequentially from first entry and locate the earliest event—not a
+   fixed bar number—where the cohorts diverge before meaningful stopped
+   exposure;
+3. test whether a small initial probe followed by evidence-based risk release
+   preserves journey participation while blocking second/third stopped units;
+4. do not revive fixed k2 funding, broad cooldown, or the closed complete-
+   feature-stack sequential model under new names;
+5. preserve GOLD# 2021 and post-cutoff chronology until that timeline contract
+   and success gates are frozen.

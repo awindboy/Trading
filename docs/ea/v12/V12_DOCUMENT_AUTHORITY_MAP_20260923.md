@@ -60,6 +60,12 @@ As of `2026-09-24`, read V12 authority in this order:
 26. `results/V12_PHASE1H_COMPACT_CONVICTION_HEAD_20260924.md` — reproducible
     compact-head result, failed primary gate, component-role split, and next
     asymmetric-head boundary.
+27. `V12_PHASE1I_RUN_EPISODE_REVERSE_ENGINEERING_CONTRACT_20260924.md` — frozen
+    FAST-run outcome, repeat-stop, train-only operating-point, and equal-stop-
+    budget contract.
+28. `results/V12_PHASE1I_RUN_EPISODE_REVERSE_ENGINEERING_20260924.md` —
+    reproducible run-episode reverse engineering, oracle bound, rejected
+    admission policy, and within-run timeline next boundary.
 
 ## Schema authority
 
@@ -124,6 +130,13 @@ As of `2026-09-24`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1h.py`, and
   `../../../research/v12/v12_phase1h_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1H pack.
+- `../../../research/v12/v12_phase1i_contract.json`,
+  `../../../research/v12/v12_phase1i_core.py`,
+  `../../../research/v12/build_v12_phase1i.py`,
+  `../../../research/v12/test_v12_phase1i.py`,
+  `../../../research/v12/validate_v12_phase1i.py`, and
+  `../../../research/v12/v12_phase1i_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1I pack.
 
 ## Predecessor routing
 
@@ -160,3 +173,7 @@ Phase 1H is complete and reproducible. The predeclared compact path improves
 both heads versus clock control and creates a low-stop Q5, but fails the frozen
 fold-level capital gate. HA improves only the stop head; Wave adds no robust
 incremental value. All scores and bands remain observation-only.
+Phase 1I is complete and reproducible. Run-episode reverse engineering proves
+that selectively removing repeat-stop runs has valuable oracle headroom, but
+the frozen first-decision Path+HA policy barely improves normalized stop rate,
+loses concentrated tail capital, and fails win-rate/equal-risk gates.

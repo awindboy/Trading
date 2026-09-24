@@ -35,6 +35,9 @@ The retained numeric receipts are:
   competing-risk study. It fails the primary fold-level capital gate, finds HA
   useful only for stop risk, rejects robust incremental Wave value, and freezes
   asymmetric competing-head roles as the next hypothesis.
+- `V12_PHASE1I_RUN_EPISODE_REVERSE_ENGINEERING_20260924.md`: reproducible
+  funded-FAST-run outcome reconstruction, repeat-stop oracle bound, failed
+  first-decision policy, rejected cooldown, and within-run timeline boundary.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

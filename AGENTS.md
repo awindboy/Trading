@@ -85,6 +85,12 @@ head improves both outcome heads versus clock control and creates low-stop
 train-calibrated bands, but fails the fold-level capital gate. HA improves only
 the stop head and Wave adds no robust incremental value. No Phase-1H score,
 band, ablation, or shadow tilt has action or sizing authority.
+Phase 1I is complete and independently reproduced: direct funded-FAST-run
+reverse engineering shows valuable repeat-stop oracle headroom, but the frozen
+first-decision Path+HA policy barely improves normalized stopped exposure,
+loses concentrated tail capital, and fails win-rate/equal-stop-budget gates.
+The next object is the causal within-run formation timeline, not another static
+admission score.
 
 ## Non-negotiable causal contract
 
@@ -161,6 +167,13 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
   its Phase-1H stop and stability results are not robust.
 - treating absolute prior-range terciles as stable liquidity regimes; all
   Phase-1H test rows migrated into the training-defined highest tercile.
+- promoting the Phase-1I first-decision asymmetric score or broad skip-after-
+  stop cooldown; both lose too much journey capital relative to normalized
+  stopped-exposure improvement.
+- claiming that the Phase-1I perfect repeat-stop oracle proves identifiability;
+  it is only an opportunity bound and uses future outcomes.
+- reviving fixed-k funding or the closed complete-feature-stack sequential
+  model while calling it within-run reverse engineering.
 
 ## Historical generations
 
