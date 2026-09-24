@@ -66,6 +66,10 @@ Children and still concentrated. Repair mostly duplicated V10 k1 participation.
 Phase 1D is complete and independently reproduced: broker-clock and economic-
 event state add real information, but fixed-hour, all-news, and surprise-
 direction rules are rejected. Its retained interactions are shadow-only.
+The Phase-1D calendar source is corrected to one synchronized full-range query.
+Phase 1E is complete and independently reproduced: DST-aware session and
+weekday describe transition risk, but high-stop states frequently retain the
+largest right-tail capital. They remain shadow coordinates only.
 
 ## Non-negotiable causal contract
 
@@ -118,6 +122,8 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
 - fixed broker-hour/session avoidance, all-news avoidance, or realized surprise
   as a direction oracle; Phase-1D retains only two narrow shadow interactions
   and grants neither action authority.
+- using Phase-1E London, New York, Asia, Friday, Wednesday, or any session-
+  weekday interaction as a consumed-data veto or conviction-sizing rule.
 - carrying every aligned Child merely because the Phase-1B Parent is active;
   the consumed result added 66 stopped units and was negative without its best
   bridge episode.

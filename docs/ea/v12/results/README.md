@@ -19,6 +19,10 @@ The retained numeric receipts are:
 - `V12_PHASE1D_TEMPORAL_AND_EVENT_STATE_20260924.md`: reproducible broker-clock,
   economic-event, V10 Child, and FAST-flip audit. Time is retained as state;
   fixed-hour/news vetoes remain rejected and two interactions are shadow-only.
+- `V12_PHASE1E_SESSION_WEEKDAY_EVENT_INTERACTION_20260924.md`: corrected
+  calendar clock, DST-aware Asia/London/New-York phases, weekday/CRT/event
+  interaction audit, and block-bootstrap uncertainty. Session and weekday are
+  retained as transition-risk coordinates, not action rules.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

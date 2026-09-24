@@ -20,13 +20,16 @@ Phase 1D tests time as a state coordinate rather than a weekday/hour filter:
 - `1,669,073` raw GOLD# M1 rows were streamed through
   `2026-09-18 23:57`; the first unrevealed row was `2026-09-21 01:00` and zero
   post-cutoff price rows were parsed.
-- MT5 exported `68,377` calendar rows. Eight duplicated value IDs returned
-  conflicting timestamps across a query-chunk boundary; all eight IDs were
-  excluded rather than resolved by hindsight. The retained snapshot contains
-  `68,361` values and `20,271` timed event clusters.
+- The original monthly MT5 export was invalidated after its first January 2022
+  query was found three hours behind later chunks. The corrected synchronized,
+  single-query export contains `68,369` rows and `68,369` unique value IDs.
+  Ten exact 2025-11-20 Employment Situation value IDs receive one locked BLS-
+  sourced timestamp correction from server 15:30 to 16:30. The corrected pack
+  contains `20,274` timed event clusters.
 - Calendar time offset `0` ranked first for 15-minute USD-high range lift among
   offsets `-1..+4`, supporting a direct numeric join for this snapshot. This is
-  empirical clock parity, not a named London/New York timezone claim.
+  now supplemented by 56/56 NFP and 38/38 Fed-rate-decision schedule sentinels,
+  establishing a fixed server UTC+3 mapping for the consumed period.
 - Actual and normalized surprise are used only after the release. Historical
   snapshot revisions remain a disclosed limitation.
 
@@ -133,3 +136,12 @@ Neither may change V10/V12 admission, exit, size, or capital until independent
 future evidence and Python/MQL5 parity exist. The Phase-1C rolling target
 inventory remains the structural next task; temporal state should be joined to
 it rather than replacing it.
+
+## Correction receipt
+
+The calendar repair changed the source hash and cluster count, but did not
+change the 86-Child pre-event cell, the 35-Child H20-aligned subset, or their R
+results. The realized-surprise scorecard changed only where the corrected
+calendar chronology required it; the published qualitative ordering remains.
+Two corrected builds are byte-identical across all 12 output files and pass the
+updated complete-pack validator.

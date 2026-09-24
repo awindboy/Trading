@@ -91,6 +91,29 @@ These sources control implementation semantics:
   spot checks:
   https://www.tradingview.com/support/solutions/43000759911-economic-calendar-track-all-major-market-events/
 
+## Official clock and session landmarks
+
+These sources anchor Phase-1E local-clock windows. They do not create trading
+signals and do not imply that OTC gold has one centralized session.
+
+- BLS Employment Situation schedule and 08:30 ET convention:
+  https://www.bls.gov/schedule/news_release/empsit.htm
+- BLS 2025-11-20 delayed Employment Situation schedule:
+  https://www.bls.gov/schedule/2025/11_sched_list.htm
+- Federal Reserve evidence that FOMC statements have been released at 14:00 ET
+  since March 2013:
+  https://www.federalreserve.gov/econres/feds/files/2025048pap.pdf
+- JPX precious-metals derivatives trading hours:
+  https://www.jpx.co.jp/english/derivatives/rules/trading-hours/
+- London Stock Exchange 08:00/16:30 opening and closing landmarks:
+  https://www.londonstockexchange.com/discover/events/london-stock-exchange-market-ceremonies
+- NYSE 09:30-16:00 ET core cash hours:
+  https://www.nyse.com/trade/trading-information
+- LBMA 10:30 and 15:00 London-time gold auctions:
+  https://www.lbma.org.uk/prices-and-data/about-lbma-daily-auction-prices
+- CME Gold 13:29-13:30 ET settlement window:
+  https://www.cmegroup.com/tools-information/lookups/advisories/market-regulation/SER-5147.html
+
 ## MQL5 community research leads
 
 These are inspiration only. No source was copied into the repository.

@@ -98,8 +98,21 @@ def load_market(path: Path, cutoff: datetime) -> tuple[pd.DataFrame, PrefixAudit
     return frame, audit
 
 
-def load_calendar(path: Path, cutoff: datetime) -> tuple[pd.DataFrame, dict]:
+def load_calendar(path: Path, cutoff: datetime, overrides_path: Optional[Path] = None) -> tuple[pd.DataFrame, dict]:
     raw = pd.read_csv(path, encoding="cp949", low_memory=False)
+    override_rows = 0
+    if overrides_path is not None:
+        override_spec = json.loads(overrides_path.read_text(encoding="utf-8"))
+        for override in override_spec["overrides"]:
+            ids = {int(value) for value in override["value_ids"]}
+            mask = raw["value_id"].astype(int).isin(ids)
+            observed_ids = set(raw.loc[mask, "value_id"].astype(int))
+            if observed_ids != ids:
+                raise ValueError(f"calendar override IDs missing: expected={ids} observed={observed_ids}")
+            if set(raw.loc[mask, "server_time"].astype(str)) != {override["original_server_time"]}:
+                raise ValueError(f"calendar override original timestamp mismatch for IDs={ids}")
+            raw.loc[mask, "server_time"] = override["corrected_server_time"]
+            override_rows += int(mask.sum())
     raw["server_time_dt"] = pd.to_datetime(raw["server_time"], format="%Y.%m.%d %H:%M:%S")
     before = len(raw)
     duplicate_rows = int(raw.duplicated("value_id", keep=False).sum())
@@ -148,6 +161,8 @@ def load_calendar(path: Path, cutoff: datetime) -> tuple[pd.DataFrame, dict]:
         "actual_rows": int(raw["has_actual"].sum()),
         "forecast_rows": int(raw["has_forecast"].sum()),
         "normalized_surprise_rows": int(raw["surprise_robust_z"].notna().sum()),
+        "calendar_time_override_rows": override_rows,
+        "calendar_time_overrides_sha256": sha256_file(overrides_path) if overrides_path is not None else None,
     }
     return raw, diagnostics
 
@@ -702,6 +717,7 @@ def main() -> None:
     parser.add_argument("--contract", type=Path, default=repo_root / "research" / "v12" / "v12_phase1d_contract.json")
     parser.add_argument("--m1", type=Path, default=repo_root / "data" / "GOLD#" / "GOLD#_M1_202201030100_202609222358.csv")
     parser.add_argument("--calendar", type=Path, required=True)
+    parser.add_argument("--calendar-overrides", type=Path)
     parser.add_argument("--phase1b", type=Path, default=repo_root / "output" / "v12_phase1b_h4m5_journey_overlay_20260923")
     parser.add_argument("--phase1c", type=Path, default=repo_root / "output" / "v12_phase1c_crt_protected_carry_repair_20260924")
     parser.add_argument("--output", type=Path, default=repo_root / "output" / "v12_phase1d_temporal_event_state_20260924")
@@ -713,7 +729,7 @@ def main() -> None:
     safe_prepare_output(args.output, args.replace)
 
     market, prefix_audit = load_market(args.m1, cutoff)
-    calendar, calendar_quality = load_calendar(args.calendar, cutoff)
+    calendar, calendar_quality = load_calendar(args.calendar, cutoff, args.calendar_overrides)
     clusters = build_clusters(calendar)
     windows = MarketWindows(market)
     clock_rows, clock_summary = clock_profile(market)

@@ -1,0 +1,14 @@
+{
+  "version": "v12-calendar-time-overrides-v1",
+  "frozen_at": "2026-09-24",
+  "policy": "APPLY_ONLY_WHEN_VALUE_ID_AND_ORIGINAL_SERVER_TIME_BOTH_MATCH",
+  "overrides": [
+    {
+      "value_ids": [229867, 229879, 229891, 229903, 229915, 229927, 229951, 229963, 229975, 230039],
+      "original_server_time": "2025.11.20 15:30:00",
+      "corrected_server_time": "2025.11.20 16:30:00",
+      "reason": "MQL5 snapshot places the delayed September 2025 Employment Situation cluster at 07:30 ET; BLS records the release at 08:30 ET. Fixed broker UTC+3 therefore maps it to 16:30.",
+      "source": "https://www.bls.gov/schedule/2025/11_sched_list.htm"
+    }
+  ]
+}

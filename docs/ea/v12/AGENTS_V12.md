@@ -41,6 +41,9 @@ CRT creates the Parent journey and candidate state
 - Phase 1D has a frozen and independently reproduced broker-clock/economic-
   event result. It retains time and event shock as state coordinates, rejects
   fixed-hour/all-news shortcuts, and grants no veto, sizing, or trade authority.
+- Phase 1E has a frozen and independently reproduced DST-aware session/weekday
+  result on the corrected calendar source. Session and weekday describe
+  transition risk but grant no veto, sizing, or trade authority.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -114,10 +117,11 @@ promotion contract exists.
 - GOLD# chronology through `2026-09-18 23:57` is consumed development evidence.
 - GOLD# 2021 remains sealed.
 - V12 currently has no independent validation.
-- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1D
+- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1E
   have consumed-development diagnostic authority only. Phase 1A fails the V10
   replacement gate; Phase 1B separates transition risk; Phase 1C rejects broad
-  carry; Phase 1D treats time/events as state and rejects simple vetoes.
+  carry; Phase 1D treats time/events as state; Phase 1E rejects simple named-
+  session and weekday vetoes.
 
 ## Closed Phase-1A finding
 
@@ -148,3 +152,9 @@ Hour 16 retains substantial right-tail R and several post-event high-stop states
 remain profitable. Retain only the frozen 35-Child pre-release clock/journey
 interaction and post-release surprise-by-flip interpretation as shadow fields.
 Neither can act before independent future evidence and Python/MQL5 parity.
+
+## Closed Phase-1E finding
+
+Do not veto London, New York, Asia, Friday, Wednesday, or their consumed-data
+interactions. High-stop session states frequently retain the largest right-tail
+capital, while some low-stop states have little net R.

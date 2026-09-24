@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1D COMPLETE AND REPRODUCIBLE / TIME IS STATE, NOT VETO / NO TRADE AUTHORITY`
+`PHASE 1E COMPLETE AND REPRODUCIBLE / SESSION AND WEEKDAY ARE STATE, NOT VETO / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -191,10 +191,10 @@ Do not promote or tune on consumed outcomes:
 
 ## Closed Phase-1D result
 
-- MT5 supplied `68,377` values. Eight conflicting duplicate IDs at one API
-  chunk boundary were excluded, leaving `68,361` values and `20,271` timed
-  clusters. Calendar offset zero ranked first in the frozen clock-alignment
-  audit.
+- The original monthly MT5 export was invalidated by a first-chunk three-hour
+  clock error. The synchronized single-query source has `68,369` unique values;
+  one exact ten-member BLS timestamp override leaves `20,274` timed clusters.
+  Calendar offset zero still ranks first in the frozen alignment audit.
 - Broker hour 16 was normalized activity rank 1 in 2022–2025 and rank 2 in
   2026. Its V10 Children still earned `+203.53R`; fixed-hour avoidance is not a
   viable stop-reduction rule.
@@ -222,6 +222,37 @@ Do not promote or tune on consumed outcomes:
 - treating the 35-Child hour-20 interaction as sufficient trade authority;
 - discarding post-event high-stop states that still contain large right-tail R.
 
+## Closed Phase-1E result
+
+- A fixed UTC+3 broker mapping passes 56/56 NFP and 38/38 Fed-rate schedule
+  sentinels after the one locked source correction.
+- London-New-York overlap is the most active minute-for-minute phase. Session
+  activity is real, but session stop burden and economic conviction diverge.
+- London-before-New-York has `16.10` stopped units per 100 and also the highest
+  session net R (`+294.28R`) and right tail (`331.15R`). New-York-after-London
+  has only `8.76` stopped units but just `+2.74R`.
+- Friday and Wednesday have the highest broad weekday stop burden, while still
+  retaining `+92.89R` and `+134.14R`. Wednesday contains the longest nine-stop
+  chain but also `265.96R` of >=5R right-tail units.
+- Linked-k1 stop rates after FAST flips are roughly 35.5%–37.9% in Asia/London
+  phases versus 13.0%–14.3% after London/outside core. Mean new run length is
+  similar, so time describes immediate whipsaw more than eventual run length.
+- The 35-Child H20 pre-event interaction is wholly New-York-after-London but is
+  spread across auctions, Baker Hughes, FOMC, and multiple weekdays. Its 95%
+  week-block net-R interval crosses zero and it remains shadow-only.
+- Two complete output packs are byte-identical across ten files; 36 tests and
+  both validators pass with zero post-cutoff price rows parsed.
+
+## Closed Phase-1E interpretations
+
+Do not promote or tune on consumed outcomes:
+
+- avoiding London, Friday, Wednesday, or any named session to reduce stops;
+- treating low-stop New-York-after-London exposure as high-conviction capital;
+- using a session label as information independent of the six H4 decision slots;
+- funding or vetoing the 35-Child H20 pre-event interaction;
+- promoting the small Asia-Friday or session/weekday/CRT cells as rules.
+
 ## Next hypotheses
 
 These are questions, not rules:
@@ -230,7 +261,7 @@ These are questions, not rules:
    a still-active boundary whose original objectives are already consumed?
 2. After that target state is frozen, can `neutral bridge / later repair`
    preserve right-tail exposure without the broad carry's added stop burden?
-3. Does the frozen Phase-1D pre-release interaction remain distinct after a
+3. Does the frozen Phase-1D/1E pre-release interaction remain distinct after a
    causal rolling Parent target state is added, or is it only a proxy for
    unresolved target timing?
 4. Conditional on the five frozen FAST-flip meanings and realized event shock,
@@ -249,8 +280,9 @@ These are questions, not rules:
 - GOLD# 2021 remains sealed.
 - Phase 1A is a consumed-history structural-R backtest. Phase 1B is a
   consumed-history journey/transition diagnostic. Phase 1C is a consumed-history
-  holding-clock and repair diagnostic. Phase 1D is a consumed-history temporal
-  and event-state diagnostic. No V12 EA, MQL5 parity, actual-tick economics, or
+  holding-clock and repair diagnostic. Phase 1D is a corrected temporal/event
+  diagnostic and Phase 1E is a consumed-history named-session, weekday, and
+  interaction diagnostic. No V12 EA, MQL5 parity, actual-tick economics, or
   independent future validation exists yet.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

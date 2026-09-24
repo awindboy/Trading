@@ -37,6 +37,11 @@ As of `2026-09-24`, read V12 authority in this order:
     clock, calendar-cluster, causal surprise, V10 Child, and FAST-flip contract.
 18. `results/V12_PHASE1D_TEMPORAL_AND_EVENT_STATE_20260924.md` — reproducible
     temporal/event result, rejected shortcuts, and retained shadow interactions.
+19. `V12_PHASE1E_SESSION_WEEKDAY_EVENT_INTERACTION_CONTRACT_20260924.md` —
+    corrected calendar clock, DST-aware session/weekday, interaction, and
+    uncertainty contract.
+20. `results/V12_PHASE1E_SESSION_WEEKDAY_EVENT_INTERACTION_20260924.md` —
+    reproducible session/weekday/CRT/event result and retained shadow boundary.
 
 ## Schema authority
 
@@ -73,6 +78,13 @@ As of `2026-09-24`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1d_output.py`, and
   `../../../research/v12/v12_phase1d_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1D pack.
+- `../../../research/v12/v12_phase1e_contract.json`,
+  `../../../research/v12/v12_calendar_time_overrides.json`,
+  `../../../research/v12/build_v12_phase1e.py`,
+  `../../../research/v12/test_v12_phase1e.py`,
+  `../../../research/v12/validate_v12_phase1e_output.py`, and
+  `../../../research/v12/v12_phase1e_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1E pack.
 
 ## Predecessor routing
 
@@ -94,5 +106,6 @@ evidence. Its stop-risk partition is diagnostic only and grants no action.
 Phase 1C is complete and reproducible on consumed evidence. Its broad carry is
 rejected and its target-led and repair subsets remain too sparse and
 concentrated for action.
-Phase 1D is complete and reproducible on consumed evidence. Time and events are
-retained as state coordinates, not a session/news veto or directional oracle.
+Phase 1D is corrected and reproducible on consumed evidence. Phase 1E is
+complete and reproducible. Time, session, weekday, and events are retained as
+state coordinates, not a session/news veto, sizing map, or directional oracle.

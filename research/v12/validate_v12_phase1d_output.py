@@ -40,7 +40,9 @@ def main() -> None:
     require(diagnostics["post_cutoff_price_rows_parsed"] == 0, "post-cutoff price parsed")
     require(diagnostics["market"]["last_timestamp"] == diagnostics["causal_cutoff"], "market cutoff mismatch")
     require(diagnostics["market"]["first_unrevealed_timestamp"] > diagnostics["causal_cutoff"], "holdout boundary invalid")
-    require(diagnostics["calendar"]["duplicate_conflict_groups_excluded"] == 8, "calendar conflicts not excluded")
+    require(diagnostics["calendar"]["duplicate_rows"] == 0, "calendar duplicate rows remain")
+    require(diagnostics["calendar"]["duplicate_conflict_groups_excluded"] == 0, "calendar conflict rows remain")
+    require(diagnostics["calendar"]["calendar_time_override_rows"] == 10, "calendar time override count changed")
     require(diagnostics["clock_alignment"]["best_offset_by_overall_median_range_lift"] == 0, "clock alignment changed")
     require(not diagnostics["trade_authority"] and not diagnostics["sizing_authority"], "authority leak")
 

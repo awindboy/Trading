@@ -143,6 +143,25 @@ Phase 1D proves that broker clock and scheduled/realized event state are useful
 coordinates. It rejects fixed-hour, all-news, and surprise-direction shortcuts.
 Its retained interactions have no veto, sizing, EA, or trade authority.
 
+## Retained Phase-1E artifacts
+
+- `v12_phase1e_contract.json`: fixed UTC+3 broker-clock, DST-aware session,
+  weekday, interaction, and uncertainty contract.
+- `v12_calendar_time_overrides.json`: exact-ID, official-source correction for
+  the one anomalous 2025-11-20 Employment Situation timestamp.
+- `build_v12_phase1e.py`: session/weekday activity, V10 capital, FAST/NHA, H4-
+  slot parity, event-family, and week-block bootstrap builder.
+- `test_v12_phase1e.py`: session mapping, weekday-boundary, and event-state
+  regression tests.
+- `validate_v12_phase1e_output.py`: complete-pack, hash, source-clock, cutoff,
+  frozen-ledger, and authority validator.
+- `v12_phase1e_release_manifest.json`: compact receipt for two byte-identical
+  output packs.
+
+Phase 1E establishes that session/weekday state changes immediate whipsaw risk,
+but high-stop phases often carry the largest right tail. It does not authorize
+a session, weekday, event, or joint-state veto or sizing rule.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

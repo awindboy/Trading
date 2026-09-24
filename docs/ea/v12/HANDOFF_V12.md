@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1D COMPLETE AND REPRODUCIBLE / TIME IS STATE, NOT VETO / NO TRADE AUTHORITY`
+`PHASE 1E COMPLETE AND REPRODUCIBLE / SESSION AND WEEKDAY ARE STATE, NOT VETO / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -86,8 +86,9 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 
 ## Completed Phase 1D
 
-- MT5 exported `68,377` economic-calendar values; eight conflicting duplicate
-  IDs were excluded. `20,271` timed release clusters remained.
+- The original chunked calendar source was corrected. The stable single-query
+  snapshot contains `68,369` unique values; one ten-member 2025-11-20 BLS-
+  verified timestamp override leaves `20,274` timed clusters.
 - Broker hour `16` ranked first in normalized daily activity in 2022–2025 and
   second in 2026, but its V10 capital retained `+203.53R`; fixed-hour avoidance
   is rejected.
@@ -102,6 +103,23 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
   It informs flip meaning; it is not a news-direction or admission rule.
 - Two independent builds were byte-identical and parsed zero post-cutoff price
   rows.
+
+## Completed Phase 1E
+
+- The broker clock is verified as fixed UTC+3 by 56/56 NFP and 38/38 Fed-rate
+  schedule sentinels after the locked source correction.
+- London-New-York overlap has the highest M1 activity, but the lowest-stop V10
+  phases do not carry the strongest economic result.
+- London-before-New-York carries `16.10` stopped units per 100 and also the
+  highest session net result (`+294.28R`) and right tail (`331.15R`). New York
+  after London carries only `8.76` stopped units but just `+2.74R`.
+- Friday (`19.77`) and Wednesday (`16.84`) have the highest weekday stopped-
+  unit rates, yet retain `+92.89R` and `+134.14R` respectively.
+- The 35-Child H20 pre-event cell is entirely New-York-after-London, but is not
+  only Friday/Baker Hughes: auctions and FOMC also contribute. Its 95% week-
+  block net-R interval crosses zero, so it remains shadow-only.
+- Two independent packs are byte-identical across all ten files; 36 tests and
+  complete-pack validation pass with zero post-cutoff price rows parsed.
 
 ## What is not yet known
 
@@ -125,8 +143,8 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
    actual Parent invalidation before retesting carry;
 3. retain the Phase-1C repair definition but do not add capital until the target
    state exists and future evidence accumulates;
-4. carry the two frozen Phase-1D temporal interactions as shadow fields inside
-   the target-state work; do not turn them into hour/news vetoes;
+4. carry the frozen Phase-1D/1E temporal interactions as shadow fields inside
+   the target-state work; do not turn them into hour/session/weekday/news vetoes;
 5. test FAST/STD/SLOW and Wave only conditionally inside the frozen CRT states;
 6. preserve GOLD# 2021 and do not reinterpret the still-unread post-cutoff
    chronology after its shadow semantics are frozen.

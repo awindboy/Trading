@@ -1,0 +1,90 @@
+{
+  "contract_version": "v12-phase1e-session-weekday-event-interaction-v1.1",
+  "frozen_at": "2026-09-24",
+  "mechanism_cutoff": "2026-09-18T23:57:00",
+  "symbol": "GOLD#",
+  "market_source": "VERIFIED_RAW_M1_CHRONOLOGICAL_PREFIX",
+  "calendar_source": "MQL5_ECONOMIC_CALENDAR_STABLE_SINGLE_QUERY_SNAPSHOT",
+  "broker_clock_mapping": "FIXED_UTC_PLUS_3_LABEL",
+  "clock_validation_sentinels": {
+    "nonfarm_payrolls": "08:30 America/New_York",
+    "fed_interest_rate_decision": "14:00 America/New_York"
+  },
+  "session_windows": {
+    "ASIA_PRECIOUS_CORE": "08:45-15:45 Asia/Tokyo",
+    "LONDON_CORE": "08:00-16:30 Europe/London",
+    "NEW_YORK_RISK_CORE": "08:30-16:00 America/New_York"
+  },
+  "mutually_exclusive_session_phase": [
+    "OFF_CORE",
+    "ASIA_ONLY",
+    "LONDON_PRE_NY",
+    "LONDON_NY_OVERLAP",
+    "NY_AFTER_LONDON"
+  ],
+  "gold_landmarks": {
+    "LBMA_AM": "10:30 Europe/London",
+    "LBMA_PM": "15:00 Europe/London",
+    "COMEX_SETTLEMENT": "13:29-13:30 America/New_York"
+  },
+  "weekday_dimensions": [
+    "BROKER_WEEKDAY",
+    "NEW_YORK_LOCAL_WEEKDAY"
+  ],
+  "analysis_units": [
+    "M1_MARKET_MINUTE",
+    "FROZEN_V10_SELECTED_CHILD",
+    "PHASE1B_FAST_FLIP"
+  ],
+  "child_scorecard_dimensions": [
+    "ENTRY_SESSION",
+    "NEW_YORK_WEEKDAY",
+    "ENTRY_SESSION_X_NEW_YORK_WEEKDAY",
+    "ENTRY_SESSION_X_JOURNEY_RELATION",
+    "ENTRY_SESSION_X_NEW_YORK_WEEKDAY_X_JOURNEY_RELATION",
+    "ENTRY_SESSION_X_USD_EVENT_STATE",
+    "ENTRY_SESSION_X_YEAR",
+    "NEW_YORK_WEEKDAY_X_YEAR",
+    "ENTRY_SESSION_X_NEW_YORK_WEEKDAY_X_YEAR",
+    "ENTRY_SESSION_X_SIDE",
+    "BROKER_HOUR_X_ENTRY_SESSION",
+    "BROKER_HOUR_X_ENTRY_SESSION_X_YEAR",
+    "BROKER_HOUR_X_ENTRY_SESSION_X_NEW_YORK_WEEKDAY",
+    "BROKER_HOUR_X_ENTRY_SESSION_X_JOURNEY_RELATION"
+  ],
+  "nha_scorecard_dimensions": [
+    "KNOWN_SESSION",
+    "NEW_YORK_WEEKDAY",
+    "KNOWN_SESSION_X_NEW_YORK_WEEKDAY",
+    "KNOWN_SESSION_X_EXPLANATION_STATE",
+    "KNOWN_SESSION_X_NEW_YORK_WEEKDAY_X_EXPLANATION_STATE"
+    ,"KNOWN_SESSION_X_YEAR",
+    "NEW_YORK_WEEKDAY_X_YEAR",
+    "BROKER_HOUR_X_KNOWN_SESSION"
+  ],
+  "event_state_collapse": {
+    "PRE_0_30": ["AT_RELEASE", "PRE_LE_15", "PRE_15_30"],
+    "PRE_30_60": ["PRE_30_60"],
+    "POST_0_60": ["POST_LE_15", "POST_15_30", "POST_30_60"],
+    "OTHER": "ALL_REMAINING_STATES"
+  },
+  "uncertainty": {
+    "method": "DETERMINISTIC_ISO_WEEK_BLOCK_BOOTSTRAP",
+    "draws": 2000,
+    "seed": 120124,
+    "minimum_children": 20,
+    "interval": "PERCENTILE_95"
+  },
+  "predeclared_special_audits": [
+    "H20_ALIGNED_PRE_USD_MODHIGH_30_60_BY_SESSION_WEEKDAY_YEAR_AND_EVENT_FAMILY",
+    "FRIDAY_VERSUS_NON_FRIDAY_WITHIN_SESSION_AND_JOURNEY_RELATION",
+    "BROKER_HOUR_EFFECT_AFTER_SESSION_AND_DST_MAPPING",
+    "STOPPED_UNITS_AND_GE5R_RIGHT_TAIL_REMOVED_TOGETHER"
+  ],
+  "multiple_comparison_policy": "REPORT_ALL_PREDECLARED_CELLS; NO_BEST_CELL_PROMOTION",
+  "action_policy": "OBSERVATION_AND_MECHANISM_ONLY",
+  "post_cutoff_price_access": false,
+  "sealed_year": 2021,
+  "trade_authority": false,
+  "sizing_authority": false
+}
