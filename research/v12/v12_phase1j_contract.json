@@ -1,0 +1,83 @@
+{
+  "contract_version": "v12-phase1j-within-run-causal-timeline-v1",
+  "frozen_at": "2026-09-24",
+  "mechanism_cutoff": "2026-09-18T23:57:00",
+  "evidence_status": "CONSUMED_DEVELOPMENT_MECHANISM_DIAGNOSTIC",
+  "purpose": "LOCATE_THE_EARLIEST_CAUSAL_WITHIN_RUN_SEPARATION_BETWEEN_STOP_ONLY_AND_TAIL_JOURNEY_RUNS",
+  "source_hashes": {
+    "phase1i_manifest_sha256": "5e714e82bdb77f5644eea1fadf1779d0e8e798dca16f0d6b9fd604ab36099e44",
+    "v11_completed_wave_ledger_sha256": "36233dfcfdd09439fdee538a81f573e9a035894da1dae26156a32808a58c143e",
+    "raw_m1_full_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+    "raw_m1_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939"
+  },
+  "fixed_population": "PHASE1I_FUNDED_RUNS_WITH_RUN_CLASS_STOP_ONLY_RUN_OR_TAIL_JOURNEY_RUN",
+  "primary_cohort": "ALL_CLASSIFIED_RUNS",
+  "secondary_cohort": "AFTER_STOP_CANDIDATES_DESCRIPTIVE_ONLY",
+  "timeline_start": "EARLIEST_ACTUAL_CHILD_ENTRY_TIME_IN_RUN",
+  "terminal_rules": {
+    "STOP_ONLY_RUN": "EARLIEST_EXIT_TIME_OF_A_STOPPED_CHILD",
+    "TAIL_JOURNEY_RUN": "EARLIEST_RAW_M1_TOUCH_OF_ANY_CHILD_FINAL_LABELED_AT_LEAST_5_WEIGHTED_R",
+    "tail_touch_price": "ENTRY_PLUS_DIRECTION_TIMES_ABS_ENTRY_MINUS_STOP_TIMES_5_DIVIDED_BY_R7G_WEIGHT",
+    "same_m1_policy": "NO_ORDER_IS_INFERRED_BEYOND_THE_RECORDED_M1_OHLC"
+  },
+  "causal_bar": "COMPLETED_M15_RECONSTRUCTED_FROM_REVEALED_RAW_M1",
+  "snapshot_boundary": "M15_BAR_END_STRICTLY_BEFORE_RUN_TERMINAL",
+  "normalization": "FIRST_CHILD_ABSOLUTE_ENTRY_TO_HARD_SL_DISTANCE",
+  "event_snapshots": [
+    "FIRST_FAVORABLE_CLOSE",
+    "FIRST_OPPOSED_CLOSE",
+    "FIRST_REPAIR_CLOSE_AFTER_OPPOSED",
+    "FIRST_TWO_CONSECUTIVE_FAVORABLE_CLOSES",
+    "FIRST_TWO_CONSECUTIVE_OPPOSED_CLOSES",
+    "FIRST_REPAIRED_DEPARTURE_ABOVE_PRE_OPPOSED_FAVORABLE_CLOSE_MAX"
+  ],
+  "diagnostic_checkpoints_completed_m15_bars": [1, 2, 4, 8],
+  "path_fields": [
+    "elapsed_minutes",
+    "completed_m15_bars",
+    "aligned_close_r",
+    "cumulative_mfe_r",
+    "cumulative_mae_r",
+    "cumulative_close_path_r",
+    "signed_path_efficiency",
+    "favorable_close_fraction",
+    "opposed_close_fraction",
+    "zero_crossings",
+    "repairs_to_favorable",
+    "current_favorable_streak",
+    "current_opposed_streak",
+    "max_favorable_streak",
+    "max_opposed_streak",
+    "favorable_close_max_r",
+    "opposed_close_min_r",
+    "giveback_from_favorable_max_r",
+    "children_entered_by_snapshot",
+    "funded_units_entered_by_snapshot"
+  ],
+  "periods": {
+    "TRAIN": ["2024-10-01T00:00:00", "2025-03-31T23:59:59"],
+    "F1": ["2025-04-01T00:00:00", "2025-09-30T23:59:59"],
+    "F2": ["2025-10-01T00:00:00", "2026-03-31T23:59:59"],
+    "F3": ["2026-04-01T00:00:00", "2026-09-18T23:57:00"]
+  },
+  "promotion_screen": {
+    "minimum_class_count_per_test_fold": 5,
+    "minimum_event_occurrence_each_class_pooled": 0.25,
+    "stable_feature_requirement": "SAME_TAIL_MINUS_STOP_SIGN_IN_F1_F2_F3",
+    "pooled_effect_requirement": "ABS_STANDARDIZED_DIFFERENCE_AT_LEAST_0_50_OR_UNIVARIATE_AUC_AT_LEAST_0_70",
+    "scope": "MECHANISM_WORTH_FURTHER_POLICY_RESEARCH_ONLY"
+  },
+  "forbidden": [
+    "NO_ENTRY_VETO",
+    "NO_EXIT_RULE",
+    "NO_SIZING_RULE",
+    "NO_THRESHOLD_SEARCH",
+    "NO_POST_TERMINAL_SNAPSHOT",
+    "NO_NEUTRAL_RUN_RECLASSIFICATION",
+    "NO_FIXED_K2_FUNDING_POLICY",
+    "NO_POST_CUTOFF_PRICE_ACCESS",
+    "NO_GOLD_2021_ACCESS"
+  ],
+  "trade_authority": false,
+  "sizing_authority": false
+}
