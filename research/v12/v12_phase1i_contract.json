@@ -1,0 +1,97 @@
+{
+  "contract_version": "v12-phase1i-run-episode-reverse-engineering-v1",
+  "frozen_at": "2026-09-24",
+  "mechanism_cutoff": "2026-09-18T23:57:00",
+  "evidence_status": "CONSUMED_DEVELOPMENT_REVERSE_ENGINEERING",
+  "purpose": "REVERSE_ENGINEER_REPEAT_STOP_CHAINS_VERSUS_TAIL_JOURNEY_RUNS_WITHOUT_OPTIMIZING_RAW_PROFIT",
+  "source_hashes": {
+    "phase1g_manifest_sha256": "d0d0bec990a7ef8ba99618436af25096b4c5d6a20a4592656f0e823bab9f73b0",
+    "phase1h_manifest_sha256": "529929fff23b955347efd43b001dc8ee2441269f25c57729cf3e0faed53aaa14",
+    "v11_completed_wave_ledger_sha256": "36233dfcfdd09439fdee538a81f573e9a035894da1dae26156a32808a58c143e",
+    "raw_m1_full_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+    "raw_m1_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939"
+  },
+  "unit": "ONE_FUNDED_FAST_HA_RUN_AT_ITS_FIRST_ACTUAL_ENTRY_DECISION",
+  "run_outcome_classes": {
+    "TAIL_JOURNEY_RUN": "RIGHT_TAIL_GE_5R_UNITS_GT_ZERO",
+    "STOP_ONLY_RUN": "RIGHT_TAIL_GE_5R_UNITS_EQ_ZERO_AND_STOPPED_LOSS_UNITS_GT_ZERO",
+    "NEUTRAL_RUN": "ALL_OTHER_FUNDED_RUNS"
+  },
+  "repeat_stop_definitions": {
+    "primary": "CURRENT_STOP_ONLY_RUN_AFTER_PRIOR_FUNDED_STOP_ONLY_RUN",
+    "strict_adjacency_audit": "PRIMARY_AND_CURRENT_FAST_RUN_ID_EQUALS_PRIOR_FUNDED_FAST_RUN_ID_PLUS_ONE",
+    "known_state_requirement": "PRIOR_FUNDED_RUN_EXIT_NOT_LATER_THAN_CURRENT_FIRST_ENTRY_DECISION"
+  },
+  "decision_scope": "POLICY_MAY_CHANGE_ONLY_RUNS_WHOSE_PRIOR_FUNDED_RUN_IS_STOP_ONLY_ALL_OTHER_RUNS_REMAIN_BASELINE",
+  "primary_outcome_heads": {
+    "STOP_ONLY_RUN": "RUN_CLASS_EQ_STOP_ONLY_RUN",
+    "TAIL_JOURNEY_RUN": "RUN_CLASS_EQ_TAIL_JOURNEY_RUN"
+  },
+  "conviction_score": "P_TAIL_JOURNEY_RUN_MINUS_P_STOP_ONLY_RUN",
+  "feature_assembly": {
+    "tail_head": "PHASE1H_COMPACT_PATH_PLUS_CAUSALLY_KNOWN_PRIOR_RUN_STATE",
+    "stop_head": "PHASE1H_COMPACT_PATH_PLUS_CAUSALLY_KNOWN_PRIOR_RUN_STATE_PLUS_COMPLETED_H4_FAST_STD_SLOW_HA",
+    "wave": "EXCLUDED_FROM_PRIMARY_AFTER_PHASE1H_INCREMENTAL_FAILURE"
+  },
+  "prior_run_numeric_fields": [
+    "known_consecutive_stop_only_runs",
+    "prior_funded_run_stopped_units",
+    "prior_funded_run_net_R_per_unit",
+    "funded_run_id_gap",
+    "hours_since_prior_funded_run_start"
+  ],
+  "prior_run_categorical_fields": [
+    "prior_funded_run_class",
+    "prior_funded_run_direction"
+  ],
+  "regularization_grid": [0.1, 1.0, 10.0, 100.0],
+  "outer_walk_forward_folds": [
+    {
+      "train_end": "2025-03-31T23:59:59",
+      "test_start": "2025-04-01T00:00:00",
+      "test_end": "2025-09-30T23:59:59"
+    },
+    {
+      "train_end": "2025-09-30T23:59:59",
+      "test_start": "2025-10-01T00:00:00",
+      "test_end": "2026-03-31T23:59:59"
+    },
+    {
+      "train_end": "2026-03-31T23:59:59",
+      "test_start": "2026-04-01T00:00:00",
+      "test_end": "2026-09-18T23:57:00"
+    }
+  ],
+  "threshold_selection": {
+    "source": "TRAIN_RUN_PREDICTIONS_ONLY",
+    "candidate_thresholds": "TRAIN_CANDIDATE_SCORE_QUANTILES_0_TO_100_BY_5_PERCENT",
+    "objective": "MAXIMIZE_TRAIN_REPEAT_STOPPED_UNITS_REMOVED",
+    "constraints": {
+      "overall_tail_units_retained": 0.90,
+      "overall_tail_journey_runs_retained": 0.85,
+      "overall_funded_children_retained": 0.80,
+      "after_stop_candidate_runs_retained": 0.40
+    },
+    "tie_break": "HIGHER_TRAIN_NET_R_THEN_LOWER_THRESHOLD"
+  },
+  "primary_success_gates": {
+    "repeat_stop_removal": "AT_LEAST_40_PERCENT_OF_REPEAT_STOPPED_UNITS_POOLED_AND_15_PERCENT_IN_EVERY_FOLD",
+    "all_stop_removal": "AT_LEAST_15_PERCENT_OF_ALL_STOPPED_UNITS_POOLED",
+    "tail_units": "AT_LEAST_85_PERCENT_POOLED_AND_70_PERCENT_IN_EVERY_FOLD",
+    "tail_journey_participation": "AT_LEAST_85_PERCENT_POOLED_AND_70_PERCENT_IN_EVERY_FOLD",
+    "child_frequency": "AT_LEAST_80_PERCENT_OF_FUNDED_CHILDREN_IN_EVERY_FOLD",
+    "win_rate": "CHILD_WIN_RATE_IMPROVES_BY_AT_LEAST_3_PERCENTAGE_POINTS_POOLED_AND_IS_NOT_LOWER_IN_AT_LEAST_TWO_FOLDS",
+    "raw_economics": "RAW_NET_R_POSITIVE_IN_EVERY_FOLD",
+    "equal_stop_budget": "RISK_EQUIVALENT_SCALED_NET_R_PER_BASELINE_FUNDED_UNIT_EXCEEDS_BASELINE_POOLED_AND_IN_AT_LEAST_TWO_FOLDS"
+  },
+  "required_comparators": [
+    "BASELINE_ALL_FUNDED_RUNS",
+    "BROAD_SKIP_ALL_AFTER_STOP_ONE_RUN_COOLDOWN",
+    "PERFECT_REPEAT_STOP_ORACLE_UPPER_BOUND"
+  ],
+  "interpretation_policy": "OUTCOME_CLASSES_ARE_RESEARCH_LABELS_NOT_LIVE_STATE_LABELS_AND_NO_RESULT_ON_CONSUMED_CHRONOLOGY_CAN_AUTHORIZE_ACTION",
+  "post_cutoff_price_access": false,
+  "sealed_year": 2021,
+  "trade_authority": false,
+  "sizing_authority": false
+}
