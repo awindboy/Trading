@@ -44,6 +44,9 @@ CRT creates the Parent journey and candidate state
 - Phase 1E has a frozen and independently reproduced DST-aware session/weekday
   result on the corrected calendar source. Session and weekday describe
   transition risk but grant no veto, sizing, or trade authority.
+- Phase 1F has a frozen and independently reproduced rolling Parent-target
+  result. Nearest H4/day/week/month target completeness is too dense to select
+  trustworthy bridges; target kind remains a lifecycle observation only.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -117,11 +120,12 @@ promotion contract exists.
 - GOLD# chronology through `2026-09-18 23:57` is consumed development evidence.
 - GOLD# 2021 remains sealed.
 - V12 currently has no independent validation.
-- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1E
+- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1F
   have consumed-development diagnostic authority only. Phase 1A fails the V10
   replacement gate; Phase 1B separates transition risk; Phase 1C rejects broad
   carry; Phase 1D treats time/events as state; Phase 1E rejects simple named-
-  session and weekday vetoes.
+  session and weekday vetoes; Phase 1F rejects nearest-target completeness as a
+  carry or admission gate.
 
 ## Closed Phase-1A finding
 
@@ -143,7 +147,8 @@ Do not carry a Child solely because the Phase-1B Parent remains active. The
 broad view added R only with more stops, exposure, and drawdown and became
 negative after removing its best bridge. Do not promote the 12-Child
 unfinished-origin-target subset or 31 repair Children. The next missing object
-is a causal rolling target inventory, not a carry-duration threshold.
+was a causal rolling target inventory, not a carry-duration threshold; Phase 1F
+has now tested and rejected its nearest-level completeness form.
 
 ## Closed Phase-1D finding
 
@@ -158,3 +163,12 @@ Neither can act before independent future evidence and Python/MQL5 parity.
 Do not veto London, New York, Asia, Friday, Wednesday, or their consumed-data
 interactions. High-stop session states frequently retain the largest right-tail
 capital, while some low-stop states have little net R.
+
+## Closed Phase-1F finding
+
+Do not carry, admit, or resize merely because the rolling nearest target is
+unfinished. Previous-H4 levels saturate the inventory: every Phase-1C bridge
+and every retained H20 pre-event Child remains unfinished. Do not post-hoc
+remove H4 levels or tune a minimum target distance. Origin/external phase may be
+used only as a conditional observation while branch, side, first/later Child,
+time, event, and right-tail capital remain visible.

@@ -162,6 +162,26 @@ Phase 1E establishes that session/weekday state changes immediate whipsaw risk,
 but high-stop phases often carry the largest right tail. It does not authorize
 a session, weekday, event, or joint-state veto or sizing rule.
 
+## Retained Phase-1F artifacts
+
+- `v12_phase1f_contract.json`: monotonic origin-to-external target succession,
+  completed-H4 reframe, same-price clustering, and no-family-score contract.
+- `v12_phase1f_core.py`: pure directional frontier, active-level cluster,
+  same-M1 query, target-ID, and Parent-state primitives.
+- `build_v12_phase1f.py`: byte-frozen Phase-1B/1C/1E pack join, target ledger,
+  V10/FAST/carry/repair contexts, and balanced stop/right-tail scorecards.
+- `test_v12_phase1f.py`: family-neutral clustering, same-M1, frontier, pending,
+  and Parent-end regression tests.
+- `validate_v12_phase1f_output.py`: complete-pack, decision/outcome, frozen-
+  population, authority, and manifest validator.
+- `v12_phase1f_release_manifest.json`: compact receipt for two independently
+  rebuilt, byte-identical packs.
+
+Phase 1F rejects nearest one-use target completeness as a useful gate. Previous-
+H4 objects make the inventory nearly always unfinished, including all Phase-1C
+bridges and the full H20 pre-event cell. Origin/external target kind remains an
+observation-only lifecycle coordinate for conditional HA/Wave work.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

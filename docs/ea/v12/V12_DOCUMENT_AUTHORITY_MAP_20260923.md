@@ -42,6 +42,12 @@ As of `2026-09-24`, read V12 authority in this order:
     uncertainty contract.
 20. `results/V12_PHASE1E_SESSION_WEEKDAY_EVENT_INTERACTION_20260924.md` —
     reproducible session/weekday/CRT/event result and retained shadow boundary.
+21. `V12_PHASE1F_PARENT_TARGET_SUCCESSION_CONTRACT_20260924.md` — frozen
+    monotonic target succession, completed-H4 reframe, same-price cluster, and
+    no-family-score contract.
+22. `results/V12_PHASE1F_PARENT_TARGET_SUCCESSION_20260924.md` — reproducible
+    target-density audit, rejected completeness gate, and retained lifecycle
+    coordinate.
 
 ## Schema authority
 
@@ -85,6 +91,13 @@ As of `2026-09-24`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1e_output.py`, and
   `../../../research/v12/v12_phase1e_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1E pack.
+- `../../../research/v12/v12_phase1f_contract.json`,
+  `../../../research/v12/v12_phase1f_core.py`,
+  `../../../research/v12/build_v12_phase1f.py`,
+  `../../../research/v12/test_v12_phase1f.py`,
+  `../../../research/v12/validate_v12_phase1f_output.py`, and
+  `../../../research/v12/v12_phase1f_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1F pack.
 
 ## Predecessor routing
 
@@ -109,3 +122,7 @@ concentrated for action.
 Phase 1D is corrected and reproducible on consumed evidence. Phase 1E is
 complete and reproducible. Time, session, weekday, and events are retained as
 state coordinates, not a session/news veto, sizing map, or directional oracle.
+Phase 1F is complete and reproducible. The nearest rolling one-use target is
+too dense to distinguish trustworthy unfinished Parents: every Phase-1C bridge
+remains unfinished. Target completeness is rejected as a gate; target kind is
+retained only as a lifecycle coordinate.

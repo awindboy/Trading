@@ -1,0 +1,64 @@
+{
+  "contract_version": "v12-phase1f-parent-target-succession-v1",
+  "frozen_at": "2026-09-24",
+  "mechanism_cutoff": "2026-09-18T23:57:00",
+  "symbol": "GOLD#",
+  "source_journey_contract": "v12-phase1b-h4m5-journey-v1.1",
+  "source_carry_contract": "v12-phase1c-crt-protected-carry-repair-v1",
+  "source_temporal_contract": "v12-phase1e-session-weekday-event-interaction-v1.1",
+  "parent_scope": "ALL_PHASE1B_CANONICAL_JOURNEYS",
+  "initial_target_order": [
+    "ORIGIN_C1_MIDPOINT_IF_STRICTLY_AHEAD_AT_SELECTION",
+    "ORIGIN_C1_OPPOSITE_EDGE_IF_STRICTLY_AHEAD_AT_SELECTION"
+  ],
+  "external_target_inventory": [
+    "PREVIOUS_H4",
+    "PREVIOUS_DAY",
+    "PREVIOUS_WEEK",
+    "PREVIOUS_MONTH"
+  ],
+  "external_selection": "NEAREST_ACTIVE_ONE_USE_PRICE_STRICTLY_BEYOND_DIRECTIONAL_PROGRESS_FRONTIER",
+  "same_price_policy": "ALL_ACTIVE_LEVEL_OBJECTS_AT_ONE_POINT_ROUNDED_PRICE_FORM_ONE_TARGET_CLUSTER",
+  "family_priority_or_score": false,
+  "progress_frontier": "MONOTONIC_DIRECTIONAL_MAX_OR_MIN_OF_PRIOR_FRONTIER_COMPLETED_TARGET_AND_CAUSAL_REFRAME_H4_CLOSE",
+  "target_completion": {
+    "internal": "FIRST_CAUSAL_M1_TOUCH_AT_OR_BEYOND_PRICE",
+    "external": "PHASE1B_FIRST_STRICT_POINT_ROUNDED_M1_BREACH"
+  },
+  "reframe_clock": "FIRST_LATER_COMPLETED_H4_AFTER_TARGET_COMPLETION_THEN_EVERY_COMPLETED_H4_WHILE_NO_SUCCESSOR_EXISTS",
+  "same_m1_query_policy": "A_TARGET_WITH_COMPLETION_TIME_EQUAL_TO_QUERY_TIME_REMAINS_UNFINISHED_AT_THE_M1_OPEN",
+  "parent_end_policy": "PARENT_END_IS_EXCLUSIVE_AND_PRECEDES_ANY_NEW_INTRAMINUTE_TARGET_TOUCH_AT_THE_SAME_TIMESTAMP",
+  "target_states": [
+    "TARGET_UNFINISHED",
+    "TARGET_COMPLETE_REFRAME_PENDING",
+    "PARENT_INVALIDATED",
+    "NO_ACTIVE_PARENT"
+  ],
+  "query_units": [
+    "FROZEN_V10_SELECTED_CHILD",
+    "PHASE1B_FAST_FLIP",
+    "PHASE1C_BRIDGE_AND_REPAIR"
+  ],
+  "required_interactions": [
+    "JOURNEY_RELATION_X_TARGET_STATE",
+    "TARGET_STATE_X_SESSION_PHASE",
+    "TARGET_STATE_X_NEW_YORK_WEEKDAY",
+    "TARGET_STATE_X_USD_EVENT_STATE",
+    "H20_ALIGNED_PRE_USD_MODHIGH_30_60_X_TARGET_STATE",
+    "PHASE1C_CARRY_DELTA_X_TARGET_STATE",
+    "PHASE1C_REPAIR_X_TARGET_STATE"
+  ],
+  "economic_balance": "REPORT_STOPPED_UNITS_NET_R_AND_GE5R_RIGHT_TAIL_TOGETHER",
+  "uncertainty": {
+    "method": "DETERMINISTIC_ISO_WEEK_BLOCK_BOOTSTRAP",
+    "draws": 2000,
+    "seed": 120124,
+    "minimum_children": 20,
+    "interval": "PERCENTILE_95"
+  },
+  "action_policy": "OBSERVATION_AND_MECHANISM_ONLY",
+  "post_cutoff_price_access": false,
+  "sealed_year": 2021,
+  "trade_authority": false,
+  "sizing_authority": false
+}

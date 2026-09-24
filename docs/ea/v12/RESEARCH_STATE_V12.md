@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1E COMPLETE AND REPRODUCIBLE / SESSION AND WEEKDAY ARE STATE, NOT VETO / NO TRADE AUTHORITY`
+`PHASE 1F COMPLETE AND REPRODUCIBLE / NEAREST TARGET COMPLETENESS REJECTED / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -81,6 +81,9 @@ Last synchronized: `2026-09-24`
 - Phase 1D joins a frozen MT5 economic-calendar snapshot to the broker-label M1
   clock. Scheduled metadata and realized surprise remain physically separate;
   no time/event field may invent, veto, resize, or reverse a Child.
+- Phase 1F advances Parent objectives only at a later completed H4, keeps a
+  monotonic directional frontier, and gives no level family a score. The result
+  rejects nearest-target completeness as action authority.
 
 ## Closed Phase-0 result
 
@@ -253,17 +256,54 @@ Do not promote or tune on consumed outcomes:
 - funding or vetoing the 35-Child H20 pre-event interaction;
 - promoting the small Asia-Friday or session/weekday/CRT cells as rules.
 
+## Closed Phase-1F result
+
+- Contract `v12-phase1f-parent-target-succession-v1` selected `4,675` rolling
+  targets across all `2,649` Phase-1B Parents; `3,089` completed before Parent
+  end. Two independent 13-file packs are byte-identical and all 41 tests pass.
+- External targets are structurally dense: `2,551 / 2,780` are previous-H4-only
+  clusters, every external cluster contains H4, median selection distance is
+  `0.224 H4 ATR`, and median completion time is `0.483` hour.
+- `1,422 / 1,499` active-Parent V10 Children are target-unfinished. Every one of
+  the 118 carry Children, 60 bridges, 31 repairs, and 35 H20 pre-event Children
+  is unfinished. The definition therefore cannot select the useful bridges.
+- The 77 complete/reframe-pending rows consist of 66 `ORDER_FAIL`, ten
+  `EXIT_PENDING_BLOCK`, and one ordinary entry. Their low pooled stop burden is
+  not interpretable as a strategy advantage.
+- External-target Children carry lower pooled stopped exposure, but the effect
+  is strongly conditioned by aligned/opposed relation, first/later Child, CRT
+  origin branch, and side. High-outside LONG continuation is positive while
+  low-outside SHORT continuation is negative.
+- The broad carry result is unchanged: `+23.19R` delta with 26 added Hard SLs,
+  66 added stopped units, and negative 2026 delta. Target completeness does not
+  rehabilitate it.
+
+## Closed Phase-1F interpretations
+
+Do not promote or tune on consumed outcomes:
+
+- treating the existence of a nearest one-use target as Parent conviction;
+- carrying or adding on every unfinished rolling target;
+- interpreting the reframe-pending group's low stop rate without separating
+  market-closed and blocked execution states;
+- removing previous-H4 or imposing a minimum ATR distance after seeing this
+  target-density result;
+- treating external-target phase as a veto or size release without controlling
+  branch, side, and first/later Child status.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. Can a causal ordered target inventory distinguish an unfinished Journey from
-   a still-active boundary whose original objectives are already consumed?
-2. After that target state is frozen, can `neutral bridge / later repair`
-   preserve right-tail exposure without the broad carry's added stop burden?
-3. Does the frozen Phase-1D/1E pre-release interaction remain distinct after a
-   causal rolling Parent target state is added, or is it only a proxy for
-   unresolved target timing?
+1. Conditional on the five frozen FAST-flip meanings, does origin-target versus
+   external-target lifecycle phase add information after branch, side, and
+   first/later status are controlled?
+2. Does the frozen Phase-1D/1E pre-release interaction remain distinct after
+   lifecycle phase is added? Phase 1F shows it is not explained by target
+   completeness because all 35 Children remain unfinished.
+3. Can `neutral bridge / later repair` preserve right-tail exposure only when
+   HA/Wave settlement confirms renewed delivery, without the broad carry's
+   added stop burden?
 4. Conditional on the five frozen FAST-flip meanings and realized event shock,
    do FAST/STD/SLOW disagreement and Wave settlement add information beyond CRT
    geometry?
@@ -281,8 +321,9 @@ These are questions, not rules:
 - Phase 1A is a consumed-history structural-R backtest. Phase 1B is a
   consumed-history journey/transition diagnostic. Phase 1C is a consumed-history
   holding-clock and repair diagnostic. Phase 1D is a corrected temporal/event
-  diagnostic and Phase 1E is a consumed-history named-session, weekday, and
-  interaction diagnostic. No V12 EA, MQL5 parity, actual-tick economics, or
-  independent future validation exists yet.
+  diagnostic, Phase 1E is a named-session/weekday diagnostic, and Phase 1F is a
+  consumed-history rolling-target density and lifecycle diagnostic. No V12 EA,
+  MQL5 parity, actual-tick economics, or independent future validation exists
+  yet.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

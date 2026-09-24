@@ -4,7 +4,7 @@ Last synchronized: `2026-09-24`
 
 ## Status
 
-`PHASE 1E COMPLETE AND REPRODUCIBLE / SESSION AND WEEKDAY ARE STATE, NOT VETO / NO TRADE AUTHORITY`
+`PHASE 1F COMPLETE AND REPRODUCIBLE / NEAREST TARGET COMPLETENESS REJECTED / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -121,6 +121,25 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 - Two independent packs are byte-identical across all ten files; 36 tests and
   complete-pack validation pass with zero post-cutoff price rows parsed.
 
+## Completed Phase 1F
+
+- The frozen rolling ledger selected `4,675` Parent targets; `3,089` completed
+  before Parent end. Two independent 13-file packs are byte-identical, all
+  validators pass, and the full suite has 41 tests.
+- Previous-H4 dominates the external inventory: `2,551 / 2,780` external
+  targets are H4-only, every external cluster contains H4, median distance is
+  `0.224 H4 ATR`, and median completion time is 29 minutes.
+- All `118` Phase-1C carry Children, all 60 bridge episodes, all 31 repairs, and
+  all 35 H20 pre-event Children remain `TARGET_UNFINISHED`. The state therefore
+  reproduces broad carry rather than selecting trustworthy bridges.
+- The 77 reframe-pending V10 rows are mostly execution states: 66 order fails,
+  ten exit-pending blocks, and one ordinary entry. Their low pooled stop burden
+  is not strategy edge.
+- External-target phase has lower pooled stopped exposure, but relation,
+  first/later status, and CRT branch/side explain much of it. Journey-start
+  high-outside LONGs are strongly positive while low-outside SHORTs are
+  negative. Target kind remains descriptive only.
+
 ## What is not yet known
 
 - a reproducible causal true-MSS definition that preserves the source idea
@@ -129,22 +148,23 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
   is both lower than V10 and frequent enough to carry meaningful right-tail
   capital;
 - whether HA/Wave add incremental information inside CRT states;
-- how to maintain a causal rolling target inventory after C1 midpoint and
-  opposite edge are consumed without inventing a hindsight key-level score;
+- whether origin-target versus external-target lifecycle phase adds information
+  after branch, side, and first/later Child are controlled;
 - whether any ML head is calibrated and stable across side, year, lane, and
   liquidity era;
 - whether the structure survives actual-tick costs and execution constraints.
 
 ## Immediate next work
 
-1. freeze a target-first Parent inventory using the existing causal one-use
-   H4/day/week/month levels, with deterministic succession and no family score;
-2. distinguish `unfinished target`, `target complete / reframe pending`, and
-   actual Parent invalidation before retesting carry;
-3. retain the Phase-1C repair definition but do not add capital until the target
-   state exists and future evidence accumulates;
-4. carry the frozen Phase-1D/1E temporal interactions as shadow fields inside
-   the target-state work; do not turn them into hour/session/weekday/news vetoes;
-5. test FAST/STD/SLOW and Wave only conditionally inside the frozen CRT states;
+1. freeze a conditional HA/Wave study inside the five Phase-1B FAST-flip
+   meanings and the Phase-1F origin/external lifecycle coordinate;
+2. control CRT branch, side, first/later aligned status, session, weekday, and
+   the retained H20 event cell before claiming incremental information;
+3. use FAST/STD/SLOW disagreement and Wave settlement as observations only;
+   do not revive a global HA or static-Wave gate;
+4. retain Phase-1C repair as a shadow outcome, but do not add capital merely
+   because a nearest external target exists;
+5. do not tune a minimum target distance or remove a level family from the
+   consumed Phase-1F result;
 6. preserve GOLD# 2021 and do not reinterpret the still-unread post-cutoff
    chronology after its shadow semantics are frozen.

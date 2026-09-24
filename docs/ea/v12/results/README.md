@@ -23,6 +23,10 @@ The retained numeric receipts are:
   calendar clock, DST-aware Asia/London/New-York phases, weekday/CRT/event
   interaction audit, and block-bootstrap uncertainty. Session and weekday are
   retained as transition-risk coordinates, not action rules.
+- `V12_PHASE1F_PARENT_TARGET_SUCCESSION_20260924.md`: reproducible rolling
+  Parent-target inventory and target-density audit. It rejects target
+  completeness as a carry/admission gate and retains origin/external phase only
+  as a conditional lifecycle coordinate.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

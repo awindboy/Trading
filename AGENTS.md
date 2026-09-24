@@ -70,6 +70,10 @@ The Phase-1D calendar source is corrected to one synchronized full-range query.
 Phase 1E is complete and independently reproduced: DST-aware session and
 weekday describe transition risk, but high-stop states frequently retain the
 largest right-tail capital. They remain shadow coordinates only.
+Phase 1F is complete and independently reproduced: deterministic nearest
+H4/day/week/month target succession is too dense, leaving every Phase-1C bridge
+unfinished. Target completeness is rejected as a gate; origin/external target
+phase remains observation-only.
 
 ## Non-negotiable causal contract
 
@@ -129,6 +133,11 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
   bridge episode.
 - promoting the 12-Child unfinished-origin-target carry subset or the 31 repair
   Children; both are sparse, concentrated, and lack future evidence.
+- using nearest one-use target completeness as Parent conviction or broad carry
+  permission; previous-H4 levels saturate the state, and all Phase-1C bridges
+  remain unfinished.
+- removing previous-H4 or tuning a minimum ATR target distance after seeing the
+  Phase-1F consumed result.
 
 ## Historical generations
 
