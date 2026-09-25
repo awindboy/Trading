@@ -509,14 +509,27 @@ Do not promote:
 - lower timeframe itself as the edge. The useful object is clock-specific
   temporal state conditional on the stop-chain stage.
 
+## Closed Phase-1R result
+
+- Causal annual expanding models remove 339 of 1,004 targeted repeat stops
+  (`33.76%`) across 2023–2026.
+- Across all M30 history, the policy removes 339 of 4,820 stops (`7.03%`) but
+  reduces net R from `384.61` to `329.97`, retains `88.84%` of >=5R tail, and
+  worsens maximum stop streak from five to six.
+- In the selected-R7G window, M30 policy improves its baseline from `189.88R`
+  to `209.76R`, while V10 R7G earns `741.01R` at `12.52` stopped units per 100
+  versus M30's `27.63`.
+- At equal V10 funded units M30 earns `123.87R`; at equal 486 stopped units it
+  earns `56.14R`. M30 session path is not a V10 replacement.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. Can one preregistered compact M30 after-stop temporal/path rule reproduce on
-   untouched chronology without retuning its clock, model, or quantile?
-2. Can a simpler monotonic or rule-based representation reproduce the M30 HGB
-   result without black-box instability?
+1. Can M30 temporal state add value only inside an already selective higher-
+   quality base without funding the full M30 `k=1` population?
+2. Can a simpler monotonic representation reproduce repeat-stop selectivity
+   without the 2023–2024 tail loss and HGB instability?
 3. Does the M15 third-and-later-stop warning transfer as a subordinate warning
    while preserving the Parent/Child semantics of the higher execution clock?
 4. Can Python and MQL5 produce identical M30/M15 temporal features, stop-chain
@@ -541,7 +554,8 @@ These are questions, not rules:
   Phase 1M is a failed-stability H1 transition-Child diagnostic, Phase 1N is a
   failed broad temporal-admission diagnostic, Phase 1O is an unstable after-one-
   stop interaction diagnostic, Phase 1P is an intermediate-clock boundary
-  diagnostic, and Phase 1Q is a deep stop-chain warning diagnostic. No V12 EA,
-  MQL5 parity, actual-tick economics, or independent future validation exists.
+  diagnostic, Phase 1Q is a deep stop-chain warning diagnostic, and Phase 1R is
+  a failed full-history M30/V10 replacement comparison. No V12 EA, MQL5 parity,
+  actual-tick economics, or independent future validation exists.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

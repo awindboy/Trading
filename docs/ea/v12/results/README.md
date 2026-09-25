@@ -62,6 +62,9 @@ The retained numeric receipts are:
 - `V12_PHASE1Q_THIRD_STOP_CHAIN_20260925.md`: reproducible third-and-later-stop
   audit. M15 time/path state shortens maximum churn from five to four but lowers
   capital and does not materially raise win rate.
+- `V12_PHASE1R_FULL_HISTORY_M30_V10_COMPARISON_20260925.md`: causal annual M30
+  session-path replay and normalized V10 R7G comparison. Targeted repeat-stop
+  selectivity persists, but full-history capital and equal-risk economics fail.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

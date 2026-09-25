@@ -116,6 +116,10 @@ Phase 1Q is complete and independently reproduced: M15 static-time and session-
 path state help only after two prior consecutive stops, reducing third-and-later
 stops and maximum streak from five to four while slightly reducing raw and
 equal-stop-budget R. This is a defensive deep-churn observation, not a strategy.
+Phase 1R is complete and independently reproduced: causal annual M30 session-
+path models remove `33.76%` of repeat stops in the targeted cohort but reduce
+full-history R, retain only `88.84%` of tail, and remain far inferior to V10 R7G
+under common-window, equal-funded, and equal-stopped-unit comparisons.
 
 ## Non-negotiable causal contract
 
@@ -184,6 +188,8 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
 - applying the Phase-1Q M15 deep-chain warning before two prior stops, claiming
   it eliminates churn, or sizing from it; the surviving policies reduce maximum
   streak only from five to four and do not materially improve win rate.
+- treating Phase-1R's one-third repeat-stop removal as an M30 replacement edge;
+  full-history capital falls and equal-risk economics remain far below V10 R7G.
 - fixed broker-hour/session avoidance, all-news avoidance, or realized surprise
   as a direction oracle; Phase-1D retains only two narrow shadow interactions
   and grants neither action authority.

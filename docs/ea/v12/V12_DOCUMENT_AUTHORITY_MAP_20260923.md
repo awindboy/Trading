@@ -99,6 +99,10 @@ As of `2026-09-25`, read V12 authority in this order:
     stop-chain temporal-path contract across H2/H1/M30/M15.
 44. `results/V12_PHASE1Q_THIRD_STOP_CHAIN_20260925.md` — reproducible M15 deep-
     churn warning result and failed full-chain resolution.
+45. `V12_PHASE1R_FULL_HISTORY_M30_V10_COMPARISON_CONTRACT_20260925.md` — frozen
+    causal annual M30 session-path and normalized V10 comparison contract.
+46. `results/V12_PHASE1R_FULL_HISTORY_M30_V10_COMPARISON_20260925.md` —
+    reproducible full-history failure and fixed-window V10 comparison.
 
 ## Schema authority
 
@@ -222,6 +226,11 @@ As of `2026-09-25`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1q.py`, and
   `../../../research/v12/v12_phase1q_release_manifest.json`
   define, validate, and receipt the independently reproduced Phase-1Q pack.
+- `../../../research/v12/v12_phase1r_contract.json`,
+  `../../../research/v12/build_v12_phase1r.py`,
+  `../../../research/v12/validate_v12_phase1r.py`, and
+  `../../../research/v12/v12_phase1r_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1R pack.
 
 ## Predecessor routing
 
@@ -284,3 +293,7 @@ after-stop clock, with H2 supportive, but the fitted scores are not independent
 evidence. Phase 1Q is complete and reproducible. M15 session/static time helps
 only after two prior stops, shortens maximum streak from five to four, and
 slightly reduces capital. None has veto, sizing, entry, or trade authority.
+Phase 1R is complete and reproducible. Causal annual M30 session-path models
+remove one third of targeted repeat stops but lose full-history capital and are
+far inferior to V10 R7G under normalized common-window comparisons. It has no
+veto, sizing, entry, or trade authority.

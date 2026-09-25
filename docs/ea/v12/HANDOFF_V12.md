@@ -4,7 +4,7 @@ Last synchronized: `2026-09-25`
 
 ## Status
 
-`PHASE 1Q COMPLETE AND REPRODUCIBLE / M30 IS THE LEADING CONSUMED-DATA TEMPORAL CLOCK / H2 SUPPORTIVE / M15 DEEP-CHURN ONLY / NO TRADE AUTHORITY`
+`PHASE 1R COMPLETE AND REPRODUCIBLE / M30 REPEAT-STOP SIGNAL CONFIRMED BUT FULL-HISTORY V10 REPLACEMENT REJECTED / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -286,12 +286,24 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
   win rate is effectively unchanged. It is a defensive deep-churn coordinate,
   not a solved high-conviction strategy.
 
+## Completed Phase 1R
+
+- Annual causal models remove `33.76%` of targeted repeat stops, but across all
+  M30 history remove only `7.03%` of total stops and lose `54.64R`.
+- Full-history M30 policy: 16,371 Children, 4,481 stops, `329.97R`, `27.37`
+  stopped units per 100, and maximum streak six.
+- In the fixed V10 window M30 improves its own baseline to `209.76R`, but V10
+  R7G earns `741.01R` with fewer units and less than half the normalized stopped
+  exposure. Equal V10 stopped units produce only `56.14R` for M30.
+- The temporal signal is real but is not sufficient to create a high-quality
+  M30 base strategy.
+
 ## Immediate next work
 
 1. do not tune clock choice, HGB depth, quintile boundaries, or feature sets on
-   the consumed Phase-1N through Phase-1Q outcomes;
-2. retain M30 session/micro path as the leading after-stop shadow hypothesis and
-   H2 continuous clock as the simpler supportive comparator;
+   the consumed Phase-1N through Phase-1R outcomes;
+2. do not fund all M30 `k=1` Children; test temporal state only as a subordinate
+   observation inside a separately frozen, already-selective higher-quality base;
 3. retain M15 only as a third-and-later-stop churn warning, never as a broad
    entry filter or claim that the main strategy should run on M15;
 4. before any promotion, preregister one compact rule and test it on untouched

@@ -78,6 +78,9 @@ CRT creates the Parent journey and candidate state
 - Phase 1Q has a frozen and independently reproduced third-stop-chain result.
   M15 time/path helps only after two prior stops and shortens the maximum streak
   from five to four while reducing R; it has no veto or sizing authority.
+- Phase 1R has a frozen and independently reproduced causal full-history M30
+  comparison. It confirms repeat-stop selectivity but rejects M30 session path
+  as a V10 replacement on full-history and equal-risk economics.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -163,8 +166,9 @@ promotion contract exists.
   cooldown; Phase 1J/1K retain mechanism but reject its stale H4 capital mapping;
   Phase 1L/1M reject lower-clock HA clones; Phase 1N rejects broad temporal
   admission; Phase 1O retains unstable H1 after-stop information; Phase 1P
-  identifies M30 as the leading consumed-data clock; and Phase 1Q retains M15
-  only as a deep-churn warning after two prior stops.
+  identifies M30 as the leading consumed-data clock; Phase 1Q retains M15 only
+  as a deep-churn warning after two prior stops; and Phase 1R rejects the full-
+  history M30 replacement despite its targeted repeat-stop reduction.
 
 ## Closed Phase-1A finding
 
@@ -280,3 +284,11 @@ research boundary, but their fitted scores and quintiles have no future or
 platform validation. Phase 1Q permits only the interpretation that M15 can
 describe deep churn after two prior stops; it does not eliminate churn, improve
 win rate materially, or authorize a veto, delay, or sizing rule.
+
+## Closed Phase-1R finding
+
+Do not promote M30 session path because it removes one third of targeted repeat
+stops. Across full causal history it removes only `7.03%` of all stops, loses
+`54.64R`, retains `88.84%` of right-tail R, and worsens maximum streak from five
+to six. In the fixed V10 window it improves the M30 baseline but remains far
+below R7G at equal funded units and equal stopped-unit budget.

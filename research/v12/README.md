@@ -372,6 +372,19 @@ Phase 1Q retains M15 session/static state only as a deep-churn observation after
 two prior stops. It reduces but does not eliminate stop chains and grants no
 veto, delay, sizing, or trade authority.
 
+## Retained Phase-1R artifacts
+
+- `v12_phase1r_contract.json`: frozen annual expanding M30 session-path and
+  normalized V10 R7G comparison contract.
+- `build_v12_phase1r.py`: causal 2022 warmup, 2023–2026 annual model, full and
+  matched-window scorecard, and equal-risk comparison builder.
+- `validate_v12_phase1r.py` and `v12_phase1r_release_manifest.json`: complete-
+  pack validator and two-build byte-parity receipt.
+
+Phase 1R confirms targeted repeat-stop discrimination but rejects the full M30
+base as a V10 replacement. Recent-window improvement does not survive the full
+history and normalized risk comparison.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary
