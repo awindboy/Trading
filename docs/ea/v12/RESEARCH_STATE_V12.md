@@ -1,6 +1,6 @@
 # V12 research state
 
-Last synchronized: `2026-09-24`
+Last synchronized: `2026-09-25`
 
 ## Status
 
@@ -421,21 +421,60 @@ Do not promote:
 - first-Child-only as proof that lower exposure improves quality;
 - a tuned M15 threshold intended to rescue these consumed mappings.
 
+## Closed Phase-1L result
+
+- Exact H4 parity is established against all 6,770 historical V10 rows.
+- Moving the same repeated-HA semantics to H1 creates 3.92x Children and 3.91x
+  stopped units without a material stop-density or win-rate improvement.
+- H1 core retains 43.8% of H4 equal-total-stop-budget R and is negative in two
+  years. H4 FAST/STD alignment raises retention to 70.4% but still fails.
+- M15 directional net and body efficiency have stable univariate associations,
+  but directional net reduces both stop and later right-tail incidence. It is a
+  competing-outcome coordinate, not an admission rule.
+
+## Closed Phase-1L interpretations
+
+Do not promote:
+
+- repeated H1 HA Children as a higher-opportunity replacement for H4;
+- H4 FAST/STD alignment as sufficient Parent authorization;
+- any threshold on the three passing M15 univariate screens;
+- gross H1 R without matching total stopped-unit budget.
+
+## Closed Phase-1M result
+
+- H1 `k=1` plus H4 FAST alignment reduces total stops by 36.7%, maximum stop
+  streak from 11 to 6, and maximum concurrent units from 21 to 1.
+- Equal-total-stop-budget R retains 92.4% of H4, but per-attempt stop density
+  worsens from 26.28 to 31.62 and win rate falls from 32.27% to 31.37%.
+- The lane is negative in 2024 and 2026. Its pooled +223.57R is fully supplied
+  by 2023 (+229.46R); the other four years sum to -5.89R. SHORT is negative.
+- The reduced stop count is a lower-frequency effect, not higher conviction.
+
+## Closed Phase-1M interpretations
+
+Do not promote:
+
+- H1 `k=1` or H4-aligned `k=1` to entry or sizing authority;
+- lower total stops as evidence of a higher hit-rate strategy;
+- a long-only rule, 2023-era condition, or H4 alignment threshold fitted after
+  seeing the concentration;
+- one-active-Child exposure as proof of edge rather than a property of k1 runs.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. Can a genuinely event-native M15 Child be defined as an independent attempt
-   near demonstrated progression, rather than stale permission for a later H4
-   Child?
-2. What structural M15 falsification price ends that new Child without widening
-   or rescuing the original H4 probe?
-3. Does event-native exposure add right-tail capital faster than stopped units,
-   after preserving the unchanged V10 comparator?
-4. Can normalized liquidity-era coordinates make the separation transportable
-   when absolute volatility buckets drift?
-5. If staged funding fails, should V12 accept unavoidable first-Child loss and
-   stop trying to predict the run before it forms?
+1. Can the official D1 CRT Parent -> H1 execution lane create an independent H1
+   Child, rather than transplanting repeated V10 HA semantics downward?
+2. Which completed-H1 acceptance, rejection, or repair event gives that Child a
+   structural falsification price without using H4 alignment as a veto?
+3. Can M15 path coordinates describe the H1 Child's competing stop and tail
+   outcomes without one threshold pretending to optimize both?
+4. Does event-native H1 exposure improve stopped units and right-tail capital
+   together across side, year, and normalized liquidity era?
+5. If not, should H4 remain the HA campaign clock while H1 stays only the native
+   CRT execution lane?
 
 ## Evidence boundary
 
@@ -450,7 +489,8 @@ These are questions, not rules:
   component-role diagnostic, and Phase 1I is a run-episode reverse-engineering
   and oracle-bound diagnostic. Phase 1J is a within-run causal-timeline and
   early-mechanism diagnostic. Phase 1K is a failed staged-funding capital
-  mapping diagnostic. No V12 EA, MQL5 parity,
-  actual-tick economics, or independent future validation exists yet.
+  mapping diagnostic. Phase 1L is a failed H1-main-clock feasibility diagnostic,
+  and Phase 1M is a failed-stability H1 transition-Child diagnostic. No V12 EA,
+  MQL5 parity, actual-tick economics, or independent future validation exists.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

@@ -1,6 +1,6 @@
 # V12 document authority map
 
-As of `2026-09-24`, read V12 authority in this order:
+As of `2026-09-25`, read V12 authority in this order:
 
 1. `AGENTS_V12.md` — generation boundary and non-negotiable rules;
 2. `HANDOFF_V12.md` — shortest current handoff;
@@ -75,6 +75,14 @@ As of `2026-09-24`, read V12 authority in this order:
     no-threshold existing-Child capital mapping and gates.
 32. `results/V12_PHASE1K_STAGED_FUNDING_COUNTERFACTUAL_20260924.md` —
     reproducible failed capital mapping and event-native Child boundary.
+33. `V12_PHASE1L_H1_MAIN_TIMEFRAME_FEASIBILITY_CONTRACT_20260925.md` — frozen
+    H4/H1 HA-clock, total-stop-budget, H4-context, M15-path, and clock contract.
+34. `results/V12_PHASE1L_H1_MAIN_TIMEFRAME_FEASIBILITY_20260925.md` —
+    reproducible failed H1 whole-base substitution and retained path mechanism.
+35. `V12_PHASE1M_H1_TRANSITION_CHILD_CONTRACT_20260925.md` — frozen H1 `k=1`
+    structural transition-Child and H4 Parent-context contract.
+36. `results/V12_PHASE1M_H1_TRANSITION_CHILD_20260925.md` — reproducible stop-
+    count reduction, concentration audit, failed stability gate, and next lane.
 
 ## Schema authority
 
@@ -160,6 +168,18 @@ As of `2026-09-24`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1k.py`, and
   `../../../research/v12/v12_phase1k_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1K pack.
+- `../../../research/v12/v12_phase1l_contract.json`,
+  `../../../research/v12/v12_phase1l_core.py`,
+  `../../../research/v12/build_v12_phase1l.py`,
+  `../../../research/v12/test_v12_phase1l.py`,
+  `../../../research/v12/validate_v12_phase1l.py`, and
+  `../../../research/v12/v12_phase1l_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1L pack.
+- `../../../research/v12/v12_phase1m_contract.json`,
+  `../../../research/v12/build_v12_phase1m.py`,
+  `../../../research/v12/validate_v12_phase1m.py`, and
+  `../../../research/v12/v12_phase1m_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1M pack.
 
 ## Predecessor routing
 
@@ -207,3 +227,9 @@ Phase 1K is complete and reproducible. The frozen no-threshold mapping to
 existing H4 Children fails: progression is nonselective and damage-stop worsens
 normalized capital quality. The next object, if pursued, is an event-native
 independent Child rather than another V10 gate.
+Phase 1L is complete and reproducible. Whole-base H1 substitution leaves stop
+density and win rate nearly unchanged, multiplies total stops, and fails equal-
+total-stop-budget and year-stability gates. Phase 1M is complete and
+reproducible. H1 `k=1` under H4 context reduces total stops and overlap but has
+worse stop density, no win-rate improvement, and 2023 LONG-tail concentration.
+Neither has sizing, veto, entry, or trade authority.

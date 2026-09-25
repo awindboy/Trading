@@ -295,6 +295,34 @@ Phase 1K rejects using early M15 events as stale permission for existing later
 H4 Children. Further work, if retained, must define a genuinely event-native
 independent Child rather than another V10 admission gate.
 
+## Retained Phase-1L artifacts
+
+- `v12_phase1l_contract.json`: frozen H4/H1 HA clock, equal-total-stop-budget,
+  H4-context, M15-path, continuous-clock, and viability contract.
+- `v12_phase1l_core.py`: causal bar aggregation, FAST/STD/SLOW HA, scorecard,
+  AUC, concurrency, and equal-stop-budget primitives.
+- `build_v12_phase1l.py`: chronological raw-M1 H4/H1/M15 reconstruction,
+  historical H4 parity audit, policy scorecards, and feature screens.
+- `test_v12_phase1l.py`, `validate_v12_phase1l.py`, and
+  `v12_phase1l_release_manifest.json`: regression tests, complete-pack parity,
+  and compact two-build receipt.
+
+Phase 1L rejects whole-base H1 HA substitution. H1/M15 path remains a subordinate
+observation layer only.
+
+## Retained Phase-1M artifacts
+
+- `v12_phase1m_contract.json`: frozen H1 `k=1` transition-Child, H4 context,
+  total-stop-budget, stability, and right-tail contract.
+- `build_v12_phase1m.py`: source-verified structural-transition comparator and
+  year/side/exposure scorecard builder.
+- `validate_v12_phase1m.py` and `v12_phase1m_release_manifest.json`: complete-
+  pack byte-parity validator and compact two-build receipt.
+
+Phase 1M retains `k=1` as a coherent event concept but rejects it as entry or
+sizing authority. Its lower total stop count is lower frequency, not better
+per-attempt quality, and its pooled result is 2023 LONG-tail concentrated.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

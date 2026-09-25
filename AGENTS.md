@@ -1,6 +1,6 @@
 # Trading repository authority
 
-Last synchronized: `2026-09-24`
+Last synchronized: `2026-09-25`
 
 ## Active generation
 
@@ -96,6 +96,12 @@ checkpoint or event has funding, veto, exit, or sizing authority.
 Phase 1K is complete and independently reproduced: applying those events to
 existing H4-spaced V10 Children fails. Progression is too common by the next
 Child, while damage-stop removes exposure faster than stops and loses tail.
+Phase 1L is complete and independently reproduced: direct H1 HA substitution
+keeps roughly the same stop density and win rate while multiplying total stopped
+exposure, so it fails the main-timeframe viability gate.
+Phase 1M is complete and independently reproduced: H1 `k=1` realignment under
+H4 context lowers total stops and overlap, but worsens per-attempt stop density,
+fails year stability, and is concentrated in 2023 LONG tail.
 
 ## Non-negotiable causal contract
 
@@ -150,6 +156,11 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
   and event prevalence is exposed to unequal terminal-time censoring.
 - reusing Phase-1J progression as permission for the next H4 Child, or opposed
   persistence as a broad funding stop; Phase 1K rejects both capital mappings.
+- replacing the H4 HA base with repeated H1 HA entries; Phase 1L rejects the
+  apparent extra opportunity after equal-total-stop-budget normalization.
+- treating H1 `k=1` plus H4 alignment as high conviction because it has fewer
+  total stops; Phase 1M shows lower frequency, not better hit quality, and fails
+  four-of-five-year stability.
 - fixed broker-hour/session avoidance, all-news avoidance, or realized surprise
   as a direction oracle; Phase-1D retains only two narrow shadow interactions
   and grants neither action authority.

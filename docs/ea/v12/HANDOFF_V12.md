@@ -1,10 +1,10 @@
 # V12 handoff
 
-Last synchronized: `2026-09-24`
+Last synchronized: `2026-09-25`
 
 ## Status
 
-`PHASE 1I COMPLETE AND REPRODUCIBLE / RUN-EPISODE ORACLE VALUABLE / FIRST-DECISION POLICY FAILED / NO TRADE AUTHORITY`
+`PHASE 1M COMPLETE AND REPRODUCIBLE / LOWER-TIMEFRAME HA REPLACEMENT FAILED / H1 TRANSITION EVENT RETAINED AS ARCHITECTURAL CLUE ONLY / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -229,11 +229,37 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 - Two independent six-file packs are byte-identical; all 58 tests and complete-
   pack validation pass with zero post-cutoff rows.
 
+## Completed Phase 1L
+
+- The exact H4 rebuild matches all 6,770 historical V10 rows with zero entry or
+  stop-label mismatch and only floating-point-scale stop/R differences.
+- H1 core creates 26,881 Children and 7,044 stops versus H4's 6,857 and 1,802.
+  Stop density (`26.20` vs `26.28`) and win rate (`32.53%` vs `32.27%`) barely
+  change, while equal-total-stop-budget R retains only `43.8%` of H4.
+- H4 FAST/STD alignment improves the H1 comparator but retains only `70.4%` of
+  H4 equal-stop-budget R. Whole-base H1 substitution is rejected.
+- M15 directional net and body efficiency pass threshold-free stop screens;
+  directional net also relates to right tail in the competing direction. These
+  are observations, not filters.
+
+## Completed Phase 1M
+
+- H1 `k=1` under completed H4 FAST context reduces total stops from 1,802 to
+  1,141, maximum stop streak from 11 to 6, and concurrency from 21 to 1.
+- It retains `92.4%` of H4 R after matching total stopped units, but stop density
+  worsens to `31.62`, win rate falls to `31.37%`, and 2024/2026 are negative.
+- 2023 contributes `+229.46R` of pooled `+223.57R`; the other four years total
+  `-5.89R`. SHORT remains negative and top-tail concentration rises.
+- The structural transition is more coherent than repeated H1 PHA, but it fails
+  the stability gate and cannot support larger size.
+
 ## Immediate next work
 
-1. do not tune the failed existing-H4-Child gates;
-2. decide whether to freeze an event-native M15 Child definition near the
-   progression event, with its own structural Hard SL and no rescue semantics;
-3. keep original V10 Children unchanged as the comparator and audit incremental
-   stopped units versus incremental tail capital;
-4. preserve GOLD# 2021 and post-cutoff chronology.
+1. do not tune H1 HA thresholds, H4 alignment, or a long-only exception from
+   consumed Phase-1L/1M outcomes;
+2. if the timeframe is lowered, use the official D1 CRT Parent -> H1 Child lane
+   rather than a smaller-bar V10 clone;
+3. define each H1 Child from an independent causal CRT/acceptance/repair event
+   with its own structural Hard SL, then audit stop density and right tail jointly;
+4. retain H4 and M15 path as context only until independently validated;
+5. preserve GOLD# 2021 and post-cutoff chronology.

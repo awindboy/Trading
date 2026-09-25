@@ -44,6 +44,12 @@ The retained numeric receipts are:
 - `V12_PHASE1K_STAGED_FUNDING_COUNTERFACTUAL_20260924.md`: reproducible
   no-threshold capital audit rejecting progression/damage gates on existing
   H4-spaced V10 Children and defining the event-native Child boundary.
+- `V12_PHASE1L_H1_MAIN_TIMEFRAME_FEASIBILITY_20260925.md`: reproducible H1-main-
+  clock feasibility result rejecting whole-base lower-timeframe HA substitution
+  after equal-total-stop-budget normalization.
+- `V12_PHASE1M_H1_TRANSITION_CHILD_20260925.md`: reproducible H1 `k=1` transition
+  result. It lowers total stops and overlap but fails stop-density, year-
+  stability, and concentration audits; it has no sizing or trade authority.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

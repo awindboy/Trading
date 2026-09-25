@@ -1,6 +1,6 @@
 # V12 research authority
 
-Last synchronized: `2026-09-24`
+Last synchronized: `2026-09-25`
 
 V12 is the active strategy-research generation. It tests a new assembly rather
 than another filter around V10:
@@ -60,6 +60,12 @@ CRT creates the Parent journey and candidate state
   decision Path+HA policy loses concentrated tail and fails win-rate and equal-
   risk gates. The next object is a causal within-run timeline, not another
   start-of-run score.
+- Phase 1L has a frozen and independently reproduced H1-main-clock result. A
+  whole-base H1 HA substitution multiplies stopped exposure without improving
+  per-attempt quality and is rejected.
+- Phase 1M has a frozen and independently reproduced H1-transition result. H1
+  `k=1` under H4 context lowers total stops but worsens stop density, fails year
+  stability, and remains tail-concentrated with no sizing or trade authority.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -232,3 +238,17 @@ do not stop all later H4 funding after two opposed settlements. The first is
 nonselective by the next capital decision; the second worsens normalized stop
 burden and loses tail. Any continuation must define an event-native independent
 Child near the M15 event, with a new structural Hard SL and contract.
+
+## Closed Phase-1L finding
+
+Do not replace H4 with repeated H1 HA Children or treat four times as many
+signals as more opportunity. H1 preserves roughly the same stop density and win
+rate while multiplying total stopped exposure and losing more than half of H4
+equal-total-stop-budget R. The passing M15 associations remain shadow-only.
+
+## Closed Phase-1M finding
+
+Do not size H1 `k=1` realignments from their lower total stop count. H4-aligned
+`k=1` reduces frequency and overlap, but worsens stop density and win rate; its
+pooled profit is supplied by 2023 LONG tail and fails year stability. Continue
+only through a native D1 CRT Parent -> H1 Child contract.
