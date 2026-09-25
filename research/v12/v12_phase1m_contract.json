@@ -1,0 +1,43 @@
+{
+  "contract_version": "v12-phase1m-h1-transition-child-v1",
+  "frozen_at": "2026-09-25",
+  "mechanism_cutoff": "2026-09-18T23:57:00",
+  "evidence_status": "CONSUMED_DEVELOPMENT_STRUCTURAL_CHILD_DIAGNOSTIC",
+  "purpose": "TEST_H1_FAST_REALIGNMENT_AS_A_STRUCTURAL_CHILD_EVENT_UNDER_AN_H4_PARENT_INSTEAD_OF_REPEATING_EVERY_H1_PHA",
+  "source_hashes": {
+    "raw_m1_full_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+    "raw_m1_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939"
+  },
+  "lanes": {
+    "H4_CORE": "PHASE1L_H4_CORE_BASELINE",
+    "H1_K1": "FIRST_H1_FAST_PHA_AFTER_EACH_OPPOSITE_FAST_HA_RUN",
+    "H1_K1_H4_FAST_ALIGNED": "H1_K1_MATCHING_LATEST_COMPLETED_H4_FAST_HA",
+    "H1_K1_H4_FAST_STD_ALIGNED": "H1_K1_MATCHING_LATEST_COMPLETED_H4_FAST_AND_STD_HA"
+  },
+  "child_contract": {
+    "entry": "FIRST_RAW_M1_OPEN_AFTER_THE_COMPLETED_H1_K1_BAR",
+    "hard_sl": "PREVIOUS_COMPLETED_H1_STD_HA_LOW_FOR_LONG_OR_HIGH_FOR_SHORT",
+    "exit": "FIRST_OPPOSITE_COMPLETED_H1_FAST_HA_DECISION_OPEN",
+    "same_m1": "CONSERVATIVE_HARD_SL_PRIMARY",
+    "risk_units": 1.0,
+    "stop_widening": false
+  },
+  "primary_kpis": [
+    "TOTAL_STOPPED_UNITS", "STOPPED_UNITS_PER_100_FUNDED",
+    "NET_R_PER_FUNDED_UNIT", "EQUAL_TOTAL_STOP_BUDGET_NET_R_PER_H4_BASELINE_UNIT"
+  ],
+  "viability_screen": {
+    "positive_years": "AT_LEAST_4_OF_5_YEARS_HAVE_POSITIVE_NET_R",
+    "total_stops": "NO_MORE_THAN_H4_CORE",
+    "equal_total_stop_budget": "AT_LEAST_0_80_TIMES_H4_CORE_NET_R_PER_UNIT",
+    "profit_factor": "AT_LEAST_0_90_TIMES_H4_CORE",
+    "stop_streak": "NO_MORE_THAN_1_50_TIMES_H4_CORE",
+    "right_tail": "TAIL_GE_5_R_PER_100_AT_LEAST_0_70_TIMES_H4_CORE"
+  },
+  "forbidden": [
+    "NO_THRESHOLD_SEARCH", "NO_COOLDOWN", "NO_CAMPAIGN_CAP", "NO_ML_ACTION",
+    "NO_SESSION_VETO", "NO_POST_CUTOFF_PRICE_ACCESS", "NO_GOLD_2021_ACCESS"
+  ],
+  "trade_authority": false,
+  "sizing_authority": false
+}
