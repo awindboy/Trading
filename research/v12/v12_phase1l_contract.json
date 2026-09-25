@@ -1,0 +1,72 @@
+{
+  "contract_version": "v12-phase1l-h1-main-timeframe-feasibility-v1",
+  "frozen_at": "2026-09-25",
+  "mechanism_cutoff": "2026-09-18T23:57:00",
+  "evidence_status": "CONSUMED_DEVELOPMENT_TIMEFRAME_FEASIBILITY",
+  "purpose": "TEST_WHETHER_H1_CAN_REPLACE_H4_AS_THE_HA_CHILD_CLOCK_WITHOUT_MISTAKING_MORE_TRADES_FOR_BETTER_QUALITY",
+  "source_hashes": {
+    "raw_m1_full_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+    "raw_m1_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939",
+    "v10_r3_h4_universe_sha256": "f352a99c746752ca259da33dbdaee9d8f0cb874bd01cf520a487fe1bdbf82609"
+  },
+  "lanes": {
+    "H4_CORE": "EXACT_V10_HA_CHILD_SEMANTICS_WITH_ONE_UNIT_AND_NO_R4_R5_R7G_SELECTION",
+    "H1_CORE": "SAME_HA_CHILD_SEMANTICS_ON_COMPLETED_H1_BARS_WITH_ONE_UNIT",
+    "H1_H4_FAST_ALIGNED": "H1_CORE_ROWS_WHOSE_DIRECTION_MATCHES_LATEST_CAUSALLY_COMPLETED_H4_FAST_HA",
+    "H1_H4_FAST_STD_ALIGNED": "H1_CORE_ROWS_MATCHING_COMPLETED_H4_FAST_AND_STD_HA"
+  },
+  "ha_definitions": {
+    "FAST": {"close_weight": 2.0, "open_alpha": 0.25},
+    "STD": {"close_weight": 1.0, "open_alpha": 0.50},
+    "SLOW": {"close_weight": 2.0, "open_alpha": 0.75}
+  },
+  "child_contract": {
+    "entry": "FIRST_RAW_M1_OPEN_AFTER_COMPLETED_MAIN_BAR_WITHIN_ONE_MAIN_BAR_DURATION",
+    "hard_sl": "PREVIOUS_COMPLETED_MAIN_TIMEFRAME_STD_HA_LOW_FOR_LONG_OR_HIGH_FOR_SHORT",
+    "exit": "FIRST_OPPOSITE_COMPLETED_MAIN_TIMEFRAME_FAST_HA_DECISION_OPEN",
+    "same_m1": "CONSERVATIVE_HARD_SL_PRIMARY_AND_ALTERNATIVE_FAST_EXIT_RECORDED",
+    "risk_units": 1.0,
+    "stop_widening": false
+  },
+  "comparison_window": "COMMON_CAUSAL_WINDOW_AFTER_BOTH_H4_AND_H1_180_BAR_WARMUPS",
+  "h1_shadow_observations": [
+    "LATEST_COMPLETED_H4_FAST_STD_SLOW_ALIGNMENT",
+    "H4_FAST_RUN_AGE_HOURS",
+    "LAST_FOUR_COMPLETED_M15_FAST_HA_ALIGNMENT_FRACTION",
+    "LAST_FOUR_M15_DIRECTIONAL_NET_OVER_H1_ATR180",
+    "LAST_FOUR_M15_PATH_EFFICIENCY",
+    "LAST_FOUR_M15_HA_TRANSITIONS",
+    "LAST_FOUR_M15_HA_BODY_EFFICIENCY",
+    "CONTINUOUS_BROKER_CLOCK_SIN_COS",
+    "CONTINUOUS_WEEK_CLOCK_SIN_COS"
+  ],
+  "primary_kpis": [
+    "STOPPED_UNITS_PER_100_FUNDED",
+    "NET_R_PER_FUNDED_UNIT",
+    "EQUAL_STOP_BUDGET_NET_R_PER_H4_BASELINE_UNIT"
+  ],
+  "guardrails": [
+    "WIN_RATE", "PROFIT_FACTOR_R", "MAX_STOP_STREAK", "MAX_CONCURRENT_UNITS",
+    "TAIL_R_GE_5_PER_100_FUNDED", "TOP_1_PERCENT_POSITIVE_R_SHARE",
+    "YEAR_AND_SIDE_STABILITY", "SAME_M1_AMBIGUITY"
+  ],
+  "h1_core_viability_screen": {
+    "positive_years": "AT_LEAST_4_OF_5_YEARS_HAVE_POSITIVE_NET_R",
+    "stop_density": "NO_MORE_THAN_1_50_TIMES_H4_CORE",
+    "equal_stop_budget": "AT_LEAST_0_80_TIMES_H4_CORE_NET_R_PER_UNIT",
+    "profit_factor": "AT_LEAST_0_90_TIMES_H4_CORE",
+    "stop_streak": "NO_MORE_THAN_2_TIMES_H4_CORE"
+  },
+  "feature_screen": {
+    "method": "UNIVARIATE_AUC_ONLY_NO_THRESHOLD_OR_POLICY",
+    "stable": "SAME_RAW_AUC_SIDE_IN_AT_LEAST_4_OF_5_YEARS_AND_ORIENTED_AUC_AT_LEAST_0_60_POOLED",
+    "targets": ["HARD_SL", "RIGHT_TAIL_R_GE_5"]
+  },
+  "forbidden": [
+    "NO_R4_R5_R7G_RETRAINING", "NO_THRESHOLD_SEARCH", "NO_ML_ACTION",
+    "NO_SESSION_VETO", "NO_FIXED_M15_FUNDING_RULE", "NO_POST_CUTOFF_PRICE_ACCESS",
+    "NO_GOLD_2021_ACCESS"
+  ],
+  "trade_authority": false,
+  "sizing_authority": false
+}
