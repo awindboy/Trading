@@ -1,0 +1,47 @@
+{
+  "contract_version": "v12-phase1p-intermediate-clock-boundary-v1",
+  "frozen_at": "2026-09-25",
+  "evidence_status": "CONSUMED_DEVELOPMENT_INTERMEDIATE_CLOCK_BOUNDARY_AUDIT",
+  "purpose": "LOCATE_THE_TEMPORAL_INFORMATION_BOUNDARY_BETWEEN_H1_AND_M15_WITH_H2_AND_M30_USING_THE_SAME_AFTER_STOP_SEQUENCE_CONTRACT",
+  "source_hashes": {
+    "raw_m1_full_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+    "raw_m1_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939",
+    "calendar_snapshot_sha256": "a3fc252157638a72052df4dc5b3d305932d114698dd977bc3c4b529f93ff101a",
+    "phase0_parent_events_sha256": "ded52cdc2b195a69dca300c1c0b38dca79cb0eb0ddd8e4f009a0b1589042fbf0",
+    "phase1b_h4_crt_decisions_sha256": "33460eedae0deaed135a2c93f3b217754d7da0e5333698c6c447ed14f085ec2b",
+    "phase1g_source_boxes_sha256": "d8646e232cb4247a3d64232480659b41cf4a209e27be08c576aa961fa4e03bc7"
+  },
+  "populations": {
+    "H2_K1": "FIRST_H2_FAST_HA_BAR_AFTER_OPPOSITE_H2_RUN",
+    "M30_K1": "FIRST_M30_FAST_HA_BAR_AFTER_OPPOSITE_M30_RUN"
+  },
+  "child_contract": {
+    "entry": "FIRST_RAW_M1_OPEN_AFTER_COMPLETED_MAIN_TIMEFRAME_K1_BAR",
+    "hard_sl": "PREVIOUS_COMPLETED_SAME_TIMEFRAME_STD_HA_EXTREME",
+    "exit": "FIRST_OPPOSITE_COMPLETED_SAME_TIMEFRAME_FAST_HA_DECISION_OPEN",
+    "same_m1": "CONSERVATIVE_HARD_SL_PRIMARY"
+  },
+  "conditional_cohort": "CURRENT_K1_AFTER_CAUSALLY_COMPLETED_PRIOR_K1_HARD_SL",
+  "information_ablations": [
+    "HISTORY_ONLY_RIDGE", "HISTORY_ONLY_HGB", "HA_HISTORY_HGB", "STATIC_TIME_HISTORY_HGB",
+    "CONTINUOUS_CLOCK_HISTORY_HGB", "EVENT_HISTORY_HGB", "SESSION_PATH_HISTORY_HGB",
+    "MICRO_HISTORY_HGB", "WAVE_HISTORY_HGB", "FULL_SEQUENCE_HGB"
+  ],
+  "hgb_parameters": {
+    "learning_rate": 0.05, "max_iter": 150, "max_leaf_nodes": 15,
+    "min_samples_leaf_h1": 50, "min_samples_leaf_m15": 100,
+    "l2_regularization": 10.0, "random_state": 120
+  },
+  "outer_walk_forward_folds": [
+    {"train_end": "2025-03-31T23:59:59", "test_start": "2025-04-01T00:00:00", "test_end": "2025-09-30T23:59:59"},
+    {"train_end": "2025-09-30T23:59:59", "test_start": "2025-10-01T00:00:00", "test_end": "2026-03-31T23:59:59"},
+    {"train_end": "2026-03-31T23:59:59", "test_start": "2026-04-01T00:00:00", "test_end": "2026-09-18T23:57:00"}
+  ],
+  "primary_gates": "IDENTICAL_TO_PHASE1O",
+  "forbidden": [
+    "NO_CLOCK_SELECTED_AFTER_RESULTS", "NO_THRESHOLD_TUNING", "NO_BROAD_COOLDOWN",
+    "NO_SESSION_OR_NEWS_VETO", "NO_POST_CUTOFF_PRICE_ACCESS", "NO_GOLD_2021_ACCESS"
+  ],
+  "trade_authority": false,
+  "sizing_authority": false
+}
