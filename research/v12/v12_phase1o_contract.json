@@ -1,0 +1,49 @@
+{
+  "contract_version": "v12-phase1o-lower-timeframe-after-stop-sequence-v1",
+  "frozen_at": "2026-09-25",
+  "evidence_status": "CONSUMED_DEVELOPMENT_SEQUENCE_INTERACTION_AUDIT",
+  "purpose": "TEST_WHETHER_LOWER_TIMEFRAME_FAILURE_HISTORY_AND_NONLINEAR_TEMPORAL_INTERACTIONS_IDENTIFY_THE_NEXT_REPEAT_STOP_WITHOUT_BROAD_EXPOSURE_REMOVAL",
+  "source_hashes": {
+    "phase1n_h1_enriched_ledger_sha256": "7350f10a81ab300f97c737d4842697f8e5f3589a33e84ebca3deae0be70a41e9",
+    "phase1n_m15_enriched_ledger_sha256": "9773344dabb470ad8a582054b30274a437200ab5133c632df002e2bd8917a529",
+    "raw_m1_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939"
+  },
+  "populations": ["H1_K1", "M15_K1"],
+  "conditional_cohort": "CURRENT_K1_WHOSE_IMMEDIATE_PRIOR_K1_LABEL_WAS_CAUSALLY_AVAILABLE_AND_HARD_SL_STOPPED",
+  "unchanged_scope": "ALL_K1_OUTSIDE_CONDITIONAL_COHORT_REMAIN_FUNDED_IN_POLICY_AUDITS",
+  "outcomes": ["CURRENT_REPEAT_HARD_SL", "CURRENT_RIGHT_TAIL_R_GE_5"],
+  "causal_history": [
+    "PRIOR_1_2_3_STOP_COUNT", "PRIOR_R_CLIPPED", "PRIOR_RUN_LENGTH", "PRIOR_POSITION_HOURS",
+    "HOURS_SINCE_PRIOR_DECISION", "RECENT_FLIP_INTERVAL_MEAN_AND_DISPERSION", "KNOWN_PRIOR_STOP_STREAK"
+  ],
+  "information_ablations": [
+    "HISTORY_ONLY_RIDGE", "HISTORY_ONLY_HGB", "HA_HISTORY_HGB", "STATIC_TIME_HISTORY_HGB",
+    "CONTINUOUS_CLOCK_HISTORY_HGB", "EVENT_HISTORY_HGB", "SESSION_PATH_HISTORY_HGB",
+    "MICRO_HISTORY_HGB", "WAVE_HISTORY_HGB", "FULL_SEQUENCE_HGB"
+  ],
+  "hgb_parameters": {
+    "learning_rate": 0.05, "max_iter": 150, "max_leaf_nodes": 15,
+    "min_samples_leaf_h1": 50, "min_samples_leaf_m15": 100,
+    "l2_regularization": 10.0, "random_state": 120
+  },
+  "outer_walk_forward_folds": [
+    {"train_end": "2025-03-31T23:59:59", "test_start": "2025-04-01T00:00:00", "test_end": "2025-09-30T23:59:59"},
+    {"train_end": "2025-09-30T23:59:59", "test_start": "2025-10-01T00:00:00", "test_end": "2026-03-31T23:59:59"},
+    {"train_end": "2026-03-31T23:59:59", "test_start": "2026-04-01T00:00:00", "test_end": "2026-09-18T23:57:00"}
+  ],
+  "label_availability": "TRAIN_ROWS_REQUIRE_CURRENT_LABEL_AVAILABLE_AT_OR_BEFORE_TRAIN_END_AND_ALL_HISTORY_LABELS_AVAILABLE_AT_DECISION",
+  "risk_policy": "EXCLUDE_ONLY_TRAIN_DEFINED_TOP_QUINTILE_OF_REPEAT_STOP_PROBABILITY_WITHIN_AFTER_STOP_COHORT",
+  "primary_gates": {
+    "repeat_stop_logloss": "IMPROVE_VS_HISTORY_ONLY_RIDGE_IN_AT_LEAST_TWO_OF_THREE_FOLDS",
+    "repeat_stop_removal": "AT_LEAST_30_PERCENT_POOLED_AND_20_PERCENT_EACH_FOLD",
+    "overall_child_retention": "AT_LEAST_75_PERCENT",
+    "right_tail_R_retention": "AT_LEAST_90_PERCENT_POOLED_AND_80_PERCENT_EACH_FOLD",
+    "equal_stop_budget_net_R": "AT_LEAST_95_PERCENT_OF_BASELINE_POOLED_AND_POSITIVE_EACH_FOLD"
+  },
+  "forbidden": [
+    "NO_FULL_HISTORY_THRESHOLD_SEARCH", "NO_BROAD_SKIP_AFTER_STOP", "NO_SESSION_OR_NEWS_VETO",
+    "NO_LONG_ONLY_PROMOTION", "NO_COMBINED_SCORE_TUNING", "NO_POST_CUTOFF_PRICE_ACCESS", "NO_GOLD_2021_ACCESS"
+  ],
+  "trade_authority": false,
+  "sizing_authority": false
+}
