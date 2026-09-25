@@ -1,0 +1,31 @@
+{
+  "contract_version": "v12-phase1q-third-stop-chain-v1",
+  "frozen_at": "2026-09-25",
+  "evidence_status": "CONSUMED_DEVELOPMENT_THIRD_STOP_CHAIN_AUDIT",
+  "purpose": "TEST_WHETHER_THE_THIRD_AND_LATER_STOP_IN_LOWER_TIMEFRAME_CHAINS_CAN_BE_SELECTIVELY_REMOVED",
+  "source_hashes": {
+    "h2_ledger_sha256": "d1a422a34af9398178ef16012dc68eb06ec4844134d0b53956a029b9512afa06",
+    "h1_ledger_sha256": "7350f10a81ab300f97c737d4842697f8e5f3589a33e84ebca3deae0be70a41e9",
+    "m30_ledger_sha256": "523d971c0abb3950f19568c9843fabf0d0a046fc3e1e378298fc151364e0d26c",
+    "m15_ledger_sha256": "9773344dabb470ad8a582054b30274a437200ab5133c632df002e2bd8917a529"
+  },
+  "populations": ["H2_K1", "H1_K1", "M30_K1", "M15_K1"],
+  "conditional_cohort": "CURRENT_K1_WITH_AT_LEAST_TWO_CONSECUTIVE_CAUSALLY_KNOWN_PRIOR_STOPPED_K1_CANDIDATES",
+  "outcomes": ["CURRENT_THIRD_PLUS_HARD_SL", "CURRENT_RIGHT_TAIL_R_GE_5"],
+  "information_ablations": "ALL_TEN_PHASE1O_ABLATIONS",
+  "risk_policy": "EXCLUDE_ONLY_TRAIN_DEFINED_TOP_REPEAT_RISK_QUINTILE_INSIDE_THIRD_PLUS_COHORT",
+  "primary_gates": {
+    "repeat_logloss": "IMPROVE_IN_AT_LEAST_TWO_FOLDS",
+    "third_plus_stop_removal": "AT_LEAST_30_PERCENT_POOLED_AND_15_PERCENT_EACH_FOLD",
+    "overall_child_retention": "AT_LEAST_90_PERCENT",
+    "right_tail_R_retention": "AT_LEAST_95_PERCENT_POOLED_AND_90_PERCENT_EACH_FOLD",
+    "max_stop_streak": "REDUCE_BY_AT_LEAST_ONE_POOLED_AND_DO_NOT_WORSEN_ANY_FOLD",
+    "equal_stop_budget": "AT_LEAST_95_PERCENT_POOLED_AND_POSITIVE_EACH_FOLD"
+  },
+  "forbidden": [
+    "NO_COOLDOWN", "NO_SKIP_EVERY_THIRD_TRADE", "NO_THRESHOLD_TUNING", "NO_CLOCK_SELECTION_AFTER_RESULTS",
+    "NO_SESSION_OR_NEWS_VETO", "NO_POST_CUTOFF_PRICE_ACCESS", "NO_GOLD_2021_ACCESS"
+  ],
+  "trade_authority": false,
+  "sizing_authority": false
+}

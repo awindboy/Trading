@@ -300,7 +300,7 @@ def feature_specs(frame: pd.DataFrame) -> dict[str, tuple[list[str], list[str]]]
                  and pd.to_numeric(frame[column], errors="coerce").notna().any()]
     parent_num = [column for column in frame if column.endswith(("_sweep_depth_c1_range", "_sweep_depth_atr", "_close_location_c1", "_age_hours", "_atr180"))]
     parent_cat = [column for column in frame if column.endswith(("_interaction", "_direction_relation", "_activation_status"))]
-    micro_num = [column for column in frame if column.startswith(("m5_", "m15_"))]
+    micro_num = [column for column in frame if column.startswith(("m5_", "m15_", "m30_"))]
     wave_num = [column for column in frame if column.startswith("wave_")]
 
     def joined(*groups):
