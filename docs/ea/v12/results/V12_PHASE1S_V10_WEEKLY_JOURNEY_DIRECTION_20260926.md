@@ -1,6 +1,6 @@
 # V12 Phase 1S — V10 weekly-journey direction result
 
-Status: **complete and reproducible / stop-risk information, directional-veto failure / no action authority**  
+Status: **complete and reproducible / stop-risk information, directional-veto failure / no action authority**
 Date: `2026-09-26`
 
 ## Causal reconstruction
