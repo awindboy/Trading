@@ -8,6 +8,7 @@
     "raw_m1_full_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
     "raw_m1_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939",
     "phase0_parent_events_sha256": "ded52cdc2b195a69dca300c1c0b38dca79cb0eb0ddd8e4f009a0b1589042fbf0",
+    "phase1b_h4_crt_decisions_sha256": "33460eedae0deaed135a2c93f3b217754d7da0e5333698c6c447ed14f085ec2b",
     "phase1g_source_boxes_sha256": "d8646e232cb4247a3d64232480659b41cf4a209e27be08c576aa961fa4e03bc7",
     "calendar_snapshot_sha256": "a3fc252157638a72052df4dc5b3d305932d114698dd977bc3c4b529f93ff101a",
     "phase1l_release_manifest_sha256": "af616b132778408025d792721c2517370d805e87817db8b6182a16bb89d0fc89"

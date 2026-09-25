@@ -36,6 +36,10 @@ Every decision receives only causally available observations:
 8. lower-bar price-time distribution, median settlement, entropy, dispersion,
    directional mass, close density, and settlement location as Wave features.
 
+The M15 H4-shadow Parent source is the frozen Phase-1B decision ledger with
+SHA-256 `33460eedae0deaed135a2c93f3b217754d7da0e5333698c6c447ed14f085ec2b`.
+This source inventory correction was made before any Phase-1N evaluation.
+
 ## Comparisons
 
 Ten frozen ablations run independently for H1 and M15: HA only; HA plus static
