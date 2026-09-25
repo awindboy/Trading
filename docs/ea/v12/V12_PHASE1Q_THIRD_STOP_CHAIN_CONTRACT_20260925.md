@@ -9,9 +9,9 @@ after two causally completed consecutive stopped `k=1` candidates, can the
 third or later stopped candidate be identified?
 
 H2, H1, M30, and M15 are all included so no clock is selected after Phase-1P
-results. The same ten fixed model ablations and train-only top-risk quintile are
-used. Only candidates whose known prior stop streak is at least two can be
-excluded; every other candidate remains unchanged.
+results. The same ten fixed model ablations, Phase-1O HGB parameters, and
+train-only top-risk quintile are used. Only candidates whose known prior stop
+streak is at least two can be excluded; every other candidate remains unchanged.
 
 Success requires repeat-risk improvement, at least 30% pooled and 15% per-fold
 third-plus-stop removal, at least 90% overall participation, at least 95%

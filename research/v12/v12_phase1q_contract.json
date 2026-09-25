@@ -13,6 +13,11 @@
   "conditional_cohort": "CURRENT_K1_WITH_AT_LEAST_TWO_CONSECUTIVE_CAUSALLY_KNOWN_PRIOR_STOPPED_K1_CANDIDATES",
   "outcomes": ["CURRENT_THIRD_PLUS_HARD_SL", "CURRENT_RIGHT_TAIL_R_GE_5"],
   "information_ablations": "ALL_TEN_PHASE1O_ABLATIONS",
+  "hgb_parameters": {
+    "learning_rate": 0.05, "max_iter": 150, "max_leaf_nodes": 15,
+    "min_samples_leaf_h1": 50, "min_samples_leaf_m15": 100,
+    "l2_regularization": 10.0, "random_state": 120
+  },
   "risk_policy": "EXCLUDE_ONLY_TRAIN_DEFINED_TOP_REPEAT_RISK_QUINTILE_INSIDE_THIRD_PLUS_COHORT",
   "primary_gates": {
     "repeat_logloss": "IMPROVE_IN_AT_LEAST_TWO_FOLDS",
