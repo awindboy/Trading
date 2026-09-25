@@ -1,0 +1,54 @@
+{
+  "contract_version": "v12-phase1r-full-history-m30-v10-comparison-v1",
+  "frozen_at": "2026-09-25",
+  "evidence_status": "CONSUMED_DEVELOPMENT_CAUSAL_FULL_HISTORY_COMPARISON",
+  "purpose": "COMPARE_THE_FROZEN_M30_SESSION_PATH_AFTER_STOP_POLICY_WITH_THE_FROZEN_V10_R7G_COMPARATOR_WITHOUT_BACKFILLING_FULL_HISTORY",
+  "source_hashes": {
+    "phase1p_m30_enriched_ledger_sha256": "523d971c0abb3950f19568c9843fabf0d0a046fc3e1e378298fc151364e0d26c",
+    "v10_r7g_comparator_ledger_sha256": "cfee70fa0985f5b4eac4b04357a0add5795b745ba3d95ba7be56ebd7d648c4c6"
+  },
+  "m30_policy": {
+    "population": "M30_K1",
+    "model": "SESSION_PATH_HISTORY_HGB",
+    "conditional_cohort": "CURRENT_K1_AFTER_CAUSALLY_COMPLETED_PRIOR_K1_HARD_SL",
+    "decision": "EXCLUDE_TRAIN_DEFINED_TOP_REPEAT_RISK_QUINTILE_ONLY_INSIDE_CONDITIONAL_COHORT",
+    "warmup": "TRADE_ALL_2022_CANDIDATES_AND_USE_ONLY_CAUSALLY_AVAILABLE_OUTCOMES_FOR_2023_MODEL"
+  },
+  "hgb_parameters": {
+    "learning_rate": 0.05,
+    "max_iter": 150,
+    "max_leaf_nodes": 15,
+    "min_samples_leaf_h1": 50,
+    "min_samples_leaf_m15": 100,
+    "l2_regularization": 10.0,
+    "random_state": 120
+  },
+  "outer_walk_forward_folds": [
+    {"fold": "Y2023", "train_end": "2022-12-31T23:59:59", "test_start": "2023-01-01T00:00:00", "test_end": "2023-12-31T23:59:59"},
+    {"fold": "Y2024", "train_end": "2023-12-31T23:59:59", "test_start": "2024-01-01T00:00:00", "test_end": "2024-12-31T23:59:59"},
+    {"fold": "Y2025", "train_end": "2024-12-31T23:59:59", "test_start": "2025-01-01T00:00:00", "test_end": "2025-12-31T23:59:59"},
+    {"fold": "Y2026", "train_end": "2025-12-31T23:59:59", "test_start": "2026-01-01T00:00:00", "test_end": "2026-09-18T23:57:00"}
+  ],
+  "v10_comparator": {
+    "policy": "ORIGINAL_FULL_R7G_PORTFOLIO",
+    "matched_start": "2024-10-01T01:00:00",
+    "matched_end": "2026-08-28T23:57:00"
+  },
+  "comparison_views": [
+    "NATIVE_FULL_AVAILABLE_HISTORY",
+    "MATCHED_V10_WINDOW",
+    "PER_100_FUNDED_UNITS",
+    "EQUAL_V10_FUNDED_UNITS",
+    "EQUAL_V10_STOPPED_UNITS"
+  ],
+  "economics": "SPREADLESS_STRUCTURAL_R_NO_MT5_COSTS",
+  "forbidden": [
+    "NO_FULL_SAMPLE_MODEL_BACKFILL",
+    "NO_2021_ACCESS",
+    "NO_POST_CUTOFF_ACCESS",
+    "NO_THRESHOLD_OR_FEATURE_RETUNING",
+    "NO_RAW_R_ONLY_CONCLUSION"
+  ],
+  "trade_authority": false,
+  "sizing_authority": false
+}
