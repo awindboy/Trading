@@ -83,6 +83,22 @@ As of `2026-09-25`, read V12 authority in this order:
     structural transition-Child and H4 Parent-context contract.
 36. `results/V12_PHASE1M_H1_TRANSITION_CHILD_20260925.md` — reproducible stop-
     count reduction, concentration audit, failed stability gate, and next lane.
+37. `V12_PHASE1N_LOWER_TIMEFRAME_TEMPORAL_INFORMATION_CONTRACT_20260925.md` —
+    frozen H1/M15 causal temporal-information matrix and broad-admission gates.
+38. `results/V12_PHASE1N_LOWER_TIMEFRAME_TEMPORAL_INFORMATION_20260925.md` —
+    reproducible predictive-information result and failed capital preservation.
+39. `V12_PHASE1O_LOWER_TIMEFRAME_AFTER_STOP_SEQUENCE_CONTRACT_20260925.md` —
+    frozen after-one-stop sequence interaction and stability contract.
+40. `results/V12_PHASE1O_LOWER_TIMEFRAME_AFTER_STOP_SEQUENCE_20260925.md` —
+    reproducible H1/M15 repeat-stop and tail-preservation audit.
+41. `V12_PHASE1P_INTERMEDIATE_CLOCK_BOUNDARY_CONTRACT_20260925.md` — frozen
+    H2/M30 intermediate-clock boundary and after-stop capital contract.
+42. `results/V12_PHASE1P_INTERMEDIATE_CLOCK_BOUNDARY_20260925.md` — reproducible
+    M30-leading, H2-supportive clock-boundary result.
+43. `V12_PHASE1Q_THIRD_STOP_CHAIN_CONTRACT_20260925.md` — frozen third-and-later
+    stop-chain temporal-path contract across H2/H1/M30/M15.
+44. `results/V12_PHASE1Q_THIRD_STOP_CHAIN_20260925.md` — reproducible M15 deep-
+    churn warning result and failed full-chain resolution.
 
 ## Schema authority
 
@@ -180,6 +196,32 @@ As of `2026-09-25`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1m.py`, and
   `../../../research/v12/v12_phase1m_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1M pack.
+- `../../../research/v12/v12_phase1n_contract.json`,
+  `../../../research/v12/v12_phase1n_core.py`,
+  `../../../research/v12/build_v12_phase1n.py`,
+  `../../../research/v12/analyze_v12_phase1n.py`,
+  `../../../research/v12/test_v12_phase1n.py`,
+  `../../../research/v12/validate_v12_phase1n.py`, and
+  `../../../research/v12/v12_phase1n_release_manifest.json`
+  define, audit, and receipt the independently reproduced Phase-1N pack.
+- `../../../research/v12/v12_phase1o_contract.json`,
+  `../../../research/v12/v12_phase1o_core.py`,
+  `../../../research/v12/build_v12_phase1o.py`,
+  `../../../research/v12/test_v12_phase1o.py`,
+  `../../../research/v12/validate_v12_phase1o.py`, and
+  `../../../research/v12/v12_phase1o_release_manifest.json`
+  define, validate, and receipt the independently reproduced Phase-1O pack.
+- `../../../research/v12/v12_phase1p_contract.json`,
+  `../../../research/v12/build_v12_phase1p.py`,
+  `../../../research/v12/analyze_v12_phase1p.py`,
+  `../../../research/v12/validate_v12_phase1p.py`, and
+  `../../../research/v12/v12_phase1p_release_manifest.json`
+  define, audit, and receipt the independently reproduced Phase-1P pack.
+- `../../../research/v12/v12_phase1q_contract.json`,
+  `../../../research/v12/build_v12_phase1q.py`,
+  `../../../research/v12/validate_v12_phase1q.py`, and
+  `../../../research/v12/v12_phase1q_release_manifest.json`
+  define, validate, and receipt the independently reproduced Phase-1Q pack.
 
 ## Predecessor routing
 
@@ -233,3 +275,12 @@ total-stop-budget and year-stability gates. Phase 1M is complete and
 reproducible. H1 `k=1` under H4 context reduces total stops and overlap but has
 worse stop density, no win-rate improvement, and 2023 LONG-tail concentration.
 Neither has sizing, veto, entry, or trade authority.
+Phase 1N is complete and reproducible. H1/M15 temporal information improves
+prediction but broad admission loses too much participation and right tail.
+Phase 1O is complete and reproducible. H1 after-one-stop interactions remove
+meaningful repeat stops but fail all-fold stability; M15 broad use is rejected.
+Phase 1P is complete and reproducible. M30 is the strongest consumed-data
+after-stop clock, with H2 supportive, but the fitted scores are not independent
+evidence. Phase 1Q is complete and reproducible. M15 session/static time helps
+only after two prior stops, shortens maximum streak from five to four, and
+slightly reduces capital. None has veto, sizing, entry, or trade authority.

@@ -102,6 +102,20 @@ exposure, so it fails the main-timeframe viability gate.
 Phase 1M is complete and independently reproduced: H1 `k=1` realignment under
 H4 context lowers total stops and overlap, but worsens per-attempt stop density,
 fails year stability, and is concentrated in 2023 LONG tail.
+Phase 1N is complete and independently reproduced: H1/M15 lower-timeframe
+temporal features contain predictive information, but broad low-risk admission
+bands discard most candidates and nearly all right-tail capital.
+Phase 1O is complete and independently reproduced: H1 after-one-stop nonlinear
+time/path interactions remove meaningful repeat stops while preserving tail,
+but fail every-fold stability; broad M15 after-one-stop selection is too noisy.
+Phase 1P is complete and independently reproduced: the intermediate H2/M30
+clock is the strongest consumed-data boundary. Four H2 and six M30 after-stop
+models pass frozen stability/capital gates, with M30 session-path and micro-path
+leading. They remain research coordinates with no action or sizing authority.
+Phase 1Q is complete and independently reproduced: M15 static-time and session-
+path state help only after two prior consecutive stops, reducing third-and-later
+stops and maximum streak from five to four while slightly reducing raw and
+equal-stop-budget R. This is a defensive deep-churn observation, not a strategy.
 
 ## Non-negotiable causal contract
 
@@ -161,6 +175,15 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
 - treating H1 `k=1` plus H4 alignment as high conviction because it has fewer
   total stops; Phase 1M shows lower frequency, not better hit quality, and fails
   four-of-five-year stability.
+- using Phase-1N H1/M15 temporal quintiles as broad admission or sizing rules;
+  they remove far more candidates and right-tail capital than stopped exposure.
+- promoting Phase-1O H1 after-stop scores despite their useful pooled result;
+  the frozen all-fold gate fails, and broad M15 after-one-stop use loses tail.
+- treating Phase-1P M30/H2 after-stop scores or their fitted quintiles as live
+  vetoes or conviction sizing; they are selected on consumed development data.
+- applying the Phase-1Q M15 deep-chain warning before two prior stops, claiming
+  it eliminates churn, or sizing from it; the surviving policies reduce maximum
+  streak only from five to four and do not materially improve win rate.
 - fixed broker-hour/session avoidance, all-news avoidance, or realized surprise
   as a direction oracle; Phase-1D retains only two narrow shadow interactions
   and grants neither action authority.

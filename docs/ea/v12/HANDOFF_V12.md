@@ -4,7 +4,7 @@ Last synchronized: `2026-09-25`
 
 ## Status
 
-`PHASE 1M COMPLETE AND REPRODUCIBLE / LOWER-TIMEFRAME HA REPLACEMENT FAILED / H1 TRANSITION EVENT RETAINED AS ARCHITECTURAL CLUE ONLY / NO TRADE AUTHORITY`
+`PHASE 1Q COMPLETE AND REPRODUCIBLE / M30 IS THE LEADING CONSUMED-DATA TEMPORAL CLOCK / H2 SUPPORTIVE / M15 DEEP-CHURN ONLY / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -253,13 +253,47 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 - The structural transition is more coherent than repeated H1 PHA, but it fails
   the stability gate and cannot support larger size.
 
+## Completed Phase 1N
+
+- H1 and M15 causal temporal matrices confirm that continuous clock, session
+  path, event distance, HA, and micro-path state are measurable below H4.
+- The passing broad low-risk bands retain only about 19%–21% of Children and
+  remove nearly all right-tail capital. Predictive lift is not usable admission.
+
+## Completed Phase 1O
+
+- H1 after-one-stop nonlinear time/path models remove roughly 35%–42% of repeat
+  stops while retaining 94%–98% of right-tail capital.
+- One fold remains negative, so the frozen every-fold-positive gate fails.
+  Broad M15 after-one-stop selection is noisier and loses too much capital.
+
+## Completed Phase 1P
+
+- H2 continuous clock removes `32.89%` of repeat stops while retaining `96.44%`
+  of Children and `95.10%` of right-tail R.
+- M30 session path removes `37.25%` of repeat stops, retains `94.95%` of
+  Children and `91.24%` of right-tail R, and improves consumed OOS net R from
+  `209.79` to `234.62`; equal-stop-budget R is `260.53`.
+- Four H2 and six M30 models pass all frozen consumed-data folds and liquidity
+  terciles. M30 is the leading research clock, not validated trade authority.
+
+## Completed Phase 1Q
+
+- Only M15 session-path and static-time models pass the frozen third-and-later-
+  stop gates. Session path removes `31.65%` of those stops, retains `99.10%` of
+  Children and `97.36%` of right-tail R, and reduces maximum streak `5 -> 4`.
+- Raw R falls from `459.52` to `436.97`; equal-stop-budget R is `443.56` and
+  win rate is effectively unchanged. It is a defensive deep-churn coordinate,
+  not a solved high-conviction strategy.
+
 ## Immediate next work
 
-1. do not tune H1 HA thresholds, H4 alignment, or a long-only exception from
-   consumed Phase-1L/1M outcomes;
-2. if the timeframe is lowered, use the official D1 CRT Parent -> H1 Child lane
-   rather than a smaller-bar V10 clone;
-3. define each H1 Child from an independent causal CRT/acceptance/repair event
-   with its own structural Hard SL, then audit stop density and right tail jointly;
-4. retain H4 and M15 path as context only until independently validated;
+1. do not tune clock choice, HGB depth, quintile boundaries, or feature sets on
+   the consumed Phase-1N through Phase-1Q outcomes;
+2. retain M30 session/micro path as the leading after-stop shadow hypothesis and
+   H2 continuous clock as the simpler supportive comparator;
+3. retain M15 only as a third-and-later-stop churn warning, never as a broad
+   entry filter or claim that the main strategy should run on M15;
+4. before any promotion, preregister one compact rule and test it on untouched
+   chronology with Python/MQL5 feature and event-ledger parity;
 5. preserve GOLD# 2021 and post-cutoff chronology.

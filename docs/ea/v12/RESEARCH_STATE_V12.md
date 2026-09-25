@@ -461,20 +461,68 @@ Do not promote:
   seeing the concentration;
 - one-active-Child exposure as proof of edge rather than a property of k1 runs.
 
+## Closed Phase-1N result
+
+- H1 `k=1` has 8,666 candidates and M15 `k=1` has 34,519 candidates under the
+  causal lower-clock matrix.
+- H1 HA+M15 micro, H1 HA+static time, and M15 HA+static time pass predictive
+  screens, but their Q5 bands retain only `18.75%`–`21.46%` of Children.
+- H1 right-tail R falls to zero in both passing broad bands; M15 retains only
+  `3.03%`. Broad temporal admission fails the capital gate.
+
+## Closed Phase-1O result
+
+- The after-one-stop cohorts contain 2,586 H1 and 9,657 M15 candidates.
+- H1 nonlinear temporal heads remove roughly `35%`–`42%` of repeat stops while
+  retaining `94%`–`98%` of right-tail capital, but one OOS fold remains negative.
+- M15 after-one-stop models find repeat risk but remove too much tail and net R.
+
+## Closed Phase-1P result
+
+- The intermediate clocks create 4,246 H2 and 17,012 M30 `k=1` candidates;
+  after-one-stop cohorts contain 1,309 H2 and 4,820 M30 candidates.
+- Four H2 and six M30 model families pass the frozen consumed-data capital,
+  year, side, fold, and liquidity-era gates.
+- H2 continuous clock removes `32.89%` of repeat stops with `95.10%` tail
+  retention. M30 session path removes `37.25%`, retains `91.24%` of tail, and
+  raises OOS net R from `209.79` to `234.62` on consumed evidence.
+- M30 micro/session path is the strongest research boundary; H2 is supportive.
+
+## Closed Phase-1Q result
+
+- Third-and-later-stop cohorts contain 357 H2, 686 H1, 1,249 M30, and 2,285
+  M15 candidates.
+- Only M15 session-path and static-time heads pass all frozen gates. Session
+  path removes `31.65%` of third+ stops, retains `97.36%` of right-tail R, and
+  reduces maximum streak from five to four.
+- Raw and equal-stop-budget R both remain below baseline and win rate is almost
+  unchanged. The result describes deep churn but does not solve it.
+
+## Closed Phase-1N through Phase-1Q interpretations
+
+Do not promote:
+
+- H1/M15 temporal quintiles as broad admission or sizing rules;
+- the pooled H1 after-one-stop improvement while one frozen fold is negative;
+- M30/H2 HGB scores, model depth, or quintile boundaries fitted on consumed data;
+- M15 state before two prior stops, or the claim that it eliminates stop chains;
+- lower timeframe itself as the edge. The useful object is clock-specific
+  temporal state conditional on the stop-chain stage.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. Can the official D1 CRT Parent -> H1 execution lane create an independent H1
-   Child, rather than transplanting repeated V10 HA semantics downward?
-2. Which completed-H1 acceptance, rejection, or repair event gives that Child a
-   structural falsification price without using H4 alignment as a veto?
-3. Can M15 path coordinates describe the H1 Child's competing stop and tail
-   outcomes without one threshold pretending to optimize both?
-4. Does event-native H1 exposure improve stopped units and right-tail capital
-   together across side, year, and normalized liquidity era?
-5. If not, should H4 remain the HA campaign clock while H1 stays only the native
-   CRT execution lane?
+1. Can one preregistered compact M30 after-stop temporal/path rule reproduce on
+   untouched chronology without retuning its clock, model, or quantile?
+2. Can a simpler monotonic or rule-based representation reproduce the M30 HGB
+   result without black-box instability?
+3. Does the M15 third-and-later-stop warning transfer as a subordinate warning
+   while preserving the Parent/Child semantics of the higher execution clock?
+4. Can Python and MQL5 produce identical M30/M15 temporal features, stop-chain
+   state, and event ledgers before any Strategy Tester economics are claimed?
+5. If future evidence fails, should M30/M15 remain diagnostic only while H4/H1
+   retain the official Parent/Child research lanes?
 
 ## Evidence boundary
 
@@ -490,7 +538,10 @@ These are questions, not rules:
   and oracle-bound diagnostic. Phase 1J is a within-run causal-timeline and
   early-mechanism diagnostic. Phase 1K is a failed staged-funding capital
   mapping diagnostic. Phase 1L is a failed H1-main-clock feasibility diagnostic,
-  and Phase 1M is a failed-stability H1 transition-Child diagnostic. No V12 EA,
+  Phase 1M is a failed-stability H1 transition-Child diagnostic, Phase 1N is a
+  failed broad temporal-admission diagnostic, Phase 1O is an unstable after-one-
+  stop interaction diagnostic, Phase 1P is an intermediate-clock boundary
+  diagnostic, and Phase 1Q is a deep stop-chain warning diagnostic. No V12 EA,
   MQL5 parity, actual-tick economics, or independent future validation exists.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

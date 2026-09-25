@@ -66,6 +66,18 @@ CRT creates the Parent journey and candidate state
 - Phase 1M has a frozen and independently reproduced H1-transition result. H1
   `k=1` under H4 context lowers total stops but worsens stop density, fails year
   stability, and remains tail-concentrated with no sizing or trade authority.
+- Phase 1N has a frozen and independently reproduced H1/M15 temporal-information
+  result. Predictive information exists, but broad low-risk bands destroy too
+  much participation and right-tail capital.
+- Phase 1O has a frozen and independently reproduced after-one-stop result. H1
+  nonlinear time/path interactions are promising but fail every-fold stability;
+  M15 is too noisy for broad after-one-stop admission.
+- Phase 1P has a frozen and independently reproduced H2/M30 clock-boundary
+  result. M30 session/micro path is the strongest consumed-data research clock,
+  with H2 supportive, but all scores and quintiles remain shadow-only.
+- Phase 1Q has a frozen and independently reproduced third-stop-chain result.
+  M15 time/path helps only after two prior stops and shortens the maximum streak
+  from five to four while reducing R; it has no veto or sizing authority.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -139,7 +151,7 @@ promotion contract exists.
 - GOLD# chronology through `2026-09-18 23:57` is consumed development evidence.
 - GOLD# 2021 remains sealed.
 - V12 currently has no independent validation.
-- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1I
+- The Phase-0 receipt has observation authority only. Phase 1A through Phase 1Q
   have consumed-development diagnostic authority only. Phase 1A fails the V10
   replacement gate; Phase 1B separates transition risk; Phase 1C rejects broad
   carry; Phase 1D treats time/events as state; Phase 1E rejects simple named-
@@ -148,7 +160,11 @@ promotion contract exists.
   representation but rejects stop-only action and journey-length prediction;
   Phase 1H rejects its compact score and HA/Wave ablations as action or sizing
   authority; Phase 1I rejects the asymmetric first-decision policy and broad
-  cooldown while retaining only the oracle opportunity and timeline question.
+  cooldown; Phase 1J/1K retain mechanism but reject its stale H4 capital mapping;
+  Phase 1L/1M reject lower-clock HA clones; Phase 1N rejects broad temporal
+  admission; Phase 1O retains unstable H1 after-stop information; Phase 1P
+  identifies M30 as the leading consumed-data clock; and Phase 1Q retains M15
+  only as a deep-churn warning after two prior stops.
 
 ## Closed Phase-1A finding
 
@@ -252,3 +268,15 @@ Do not size H1 `k=1` realignments from their lower total stop count. H4-aligned
 `k=1` reduces frequency and overlap, but worsens stop density and win rate; its
 pooled profit is supplied by 2023 LONG tail and fails year stability. Continue
 only through a native D1 CRT Parent -> H1 Child contract.
+
+## Closed Phase-1N through Phase-1Q findings
+
+Do not convert the Phase-1N broad temporal bands into admission rules: their
+predictive lift comes with severe Child and right-tail loss. Do not promote the
+Phase-1O H1 after-stop score because its pooled improvement fails the frozen
+all-fold gate, or use M15 broadly after one stop. Phase 1P identifies M30
+session/micro path and H2 continuous clock as the strongest consumed-data
+research boundary, but their fitted scores and quintiles have no future or
+platform validation. Phase 1Q permits only the interpretation that M15 can
+describe deep churn after two prior stops; it does not eliminate churn, improve
+win rate materially, or authorize a veto, delay, or sizing rule.

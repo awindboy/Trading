@@ -50,6 +50,18 @@ The retained numeric receipts are:
 - `V12_PHASE1M_H1_TRANSITION_CHILD_20260925.md`: reproducible H1 `k=1` transition
   result. It lowers total stops and overlap but fails stop-density, year-
   stability, and concentration audits; it has no sizing or trade authority.
+- `V12_PHASE1N_LOWER_TIMEFRAME_TEMPORAL_INFORMATION_20260925.md`: reproducible
+  H1/M15 temporal-information matrix. Predictive lift exists, but broad low-risk
+  bands fail Child and right-tail capital preservation.
+- `V12_PHASE1O_LOWER_TIMEFRAME_AFTER_STOP_SEQUENCE_20260925.md`: reproducible
+  after-one-stop sequence audit. H1 interactions remove repeat stops but fail
+  all-fold stability; broad M15 selection is rejected.
+- `V12_PHASE1P_INTERMEDIATE_CLOCK_BOUNDARY_20260925.md`: reproducible H2/M30
+  clock-boundary audit. M30 session/micro path leads consumed research and H2
+  supports it, with no action authority.
+- `V12_PHASE1Q_THIRD_STOP_CHAIN_20260925.md`: reproducible third-and-later-stop
+  audit. M15 time/path state shortens maximum churn from five to four but lowers
+  capital and does not materially raise win rate.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

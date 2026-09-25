@@ -323,6 +323,55 @@ Phase 1M retains `k=1` as a coherent event concept but rejects it as entry or
 sizing authority. Its lower total stop count is lower frequency, not better
 per-attempt quality, and its pooled result is 2023 LONG-tail concentrated.
 
+## Retained Phase-1N artifacts
+
+- `v12_phase1n_contract.json` and `v12_phase1n_core.py`: frozen H1/M15 temporal-
+  information populations, causal features, labels, folds, and capital gates.
+- `build_v12_phase1n.py` and `analyze_v12_phase1n.py`: source-verified builder
+  and broad temporal-band audit.
+- `test_v12_phase1n.py`, `validate_v12_phase1n.py`, and
+  `v12_phase1n_release_manifest.json`: regression tests, complete-pack parity,
+  and compact receipt.
+
+Phase 1N proves lower-clock temporal information is measurable but rejects its
+broad use as an admission filter because right-tail capital collapses.
+
+## Retained Phase-1O artifacts
+
+- `v12_phase1o_contract.json` and `v12_phase1o_core.py`: frozen after-one-stop
+  sequence features, train-only policy, and stability/capital primitives.
+- `build_v12_phase1o.py`: H1/M15 sequence-interaction and policy builder.
+- `test_v12_phase1o.py`, `validate_v12_phase1o.py`, and
+  `v12_phase1o_release_manifest.json`: tests, complete-pack parity, and receipt.
+
+Phase 1O retains H1 after-stop nonlinear state as a hypothesis but rejects
+promotion because one frozen fold is negative and broad M15 use loses tail.
+
+## Retained Phase-1P artifacts
+
+- `v12_phase1p_contract.json`: frozen H2/M30 clock, feature, policy, and gate
+  contract.
+- `build_v12_phase1p.py` and `analyze_v12_phase1p.py`: intermediate-clock
+  builder and cross-model/capital audit.
+- `validate_v12_phase1p.py` and `v12_phase1p_release_manifest.json`: complete-
+  pack byte-parity validator and compact receipt.
+
+Phase 1P identifies M30 session/micro path as the leading consumed-data clock
+and H2 continuous clock as supportive. All remain research-only.
+
+## Retained Phase-1Q artifacts
+
+- `v12_phase1q_contract.json`: frozen third-and-later-stop cohort and promotion
+  gates across H2/H1/M30/M15.
+- `build_v12_phase1q.py`: source-verified deep-chain interaction and policy
+  builder.
+- `validate_v12_phase1q.py` and `v12_phase1q_release_manifest.json`: complete-
+  pack byte-parity validator and compact receipt.
+
+Phase 1Q retains M15 session/static state only as a deep-churn observation after
+two prior stops. It reduces but does not eliminate stop chains and grants no
+veto, delay, sizing, or trade authority.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

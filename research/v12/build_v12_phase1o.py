@@ -77,6 +77,9 @@ def fit_head(train: pd.DataFrame, test: pd.DataFrame, numeric: list[str], catego
     x_train = encoder.transform(train)
     x_test = encoder.transform(test)
     y_train = train[target].to_numpy(int)
+    if len(np.unique(y_train)) < 2:
+        constant = float(y_train[0]) if len(y_train) else 0.0
+        return np.full(len(train), constant), np.full(len(test), constant)
     if algorithm == "RIDGE":
         beta = fit_ridge_logistic(x_train, y_train, np.ones(len(train)), 10.0)
         return predict_logistic(x_train, beta), predict_logistic(x_test, beta)
