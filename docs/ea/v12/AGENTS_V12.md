@@ -1,6 +1,6 @@
 # V12 research authority
 
-Last synchronized: `2026-09-25`
+Last synchronized: `2026-09-26`
 
 V12 is the active strategy-research generation. It tests a new assembly rather
 than another filter around V10:
@@ -81,6 +81,10 @@ CRT creates the Parent journey and candidate state
 - Phase 1R has a frozen and independently reproduced causal full-history M30
   comparison. It confirms repeat-stop selectivity but rejects M30 session path
   as a V10 replacement on full-history and equal-risk economics.
+- Phase 1S has a frozen and independently reproduced causal weekly-journey
+  direction result on the V10 comparator. Weekly state separates stop risk but
+  flags a high-variance cohort containing most >=5R tail, so both full veto and
+  extra-unit guard are rejected.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -167,8 +171,10 @@ promotion contract exists.
   Phase 1L/1M reject lower-clock HA clones; Phase 1N rejects broad temporal
   admission; Phase 1O retains unstable H1 after-stop information; Phase 1P
   identifies M30 as the leading consumed-data clock; Phase 1Q retains M15 only
-  as a deep-churn warning after two prior stops; and Phase 1R rejects the full-
-  history M30 replacement despite its targeted repeat-stop reduction.
+  as a deep-churn warning after two prior stops; Phase 1R rejects the full-
+  history M30 replacement despite its targeted repeat-stop reduction; and Phase
+  1S rejects weekly state as directional authorization for an existing V10
+  Child despite useful stop-risk discrimination.
 
 ## Closed Phase-1A finding
 
@@ -292,3 +298,12 @@ stops. Across full causal history it removes only `7.03%` of all stops, loses
 `54.64R`, retains `88.84%` of right-tail R, and worsens maximum streak from five
 to six. In the fixed V10 window it improves the M30 baseline but remains far
 below R7G at equal funded units and equal stopped-unit budget.
+
+## Closed Phase-1S finding
+
+Do not promote the weekly price/event score, its train-defined top-20% band,
+full V10 Child veto, or seed-protected extra-unit guard. The primary band
+removes `36.26%` of stopped units but also removes `49.96%` of net R and
+`72.58%` of >=5R tail. Weekly settlement describes transition intensity, not
+independent direction authorization. Any next large-flow study must begin from
+a CRT-created W1 Parent rather than relabeling V10 entries.

@@ -385,6 +385,19 @@ Phase 1R confirms targeted repeat-stop discrimination but rejects the full M30
 base as a V10 replacement. Recent-window improvement does not survive the full
 history and normalized risk comparison.
 
+## Retained Phase-1S artifacts
+
+- `v12_phase1s_contract.json`: frozen continuous weekly-state, two-head,
+  train-only operating point, and capital-preservation contract.
+- `build_v12_phase1s.py`: raw-M1 causal weekly/day/H4/event reconstruction,
+  same-week-embargoed walk-forward model, and V10 capital audit.
+- `validate_v12_phase1s.py` and `v12_phase1s_release_manifest.json`: complete-
+  pack validator and two-build byte-parity receipt.
+
+Phase 1S retains weekly settlement and boundary consumption only as transition-
+risk information. It rejects both full V10 direction veto and extra-unit guard
+because stopped exposure falls much less than right-tail capital.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

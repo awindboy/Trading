@@ -1,6 +1,6 @@
 # Trading repository authority
 
-Last synchronized: `2026-09-25`
+Last synchronized: `2026-09-26`
 
 ## Active generation
 
@@ -120,6 +120,10 @@ Phase 1R is complete and independently reproduced: causal annual M30 session-
 path models remove `33.76%` of repeat stops in the targeted cohort but reduce
 full-history R, retain only `88.84%` of tail, and remain far inferior to V10 R7G
 under common-window, equal-funded, and equal-stopped-unit comparisons.
+Phase 1S is complete and independently reproduced: continuous weekly path and
+released-event response distinguish stop risk, but the flagged V10 cohort also
+contains most >=5R tail. Full directional veto and seed-protected extra-unit
+guard both fail capital preservation and have no action authority.
 
 ## Non-negotiable causal contract
 
@@ -190,6 +194,9 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
   streak only from five to four and do not materially improve win rate.
 - treating Phase-1R's one-third repeat-stop removal as an M30 replacement edge;
   full-history capital falls and equal-risk economics remain far below V10 R7G.
+- using Phase-1S weekly settlement, event response, or its top-20% badness band
+  as direction authorization for an existing V10 Child; the band removes
+  `36.26%` of stopped units but destroys `72.58%` of >=5R tail.
 - fixed broker-hour/session avoidance, all-news avoidance, or realized surprise
   as a direction oracle; Phase-1D retains only two narrow shadow interactions
   and grants neither action authority.

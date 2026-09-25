@@ -65,6 +65,9 @@ The retained numeric receipts are:
 - `V12_PHASE1R_FULL_HISTORY_M30_V10_COMPARISON_20260925.md`: causal annual M30
   session-path replay and normalized V10 R7G comparison. Targeted repeat-stop
   selectivity persists, but full-history capital and equal-risk economics fail.
+- `V12_PHASE1S_V10_WEEKLY_JOURNEY_DIRECTION_20260926.md`: causal weekly-state
+  overlay on the frozen V10 comparator. Stop-risk separation persists, but the
+  flagged cohort retains most major journey capital and directional veto fails.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

@@ -1,6 +1,6 @@
 # V12 document authority map
 
-As of `2026-09-25`, read V12 authority in this order:
+As of `2026-09-26`, read V12 authority in this order:
 
 1. `AGENTS_V12.md` — generation boundary and non-negotiable rules;
 2. `HANDOFF_V12.md` — shortest current handoff;
@@ -103,6 +103,10 @@ As of `2026-09-25`, read V12 authority in this order:
     causal annual M30 session-path and normalized V10 comparison contract.
 46. `results/V12_PHASE1R_FULL_HISTORY_M30_V10_COMPARISON_20260925.md` —
     reproducible full-history failure and fixed-window V10 comparison.
+47. `V12_PHASE1S_V10_WEEKLY_JOURNEY_DIRECTION_CONTRACT_20260925.md` — frozen
+    causal weekly-journey direction and V10 capital-preservation contract.
+48. `results/V12_PHASE1S_V10_WEEKLY_JOURNEY_DIRECTION_20260926.md` —
+    reproducible stop-risk discrimination and failed directional-veto result.
 
 ## Schema authority
 
@@ -231,6 +235,11 @@ As of `2026-09-25`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1r.py`, and
   `../../../research/v12/v12_phase1r_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1R pack.
+- `../../../research/v12/v12_phase1s_contract.json`,
+  `../../../research/v12/build_v12_phase1s.py`,
+  `../../../research/v12/validate_v12_phase1s.py`, and
+  `../../../research/v12/v12_phase1s_release_manifest.json` define, validate,
+  and receipt the independently reproduced Phase-1S pack.
 
 ## Predecessor routing
 
@@ -296,4 +305,8 @@ slightly reduces capital. None has veto, sizing, entry, or trade authority.
 Phase 1R is complete and reproducible. Causal annual M30 session-path models
 remove one third of targeted repeat stops but lose full-history capital and are
 far inferior to V10 R7G under normalized common-window comparisons. It has no
+veto, sizing, entry, or trade authority.
+Phase 1S is complete and reproducible. Continuous weekly path and released-
+event response separate Hard-SL risk, but the flagged state retains most >=5R
+tail and fails the directional-veto and capital-preservation gates. It has no
 veto, sizing, entry, or trade authority.

@@ -298,14 +298,26 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 - The temporal signal is real but is not sufficient to create a high-quality
   M30 base strategy.
 
+## Completed Phase 1S
+
+- Raw M1 was streamed into `1,649` strictly causal V10 weekly-state snapshots;
+  `1,219` Children belong to three same-week-embargoed OOS folds.
+- Weekly price/event stop AUC is `0.684`, `0.627`, and `0.709`, but the R>=2
+  journey head is only `0.571`, `0.498`, and `0.609`.
+- Full veto removes `36.26%` of stopped units but also removes `49.96%` of net R
+  and `72.58%` of >=5R tail. Seed protection also fails equal-risk economics.
+- Weekly state describes high-variance transition intensity, not a disposable
+  V10 direction. Two final 15-file builds are byte-identical.
+
 ## Immediate next work
 
-1. do not tune clock choice, HGB depth, quintile boundaries, or feature sets on
-   the consumed Phase-1N through Phase-1R outcomes;
-2. do not fund all M30 `k=1` Children; test temporal state only as a subordinate
-   observation inside a separately frozen, already-selective higher-quality base;
-3. retain M15 only as a third-and-later-stop churn warning, never as a broad
-   entry filter or claim that the main strategy should run on M15;
-4. before any promotion, preregister one compact rule and test it on untouched
-   chronology with Python/MQL5 feature and event-ledger parity;
-5. preserve GOLD# 2021 and post-cutoff chronology.
+1. do not tune the Phase-1S feature set, logistic penalty, journey threshold, or
+   top-20% operating point on consumed outcomes;
+2. do not add another weekly/weekday/event veto to existing V10 Children;
+3. if large-flow direction work continues, freeze a W1 CRT Parent-created H4
+   candidate contract that separates sweep-return from outside acceptance before
+   HA participates in Child timing;
+4. retain Phase-1S weekly state only as a shadow transition-risk coordinate and
+   retain M15 only as a third-and-later-stop churn warning;
+5. require Python/MQL5 feature and event-ledger parity before promotion, and
+   preserve GOLD# 2021 and post-cutoff chronology.

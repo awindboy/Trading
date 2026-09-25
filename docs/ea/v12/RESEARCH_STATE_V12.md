@@ -522,20 +522,32 @@ Do not promote:
 - At equal V10 funded units M30 earns `123.87R`; at equal 486 stopped units it
   earns `56.14R`. M30 session path is not a V10 replacement.
 
+## Closed Phase-1S result
+
+- Three same-week-embargoed OOS folds cover `1,219` frozen V10 R7G Children.
+- Weekly price/event state produces stable stop-risk discrimination, but weak
+  `R >= 2` journey discrimination.
+- Full veto reduces stopped units `353 -> 225` and stop density `12.38 -> 10.19`
+  per 100, while net R falls `498.26 -> 249.32` and >=5R tail falls
+  `170.70 -> 46.80`.
+- The flagged `288`-Child cohort has twice the stop rate of the kept cohort but
+  still contains `248.94R` and `123.90R` of >=5R tail. It is a high-variance
+  transition state, not an unnecessary-direction state.
+
 ## Next hypotheses
 
 These are questions, not rules:
 
-1. Can M30 temporal state add value only inside an already selective higher-
-   quality base without funding the full M30 `k=1` population?
-2. Can a simpler monotonic representation reproduce repeat-stop selectivity
-   without the 2023–2024 tail loss and HGB instability?
+1. Can a W1 CRT Parent create an H4 directional candidate by distinguishing
+   sweep-return from outside acceptance before HA participates in Child timing?
+2. Does the Phase-1S weekly state add only calibrated transition-risk context
+   inside that independently created candidate without vetoing tail opportunity?
 3. Does the M15 third-and-later-stop warning transfer as a subordinate warning
-   while preserving the Parent/Child semantics of the higher execution clock?
-4. Can Python and MQL5 produce identical M30/M15 temporal features, stop-chain
-   state, and event ledgers before any Strategy Tester economics are claimed?
-5. If future evidence fails, should M30/M15 remain diagnostic only while H4/H1
-   retain the official Parent/Child research lanes?
+   while preserving Parent/Child semantics and the H4 execution clock?
+4. Can Python and MQL5 produce identical W1/H4 weekly-state, branch, and event
+   ledgers before any Strategy Tester economics are claimed?
+5. If future evidence fails, should all lower-clock and weekly-state models
+   remain diagnostic while only explicit CRT Parent branches create candidates?
 
 ## Evidence boundary
 
@@ -554,8 +566,9 @@ These are questions, not rules:
   Phase 1M is a failed-stability H1 transition-Child diagnostic, Phase 1N is a
   failed broad temporal-admission diagnostic, Phase 1O is an unstable after-one-
   stop interaction diagnostic, Phase 1P is an intermediate-clock boundary
-  diagnostic, Phase 1Q is a deep stop-chain warning diagnostic, and Phase 1R is
-  a failed full-history M30/V10 replacement comparison. No V12 EA, MQL5 parity,
-  actual-tick economics, or independent future validation exists.
+  diagnostic, Phase 1Q is a deep stop-chain warning diagnostic, Phase 1R is a
+  failed full-history M30/V10 replacement comparison, and Phase 1S is a failed
+  weekly-direction veto with retained stop-risk mechanism. No V12 EA, MQL5
+  parity, actual-tick economics, or independent future validation exists.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.
