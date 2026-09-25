@@ -1,0 +1,93 @@
+{
+  "contract_version": "v12-phase1s-v10-weekly-journey-direction-v1",
+  "frozen_at": "2026-09-25",
+  "evidence_status": "CONSUMED_DEVELOPMENT_CAUSAL_WEEKLY_DIRECTION_AUDIT",
+  "purpose": "TEST_WHETHER_A_CONTINUOUS_CAUSAL_WEEKLY_JOURNEY_STATE_CAN_IDENTIFY_UNNECESSARY_V10_DIRECTIONS_AND_REDUCE_STOPPED_EXPOSURE_WITHOUT_DESTROYING_RIGHT_TAIL_CAPITAL",
+  "source_hashes": {
+    "raw_m1_full_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+    "raw_m1_prefix_sha256": "04e074ca77f449f02ac65a0b11f8efcb06254272be1a99b7273db8876ec4c939",
+    "calendar_snapshot_sha256": "a3fc252157638a72052df4dc5b3d305932d114698dd977bc3c4b529f93ff101a",
+    "calendar_time_overrides_sha256": "87e08ee68948003ca2edb1e6dbfb7259867deb40d3a3b8d22f7208af01ea16ac",
+    "v10_r7g_comparator_ledger_sha256": "cfee70fa0985f5b4eac4b04357a0add5795b745ba3d95ba7be56ebd7d648c4c6"
+  },
+  "population": {
+    "policy": "ORIGINAL_FULL_R7G_PORTFOLIO",
+    "expected_children": 1649,
+    "decision_clock": "V10_H4_DECISION_TIMESTAMP",
+    "feature_cutoff": "RAW_M1_TIMESTAMP_STRICTLY_BEFORE_DECISION",
+    "label_available_at": "CHILD_EXIT_TIME"
+  },
+  "normalization": {
+    "weekly_scale": "MEDIAN_RANGE_OF_PRIOR_20_COMPLETED_BROKER_WEEKS_MINIMUM_8",
+    "daily_scale": "MEDIAN_RANGE_OF_PRIOR_60_COMPLETED_BROKER_DAYS_MINIMUM_20",
+    "broker_week": "MONDAY_00_00_TO_NEXT_MONDAY_00_00",
+    "bar_inputs": "VERIFIED_RAW_M1_REVEALED_CHRONOLOGICALLY"
+  },
+  "feature_families": {
+    "WEEK_CLOCK": "CONTINUOUS_WEEK_AND_DAY_PHASE_SIN_COS_ONLY",
+    "WEEK_PRICE": "WEEK_CLOCK_PLUS_DIRECTION_ALIGNED_PRIOR_AND_CURRENT_WEEK_PATH_PREVIOUS_DAY_MONDAY_RANGE_AND_COMPLETED_H4_SETTLEMENT",
+    "WEEK_PRICE_EVENT": "WEEK_PRICE_PLUS_CAUSALLY_RELEASED_USD_MODERATE_HIGH_EVENT_COUNTS_SURPRISE_MAGNITUDE_AND_POST_EVENT_PRICE_RESPONSE",
+    "WEEK_PRICE_EVENT_HISTORY": "WEEK_PRICE_EVENT_PLUS_CAUSALLY_COMPLETED_PRIOR_V10_CHILD_OUTCOMES_CURRENT_K_AND_R7G_WEIGHT"
+  },
+  "primary_feature_family": "WEEK_PRICE_EVENT",
+  "model": {
+    "algorithm": "L2_LOGISTIC_REGRESSION",
+    "C": 0.25,
+    "max_iter": 2000,
+    "random_state": 121,
+    "numeric_imputation": "TRAIN_MEDIAN_WITH_MISSING_INDICATORS",
+    "scaling": "TRAIN_STANDARD_SCALER",
+    "heads": {
+      "stop": "P_HARD_SL",
+      "journey": "P_CHILD_R_GE_2"
+    },
+    "directional_badness": "P_HARD_SL_MINUS_P_CHILD_R_GE_2",
+    "operating_point": "TRAIN_ONLY_TOP_20_PERCENT_DIRECTIONAL_BADNESS"
+  },
+  "outer_walk_forward_folds": [
+    {"fold": "F1", "train_end": "2025-03-31T23:59:59", "test_start": "2025-04-01T00:00:00", "test_end": "2025-09-30T23:59:59"},
+    {"fold": "F2", "train_end": "2025-09-30T23:59:59", "test_start": "2025-10-01T00:00:00", "test_end": "2026-03-31T23:59:59"},
+    {"fold": "F3", "train_end": "2026-03-31T23:59:59", "test_start": "2026-04-01T00:00:00", "test_end": "2026-09-18T23:57:00"}
+  ],
+  "policies": {
+    "FULL_DIRECTION_VETO": "ZERO_UNITS_FOR_FLAGGED_CHILD",
+    "SEED_PROTECTED_EXTRA_UNIT_GUARD": "KEEP_ONE_UNIT_FOR_EVERY_CHILD_AND_REMOVE_ONLY_UNITS_ABOVE_ONE_WHEN_FLAGGED"
+  },
+  "primary_policy": "FULL_DIRECTION_VETO",
+  "primary_gates": {
+    "children_retention_min": 0.8,
+    "stopped_units_per_100_relative_max": 0.85,
+    "net_R_retention_min": 0.9,
+    "right_tail_ge5_R_retention_min": 0.9,
+    "equal_stop_budget_R_relative_min": 1.0,
+    "nonnegative_fold_delta_min_count": 2,
+    "both_sides_stop_density_must_improve": true,
+    "both_sides_net_R_retention_min": 0.8
+  },
+  "required_reporting": [
+    "CHILDREN_AND_FUNDED_UNITS",
+    "STOPPED_CHILDREN_AND_STOPPED_UNITS",
+    "STOPPED_UNITS_PER_100",
+    "WIN_RATE_NET_R_R_PER_100_PROFIT_FACTOR_DRAWDOWN",
+    "MAX_STOP_STREAK",
+    "RIGHT_TAIL_GE2_AND_GE5_R_UNITS",
+    "EQUAL_STOP_BUDGET_R",
+    "FOLD_SIDE_YEAR_AND_WEEKLY_LIQUIDITY_BREAKDOWNS",
+    "FLAGGED_COHORT_STOP_RATE_NET_R_AND_TAIL",
+    "STOP_AND_JOURNEY_HEAD_AUC_BRIER",
+    "ORDER_FAIL_COUNT_AND_CAUSAL_SNAPSHOT_AUDIT"
+  ],
+  "forbidden": [
+    "NO_WEEKDAY_SESSION_OR_ALL_NEWS_VETO",
+    "NO_RAW_LONG_SHORT_LABEL_IN_PRIMARY_MODEL",
+    "NO_OUTCOME_OR_FUTURE_RUN_FEATURE",
+    "NO_FEATURE_THRESHOLD_OR_MODEL_RETUNING_AFTER_RESULTS",
+    "NO_SAME_WEEK_TRAIN_TEST_MIXING",
+    "NO_2021_ACCESS",
+    "NO_POST_2026_09_18_23_57_PRICE_ACCESS",
+    "NO_ACTION_AUTHORITY_FROM_CONSUMED_HISTORY"
+  ],
+  "economics": "SPREADLESS_STRUCTURAL_R_USING_FROZEN_V10_CHILD_OUTCOMES",
+  "trade_authority": false,
+  "sizing_authority": false
+}
