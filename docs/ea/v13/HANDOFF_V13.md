@@ -1,11 +1,13 @@
 # V13 handoff
 
-Last synchronized: `2026-09-26`
-Status: `BASELINE 0 FROZEN / ACTUAL-TICK STRUCTURAL PARITY CONFIRMED / HA-0 MEASUREMENT NEXT`
+Last synchronized: `2026-09-27`
+Status: `BASELINE 0 FROZEN / HA-0..HA-3 OBSERVATION COMPLETE / HA-4 NEXT`
 
 ## Resume point
 
-V13 has moved from “build the simple EA” to “use the simple EA to learn HA.”
+V13 uses the simple EA as an observation instrument. HA-0..HA-3 research
+receipts now document morphology, lifecycle, and four predeclared HA
+representations. They are consumed development evidence, not trading rules.
 
 The latest uploaded MT5 report is an extended real-tick run through
 `2026-09-26`. Its canonical prefix confirms the intended Journey/Child structure:
@@ -59,39 +61,33 @@ The useful result is that it exposes HA behavior:
 This is not authority to ban SHORTs, lower the ten-Child cap, or add a fixed
 late-Child rule.
 
-## Immediate next work — HA-0
+## Completed observation work — HA-0..HA-3
 
-Do **not** change the EA strategy.
+The Baseline-0 EA strategy remains unchanged. Decision ledgers record completed
+H4 raw/HA OHLC, HA body/Delta/range/wick geometry, streak and Child index.
+Separate future-label ledgers record raw M1 extrema, final Journey length,
+exit/giveback and idealized no-cost Child price differences. These ledgers are
+reproducible from `research/v13/ha_representation_audit.py` and stored locally;
+compact source-backed findings are in `results/`.
 
-Build an observation ledger for every completed H4 bar / Child / Journey with:
+HA-1: stronger HA body and clean opposite-wick morphology corresponded to
+longer persistence, but are overlapping geometry, not two independent signals.
+HA-2: median raw-extreme-to-exit lag was 7.35h and median giveback 21.41
+GOLD price. HA-3: changing responsiveness exchanged shorter lag for more
+short-lived Journeys, or vice versa. No threshold or trade rule was promoted.
 
-```text
-standard HA OHLC
-HA Delta and absolute Delta
-HA body and full range
-body/range strength
-upper and lower wick lengths/ratios
-directional-wick and opposite-wick state
-no-opposite-wick flag
-same-color streak
-Delta/body expansion or contraction
-raw OHLC morphology
-raw-price <-> HA displacement
-```
+## Immediate next work — HA-4
 
-Freeze these fields at the completed-bar decision time.
+Observe D1 standard HA alongside the H4 baseline on the full canonical window.
+Then study H1 standard HA separately around H4 transitions. Start with
+decision-time state and future outcomes in separate ledgers. No D1/H1 veto,
+score, or Baseline-0 trading action is authorized.
 
-Store future outcomes separately: bars/time to opposite color, Journey final
-length, MFE/MAE, peak time, giveback to HA exit, and Child/Journey terminal PnL.
-
-First question:
-
-> How does standard HA morphology evolve from Journey birth through persistent
-> trend, contraction, raw-price turn and eventual opposite-color confirmation?
-
-No threshold and no trading change is authorized in HA-0.
+HA-3 found a clear responsiveness/persistence trade-off, not an economic
+winner. Its PRE-EMA2 and POST-EMA2 color sequences were identical under the
+stated linear formulas, so do not count them as independent color evidence.
 
 ## Following order
 
-After HA-0, follow the roadmap. Do not jump directly to EMA/ADX/ML merely because
+After HA-4, follow the roadmap. Do not jump directly to EMA/ADX/ML merely because
 external sources combine them successfully in examples.

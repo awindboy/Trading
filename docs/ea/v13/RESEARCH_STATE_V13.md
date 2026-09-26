@@ -1,7 +1,7 @@
 # V13 research state
 
-Last synchronized: `2026-09-26`
-Status: `BASELINE 0 FROZEN / ACTUAL-TICK STRUCTURAL PARITY CONFIRMED / HA REPRESENTATION RESEARCH ACTIVE`
+Last synchronized: `2026-09-27`
+Status: `BASELINE 0 FROZEN / ACTUAL-TICK STRUCTURAL PARITY CONFIRMED / HA-0..HA-3 OBSERVATION COMPLETE`
 Market: `GOLD# ONLY`
 
 ## 1. Generation reset
@@ -151,19 +151,37 @@ ML-integration example but is not a standard-HA formula authority.
 
 Every imported implementation must therefore pass formula parity before use.
 
-## 9. Active research question
+## 9. HA-0..HA-3 research update
+
+The completed observation receipts are under `results/`. HA-1 confirms that
+body strength and opposite-wick geometry describe related persistence state;
+their apparent signals must not be counted as independent. HA-2 finds a
+standard-HA median 7.35-hour raw extreme to opposite-color exit and median
+21.41 GOLD-price giveback. The year medians rise with Gold's price movement;
+fixed-price cutoffs are not authorized.
+
+HA-3 changes *representation only*. On the full window, FAST-R25 has 1,240
+closed Journeys versus STD's 965, with median lag/giveback 6.40h/18.03 versus
+7.35h/21.41. PRE-EMA2 has 757 closed Journeys and 8.83h/24.10. POST-EMA2 has
+exactly the same color chronology as PRE-EMA2 under these formulas. These are
+different episode partitions, not matched-trade improvement or MT5 economics.
+
+All findings use already-consumed 2024-2026 development data. No variant has
+been promoted into the baseline EA, and the official exact-window real-tick
+economic receipt is still pending.
+
+## 10. Active research question
 
 The next question is no longer “which simple filter immediately improves P/L?”
 
 It is:
 
-> What information about trend persistence, maturity, contraction and transition
-> already exists inside standard HA itself, and how early does that information
-> appear relative to the eventual color flip?
+> Does D1 standard HA supply distinct causal context for H4 lifecycle state,
+> and separately does H1 reveal transition earlier without importing noise?
 
-Roadmap Stage HA-0 answers this without changing trades.
+Roadmap Stage HA-4 studies these separately without changing trades.
 
-## 10. Promotion boundary
+## 11. Promotion boundary
 
 Observation may begin now. Strategy modification may not.
 

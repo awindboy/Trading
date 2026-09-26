@@ -1,6 +1,6 @@
 # EA strategy research documentation
 
-Last synchronized: `2026-09-26`
+Last synchronized: `2026-09-27`
 
 ## Active research
 
@@ -14,6 +14,7 @@ repository AGENTS.md
 -> RESEARCH_STATE_V13.md
 -> V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_20260926.md
 -> V13_HA_RESEARCH_ROADMAP_20260926.md
+-> V13_HA3_REPRESENTATION_COMPARISON_CONTRACT_20260927.md
 -> V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md
 -> V13_EXECUTION_RECOVERY_20260926.md
 -> V13_MQL5_BACKTEST_PROTOCOL_20260926.md
@@ -21,8 +22,9 @@ repository AGENTS.md
 ```
 
 V13 is a clean rebuild from a minimal H4 standard-Heikin-Ashi strategy. The
-current research emphasis is to understand HA itself before importing more
-indicators or ML.
+HA-0..HA-3 observation receipts are under `results/`. The next stage is HA-4:
+D1 standard HA context first, then H1 standard HA transition observation,
+separately and without changing the Baseline-0 EA.
 
 Baseline 0 remains one contiguous same-color H4 HA Journey with one fixed-size
 Child after every completed same-color bar, capped at ten successful Children,

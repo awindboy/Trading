@@ -378,7 +378,8 @@ Stopping a branch is a successful V13 result.
 
 ## 4. Current next step
 
-`HA-0 Standard-HA measurement ledger`
+`HA-4 Multi-timeframe standard HA observation: D1 first, H1 separately`
 
-No EA strategy modification is authorized before that ledger and its descriptive
-receipt are complete.
+HA-0..HA-3 descriptive receipts and the HA-3 frozen comparison contract are
+under `results/` and the V13 root respectively. No EA strategy modification is
+authorized by any of them. HA-4 begins observation-only.

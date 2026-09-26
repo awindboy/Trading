@@ -1,6 +1,6 @@
 # V13 document authority map
 
-As of `2026-09-26`, read V13 authority in this order:
+As of `2026-09-27`, read V13 authority in this order:
 
 1. `AGENTS_V13.md` — generation boundary, frozen baseline, causal rules and
    research discipline.
@@ -15,13 +15,15 @@ As of `2026-09-26`, read V13 authority in this order:
    semantics.
 8. `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` — exact tester setup and required
    report fields.
-9. `results/README.md` — compact result routing.
-10. `results/V13_BASELINE0_EXTENDED_ACTUAL_TICK_DIAGNOSTIC_20260926.md` — latest
+9. `V13_HA3_REPRESENTATION_COMPARISON_CONTRACT_20260927.md` — named,
+   observation-only four-representation comparison; not a strategy rule.
+10. `results/README.md` — compact result routing, including HA-1..HA-3.
+11. `results/V13_BASELINE0_EXTENDED_ACTUAL_TICK_DIAGNOSTIC_20260926.md` — latest
     actual-tick structural-parity diagnostic; not the official exact-window
     economic receipt.
-11. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` — frozen Baseline-0 MQL5
+12. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` — frozen Baseline-0 MQL5
     implementation.
-12. `../../../mt5/tester/V13HAOnlyMax10.GOLD.actualticks.2024_2026.ini` — starter
+13. `../../../mt5/tester/V13HAOnlyMax10.GOLD.actualticks.2024_2026.ini` — starter
     tester configuration; Strategy Tester GUI remains broker/account authority.
 
 ## Precedence

@@ -1,6 +1,11 @@
 # V13 research code
 
-V13 currently has no active Python feature stack.
+V13 has one observation-only Python audit:
+
+`ha_representation_audit.py` reproduces HA-0..HA-3 descriptive ledgers from
+chronological GOLD# H4 and raw M1 source files. It is not an EA feature stack,
+trading signal generator, or an official economic backtest. Decision fields and
+future labels are written separately under `output/v13_ha3_20260927/`.
 
 The active baseline implementation is:
 

@@ -1,9 +1,9 @@
 # V13 Research Instructions — Minimal HA Rebuild
 
-Last synchronized: `2026-09-26`
+Last synchronized: `2026-09-27`
 Status: `ACTIVE / BASELINE 0 FROZEN / HA KNOWLEDGE PROGRAM ACTIVE / NO PRODUCTION AUTHORITY`
 Market authority: `GOLD# ONLY`
-Research-update base GitHub HEAD: `6550da435ac34a7b1a0a026196a7a1157153d37a`
+Research-update base GitHub HEAD: `be1c6db8aaa3b986c59ae99f8809575bc0b1c123`
 
 ## 0. Start order
 
@@ -21,7 +21,8 @@ Read in this order:
 8. `V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md`;
 9. `V13_EXECUTION_RECOVERY_20260926.md` and
    `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` when execution/tester work matters;
-10. `results/README.md` and the newest V13 receipt;
+10. `V13_HA3_REPRESENTATION_COMPARISON_CONTRACT_20260927.md`,
+    `results/README.md`, and the HA-1..HA-3 receipts;
 11. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` for implementation parity.
 
 ## 1. Why V13 exists
@@ -209,8 +210,9 @@ leverage from the frozen protocol.
 
 ## 11. Current next action
 
-Begin Roadmap Stage HA-0: build a causal standard-HA measurement ledger on the
-existing Baseline-0 chronology without changing a single trade rule.
+HA-0..HA-3 descriptive work is recorded in the compact receipts. Begin HA-4
+with D1 standard HA as observation-only context; study H1 separately afterward.
+Do not import either timeframe into the Baseline-0 EA without a new contract.
 
 The exact-window MT5 rerun should still be captured before any strategy variant
 is promoted economically, but it does not block observation-only HA measurement.

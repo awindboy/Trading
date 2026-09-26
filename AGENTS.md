@@ -1,8 +1,8 @@
 # Trading repository authority
 
-Last synchronized: `2026-09-26`
-V13 HA-research documentation update base HEAD:
-`6550da435ac34a7b1a0a026196a7a1157153d37a`
+Last synchronized: `2026-09-27`
+V13 HA-0..HA-3 local handoff base GitHub HEAD:
+`be1c6db8aaa3b986c59ae99f8809575bc0b1c123`
 
 ## Active generation
 
@@ -25,7 +25,8 @@ Start every V13 session in this order:
 8. read `docs/ea/v13/V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md`;
 9. read `docs/ea/v13/V13_EXECUTION_RECOVERY_20260926.md` and
    `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` before tester/execution work;
-10. read the current compact receipts under `docs/ea/v13/results/`;
+10. read the current compact receipts under `docs/ea/v13/results/`, including
+    HA-1, HA-2 and HA-3;
 11. inspect `mt5/experts/V13HAOnlyMax10EA.mq5` before changing implementation.
 
 Where V13 conflicts with V12 or older strategy-routing documents, V13 controls.
@@ -64,9 +65,10 @@ month, quarter, year, or episode is diagnostic only.
 
 ## Current research doctrine
 
-V13 now treats Baseline 0 first as an **instrument for learning what standard
-Heikin-Ashi actually represents**. The immediate task is not to optimize the
-simple strategy but to measure HA morphology, persistence, lag and lifecycle.
+V13 treats Baseline 0 first as an **instrument for learning what standard
+Heikin-Ashi actually represents**. HA-0..HA-3 are descriptive development
+evidence. HA-4 multi-timeframe standard HA is the next observation-only stage.
+The Baseline-0 EA and trading rules have not changed.
 
 Research order is frozen in
 `docs/ea/v13/V13_HA_RESEARCH_ROADMAP_20260926.md`.
