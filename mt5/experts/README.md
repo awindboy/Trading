@@ -1,7 +1,24 @@
 # Operational Expert Advisors
 
-`TradeJournalExporterEA.mq5`는 현재 웹 매매일지 연동에 사용하는 운영 EA입니다. 주문 전략 EA가 아니라 거래 이벤트와 차트 캡처를 내보냅니다.
+`TradeJournalExporterEA.mq5` remains the operational journal/export utility.
 
-V12 전략 EA는 아직 없습니다. V12는 먼저 raw-M1 Python event oracle과
-MQL5 event-ledger parity probe를 완성한 뒤 연구 EA를 허용합니다. 기존 V10
-EA는 frozen comparator이며 V12 성과를 나타내지 않습니다.
+## Active V13 research EA
+
+`V13HAOnlyMax10EA.mq5` implements the frozen V13 Baseline 0:
+
+```text
+standard completed H4 Heikin-Ashi only
+one Child per completed same-color H4 HA bar
+maximum 10 Children per Journey
+first opposite completed H4 HA closes all and reverses
+no SL / no TP / no filter / no ML
+```
+
+It is a research/tester EA only and has no live-trading authority.
+
+The EA requires hedging position accounting so each Child remains independently
+visible in MT5 history. It fails closed on execution errors instead of silently
+retrying.
+
+V12 has no active strategy EA. Existing V10 EAs are frozen historical
+comparators and do not represent V13.

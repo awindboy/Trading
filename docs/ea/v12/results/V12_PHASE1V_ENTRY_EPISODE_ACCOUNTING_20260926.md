@@ -4,6 +4,12 @@ Status: **complete and byte-reproduced / corrected population confirms negative 
 
 Date: `2026-09-26`
 
+Interpretation addendum: read `V12_PHASE1W_RETRY_LOCATION_20260926.md` before
+using this frozen report. Count curves are not equity; ex-post tail removal
+does not prove lack of edge; its tail threshold is weighted Child R>=5; the
+48 late-damage cases are a subset of the 338 no-first-stop negatives. Historical
+numbers/gates below are retained as originally reported, not universal criteria.
+
 ## Why Phase 1U was not the right answer
 
 Phase 1U pooled all selected Children. That mixed three different questions:

@@ -1,41 +1,42 @@
 # EA strategy research documentation
 
-Last synchronized: `2026-09-23`
+Last synchronized: `2026-09-26`
 
 ## Active research
 
-V12 is the only active strategy-research generation.
+V13 is the only active strategy-research generation.
 
 ```text
 repository AGENTS.md
--> docs/ea/v12/AGENTS_V12.md
--> V12_DOCUMENT_AUTHORITY_MAP_20260923.md
--> HANDOFF_V12.md
--> RESEARCH_STATE_V12.md
--> V12_CRT_NUMERIC_OBSERVATION_CONTRACT_20260923.md
--> V12_MQL5_ENGINEERING_AND_VALIDATION_CONTRACT_20260923.md
+-> docs/ea/v13/AGENTS_V13.md
+-> V13_DOCUMENT_AUTHORITY_MAP_20260926.md
+-> HANDOFF_V13.md
+-> RESEARCH_STATE_V13.md
+-> V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md
+-> V13_MQL5_BACKTEST_PROTOCOL_20260926.md
 ```
 
-V12 uses CRT as the candidate and Parent-journey grammar, then studies HA,
-Wave Candle, normalized liquidity coordinates, and ML as subordinate evidence.
-It has no trade or production authority.
+V13 is a clean rebuild from a minimal H4 standard-Heikin-Ashi strategy. It does
+not inherit CRT, ML, Wave, liquidity, session, news, or multi-indicator gates.
+
+The current frozen baseline is one contiguous same-color H4 HA Journey with one
+new fixed-size Child after each completed same-color bar, capped at 10 Children,
+and full Journey exit/reversal on the first completed opposite-color H4 HA.
+There is no SL or TP in Baseline 0.
+
+## Canonical comparison period
+
+Current V13 strategy comparisons use the entire available window:
+
+`2024-01-01 through 2026-08-28`
+
+Partial windows are diagnostic only.
 
 ## Historical generations
 
-- V11: frozen immediate predecessor; Wave Candle remains an observation asset;
-- V10: frozen HA/ML predecessor and principal comparator;
+- V12: frozen immediate predecessor and historical evidence;
+- V11: frozen predecessor;
+- V10: frozen HA/ML predecessor;
 - V9 and earlier: historical evidence only.
 
-Historical documents cannot override V12 authority.
-
-## Artifact policy
-
-- authority and checkpoints: `docs/ea/v12/`;
-- schema and retained code: `research/v12/`;
-- large generated ledgers and model output: ignored `output/`;
-- external sources: register links and provenance, do not silently vendor code;
-- deleted superseded packs: Git history.
-
-The retained V10 replay EAs remain research/tester artifacts. The user's MT5
-run exposed market-closed order failures; that execution-lifecycle repair is
-deferred and must not be relabeled as a strategy loss or filled retrospectively.
+Historical documents cannot override V13 authority.

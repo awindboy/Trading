@@ -4,7 +4,18 @@ Last synchronized: `2026-09-26`
 
 ## Status
 
-`PHASE 1V COMPLETE AND REPRODUCIBLE / ENTRY GRAIN CORRECTED / NEGATIVE ORDINARY DRIFT CONFIRMED / ENTRY OWNERSHIP REJECTED / NO TRADE AUTHORITY`
+`PHASE 1W RETRY-LOCATION DIAGNOSTIC / ACCOUNTING QUALIFIED / NO TRADE AUTHORITY`
+
+Read `results/V12_PHASE1W_RETRY_LOCATION_20260926.md` first for current
+interpretation. Phase-1V count curves are not equity; ex-post tail removal is
+not proof of no edge. Its 57 tails use weighted Child R, and the 48 late-damage
+cases are included in the 338 no-first-stop losses. Selected-signal 1,649 rows
+and actual-entry 1,409 rows must not be interchanged.
+
+Phase 1W freezes two failed-seed footprint exclusions. H4 footprint removes
+54 negative and 15 positive episodes, saves 22 first stops, and changes win rate
+29.01% -> 29.84%, weighted R 646.18 -> 634.16. This is modest selectivity, not
+a solved churn problem. 2025 drawdown worsens slightly. No promotion or tuning.
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.

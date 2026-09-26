@@ -1,0 +1,96 @@
+{
+  "packet": "V13_GITHUB_UPDATE_20260926",
+  "created": "2026-09-26",
+  "base_repository": "awindboy/Trading",
+  "base_main_head": "b57be8e619254191f3a54da86bec3745edae6ac8",
+  "purpose": "Activate V13 minimal HA rebuild and add frozen max-10 Baseline-0 MT5 EA.",
+  "ea_static_checks": {
+    "brace_balance": true,
+    "fixed_h4": true,
+    "max_10": true,
+    "standard_ha_close": true,
+    "recursive_ha_open": true,
+    "no_sl_tp_order": true,
+    "hedging_required": true,
+    "fail_closed": true,
+    "evaluation_start": true,
+    "warmup_start": true
+  },
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 4393,
+      "sha256": "370a3630cf98ba4ea677c3637e2899a6633235bdde2222ae2a4d6e0bd7558cd5"
+    },
+    {
+      "path": "README_V13_UPDATE.txt",
+      "bytes": 693,
+      "sha256": "cfe7455d8380757177b7fcd8822ee6e176692158e39b0f73bc4dcf6c34f3fa8f"
+    },
+    {
+      "path": "docs/ea/README.md",
+      "bytes": 1231,
+      "sha256": "e15be9f880a54d80738a02a34ceccc27814d6204c7d87f120a1b836f839cce12"
+    },
+    {
+      "path": "docs/ea/v13/AGENTS_V13.md",
+      "bytes": 4568,
+      "sha256": "77208c83e17ed6f8bed7bf377f6ca8f8310f9aa4db501e4597589ec271758632"
+    },
+    {
+      "path": "docs/ea/v13/HANDOFF_V13.md",
+      "bytes": 1347,
+      "sha256": "c54b1c7a25360927320f63d588f11dea82434244c4bd3e4dbb0cbaeb777d6b23"
+    },
+    {
+      "path": "docs/ea/v13/RESEARCH_STATE_V13.md",
+      "bytes": 2727,
+      "sha256": "5c86716f5465e2a9f58d6a6bfcccb0448a96a654b074c6ce7fe293538e239fb5"
+    },
+    {
+      "path": "docs/ea/v13/V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md",
+      "bytes": 3795,
+      "sha256": "f951ae3f697802768f5eb596e231d68eb39badb38b98300638b866323c7ab1e0"
+    },
+    {
+      "path": "docs/ea/v13/V13_DOCUMENT_AUTHORITY_MAP_20260926.md",
+      "bytes": 1263,
+      "sha256": "063f56e7d410c0277eb9a86689168621d8878b0fabd20917fe2d15ff5dffd627"
+    },
+    {
+      "path": "docs/ea/v13/V13_MQL5_BACKTEST_PROTOCOL_20260926.md",
+      "bytes": 2958,
+      "sha256": "5729dcc78001c1c4160a3e50f7827fd4663f6830c9ee47690cac9e006499def0"
+    },
+    {
+      "path": "docs/ea/v13/results/README.md",
+      "bytes": 517,
+      "sha256": "4349de9d88207a7ef76a7b536f623bad6160cf9489e361578ff48cb0355674f4"
+    },
+    {
+      "path": "mt5/experts/README.md",
+      "bytes": 763,
+      "sha256": "640e68450ace9db7d5e4bb7fc0dc1aea368823d392288f595bf2c40432993e50"
+    },
+    {
+      "path": "mt5/experts/V13HAOnlyMax10EA.mq5",
+      "bytes": 15967,
+      "sha256": "53a48213a340a9984664bf47401893312fcadafa833ac9c044fd727aeac3b4bf"
+    },
+    {
+      "path": "mt5/tester/V13HAOnlyMax10.GOLD.actualticks.2024_2026.ini",
+      "bytes": 308,
+      "sha256": "7698dcba600bd07f51f8c7bd0590b6ce137b941d302d53389f469e9135d6dee6"
+    },
+    {
+      "path": "research/v13/README.md",
+      "bytes": 355,
+      "sha256": "777e3f6778b4a7f2396f033bada99b0f58353da758a4f42b7a590c987fb79599"
+    }
+  ],
+  "notes": [
+    "Official V13 economic result is pending user MT5 Strategy Tester run.",
+    "Canonical comparison window is 2024-01-01 through 2026-08-28 available GOLD# history.",
+    "No generated XLSX ledger is included in the Git update packet."
+  ]
+}

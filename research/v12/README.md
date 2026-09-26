@@ -449,7 +449,18 @@ solution; later-Child management remains separately accounted.
 
 Large ledgers and diagnostics belong under ignored `output/`.
 
-## Predecessor reuse boundary
+## Retained Phase-1W artifacts
+
+- `build_v12_phase1w.py`: causal raw-M1 failed-seed footprints; strict prior
+  outcome availability, actual-entry reconciliation, two fixed exclusions,
+  exit-time realized-R accounting and separate tail definitions.
+- `test_v12_phase1w.py`: mirrored boundaries, unresolved/equal-time exclusion,
+  current-outcome isolation and prefix invariance.
+- `v12_phase1w_release_manifest.json`: final two-run reproduction receipt.
+- Contract/result in the authority map: predeclared scope and current
+  accounting qualifications. No V12 candidate, gate, sizing or EA authority.
+
+## Predecessor component boundary
 
 V10/V11 code may provide tested OHLC aggregation, HA, ATR normalization, Wave,
 feature-registry, and parity utilities. Reuse requires explicit imports or copied

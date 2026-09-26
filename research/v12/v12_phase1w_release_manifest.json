@@ -1,0 +1,21 @@
+{
+  "action_authority": false,
+  "independent_validation": false,
+  "evidence": "CONSUMED_DEVELOPMENT_FIXED_BOOK_EXCLUSION",
+  "packs": [
+    "output/v12_phase1w_retry_location_20260926_b",
+    "output/v12_phase1w_retry_location_20260926_c"
+  ],
+  "byte_identical_members": 8,
+  "pack_manifest_sha256": "c2175e20f2e6c2b2d48033c08fc6f8468455a5840f9dc08f9ee2874ac910a976",
+  "source_code_sha256": "b443b9df7d876ebd632decc3ec2ec66c116dd2a6d5b98ccd0c4ac41cbfd61ab7",
+  "contract_sha256": "4885f8548a3dd49c6f7e7f7cac9cc29b6b985060ddc6872ffbd3719ee5a7030c",
+  "tests": {"phase1_pattern_suite": 71, "focused": 4},
+  "causal_reference_timestamp_checks": 379,
+  "unavailable_references": 300,
+  "episodes": 679,
+  "actual_entry_children": 1409,
+  "selected_unfilled_rows": 240,
+  "h4_footprint": {"negative_episodes_removed": 54, "positive_episodes_removed": 15, "first_hard_stops_removed": 22},
+  "risk_footprint": {"negative_episodes_removed": 68, "positive_episodes_removed": 26, "first_hard_stops_removed": 22}
+}

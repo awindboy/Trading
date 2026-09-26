@@ -2,6 +2,10 @@
 
 The retained numeric receipts are:
 
+- `V12_PHASE1W_RETRY_LOCATION_20260926.md`: current failed-seed footprint
+  diagnostic and accounting qualifications. Read before using earlier
+  selected-signal/actual-entry, weighted-tail, or equity-curve interpretations.
+
 - `V12_PHASE0_CAUSAL_EVENT_UNIVERSE_20260923.md`: exhaustive W1/D1 C1/C2
   parent universe, raw-M1-to-MT5 parity, ambiguity counts, and independent
   byte-identical rerun evidence. It has observation authority only.

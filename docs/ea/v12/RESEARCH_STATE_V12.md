@@ -4,7 +4,19 @@ Last synchronized: `2026-09-26`
 
 ## Status
 
-`PHASE 1V COMPLETE AND REPRODUCIBLE / ENTRY EPISODE GRAIN ADOPTED / ORDINARY CURVE NEGATIVE / ENTRY OWNERSHIP FAILED / NO TRADE AUTHORITY`
+`PHASE 1W RETRY-LOCATION DIAGNOSTIC / ACCOUNTING QUALIFIED / NO TRADE AUTHORITY`
+
+Current interpretation: see the Phase-1W result. Historical Phase-1V claims of
+ordinary equity drift refer to ex-post tail-excluded attribution and +/-1 count
+curves, not an unconditional expectancy finding or actual equity. Its 57 tail
+episodes use weighted Child R>=5 (14 episodes meet unweighted Child R>=5).
+Its 48 positive-start/negative-end episodes are included in the 338 no-first-SL
+negative episodes. Actual ENTRY is 1,409; another 240 selected rows did not fill.
+
+The Phase-1W fixed H4 footprint saves 54 negative episodes for 15 lost positives,
+but raises win rate only 0.82 percentage points and does not shorten the maximum
+negative-episode streak. Price-location duplication remains a modest diagnostic,
+not an authorized gate. Waiting for a new attempt would require its own replay.
 
 ## Established inputs
 

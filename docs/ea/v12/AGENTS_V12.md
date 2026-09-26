@@ -27,6 +27,12 @@ CRT creates the Parent journey and candidate state
 
 ## Authority boundary
 
+- Phase 1W qualifies the Phase-1V interpretation: count curves are not equity,
+  weighted and unweighted tail definitions differ, and removing ex-post winners
+  cannot establish lack of edge. Failed-seed footprint exclusions show modest
+  selectivity but no solved churn or action authority. Use its accounting
+  addendum before interpreting older economic summaries.
+
 - V12 has research authority only.
 - Phase 0 has a validated, reproducible C1/C2 parent-event universe. Phase 1A
   has a reproducible rejection-only no-ML prototype and consumed-history V10

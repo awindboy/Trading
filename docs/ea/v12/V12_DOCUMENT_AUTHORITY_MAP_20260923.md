@@ -126,6 +126,18 @@ As of `2026-09-26`, read V12 authority in this order:
 
 ## Schema authority
 
+Current Phase 1W additions:
+
+- `V12_PHASE1W_RETRY_LOCATION_CONTRACT_20260926.md`: frozen two-footprint
+  comparator diagnostic and strict prior-resolution requirement.
+- `results/V12_PHASE1W_RETRY_LOCATION_20260926.md`: current accounting
+  qualifications and both diagnostic results; interpretation precedence over
+  older Phase-1V equity/tail wording, without rewriting historical outputs.
+- `../../../research/v12/build_v12_phase1w.py` and `test_v12_phase1w.py`:
+  raw-M1 reconstruction, source reconciliation, decisions/outcomes, and tests.
+- `../../../research/v12/v12_phase1w_release_manifest.json`: reproducibility
+  receipt. Packs `output/v12_phase1w_retry_location_20260926_b` and `_c`.
+
 - `../../../research/v12/v12_crt_event_contract.schema.json` defines the current
   machine-readable decision/outcome record boundary.
 - `../../../research/v12/validate_v12_event_schema.py` verifies the schema and
