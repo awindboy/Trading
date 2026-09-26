@@ -134,6 +134,11 @@ ownership state removes 74 of 232 Hard-SL Children and shortens the maximum
 streak from five to four, but also removes 107 positive Children and seven of
 16 >=5R Children. Multi-speed sequence has mechanism value, but current
 alignment/ownership is rejected as a broad gate and has no action authority.
+Phase 1V is complete and independently reproduced: correcting the unit to one
+funded entry episode shows 197 positive versus 482 negative episodes, while 57
+tail episodes lift total R above a `-423.25R` non-tail path. Entry-only
+ownership removes first stops but leaves the non-tail count slope virtually
+unchanged and fails positive/tail-episode retention.
 
 ## Non-negotiable causal contract
 
@@ -214,6 +219,12 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
   transfer as a broad V10 admission or conviction-sizing rule; the frozen
   primary saves 74 Hard-SL Children but loses 107 positive and seven >=5R
   Children on consumed data.
+- evaluating entry quality from pooled Child wins, stopped units, or weighted R
+  after Phase 1V; use one entry episode or future true Journey as the admission
+  unit, count a tail Journey once, and keep later-Child management separate.
+- using Phase-1V entry ownership as a gate; it saves 65 first-Child stops but
+  loses 70 positive and 16 tail episodes, while ordinary count slope remains
+  negative.
 - fixed broker-hour/session avoidance, all-news avoidance, or realized surprise
   as a direction oracle; Phase-1D retains only two narrow shadow interactions
   and grants neither action authority.

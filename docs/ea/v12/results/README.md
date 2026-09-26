@@ -74,6 +74,9 @@ The retained numeric receipts are:
 - `V12_PHASE1U_MULTISPEED_HA_OWNERSHIP_20260926.md`: causal FAST/STD/SLOW
   ownership-memory and transition audit. Stop count and streak improve, but
   positive and >=5R Child preservation fail, so alignment is not a gate.
+- `V12_PHASE1V_ENTRY_EPISODE_ACCOUNTING_20260926.md`: one-funded-entry-episode
+  accounting, first-versus-later Child loss decomposition, inter-tail drift,
+  and failed entry-only multi-speed ownership gate.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

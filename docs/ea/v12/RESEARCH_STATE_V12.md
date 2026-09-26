@@ -4,7 +4,7 @@ Last synchronized: `2026-09-26`
 
 ## Status
 
-`PHASE 1U COMPLETE AND REPRODUCIBLE / MULTI-SPEED HA MECHANISM RETAINED / BROAD OWNERSHIP GATE FAILED / NO TRADE AUTHORITY`
+`PHASE 1V COMPLETE AND REPRODUCIBLE / ENTRY EPISODE GRAIN ADOPTED / ORDINARY CURVE NEGATIVE / ENTRY OWNERSHIP FAILED / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -565,6 +565,22 @@ Do not promote:
 - Two builds are byte-identical; tests and pack validation pass. No Phase-1U
   state, policy, or transition has action or sizing authority.
 
+## Closed Phase-1V result
+
+- V10 has 679 funded entry episodes, 197 positive and 482 negative. The 57 tail
+  episodes lift total result to `+646.18R`; the 622 non-tail episodes total
+  `-423.25R`, with a `-342` one-vote count balance.
+- Only seven of 53 inter-tail blocks are positive. Ordinary equity decline is a
+  measured property, not a visual anecdote.
+- First-Child Hard SL identifies a clean entry failure in 144 of 145 cases, but
+  338 negative episodes have no first-Child Hard SL. Another 48 begin with a
+  positive first Child and become negative through later management.
+- Entry-only ownership saves 65 first stops and 16 repeated first stops, but
+  loses 70 positive and 16 tail episodes. The non-tail count slope remains
+  approximately `-0.55`; all ownership states remain negative.
+- Two builds are byte-identical and all source joins reconcile. No Phase-1V
+  accounting result or policy has action or sizing authority.
+
 ## Next hypotheses
 
 These are questions, not rules:
@@ -585,6 +601,8 @@ These are questions, not rules:
 7. Can a future Parent-created Child use FAST, STD, and SLOW as event,
    developing acceptance, and ownership-transfer clocks without converting
    their current alignment into another broad veto?
+8. What causal Journey-birth event distinguishes the 338 negative episodes that
+   do not begin with a first-Child Hard SL from ordinary and tail successes?
 
 ## Evidence boundary
 
@@ -608,7 +626,8 @@ These are questions, not rules:
   weekly-direction veto with retained stop-risk mechanism. Phase 1T is a failed
   direct V10-head feature augmentation with a declared XGBoost platform-parity
   limit. Phase 1U is a failed broad multi-speed ownership gate with retained
-  transition-state mechanism. No V12 EA, MQL5 parity, actual-tick economics, or
-  independent future validation exists.
+  transition-state mechanism. Phase 1V corrects admission accounting to entry-
+  episode grain and rejects entry-only ownership. No V12 EA, MQL5 parity,
+  actual-tick economics, or independent future validation exists.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

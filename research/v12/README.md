@@ -431,6 +431,22 @@ Phase 1U confirms that FAST/STD/SLOW sequence contains transition-state
 information but rejects current ownership/alignment as a broad V10 gate. The
 speed hierarchy remains a role-separated mechanism coordinate only.
 
+## Retained Phase-1V artifacts
+
+- `v12_phase1v_contract.json` and the Phase-1V contract document: frozen entry-
+  episode grain, one-vote journey proxy, policy, and count gates.
+- `build_v12_phase1v.py`: exact Phase-1I/1K/1U reconciliation, first/later Child
+  decomposition, entry-only policy, count curves, and inter-tail blocks.
+- `test_v12_phase1v.py` and `validate_v12_phase1v.py`: sequence/count regression
+  tests and complete-pack population/hash/authority validation.
+- `v12_phase1v_entry_episode_analysis.ipynb`: executed companion analysis and
+  cumulative actual-R versus one-vote-per-episode visualization.
+- `v12_phase1v_release_manifest.json`: compact two-build byte-parity receipt.
+
+Phase 1V adopts entry episode/Journey grain for future admission studies. It
+confirms the negative ordinary V10 path and rejects entry-only ownership as the
+solution; later-Child management remains separately accounted.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

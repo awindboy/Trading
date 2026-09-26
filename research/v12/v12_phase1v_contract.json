@@ -1,0 +1,33 @@
+{
+  "action_authority": false,
+  "common_window_end_inclusive": "2026-08-28T12:00:00",
+  "consumed_development_only": true,
+  "contract_version": "v12-phase1v-entry-episode-accounting-v1",
+  "first_entry_policy": {
+    "admit_states": [
+      "FAST_WITH_MEMORY",
+      "TRANSFER_CONFIRMED"
+    ],
+    "name": "ENTRY_OWNERSHIP_AUTHORIZED",
+    "preserve_complete_admitted_episode": true
+  },
+  "primary_gates": {
+    "avoided_first_stops_per_lost_positive_episode_min": 1.5,
+    "first_child_hard_sl_reduction_min": 0.2,
+    "maximum_years_with_worse_first_stop_rate": 1,
+    "max_streak_must_not_worsen": true,
+    "non_tail_count_curve_slope_must_be_positive": true,
+    "positive_episode_retention_min": 0.9,
+    "repeat_first_stop_reduction_min": 0.3,
+    "side_first_stop_rate_must_not_worsen": true,
+    "tail_episode_retention_min": 0.9,
+    "win_rate_must_improve": true
+  },
+  "source_hashes": {
+    "phase1i_run_episodes_sha256": "69bd8bf4fe16929712915daee860ab217613ece38729445e2b984f223e662eb6",
+    "phase1k_child_policy_ledger_sha256": "bf7db81cbdb33d9e9c166296b15336c32d60dd52d31b81ec7aff9e5816bcee13",
+    "phase1u_child_ledger_sha256": "f2babc17c95e31225057a7b7aa69195cccdbab97b514a20d6d33d62a821ae834"
+  },
+  "unit": "ONE_FUNDED_FAST_RUN_AT_FIRST_ACTUAL_ENTRY",
+  "unit_caveat": "FAST_RUN_IS_AN_ENTRY_EPISODE_PROXY_NOT_A_PROVEN_COMPLETE_MARKET_JOURNEY"
+}

@@ -93,6 +93,10 @@ CRT creates the Parent journey and candidate state
   Chronological FAST/STD/SLOW state reduces Hard-SL count and maximum streak,
   but loses more positive Children than stops and nearly half the >=5R Child
   count. It has mechanism authority only and no veto or sizing authority.
+- Phase 1V has a frozen and byte-reproduced entry-episode accounting result.
+  One-vote-per-episode and inter-tail curves confirm that ordinary V10 drift is
+  negative and sparse tail episodes lift total R. Entry-only ownership reduces
+  first stops but does not change that ordinary process.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -183,8 +187,10 @@ promotion contract exists.
   history M30 replacement despite its targeted repeat-stop reduction; Phase 1S
   rejects weekly state as directional authorization for an existing V10 Child;
   Phase 1T rejects wholesale insertion of the same weekly fields into frozen
-  V10 R4/R5 heads despite useful stop-risk discrimination; and Phase 1U rejects
-  current multi-speed ownership/alignment as a broad admission or sizing rule.
+  V10 R4/R5 heads despite useful stop-risk discrimination; Phase 1U rejects
+  current multi-speed ownership/alignment as a broad admission or sizing rule;
+  and Phase 1V requires entry evaluation at episode/Journey grain rather than
+  pooled Child grain.
 
 ## Closed Phase-1A finding
 
@@ -333,3 +339,11 @@ Do not require FAST/STD/SLOW alignment, wait for both slower speeds, or use the
 frozen ownership gate saves 74 Hard-SL Children but removes 107 positive
 Children and seven of 16 >=5R Children. Retain the speed hierarchy only as a
 role-separated state description inside a separately created Parent/Child.
+
+## Closed Phase-1V finding
+
+Do not judge admission from pooled Child win count or weighted R. One funded
+entry episode is the current proxy unit, and a tail episode counts once. The
+frozen entry-only ownership policy removes `44.83%` of first stops but retains
+only `64.47%` of positive and `71.93%` of tail episodes; non-tail count slope
+remains about `-0.55`. Later-Child management losses remain a separate object.

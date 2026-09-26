@@ -1,0 +1,32 @@
+{
+  "action_authority": false,
+  "byte_identical_manifest_members": 10,
+  "consumed_development_only": true,
+  "contract_version": "v12-phase1v-entry-episode-accounting-v1",
+  "independent_builds": [
+    "output/v12_phase1v_entry_episode_accounting_20260926_a",
+    "output/v12_phase1v_entry_episode_accounting_20260926_b"
+  ],
+  "pack_manifest_sha256": "849ddb0cfcc5e1d096ac6233c6af1aeaa7f4dbee905fcc2136d0f1ced833bdcd",
+  "primary": {
+    "episodes": 420,
+    "first_child_hard_sl_episodes": 80,
+    "first_stops_saved": 65,
+    "non_tail_count_slope": -0.54617414248,
+    "positive_episodes": 127,
+    "positive_episodes_lost": 70,
+    "repeat_first_child_stop_episodes": 12,
+    "status": "FAILED_6_OF_10_GATES",
+    "tail_episodes": 41,
+    "tail_episodes_lost": 16
+  },
+  "source_sha256": {
+    "V12_PHASE1V_ENTRY_EPISODE_ACCOUNTING_CONTRACT_20260926.md": "29c37d7f4f6b76d48d71e8ecc7cbb2879da6a6474ae18045c4a461432b37d327",
+    "build_v12_phase1v.py": "360eb577f85409c2fa6a980a8d48f602a2d30bfdac068007707257711363ab3f",
+    "test_v12_phase1v.py": "9dbfb59fe42f814f2bb6b7932ee50eec228b3ac2ca5848a8325e816a6ec83985",
+    "v12_phase1v_contract.json": "78f37d6ff9c33d2f36fa87764af217957400fe70d29232b212634a4893fae007",
+    "v12_phase1v_entry_episode_analysis.ipynb": "1ce2caa3039844de08f7cecffffb63fae6d721067ace3510aa41686eb64dd3b1",
+    "validate_v12_phase1v.py": "e31f027ea8aa488eaa23893428bf8d94576ca19386a3e7e23c11be5492874401"
+  },
+  "status": "COMPLETE_BYTE_REPRODUCED_PRIMARY_FAILED"
+}

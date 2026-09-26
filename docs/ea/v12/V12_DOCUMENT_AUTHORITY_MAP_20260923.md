@@ -117,6 +117,12 @@ As of `2026-09-26`, read V12 authority in this order:
 52. `results/V12_PHASE1U_MULTISPEED_HA_OWNERSHIP_20260926.md` — byte-reproduced
     stop-count improvement, failed positive/tail preservation, and retained
     role-separated HA mechanism.
+53. `V12_PHASE1V_ENTRY_EPISODE_ACCOUNTING_CONTRACT_20260926.md` — frozen first-
+    actual-entry, one-episode-one-vote, inter-tail drift, and entry-only policy
+    contract.
+54. `results/V12_PHASE1V_ENTRY_EPISODE_ACCOUNTING_20260926.md` — corrected V10
+    economic shape, entry-versus-management decomposition, and failed entry-
+    ownership result.
 
 ## Schema authority
 
@@ -262,6 +268,12 @@ As of `2026-09-26`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1u.py`, and
   `../../../research/v12/v12_phase1u_release_manifest.json` define, validate,
   and receipt the byte-reproduced Phase-1U diagnostic.
+- `../../../research/v12/v12_phase1v_contract.json`,
+  `../../../research/v12/build_v12_phase1v.py`,
+  `../../../research/v12/test_v12_phase1v.py`,
+  `../../../research/v12/validate_v12_phase1v.py`, and
+  `../../../research/v12/v12_phase1v_release_manifest.json` define, validate,
+  and receipt the byte-reproduced Phase-1V diagnostic.
 
 ## Predecessor routing
 
@@ -342,3 +354,7 @@ meaningfully lowers Hard-SL count and maximum streak, but the broad gate removes
 more positive Children than stops and cuts >=5R Child count from 16 to nine.
 FAST/STD/SLOW sequence remains a mechanism coordinate, not an admission or
 sizing rule.
+Phase 1V is complete and reproducible. Correcting the admission unit from Child
+to funded entry episode confirms a persistently negative ordinary count/R path
+between tail journeys. Entry-only ownership saves first stops but removes too
+many positive and tail episodes and does not change the ordinary count slope.

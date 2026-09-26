@@ -4,7 +4,7 @@ Last synchronized: `2026-09-26`
 
 ## Status
 
-`PHASE 1U COMPLETE AND REPRODUCIBLE / MULTI-SPEED HA STATE CONFIRMED BUT BROAD OWNERSHIP GATE REJECTED / NO TRADE AUTHORITY`
+`PHASE 1V COMPLETE AND REPRODUCIBLE / ENTRY GRAIN CORRECTED / NEGATIVE ORDINARY DRIFT CONFIRMED / ENTRY OWNERSHIP REJECTED / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -337,6 +337,21 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 - Two ten-file packs are byte-identical. The primary passes five of nine frozen
   gates and fails. No state or transition has action or sizing authority.
 
+## Completed Phase 1V
+
+- Admission is re-accounted at one funded FAST-run entry episode, with its first
+  actual Child as the start decision. The 730 later Children are management,
+  not 730 additional independent journey starts.
+- The 679 episodes contain 197 positives, 482 negatives, and 57 tail episodes.
+  Non-tail episodes total `-423.25R`; 46 of 53 inter-tail blocks are negative.
+- First-Child Hard SL is a clean bad-start label: 144 of 145 such episodes end
+  negative. But 338 additional negative episodes occur without that first stop.
+- Entry-only ownership changes first stops `145 -> 80` and repeated first stops
+  `28 -> 12`, while positive episodes fall `197 -> 127` and tail episodes
+  `57 -> 41`.
+- Non-tail count slope barely changes `-0.550 -> -0.546`. Every ownership state
+  remains negative on this one-vote ordinary curve. The primary fails.
+
 ## Immediate next work
 
 1. do not tune the Phase-1S feature set, logistic penalty, journey threshold, or
@@ -354,3 +369,7 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 7. do not restore multi-speed HA as three votes or a simple alignment wait;
    retain FAST event, STD developing acceptance, and SLOW ownership transfer as
    distinct shadow roles inside a separately created Parent/Child hypothesis.
+8. evaluate future admission at one entry episode or independently defined true
+   Journey; count tail success once and keep later-Child management separate.
+9. the next entry object must address negative episodes without first-Child Hard
+   SL, not merely filter the 145 clean first-stop failures.
