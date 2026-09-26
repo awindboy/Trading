@@ -1,6 +1,6 @@
 # V13 results
 
-Status: `HA-0..HA-4 OBSERVATION COMPLETE / EXACT-WINDOW OFFICIAL ECONOMIC RECEIPT STILL PENDING`
+Status: `HA-4C/D INTEGRATED OBSERVATION COMPLETE / EXACT-WINDOW OFFICIAL ECONOMIC RECEIPT STILL PENDING`
 
 Store only compact, source-backed result receipts here.
 
@@ -23,6 +23,10 @@ Store only compact, source-backed result receipts here.
   HA context at H4 decisions; no alignment gate.
 - `V13_HA4_H1_STANDARD_HA_RECEIPT_20260927.md` — completed H1 warning,
   false-warning and H4 raw-close redundancy checks; no exit rule.
+- `V13_HA4C_D_INTEGRATED_STATE_RECEIPT_20260927.md` — same-Standard-Journey
+  HA morphology, ordered H1 path, FAST/D1 and PRE/POST EMA wick comparisons;
+  this supplement is required context before interpreting HA-3/4 as complete
+  HA-state research. No action rule.
 
 Generated CSV ledgers and summary JSON are local under
 `output/v13_ha3_20260927/` and are not Git authority. The reproducible source
@@ -32,6 +36,11 @@ HA-4's separately generated D1/H1 decision-feature, future-label and summary
 files are local under `output/v13_ha4_d1_20260927/` and
 `output/v13_ha4_h1_20260927/`. Its source is
 `research/v13/ha4_mtf_audit.py`.
+
+HA-4C/D's regenerated H1/D1 and integrated ledgers are local under
+`output/v13_ha4c_*_20260927/`. Reproduce with `ha4_mtf_audit.py` and
+`research/v13/ha_integrated_state_audit.py`; local ledgers are not Git
+authority.
 
 ## Official Baseline-0 receipt still required
 

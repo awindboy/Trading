@@ -1,7 +1,7 @@
 # V13 research state
 
 Last synchronized: `2026-09-27`
-Status: `BASELINE 0 FROZEN / ACTUAL-TICK STRUCTURAL PARITY CONFIRMED / HA-0..HA-4 OBSERVATION COMPLETE`
+Status: `BASELINE 0 FROZEN / ACTUAL-TICK STRUCTURAL PARITY CONFIRMED / HA-4C/D INTEGRATED OBSERVATION COMPLETE`
 Market: `GOLD# ONLY`
 
 ## 1. Generation reset
@@ -191,6 +191,36 @@ separately; neither timeframe changed Baseline-0 decisions.
 The raw-extreme-already-past variable is a future label. No H1 exit, D1
 alignment filter, changed funding, or MTF score has trading authority.
 
+## 10A. HA-4C/D same-Journey morphology and ordered-context supplement
+
+The earlier HA-3/4 receipts were valid narrow studies, but they did not fully
+carry HA-1/2 morphology and lifecycle questions into representation/MTF
+comparison. The supplement joined all four representations plus D1/H1 to the
+same Standard-H4 decisions and reconstructed the ordered completed-H1 path
+from M1. Source hashes, timeframe parity and the frozen Baseline-0 structure
+matched earlier receipts. Details and limits are in
+`results/V13_HA4C_D_INTEGRATED_STATE_RECEIPT_20260927.md`.
+
+- H1 never-opposed, repaired, ending-opposed-mixed and persistently-opposed
+  paths had next-H4 flip rates 7.9%, 16.1%, 46.6% and 51.1% respectively.
+  This is more informative than a single color-alignment label.
+- But pooled H1 opposed/agree separation of +36.1 points fell to +13.1 or
+  +4.4 points in different H4-body/raw-close overlap displays, covering only
+  2,737 or 1,627 of 4,105 decisions. An independent full-population H1
+  contribution remains unresolved.
+- FAST opposition largely coincided with Standard-H4 Delta contraction
+  (375 of 386 decisions); D1 opposition remained weak for next-H4 flips.
+- PRE/POST EMA2 had identical Open/Close/color but opposite-wick presence
+  differed on 518 decisions. POST wick reappearance was associated with a
+  46.0% next-H4 flip, yet its H4-geometry-overlap difference among continuing
+  Journeys was only +3.3 points over 1,454/3,141 decisions.
+- All 88 >=10-bar Standard Journeys had a last-H1 opposed warning; 254 of
+  their 318 warnings did not precede a next-H4 flip. The median remaining
+  favorable excursion after those warnings was 2.17 trailing-H4 ranges.
+
+These are consumed, overlapping observations. No entry, exit, SL, risk,
+sizing, filter or EA change was made or justified.
+
 ## 11. Active research question
 
 The next question is no longer “which simple filter immediately improves P/L?”
@@ -198,8 +228,9 @@ The next question is no longer “which simple filter immediately improves P/L?�
 It is:
 
 > Can causally confirmed raw-price swing structure distinguish actual
-> continuation/failed breaks from temporary H1 opposition and clarify the
-> H4 HA lifecycle without relying on hindsight pivots?
+> continuation/failed breaks from temporary *ordered-H1* opposition and
+> clarify the H4 HA lifecycle beyond completed-H4 morphology without relying
+> on hindsight pivots?
 
 Roadmap Stage HA-5 studies this without changing trades.
 

@@ -3,7 +3,7 @@
 Last synchronized: `2026-09-27`
 Status: `ACTIVE / BASELINE 0 FROZEN / HA KNOWLEDGE PROGRAM ACTIVE / NO PRODUCTION AUTHORITY`
 Market authority: `GOLD# ONLY`
-Research-update base GitHub HEAD: `bc23a1dddeb79a62660367bed2382039c9871828`
+Research-update base GitHub HEAD: `e953412a43f7133e7774972cd9675842258547c6`
 
 ## 0. Start order
 
@@ -22,8 +22,8 @@ Read in this order:
 9. `V13_EXECUTION_RECOVERY_20260926.md` and
    `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` when execution/tester work matters;
 10. `V13_HA3_REPRESENTATION_COMPARISON_CONTRACT_20260927.md`,
-    `V13_HA4_MTF_OBSERVATION_CONTRACT_20260927.md`, `results/README.md`,
-    and the HA-1..HA-4 receipts;
+    `V13_HA4_MTF_OBSERVATION_CONTRACT_20260927.md`, the HA-4C/D supplement
+    contracts, `results/README.md`, and the HA-1..HA-4C/D receipts;
 11. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` for implementation parity.
 
 ## 1. Why V13 exists
@@ -211,11 +211,14 @@ leverage from the frozen protocol.
 
 ## 11. Current next action
 
-HA-0..HA-4 descriptive work is recorded in compact receipts. HA-4 studied
-D1 and H1 separately. D1's next-H4 separation was weak; H1 opposition was
-strongly associated with transition but issued many false warnings and
-overlapped with H4 raw-close geometry. No MTF veto or exit was promoted.
-Begin HA-5 raw-price structure as observation only.
+HA-0..HA-4C/D descriptive work is recorded in compact receipts. HA-4C/D
+rejoined HA morphology, representation and ordered H1 paths on identical
+Standard-H4 decisions. H1 repair versus persistent opposition separated
+different lifecycle states, but the pooled difference was sensitive to H4
+geometry overlap and binning; all 88 long Journeys had an H1 opposition.
+PRE/POST EMA color equivalence did not imply wick equivalence. D1 added little
+next-H4 distinction. No MTF/FAST/EMA veto or exit was promoted. Begin HA-5
+raw-price structure as observation only.
 
 The exact-window MT5 rerun should still be captured before any strategy variant
 is promoted economically, but it does not block observation-only HA measurement.

@@ -19,13 +19,18 @@ As of `2026-09-27`, read V13 authority in this order:
    observation-only four-representation comparison; not a strategy rule.
 10. `V13_HA4_MTF_OBSERVATION_CONTRACT_20260927.md` — D1 then H1 causal,
     observation-only comparison; no MTF action authority.
-11. `results/README.md` — compact result routing, including HA-1..HA-4.
-12. `results/V13_BASELINE0_EXTENDED_ACTUAL_TICK_DIAGNOSTIC_20260926.md` — latest
+11. `V13_HA4C_INTEGRATED_STATE_CONTRACT_20260927.md` and
+    `V13_HA4D_EMA_MORPHOLOGY_CONTRACT_20260927.md` — observation-only
+    supplements correcting the color-heavy HA-3/4 scope.
+12. `results/README.md` — compact result routing, including HA-4C/D.
+13. `results/V13_HA4C_D_INTEGRATED_STATE_RECEIPT_20260927.md` — same-Journey
+    morphology, ordered-H1, FAST/D1 and EMA-wick evidence; no action rule.
+14. `results/V13_BASELINE0_EXTENDED_ACTUAL_TICK_DIAGNOSTIC_20260926.md` — latest
     actual-tick structural-parity diagnostic; not the official exact-window
     economic receipt.
-13. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` — frozen Baseline-0 MQL5
+15. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` — frozen Baseline-0 MQL5
     implementation.
-14. `../../../mt5/tester/V13HAOnlyMax10.GOLD.actualticks.2024_2026.ini` — starter
+16. `../../../mt5/tester/V13HAOnlyMax10.GOLD.actualticks.2024_2026.ini` — starter
     tester configuration; Strategy Tester GUI remains broker/account authority.
 
 ## Precedence

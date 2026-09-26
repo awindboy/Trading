@@ -155,7 +155,8 @@ def run(m1, exports, stage):
         prior = states[tf].color
         feature = states[tf].update(b)
         if tf == context_tf:
-            context = {"signal": b.time, "known_at": known_at, **feature}
+            context = {"signal": b.time, "known_at": known_at, **feature,
+                       "abs_delta_contract": context is not None and feature["abs_delta"] < context["abs_delta"]}
             if stage == "h1":
                 context_events.append(context)
             return
@@ -191,13 +192,28 @@ def run(m1, exports, stage):
                "context_color": context["color"],
                "context_body_ratio": context["body_ratio"],
                "context_opposite_wick": context["opposite_wick"],
+               "context_abs_delta": context["abs_delta"],
+               "context_delta_contract": context["abs_delta_contract"],
                "context_streak": context["streak"],
                "aligned": context["color"] == side}
         if stage == "h1":
             inside = [e for e in context_events if b.time <= e["signal"] < known_at]
+            opposed_path = [e["color"] != side for e in inside]
+            trailing_opposed = 0
+            for opposed in reversed(opposed_path):
+                if not opposed:
+                    break
+                trailing_opposed += 1
             obs["h1_bars_in_h4"] = len(inside)
             obs["h1_flips_in_h4"] = sum(e["color"] != e["prior_color"] for e in inside)
-            obs["h1_opposed_bars_in_h4"] = sum(e["color"] != side for e in inside)
+            obs["h1_opposed_bars_in_h4"] = sum(opposed_path)
+            obs["h1_opposed_path"] = "".join("1" if value else "0" for value in opposed_path)
+            obs["h1_trailing_opposed"] = trailing_opposed
+            obs["h1_path_state"] = (
+                "no_opposition" if not any(opposed_path) else
+                "repaired" if not opposed_path[-1] else
+                "persistent_opposition" if all(opposed_path) else
+                "unrepaired_mixed")
             # Retain only the next H4 bar's possible H1 events.
             context_events[:] = [e for e in context_events if e["signal"] >= b.time]
         h4.append(obs)

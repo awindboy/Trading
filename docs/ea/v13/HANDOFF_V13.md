@@ -1,13 +1,15 @@
 # V13 handoff
 
 Last synchronized: `2026-09-27`
-Status: `BASELINE 0 FROZEN / HA-0..HA-4 OBSERVATION COMPLETE / HA-5 NEXT`
+Status: `BASELINE 0 FROZEN / HA-4C/D INTEGRATED OBSERVATION COMPLETE / HA-5 NEXT`
 
 ## Resume point
 
-V13 uses the simple EA as an observation instrument. HA-0..HA-4 research
-receipts now document morphology, lifecycle, and four predeclared HA
-representations. They are consumed development evidence, not trading rules.
+V13 uses the simple EA as an observation instrument. HA-0..HA-4C/D research
+receipts document morphology, lifecycle, four HA representations and D1/H1
+context on the **same** Standard-H4 Journey. These are consumed development
+evidence, not trading rules. HA-4C/D specifically repaired the earlier
+color-heavy comparison scope; it did not prove a safe exit.
 
 The latest uploaded MT5 report is an extended real-tick run through
 `2026-09-26`. Its canonical prefix confirms the intended Journey/Child structure:
@@ -61,7 +63,7 @@ The useful result is that it exposes HA behavior:
 This is not authority to ban SHORTs, lower the ten-Child cap, or add a fixed
 late-Child rule.
 
-## Completed observation work — HA-0..HA-4
+## Completed observation work — HA-0..HA-4C/D
 
 The Baseline-0 EA strategy remains unchanged. Decision ledgers record completed
 H4 raw/HA OHLC, HA body/Delta/range/wick geometry, streak and Child index.
@@ -78,16 +80,25 @@ short-lived Journeys, or vice versa. HA-4: D1 alignment weakly separated
 next-H4 flips (22.8% aligned versus 24.3% opposed); H1 opposition separated
 them more (11.2% versus 47.3%) but 735 of 1,395 H1-opposed decisions did
 not flip next H4 and all 88 long Journeys had at least one such warning.
-Much of H1's pooled separation overlaps with H4 raw-close geometry. No
-threshold or trade rule was promoted.
+Much of H1's pooled separation overlaps with H4 raw-close geometry. HA-4C/D
+then separated H1 opposition that repaired within the H4 bar (16.1% next-H4
+flip, 1,073 decisions) from opposition remaining at the end (46.6%-51.1%,
+depending on its H1 path). However, H1's +36.1-point pooled opposition
+contrast shrank to +13.1 or +4.4 points in different H4-morphology/raw-close
+overlap bins, with incomplete coverage. All 88 long Journeys had at least one
+H1-opposed warning, and 254 of their 318 warnings were not followed by a
+next-H4 flip. PRE/POST EMA2 color identity hid 518 decisions with different
+opposite-wick presence. No threshold or trade rule was promoted; see the
+HA-4C/D receipt before interpreting HA-3 or HA-4 in isolation.
 
 ## Immediate next work — HA-5
 
 Observe causal raw-price swing structure alongside unchanged H4 standard HA.
 Confirm a swing only when its required later bars have completed; compare
 actual traded highs/lows and failed/continued breaks to HA-2 lifecycle and
-the HA-4 H1 warning. Start with decision-time structure and separate future
-outcomes. No swing, D1 or H1 veto/exit is authorized.
+the HA-4C/D ordered-H1 warning and H4 morphology. Start with decision-time
+structure and separate future outcomes. No swing, D1, H1, FAST or EMA veto/
+exit is authorized.
 
 HA-3's PRE-EMA2 and POST-EMA2 color sequences were identical under the stated
 linear formulas. HA-4's H1 warning needs false-warning and tail-preservation

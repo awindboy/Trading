@@ -380,6 +380,10 @@ Stopping a branch is a successful V13 result.
 
 `HA-5 Causally confirmed raw-price structure complement`
 
-HA-0..HA-4 descriptive receipts and the HA-3/HA-4 observation contracts are
-under `results/` and the V13 root respectively. No EA strategy modification is
-authorized by any of them. HA-5 begins observation-only.
+HA-0..HA-4 descriptive receipts and the HA-4C/D integrated-state supplement
+are under `results/` and the V13 root respectively. The supplement exposed
+ordered-H1 repair/persistence and EMA wick distinctions, but also strong
+overlap with H4 morphology and major false-warning cost in long Journeys.
+No EA strategy modification is authorized by any of these receipts. HA-5
+begins observation-only and must compare against the *full* H4 morphology and
+ordered-H1 state, not just color alignment.

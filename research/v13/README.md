@@ -1,6 +1,6 @@
 # V13 research code
 
-V13 has one observation-only Python audit:
+V13's observation-only Python audits:
 
 `ha_representation_audit.py` reproduces HA-0..HA-3 descriptive ledgers from
 chronological GOLD# H4 and raw M1 source files. It is not an EA feature stack,
@@ -13,6 +13,17 @@ export path used only to verify OHLC parity. It writes decision-time features,
 future labels and a compact summary separately under
 `output/v13_ha4_d1_20260927/` or `output/v13_ha4_h1_20260927/`. No D1/H1
 field changes Baseline-0 trading.
+
+For HA-4C/D, rerun `ha4_mtf_audit.py` into *new* local D1/H1 output
+directories; it now also records the ordered within-H4 H1 color path and
+completed-context Delta contraction. Then run
+`ha_integrated_state_audit.py --ha3 <HA-3 output> --h1 <new H1 output>
+--d1 <new D1 output> --output <local integrated output>`. The integration
+checks source hashes, timeframe parity, identical Standard-H4 Journey IDs and
+PRE/POST EMA2 Open/Close/color identity. It writes matched decision features,
+future labels and a compact JSON summary separately. It is neither a strategy
+variant nor a real-tick economic backtest. The contracts and compact findings
+are under `docs/ea/v13/` and `docs/ea/v13/results/`.
 
 The active baseline implementation is:
 
