@@ -4,10 +4,12 @@
 //| GOLD# / RESEARCH TESTER ONLY / NO PRODUCTION AUTHORITY           |
 //+------------------------------------------------------------------+
 #property strict
-#property version   "13.001"
+#property version   "13.002"
 #property description "V13 Baseline 0: standard H4 HA, one Child per same-color completed bar, max 10, opposite HA close-all/reverse."
 
+#ifndef V13_EXECUTION_TEST
 #include <Trade/Trade.mqh>
+#endif
 
 input long   InpMagicNumber     = 1300260926;
 input double InpLotPerChild     = 0.01;
@@ -32,6 +34,41 @@ int      g_journey_direction = 0; // +1 LONG/BULL, -1 SHORT/BEAR
 int      g_children          = 0;
 int      g_journey_id        = 0;
 bool     g_halted            = false;
+bool     g_pending_entry     = false;
+bool     g_pending_close     = false;
+datetime g_signal_time       = 0;
+datetime g_execution_bar     = 0;
+datetime g_next_attempt      = 0;
+datetime g_last_signal       = 0;
+int      g_target_color      = 0;
+int      g_retry_delay       = 1;
+int      g_retry_count       = 0;
+
+// Only explicit non-execution responses are safe to resend. A timeout,
+// PLACED, partial ENTRY, or connection ambiguity must never create a duplicate.
+bool Retryable(const uint code)
+  {
+   return(code==TRADE_RETCODE_MARKET_CLOSED || code==TRADE_RETCODE_REQUOTE ||
+          code==TRADE_RETCODE_PRICE_CHANGED || code==TRADE_RETCODE_PRICE_OFF ||
+          code==TRADE_RETCODE_TOO_MANY_REQUESTS);
+  }
+
+void ResetRetry()
+  {
+   g_next_attempt=0;
+   g_retry_delay=1;
+  }
+
+void DeferExecution(const string action,const uint code)
+  {
+   g_retry_count++;
+   g_next_attempt=TimeCurrent()+g_retry_delay;
+   // Log once per retry, never once per tick; no blocking Sleep loop.
+   PrintFormat("V13_RETRY|action=%s|retcode=%u|delay=%d|signal=%s|positions=%d",
+               action,code,g_retry_delay,
+               TimeToString(g_signal_time,TIME_DATE|TIME_SECONDS),CountOwnPositions());
+   g_retry_delay=(int)MathMin(30,g_retry_delay*2);
+  }
 
 //+------------------------------------------------------------------+
 string DirectionName(const int direction)
@@ -178,6 +215,7 @@ bool InitializeHAState()
    g_last_ha_close=prev_ha_close;
    g_last_ha_color=prev_color;
    g_ha_ready=true;
+   g_last_signal=last_completed;
 
    if(InpVerbose)
       PrintFormat("V13_INIT|symbol=%s|last_completed=%s|ha_open=%.5f|ha_close=%.5f|color=%d|warmup_bars=%d",
@@ -217,10 +255,24 @@ bool PlaceChild(const int direction,const datetime signal_bar_time,const datetim
                   TimeToString(signal_bar_time,TIME_DATE|TIME_MINUTES),
                   TimeToString(execution_bar_time,TIME_DATE|TIME_MINUTES),
                   (uint)trade.ResultRetcode(),trade.ResultRetcodeDescription(),GetLastError());
+      const uint code=(uint)trade.ResultRetcode();
+      if(Retryable(code) && CountOwnPositions()==g_children)
+         DeferExecution("ENTRY",code);
+      else
+         HaltRun(StringFormat("ENTRY unresolved/permanent failure; do not resend retcode=%u",code));
+      return false;
+     }
+
+   // DONE must correspond to exactly one full independent hedging position.
+   if(CountOwnPositions()!=g_children+1 ||
+      MathAbs(trade.ResultVolume()-InpLotPerChild)>1e-8)
+     {
+      HaltRun("ENTRY success cannot be reconciled to one full Child");
       return false;
      }
 
    g_children=next_child;
+   ResetRetry();
    PrintFormat("V13_EVENT|ENTRY|journey=%d|child=%d|dir=%s|signal=%s|exec=%s|deal=%I64u|price=%.5f|volume=%.2f",
                g_journey_id,g_children,DirectionName(direction),
                TimeToString(signal_bar_time,TIME_DATE|TIME_MINUTES),
@@ -233,10 +285,11 @@ bool PlaceChild(const int direction,const datetime signal_bar_time,const datetim
 bool CloseAllJourneyPositions(const datetime signal_bar_time,const datetime execution_bar_time)
   {
    const int expected=CountOwnPositions();
-   if(expected!=g_children)
+   if(expected>g_children)
      {
       PrintFormat("V13_STATE_FAIL|reason=position_count_mismatch_before_close|journey=%d|children=%d|positions=%d",
                   g_journey_id,g_children,expected);
+      HaltRun("unexpected extra positions during close");
       return false;
      }
 
@@ -247,6 +300,7 @@ bool CloseAllJourneyPositions(const datetime signal_bar_time,const datetime exec
         {
          PrintFormat("V13_ORDER_FAIL|action=SELECT_FOR_CLOSE|journey=%d|ticket=%I64u|last_error=%d",
                      g_journey_id,ticket,GetLastError());
+         HaltRun("cannot select own position during close");
          return false;
         }
 
@@ -256,15 +310,29 @@ bool CloseAllJourneyPositions(const datetime signal_bar_time,const datetime exec
 
       ResetLastError();
       const bool request_ok=trade.PositionClose(ticket,(ulong)InpDeviationPoints);
-      if(!request_ok || !TradeRetcodeDone())
+      const uint code=(uint)trade.ResultRetcode();
+      const bool remains=PositionSelectByTicket(ticket);
+      if((!request_ok || !TradeRetcodeDone()) || remains)
         {
          PrintFormat("V13_ORDER_FAIL|action=EXIT|journey=%d|ticket=%I64u|comment=%s|signal=%s|exec_bar=%s|retcode=%u|ret=%s|last_error=%d",
                      g_journey_id,ticket,child_comment,
                      TimeToString(signal_bar_time,TIME_DATE|TIME_MINUTES),
                      TimeToString(execution_bar_time,TIME_DATE|TIME_MINUTES),
                      (uint)trade.ResultRetcode(),trade.ResultRetcodeDescription(),GetLastError());
+         if(code==TRADE_RETCODE_DONE_PARTIAL && remains &&
+            PositionGetDouble(POSITION_VOLUME)<volume)
+            DeferExecution("EXIT_REMAINDER",code);
+         else if(Retryable(code) && remains &&
+                 MathAbs(PositionGetDouble(POSITION_VOLUME)-volume)<1e-8)
+            DeferExecution("EXIT",code);
+         else if(code==TRADE_RETCODE_POSITION_CLOSED && !remains)
+            continue;
+         else
+            HaltRun(StringFormat("EXIT unresolved/permanent failure; retcode=%u",code));
          return false;
         }
+
+      ResetRetry();
 
       PrintFormat("V13_EVENT|EXIT|journey=%d|ticket=%I64u|comment=%s|signal=%s|exec=%s|deal=%I64u|entry=%.5f|exit=%.5f|volume=%.2f",
                   g_journey_id,ticket,child_comment,
@@ -278,6 +346,7 @@ bool CloseAllJourneyPositions(const datetime signal_bar_time,const datetime exec
      {
       PrintFormat("V13_STATE_FAIL|reason=positions_remain_after_close|journey=%d|remaining=%d",
                   g_journey_id,remaining);
+      HaltRun("unexpected remaining positions after close");
       return false;
      }
 
@@ -297,28 +366,48 @@ bool StartJourney(const int direction,const datetime signal_bar_time,const datet
                TimeToString(signal_bar_time,TIME_DATE|TIME_MINUTES),
                TimeToString(execution_bar_time,TIME_DATE|TIME_MINUTES));
 
-   if(!PlaceChild(direction,signal_bar_time,execution_bar_time))
-     {
-      PrintFormat("V13_PENDING_ENTRY retcode=%u desc=%s", trade.ResultRetcode(), trade.ResultRetcodeDescription());
-      return false;
-     }
+   g_pending_entry=true;
    return true;
   }
 
 //+------------------------------------------------------------------+
-void ProcessCompletedH4(const datetime execution_bar_time)
+void ServiceExecution()
   {
-   MqlRates completed[1];
-   const int copied=CopyRates(_Symbol,SIGNAL_TF,1,1,completed);
-   if(copied!=1)
-     {
-      PrintFormat("V13_PENDING_ENTRY retcode=%u desc=%s", trade.ResultRetcode(), trade.ResultRetcodeDescription());
+   if(g_halted || TimeCurrent()<g_next_attempt)
       return;
+   if(g_pending_close)
+     {
+      if(!CloseAllJourneyPositions(g_signal_time,g_execution_bar))
+         return;
+      PrintFormat("V13_EVENT|JOURNEY_END|journey=%d|children=%d|exec=%s",
+                  g_journey_id,g_children,TimeToString(TimeCurrent(),TIME_DATE|TIME_SECONDS));
+      g_pending_close=false;
+      g_active_journey=false;
+      g_children=0;
+      g_journey_direction=0;
+      // Closing is latched. Reopen only in the latest completed HA direction,
+      // not a stale reversal that failed hours ago.
+      StartJourney(g_target_color,g_signal_time,g_execution_bar);
      }
+   if(g_pending_entry)
+     {
+      if(CountOwnPositions()!=g_children)
+        {
+         HaltRun("position mismatch before pending ENTRY");
+         return;
+        }
+      if(PlaceChild(g_journey_direction,g_signal_time,g_execution_bar))
+         g_pending_entry=false;
+     }
+  }
 
-   const datetime signal_bar_time=completed[0].time;
+// Signal consumption never submits orders. This prevents catch-up orders when
+// history is temporarily unavailable and several bars arrive together.
+void ObserveCompletedH4(const MqlRates &completed,const datetime execution_bar_time)
+  {
+   const datetime signal_bar_time=completed.time;
    const int previous_color=g_last_ha_color;
-   const double hc=(completed[0].open+completed[0].high+completed[0].low+completed[0].close)/4.0;
+   const double hc=(completed.open+completed.high+completed.low+completed.close)/4.0;
    const double ho=(g_last_ha_open+g_last_ha_close)/2.0;
    const int ha_color=HAColor(ho,hc,previous_color);
 
@@ -326,6 +415,16 @@ void ProcessCompletedH4(const datetime execution_bar_time)
    g_last_ha_open=ho;
    g_last_ha_close=hc;
    g_last_ha_color=ha_color;
+   g_last_signal=signal_bar_time;
+
+   if(g_pending_entry)
+      PrintFormat("V13_ENTRY_EXPIRED|old_signal=%s|new_signal=%s",
+                  TimeToString(g_signal_time,TIME_DATE|TIME_MINUTES),
+                  TimeToString(signal_bar_time,TIME_DATE|TIME_MINUTES));
+   g_pending_entry=false;
+   g_signal_time=signal_bar_time;
+   g_execution_bar=execution_bar_time;
+   g_target_color=ha_color;
 
    if(InpVerbose)
       PrintFormat("V13_EVENT|HA_CLOSE|bar=%s|known_at=%s|ha_open=%.5f|ha_close=%.5f|color=%d|prev_color=%d",
@@ -339,6 +438,9 @@ void ProcessCompletedH4(const datetime execution_bar_time)
 
    if(ha_color==0 || previous_color==0)
       return;
+
+   if(g_pending_close)
+      return; // continue closing even if color changes again before market opens
 
    if(!g_active_journey)
      {
@@ -360,8 +462,7 @@ void ProcessCompletedH4(const datetime execution_bar_time)
      {
       if(g_children<MAX_CHILDREN)
         {
-         if(!PlaceChild(g_journey_direction,signal_bar_time,execution_bar_time))
-            HaltRun("same-color Child entry failed");
+         g_pending_entry=true;
         }
       else if(InpVerbose)
         {
@@ -373,26 +474,32 @@ void ProcessCompletedH4(const datetime execution_bar_time)
      }
 
    // Opposite completed HA: close all old Children, then start the opposite Journey.
-   const int old_journey=g_journey_id;
-   const int old_children=g_children;
-   const int old_direction=g_journey_direction;
+   g_pending_close=true;
+   ResetRetry(); // a newly required exit takes priority over a failed entry
+  }
 
-   if(!CloseAllJourneyPositions(signal_bar_time,execution_bar_time))
+bool ProcessCompletedH4(const datetime execution_bar_time)
+  {
+   MqlRates completed[];
+   ArraySetAsSeries(completed,false);
+   const datetime latest=iTime(_Symbol,SIGNAL_TF,1);
+   if(latest<=g_last_signal)
+      return false;
+   ResetLastError();
+   const int copied=CopyRates(_Symbol,SIGNAL_TF,g_last_signal+1,latest,completed);
+   // Do not mark the H4 boundary consumed before its data are actually present.
+   if(copied<=0 || completed[copied-1].time!=latest)
      {
-      HaltRun("Journey close-all failed");
-      return;
+      if(TimeCurrent()>=g_next_attempt)
+        {
+         PrintFormat("V13_HISTORY_WAIT|err=%d|latest=%s",GetLastError(),TimeToString(latest));
+         g_next_attempt=TimeCurrent()+5;
+        }
+      return false;
      }
-
-   PrintFormat("V13_EVENT|JOURNEY_END|journey=%d|dir=%s|children=%d|signal=%s|exec=%s",
-               old_journey,DirectionName(old_direction),old_children,
-               TimeToString(signal_bar_time,TIME_DATE|TIME_MINUTES),
-               TimeToString(TimeCurrent(),TIME_DATE|TIME_SECONDS));
-
-   g_active_journey=false;
-   g_journey_direction=0;
-   g_children=0;
-
-   StartJourney(ha_color,signal_bar_time,execution_bar_time);
+   for(int i=0;i<copied && !g_halted;i++)
+      ObserveCompletedH4(completed[i],execution_bar_time);
+   return !g_halted;
   }
 
 //+------------------------------------------------------------------+
@@ -404,7 +511,7 @@ int OnInit()
       return INIT_FAILED;
      }
 
-   if(!ValidateRequestedVolume())
+   if(InpDeviationPoints<0 || InpMagicNumber<=0 || !ValidateRequestedVolume())
      {
       PrintFormat("V13_INIT_FAIL|reason=invalid InpLotPerChild %.8f for symbol volume constraints",InpLotPerChild);
       return INIT_FAILED;
@@ -418,7 +525,11 @@ int OnInit()
 
    trade.SetExpertMagicNumber(InpMagicNumber);
    trade.SetDeviationInPoints(InpDeviationPoints);
-   trade.SetTypeFillingBySymbol(_Symbol);
+   if(!trade.SetTypeFillingBySymbol(_Symbol))
+     {
+      Print("V13_INIT_FAIL|reason=unsupported symbol filling mode");
+      return INIT_FAILED;
+     }
    trade.SetAsyncMode(false);
 
    g_current_h4_open=iTime(_Symbol,SIGNAL_TF,0);
@@ -441,10 +552,10 @@ int OnInit()
 //+------------------------------------------------------------------+
 void OnDeinit(const int reason)
   {
-   PrintFormat("V13_DEINIT|reason=%d|halted=%s|active=%s|journey=%d|children=%d|positions=%d",
+   PrintFormat("V13_DEINIT|reason=%d|halted=%s|active=%s|journey=%d|children=%d|positions=%d|retries=%d|pending_entry=%d|pending_close=%d",
                reason,g_halted ? "true" : "false",
                g_active_journey ? "true" : "false",
-               g_journey_id,g_children,CountOwnPositions());
+               g_journey_id,g_children,CountOwnPositions(),g_retry_count,g_pending_entry,g_pending_close);
   }
 
 //+------------------------------------------------------------------+
@@ -454,10 +565,15 @@ void OnTick()
       return;
 
    const datetime current_h4_open=iTime(_Symbol,SIGNAL_TF,0);
-   if(current_h4_open<=0 || current_h4_open==g_current_h4_open)
+   if(current_h4_open<=0)
       return;
 
-   g_current_h4_open=current_h4_open;
-   ProcessCompletedH4(current_h4_open);
+   if(current_h4_open!=g_current_h4_open)
+     {
+      if(!ProcessCompletedH4(current_h4_open))
+         return; // never execute a stale pending entry while new HA is unknown
+      g_current_h4_open=current_h4_open;
+     }
+   ServiceExecution();
   }
 //+------------------------------------------------------------------+

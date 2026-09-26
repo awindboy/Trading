@@ -19,6 +19,10 @@ As of `2026-09-26`, read V13 in this order:
 
 ## Precedence
 
+Execution revision: `V13_EXECUTION_RECOVERY_20260926.md` supersedes the initial
+halt-on-any-order-failure paragraph. EA version 13.002 is the current compiled
+implementation; use the same revision for every economic comparator.
+
 V13 controls active strategy research. V12 and earlier remain historical
 records. If an older document suggests importing CRT, liquidity, ML, Wave,
 multi-speed HA, structural SL, or another filter into the active baseline, that

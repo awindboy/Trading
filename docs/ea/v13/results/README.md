@@ -4,6 +4,9 @@ Status: `OFFICIAL BASELINE-0 MT5 RESULT PENDING`
 
 Store only compact, source-backed result receipts here.
 
+`V13_EXECUTION_13002_TEST_RECEIPT_20260926.md` records compilation and 17
+synthetic execution checks. It is not the official baseline economic report.
+
 The first expected receipt is:
 
 `V13_BASELINE0_MT5_ACTUAL_TICK_RESULT_20260926.md`

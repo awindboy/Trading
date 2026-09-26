@@ -5,6 +5,11 @@ Status: `BASELINE 0 FROZEN / EA READY / OFFICIAL MT5 BACKTEST REPORT PENDING`
 
 ## Resume point
 
+EA 13.002 now retries recoverable execution errors and resumes partial close-all
+without duplicate entries. Read `V13_EXECUTION_RECOVERY_20260926.md`. Compilation
+passes and 17 deterministic MT5 fault-injection assertions pass; this is not a
+GOLD# actual-tick economic result. Replace the old EX5 before the baseline run.
+
 1. Refresh GitHub `main`.
 2. Read `AGENTS_V13.md` and the authority map.
 3. Do not modify Baseline 0 before its first official MT5 tester report is

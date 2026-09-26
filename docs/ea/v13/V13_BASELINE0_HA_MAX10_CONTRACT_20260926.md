@@ -146,11 +146,13 @@ Any addition creates a new named V13 experiment.
 
 Trade execution failure is not a market signal.
 
-The baseline EA does not invent retries. If an intended market open/close does
-not receive a successful trade-server result, the EA logs a `V13_HALT` record
-and stops generating further trades for that run.
+User-authorized execution revision 13.002 replaces the original halt-on-any-
+failure policy. `V13_EXECUTION_RECOVERY_20260926.md` defines bounded-rate retries
+for explicit transient non-execution responses, latest-H4 entry expiry, and
+remaining-position close recovery. No stale entry backlog is funded.
 
-That run is execution-invalid until the failure is understood.
+The strategy skeleton is unchanged, but delayed execution must be disclosed.
+Ambiguous/permanent failures still log V13_HALT and invalidate that run.
 
 ## 12. Official evaluation
 

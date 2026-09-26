@@ -86,8 +86,11 @@ reconstructions may be used as deterministic sanity checks, but they are not a
 substitute for the tester report.
 
 Baseline 0 intentionally has no SL or TP, so its main execution uncertainty is
-market-order fill/close handling at H4 boundaries. The EA fails closed on a
-trade-operation error rather than silently retrying or fabricating a fill.
+market-order fill/close handling at H4 boundaries. Execution revision 13.002
+retries explicit transient rejections, expires stale entries, and resumes
+remaining closes without reversing early. Ambiguous/permanent failures still
+halt. See `docs/ea/v13/V13_EXECUTION_RECOVERY_20260926.md`; this explicit
+user-authorized execution repair is not a strategy retry/cooldown rule.
 
 ## Historical generations
 

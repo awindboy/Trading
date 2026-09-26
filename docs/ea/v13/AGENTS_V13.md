@@ -119,10 +119,11 @@ be reported as the primary performance comparison.
 Official economics come from MT5 Strategy Tester with `Every tick based on real
 ticks`.
 
-The EA is a research EA, not a live system. It deliberately fails closed on an
-order/close failure. It does not invent a retry schedule. A failure must remain
-visible in the Journal and invalidate that run until the execution issue is
-understood.
+The EA is a research EA, not a live system. Execution revision 13.002 follows
+`V13_EXECUTION_RECOVERY_20260926.md`: explicit transient rejections are retried
+without duplicate entries; remaining closes resume before any reversal.
+Ambiguous/permanent failures still halt and invalidate the run. Successful
+recoveries and stale-entry expiry remain visible in the Journal.
 
 A hedging account/tester mode is required so each Child remains an independent
 position and can be inspected in the history.

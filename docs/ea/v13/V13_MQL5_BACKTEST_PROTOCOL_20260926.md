@@ -6,6 +6,9 @@ EA: `V13HAOnlyMax10EA.mq5`
 
 ## 1. Canonical run
 
+Use compiled EA version 13.002 (execution recovery). See
+`V13_EXECUTION_RECOVERY_20260926.md`. Old 13.001 failure semantics are superseded.
+
 Use MetaTrader 5 Strategy Tester:
 
 ```text
@@ -57,6 +60,10 @@ pre-existing V13 magic positions
 ```
 
 If any appears, do not interpret the economic report.
+
+`V13_RETRY` and a subsequently successful fill/close are not HALT. Report retry
+count, `V13_ENTRY_EXPIRED` count and final pending-entry/pending-close flags.
+Pending operations at the end of the window require explicit boundary disclosure.
 
 ## 4. What to export
 

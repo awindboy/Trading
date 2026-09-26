@@ -79,6 +79,12 @@ Until the MT5 tester report exists, V13 does not yet know:
 
 ## 6. Next evidence gate
 
+Execution revision 13.002 fixes transient-failure handling without adding a
+strategy component. Both production EA and fault harness compile cleanly, and
+17 injected execution assertions pass in MT5. The audit terminal lacks GOLD#;
+the official full-window actual-tick result remains pending. See the execution
+recovery note for retry, expiry, partial close and unresolved-failure limits.
+
 No new strategy layer should be researched before the baseline EA is compiled
 and the full-window actual-tick report is frozen.
 
