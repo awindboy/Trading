@@ -7,6 +7,13 @@ chronological GOLD# H4 and raw M1 source files. It is not an EA feature stack,
 trading signal generator, or an official economic backtest. Decision fields and
 future labels are written separately under `output/v13_ha3_20260927/`.
 
+`ha4_mtf_audit.py` streams raw GOLD# M1 to reconstruct H4 plus one context
+timeframe. Run `--stage d1` and `--stage h1` separately, with the matching
+export path used only to verify OHLC parity. It writes decision-time features,
+future labels and a compact summary separately under
+`output/v13_ha4_d1_20260927/` or `output/v13_ha4_h1_20260927/`. No D1/H1
+field changes Baseline-0 trading.
+
 The active baseline implementation is:
 
 `../../mt5/experts/V13HAOnlyMax10EA.mq5`

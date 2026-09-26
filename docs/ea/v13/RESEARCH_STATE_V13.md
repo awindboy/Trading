@@ -1,7 +1,7 @@
 # V13 research state
 
 Last synchronized: `2026-09-27`
-Status: `BASELINE 0 FROZEN / ACTUAL-TICK STRUCTURAL PARITY CONFIRMED / HA-0..HA-3 OBSERVATION COMPLETE`
+Status: `BASELINE 0 FROZEN / ACTUAL-TICK STRUCTURAL PARITY CONFIRMED / HA-0..HA-4 OBSERVATION COMPLETE`
 Market: `GOLD# ONLY`
 
 ## 1. Generation reset
@@ -170,18 +170,40 @@ All findings use already-consumed 2024-2026 development data. No variant has
 been promoted into the baseline EA, and the official exact-window real-tick
 economic receipt is still pending.
 
-## 10. Active research question
+## 10. HA-4 D1 and H1 completed-HA update
+
+HA-4 reconstructed completed D1 and H1 standard HA from chronological raw
+M1, with zero OHLC mismatches against the exported H4/D1/H1 bars and the same
+965-Journey/3,858-Child baseline structure. The stages were analyzed
+separately; neither timeframe changed Baseline-0 decisions.
+
+- Last completed D1 color opposed versus aligned to the H4 Journey showed
+  next-H4 flip rates 24.3% versus 22.8%. H4-morphology and year/side cuts did
+  not support a robust next-flip distinction. Its three-H4-bar difference
+  remains exploratory development evidence, not a D1 veto.
+- Last completed H1 opposed versus aligned showed 47.3% versus 11.2% next-H4
+  flips and 54.6% versus 18.2% final raw-extreme-already-past labels. But
+  735 of 1,395 opposed-H1 decisions did not flip next H4, and all 88 long
+  Journeys had at least one opposed-H1 warning. The pooled contrast shares
+  much information with H4 raw-close versus HA geometry; H1's distinct
+  actionable contribution is not established.
+
+The raw-extreme-already-past variable is a future label. No H1 exit, D1
+alignment filter, changed funding, or MTF score has trading authority.
+
+## 11. Active research question
 
 The next question is no longer “which simple filter immediately improves P/L?”
 
 It is:
 
-> Does D1 standard HA supply distinct causal context for H4 lifecycle state,
-> and separately does H1 reveal transition earlier without importing noise?
+> Can causally confirmed raw-price swing structure distinguish actual
+> continuation/failed breaks from temporary H1 opposition and clarify the
+> H4 HA lifecycle without relying on hindsight pivots?
 
-Roadmap Stage HA-4 studies these separately without changing trades.
+Roadmap Stage HA-5 studies this without changing trades.
 
-## 11. Promotion boundary
+## 12. Promotion boundary
 
 Observation may begin now. Strategy modification may not.
 

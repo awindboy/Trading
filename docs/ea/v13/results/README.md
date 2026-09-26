@@ -1,6 +1,6 @@
 # V13 results
 
-Status: `HA-0..HA-3 OBSERVATION COMPLETE / EXACT-WINDOW OFFICIAL ECONOMIC RECEIPT STILL PENDING`
+Status: `HA-0..HA-4 OBSERVATION COMPLETE / EXACT-WINDOW OFFICIAL ECONOMIC RECEIPT STILL PENDING`
 
 Store only compact, source-backed result receipts here.
 
@@ -19,10 +19,19 @@ Store only compact, source-backed result receipts here.
   lag and giveback anatomy; no exit rule.
 - `V13_HA3_REPRESENTATION_COMPARISON_RECEIPT_20260927.md` — STD, FAST-R25 and
   pre/post-EMA2 descriptive comparison; no representation promoted.
+- `V13_HA4_D1_STANDARD_HA_RECEIPT_20260927.md` — last completed D1 standard
+  HA context at H4 decisions; no alignment gate.
+- `V13_HA4_H1_STANDARD_HA_RECEIPT_20260927.md` — completed H1 warning,
+  false-warning and H4 raw-close redundancy checks; no exit rule.
 
 Generated CSV ledgers and summary JSON are local under
 `output/v13_ha3_20260927/` and are not Git authority. The reproducible source
 is `research/v13/ha_representation_audit.py`.
+
+HA-4's separately generated D1/H1 decision-feature, future-label and summary
+files are local under `output/v13_ha4_d1_20260927/` and
+`output/v13_ha4_h1_20260927/`. Its source is
+`research/v13/ha4_mtf_audit.py`.
 
 ## Official Baseline-0 receipt still required
 

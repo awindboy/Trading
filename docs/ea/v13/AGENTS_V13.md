@@ -3,7 +3,7 @@
 Last synchronized: `2026-09-27`
 Status: `ACTIVE / BASELINE 0 FROZEN / HA KNOWLEDGE PROGRAM ACTIVE / NO PRODUCTION AUTHORITY`
 Market authority: `GOLD# ONLY`
-Research-update base GitHub HEAD: `be1c6db8aaa3b986c59ae99f8809575bc0b1c123`
+Research-update base GitHub HEAD: `bc23a1dddeb79a62660367bed2382039c9871828`
 
 ## 0. Start order
 
@@ -22,7 +22,8 @@ Read in this order:
 9. `V13_EXECUTION_RECOVERY_20260926.md` and
    `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` when execution/tester work matters;
 10. `V13_HA3_REPRESENTATION_COMPARISON_CONTRACT_20260927.md`,
-    `results/README.md`, and the HA-1..HA-3 receipts;
+    `V13_HA4_MTF_OBSERVATION_CONTRACT_20260927.md`, `results/README.md`,
+    and the HA-1..HA-4 receipts;
 11. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` for implementation parity.
 
 ## 1. Why V13 exists
@@ -210,9 +211,11 @@ leverage from the frozen protocol.
 
 ## 11. Current next action
 
-HA-0..HA-3 descriptive work is recorded in the compact receipts. Begin HA-4
-with D1 standard HA as observation-only context; study H1 separately afterward.
-Do not import either timeframe into the Baseline-0 EA without a new contract.
+HA-0..HA-4 descriptive work is recorded in compact receipts. HA-4 studied
+D1 and H1 separately. D1's next-H4 separation was weak; H1 opposition was
+strongly associated with transition but issued many false warnings and
+overlapped with H4 raw-close geometry. No MTF veto or exit was promoted.
+Begin HA-5 raw-price structure as observation only.
 
 The exact-window MT5 rerun should still be captured before any strategy variant
 is promoted economically, but it does not block observation-only HA measurement.

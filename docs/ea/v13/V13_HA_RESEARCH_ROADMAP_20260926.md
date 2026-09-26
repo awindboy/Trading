@@ -378,8 +378,8 @@ Stopping a branch is a successful V13 result.
 
 ## 4. Current next step
 
-`HA-4 Multi-timeframe standard HA observation: D1 first, H1 separately`
+`HA-5 Causally confirmed raw-price structure complement`
 
-HA-0..HA-3 descriptive receipts and the HA-3 frozen comparison contract are
+HA-0..HA-4 descriptive receipts and the HA-3/HA-4 observation contracts are
 under `results/` and the V13 root respectively. No EA strategy modification is
-authorized by any of them. HA-4 begins observation-only.
+authorized by any of them. HA-5 begins observation-only.

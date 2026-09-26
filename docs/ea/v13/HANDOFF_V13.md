@@ -1,11 +1,11 @@
 # V13 handoff
 
 Last synchronized: `2026-09-27`
-Status: `BASELINE 0 FROZEN / HA-0..HA-3 OBSERVATION COMPLETE / HA-4 NEXT`
+Status: `BASELINE 0 FROZEN / HA-0..HA-4 OBSERVATION COMPLETE / HA-5 NEXT`
 
 ## Resume point
 
-V13 uses the simple EA as an observation instrument. HA-0..HA-3 research
+V13 uses the simple EA as an observation instrument. HA-0..HA-4 research
 receipts now document morphology, lifecycle, and four predeclared HA
 representations. They are consumed development evidence, not trading rules.
 
@@ -61,7 +61,7 @@ The useful result is that it exposes HA behavior:
 This is not authority to ban SHORTs, lower the ten-Child cap, or add a fixed
 late-Child rule.
 
-## Completed observation work — HA-0..HA-3
+## Completed observation work — HA-0..HA-4
 
 The Baseline-0 EA strategy remains unchanged. Decision ledgers record completed
 H4 raw/HA OHLC, HA body/Delta/range/wick geometry, streak and Child index.
@@ -74,20 +74,27 @@ HA-1: stronger HA body and clean opposite-wick morphology corresponded to
 longer persistence, but are overlapping geometry, not two independent signals.
 HA-2: median raw-extreme-to-exit lag was 7.35h and median giveback 21.41
 GOLD price. HA-3: changing responsiveness exchanged shorter lag for more
-short-lived Journeys, or vice versa. No threshold or trade rule was promoted.
+short-lived Journeys, or vice versa. HA-4: D1 alignment weakly separated
+next-H4 flips (22.8% aligned versus 24.3% opposed); H1 opposition separated
+them more (11.2% versus 47.3%) but 735 of 1,395 H1-opposed decisions did
+not flip next H4 and all 88 long Journeys had at least one such warning.
+Much of H1's pooled separation overlaps with H4 raw-close geometry. No
+threshold or trade rule was promoted.
 
-## Immediate next work — HA-4
+## Immediate next work — HA-5
 
-Observe D1 standard HA alongside the H4 baseline on the full canonical window.
-Then study H1 standard HA separately around H4 transitions. Start with
-decision-time state and future outcomes in separate ledgers. No D1/H1 veto,
-score, or Baseline-0 trading action is authorized.
+Observe causal raw-price swing structure alongside unchanged H4 standard HA.
+Confirm a swing only when its required later bars have completed; compare
+actual traded highs/lows and failed/continued breaks to HA-2 lifecycle and
+the HA-4 H1 warning. Start with decision-time structure and separate future
+outcomes. No swing, D1 or H1 veto/exit is authorized.
 
-HA-3 found a clear responsiveness/persistence trade-off, not an economic
-winner. Its PRE-EMA2 and POST-EMA2 color sequences were identical under the
-stated linear formulas, so do not count them as independent color evidence.
+HA-3's PRE-EMA2 and POST-EMA2 color sequences were identical under the stated
+linear formulas. HA-4's H1 warning needs false-warning and tail-preservation
+accounting before any action experiment. The exact-window actual-tick
+Baseline-0 receipt remains pending.
 
 ## Following order
 
-After HA-4, follow the roadmap. Do not jump directly to EMA/ADX/ML merely because
+After HA-5, follow the roadmap. Do not jump directly to EMA/ADX/ML merely because
 external sources combine them successfully in examples.
