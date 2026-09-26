@@ -415,6 +415,22 @@ improves, but the old capital map cannot use it efficiently and R4 augmentation
 destroys tail. The control's XGBoost STOP/R7G platform mismatch is explicit;
 the result is deterministic diagnostic evidence, not exact MT5 parity.
 
+## Retained Phase-1U artifacts
+
+- `v12_phase1u_contract.json` and the Phase-1U contract document: frozen
+  chronological ownership memory, state vocabulary, policies, and count gates.
+- `build_v12_phase1u.py`: verified raw-M1 H4 rebuild, exact MT5-ledger join,
+  multi-speed transition classification, and count-first scorecards.
+- `test_v12_phase1u.py` and `validate_v12_phase1u.py`: state-ordering regression
+  tests and complete-pack population/hash/authority validation.
+- `v12_phase1u_multispeed_ha_analysis.ipynb`: reproducible inspection of policy,
+  state, and k1 transition counts.
+- `v12_phase1u_release_manifest.json`: compact two-build byte-parity receipt.
+
+Phase 1U confirms that FAST/STD/SLOW sequence contains transition-state
+information but rejects current ownership/alignment as a broad V10 gate. The
+speed hierarchy remains a role-separated mechanism coordinate only.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

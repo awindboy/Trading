@@ -71,6 +71,9 @@ The retained numeric receipts are:
 - `V12_PHASE1T_V10_DIRECT_FEATURE_RETRAIN_20260926.md`: direct weekly-feature
   retraining inside frozen V10 heads. STOP metrics improve, but capital and tail
   gates fail; XGBoost STOP/R7G control parity remains explicitly incomplete.
+- `V12_PHASE1U_MULTISPEED_HA_OWNERSHIP_20260926.md`: causal FAST/STD/SLOW
+  ownership-memory and transition audit. Stop count and streak improve, but
+  positive and >=5R Child preservation fail, so alignment is not a gate.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

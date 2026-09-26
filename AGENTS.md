@@ -129,6 +129,11 @@ directly adding weekly clock/price/event fields to the frozen V10 heads improves
 STOP-head discrimination but fails the capital gate. The primary loses about
 42% of net R and >=5R tail for about 5% fewer refit stopped units. Two builds
 are byte-identical, but XGBoost STOP and R7G parity versus MT5 are not exact.
+Phase 1U is complete and independently reproduced: chronological FAST/STD/SLOW
+ownership state removes 74 of 232 Hard-SL Children and shortens the maximum
+streak from five to four, but also removes 107 positive Children and seven of
+16 >=5R Children. Multi-speed sequence has mechanism value, but current
+alignment/ownership is rejected as a broad gate and has no action authority.
 
 ## Non-negotiable causal contract
 
@@ -205,6 +210,10 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
 - adding Phase-1T weekly clock, price, boundary, or event fields wholesale to
   frozen V10 R4/R5 heads; better STOP AUC does not produce useful R7G capital
   allocation, and the R4 ranking destroys right-tail capital.
+- using Phase-1U FAST/STD/SLOW ownership, current alignment, or `00_TO_11`
+  transfer as a broad V10 admission or conviction-sizing rule; the frozen
+  primary saves 74 Hard-SL Children but loses 107 positive and seven >=5R
+  Children on consumed data.
 - fixed broker-hour/session avoidance, all-news avoidance, or realized surprise
   as a direction oracle; Phase-1D retains only two narrow shadow interactions
   and grants neither action authority.

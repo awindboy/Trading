@@ -1,10 +1,10 @@
 # V12 handoff
 
-Last synchronized: `2026-09-25`
+Last synchronized: `2026-09-26`
 
 ## Status
 
-`PHASE 1R COMPLETE AND REPRODUCIBLE / M30 REPEAT-STOP SIGNAL CONFIRMED BUT FULL-HISTORY V10 REPLACEMENT REJECTED / NO TRADE AUTHORITY`
+`PHASE 1U COMPLETE AND REPRODUCIBLE / MULTI-SPEED HA STATE CONFIRMED BUT BROAD OWNERSHIP GATE REJECTED / NO TRADE AUTHORITY`
 
 V12 begins because V10/V11 did not selectively remove enough stopped Children.
 The new base is CRT journey structure, not a FAST-HA ledger with another veto.
@@ -322,6 +322,21 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
   sign parity is `2,817/2,839` and R7G weight parity `2,793/2,839`. The result
   is deterministic and byte-reproduced, but not exact MT5 replacement evidence.
 
+## Completed Phase 1U
+
+- FAST remains the event sensor; the most recent strictly prior STD/SLOW
+  agreement supplies causal ownership memory. Current bars cannot rewrite their
+  own pre-decision memory.
+- The frozen broad ownership policy changes `1,649 -> 1,331` Children and
+  `232 -> 158` Hard-SL Children, while win rate rises `38.51% -> 39.67%` and
+  maximum stop streak falls `5 -> 4`.
+- It also removes `107` positive Children, `16` >=3R Children, and seven of the
+  16 >=5R Children. Only `0.69` Hard SL is avoided per lost positive Child.
+- Confirmed transfer has the cleanest k1 stop rate, but challenge and return-to-
+  memory states still contain substantial positive and >=5R Children.
+- Two ten-file packs are byte-identical. The primary passes five of nine frozen
+  gates and fails. No state or transition has action or sizing authority.
+
 ## Immediate next work
 
 1. do not tune the Phase-1S feature set, logistic penalty, journey threshold, or
@@ -336,3 +351,6 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
    preserve GOLD# 2021 and post-cutoff chronology.
 6. do not append the Phase-1T weekly blocks wholesale to V10 heads or tune the
    old `EV>0` allocation map on consumed data.
+7. do not restore multi-speed HA as three votes or a simple alignment wait;
+   retain FAST event, STD developing acceptance, and SLOW ownership transfer as
+   distinct shadow roles inside a separately created Parent/Child hypothesis.

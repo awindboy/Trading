@@ -89,6 +89,10 @@ CRT creates the Parent journey and candidate state
   result. Weekly features improve STOP metrics but fail capital preservation;
   R4 augmentation removes right-tail capital. R4 parity is exact, while
   XGBoost STOP/R7G parity remains incomplete and explicitly limits the claim.
+- Phase 1U has a frozen and byte-reproduced multi-speed HA ownership result.
+  Chronological FAST/STD/SLOW state reduces Hard-SL count and maximum streak,
+  but loses more positive Children than stops and nearly half the >=5R Child
+  count. It has mechanism authority only and no veto or sizing authority.
 - There is no V12 EA, validated entry model, sizing rule, actual-tick result, or
   independent future result.
 - The supplied Romeo CRT guide is a secondary synthesis. It is a source, not an
@@ -178,8 +182,9 @@ promotion contract exists.
   as a deep-churn warning after two prior stops; Phase 1R rejects the full-
   history M30 replacement despite its targeted repeat-stop reduction; Phase 1S
   rejects weekly state as directional authorization for an existing V10 Child;
-  and Phase 1T rejects wholesale insertion of the same weekly fields into frozen
-  V10 R4/R5 heads despite useful stop-risk discrimination.
+  Phase 1T rejects wholesale insertion of the same weekly fields into frozen
+  V10 R4/R5 heads despite useful stop-risk discrimination; and Phase 1U rejects
+  current multi-speed ownership/alignment as a broad admission or sizing rule.
 
 ## Closed Phase-1A finding
 
@@ -320,3 +325,11 @@ the frozen V10 heads, and do not promote the STOP-only ablations from better
 AUC. The primary saves only `4.90%` of refit stopped units while losing about
 `42%` of net R and >=5R tail. The direct control also lacks exact XGBoost
 STOP/R7G parity with MT5, so no Phase-1T output has sizing or action authority.
+
+## Closed Phase-1U finding
+
+Do not require FAST/STD/SLOW alignment, wait for both slower speeds, or use the
+`00_TO_11` transition as consumed-data permission to enlarge a V10 Child. The
+frozen ownership gate saves 74 Hard-SL Children but removes 107 positive
+Children and seven of 16 >=5R Children. Retain the speed hierarchy only as a
+role-separated state description inside a separately created Parent/Child.

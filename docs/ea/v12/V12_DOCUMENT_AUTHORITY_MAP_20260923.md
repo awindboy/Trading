@@ -112,6 +112,11 @@ As of `2026-09-26`, read V12 authority in this order:
 50. `results/V12_PHASE1T_V10_DIRECT_FEATURE_RETRAIN_20260926.md` — deterministic
     primary failure, head-placement explanation, and declared platform-parity
     limitation.
+51. `V12_PHASE1U_MULTISPEED_HA_OWNERSHIP_CONTRACT_20260926.md` — frozen causal
+    FAST/STD/SLOW ownership-memory, transition, count-first, and tail gates.
+52. `results/V12_PHASE1U_MULTISPEED_HA_OWNERSHIP_20260926.md` — byte-reproduced
+    stop-count improvement, failed positive/tail preservation, and retained
+    role-separated HA mechanism.
 
 ## Schema authority
 
@@ -251,6 +256,12 @@ As of `2026-09-26`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1t.py`, and
   `../../../research/v12/v12_phase1t_release_manifest.json` define and receipt
   the deterministic Phase-1T diagnostic and its explicit control-parity limit.
+- `../../../research/v12/v12_phase1u_contract.json`,
+  `../../../research/v12/build_v12_phase1u.py`,
+  `../../../research/v12/test_v12_phase1u.py`,
+  `../../../research/v12/validate_v12_phase1u.py`, and
+  `../../../research/v12/v12_phase1u_release_manifest.json` define, validate,
+  and receipt the byte-reproduced Phase-1U diagnostic.
 
 ## Predecessor routing
 
@@ -326,3 +337,8 @@ retraining improves STOP-head metrics but fails capital preservation, while
 the R4-augmented ranking removes far more right-tail capital than stops. Its
 R4 parity is exact; XGBoost STOP/R7G parity is explicitly incomplete, so it is
 not exact MT5 replacement evidence and has no action authority.
+Phase 1U is complete and reproducible. Chronological multi-speed ownership
+meaningfully lowers Hard-SL count and maximum streak, but the broad gate removes
+more positive Children than stops and cuts >=5R Child count from 16 to nine.
+FAST/STD/SLOW sequence remains a mechanism coordinate, not an admission or
+sizing rule.

@@ -1,10 +1,10 @@
 # V12 research state
 
-Last synchronized: `2026-09-25`
+Last synchronized: `2026-09-26`
 
 ## Status
 
-`PHASE 1I COMPLETE AND REPRODUCIBLE / RUN-EPISODE ORACLE VALUABLE / FIRST-DECISION POLICY FAILED / NO TRADE AUTHORITY`
+`PHASE 1U COMPLETE AND REPRODUCIBLE / MULTI-SPEED HA MECHANISM RETAINED / BROAD OWNERSHIP GATE FAILED / NO TRADE AUTHORITY`
 
 ## Established inputs
 
@@ -550,6 +550,21 @@ Do not promote:
 - Two builds are byte-identical. R4 parity is exact, while XGBoost STOP/R7G
   parity versus the supplied MT5 ledger remains incomplete and explicit.
 
+## Closed Phase-1U result
+
+- The exact MT5-selected control has 1,649 Children, 232 Hard-SL Children, 635
+  positive Children, 16 >=5R Children, and a maximum stop streak of five.
+- The frozen ownership gate has 1,331 Children, 158 Hard-SL Children, 528
+  positive Children, nine >=5R Children, and a maximum streak of four.
+- Stop rate improves on both sides and in every represented year, but 74 avoided
+  stops cost 107 positive Children. Positive retention is `83.15%` and >=5R
+  retention `56.25%`, so the count-quality and tail gates fail.
+- Causal k1 transition `00_TO_11` has a low `13.53%` stop rate, but persistent
+  opposition retains four >=5R Children and `108.48R`. Transition sequence is
+  informative but not an authorization rule.
+- Two builds are byte-identical; tests and pack validation pass. No Phase-1U
+  state, policy, or transition has action or sizing authority.
+
 ## Next hypotheses
 
 These are questions, not rules:
@@ -567,6 +582,9 @@ These are questions, not rules:
 6. Can a future-frozen Parent-created candidate use weekly transition risk as
    calibration context without letting it compete with R4 for broad ranking or
    reusing the failed `EV>0` R7G map?
+7. Can a future Parent-created Child use FAST, STD, and SLOW as event,
+   developing acceptance, and ownership-transfer clocks without converting
+   their current alignment into another broad veto?
 
 ## Evidence boundary
 
@@ -589,7 +607,8 @@ These are questions, not rules:
   failed full-history M30/V10 replacement comparison, and Phase 1S is a failed
   weekly-direction veto with retained stop-risk mechanism. Phase 1T is a failed
   direct V10-head feature augmentation with a declared XGBoost platform-parity
-  limit. No V12 EA, MQL5 parity, actual-tick economics, or independent future
-  validation exists.
+  limit. Phase 1U is a failed broad multi-speed ownership gate with retained
+  transition-state mechanism. No V12 EA, MQL5 parity, actual-tick economics, or
+  independent future validation exists.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

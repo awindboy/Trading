@@ -1,0 +1,51 @@
+{
+  "contract_version": "v12-phase1u-multispeed-ha-ownership-v1",
+  "status": "FROZEN BEFORE PHASE1U OUTCOME EVALUATION / CONSUMED DEVELOPMENT ONLY",
+  "cutoff": "2026-08-28T23:57:00",
+  "economic_window": {
+    "start_inclusive": "2024-10-01T00:00:00",
+    "end_inclusive": "2026-08-28T12:00:00"
+  },
+  "source_hashes": {
+    "raw_m1_prefix_sha256": "626d81d3d6ba94ac80d00748fa83e11ff5ec90df7fb6c98688c77f20d1604ff2",
+    "mt5_event_ledger_sha256": "c4348a34aa35d1e9793283cebbf1a028327c10e3e1c5a4fde2a9e74e3ff801a7"
+  },
+  "memory_rule": "most recent strictly-prior completed H4 where STD and SLOW agree; current bar updates memory only after classification",
+  "states": [
+    "FAST_WITH_MEMORY",
+    "FAST_ONLY_CHALLENGE",
+    "STD_LEADS_TRANSFER",
+    "SLOW_ONLY_CONFLICT",
+    "TRANSFER_CONFIRMED",
+    "MEMORY_UNAVAILABLE"
+  ],
+  "primary_policy": {
+    "name": "OWNERSHIP_AUTHORIZED",
+    "keep_states": ["FAST_WITH_MEMORY", "TRANSFER_CONFIRMED"],
+    "scope": "all exact MT5-selected V10 Children",
+    "entry_stop_exit_weight": "unchanged"
+  },
+  "explanatory_policy": {
+    "name": "K1_OWNERSHIP_ONLY",
+    "keep_states": ["FAST_WITH_MEMORY", "TRANSFER_CONFIRMED"],
+    "scope": "k1 only; retain every selected k2+ Child",
+    "authority": "failure explanation only"
+  },
+  "primary_count_gates": {
+    "hard_sl_reduction_min": 0.2,
+    "positive_child_retention_min": 0.9,
+    "ge3r_child_retention_min": 0.9,
+    "ge5r_child_retention_min": 0.9,
+    "avoided_hard_sl_per_lost_positive_min": 2.0,
+    "win_rate_must_not_worsen": true,
+    "max_stop_streak_must_not_worsen": true,
+    "side_hard_sl_rate_must_not_worsen": true,
+    "maximum_years_with_worse_hard_sl_rate": 1
+  },
+  "evidence": {
+    "consumed_development_only": true,
+    "action_authority": false,
+    "gold_2021_sealed": true,
+    "post_cutoff_unread": true
+  }
+}

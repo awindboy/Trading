@@ -1,0 +1,31 @@
+{
+  "action_authority": false,
+  "byte_identical_manifest_members": 10,
+  "consumed_development_only": true,
+  "contract_version": "v12-phase1u-multispeed-ha-ownership-v1",
+  "independent_builds": [
+    "output/v12_phase1u_multispeed_ha_ownership_20260926_a",
+    "output/v12_phase1u_multispeed_ha_ownership_20260926_b"
+  ],
+  "pack_manifest_sha256": "b237c23029f6f53ea4ae6dfd1a6e27af3028c0cff30c4540442fd8e6c707786a",
+  "primary": {
+    "avoided_hard_sl_per_lost_positive": 0.691588785047,
+    "children": 1331,
+    "ge5r_children": 9,
+    "hard_sl_children": 158,
+    "hard_sl_saved": 74,
+    "max_stop_streak": 4,
+    "positive_children": 528,
+    "positive_children_lost": 107,
+    "status": "FAILED_5_OF_9_GATES"
+  },
+  "source_sha256": {
+    "V12_PHASE1U_MULTISPEED_HA_OWNERSHIP_CONTRACT_20260926.md": "e0426844ed3c90f6b26f07c91a2b94b023ca0ccd97e863e97af8f4c383cb579e",
+    "build_v12_phase1u.py": "400312750c78b8fcfb5210b7b737ae4d0460eb143439c025482eb58f9bd6e400",
+    "test_v12_phase1u.py": "f74566f3c4dc5c3e00de836abebf4ebf5052652661481c723c7496b252768017",
+    "v12_phase1u_contract.json": "6e452dbf3e51d76261a2a3175ac928cae640c52a64c453821b8681609a3403a9",
+    "v12_phase1u_multispeed_ha_analysis.ipynb": "fe323ea44bfde7ba9c553afca800f07bb33fdad20b3e58c8cdc1428500bd7782",
+    "validate_v12_phase1u.py": "d8632650f0d53866addf8c465d29674ef43c88649518d09a5aecfc39236e8618"
+  },
+  "status": "COMPLETE_BYTE_REPRODUCED_PRIMARY_FAILED"
+}
