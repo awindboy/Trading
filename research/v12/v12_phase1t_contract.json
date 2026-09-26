@@ -1,0 +1,61 @@
+{
+  "contract_version": "v12-phase1t-v10-direct-feature-retrain-v1",
+  "status": "FROZEN BEFORE PHASE1T MODEL EVALUATION / CONSUMED DEVELOPMENT ONLY",
+  "cutoff": "2026-08-28T23:57:00",
+  "economic_window": {
+    "start_inclusive": "2024-10-01T00:00:00",
+    "end_inclusive": "2026-08-28T12:00:00"
+  },
+  "source_hashes": {
+    "raw_m1_full_sha256": "fd6b1c886519b544b00dfdcf0ee390970e29c54bb3bf7530c3bd1ef52aa47250",
+    "calendar_snapshot_sha256": "a3fc252157638a72052df4dc5b3d305932d114698dd977bc3c4b529f93ff101a",
+    "calendar_time_overrides_sha256": "87e08ee68948003ca2edb1e6dbfb7259867deb40d3a3b8d22f7208af01ea16ac",
+    "frozen_model_specs_sha256": "1cf11b70e338acbd4972e68d52c3c78afb8174d3225c0e0daba451e3d54885fb",
+    "mt5_event_ledger_sha256": "c4348a34aa35d1e9793283cebbf1a028327c10e3e1c5a4fde2a9e74e3ff801a7",
+    "v10_child_ledger_sha256": "cfee70fa0985f5b4eac4b04357a0add5795b745ba3d95ba7be56ebd7d648c4c6"
+  },
+  "feature_variants": {
+    "V10_CONTROL": [],
+    "V10_WEEK_CLOCK": ["CLOCK_FEATURES"],
+    "V10_WEEK_PRICE": ["PRICE_FEATURES"],
+    "V10_WEEK_PRICE_EVENT": ["PRICE_FEATURES", "EVENT_FEATURES"],
+    "V10_WEEK_PRICE_R4_ONLY": ["PRICE_FEATURES -> R4 only; post-primary explanatory ablation"],
+    "V10_WEEK_PRICE_STOP_ONLY": ["PRICE_FEATURES -> R5 STOP only; post-primary explanatory ablation"],
+    "V10_WEEK_PRICE_R5_BOTH": ["PRICE_FEATURES -> both R5 heads; post-primary explanatory ablation"],
+    "V10_WEEK_PRICE_EVENT_STOP_ONLY": ["PRICE_FEATURES + EVENT_FEATURES -> R5 STOP only; post-primary explanatory ablation"]
+  },
+  "post_primary_ablation_status": "added only to explain the already-observed primary failure; no selection, gate, or authority effect",
+  "primary_variant": "V10_WEEK_PRICE",
+  "incremental_event_variant": "V10_WEEK_PRICE_EVENT",
+  "model_policy": {
+    "seed": 261017,
+    "missing_value_policy": "fill_zero_after_explicit availability fields",
+    "feature_selection": "none; append the frozen block to each frozen head-specific V10 feature list",
+    "hyperparameter_selection": "none; preserve the frozen stage-direction head family, parameters, recency and R4 score source",
+    "r4": "frozen LightGBM quantile score head; previous-quarter same-stage-direction q50/q75 maps to 0/1/3",
+    "r5": "frozen stage-direction STOP classifier plus conditional non-stop R regressor",
+    "r7g": "recompute chronologically from the altered R4/R5 eligible set using prior exited eligible Children in the latest 180 completed H4 indices"
+  },
+  "control_parity": {
+    "r4_action_match_required": 1.0,
+    "r5_ev_sign_match_required": 1.0,
+    "r7g_weight_match_required": 1.0,
+    "failure_effect": "economic comparison is diagnostic-only and cannot claim direct V10 retraining parity"
+  },
+  "primary_gates": {
+    "child_retention_min": 0.9,
+    "net_r_retention_min": 0.9,
+    "right_tail_ge5_r_retention_min": 0.9,
+    "stopped_units_per_100_improvement_min": 0.1,
+    "equal_stopped_unit_budget_r_ratio_min": 1.0,
+    "max_stop_streak_must_not_worsen": true,
+    "both_sides_stop_density_must_not_worsen": true,
+    "maximum_negative_annual_deltas": 1
+  },
+  "evidence": {
+    "consumed_development_only": true,
+    "action_authority": false,
+    "gold_2021_sealed": true,
+    "post_cutoff_unread": true
+  }
+}

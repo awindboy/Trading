@@ -534,6 +534,22 @@ Do not promote:
   still contains `248.94R` and `123.90R` of >=5R tail. It is a high-variance
   transition state, not an unnecessary-direction state.
 
+## Closed Phase-1T result
+
+- Direct all-head weekly-price retraining reduces selected Children
+  `1,649 -> 1,561` and stopped Children `232 -> 214`, but refit stopped-unit
+  density slightly worsens and maximum streak remains five.
+- Net R falls `722.47 -> 421.89`; >=5R tail falls `283.59 -> 163.06`; all three
+  years and both sides lose R.
+- R4-only ablation identifies ranking displacement as the main damage. The
+  removed baseline set carries `210.22` weighted R and `106.37R` of >=5R tail;
+  the added set carries `-33.34R` and no >=5R tail.
+- STOP-only weekly price improves AUC and log loss but saves only four refit
+  stopped units while losing `40.66R`. Event response saves eight and loses
+  `42.87R`. Predictive lift does not imply a useful capital mapping.
+- Two builds are byte-identical. R4 parity is exact, while XGBoost STOP/R7G
+  parity versus the supplied MT5 ledger remains incomplete and explicit.
+
 ## Next hypotheses
 
 These are questions, not rules:
@@ -548,6 +564,9 @@ These are questions, not rules:
    ledgers before any Strategy Tester economics are claimed?
 5. If future evidence fails, should all lower-clock and weekly-state models
    remain diagnostic while only explicit CRT Parent branches create candidates?
+6. Can a future-frozen Parent-created candidate use weekly transition risk as
+   calibration context without letting it compete with R4 for broad ranking or
+   reusing the failed `EV>0` R7G map?
 
 ## Evidence boundary
 
@@ -568,7 +587,9 @@ These are questions, not rules:
   stop interaction diagnostic, Phase 1P is an intermediate-clock boundary
   diagnostic, Phase 1Q is a deep stop-chain warning diagnostic, Phase 1R is a
   failed full-history M30/V10 replacement comparison, and Phase 1S is a failed
-  weekly-direction veto with retained stop-risk mechanism. No V12 EA, MQL5
-  parity, actual-tick economics, or independent future validation exists.
+  weekly-direction veto with retained stop-risk mechanism. Phase 1T is a failed
+  direct V10-head feature augmentation with a declared XGBoost platform-parity
+  limit. No V12 EA, MQL5 parity, actual-tick economics, or independent future
+  validation exists.
 - The post-`2026-09-18 23:57` prices in the supplied files remain unread by the
   official builder and reserved for a later frozen shadow.

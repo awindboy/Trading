@@ -107,6 +107,11 @@ As of `2026-09-26`, read V12 authority in this order:
     causal weekly-journey direction and V10 capital-preservation contract.
 48. `results/V12_PHASE1S_V10_WEEKLY_JOURNEY_DIRECTION_20260926.md` —
     reproducible stop-risk discrimination and failed directional-veto result.
+49. `V12_PHASE1T_V10_DIRECT_FEATURE_RETRAIN_CONTRACT_20260926.md` — frozen
+    direct V10-head weekly-feature retraining and capital-preservation contract.
+50. `results/V12_PHASE1T_V10_DIRECT_FEATURE_RETRAIN_20260926.md` — deterministic
+    primary failure, head-placement explanation, and declared platform-parity
+    limitation.
 
 ## Schema authority
 
@@ -240,6 +245,12 @@ As of `2026-09-26`, read V12 authority in this order:
   `../../../research/v12/validate_v12_phase1s.py`, and
   `../../../research/v12/v12_phase1s_release_manifest.json` define, validate,
   and receipt the independently reproduced Phase-1S pack.
+- `../../../research/v12/v12_phase1t_contract.json`,
+  `../../../research/v12/v12_phase1t_v10_frozen_model_specs.json`,
+  `../../../research/v12/build_v12_phase1t.py`,
+  `../../../research/v12/validate_v12_phase1t.py`, and
+  `../../../research/v12/v12_phase1t_release_manifest.json` define and receipt
+  the deterministic Phase-1T diagnostic and its explicit control-parity limit.
 
 ## Predecessor routing
 
@@ -310,3 +321,8 @@ Phase 1S is complete and reproducible. Continuous weekly path and released-
 event response separate Hard-SL risk, but the flagged state retains most >=5R
 tail and fails the directional-veto and capital-preservation gates. It has no
 veto, sizing, entry, or trade authority.
+Phase 1T is complete as a deterministic diagnostic. Direct weekly-feature
+retraining improves STOP-head metrics but fails capital preservation, while
+the R4-augmented ranking removes far more right-tail capital than stops. Its
+R4 parity is exact; XGBoost STOP/R7G parity is explicitly incomplete, so it is
+not exact MT5 replacement evidence and has no action authority.

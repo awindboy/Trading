@@ -398,6 +398,23 @@ Phase 1S retains weekly settlement and boundary consumption only as transition-
 risk information. It rejects both full V10 direction veto and extra-unit guard
 because stopped exposure falls much less than right-tail capital.
 
+## Retained Phase-1T artifacts
+
+- `v12_phase1t_contract.json` and the Phase-1T contract document: frozen
+  primary direct-head augmentation question and explicit post-primary ablation
+  boundary.
+- `v12_phase1t_v10_frozen_model_specs.json`: recovered frozen stage/direction
+  R4/R5 family, feature, recency, parameter, and score-source specification.
+- `build_v12_phase1t.py`: raw-M1 causal universe/weekly-state rebuild, direct
+  head retraining, chronological R7G reconstruction, and capital audit.
+- `validate_v12_phase1t.py` and `v12_phase1t_release_manifest.json`: complete-
+  pack integrity, causal, ablation, declared-parity, and two-build byte receipt.
+
+Phase 1T rejects wholesale weekly-feature insertion into V10. STOP prediction
+improves, but the old capital map cannot use it efficiently and R4 augmentation
+destroys tail. The control's XGBoost STOP/R7G platform mismatch is explicit;
+the result is deterministic diagnostic evidence, not exact MT5 parity.
+
 Large ledgers and diagnostics belong under ignored `output/`.
 
 ## Predecessor reuse boundary

@@ -1,0 +1,23 @@
+{
+  "contract_version": "v12-phase1t-v10-direct-feature-retrain-v1",
+  "status": "COMPLETE_DETERMINISTIC_DIAGNOSTIC_CONTROL_PARITY_LIMITED_PRIMARY_FAILED",
+  "independent_builds": [
+    "output/v12_phase1t_v10_direct_feature_retrain_20260926_b",
+    "output/v12_phase1t_v10_direct_feature_retrain_20260926_c"
+  ],
+  "byte_identical_manifest_members": 11,
+  "pack_manifest_sha256": "4d8f5f4ec1329bb145fb946db58a05cd9a85cad402ea32ab7b4b5c1ed68f9aea",
+  "source_sha256": {
+    "v12_phase1t_contract.json": "17506b91cb6cbd4dfeecb6977826c1fc9073a1e9c00b9ed8dbd5931592728605",
+    "v12_phase1t_v10_frozen_model_specs.json": "1cf11b70e338acbd4972e68d52c3c78afb8174d3225c0e0daba451e3d54885fb",
+    "build_v12_phase1t.py": "920f2e338286738e82fa36fcfce27c004870ecd3da7d59591dd820cc0708f51b",
+    "validate_v12_phase1t.py": "69437858be9223f2182f40863737db0d68cb565fc3a8d415cbea05756577e125"
+  },
+  "parity": {
+    "r4_action": "2839/2839",
+    "r5_ev_sign": "2817/2839",
+    "r7g_weight": "2793/2839"
+  },
+  "primary_pass": false,
+  "action_authority": false
+}

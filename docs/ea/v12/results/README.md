@@ -68,6 +68,9 @@ The retained numeric receipts are:
 - `V12_PHASE1S_V10_WEEKLY_JOURNEY_DIRECTION_20260926.md`: causal weekly-state
   overlay on the frozen V10 comparator. Stop-risk separation persists, but the
   flagged cohort retains most major journey capital and directional veto fails.
+- `V12_PHASE1T_V10_DIRECT_FEATURE_RETRAIN_20260926.md`: direct weekly-feature
+  retraining inside frozen V10 heads. STOP metrics improve, but capital and tail
+  gates fail; XGBoost STOP/R7G control parity remains explicitly incomplete.
 
 No receipt proves independent future edge, Python/MQL5 parity, actual-tick
 economics, or production readiness.

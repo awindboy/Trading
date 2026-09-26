@@ -309,6 +309,19 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
 - Weekly state describes high-variance transition intensity, not a disposable
   V10 direction. Two final 15-file builds are byte-identical.
 
+## Completed Phase 1T
+
+- Weekly clock/price/event fields were inserted directly into the frozen V10
+  R4/R5 heads and the full R4 -> R5 -> R7G chain was rebuilt causally.
+- The primary weekly-price variant reduces refit stopped units `490 -> 466`,
+  but net R falls `722.47 -> 421.89` and >=5R tail `283.59 -> 163.06`.
+- STOP-only augmentation improves mean AUC `0.7747 -> 0.7849`, yet saves only
+  four refit stopped units while losing `40.66R`. Better classification does
+  not transfer through the old R7G allocation map.
+- R4 action parity is exact (`2,839/2,839`), but Windows XGBoost STOP-head EV
+  sign parity is `2,817/2,839` and R7G weight parity `2,793/2,839`. The result
+  is deterministic and byte-reproduced, but not exact MT5 replacement evidence.
+
 ## Immediate next work
 
 1. do not tune the Phase-1S feature set, logistic penalty, journey threshold, or
@@ -321,3 +334,5 @@ The new base is CRT journey structure, not a FAST-HA ledger with another veto.
    retain M15 only as a third-and-later-stop churn warning;
 5. require Python/MQL5 feature and event-ledger parity before promotion, and
    preserve GOLD# 2021 and post-cutoff chronology.
+6. do not append the Phase-1T weekly blocks wholesale to V10 heads or tune the
+   old `EV>0` allocation map on consumed data.

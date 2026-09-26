@@ -124,6 +124,11 @@ Phase 1S is complete and independently reproduced: continuous weekly path and
 released-event response distinguish stop risk, but the flagged V10 cohort also
 contains most >=5R tail. Full directional veto and seed-protected extra-unit
 guard both fail capital preservation and have no action authority.
+Phase 1T is complete as a deterministic, platform-parity-limited diagnostic:
+directly adding weekly clock/price/event fields to the frozen V10 heads improves
+STOP-head discrimination but fails the capital gate. The primary loses about
+42% of net R and >=5R tail for about 5% fewer refit stopped units. Two builds
+are byte-identical, but XGBoost STOP and R7G parity versus MT5 are not exact.
 
 ## Non-negotiable causal contract
 
@@ -197,6 +202,9 @@ Do not reopen these by renaming them CRT or silently changing thresholds:
 - using Phase-1S weekly settlement, event response, or its top-20% badness band
   as direction authorization for an existing V10 Child; the band removes
   `36.26%` of stopped units but destroys `72.58%` of >=5R tail.
+- adding Phase-1T weekly clock, price, boundary, or event fields wholesale to
+  frozen V10 R4/R5 heads; better STOP AUC does not produce useful R7G capital
+  allocation, and the R4 ranking destroys right-tail capital.
 - fixed broker-hour/session avoidance, all-news avoidance, or realized surprise
   as a direction oracle; Phase-1D retains only two narrow shadow interactions
   and grants neither action authority.
