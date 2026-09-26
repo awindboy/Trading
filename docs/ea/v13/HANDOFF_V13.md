@@ -1,15 +1,17 @@
 # V13 handoff
 
 Last synchronized: `2026-09-27`
-Status: `BASELINE 0 FROZEN / HA-4C/D INTEGRATED OBSERVATION COMPLETE / HA-5 NEXT`
+Status: `BASELINE 0 FROZEN / HA-5 FIRST FIXED PROBE COMPLETE / HA-6 OBSERVATION NEXT`
 
 ## Resume point
 
-V13 uses the simple EA as an observation instrument. HA-0..HA-4C/D research
+V13 uses the simple EA as an observation instrument. HA-0..HA-5 research
 receipts document morphology, lifecycle, four HA representations and D1/H1
 context on the **same** Standard-H4 Journey. These are consumed development
 evidence, not trading rules. HA-4C/D specifically repaired the earlier
-color-heavy comparison scope; it did not prove a safe exit.
+color-heavy comparison scope; it did not prove a safe exit. HA-5 first fixed
+probe confirmed actual raw-price swings causally and compared them with
+ordered-H1 warnings and H4 morphology. It likewise did not prove a safe exit.
 
 The latest uploaded MT5 report is an extended real-tick run through
 `2026-09-26`. Its canonical prefix confirms the intended Journey/Child structure:
@@ -63,7 +65,7 @@ The useful result is that it exposes HA behavior:
 This is not authority to ban SHORTs, lower the ten-Child cap, or add a fixed
 late-Child rule.
 
-## Completed observation work — HA-0..HA-4C/D
+## Completed observation work — HA-0..HA-5
 
 The Baseline-0 EA strategy remains unchanged. Decision ledgers record completed
 H4 raw/HA OHLC, HA body/Delta/range/wick geometry, streak and Child index.
@@ -91,21 +93,33 @@ next-H4 flip. PRE/POST EMA2 color identity hid 518 decisions with different
 opposite-wick presence. No threshold or trade rule was promoted; see the
 HA-4C/D receipt before interpreting HA-3 or HA-4 in isolation.
 
-## Immediate next work — HA-5
+HA-5 rebuilt 7,198 H4 bars from 1,648,308 chronological M1 rows with zero
+OHLC mismatches and classified 4,105 labeled Standard-H4 decisions against
+previously confirmed actual-price swing levels. A fresh favorable close beyond
+a swing had only 4.0% next-H4 reversals; a return inside a previously crossed
+level had 64.7%. In last-H1-opposed decisions, favorable rejection/return
+preceded 58.7% next-H4 reversals versus 45.0% otherwise, but this caught only
+138/660 reversals, shrank after H4-morphology matching, and falsely warned in
+long Journeys. No level state or numerical cutoff was promoted. Read
+`results/V13_HA5_CAUSAL_RAW_SWING_RECEIPT_20260927.md` for scope and caveats.
 
-Observe causal raw-price swing structure alongside unchanged H4 standard HA.
-Confirm a swing only when its required later bars have completed; compare
-actual traded highs/lows and failed/continued breaks to HA-2 lifecycle and
-the HA-4C/D ordered-H1 warning and H4 morphology. Start with decision-time
-structure and separate future outcomes. No swing, D1, H1, FAST or EMA veto/
-exit is authorized.
+## Immediate next work — HA-6 observation planning
+
+The HA-5 first probe is complete as *description*. Do not turn its return-
+inside or rejected-break states into an exit: within finer H4-morphology cells
+there was no support for an independent claim, and 56/88 long Journeys had a
+favorable rejection/return at some point. If revisiting raw swings, freeze a
+distinct incremental question before measuring. Otherwise follow roadmap
+HA-6 one complementary family at a time, observation first; begin by stating
+which information that family adds beyond HA morphology, ordered H1 and
+actual raw structure. No swing, D1, H1, FAST or EMA veto/exit is authorized.
 
 HA-3's PRE-EMA2 and POST-EMA2 color sequences were identical under the stated
-linear formulas. HA-4's H1 warning needs false-warning and tail-preservation
+linear formulas. HA-4/5's warnings need false-warning and tail-preservation
 accounting before any action experiment. The exact-window actual-tick
 Baseline-0 receipt remains pending.
 
 ## Following order
 
-After HA-5, follow the roadmap. Do not jump directly to EMA/ADX/ML merely because
+Follow the roadmap. Do not jump directly to EMA/ADX/ML merely because
 external sources combine them successfully in examples.

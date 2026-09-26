@@ -25,6 +25,21 @@ future labels and a compact JSON summary separately. It is neither a strategy
 variant nor a real-tick economic backtest. The contracts and compact findings
 are under `docs/ea/v13/` and `docs/ea/v13/results/`.
 
+`ha5_causal_raw_swing_audit.py` streams raw GOLD# M1 through the frozen
+canonical cutoff, rebuilds H4 with export parity, and confirms strict
+five-bar H4 raw-price pivots only after their right-hand bars complete.
+It compares the already-known raw levels against unchanged HA-4C/D decisions
+and separately stored future labels. Example invocation from repository root:
+
+```powershell
+python research/v13/ha5_causal_raw_swing_audit.py --m1 'data/GOLD#/GOLD#_M1_202201030100_202609222358.csv' --h4 'data/GOLD#/GOLD#_H4_202201030000_202609230000.csv' --integrated output/v13_ha4c_integrated_20260927 --output output/v13_ha5_raw_swing_20260927
+```
+
+This is observation-only, not an MT5 backtest or an HA-5 action rule. See the
+frozen contract and compact receipt under `docs/ea/v13/`.
+Run `python research/v13/test_ha5_causal_raw_swing_audit.py` for the mirrored
+LONG/SHORT, level-change and close-versus-probe state checks.
+
 The active baseline implementation is:
 
 `../../mt5/experts/V13HAOnlyMax10EA.mq5`

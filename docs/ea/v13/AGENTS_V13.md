@@ -3,7 +3,7 @@
 Last synchronized: `2026-09-27`
 Status: `ACTIVE / BASELINE 0 FROZEN / HA KNOWLEDGE PROGRAM ACTIVE / NO PRODUCTION AUTHORITY`
 Market authority: `GOLD# ONLY`
-Research-update base GitHub HEAD: `e953412a43f7133e7774972cd9675842258547c6`
+Research-update base GitHub HEAD: `1ab3e2e9dbe6bac0afe6223eef2f3fc3a936d4af`
 
 ## 0. Start order
 
@@ -23,7 +23,8 @@ Read in this order:
    `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` when execution/tester work matters;
 10. `V13_HA3_REPRESENTATION_COMPARISON_CONTRACT_20260927.md`,
     `V13_HA4_MTF_OBSERVATION_CONTRACT_20260927.md`, the HA-4C/D supplement
-    contracts, `results/README.md`, and the HA-1..HA-4C/D receipts;
+    contracts, `V13_HA5_CAUSAL_RAW_SWING_CONTRACT_20260927.md`,
+    `results/README.md`, and the HA-1..HA-5 receipts;
 11. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` for implementation parity.
 
 ## 1. Why V13 exists
@@ -211,14 +212,18 @@ leverage from the frozen protocol.
 
 ## 11. Current next action
 
-HA-0..HA-4C/D descriptive work is recorded in compact receipts. HA-4C/D
+HA-0..HA-5 descriptive work is recorded in compact receipts. HA-4C/D
 rejoined HA morphology, representation and ordered H1 paths on identical
 Standard-H4 decisions. H1 repair versus persistent opposition separated
 different lifecycle states, but the pooled difference was sensitive to H4
 geometry overlap and binning; all 88 long Journeys had an H1 opposition.
 PRE/POST EMA color equivalence did not imply wick equivalence. D1 added little
-next-H4 distinction. No MTF/FAST/EMA veto or exit was promoted. Begin HA-5
-raw-price structure as observation only.
+next-H4 distinction. HA-5 causally confirmed raw-price swings from M1 and
+compared favorable/adverse interactions on the same H4 Journeys. Favorable
+rejection/return distinguished some H1-opposed reversals, but H4-morphology
+overlap reduced the contrast and many long Journeys had false warnings. No
+swing/MTF/FAST/EMA veto or exit was promoted. Read the HA-5 receipt before
+moving to roadmap HA-6 as a separately named observation-only family.
 
 The exact-window MT5 rerun should still be captured before any strategy variant
 is promoted economically, but it does not block observation-only HA measurement.

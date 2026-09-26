@@ -1,7 +1,7 @@
 # V13 research state
 
 Last synchronized: `2026-09-27`
-Status: `BASELINE 0 FROZEN / ACTUAL-TICK STRUCTURAL PARITY CONFIRMED / HA-4C/D INTEGRATED OBSERVATION COMPLETE`
+Status: `BASELINE 0 FROZEN / ACTUAL-TICK STRUCTURAL PARITY CONFIRMED / HA-5 FIRST FIXED PROBE COMPLETE`
 Market: `GOLD# ONLY`
 
 ## 1. Generation reset
@@ -221,18 +221,33 @@ matched earlier receipts. Details and limits are in
 These are consumed, overlapping observations. No entry, exit, SL, risk,
 sizing, filter or EA change was made or justified.
 
+## 10B. HA-5 causal actual-price swing probe
+
+The first fixed HA-5 probe streamed 1,648,308 raw M1 rows to rebuild 7,198
+H4 bars with zero exported-OHLC mismatches. Strict 2-left/2-right swings were
+confirmed only after the required H4 bars completed; the current H4 bar was
+tested against levels already known when it began. It joined 4,105 labeled
+Standard-H4 decisions to the unchanged HA-4C/D Journey and H1 path. In 1,395
+last-H1-opposed decisions, favorable swing rejection/return had a 58.7%
+next-H4 flip rate versus 45.0% otherwise, but identified only 138/660 flips.
+H4 body/raw-close and Delta/wick overlap reduced the descriptive difference,
+and 56/88 long Journeys had this event. This is not a safe exit or an
+independent validated edge. See the HA-5 receipt for the complete counts,
+counterexamples and data contract. No strategy/EA change.
+
 ## 11. Active research question
 
 The next question is no longer “which simple filter immediately improves P/L?”
 
 It is:
 
-> Can causally confirmed raw-price swing structure distinguish actual
-> continuation/failed breaks from temporary *ordered-H1* opposition and
-> clarify the H4 HA lifecycle beyond completed-H4 morphology without relying
-> on hindsight pivots?
+> Does any *new* family in roadmap HA-6 explain Journey continuation or
+> transition beyond completed-H4 morphology, ordered H1 paths and the now
+> measured causal actual-price swing interaction, while preserving long
+> Journeys and avoiding false warnings?
 
-Roadmap Stage HA-5 studies this without changing trades.
+HA-5 answered its first fixed observation probe but not a trading-rule
+increment. HA-6 begins as a separately frozen observation, not an EA change.
 
 ## 12. Promotion boundary
 

@@ -1,6 +1,6 @@
 # V13 results
 
-Status: `HA-4C/D INTEGRATED OBSERVATION COMPLETE / EXACT-WINDOW OFFICIAL ECONOMIC RECEIPT STILL PENDING`
+Status: `HA-5 FIRST FIXED PROBE COMPLETE / EXACT-WINDOW OFFICIAL ECONOMIC RECEIPT STILL PENDING`
 
 Store only compact, source-backed result receipts here.
 
@@ -27,6 +27,9 @@ Store only compact, source-backed result receipts here.
   HA morphology, ordered H1 path, FAST/D1 and PRE/POST EMA wick comparisons;
   this supplement is required context before interpreting HA-3/4 as complete
   HA-state research. No action rule.
+- `V13_HA5_CAUSAL_RAW_SWING_RECEIPT_20260927.md` — M1-prefix confirmed raw
+  H4 pivots, break/rejection/return states, H1-warning overlap and long-Journey
+  false-warning accounting. First fixed probe only; no action rule.
 
 Generated CSV ledgers and summary JSON are local under
 `output/v13_ha3_20260927/` and are not Git authority. The reproducible source
@@ -41,6 +44,11 @@ HA-4C/D's regenerated H1/D1 and integrated ledgers are local under
 `output/v13_ha4c_*_20260927/`. Reproduce with `ha4_mtf_audit.py` and
 `research/v13/ha_integrated_state_audit.py`; local ledgers are not Git
 authority.
+
+HA-5 decision features, unchanged future labels and summary JSON are local
+under `output/v13_ha5_raw_swing_20260927/`. Its source is
+`research/v13/ha5_causal_raw_swing_audit.py`; the compact receipt above is
+Git authority.
 
 ## Official Baseline-0 receipt still required
 

@@ -1,8 +1,8 @@
 # Trading repository authority
 
 Last synchronized: `2026-09-27`
-V13 HA-4C/D integrated-state supplement base GitHub HEAD:
-`e953412a43f7133e7774972cd9675842258547c6`
+V13 HA-5 causal raw-swing observation base GitHub HEAD:
+`1ab3e2e9dbe6bac0afe6223eef2f3fc3a936d4af`
 
 ## Active generation
 
@@ -26,7 +26,7 @@ Start every V13 session in this order:
 9. read `docs/ea/v13/V13_EXECUTION_RECOVERY_20260926.md` and
    `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` before tester/execution work;
 10. read the current compact receipts under `docs/ea/v13/results/`, including
-    HA-1 through the HA-4C/D integrated-state supplement;
+    HA-1 through the HA-5 causal raw-swing receipt;
 11. inspect `mt5/experts/V13HAOnlyMax10EA.mq5` before changing implementation.
 
 Where V13 conflicts with V12 or older strategy-routing documents, V13 controls.
@@ -66,10 +66,11 @@ month, quarter, year, or episode is diagnostic only.
 ## Current research doctrine
 
 V13 treats Baseline 0 first as an **instrument for learning what standard
-Heikin-Ashi actually represents**. HA-0..HA-4C/D are descriptive development
-evidence. HA-4C/D rejoined morphology and ordered H1 paths to the same H4
-Journey; no warning gained action authority. HA-5 raw-price structure is the
-next observation-only stage.
+Heikin-Ashi actually represents**. HA-0..HA-5 are descriptive development
+evidence. HA-5 added causally confirmed raw-price swing interactions to the
+same Standard-H4 Journey, but did not establish robust incremental trade
+authority beyond existing H4/H1 information. Read its compact receipt before
+proposing any action rule; the next distinct roadmap stage is HA-6 observation.
 The Baseline-0 EA and trading rules have not changed.
 
 Research order is frozen in

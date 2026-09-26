@@ -378,12 +378,13 @@ Stopping a branch is a successful V13 result.
 
 ## 4. Current next step
 
-`HA-5 Causally confirmed raw-price structure complement`
+`HA-6 single complementary indicator family, observation-only contract next`
 
-HA-0..HA-4 descriptive receipts and the HA-4C/D integrated-state supplement
-are under `results/` and the V13 root respectively. The supplement exposed
-ordered-H1 repair/persistence and EMA wick distinctions, but also strong
-overlap with H4 morphology and major false-warning cost in long Journeys.
-No EA strategy modification is authorized by any of these receipts. HA-5
-begins observation-only and must compare against the *full* H4 morphology and
-ordered-H1 state, not just color alignment.
+HA-0..HA-5 descriptive receipts are under `results/`. HA-5's first fixed
+raw-swing probe is complete: actual price adds a distinct observation but its
+apparent H1-warning separation weakens after H4 morphology overlap and has
+major false-warning cost in long Journeys. No EA strategy modification is
+authorized by any of these receipts. Before HA-6, freeze the one family and
+distinct mechanism to observe; compare against full H4 morphology, ordered
+H1 and HA-5 raw structure, not just color alignment. Keep future labels and
+decision features separate.
