@@ -1,15 +1,17 @@
 # Trading repository authority
 
 Last synchronized: `2026-09-26`
-Base GitHub HEAD before V13 update: `b57be8e619254191f3a54da86bec3745edae6ac8`
+V13 HA-research documentation update base HEAD:
+`6550da435ac34a7b1a0a026196a7a1157153d37a`
 
 ## Active generation
 
 V13 is the only active strategy-research generation.
 
 V13 is a deliberate reset. It does not continue the V12 feature stack. It starts
-again from a minimal Heikin-Ashi trading skeleton and adds complexity only when a
-single added component earns its place on the frozen full comparison window.
+from a minimal standard-Heikin-Ashi participation skeleton, studies Heikin-Ashi
+itself before importing complexity, and adds one component at a time only after
+its role is understood.
 
 Start every V13 session in this order:
 
@@ -18,10 +20,13 @@ Start every V13 session in this order:
 3. read `docs/ea/v13/V13_DOCUMENT_AUTHORITY_MAP_20260926.md`;
 4. read `docs/ea/v13/HANDOFF_V13.md`;
 5. read `docs/ea/v13/RESEARCH_STATE_V13.md`;
-6. read `docs/ea/v13/V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md`;
-7. read `docs/ea/v13/V13_MQL5_BACKTEST_PROTOCOL_20260926.md`;
-8. read the current compact result receipt under `docs/ea/v13/results/`;
-9. inspect `mt5/experts/V13HAOnlyMax10EA.mq5` before changing execution semantics.
+6. read `docs/ea/v13/V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_20260926.md`;
+7. read `docs/ea/v13/V13_HA_RESEARCH_ROADMAP_20260926.md`;
+8. read `docs/ea/v13/V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md`;
+9. read `docs/ea/v13/V13_EXECUTION_RECOVERY_20260926.md` and
+   `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` before tester/execution work;
+10. read the current compact receipts under `docs/ea/v13/results/`;
+11. inspect `mt5/experts/V13HAOnlyMax10EA.mq5` before changing implementation.
 
 Where V13 conflicts with V12 or older strategy-routing documents, V13 controls.
 Older generations remain historical evidence and must not silently re-enter the
@@ -50,64 +55,93 @@ changed without naming a new V13 experiment.
 
 ## Canonical comparison window
 
-The frozen comparison window for current V13 work is:
+The frozen comparison window is:
 
-```text
-2024-01-01 through 2026-08-28 available GOLD# history
-```
+`2024-01-01 through 2026-08-28 available GOLD# history`
 
-Every claim that one V13 variant improves or worsens another must be based on
-this entire window. A month, quarter, selected episode, or selected year may be
-used for diagnosis only; it cannot replace the full-window comparison.
+Every primary V13 strategy comparison must use this entire window. A selected
+month, quarter, year, or episode is diagnostic only.
 
-If the authoritative 2026 dataset is later extended, change the canonical end
-only in an explicit authority update and rerun every comparator on the same new
-full window.
+## Current research doctrine
 
-## Research method
+V13 now treats Baseline 0 first as an **instrument for learning what standard
+Heikin-Ashi actually represents**. The immediate task is not to optimize the
+simple strategy but to measure HA morphology, persistence, lag and lifecycle.
 
-- Baseline 0 remains frozen and reproducible.
-- Add or alter one strategy component at a time whenever possible.
-- Keep entry, risk, participation, exit, and sizing changes separately
-  attributable.
-- Complexity is a cost. If the contribution of a component cannot be isolated,
-  remove it rather than stacking more conditions on top.
-- Do not invent hidden minimum-R, cooldown, retry, no-chase, direction-balance,
-  time-of-day, or discretionary exceptions.
-- Do not promote a rule from one or two attractive examples.
-- Never inspect future prices before a decision. A stopped or closed Child is
-  never resurrected from hindsight.
+Research order is frozen in
+`docs/ea/v13/V13_HA_RESEARCH_ROADMAP_20260926.md`.
+
+Key rules:
+
+- first extract more information from the same standard HA before adding another
+  indicator;
+- start with observation-only feature ledgers; no entry/exit rule changes;
+- do not turn a descriptive threshold, quantile, Child number or side split into
+  a trading rule merely because it looked attractive in consumed data;
+- when an external component is tested, add one component at a time and state
+  the distinct information it is supposed to contribute;
+- source popularity is not evidence of edge;
+- MQL5 Market/Forum/User Articles are hypothesis sources, not strategy authority;
+- verify every imported HA formula against the MetaQuotes standard definition;
+- keep decision-time inputs separate from future outcome labels;
+- never inspect future prices before a historical decision timestamp;
+- no hindsight recovery of stopped/closed Children.
+
+## HA source authority
+
+`V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_20260926.md` distinguishes:
+
+1. platform/reference authority;
+2. implementation/research examples;
+3. academic evidence;
+4. community/market practice leads;
+5. external educational material.
+
+No external source creates a V13 trading rule by itself.
+
+## ML boundary
+
+ML is a later research stage, not the next step. If reached, begin with causal
+HA-state features and interpretable/tabular models before sequence models.
+Preferred targets are lifecycle outcomes such as continuation, transition risk,
+remaining favorable excursion, giveback and time-to-opposite-color rather than
+a direct next-bar LONG/SHORT oracle.
+
+Any ML pipeline must reproduce preprocessing identically in Python and MQL5;
+ONNX transport does not excuse feature/preprocessing mismatch.
 
 ## Execution authority
 
-MQL5 Strategy Tester on `Every tick based on real ticks` is the official V13
-execution environment for baseline economic reports. Python/H4 next-open
-reconstructions may be used as deterministic sanity checks, but they are not a
-substitute for the tester report.
+MQL5 Strategy Tester on `Every tick based on real ticks` remains the official
+execution environment for economic reports. Python/H4 next-open reconstruction
+is a deterministic sanity check only.
 
-Baseline 0 intentionally has no SL or TP, so its main execution uncertainty is
-market-order fill/close handling at H4 boundaries. Execution revision 13.002
-retries explicit transient rejections, expires stale entries, and resumes
-remaining closes without reversing early. Ambiguous/permanent failures still
-halt. See `docs/ea/v13/V13_EXECUTION_RECOVERY_20260926.md`; this explicit
-user-authorized execution repair is not a strategy retry/cooldown rule.
+Execution revision 13.002 retries explicit transient rejections, expires stale
+entries, and resumes remaining closes without reversing early. Ambiguous or
+permanent failures halt the run. This is execution recovery, not a strategy
+cooldown/retry rule.
+
+The uploaded extended tester report ending `2026-09-26` confirms structural
+parity through the canonical source cutoff, but is not the official exact-window
+receipt because its end date and leverage differ from the frozen tester protocol.
+See the diagnostic receipt under `docs/ea/v13/results/`.
 
 ## Historical generations
 
-- V12 is the frozen immediate predecessor. CRT/HA/Wave/liquidity/ML research is
-  retained as historical evidence only.
-- V11 is frozen historical Wave/capital evidence.
-- V10 is frozen historical HA/ML evidence and may be consulted only when a V13
-  question explicitly needs historical comparison.
+- V12 is frozen historical CRT/HA/Wave/liquidity/ML evidence;
+- V11 is frozen historical Wave/capital evidence;
+- V10 is frozen historical HA/ML evidence and may be consulted only for an
+  explicitly stated historical question;
 - V9 and earlier are historical evidence only.
 
 No historical document overrides V13 authority.
 
 ## Repository hygiene
 
-- Keep active V13 authority under `docs/ea/v13/`.
-- Keep the frozen V13 baseline EA under `mt5/experts/`.
-- Keep compact result receipts under `docs/ea/v13/results/`.
-- Keep large tester exports and generated ledgers out of Git unless explicitly
-  promoted to a compact receipt; Git history remains the archive.
-- Record external ideas before they become V13 research hypotheses.
+- keep active V13 authority under `docs/ea/v13/`;
+- keep the frozen V13 baseline EA under `mt5/experts/`;
+- keep compact result receipts under `docs/ea/v13/results/`;
+- keep large tester exports and generated ledgers out of Git unless explicitly
+  promoted;
+- register external research before converting it into a V13 hypothesis;
+- retain raw source URLs and caveats in the source register.
