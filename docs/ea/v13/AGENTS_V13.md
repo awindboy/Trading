@@ -1,15 +1,18 @@
 # V13 Research Instructions — Minimal HA Rebuild
 
 Last synchronized: `2026-09-27`
-Status: `ACTIVE / BASELINE 0 FROZEN / HA KNOWLEDGE PROGRAM ACTIVE / NO PRODUCTION AUTHORITY`
+Status: `ACTIVE / BASELINE 0 FROZEN / HA-0..HA-6 OBSERVATION COMPLETE / HA-7 FIRST ACTION REJECTED / HA-8A NEXT / NO PRODUCTION AUTHORITY`
 Market authority: `GOLD# ONLY`
-Research-update base GitHub HEAD: `1ab3e2e9dbe6bac0afe6223eef2f3fc3a936d4af`
+GitHub SSOT base HEAD used for this documentation update: `40f97352e47c66cd3b952f74532b1b71969e79fd`
+Package status: `LOCAL DOCUMENT UPDATE / NOT YET COMMITTED TO GITHUB`
 
 ## 0. Start order
 
-GitHub `awindboy/Trading` latest `main` is the Single Source of Truth.
+GitHub `awindboy/Trading` latest `main` is the Single Source of Truth. On a new
+session, refresh `main` first. If a later GitHub commit conflicts with this local
+package, the later GitHub authority wins.
 
-Read in this order:
+Read V13 in this order:
 
 1. repository `AGENTS.md`;
 2. this file;
@@ -17,34 +20,21 @@ Read in this order:
 4. `HANDOFF_V13.md`;
 5. `RESEARCH_STATE_V13.md`;
 6. `V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_20260926.md`;
-7. `V13_HA_RESEARCH_ROADMAP_20260926.md`;
-8. `V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md`;
-9. `V13_EXECUTION_RECOVERY_20260926.md` and
-   `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` when execution/tester work matters;
-10. `V13_HA3_REPRESENTATION_COMPARISON_CONTRACT_20260927.md`,
-    `V13_HA4_MTF_OBSERVATION_CONTRACT_20260927.md`, the HA-4C/D supplement
-    contracts, `V13_HA5_CAUSAL_RAW_SWING_CONTRACT_20260927.md`,
-    `results/README.md`, and the HA-1..HA-5 receipts;
-11. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` for implementation parity.
+7. `V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_ADDENDUM_20260927.md`;
+8. `V13_HA_RESEARCH_ROADMAP_20260926.md`;
+9. `V13_HA_RESEARCH_ROADMAP_STATUS_ADDENDUM_20260927.md`;
+10. `V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md`;
+11. `V13_EXECUTION_RECOVERY_20260926.md` and
+    `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` before tester/execution work;
+12. the named HA-3..HA-7 contracts, especially the HA-6A/B/C/D1/E and HA-7
+    contracts added on `2026-09-27`;
+13. `V13_HA6_HA7_RESEARCH_SYNTHESIS_20260927.md`;
+14. `results/README.md` and the compact receipts through HA-7;
+15. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` before any implementation change.
 
-## 1. Why V13 exists
+## 1. Frozen Baseline 0 remains unchanged
 
-V13 intentionally resets the strategy stack after V9-V12 accumulated too many
-interacting components to attribute gains and failures cleanly.
-
-The V13 question is:
-
-> How far can a minimal standard-HA participation engine go, what does HA itself
-> actually encode, where does it lag or discard information, and what single
-> addition improves a demonstrated weakness without obscuring the cause?
-
-Do not reconstruct an old strategy and do not automatically import old rules.
-Historical generations may explain prior failures, but V13 rules must be earned
-again from the V13 baseline.
-
-## 2. Frozen Baseline 0
-
-Baseline 0 uses only standard H4 Heikin-Ashi.
+V13 still starts from one decision source: completed standard H4 Heikin-Ashi.
 
 ```text
 HA_CLOSE = (O + H + L + C) / 4
@@ -54,176 +44,153 @@ HA_HIGH = max(raw H, HA_OPEN, HA_CLOSE)
 HA_LOW  = min(raw L, HA_OPEN, HA_CLOSE)
 ```
 
-Baseline trading color:
+Color:
 
 ```text
 BULL if HA_CLOSE > HA_OPEN
 BEAR if HA_CLOSE < HA_OPEN
-exact equality inherits the previous non-zero color
+exact equality inherits previous non-zero color
 ```
 
 Journey / Child semantics:
 
 ```text
-one contiguous same-color completed-H4 HA run = one Journey
-first qualifying HA flip starts Child #1
-next completed same-color HA bar adds Child #2
-...
-maximum = 10 successful Children
-bars after Child #10 add nothing
-first completed opposite-color H4 HA closes all Journey Children
-same opposite-color event starts the next Journey after close-all succeeds
+one contiguous same-color completed-H4 run = Journey
+first qualifying flip starts Child #1
+one further Child after each completed same-color H4
+maximum 10 successful Children
+first opposite completed H4 closes all Journey Children
+same opposite event then starts the opposite Journey after close-all
+1 fixed unit per Child
 ```
 
-No Hard SL, TP, break-even, trailing, partial TP, liquidity, CRT, Wave, ML,
-session, news, volatility gate, MA, oscillator or dynamic sizing exists in
-Baseline 0.
+No Hard SL, TP, break-even, trailing, partial close, liquidity rule, CRT, Wave,
+ML action, session gate, news gate, volatility gate, MA filter, oscillator filter
+or dynamic sizing is part of Baseline 0.
 
-## 3. What the first actual-tick run changed conceptually
+## 2. Causal timing and data discipline
 
-The extended actual-tick tester report confirms that the repaired EA follows the
-intended Journey/Child structure through the canonical source cutoff. It does
-not justify optimizing Child count, banning SHORTs, or adding filters.
+Only completed bars may decide. At the first executable print after a new H4
+bar opens, the just-completed raw H4 and its research features become available.
+Synthetic HA values are never executable prices.
 
-The important interpretation is simpler: the baseline exposes known HA
-properties clearly. Same-color persistence captures long directional moves;
-synthetic smoothing delays reversal recognition; late Journey entries naturally
-see more giveback before an opposite color is confirmed.
-
-V13 therefore studies **HA as a representation** before treating Baseline 0 as a
-finished strategy to optimize.
-
-## 4. Causal timing
-
-Only completed H4 bars may decide.
-
-At the first executable tick after a new H4 bar opens:
-
-1. the just-completed H4 raw OHLC is known;
-2. its standard HA OHLC is finalized;
-3. any research features for that timestamp are frozen;
-4. the Baseline-0 Journey decision is made;
-5. orders execute on real market Bid/Ask, never on synthetic HA prices.
-
-Warm-up history before 2024 initializes recursive HA state only. It cannot carry
-an old position into the evaluation window.
-
-## 5. Comparison-window authority
-
-Canonical window:
+Canonical comparison window remains:
 
 `2024-01-01 through 2026-08-28 available GOLD# history`
 
-Every primary V13 strategy comparison uses the entire window. Year/month/episode
-slices diagnose mechanisms only.
+2022 history is warm-up/state only. No position carries from pre-2024 history.
+Future labels may be computed only after decision-time features are frozen.
+Never inspect future price before a historical decision timestamp, never add a
+hindsight trade after an accidental reveal, and never resurrect a stopped/closed
+Child using later information.
 
-## 6. HA research authority
+## 3. Research discipline remains binding
 
-The current source-backed HA map is
-`V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_20260926.md`.
+- Baseline 0 stays frozen unless a separately named action contract is promoted.
+- Measure first, identify a mechanism second, test one action third.
+- Add one information family at a time whenever possible.
+- Do not infer a fixed Child cap, side ban, late-Child ban, minimum-R, cooldown,
+  retry limit, fixed no-chase distance, session gate or threshold from a small
+  number of examples.
+- Quantiles are descriptive display bins unless a later contract explicitly
+  freezes a semantic boundary before economic measurement.
+- Keep full-window, year/side and long-Journey tail diagnostics visible.
+- Stronger reversal probability does not by itself justify an exit or Child
+  veto; payoff asymmetry and right-tail preservation must be measured.
 
-The ordered experiment program is
-`V13_HA_RESEARCH_ROADMAP_20260926.md`.
+## 4. Consumed HA knowledge through HA-7
 
-Neither document adds a trading rule. They define what may be measured and in
-what order hypotheses are investigated.
+HA-0..HA-6 are consumed observation research. HA-7 tested one frozen action and
+was rejected. None changes Baseline 0.
 
-The immediate priority is standard-HA internal information:
+Key result by stage:
 
-- HA Delta (`HA_CLOSE - HA_OPEN`);
-- body size and body/range strength;
-- HA upper/lower wick geometry;
-- directional versus opposite wick;
-- no-opposite-wick state;
-- same-color streak/persistence;
-- body/Delta expansion and contraction;
-- raw-price versus HA displacement;
-- lag from raw-price turning points to HA color transition.
+- **HA-1 morphology**: body/Delta/wick geometry contains persistence and
+  transition information, but the variables overlap strongly.
+- **HA-2 lifecycle**: standard HA preserves trends but creates measurable turn
+  lag and giveback; median raw-extreme-to-exit lag was 7.35h and median giveback
+  21.41 GOLD price on the consumed sample.
+- **HA-3 representations**: faster/smoothed representations mostly trade lag
+  against switching frequency; no representation earned strategy authority.
+- **HA-4 MTF**: D1 adds little; H1 opposition is informative but produces many
+  false warnings, including inside all 88 long Journeys.
+- **HA-5 raw swing**: causal raw-price swing rejection/return adds some context
+  but does not safely distinguish temporary weakness from true transition.
+- **HA-6A HASTOC10**: strong pooled ordering survives only modestly after prior
+  state matching; weak HASTOC remains unsafe as an exit.
+- **HA-6B moving averages**: EMA50 provides slower regime context and EMA20
+  envelope provides extension context, but both falsely warn in long Journeys.
+- **HA-6C ATR**: useful as a volatility-aware coordinate, not as a signal. Raw
+  GOLD price-unit features drift strongly across years; ATR normalization
+  removes most scale drift. Existing trailing-20-H4 range normalization remains
+  at least as good for lifecycle outcomes.
+- **HA-6D1 ADX/DMI**: ADX strength is distinct but weak/unstable; DMI mostly
+  re-expresses HA-6B raw-price trend context; ADX falling adds almost no
+  independent information after the full prior state stack. HA-6D stop condition
+  is met; SuperTrend was not tested or judged.
+- **HA-6E tick volume**: absolute tick counts drift by year/session. Same-slot
+  trailing-20 relative tick volume is stable enough for research. Universal
+  low-volume separation is largely H4 morphology redundancy. A narrower
+  persistent-H1-opposition + above-normal-participation interaction survived as
+  a mechanism candidate, but still had major tail false warnings.
+- **HA-7 first action**: suppressing one add-on Child on continuation bars when
+  `persistent_opposition AND relative_tick_volume20 > 1.0` removed 89 Children
+  and worsened net points by 77.93 while worsening realized-Journey DD by 30.91.
+  It removed +341.09 points from 15 Children inside long Journeys. **Rejected.**
 
-These are observations before they are rules.
+Read the named receipts for exact denominators, overlaps and caveats.
 
-## 7. External-source boundary
+## 5. Current research interpretation
 
-MetaQuotes platform/reference semantics outrank community formulas.
+Multiple independent-looking warnings repeatedly converge on the same failure:
 
-MQL5 Articles, CodeBase contributions, Forum discussions, Market products,
-external educational pages and academic papers can suggest measurements or
-combinations. They do not receive action authority merely because they exist or
-report a profitable backtest.
+> A state can have elevated near-term reversal hazard while the minority
+> continuation outcomes still contain economically dominant right-tail value.
 
-Before using an imported HA implementation:
+Therefore V13 has not earned a deterministic exit/filter/veto rule from HA-0..
+HA-7. The research problem is now conditional state discrimination, not another
+single-indicator threshold search.
 
-1. verify its formula against the standard recursive HA definition;
-2. identify whether smoothing is applied before HA, after HA, or both;
-3. verify completed-bar/no-repaint timing;
-4. separate synthetic HA values from executable raw Bid/Ask prices;
-5. record parameter provenance rather than silently optimize it.
+## 6. Immediate next work — HA-8A causal lifecycle state model
 
-## 8. Research discipline
+HA-8 begins **observation/model evaluation only**, not a trading-rule change.
+The first target should be frozen before fitting, with the preferred first target:
 
-- Baseline 0 stays frozen.
-- First measure; then form a mechanism hypothesis; only then test one rule.
-- Add one component at a time whenever possible.
-- Do not infer that late Child underperformance means a fixed Child cap should be
-  reduced. Late-child giveback is first treated as evidence about HA lag.
-- Do not infer a side ban from pooled LONG/SHORT results. Tail structure must
-  remain visible.
-- Do not mine a threshold, cooldown, minimum-R, no-chase distance, session gate,
-  or direction quota from consumed data and silently call it a rule.
-- Keep decision fields and future outcomes physically separable.
-- Never inspect future prices before a historical decision timestamp.
-- A closed Child stays closed; hindsight never resurrects it.
+`P(opposite standard-H4 HA color within the next 3 completed H4 bars)`
 
-## 9. ML boundary
+The first modeling ladder is:
 
-ML is deliberately late in the roadmap.
+1. constant/base-rate predictor;
+2. regularized logistic regression;
+3. shallow tree / small Random Forest only if the linear baseline leaves a
+   repeatable nonlinear residual;
+4. XGBoost/CatBoost only if justified later;
+5. sequence models only after tabular baselines are understood.
 
-If reached, begin with causal HA-state features and simple/interpretable models
-(logistic/regularized linear baselines, then tree models) before LSTM/TCN/
-Transformer-style sequence models.
+Candidate decision-time features come only from already measured causal state:
+H4 HA morphology, ordered H1 path, HA-5 raw structure, HASTOC10, MA context,
+ATR-normalized coordinates, ADX/DMI and normalized tick participation.
 
-Preferred research targets are lifecycle outcomes, for example:
+Because 2024-2026 is consumed development history:
 
-- probability the current HA color survives another `k` bars;
-- transition hazard to the opposite color;
-- remaining favorable excursion before the flip;
-- giveback from future peak to eventual HA exit;
-- time to opposite-color confirmation.
+- use chronological walk-forward/out-of-fold predictions;
+- never report in-sample model predictions as strategy performance;
+- keep year/side/Journey/tail diagnostics;
+- do not choose a trading threshold from the same OOF predictions and call it
+  production evidence;
+- untouched future data is required for strong promotion claims.
 
-The future may define an outcome label **after** decision-time features are
-frozen; it may never leak into the feature vector.
+The first HA-8 question is whether the model can separate **true transition**
+from **temporary weakness inside a profitable persistent Journey** better than
+simple state variables, while keeping calibration and tail diagnostics visible.
 
-Any Python model promoted toward MT5 must reproduce the complete preprocessing
-path in MQL5 and pass vector/output parity before economic claims. ONNX is a
-transport format, not a substitute for preprocessing parity.
+## 7. Execution boundary
 
-## 10. Execution boundary
+Official economics still require MT5 Strategy Tester `Every tick based on real
+ticks` under the frozen protocol. The exact-window official Baseline-0 economic
+receipt is still pending. The existing extended run confirms structural parity
+but uses a later end date and 1:500 leverage instead of the frozen 1:100 setup.
 
-Official economics come from MT5 Strategy Tester with `Every tick based on real
-ticks`.
-
-Execution revision 13.002 follows
-`V13_EXECUTION_RECOVERY_20260926.md`. Explicit transient rejections may recover;
-ambiguous/permanent failures invalidate the run.
-
-The current uploaded report is an extended diagnostic run, not the official
-exact-window receipt, because it ends after the frozen cutoff and uses different
-leverage from the frozen protocol.
-
-## 11. Current next action
-
-HA-0..HA-5 descriptive work is recorded in compact receipts. HA-4C/D
-rejoined HA morphology, representation and ordered H1 paths on identical
-Standard-H4 decisions. H1 repair versus persistent opposition separated
-different lifecycle states, but the pooled difference was sensitive to H4
-geometry overlap and binning; all 88 long Journeys had an H1 opposition.
-PRE/POST EMA color equivalence did not imply wick equivalence. D1 added little
-next-H4 distinction. HA-5 causally confirmed raw-price swings from M1 and
-compared favorable/adverse interactions on the same H4 Journeys. Favorable
-rejection/return distinguished some H1-opposed reversals, but H4-morphology
-overlap reduced the contrast and many long Journeys had false warnings. No
-swing/MTF/FAST/EMA veto or exit was promoted. Read the HA-5 receipt before
-moving to roadmap HA-6 as a separately named observation-only family.
-
-The exact-window MT5 rerun should still be captured before any strategy variant
-is promoted economically, but it does not block observation-only HA measurement.
+No HA-6/HA-7 result changes the EA. If an HA-8 model ever affects action, Python
+and MQL5 preprocessing/vector/output parity must be demonstrated before tester
+economics.

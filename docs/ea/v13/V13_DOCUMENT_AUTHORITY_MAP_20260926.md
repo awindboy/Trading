@@ -1,54 +1,57 @@
 # V13 document authority map
 
-As of `2026-09-27`, read V13 authority in this order:
+As of `2026-09-27`, this local update package was prepared against GitHub
+`main` HEAD `40f97352e47c66cd3b952f74532b1b71969e79fd`.
 
-1. `AGENTS_V13.md` — generation boundary, frozen baseline, causal rules and
-   research discipline.
-2. `HANDOFF_V13.md` — shortest resume point and immediate next work.
-3. `RESEARCH_STATE_V13.md` — current evidence, tester status and active question.
-4. `V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_20260926.md` — source-backed HA
-   knowledge map, source authority classes and combination leads.
-5. `V13_HA_RESEARCH_ROADMAP_20260926.md` — ordered one-component-at-a-time HA
-   research program.
-6. `V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md` — exact strategy semantics.
-7. `V13_EXECUTION_RECOVERY_20260926.md` — current runtime failure/recovery
-   semantics.
-8. `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` — exact tester setup and required
-   report fields.
-9. `V13_HA3_REPRESENTATION_COMPARISON_CONTRACT_20260927.md` — named,
-   observation-only four-representation comparison; not a strategy rule.
-10. `V13_HA4_MTF_OBSERVATION_CONTRACT_20260927.md` — D1 then H1 causal,
-    observation-only comparison; no MTF action authority.
-11. `V13_HA4C_INTEGRATED_STATE_CONTRACT_20260927.md` and
-    `V13_HA4D_EMA_MORPHOLOGY_CONTRACT_20260927.md` — observation-only
-    supplements correcting the color-heavy HA-3/4 scope.
-12. `V13_HA5_CAUSAL_RAW_SWING_CONTRACT_20260927.md` — frozen first
-    observation-only raw-price swing probe; no trading rule.
-13. `results/README.md` — compact result routing, including HA-5.
-14. `results/V13_HA5_CAUSAL_RAW_SWING_RECEIPT_20260927.md` — causal raw
-    swing interactions, H1-warning comparison and tail counterexamples.
-15. `results/V13_HA4C_D_INTEGRATED_STATE_RECEIPT_20260927.md` — same-Journey
-    morphology, ordered-H1, FAST/D1 and EMA-wick evidence; no action rule.
-16. `results/V13_BASELINE0_EXTENDED_ACTUAL_TICK_DIAGNOSTIC_20260926.md` — latest
-    actual-tick structural-parity diagnostic; not the official exact-window
-    economic receipt.
-17. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` — frozen Baseline-0 MQL5
-    implementation.
-18. `../../../mt5/tester/V13HAOnlyMax10.GOLD.actualticks.2024_2026.ini` — starter
-    tester configuration; Strategy Tester GUI remains broker/account authority.
+**Important:** until these files are committed, live GitHub remains the Single
+Source of Truth. On the next session, refresh `main` before using this map.
+
+Read V13 authority in this order after the package is committed:
+
+1. `AGENTS_V13.md` — active generation, frozen baseline, causal discipline and
+   current HA-8A boundary.
+2. `HANDOFF_V13.md` — shortest current resume point.
+3. `RESEARCH_STATE_V13.md` — consolidated evidence through HA-7 and active
+   question.
+4. `V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_20260926.md` — original source map.
+5. `V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_ADDENDUM_20260927.md` — platform
+   references and local evidence added during HA-6/HA-7.
+6. `V13_HA_RESEARCH_ROADMAP_20260926.md` — original ordered research program.
+7. `V13_HA_RESEARCH_ROADMAP_STATUS_ADDENDUM_20260927.md` — completion status
+   through HA-7 and immediate HA-8A next step.
+8. `V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md` — exact Baseline-0 semantics.
+9. `V13_EXECUTION_RECOVERY_20260926.md` — runtime failure/recovery semantics.
+10. `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` — official tester requirements.
+11. HA-3/4/4C/4D/5 contracts — earlier consumed observation definitions.
+12. `V13_HA6A_HASTOC_OBSERVATION_CONTRACT_20260927.md`.
+13. `V13_HA6B1_EMA50_CONTEXT_OBSERVATION_CONTRACT_20260927.md` and
+    `V13_HA6B2_EMA20_ENVELOPE_OBSERVATION_CONTRACT_20260927.md`.
+14. `V13_HA6C_ATR_NORMALIZATION_OBSERVATION_CONTRACT_20260927.md`.
+15. `V13_HA6D1_ADX_WILDER_OBSERVATION_CONTRACT_20260927.md`.
+16. `V13_HA6E_TICK_VOLUME_PARTICIPATION_CONTRACT_20260927.md` and
+    `V13_HA6E2_H1_OPPOSITION_PARTICIPATION_CONTRACT_20260927.md`.
+17. `V13_HA7_FIRST_ACTION_CHILD_ADMISSION_CONTRACT_20260927.md` — first
+    action experiment; its receipt rejects the action.
+18. `V13_HA6_HA7_RESEARCH_SYNTHESIS_20260927.md` — cross-stage mechanism
+    synthesis; use together with individual receipts, not instead of them.
+19. `results/README.md` and the HA-0..HA-7 receipts. For exact numbers and
+    caveats, the stage receipt controls over prose summaries.
+20. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` — frozen Baseline-0 EA.
+21. `../../../mt5/tester/V13HAOnlyMax10.GOLD.actualticks.2024_2026.ini` —
+    tester starter configuration.
 
 ## Precedence
 
-V13 controls active strategy research. V12 and earlier remain historical.
-
-The knowledge/source register and research roadmap define research order only;
-they do not modify Baseline 0. A new trading rule requires a separate named V13
-contract and a full-window comparison.
-
-Execution revision 13.002 supersedes the initial halt-on-any-order-failure
-paragraph. Use the same execution revision for all economic comparators unless a
-later explicit execution-only revision replaces it.
-
-MetaQuotes standard HA semantics are the formula authority. Community variants
-that use different formulas or smoothing are separate representations and must
-be named as such; they cannot silently redefine standard HA.
+- V13 controls active strategy research. V12 and earlier are history/evidence.
+- Baseline-0 contract controls trading semantics until a later accepted action
+  contract explicitly replaces part of it.
+- Individual stage contracts define what was allowed to be measured/tested.
+- Individual result receipts control exact measured numbers and limitations.
+- The HA-6/HA-7 synthesis explains cross-stage interpretation but cannot invent
+  authority absent from a receipt.
+- The HA-7 action was **rejected** and has no EA authority.
+- HA-8A begins as model observation/evaluation only. No prediction threshold or
+  trade action is authorized until a later frozen action contract and required
+  validation exist.
+- MetaQuotes platform/reference semantics outrank community formulas where they
+  conflict. External strategy examples are research leads, never edge proof.

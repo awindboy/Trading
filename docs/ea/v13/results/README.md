@@ -1,62 +1,87 @@
 # V13 results
 
-Status: `HA-5 FIRST FIXED PROBE COMPLETE / EXACT-WINDOW OFFICIAL ECONOMIC RECEIPT STILL PENDING`
+Status: `HA-0..HA-6 OBSERVATION COMPLETE / HA-7 FIRST ACTION REJECTED / HA-8A NEXT / EXACT-WINDOW OFFICIAL ECONOMIC RECEIPT STILL PENDING`
 
-Store only compact, source-backed result receipts here.
+Store compact source-backed receipts here. Generated feature/label CSVs and large
+raw/tester artifacts remain outside Git unless explicitly promoted.
 
-## Current receipts
+## Baseline / execution receipts
 
-- `V13_EXECUTION_13002_TEST_RECEIPT_20260926.md` — compilation and synthetic
-  execution-recovery tests; not economic evidence.
-- `V13_BASELINE0_EXTENDED_ACTUAL_TICK_DIAGNOSTIC_20260926.md` — user's extended
-  GOLD# real-tick report, structural parity through the canonical cutoff, and
-  explicit protocol mismatches. Diagnostic only.
-- `V13_HA0_MEASUREMENT_RECEIPT_20260927.md` — causal standard-HA source/ledger
-  parity and Journey/Child structural counts.
-- `V13_HA1_MORPHOLOGY_PERSISTENCE_RECEIPT_20260927.md` — body, wick and
-  contraction transition associations; no rule.
-- `V13_HA2_LIFECYCLE_GIVEBACK_RECEIPT_20260927.md` — raw M1 extreme-to-flip
-  lag and giveback anatomy; no exit rule.
-- `V13_HA3_REPRESENTATION_COMPARISON_RECEIPT_20260927.md` — STD, FAST-R25 and
-  pre/post-EMA2 descriptive comparison; no representation promoted.
-- `V13_HA4_D1_STANDARD_HA_RECEIPT_20260927.md` — last completed D1 standard
-  HA context at H4 decisions; no alignment gate.
-- `V13_HA4_H1_STANDARD_HA_RECEIPT_20260927.md` — completed H1 warning,
-  false-warning and H4 raw-close redundancy checks; no exit rule.
-- `V13_HA4C_D_INTEGRATED_STATE_RECEIPT_20260927.md` — same-Standard-Journey
-  HA morphology, ordered H1 path, FAST/D1 and PRE/POST EMA wick comparisons;
-  this supplement is required context before interpreting HA-3/4 as complete
-  HA-state research. No action rule.
-- `V13_HA5_CAUSAL_RAW_SWING_RECEIPT_20260927.md` — M1-prefix confirmed raw
-  H4 pivots, break/rejection/return states, H1-warning overlap and long-Journey
-  false-warning accounting. First fixed probe only; no action rule.
+- `V13_EXECUTION_13002_TEST_RECEIPT_20260926.md` — execution-recovery tests;
+  not economic evidence.
+- `V13_BASELINE0_EXTENDED_ACTUAL_TICK_DIAGNOSTIC_20260926.md` — extended real-
+  tick structural-parity diagnostic; not official exact-window economics.
 
-Generated CSV ledgers and summary JSON are local under
-`output/v13_ha3_20260927/` and are not Git authority. The reproducible source
-is `research/v13/ha_representation_audit.py`.
+## HA-0 through HA-5
 
-HA-4's separately generated D1/H1 decision-feature, future-label and summary
-files are local under `output/v13_ha4_d1_20260927/` and
-`output/v13_ha4_h1_20260927/`. Its source is
-`research/v13/ha4_mtf_audit.py`.
+- `V13_HA0_MEASUREMENT_RECEIPT_20260927.md`
+- `V13_HA1_MORPHOLOGY_PERSISTENCE_RECEIPT_20260927.md`
+- `V13_HA2_LIFECYCLE_GIVEBACK_RECEIPT_20260927.md`
+- `V13_HA3_REPRESENTATION_COMPARISON_RECEIPT_20260927.md`
+- `V13_HA4_D1_STANDARD_HA_RECEIPT_20260927.md`
+- `V13_HA4_H1_STANDARD_HA_RECEIPT_20260927.md`
+- `V13_HA4C_D_INTEGRATED_STATE_RECEIPT_20260927.md`
+- `V13_HA5_CAUSAL_RAW_SWING_RECEIPT_20260927.md`
 
-HA-4C/D's regenerated H1/D1 and integrated ledgers are local under
-`output/v13_ha4c_*_20260927/`. Reproduce with `ha4_mtf_audit.py` and
-`research/v13/ha_integrated_state_audit.py`; local ledgers are not Git
-authority.
+These receipts establish the causal standard-HA ledger, morphology/lifecycle,
+alternate representations, D1/H1 context and raw-swing complement. None grants
+a trade rule.
 
-HA-5 decision features, unchanged future labels and summary JSON are local
-under `output/v13_ha5_raw_swing_20260927/`. Its source is
-`research/v13/ha5_causal_raw_swing_audit.py`; the compact receipt above is
-Git authority.
+## HA-6 complementary-family receipts
+
+- `V13_HA6A_HASTOC_OBSERVATION_RECEIPT_20260927.md` — published HASTOC formula
+  parity; strong pooled ordering but substantial morphology/H1 redundancy and
+  long-tail false warnings. Candidate model feature only.
+- `V13_HA6B_MOVING_AVERAGE_CONTEXT_RECEIPT_20260927.md` — separate EMA50 regime
+  and EMA20 envelope observations. Slower context, no alignment/exit authority.
+- `V13_HA6C_ATR_NORMALIZATION_RECEIPT_20260927.md` — ATR14 reduces cross-era
+  price-unit drift; ATR is normalization only, not signal/risk authority.
+- `V13_HA6D1_ADX_WILDER_RECEIPT_20260927.md` — ADX/DMI audit. ADX weak/unstable,
+  DMI largely MA-redundant, tail false warnings; HA-6D branch stop. SuperTrend
+  not tested.
+- `V13_HA6E_TICK_VOLUME_PARTICIPATION_RECEIPT_20260927.md` — broker tick-volume
+  semantics/data quality, same-slot normalization, persistent-H1 participation
+  interaction; no universal volume filter/exit authority.
+
+## HA-7 first action receipt
+
+- `V13_HA7_FIRST_ACTION_CHILD_ADMISSION_RECEIPT_20260927.md` — frozen single
+  Child-admission experiment. **Rejected**: 89 Children skipped, net -77.93
+  points versus Baseline, realized-Journey DD +30.91 worse, and +341.09 points
+  removed from 15 long-Journey Children. No EA change and no threshold tuning.
+
+## Cross-stage synthesis
+
+Read `../V13_HA6_HA7_RESEARCH_SYNTHESIS_20260927.md` for the cross-stage
+mechanism interpretation and the reason HA-8A is now justified. Exact stage
+numbers/caveats still come from the individual receipts above.
+
+## Reproducible source for HA-6/HA-7
+
+The documentation package adds these scripts under `research/v13/`:
+
+```text
+ha6a_hastoc_audit.py
+ha6b1_ema50_context_audit.py
+ha6b2_ema20_envelope_audit.py
+ha6c_atr_normalization_audit.py
+ha6d1_adx_wilder_audit.py
+ha6e_tick_volume_audit.py
+ha6e2_h1_opposition_participation_audit.py
+ha7_child_admission_audit.py
+```
+
+Compact JSON summaries are included in the documentation ZIP under
+`evidence/v13/ha6_ha7/` for audit convenience, but they are not intended to
+become Git authority unless explicitly promoted. Large decision CSVs are omitted.
 
 ## Official Baseline-0 receipt still required
 
-Expected file:
+Expected authority file:
 
 `V13_BASELINE0_MT5_ACTUAL_TICK_RESULT_20260926.md`
 
-It should come from a run matching the frozen protocol exactly, including:
+Required setup remains:
 
 ```text
 GOLD#
@@ -64,12 +89,10 @@ H4
 Every tick based on real ticks
 2024-01-01 .. 2026-08-28
 10,000 USD
-1:100 leverage unless the authority is explicitly revised
+1:100 leverage unless authority is explicitly revised
 hedging mode
 current execution revision
 ```
 
-Identify EA revision/hash, tester build/broker, raw report filename/hash, and the
-metrics required by `../V13_MQL5_BACKTEST_PROTOCOL_20260926.md`.
-
-Large XLSX/HTML/CSV tester exports stay outside Git unless explicitly promoted.
+Record EA revision/hash, tester build/broker, report filename/hash and all metrics
+required by `../V13_MQL5_BACKTEST_PROTOCOL_20260926.md`.

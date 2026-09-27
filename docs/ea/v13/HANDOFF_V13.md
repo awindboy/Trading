@@ -1,125 +1,245 @@
 # V13 handoff
 
 Last synchronized: `2026-09-27`
-Status: `BASELINE 0 FROZEN / HA-5 FIRST FIXED PROBE COMPLETE / HA-6 OBSERVATION NEXT`
+Status: `BASELINE 0 FROZEN / HA-0..HA-6 OBSERVATION COMPLETE / HA-7 FIRST ACTION REJECTED / HA-8A NEXT`
+Market: `GOLD# ONLY`
+GitHub SSOT base used for this local documentation package: `40f97352e47c66cd3b952f74532b1b71969e79fd`
+Package status: `NOT YET COMMITTED TO GITHUB`
 
 ## Resume point
 
-V13 uses the simple EA as an observation instrument. HA-0..HA-5 research
-receipts document morphology, lifecycle, four HA representations and D1/H1
-context on the **same** Standard-H4 Journey. These are consumed development
-evidence, not trading rules. HA-4C/D specifically repaired the earlier
-color-heavy comparison scope; it did not prove a safe exit. HA-5 first fixed
-probe confirmed actual raw-price swings causally and compared them with
-ordered-H1 warnings and H4 morphology. It likewise did not prove a safe exit.
+V13 has completed the HA representation/observation program through HA-6 and
+performed exactly one HA-7 action experiment. **Baseline 0 has not changed.**
+The first deterministic action candidate failed because it removed economically
+important continuation-tail Children despite elevated reversal probability.
 
-The latest uploaded MT5 report is an extended real-tick run through
-`2026-09-26`. Its canonical prefix confirms the intended Journey/Child structure:
+The next research step is **HA-8A: causal lifecycle state-model baseline**, not
+another indicator threshold sweep.
 
-```text
-965 closed Journeys through the canonical source cutoff
-3,858 Children inside those 965 closed Journeys
-+ one open Journey (J966) beginning 2026-08-28 20:00
-```
-
-Those counts match the deterministic H4 sanity reconstruction. The report is
-not the official exact-window economic receipt because it extends beyond
-`2026-08-28` and used `1:500` leverage rather than the frozen protocol's `1:100`.
-See the diagnostic receipt.
-
-## Read first
-
-1. refresh GitHub `main`;
-2. read `AGENTS_V13.md`;
-3. read the authority map and this handoff;
-4. read `RESEARCH_STATE_V13.md`;
-5. read `V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_20260926.md`;
-6. read `V13_HA_RESEARCH_ROADMAP_20260926.md`.
-
-## Baseline in one block
+## Frozen Baseline 0
 
 ```text
-standard H4 HA only
+completed standard H4 HA only
 same-color run = Journey
-one Child after every completed same-color H4 HA
-maximum 10 Children
-first opposite completed H4 HA = close all
-same event then starts opposite Journey
+Child #1 on qualifying flip, then one Child per completed same-color H4
+maximum 10 successful Children
+first opposite completed H4 = close all
+same event then starts opposite Journey after close-all
 1 fixed unit per Child
-no SL / no TP / no filters / no ML
+no SL / no TP / no filters / no ML action
 ```
 
-## What was learned conceptually
+Canonical window: `2024-01-01 .. 2026-08-28 available GOLD# history`.
 
-Do not overinterpret the current simple strategy.
+Structural sanity remains:
 
-The useful result is that it exposes HA behavior:
+```text
+closed Journeys: 965
+closed Children: 3,858
+gross net points: +8,147.11
+Journey PF: 1.2597
+Child PF: 1.2000
+```
 
-- smoothing creates long same-color persistence during directional moves;
-- the same persistence delays reversal confirmation;
-- later Children naturally enter farther along the move and can give back more
-  before an opposite color appears;
-- short choppy runs and long persistent runs are two manifestations of the same
-  smoothing mechanism.
+The extended actual-tick MT5 run remains diagnostic only because it extends
+beyond the frozen cutoff and used 1:500 rather than 1:100 leverage. Exact-window
+official economic receipt is still pending.
 
-This is not authority to ban SHORTs, lower the ten-Child cap, or add a fixed
-late-Child rule.
+## What HA-0..HA-5 established
 
-## Completed observation work — HA-0..HA-5
+- HA morphology is richer than color, but body/Delta/wicks are overlapping
+  geometry rather than independent votes.
+- Standard HA captures long persistence at the cost of delayed reversal
+  confirmation and giveback.
+- D1 standard HA adds little next-H4 distinction.
+- H1 opposition is informative but not safe: 735/1,395 ending-H1-opposed
+  decisions did not flip next H4, and all 88 long Journeys contained an H1
+  opposition warning.
+- Ordered H1 path matters: repair differs from persistent/unrepaired opposition,
+  but pooled effects shrink after H4 morphology matching.
+- Causal raw swing rejection/return helps describe some transition states but
+  has limited coverage and major long-Journey false warnings.
 
-The Baseline-0 EA strategy remains unchanged. Decision ledgers record completed
-H4 raw/HA OHLC, HA body/Delta/range/wick geometry, streak and Child index.
-Separate future-label ledgers record raw M1 extrema, final Journey length,
-exit/giveback and idealized no-cost Child price differences. These ledgers are
-reproducible from `research/v13/ha_representation_audit.py` and stored locally;
-compact source-backed findings are in `results/`.
+## HA-6A — HASTOC10
 
-HA-1: stronger HA body and clean opposite-wick morphology corresponded to
-longer persistence, but are overlapping geometry, not two independent signals.
-HA-2: median raw-extreme-to-exit lag was 7.35h and median giveback 21.41
-GOLD price. HA-3: changing responsiveness exchanged shorter lag for more
-short-lived Journeys, or vice versa. HA-4: D1 alignment weakly separated
-next-H4 flips (22.8% aligned versus 24.3% opposed); H1 opposition separated
-them more (11.2% versus 47.3%) but 735 of 1,395 H1-opposed decisions did
-not flip next H4 and all 88 long Journeys had at least one such warning.
-Much of H1's pooled separation overlaps with H4 raw-close geometry. HA-4C/D
-then separated H1 opposition that repaired within the H4 bar (16.1% next-H4
-flip, 1,073 decisions) from opposition remaining at the end (46.6%-51.1%,
-depending on its H1 path). However, H1's +36.1-point pooled opposition
-contrast shrank to +13.1 or +4.4 points in different H4-morphology/raw-close
-overlap bins, with incomplete coverage. All 88 long Journeys had at least one
-H1-opposed warning, and 254 of their 318 warnings were not followed by a
-next-H4 flip. PRE/POST EMA2 color identity hid 518 decisions with different
-opposite-wick presence. No threshold or trade rule was promoted; see the
-HA-4C/D receipt before interpreting HA-3 or HA-4 in isolation.
+Formula parity was checked against the published HASTOC sample using:
 
-HA-5 rebuilt 7,198 H4 bars from 1,648,308 chronological M1 rows with zero
-OHLC mismatches and classified 4,105 labeled Standard-H4 decisions against
-previously confirmed actual-price swing levels. A fresh favorable close beyond
-a swing had only 4.0% next-H4 reversals; a return inside a previously crossed
-level had 64.7%. In last-H1-opposed decisions, favorable rejection/return
-preceded 58.7% next-H4 reversals versus 45.0% otherwise, but this caught only
-138/660 reversals, shrank after H4-morphology matching, and falsely warned in
-long Journeys. No level state or numerical cutoff was promoted. Read
-`results/V13_HA5_CAUSAL_RAW_SWING_RECEIPT_20260927.md` for scope and caveats.
+```text
+D_t = HA_OPEN_t - HA_CLOSE_t
+HASTOC10 = 100 * (D_t - min(D[t-9:t])) / (max(D[t-9:t]) - min(...))
+```
 
-## Immediate next work — HA-6 observation planning
+Journey-oriented HASTOC quintiles showed strong pooled ordering:
 
-The HA-5 first probe is complete as *description*. Do not turn its return-
-inside or rejected-break states into an exit: within finer H4-morphology cells
-there was no support for an independent claim, and 56/88 long Journeys had a
-favorable rejection/return at some point. If revisiting raw swings, freeze a
-distinct incremental question before measuring. Otherwise follow roadmap
-HA-6 one complementary family at a time, observation first; begin by stating
-which information that family adds beyond HA morphology, ordered H1 and
-actual raw structure. No swing, D1, H1, FAST or EMA veto/exit is authorized.
+```text
+Q1 weakest  next flip 35.8%   flip<=3 66.4%   remaining favorable 0.63 ranges
+Q5 strongest next flip  9.3%   flip<=3 44.6%   remaining favorable 0.95 ranges
+```
 
-HA-3's PRE-EMA2 and POST-EMA2 color sequences were identical under the stated
-linear formulas. HA-4/5's warnings need false-warning and tail-preservation
-accounting before any action experiment. The exact-window actual-tick
-Baseline-0 receipt remains pending.
+But after H4 morphology, Delta/wick, H1 and HA-5 matching, the independent
+separation shrank materially. Weak HASTOC appeared in 84/88 long Journeys; 261
+of 337 weak-tail decisions did not reverse next H4. Retain as a state feature,
+not an exit.
 
-## Following order
+## HA-6B — moving-average context
 
-Follow the roadmap. Do not jump directly to EMA/ADX/ML merely because
-external sources combine them successfully in examples.
+### EMA50 raw-close level/slope
+
+```text
+slope opposed: 1,360 decisions, 29.71% next flip
+slope aligned: 2,745 decisions, 20.36%
+position opposed: 1,451 decisions, 26.95%
+position aligned: 2,654 decisions, 21.55%
+```
+
+After prior-state matching, residual next-H4 separation was only about 3 pp,
+while the 3-H4 horizon retained about 9 pp. EMA50 is slower regime context.
+Long-tail warning: slope opposition appeared in 37/88 long Journeys; 128/129
+warnings did not flip next H4 and 3.44 ranges of favorable movement remained at
+the median.
+
+### EMA20 High/Low envelope
+
+```text
+not beyond directional boundary: 27.56% next flip / 62.09% within 3
+beyond boundary:                 20.23% / 52.00%
+```
+
+After the full prior state stack the supported comparison was only 1,020/4,105
+decisions. In long Journeys, not-beyond occurred in 62/88 Journeys and 190/191
+warnings did not flip next H4. No EMA gate/exit.
+
+## HA-6C — ATR normalization
+
+ATR14 was used as a coordinate only. Median H4 ATR14 rose from `11.99` in 2024
+to `41.01` in 2026. Raw price-unit HA/EMA measures therefore drift strongly.
+ATR normalization reduced yearly median drift, e.g.:
+
+```text
+|HA Delta| raw max/min 3.91x -> ATR-normalized 1.10x
+|raw Close - HA Close| 3.86x -> 1.03x
+|HA Close - EMA50| 3.89x -> 1.23x
+```
+
+ATR level itself did not provide a useful monotone transition selector. Existing
+trailing-20-H4 range normalization remains at least as stable for lifecycle
+outcomes. No ATR filter/SL/TP/sizing authority.
+
+## HA-6D1 — ADX Wilder 14
+
+- ADX strength is genuinely different from instantaneous HA morphology but only
+  weakly separates lifecycle state and is unstable by year/side.
+- DMI direction looks stronger raw but correlates heavily with EMA50/EMA20
+  context (`+0.862` / `+0.908`).
+- ADX falling is directionally consistent raw but its independent next-H4
+  increment falls to nearly zero after the full prior-state stack.
+- Long Journeys are heavily falsely marked: ADX falling occurs 355 times in 71
+  long Journeys, with 336 not flipping next H4 and 3.38 ranges median favorable
+  movement still remaining.
+
+HA-6D stop condition met. SuperTrend was not tested and is not judged.
+
+## HA-6E — tick-volume participation
+
+Data semantics/quality:
+
+```text
+7,199 H4 rows
+0 duplicate H4 timestamps
+0 zero tick-volume H4 rows
+real volume nonzero rows: 0
+M1 summed tick volume -> H4 tick volume: 7,199/7,199 exact
+```
+
+Absolute H4 tick-volume median drifted `25,022 -> 37,382 -> 56,328.5` from
+2024 to 2026, so absolute tick count is unusable cross-era. The fixed research
+coordinate is:
+
+`relative_tick_volume20 = current H4 tick volume / median(previous 20 same-H4-slot tick volumes)`
+
+Its overall Q1-to-Q5 next-H4 flip gradient was `28.5% -> 19.7%`, but matching
+H4 morphology reduced the difference to about `0.65 pp`; universal volume
+filtering is therefore rejected.
+
+The important interaction was `persistent_opposition`: high participation was
+associated with more transition. In the localized H1-participation audit:
+
+```text
+persistent Q1: n=44, next flip 36.4%, flip<=3 56.8%, remaining favorable 0.85
+persistent Q5: n=44, next flip 65.9%, flip<=3 88.6%, remaining favorable 0.43
+```
+
+But localized H1 activity and whole-H4 relative activity had rho `0.973`, so do
+not count them as two signals. Long-Journey false warnings remained.
+
+## HA-7 — first action experiment: REJECTED
+
+Frozen action:
+
+```text
+on original Journey bar 2..10 only:
+  if h1_path_state == persistent_opposition
+  and relative_tick_volume20 > 1.0:
+      skip only that bar's add-on Child
+keep existing Children and Journey open
+never veto Child #1
+never backfill a skipped Child
+```
+
+`1.0` was semantic (above own same-slot trailing median), not optimized.
+
+Result:
+
+```text
+Baseline: 3,858 Children, +8,147.11 points, realized-Journey DD 3,659.45
+Variant:  3,769 Children, +8,069.18 points, realized-Journey DD 3,690.36
+Skipped: 89 Children
+Net change: -77.93 points
+DD change: +30.91 points (worse)
+```
+
+The skipped set had 38 winners / 51 losers but still contributed +77.93 points.
+Inside >=10-bar Journeys, 15 skipped Children contributed **+341.09 points**
+(11 winners / 4 losers). The action directly damaged the right tail. Do not
+tune the threshold, add side/year exceptions, invent a late-Child cap, or turn
+the same state into an exit.
+
+## Central inference after HA-7
+
+V13 repeatedly observes states with elevated reversal hazard, yet deterministic
+rules fail because continuation tails dominate payoff. The missing problem is
+conditional discrimination of *true transition* versus *temporary weakness*.
+
+That is now the purpose of HA-8A.
+
+## Immediate next work — HA-8A
+
+Freeze a model-evaluation contract before fitting. Preferred first label:
+
+`opposite H4 HA occurs within next 3 completed H4 bars`
+
+Use only causal features already measured. Start with:
+
+1. base rate;
+2. regularized logistic regression;
+3. shallow tree / small Random Forest only if justified.
+
+Validation:
+
+- chronological walk-forward/out-of-fold only on consumed 2024-2026 history;
+- no random train/test split as the primary evidence;
+- no in-sample prediction presented as strategy result;
+- report calibration/discrimination by year, side, Journey age and long-tail
+  exposure;
+- compare against simple baselines such as H1 path alone and HASTOC alone;
+- no trading threshold/action mapping in HA-8A;
+- untouched future data remains necessary for promotion.
+
+## Do not resume with
+
+- SuperTrend just because it was next to ADX in an external product;
+- RSI/MACD/another indicator stack without a distinct information mechanism;
+- threshold search over HASTOC/EMA/ATR/ADX/volume;
+- side/year special cases mined from consumed data;
+- a new exit or Child veto before conditional state-model evidence exists;
+- production/EA modification from the rejected HA-7 experiment.
