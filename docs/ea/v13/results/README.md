@@ -1,6 +1,6 @@
 # V13 results
 
-Status: `HA-0..HA-6 OBSERVATION COMPLETE / HA-7 FIRST ACTION REJECTED / HA-8A NEXT / EXACT-WINDOW OFFICIAL ECONOMIC RECEIPT STILL PENDING`
+Status: `HA-0..HA-6 OBSERVATION COMPLETE / HA-7 REJECTED / HA-8A FIRST MODEL DIAGNOSTIC COMPLETE-NO ACTION / EXACT-WINDOW OFFICIAL ECONOMIC RECEIPT STILL PENDING`
 
 Store compact source-backed receipts here. Generated feature/label CSVs and large
 raw/tester artifacts remain outside Git unless explicitly promoted.
@@ -49,6 +49,14 @@ a trade rule.
   Child-admission experiment. **Rejected**: 89 Children skipped, net -77.93
   points versus Baseline, realized-Journey DD +30.91 worse, and +341.09 points
   removed from 15 long-Journey Children. No EA change and no threshold tuning.
+
+## HA-8A first state-model diagnostic
+
+- `V13_HA8A_COMBINATION_MODEL_RECEIPT_20260928.md` — frozen chronological
+  logistic-model ladder across H4/H1, HASTOC, normalized tick activity,
+  causal raw swing and EMA50. Modest three-H4 flip prediction increment, but
+  highest-risk add-on Children remained net-positive because of long-Journey
+  continuation winners. **Observation only; no model/action promotion.**
 
 ## Cross-stage synthesis
 

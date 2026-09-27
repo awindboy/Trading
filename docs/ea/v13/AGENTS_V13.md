@@ -1,10 +1,9 @@
 # V13 Research Instructions — Minimal HA Rebuild
 
-Last synchronized: `2026-09-27`
-Status: `ACTIVE / BASELINE 0 FROZEN / HA-0..HA-6 OBSERVATION COMPLETE / HA-7 FIRST ACTION REJECTED / HA-8A NEXT / NO PRODUCTION AUTHORITY`
+Last synchronized: `2026-09-28`
+Status: `ACTIVE / BASELINE 0 FROZEN / HA-7 REJECTED / HA-8A FIRST MODEL DIAGNOSTIC COMPLETE / NO PRODUCTION AUTHORITY`
 Market authority: `GOLD# ONLY`
-GitHub SSOT base HEAD used for this documentation update: `40f97352e47c66cd3b952f74532b1b71969e79fd`
-Package status: `LOCAL DOCUMENT UPDATE / NOT YET COMMITTED TO GITHUB`
+GitHub SSOT base HEAD checked for this update: `53457bf5a38b0da0b77da094b6ea0223bc238fab`
 
 ## 0. Start order
 
@@ -23,6 +22,7 @@ Read V13 in this order:
 7. `V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_ADDENDUM_20260927.md`;
 8. `V13_HA_RESEARCH_ROADMAP_20260926.md`;
 9. `V13_HA_RESEARCH_ROADMAP_STATUS_ADDENDUM_20260927.md`;
+   then `V13_HA_RESEARCH_ROADMAP_STATUS_ADDENDUM_20260928.md`;
 10. `V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md`;
 11. `V13_EXECUTION_RECOVERY_20260926.md` and
     `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` before tester/execution work;
@@ -30,7 +30,9 @@ Read V13 in this order:
     contracts added on `2026-09-27`;
 13. `V13_HA6_HA7_RESEARCH_SYNTHESIS_20260927.md`;
 14. `results/README.md` and the compact receipts through HA-7;
-15. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` before any implementation change.
+15. `V13_HA8A_COMBINATION_MODEL_CONTRACT_20260928.md` and its result receipt
+    for the completed first HA-8A model diagnostic;
+16. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` before any implementation change.
 
 ## 1. Frozen Baseline 0 remains unchanged
 
@@ -151,14 +153,14 @@ Therefore V13 has not earned a deterministic exit/filter/veto rule from HA-0..
 HA-7. The research problem is now conditional state discrimination, not another
 single-indicator threshold search.
 
-## 6. Immediate next work — HA-8A causal lifecycle state model
+## 6. HA-8A first causal lifecycle state-model diagnostic
 
-HA-8 begins **observation/model evaluation only**, not a trading-rule change.
-The first target should be frozen before fitting, with the preferred first target:
+HA-8 remains **observation/model evaluation only**, not a trading-rule change.
+The first frozen target was:
 
 `P(opposite standard-H4 HA color within the next 3 completed H4 bars)`
 
-The first modeling ladder is:
+The roadmap's complexity ladder was:
 
 1. constant/base-rate predictor;
 2. regularized logistic regression;
@@ -166,6 +168,10 @@ The first modeling ladder is:
    repeatable nonlinear residual;
 4. XGBoost/CatBoost only if justified later;
 5. sequence models only after tabular baselines are understood.
+
+The first HA-8A run stopped at constant/single-family references and
+regularized logistic regression. No tree, boosted or sequence model was run;
+the additive residual was too small and unstable to justify one.
 
 Candidate decision-time features come only from already measured causal state:
 H4 HA morphology, ordered H1 path, HA-5 raw structure, HASTOC10, MA context,
@@ -180,9 +186,18 @@ Because 2024-2026 is consumed development history:
   production evidence;
 - untouched future data is required for strong promotion claims.
 
-The first HA-8 question is whether the model can separate **true transition**
-from **temporary weakness inside a profitable persistent Journey** better than
-simple state variables, while keeping calibration and tail diagnostics visible.
+The first HA-8A combination ladder (H4/H1, HASTOC, same-slot tick activity,
+causal raw swing, EMA50) was evaluated on 3,338 chronological OOF decisions.
+H4+H1 Brier was `0.22608`; the best expanded Brier was only `0.22530`.
+Among 471 highest-risk OOF add-on Children under the activity model, 287 lost
+and 184 won, yet the group contributed `+513.61` idealized price points.
+Profitable long-Journey Children remained false transition warnings. The
+result is **NO ACTION / NO MODEL PROMOTION**; read the 2026-09-28 receipt for
+fold stability, economic decomposition and limitations.
+
+If continuing HA-8, first freeze a distinct economic-lifecycle target and
+explicitly test repeated losing Journeys versus large continuation winners.
+Do not mine a threshold or retroactively reframe this first target as profit.
 
 ## 7. Execution boundary
 
@@ -191,6 +206,6 @@ ticks` under the frozen protocol. The exact-window official Baseline-0 economic
 receipt is still pending. The existing extended run confirms structural parity
 but uses a later end date and 1:500 leverage instead of the frozen 1:100 setup.
 
-No HA-6/HA-7 result changes the EA. If an HA-8 model ever affects action, Python
+No HA-6/HA-7/HA-8A result changes the EA. If an HA-8 model ever affects action, Python
 and MQL5 preprocessing/vector/output parity must be demonstrated before tester
 economics.

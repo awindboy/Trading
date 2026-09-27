@@ -1,8 +1,8 @@
 # Trading repository authority
 
-Last synchronized: `2026-09-27`
-V13 HA-5 causal raw-swing observation base GitHub HEAD:
-`1ab3e2e9dbe6bac0afe6223eef2f3fc3a936d4af`
+Last synchronized: `2026-09-28`
+V13 research update base GitHub HEAD:
+`53457bf5a38b0da0b77da094b6ea0223bc238fab`
 
 ## Active generation
 
@@ -21,12 +21,13 @@ Start every V13 session in this order:
 4. read `docs/ea/v13/HANDOFF_V13.md`;
 5. read `docs/ea/v13/RESEARCH_STATE_V13.md`;
 6. read `docs/ea/v13/V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_20260926.md`;
-7. read `docs/ea/v13/V13_HA_RESEARCH_ROADMAP_20260926.md`;
+7. read `docs/ea/v13/V13_HA_RESEARCH_ROADMAP_20260926.md`, then
+   `docs/ea/v13/V13_HA_RESEARCH_ROADMAP_STATUS_ADDENDUM_20260928.md`;
 8. read `docs/ea/v13/V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md`;
 9. read `docs/ea/v13/V13_EXECUTION_RECOVERY_20260926.md` and
    `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` before tester/execution work;
 10. read the current compact receipts under `docs/ea/v13/results/`, including
-    HA-1 through the HA-5 causal raw-swing receipt;
+    HA-6/HA-7 and the first HA-8A combination-model receipt;
 11. inspect `mt5/experts/V13HAOnlyMax10EA.mq5` before changing implementation.
 
 Where V13 conflicts with V12 or older strategy-routing documents, V13 controls.
@@ -65,12 +66,12 @@ month, quarter, year, or episode is diagnostic only.
 
 ## Current research doctrine
 
-V13 treats Baseline 0 first as an **instrument for learning what standard
-Heikin-Ashi actually represents**. HA-0..HA-5 are descriptive development
-evidence. HA-5 added causally confirmed raw-price swing interactions to the
-same Standard-H4 Journey, but did not establish robust incremental trade
-authority beyond existing H4/H1 information. Read its compact receipt before
-proposing any action rule; the next distinct roadmap stage is HA-6 observation.
+V13 treats Baseline 0 as an **instrument for learning what standard
+Heikin-Ashi actually represents**. HA-0..HA-6 observation and the rejected
+HA-7 first action are documented. The first HA-8A chronological combination
+model diagnostic is complete as observation only: the extra feature families
+barely improved three-H4 flip prediction and did not isolate economically bad
+add-on Children. Read its compact receipt before proposing any action rule.
 The Baseline-0 EA and trading rules have not changed.
 
 Research order is frozen in
@@ -106,8 +107,10 @@ No external source creates a V13 trading rule by itself.
 
 ## ML boundary
 
-ML is a later research stage, not the next step. If reached, begin with causal
-HA-state features and interpretable/tabular models before sequence models.
+The first HA-8A ML observation has been reached. It used causal HA-state
+features and interpretable/tabular logistic models, not sequence models. No
+model or score is a trading rule. If research continues, freeze a separate
+economic-lifecycle target before fitting.
 Preferred targets are lifecycle outcomes such as continuation, transition risk,
 remaining favorable excursion, giveback and time-to-opposite-color rather than
 a direct next-bar LONG/SHORT oracle.

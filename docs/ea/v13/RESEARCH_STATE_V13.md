@@ -1,10 +1,9 @@
 # V13 research state
 
-Last synchronized: `2026-09-27`
-Status: `BASELINE 0 FROZEN / HA-0..HA-6 COMPLETE AS OBSERVATION / HA-7 FIRST ACTION REJECTED / HA-8A NEXT`
+Last synchronized: `2026-09-28`
+Status: `BASELINE 0 FROZEN / HA-7 REJECTED / HA-8A FIRST COMBINATION DIAGNOSTIC COMPLETE / NO ACTION`
 Market authority: `GOLD# ONLY`
-GitHub SSOT base used for this package: `40f97352e47c66cd3b952f74532b1b71969e79fd`
-Package status: `LOCAL UPDATE / NOT YET COMMITTED`
+GitHub SSOT base checked for this update: `53457bf5a38b0da0b77da094b6ea0223bc238fab`
 
 ## 1. Active generation and strategy skeleton
 
@@ -323,11 +322,27 @@ The next scientific question is conditional:
 > genuine H4 Journey transition from temporary weakness while preserving the
 > large continuation tail?
 
-## 12. Active next stage — HA-8A
+## 12. HA-8A first model diagnostic and next boundary
 
-HA-8A is a **state-model evaluation**, not a strategy change.
+HA-8A is a **state-model evaluation**, not a strategy change. Its first
+combination-model ladder is complete as consumed-development evidence; see
+`results/V13_HA8A_COMBINATION_MODEL_RECEIPT_20260928.md` for exact results.
 
-Preferred first label:
+In 3,338 chronological OOF decisions, H4+H1 Brier/AUC were `0.22608/0.6667`.
+Adding HASTOC, relative tick participation, causal raw swing and EMA50 only
+reached best Brier `0.22530` and best AUC `0.6718`, with inconsistent fold
+gains. The activity model's 471 highest-risk OOF add-on Children had 287
+losses and 184 winners but **net +513.61 idealized price points**. Its 66
+long-Journey false warnings contributed +2,471.13. This model does not
+separate economically bad Children from valuable temporary weakness, and no
+score/action threshold is authorized.
+
+The next question, if pursued, is a separately frozen economic-lifecycle
+target emphasizing repeated losing Journeys versus large continuation wins.
+Do not alter the first HA-8A label or refit on this consumed outcome to claim
+an untouched result.
+
+First evaluated label:
 
 `flip_within_3 = opposite standard-H4 HA appears within the next 3 completed H4 bars`
 

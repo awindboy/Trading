@@ -1,10 +1,9 @@
 # V13 handoff
 
-Last synchronized: `2026-09-27`
-Status: `BASELINE 0 FROZEN / HA-0..HA-6 OBSERVATION COMPLETE / HA-7 FIRST ACTION REJECTED / HA-8A NEXT`
+Last synchronized: `2026-09-28`
+Status: `BASELINE 0 FROZEN / HA-7 REJECTED / HA-8A FIRST COMBINATION MODEL DIAGNOSTIC COMPLETE / NO ACTION`
 Market: `GOLD# ONLY`
-GitHub SSOT base used for this local documentation package: `40f97352e47c66cd3b952f74532b1b71969e79fd`
-Package status: `NOT YET COMMITTED TO GITHUB`
+GitHub SSOT base checked for this update: `53457bf5a38b0da0b77da094b6ea0223bc238fab`
 
 ## Resume point
 
@@ -13,8 +12,18 @@ performed exactly one HA-7 action experiment. **Baseline 0 has not changed.**
 The first deterministic action candidate failed because it removed economically
 important continuation-tail Children despite elevated reversal probability.
 
-The next research step is **HA-8A: causal lifecycle state-model baseline**, not
-another indicator threshold sweep.
+HA-8A's first causal combination model diagnostic is now complete. The next
+scientific step, if pursued, is a separately frozen **economic lifecycle
+target** that tests repeated losing Journeys and right-tail preservation. It
+is not another indicator threshold sweep or an EA modification.
+
+The first HA-8A receipt is
+`results/V13_HA8A_COMBINATION_MODEL_RECEIPT_20260928.md`. In 3,338
+chronological OOF decisions, H4+H1 already captured most three-H4 flip
+information (Brier `0.22608`); the best expanded combination reached only
+`0.22530`. Its highest-risk 471 add-on Children had 287 losses but still
+contributed `+513.61` idealized points, with profitable long-Journey false
+warnings. **No model, score, filter, exit or sizing rule was promoted.**
 
 ## Frozen Baseline 0
 
@@ -212,13 +221,23 @@ conditional discrimination of *true transition* versus *temporary weakness*.
 
 That is now the purpose of HA-8A.
 
-## Immediate next work — HA-8A
+## Immediate next work after the first HA-8A diagnostic
 
-Freeze a model-evaluation contract before fitting. Preferred first label:
+The first frozen `flip_within_3` contract and chronological model ladder are
+complete; do not rerun/tune them to rescue a trade filter. Its target was:
 
 `opposite H4 HA occurs within next 3 completed H4 bars`
 
-Use only causal features already measured. Start with:
+For a distinct next target, freeze the decision timestamp, label and economic
+failure definition *before* fitting. Reuse causal features already measured.
+Simple base-rate/logistic baselines remain the first comparison; use a shallow
+nonlinear model only if a stable residual justifies it. In particular, compare
+actual losing-Journey/repeated-loss separation with false alarms in the
+profitable long-Journey tail. Do not call consumed-data OOF independent
+validation.
+
+The roadmap allowed this complexity ladder, but the first diagnostic stopped
+at the constant and regularized logistic baselines (no tree was run):
 
 1. base rate;
 2. regularized logistic regression;
@@ -232,7 +251,7 @@ Validation:
 - report calibration/discrimination by year, side, Journey age and long-tail
   exposure;
 - compare against simple baselines such as H1 path alone and HASTOC alone;
-- no trading threshold/action mapping in HA-8A;
+- no trading threshold/action mapping from the first HA-8A diagnostic;
 - untouched future data remains necessary for promotion.
 
 ## Do not resume with
@@ -241,5 +260,6 @@ Validation:
 - RSI/MACD/another indicator stack without a distinct information mechanism;
 - threshold search over HASTOC/EMA/ATR/ADX/volume;
 - side/year special cases mined from consumed data;
-- a new exit or Child veto before conditional state-model evidence exists;
+- a new exit or Child veto from the first HA-8A flip score without a distinct
+  economic-lifecycle contract and validation;
 - production/EA modification from the rejected HA-7 experiment.
