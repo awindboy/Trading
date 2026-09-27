@@ -74,6 +74,21 @@ barely improved three-H4 flip prediction and did not isolate economically bad
 add-on Children. Read its compact receipt before proposing any action rule.
 The Baseline-0 EA and trading rules have not changed.
 
+A separate X1 observation used a conservatively delayed official **daily ECB
+EUR/USD** series as an external dollar proxy at Journey birth. It did not
+improve chronological economic-Journey-loss discrimination and damaged
+right-tail warning quality. This is not a test of genuine intraday USD data.
+See `docs/ea/v13/results/V13_X1_ECB_DOLLAR_PROXY_RECEIPT_20260928.md`.
+X1 authorizes no EA, filter, exit, or size change.
+
+X2 then tested same-broker, clock-matched `EURUSD#` H4 as a separate external
+family observation. It also failed economic-Journey-loss selection: FX
+features worsened chronological Brier in all four test blocks and flagged
+valuable long Journeys. `USDX-DEC26`'s apparent 2022 bars were rejected at
+the source gate because that contract's broker start_time is 2026-09-10.
+Read `docs/ea/v13/results/V13_X2_MT5_EURUSD_H4_RECEIPT_20260928.md`.
+No rule or EA change follows X2.
+
 Research order is frozen in
 `docs/ea/v13/V13_HA_RESEARCH_ROADMAP_20260926.md`.
 

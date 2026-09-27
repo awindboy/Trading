@@ -85,6 +85,16 @@ become Git authority unless explicitly promoted. Large decision CSVs are omitted
 
 ## Official Baseline-0 receipt still required
 
+The separate X1 external-source pilot is recorded in
+`V13_X1_ECB_DOLLAR_PROXY_RECEIPT_20260928.md`. Its delayed official daily
+EUR/USD proxy failed the first economic-Journey-loss observation; no Baseline-0
+rule or EA changed. Large generated ledgers remain outside Git.
+
+`V13_X2_MT5_EURUSD_H4_RECEIPT_20260928.md` records the later, separate
+same-broker H4 EURUSD# probe. Its GOLD# time/OHLC parity was exact, but
+FX-derived economic-loss models worsened all four OOF blocks and damaged
+winning-Journey tail classification. No baseline strategy or EA changed.
+
 Expected authority file:
 
 `V13_BASELINE0_MT5_ACTUAL_TICK_RESULT_20260926.md`

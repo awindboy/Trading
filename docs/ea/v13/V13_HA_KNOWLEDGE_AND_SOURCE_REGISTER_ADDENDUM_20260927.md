@@ -100,3 +100,43 @@ HA-8 may use HA-0..HA-6 fields as model features because their semantics and
 causal timing are documented. It may not import external ML model rankings,
 feature thresholds or reported profitability. Engineering sources such as S13
 are relevant only if a model later moves toward ONNX/MT5 deployment.
+
+## D. X1 external-source lead registered on 2026-09-28
+
+### S20 — ECB EUR/USD daily reference-rate data and release timing
+
+- class: `A` for the ECB data series and its publication semantics; `research
+  lead only` for any relationship with GOLD#.
+- series: `EXR.D.USD.EUR.SP00.A` (USD for one euro, daily).
+- URLs:
+  - https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A
+  - https://data.ecb.europa.eu/help/api/data
+  - https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html
+- role: an independently sourced **bilateral, daily** dollar proxy for X1
+  observation. It is not a DXY or intraday USD history. The ECB ordinarily
+  publishes around 16:00 Central European time on working days; X1 imposes a
+  conservative two-broker-calendar-day as-of lag rather than assuming the
+  broker clock matches ECB time.
+- no trading authority: neither source credibility nor a correlation supplies
+  a V13 entry, exit, size, filter, or economic validation.
+
+### S21 — XM MT5 EURUSD# H4 bars and MetaQuotes history API
+
+- class: `A` for MetaQuotes API timestamp/schema semantics; broker-local
+  historical market data for the `EURUSD#` values.
+- URL: https://www.mql5.com/en/docs/python_metatrader5/mt5copyratesrange_py
+- role: X2 same-broker, same-H4-clock bilateral dollar proxy. The MT5 API's
+  returned GOLD# H4 series must match the frozen GOLD# CSV bar-for-bar before
+  matching EURUSD# H4 closes at the completed gold signal timestamp.
+- caveat: this is neither DXY nor centralized FX volume. Available history
+  depends on the terminal/broker. No source-derived trade rule or edge claim.
+
+### S22 — broker USDX-DEC26 apparent old history: rejected source lead
+
+- class: `broker-local metadata / do not import as causal historical source`.
+- The XM terminal returned 7,197 H4 rows starting in 2022 for a symbol
+  described as `US Dollar Index December 2026`, yet the symbol's broker
+  `start_time` was 2026-09-10, after the canonical V13 cutoff.
+- The old bars may be backfilled synthetic display history. Their historical
+  decision-time availability is unproven, so they were **not** used as DXY
+  or a trading feature. No edge conclusion can be drawn from this source.

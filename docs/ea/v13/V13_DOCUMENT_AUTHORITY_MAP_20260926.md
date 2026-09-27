@@ -36,6 +36,12 @@ Read V13 authority in this order:
     temporal split, payoff/tail diagnostic and no-action boundary.
 20. `results/README.md` and the HA-0..HA-8A receipts. For exact numbers and
     caveats, the stage receipt controls over prose summaries.
+20a. `V13_X1_ECB_DOLLAR_OBSERVATION_CONTRACT_20260928.md` and
+     `results/V13_X1_ECB_DOLLAR_PROXY_RECEIPT_20260928.md` — separate external
+     daily-proxy economic-loss observation; negative and no action.
+20b. `V13_X2_MT5_EURUSD_H4_OBSERVATION_CONTRACT_20260928.md` and
+     `results/V13_X2_MT5_EURUSD_H4_RECEIPT_20260928.md` — separate
+     same-broker H4 external bilateral-FX observation; negative and no action.
 21. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` — frozen Baseline-0 EA.
 22. `../../../mt5/tester/V13HAOnlyMax10.GOLD.actualticks.2024_2026.ini` —
     tester starter configuration.
@@ -53,5 +59,11 @@ Read V13 authority in this order:
 - The first HA-8A model diagnostic is complete as observation only. It did not
   solve economic Child-loss selection. No prediction threshold or trade action
   is authorized until a later frozen action contract and required validation.
+- X1's delayed ECB EUR/USD proxy did not improve economic-Journey loss
+  discrimination. It is not a test of genuine intraday USD data and gives no
+  trading authority.
+- X2's clock-matched broker EURUSD# H4 also failed the economic-Journey-loss
+  test. A future-dated `USDX-DEC26` display history was rejected at the source
+  gate; no broad USD-index conclusion or trading authority follows.
 - MetaQuotes platform/reference semantics outrank community formulas where they
   conflict. External strategy examples are research leads, never edge proof.

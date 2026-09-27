@@ -1,7 +1,7 @@
 # V13 research state
 
 Last synchronized: `2026-09-28`
-Status: `BASELINE 0 FROZEN / HA-7 REJECTED / HA-8A FIRST COMBINATION DIAGNOSTIC COMPLETE / NO ACTION`
+Status: `BASELINE 0 FROZEN / HA-7 REJECTED / HA-8A FIRST DIAGNOSTIC COMPLETE / X1-X2 DOLLAR PROXIES NEGATIVE / NO ACTION`
 Market authority: `GOLD# ONLY`
 GitHub SSOT base checked for this update: `53457bf5a38b0da0b77da094b6ea0223bc238fab`
 
@@ -374,3 +374,41 @@ Validation requirements:
 The exact-window official Baseline-0 MT5 actual-tick receipt remains required.
 It does not block HA-8A observation/model research, but no economic promotion
 should bypass it.
+
+## 14. X1 external ECB dollar-proxy observation
+
+X1 froze an economic target at Journey birth: whether the complete Baseline-0
+Journey loses, with repeat-loss and right-tail diagnostics. Its only new
+information family was the official daily ECB EUR/USD reference rate, allowed
+only after a conservative two-broker-calendar-day publication lag. The source
+was registered before outcome evaluation. This is a bilateral, daily proxy,
+**not** DXY or intraday H4 dollar data.
+
+Across 777 chronological OOF closed Journeys, 590 lost and 441 were repeat
+losses. Adding ECB to H4/H1 worsened Brier `0.18706 -> 0.18888`, worsening
+each of four test blocks. The highest predicted-loss 20% contained 120/156
+losses versus 122/156 for H4/H1 alone; repeat losses fell from 89 to 85.
+The ECB bucket contained +3,739.80 idealized net price points, including
+10 >=10-bar winning Journeys worth +6,710.82. **Negative proxy result; no
+filter/model/action promotion.** Read the X1 contract and result receipt for
+source/timing limits. A true intraday external-data study would need a new
+contract; X1 is not evidence that all dollar information lacks value.
+
+## 15. X2 same-broker EURUSD# H4 external observation
+
+The XM MT5 API returned 7,199 GOLD# H4 bars exactly matching the frozen
+GOLD# CSV in timestamps and OHLC, plus 7,253 EURUSD# H4 bars covering every
+GOLD# timestamp. X2 causally joined the same **completed** H4 FX bar at all
+4,108 decisions, then tested a one-/three-bar normalized bilateral dollar
+proxy and a separately staged side interaction at Journey birth. Its target,
+OOF blocks and economics were the same as X1, but the data were truly H4.
+
+On 777 chronological OOF Journeys, H4/H1 Brier `0.18706` worsened to
+`0.18810` with FX and `0.18865` with the interaction; **all four** folds
+worsened. The top predicted-loss 156 had 121 losses and 92 repeat losses
+with FX (versus 122 and 89 baseline), but was net **+1,376.87** idealized
+points and included 11 profitable >=10-bar Journeys worth +3,593.00.
+The interaction lowered the loss count to 120 and flagged even more tail.
+**Negative observation; no action.** Read the X2 contract/receipt. A
+broker symbol named `USDX-DEC26` displayed old history despite a 2026-09-10
+start_time after the cutoff, so it was rejected as a historical source.

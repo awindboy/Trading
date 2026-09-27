@@ -1,7 +1,7 @@
 # V13 Research Instructions — Minimal HA Rebuild
 
 Last synchronized: `2026-09-28`
-Status: `ACTIVE / BASELINE 0 FROZEN / HA-7 REJECTED / HA-8A FIRST MODEL DIAGNOSTIC COMPLETE / NO PRODUCTION AUTHORITY`
+Status: `ACTIVE / BASELINE 0 FROZEN / HA-7 REJECTED / HA-8A COMPLETE / X1-X2 DOLLAR PROXIES NEGATIVE / NO PRODUCTION AUTHORITY`
 Market authority: `GOLD# ONLY`
 GitHub SSOT base HEAD checked for this update: `53457bf5a38b0da0b77da094b6ea0223bc238fab`
 
@@ -33,6 +33,10 @@ Read V13 in this order:
 15. `V13_HA8A_COMBINATION_MODEL_CONTRACT_20260928.md` and its result receipt
     for the completed first HA-8A model diagnostic;
 16. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` before any implementation change.
+17. `V13_X1_ECB_DOLLAR_OBSERVATION_CONTRACT_20260928.md` and its result
+    receipt for the later, separate external daily-proxy observation.
+18. `V13_X2_MT5_EURUSD_H4_OBSERVATION_CONTRACT_20260928.md` and its result
+    receipt for the separate, same-broker H4 bilateral-FX observation.
 
 ## 1. Frozen Baseline 0 remains unchanged
 
@@ -194,6 +198,22 @@ and 184 won, yet the group contributed `+513.61` idealized price points.
 Profitable long-Journey Children remained false transition warnings. The
 result is **NO ACTION / NO MODEL PROMOTION**; read the 2026-09-28 receipt for
 fold stability, economic decomposition and limitations.
+
+X1 subsequently tested a distinct economic-Journey-loss target at Child #1
+using a two-broker-calendar-day-lagged official ECB daily EUR/USD proxy. Across
+777 chronological OOF Journeys, adding the proxy worsened Brier `0.18706 ->
+0.18888`, did not concentrate repeat losses, and flagged more large winning
+Journeys. **Negative result for this daily bilateral proxy / NO ACTION.** It
+does not test a true intraday dollar index or negate all external information.
+
+X2 then obtained clock-matched `EURUSD#` H4 from the same MT5 broker; all
+7,199 GOLD# H4 timestamp/OHLC bars matched the frozen source and all had FX
+bar coverage. Yet on 777 chronological OOF Journey births, H4/H1 loss Brier
+`0.18706` worsened to `0.18810` with FX changes and `0.18865` with a
+side-alignment interaction, in all four blocks. Top-risk bucket loss counts
+did not improve and long-Journey false warnings increased. The broker's
+`USDX-DEC26` old-looking history was rejected because the symbol start_time
+is after the cutoff. **No external action or EA authority.**
 
 If continuing HA-8, first freeze a distinct economic-lifecycle target and
 explicitly test repeated losing Journeys versus large continuation winners.

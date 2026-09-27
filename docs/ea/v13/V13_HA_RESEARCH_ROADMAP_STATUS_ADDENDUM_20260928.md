@@ -15,14 +15,28 @@ semantics or the original roadmap's research discipline.
 | HA-7 | first fixed action rejected | no Child veto/EA change |
 | HA-8A | first chronological combination model complete | three-H4 flip prediction modestly improved; no economic Child-loss selector |
 | Official exact-window MT5 Baseline 0 | pending | no economic promotion |
+| X1 external ECB EUR/USD daily proxy | consumed observation / negative | no rule; does not test intraday USD |
+| X2 same-broker EURUSD# H4 proxy | consumed observation / negative | no rule; exact GOLD#/FX H4 clock parity |
 
 Read `results/V13_HA8A_COMBINATION_MODEL_RECEIPT_20260928.md` for source
 hashes, 3,338 OOF decisions, calibration, fold stability and right-tail
 economics. The highest predicted-risk add-on group still had positive net
 points; no score threshold was promoted.
 
-If work continues, the next *hypothesis* is an economic-lifecycle target that
-directly tests repeated losing Journeys against large continuation winners.
-Freeze its causal timestamp, outcome definition and evaluation before fitting.
-It has **not** yet been tested, contracted or authorized as an action. Do not
-rename the first HA-8A flip target after seeing this result.
+At the first HA-8A completion, the next *hypothesis* was an economic-lifecycle
+target comparing repeated losing Journeys with large continuation winners.
+X1 and X2 have since frozen and tested one such Journey-birth loss target as
+**separate external-source observations**; both failed. The first HA-8A flip
+target itself was not renamed or refitted as economic P/L. No economic action
+has been contracted or authorized.
+
+X1 is a separate, later observation contract, not an HA-8A retargeting. It
+tested complete-Journey economic loss at Child #1 with a delayed daily ECB
+EUR/USD proxy and found no stable incremental value; see its 2026-09-28
+receipt. If work continues beyond this proxy, first acquire verified
+timestamped intraday external data and freeze a new source/timing contract.
+
+X2 then satisfied the H4 time-grain/source-parity question using same-broker
+EURUSD# H4, but its economic-loss discrimination and right-tail profile failed.
+The FX family stops at this frozen contract. No valid canonical-window DXY
+history has yet passed causal source-availability checks.

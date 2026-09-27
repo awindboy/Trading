@@ -1,7 +1,7 @@
 # V13 handoff
 
 Last synchronized: `2026-09-28`
-Status: `BASELINE 0 FROZEN / HA-7 REJECTED / HA-8A FIRST COMBINATION MODEL DIAGNOSTIC COMPLETE / NO ACTION`
+Status: `BASELINE 0 FROZEN / HA-7 REJECTED / HA-8A COMPLETE / X1-X2 DOLLAR PROXIES NEGATIVE / NO ACTION`
 Market: `GOLD# ONLY`
 GitHub SSOT base checked for this update: `53457bf5a38b0da0b77da094b6ea0223bc238fab`
 
@@ -12,10 +12,25 @@ performed exactly one HA-7 action experiment. **Baseline 0 has not changed.**
 The first deterministic action candidate failed because it removed economically
 important continuation-tail Children despite elevated reversal probability.
 
-HA-8A's first causal combination model diagnostic is now complete. The next
-scientific step, if pursued, is a separately frozen **economic lifecycle
-target** that tests repeated losing Journeys and right-tail preservation. It
-is not another indicator threshold sweep or an EA modification.
+HA-8A's first causal combination model diagnostic is complete. It originally
+left a separately frozen **economic lifecycle target** as the next question;
+X1 and X2 subsequently tested complete-Journey loss at Child #1 with two
+external dollar proxies. Neither is an indicator threshold sweep or EA change.
+
+X1 has now performed one separate, frozen economic-Journey-loss observation
+using an external *daily ECB EUR/USD* proxy. It failed to improve chronological
+loss discrimination or repeat-loss concentration and produced severe winning-
+Journey false warnings. Read `results/V13_X1_ECB_DOLLAR_PROXY_RECEIPT_20260928.md`.
+This does not test a true H4 USD index; no external source earned action.
+
+X2 subsequently tested **same-broker EURUSD# H4**, with 7,199/7,199 exact
+GOLD# source-bar timestamp/OHLC parity and FX coverage. The bilateral FX
+change/alignment models worsened economic-Journey-loss Brier in all four
+chronological blocks and increased long-winning-Journey false warnings.
+Read `results/V13_X2_MT5_EURUSD_H4_RECEIPT_20260928.md`. This rules out the
+specific simple H4 EURUSD# family under the frozen X2 target/model, not every
+external market. The broker's `USDX-DEC26` history was rejected because its
+symbol start_time is after the canonical cutoff.
 
 The first HA-8A receipt is
 `results/V13_HA8A_COMBINATION_MODEL_RECEIPT_20260928.md`. In 3,338
@@ -221,15 +236,18 @@ conditional discrimination of *true transition* versus *temporary weakness*.
 
 That is now the purpose of HA-8A.
 
-## Immediate next work after the first HA-8A diagnostic
+## HA-8A boundary and current next work
 
 The first frozen `flip_within_3` contract and chronological model ladder are
 complete; do not rerun/tune them to rescue a trade filter. Its target was:
 
 `opposite H4 HA occurs within next 3 completed H4 bars`
 
-For a distinct next target, freeze the decision timestamp, label and economic
-failure definition *before* fitting. Reuse causal features already measured.
+X1 and X2 have separately frozen one complete-Journey economic-loss target
+before fitting and found no useful dollar-proxy addition. If another distinct
+target is pursued within HA-8, freeze its decision timestamp, label and
+economic-failure definition *before* fitting. Reuse causal features already
+measured; do not reuse X1/X2's consumed results as a threshold source.
 Simple base-rate/logistic baselines remain the first comparison; use a shallow
 nonlinear model only if a stable residual justifies it. In particular, compare
 actual losing-Journey/repeated-loss separation with false alarms in the
@@ -263,3 +281,8 @@ Validation:
 - a new exit or Child veto from the first HA-8A flip score without a distinct
   economic-lifecycle contract and validation;
 - production/EA modification from the rejected HA-7 experiment.
+- an ECB EUR/USD sign/score veto or a revised lag/period search on X1's
+  consumed data; intraday external-dollar research requires a new source and
+  causal-timing contract.
+- an EURUSD# H4 sign/lag/side exception or extra FX stack mined to rescue X2;
+  no validated historical DXY source has yet passed the availability gate.

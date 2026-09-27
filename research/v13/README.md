@@ -53,3 +53,15 @@ validation limits are under `docs/ea/v13/V13_EXECUTION_RECOVERY_20260926.md`.
 Python may be added later only for explicit V13 analysis tasks such as Journey
 failure decomposition or parity validation. Do not import V10-V12 feature code
 into V13 merely because it already exists.
+
+`x1_ecb_dollar_observation.py` is the separately contracted, observation-only
+ECB daily dollar-proxy study. Run `--build` first to save a source-hashed
+as-of feature ledger without labels, then `--evaluate` for the frozen
+chronological economic-Journey-loss diagnostic. Its X1 contract/receipt are
+under `docs/ea/v13/`; it is not an EA or a genuine intraday USD test.
+
+`x2_mt5_eurusd_h4_observation.py` is a separate same-broker H4 follow-on.
+Run `--export` once to verify 7,199 GOLD# source bars against the MT5 API and
+freeze the EURUSD# export, then `--build` for a causal same-H4 feature ledger,
+then `--evaluate` for the fixed Journey-loss OOF comparison. It is an
+observation, not a trading strategy or a broad USD-index test.
