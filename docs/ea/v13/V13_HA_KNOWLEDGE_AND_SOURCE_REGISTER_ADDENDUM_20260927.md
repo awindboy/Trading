@@ -140,3 +140,34 @@ are relevant only if a model later moves toward ONNX/MT5 deployment.
 - The old bars may be backfilled synthetic display history. Their historical
   decision-time availability is unproven, so they were **not** used as DXY
   or a trading feature. No edge conclusion can be drawn from this source.
+
+## E. HA-8B ML-method leads reviewed on 2026-09-28
+
+### S23 — MQL5 meta-labeling implementation example
+
+- class: `B`, author article, not platform strategy authority.
+- URL: https://www.mql5.com/en/articles/22274
+- role: methodological example of leaving a primary signal responsible for
+  direction while a secondary model studies participation/sizing quality.
+- V13 boundary: HA remains the sole direction/Journey source. The article's
+  RSI, triple barriers, 0.55 threshold, bet-size formula, and reported EURUSD
+  result are **not** imported. HA-8B only evaluates conditional Child economics.
+
+### S24 — MQL5 discrete-time competing-risk exit example
+
+- class: `B`, author article, not platform strategy authority.
+- URL: https://www.mql5.com/en/articles/24106
+- role: illustrates time-varying trade-state and survival-risk modeling, and
+  explicitly reports that predictive fit need not improve trading outcomes.
+- V13 boundary: its fixed TP/SL, R normalization and early-exit policy are
+  incompatible with Baseline 0 and were not imported into HA-8B. Its state-
+  evolves-over-time lesson motivates auditing Child age and current position
+  state, not a new exit rule.
+
+### S25 — MQL5 ONNX platform reference
+
+- class: `A` for terminal model-inference API, not evidence of trading edge.
+- URL: https://www.mql5.com/en/docs/onnx
+- role: possible later transport after a V13 model, action contract, and
+  Python/MQL5 input/preprocessing/output parity pass. No ONNX or EA change is
+  part of HA-8B.

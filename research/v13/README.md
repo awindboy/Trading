@@ -1,67 +1,36 @@
 # V13 research code
 
-V13's observation-only Python audits:
+V13 historical audit scripts remain observation/action evidence for their named
+contracts. The current action audit is:
 
-`ha_representation_audit.py` reproduces HA-0..HA-3 descriptive ledgers from
-chronological GOLD# H4 and raw M1 source files. It is not an EA feature stack,
-trading signal generator, or an official economic backtest. Decision fields and
-future labels are written separately under `output/v13_ha3_20260927/`.
+`ha9_addon_proof_lock_audit.py`
 
-`ha4_mtf_audit.py` streams raw GOLD# M1 to reconstruct H4 plus one context
-timeframe. Run `--stage d1` and `--stage h1` separately, with the matching
-export path used only to verify OHLC parity. It writes decision-time features,
-future labels and a compact summary separately under
-`output/v13_ha4_d1_20260927/` or `output/v13_ha4_h1_20260927/`. No D1/H1
-field changes Baseline-0 trading.
+It reconstructs frozen Baseline 0 from raw H4, checks canonical structural
+parity, then uses raw M1 only to evaluate Child #2..#10 proof/lock/timeout
+management.
 
-For HA-4C/D, rerun `ha4_mtf_audit.py` into *new* local D1/H1 output
-directories; it now also records the ordered within-H4 H1 color path and
-completed-context Delta contraction. Then run
-`ha_integrated_state_audit.py --ha3 <HA-3 output> --h1 <new H1 output>
---d1 <new D1 output> --output <local integrated output>`. The integration
-checks source hashes, timeframe parity, identical Standard-H4 Journey IDs and
-PRE/POST EMA2 Open/Close/color identity. It writes matched decision features,
-future labels and a compact JSON summary separately. It is neither a strategy
-variant nor a real-tick economic backtest. The contracts and compact findings
-are under `docs/ea/v13/` and `docs/ea/v13/results/`.
-
-`ha5_causal_raw_swing_audit.py` streams raw GOLD# M1 through the frozen
-canonical cutoff, rebuilds H4 with export parity, and confirms strict
-five-bar H4 raw-price pivots only after their right-hand bars complete.
-It compares the already-known raw levels against unchanged HA-4C/D decisions
-and separately stored future labels. Example invocation from repository root:
+Example from repository root:
 
 ```powershell
-python research/v13/ha5_causal_raw_swing_audit.py --m1 'data/GOLD#/GOLD#_M1_202201030100_202609222358.csv' --h4 'data/GOLD#/GOLD#_H4_202201030000_202609230000.csv' --integrated output/v13_ha4c_integrated_20260927 --output output/v13_ha5_raw_swing_20260927
+python research/v13/ha9_addon_proof_lock_audit.py `
+  --h4 'data/GOLD#/GOLD#_H4_202201030000_202608282000.csv' `
+  --m1 'data/GOLD#/GOLD#_M1_202201030100_202608282357.csv' `
+  --output 'output/v13_ha9_proof_lock_20260928'
 ```
 
-This is observation-only, not an MT5 backtest or an HA-5 action rule. See the
-frozen contract and compact receipt under `docs/ea/v13/`.
-Run `python research/v13/test_ha5_causal_raw_swing_audit.py` for the mirrored
-LONG/SHORT, level-change and close-versus-probe state checks.
+Expected Baseline parity before interpreting HA-9:
 
-The active baseline implementation is:
+```text
+965 closed Journeys
+3,858 closed Children
++8,147.11 idealized GOLD price points
+```
 
-`../../mt5/experts/V13HAOnlyMax10EA.mq5`
+The audit writes:
 
-Execution revision 13.002 is tested by
-`../../mt5/tests/V13ExecutionRecoveryTest.mq5`, which includes the actual EA
-functions with fake trade/position APIs. This is fault-injection evidence only,
-not a Python feature stack or a trading result. The recovery contract and
-validation limits are under `docs/ea/v13/V13_EXECUTION_RECOVERY_20260926.md`.
+- `child_ledger.csv` — Child-level baseline/action outcomes;
+- `summary.json` — loss count, win rate, PF/net, chronological DD, loss streak,
+  year slices, trade-block quality and Top-N profitable-Journey trimming.
 
-Python may be added later only for explicit V13 analysis tasks such as Journey
-failure decomposition or parity validation. Do not import V10-V12 feature code
-into V13 merely because it already exists.
-
-`x1_ecb_dollar_observation.py` is the separately contracted, observation-only
-ECB daily dollar-proxy study. Run `--build` first to save a source-hashed
-as-of feature ledger without labels, then `--evaluate` for the frozen
-chronological economic-Journey-loss diagnostic. Its X1 contract/receipt are
-under `docs/ea/v13/`; it is not an EA or a genuine intraday USD test.
-
-`x2_mt5_eurusd_h4_observation.py` is a separate same-broker H4 follow-on.
-Run `--export` once to verify 7,199 GOLD# source bars against the MT5 API and
-freeze the EURUSD# export, then `--build` for a causal same-H4 feature ledger,
-then `--evaluate` for the fixed Journey-loss OOF comparison. It is an
-observation, not a trading strategy or a broad USD-index test.
+The Python audit is not an official MT5 backtest. Actual-tick execution authority
+belongs to the Strategy Tester after event parity.

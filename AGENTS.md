@@ -1,170 +1,83 @@
 # Trading repository authority
 
 Last synchronized: `2026-09-28`
-V13 research update base GitHub HEAD:
-`53457bf5a38b0da0b77da094b6ea0223bc238fab`
+Base GitHub `main` checked: `29e0073e57553d8fe1fd14b843daf09164a7a248`
 
 ## Active generation
 
-V13 is the only active strategy-research generation.
-
-V13 is a deliberate reset. It does not continue the V12 feature stack. It starts
-from a minimal standard-Heikin-Ashi participation skeleton, studies Heikin-Ashi
-itself before importing complexity, and adds one component at a time only after
-its role is understood.
+V13 is the only active strategy-research generation. V12 and earlier are
+historical evidence only.
 
 Start every V13 session in this order:
 
-1. refresh GitHub `main`;
+1. refresh GitHub `awindboy/Trading` latest `main`;
 2. read `docs/ea/v13/AGENTS_V13.md`;
 3. read `docs/ea/v13/V13_DOCUMENT_AUTHORITY_MAP_20260926.md`;
-4. read `docs/ea/v13/HANDOFF_V13.md`;
-5. read `docs/ea/v13/RESEARCH_STATE_V13.md`;
-6. read `docs/ea/v13/V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_20260926.md`;
-7. read `docs/ea/v13/V13_HA_RESEARCH_ROADMAP_20260926.md`, then
-   `docs/ea/v13/V13_HA_RESEARCH_ROADMAP_STATUS_ADDENDUM_20260928.md`;
-8. read `docs/ea/v13/V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md`;
-9. read `docs/ea/v13/V13_EXECUTION_RECOVERY_20260926.md` and
-   `V13_MQL5_BACKTEST_PROTOCOL_20260926.md` before tester/execution work;
-10. read the current compact receipts under `docs/ea/v13/results/`, including
-    HA-6/HA-7 and the first HA-8A combination-model receipt;
-11. inspect `mt5/experts/V13HAOnlyMax10EA.mq5` before changing implementation.
+4. read `docs/ea/v13/V13_OBJECTIVE_AND_EVALUATION_UPDATE_20260928.md`;
+5. read `docs/ea/v13/HANDOFF_V13.md`;
+6. read `docs/ea/v13/RESEARCH_STATE_V13.md`;
+7. read the frozen Baseline-0 contract and the current HA-9 action contract;
+8. read the HA-9 receipt and MQL5 validation protocol before tester work.
 
-Where V13 conflicts with V12 or older strategy-routing documents, V13 controls.
-Older generations remain historical evidence and must not silently re-enter the
-active strategy.
+## Frozen comparator
 
-## Frozen V13 Baseline 0
+Baseline 0 remains the frozen control:
 
 ```text
-market: GOLD#
-clock: completed H4 bars
-representation: standard Heikin-Ashi only
-journey: one contiguous same-color H4 HA run
-entry: +1 fixed-size Child after each completed same-color H4 HA bar
-maximum Children per Journey: 10
-exit: first completed opposite-color H4 HA closes all Journey Children
-reverse: after successful close-all, the same opposite HA starts the next Journey
-Hard SL: none
-TP: none
-filters: none
-ML: none
-CRT / liquidity / Wave / session / news / MA / RSI / other indicators: none
+completed standard H4 HA
+same-color run = Journey
+Child #1 on qualifying flip; one add-on per later same-color H4
+maximum 10 successful Child entries
+first opposite completed H4 closes remaining Journey Children
+same opposite event starts the next Journey after close-all
+fixed unit size
+no Hard SL / TP / ML action / external filter
 ```
 
-A Baseline-0 comparison is invalid if any of those strategy semantics are
-changed without naming a new V13 experiment.
+## Active action candidate
 
-## Canonical comparison window
+HA-9 is the current research candidate, not production authority.
 
-The frozen comparison window is:
+```text
+Child #1: Baseline 0 unchanged
+Child #2..#10:
+  enter at Baseline-0 timing
+  next H4 must break the signal H4 favorable raw extreme
+  if proven -> lock at max(entry, signal high) LONG / min(entry, signal low) SHORT
+  if not proven within one H4 -> close that Child
+  opposite H4 HA still closes all remaining Journey positions
+```
 
-`2024-01-01 through 2026-08-28 available GOLD# history`
+See `V13_HA9_ADDON_PROOF_LOCK_ACTION_CONTRACT_20260928.md` for exact timing.
 
-Every primary V13 strategy comparison must use this entire window. A selected
-month, quarter, year, or episode is diagnostic only.
+## Current evaluation doctrine
 
-## Current research doctrine
+The active priority is **loss-frequency and ordinary equity quality**, not
+preservation of every large right-tail Journey.
 
-V13 treats Baseline 0 as an **instrument for learning what standard
-Heikin-Ashi actually represents**. HA-0..HA-6 observation and the rejected
-HA-7 first action are documented. The first HA-8A chronological combination
-model diagnostic is complete as observation only: the extra feature families
-barely improved three-H4 flip prediction and did not isolate economically bad
-add-on Children. Read its compact receipt before proposing any action rule.
-The Baseline-0 EA and trading rules have not changed.
+Primary evidence:
 
-A separate X1 observation used a conservatively delayed official **daily ECB
-EUR/USD** series as an external dollar proxy at Journey birth. It did not
-improve chronological economic-Journey-loss discrimination and damaged
-right-tail warning quality. This is not a test of genuine intraday USD data.
-See `docs/ea/v13/results/V13_X1_ECB_DOLLAR_PROXY_RECEIPT_20260928.md`.
-X1 authorizes no EA, filter, exit, or size change.
+- loss-count reduction;
+- non-flat win rate;
+- consecutive losses;
+- chronological drawdown and ordinary 10/25/50/100-trade block quality;
+- year stability;
+- large-winner-trimmed robustness.
 
-X2 then tested same-broker, clock-matched `EURUSD#` H4 as a separate external
-family observation. It also failed economic-Journey-loss selection: FX
-features worsened chronological Brier in all four test blocks and flagged
-valuable long Journeys. `USDX-DEC26`'s apparent 2022 bars were rejected at
-the source gate because that contract's broker start_time is 2026-09-10.
-Read `docs/ea/v13/results/V13_X2_MT5_EURUSD_H4_RECEIPT_20260928.md`.
-No rule or EA change follows X2.
+Large continuation winners remain visible as a cost diagnostic, but touching a
+profitable long Journey is no longer an automatic rejection reason. Historical
+HA-6/7/8 contracts and receipts are not rewritten; current interpretation is
+superseded by `V13_OBJECTIVE_AND_EVALUATION_UPDATE_20260928.md`.
 
-Research order is frozen in
-`docs/ea/v13/V13_HA_RESEARCH_ROADMAP_20260926.md`.
+## Causal and research rules
 
-Key rules:
-
-- first extract more information from the same standard HA before adding another
-  indicator;
-- start with observation-only feature ledgers; no entry/exit rule changes;
-- do not turn a descriptive threshold, quantile, Child number or side split into
-  a trading rule merely because it looked attractive in consumed data;
-- when an external component is tested, add one component at a time and state
-  the distinct information it is supposed to contribute;
-- source popularity is not evidence of edge;
-- MQL5 Market/Forum/User Articles are hypothesis sources, not strategy authority;
-- verify every imported HA formula against the MetaQuotes standard definition;
-- keep decision-time inputs separate from future outcome labels;
-- never inspect future prices before a historical decision timestamp;
-- no hindsight recovery of stopped/closed Children.
-
-## HA source authority
-
-`V13_HA_KNOWLEDGE_AND_SOURCE_REGISTER_20260926.md` distinguishes:
-
-1. platform/reference authority;
-2. implementation/research examples;
-3. academic evidence;
-4. community/market practice leads;
-5. external educational material.
-
-No external source creates a V13 trading rule by itself.
-
-## ML boundary
-
-The first HA-8A ML observation has been reached. It used causal HA-state
-features and interpretable/tabular logistic models, not sequence models. No
-model or score is a trading rule. If research continues, freeze a separate
-economic-lifecycle target before fitting.
-Preferred targets are lifecycle outcomes such as continuation, transition risk,
-remaining favorable excursion, giveback and time-to-opposite-color rather than
-a direct next-bar LONG/SHORT oracle.
-
-Any ML pipeline must reproduce preprocessing identically in Python and MQL5;
-ONNX transport does not excuse feature/preprocessing mismatch.
-
-## Execution authority
-
-MQL5 Strategy Tester on `Every tick based on real ticks` remains the official
-execution environment for economic reports. Python/H4 next-open reconstruction
-is a deterministic sanity check only.
-
-Execution revision 13.002 retries explicit transient rejections, expires stale
-entries, and resumes remaining closes without reversing early. Ambiguous or
-permanent failures halt the run. This is execution recovery, not a strategy
-cooldown/retry rule.
-
-The uploaded extended tester report ending `2026-09-26` confirms structural
-parity through the canonical source cutoff, but is not the official exact-window
-receipt because its end date and leverage differ from the frozen tester protocol.
-See the diagnostic receipt under `docs/ea/v13/results/`.
-
-## Historical generations
-
-- V12 is frozen historical CRT/HA/Wave/liquidity/ML evidence;
-- V11 is frozen historical Wave/capital evidence;
-- V10 is frozen historical HA/ML evidence and may be consulted only for an
-  explicitly stated historical question;
-- V9 and earlier are historical evidence only.
-
-No historical document overrides V13 authority.
-
-## Repository hygiene
-
-- keep active V13 authority under `docs/ea/v13/`;
-- keep the frozen V13 baseline EA under `mt5/experts/`;
-- keep compact result receipts under `docs/ea/v13/results/`;
-- keep large tester exports and generated ledgers out of Git unless explicitly
-  promoted;
-- register external research before converting it into a V13 hypothesis;
-- retain raw source URLs and caveats in the source register.
+- Never inspect future price before the historical decision/action timestamp.
+- Never add a hindsight trade after accidental reveal.
+- Never resurrect a closed/stopped Child using later information.
+- Do not invent hidden minimum-R, cooldown, retry, fixed no-chase, side balance,
+  or parameter thresholds.
+- Do not optimize the one-H4 proof window or proof/lock price on the same
+  consumed sample merely to rescue a tester result.
+- 2024-01-01..2026-08-28 remains consumed development history.
+- MQL5 Strategy Tester `Every tick based on real ticks` is required for official
+  execution economics.

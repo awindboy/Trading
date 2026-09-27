@@ -1,390 +1,104 @@
 # V13 Heikin-Ashi research roadmap
 
-Date: `2026-09-26`
-Status: `ACTIVE ORDER / ONE LAYER AT A TIME / NO NEW TRADE RULES YET`
+Original roadmap date: `2026-09-26`
+Current synchronization: `2026-09-28`
+Status: `HA-0..HA-8 CONSUMED / HA-9 ACTION CANDIDATE ACTIVE`
 
-## 1. Objective
+## 1. Objective amendment
 
-The V13 baseline is intentionally simple enough to act as a laboratory for HA.
-The research goal is not to rush toward a more complicated strategy. It is to
-understand what standard HA contains, what information it loses through
-smoothing, and which single complementary information source is worth adding.
+The original roadmap began by prioritizing preservation of large right-tail
+Journeys when testing warnings/filters. The current objective has been clarified.
+See `V13_OBJECTIVE_AND_EVALUATION_UPDATE_20260928.md`.
 
-The order below is authoritative unless a later V13 decision document replaces
-it after evidence is consumed.
+Current first-order objective:
 
-## 2. Common protocol for every stage
+> reduce ordinary losing Children and persistent downward stretches enough that
+> the typical trade stream becomes more consistently upward.
 
-Every stage must:
+Right-tail damage remains reported, but is no longer an automatic rejection
+criterion.
 
-- use causal completed-bar inputs only;
-- preserve the Baseline-0 trade ledger unless the stage explicitly becomes an
-  action experiment;
-- use the full `2024-01-01 .. 2026-08-28` window for primary comparisons;
-- show 2024/2025/2026 and LONG/SHORT slices only as diagnostics;
-- preserve Journey grain and Child grain separately;
-- keep large right-tail Journeys visible;
-- separate decision features from future outcome labels;
-- avoid converting exploratory quantiles or visually attractive thresholds into
-  rules without a new frozen contract;
-- document source provenance and exact formulas.
+## 2. Common protocol
 
-## Stage HA-0 — Standard-HA measurement ledger
+Every stage/action must:
 
-### Change from Baseline 0
+- use causal completed information only;
+- preserve the frozen Baseline-0 comparator;
+- use full 2024-01-01..2026-08-28 consumed history for primary development
+  comparisons;
+- keep year/side diagnostics visible without mining exceptions;
+- preserve Journey and Child grain separately;
+- keep decision/action inputs separate from future outcomes;
+- avoid hidden thresholds, side balancing, cooldowns or hindsight recovery;
+- report both traditional economics and ordinary-stream quality.
 
-`NONE` to trading behavior.
-
-### Build
-
-For every completed H4 bar and every Child decision, record:
+Current ordinary-stream quality metrics:
 
 ```text
-raw OHLC
-standard HA OHLC
-HA color
-HA Delta and absolute Delta
-HA body / range / body-to-range
-upper and lower wick length / ratio
-directional wick / opposite wick
-no-opposite-wick flag
-same-color streak
-Delta change / body change
-raw body/range
-raw close displacement from HA close/open
-Journey ID / Child number
+loss count/share
+non-flat win rate
+max consecutive losses
+chronological trade-stream drawdown
+10/25/50/100-trade block positive share and median P/L
+year stability
+Top-N profitable-Journey-trimmed P/L
 ```
 
-Future outcomes live in separate columns/table:
+## 3. Consumed roadmap stages
+
+### HA-0..HA-2 — standard HA measurement/lifecycle
+Completed. Established morphology, lag and giveback anatomy.
+
+### HA-3 — alternate HA representations
+Completed. No representation promoted.
+
+### HA-4 — multi-timeframe standard HA
+Completed. H1 ordered path informative; D1 weak.
+
+### HA-5 — causal raw structure
+Completed. Useful description, insufficient action selector.
+
+### HA-6 — complementary families
+Completed HASTOC, MA, ATR normalization, ADX/DMI and tick participation studies.
+No single family earned an action rule.
+
+### HA-7 — first action
+Completed and rejected: persistent-H1-opposition + high relative activity Child
+veto. Historical right-tail damage remains part of that receipt, but current
+objective interpretation is superseded by the 2026-09-28 objective update.
+
+### HA-8 — state/economic modeling
+Completed first combination model and external X1/X2 observations. More complex
+feature/model stacking did not produce the desired loss-frequency step change.
+
+## 4. HA-9 — runtime proof/lock action
+
+Current active stage.
+
+Instead of predicting whether an add-on will fail, allow the Child to enter and
+require actual raw price to prove continuation during one H4. If proved, protect
+the achieved breakout level; if not proved, close the Child at the H4 boundary.
+
+This is the first consumed-data action showing a large shift in ordinary trade
+quality:
 
 ```text
-bars and hours to next opposite HA color
-final Journey length
-future MFE / MAE until Journey end
-raw-price favorable extreme and timestamp
-giveback from favorable extreme to HA exit
-Child terminal PnL
-Journey terminal PnL
+losses 2,427 -> 1,685
+non-flat win rate 37.08% -> 56.07%
+trade-sequence DD 3,756.99 -> 1,283.65
+max loss streak 25 -> 14
 ```
 
-### Questions
-
-- What does a typical HA Journey look like from birth to death?
-- Which HA measurements evolve smoothly with Journey age and which do not?
-- How large is raw-price turning-point -> HA-color-flip lag?
-- How much profit is commonly given back between raw favorable extreme and HA
-  exit?
-
-### Output
-
-A descriptive receipt only. No strategy change.
-
----
-
-## Stage HA-1 — HA morphology and persistence
-
-### Inputs
-
-Only fields produced in HA-0.
-
-### Study
-
-- Delta magnitude and sign;
-- body/range strength;
-- no-opposite-wick continuation state;
-- first reappearance of opposite wick;
-- small-body/two-sided-wick state;
-- same-color streak;
-- body and Delta expansion/contraction.
-
-### Methods
-
-Prefer continuous curves, empirical distributions, transition matrices and
-rank/quantile diagnostics over arbitrary hard thresholds.
-
-Quantiles are descriptive bins, not trade gates.
-
-### Questions
-
-- Does no-opposite-wick state actually correspond to longer persistence on GOLD#?
-- Does opposite-wick emergence precede color change often enough to matter?
-- Does Delta/body contraction contain transition information before color flips?
-- Are the relationships stable across years and sides?
-
-### Gate
-
-Do not create an entry/exit rule yet.
-
----
-
-## Stage HA-2 — Lifecycle, lag and giveback anatomy
-
-### Goal
-
-Map HA's smoothing benefit and lag cost directly.
-
-### Study
-
-For each Journey:
-
-1. HA color-flip start;
-2. expansion phase;
-3. maximum raw favorable excursion;
-4. contraction / opposite-wick emergence;
-5. raw-price turn;
-6. eventual opposite HA color;
-7. realized giveback to HA exit.
-
-Estimate descriptive transition/survival quantities such as:
-
-- probability same color survives another 1/2/3 bars conditioned on current HA
-  morphology;
-- empirical time-to-flip curves;
-- distribution of remaining favorable excursion;
-- distribution of giveback conditional on HA state.
-
-These are research outcomes, not probabilities authorized for trading.
-
-### Gate
-
-At the end of HA-2, decide whether the first action problem is primarily:
-
-- participation timing;
-- late-Journey funding;
-- exit timing;
-- or none of the above.
-
-Do not decide this before the lifecycle audit.
-
----
-
-## Stage HA-3 — Standard versus smoothed HA representations
-
-### Source family
-
-MQL5 smoothed HA / ExMachina / iHeikenAshiSm.
-
-### Order
-
-1. standard HA control;
-2. one clearly specified pre-smoothed-price HA implementation;
-3. one clearly specified post-HA smoothing implementation;
-4. only later consider DEMA/SMMA/LWMA/step variants if the first comparison shows
-   a mechanism worth pursuing.
-
-### Do not
-
-- launch a large period/method optimization grid;
-- choose the best period after seeing P/L;
-- mix smoothing with a new entry/exit rule in the same experiment.
-
-### Measure first
-
-- color-change frequency;
-- lag from raw favorable extreme to color transition;
-- short-run/chop frequency;
-- Journey-length distribution;
-- retained/given-back excursion;
-- how much distinct information the variant adds versus merely increasing lag.
-
----
-
-## Stage HA-4 — Multi-timeframe standard HA
-
-### Why
-
-MTF uses the same standard representation on another time scale rather than
-changing HA mathematics.
-
-### Sequence
-
-1. `D1 standard HA` as broader state alongside H4 baseline;
-2. `H1 standard HA` as faster transition observation around H4 Journey changes.
-
-Each is observation-only first and is tested separately.
-
-### Questions
-
-- Does H4 morphology mean something different when D1 HA is persistent versus
-  transitional?
-- Does H1 HA reveal a raw transition before H4 color changes without becoming
-  pure lower-timeframe noise?
-
-No forced alignment rule is pre-authorized.
-
----
-
-## Stage HA-5 — Raw-price structure complement
-
-### First candidate
-
-Fractal / causal swing structure, inspired by the 2025 MQL5 HA + Fractal system.
-
-### Rationale
-
-HA is synthetic. Raw price structure may contribute information that HA cannot:
-actual swing highs/lows, breakout/failed-break geometry and location relative to
-real traded prices.
-
-### Research order
-
-1. observation-only relation between HA state and confirmed raw swings;
-2. measure whether structure adds incremental information to HA-2 lifecycle
-   diagnostics;
-3. only then consider a one-rule action contract.
-
-Fractals must respect their confirmation delay. No future-centered swing may be
-used before it is causally confirmed.
-
----
-
-## Stage HA-6 — Single complementary indicator families
-
-Test **one family at a time**, only if it adds information not already captured
-by HA morphology and raw structure.
-
-### HA-6A — HASTOC / HA-derived momentum
-
-Reason: it is explicitly designed to combine HA trend and momentum and has
-published empirical research. Reproduce the formula before judging it.
-
-### HA-6B — Moving-average context
-
-Reason: MA level/slope may provide a raw-price directional reference distinct
-from HA morphology. Start with one named implementation/contract, not a period
-optimizer.
-
-### HA-6C — ATR as normalization, not signal
-
-Reason: compare body, wick, displacement and excursion across changing Gold
-volatility regimes. ATR initially normalizes measurements and has no entry veto.
-
-### HA-6D — ADX / SuperTrend
-
-Reason: test whether an independent trend-strength/volatility construction adds
-anything after HA + ATR normalization. Be alert to redundant trend lag.
-
-### HA-6E — volume / tick-volume participation
-
-Reason: HA is price-derived and contains no participation dimension. Verify
-broker GOLD# tick-volume semantics before using it.
-
-### Rule
-
-Do not bundle these families. `HA + EMA + ADX + ATR + RSI` is not one experiment.
-
----
-
-## Stage HA-7 — First action experiment
-
-Only after HA-0..HA-6 identify a repeatable mechanism may V13 change trading
-behavior.
-
-A valid first action contract changes **one** of:
-
-- Child admission;
-- additional-Child funding;
-- Journey exit;
-- risk/SL;
-- sizing.
-
-Do not change two categories at once.
-
-The experiment must specify:
-
-```text
-mechanism
-causal trigger
-what Baseline-0 action changes
-what stays identical
-full-window comparator
-right-tail preservation checks
-execution requirements
-```
-
-A visually obvious example or an in-sample optimum is insufficient.
-
----
-
-## Stage HA-8 — Machine learning as a HA-state model
-
-ML is allowed only after the representation work above is complete enough to
-state a meaningful target.
-
-### 8.1 Baselines first
-
-Start with:
-
-1. constant/base-rate predictor;
-2. logistic or other regularized linear model;
-3. shallow tree / Random Forest;
-4. XGBoost or CatBoost only if warranted.
-
-Only after tabular baselines are understood consider LSTM, TCN, RNN or
-Transformer-style sequence models.
-
-### 8.2 Preferred targets
-
-Avoid “predict LONG/SHORT next bar” as the default objective.
-
-Prefer lifecycle targets such as:
-
-```text
-P(same HA color survives next k bars)
-P(opposite HA color within k bars)
-remaining favorable excursion before flip
-giveback risk after current state
-time to opposite-color confirmation
-conditional future MFE/MAE
-```
-
-These future quantities are labels only. Decision features must be frozen first.
-
-### 8.3 Validation
-
-Because 2024-2026 is consumed V13 development history:
-
-- use chronological walk-forward/out-of-fold predictions for development
-  diagnostics;
-- never report in-sample model predictions as strategy performance;
-- preserve year/side/Journey/tail diagnostics;
-- future untouched data is still required for strong promotion claims.
-
-### 8.4 MT5 deployment
-
-If a model ever affects MT5 action:
-
-- freeze preprocessing exactly;
-- export via ONNX when appropriate;
-- reproduce normalization/transforms/features in MQL5;
-- pass Python/MQL5 feature-vector and output parity;
-- then run actual-tick tester economics.
-
----
-
-## 3. Stop conditions
-
-A research branch should stop when:
-
-- it adds no stable information beyond prior stages;
-- its apparent benefit is concentrated in a tiny number of already-known tail
-  Journeys with no causal selector;
-- it requires post-hoc thresholds to look useful;
-- its formula cannot be reproduced consistently;
-- its improvement disappears under the full comparison window;
-- complexity grows faster than explanatory value.
-
-Stopping a branch is a successful V13 result.
-
-## 4. Current next step
-
-`HA-6 single complementary indicator family, observation-only contract next`
-
-HA-0..HA-5 descriptive receipts are under `results/`. HA-5's first fixed
-raw-swing probe is complete: actual price adds a distinct observation but its
-apparent H1-warning separation weakens after H4 morphology overlap and has
-major false-warning cost in long Journeys. No EA strategy modification is
-authorized by any of these receipts. Before HA-6, freeze the one family and
-distinct mechanism to observe; compare against full H4 morphology, ordered
-H1 and HA-5 raw structure, not just color alignment. Keep future labels and
-decision features separate.
+## 5. Next roadmap gate
+
+Before HA-10 or any new indicator/model branch:
+
+1. compile HA-9 EA;
+2. actual-tick canonical-window test;
+3. event parity versus causal research ledger;
+4. explain execution deltas;
+5. if mechanism survives, analyze remaining losses and only then decide whether
+   sizing/capital or another structural action deserves study.
+
+Do not optimize proof duration/offsets on the same consumed data as the next
+step.

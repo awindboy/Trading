@@ -1,42 +1,44 @@
 # V13 HA research roadmap status addendum
 
 Date: `2026-09-28`
-Base roadmap: `V13_HA_RESEARCH_ROADMAP_20260926.md`
-GitHub main checked before work: `53457bf5a38b0da0b77da094b6ea0223bc238fab`
-Status: `BASELINE 0 FROZEN / HA-7 REJECTED / FIRST HA-8A MODEL DIAGNOSTIC COMPLETE / NO ACTION`
+Base GitHub `main`: `29e0073e57553d8fe1fd14b843daf09164a7a248`
+Status: `HA-9 BREAKTHROUGH CANDIDATE / RESEARCH EA IMPLEMENTED / ACTUAL-TICK TEST PENDING`
 
-This supersedes only the **status and immediate next step** in the original
-roadmap and its 2026-09-27 status addendum. Neither changes Baseline-0 trading
-semantics or the original roadmap's research discipline.
-
-| Stage | Current status | Consequence |
+| Stage | Status | Current consequence |
 | --- | --- | --- |
-| HA-0..HA-6 | consumed observation | representation/context evidence only |
-| HA-7 | first fixed action rejected | no Child veto/EA change |
-| HA-8A | first chronological combination model complete | three-H4 flip prediction modestly improved; no economic Child-loss selector |
-| Official exact-window MT5 Baseline 0 | pending | no economic promotion |
-| X1 external ECB EUR/USD daily proxy | consumed observation / negative | no rule; does not test intraday USD |
-| X2 same-broker EURUSD# H4 proxy | consumed observation / negative | no rule; exact GOLD#/FX H4 clock parity |
+| HA-0..HA-6 | consumed observation | historical representation/context evidence |
+| HA-7 | rejected action | do not revive H1+volume veto |
+| HA-8A | consumed model observation | no flip-score action |
+| X1/X2 | negative external observations | stop simple EUR/USD rescue attempts |
+| HA-8B/8C follow-on | consumed diagnosis | Child-level economic target more useful than Journey-birth target, but model lift modest |
+| **HA-9** | **active breakthrough candidate** | add-on proof/lock/timeout EA ready for actual-tick validation |
 
-Read `results/V13_HA8A_COMBINATION_MODEL_RECEIPT_20260928.md` for source
-hashes, 3,338 OOF decisions, calibration, fold stability and right-tail
-economics. The highest predicted-risk add-on group still had positive net
-points; no score threshold was promoted.
+## Objective change
 
-At the first HA-8A completion, the next *hypothesis* was an economic-lifecycle
-target comparing repeated losing Journeys with large continuation winners.
-X1 and X2 have since frozen and tested one such Journey-birth loss target as
-**separate external-source observations**; both failed. The first HA-8A flip
-target itself was not renamed or refitted as economic P/L. No economic action
-has been contracted or authorized.
+Current research does not require preserving every large continuation Journey.
+The first priority is loss-frequency reduction and ordinary trade-stream quality.
+Tail loss remains disclosed through trimmed-P/L diagnostics.
 
-X1 is a separate, later observation contract, not an HA-8A retargeting. It
-tested complete-Journey economic loss at Child #1 with a delayed daily ECB
-EUR/USD proxy and found no stable incremental value; see its 2026-09-28
-receipt. If work continues beyond this proxy, first acquire verified
-timestamped intraday external data and freeze a new source/timing contract.
+## HA-9 development result
 
-X2 then satisfied the H4 time-grain/source-parity question using same-broker
-EURUSD# H4, but its economic-loss discrimination and right-tail profile failed.
-The FX family stops at this frozen contract. No valid canonical-window DXY
-history has yet passed causal source-availability checks.
+```text
+Baseline losses: 2,427
+HA-9 losses:     1,685   (-742 / -30.6%)
+
+Baseline non-flat win rate: 37.08%
+HA-9 non-flat win rate:     56.07%
+
+trade-sequence DD: 3,756.99 -> 1,283.65
+max consecutive losses: 25 -> 14
+```
+
+HA-9 total net is lower (`+3,946.06` vs Baseline `+8,147.11`), but this no
+longer dominates the evaluation because much of the Baseline total depends on a
+small extreme-winner set. Removing the top 10 profitable Journeys leaves HA-9
+slightly positive while Baseline is deeply negative.
+
+## Immediate next step
+
+No new data and no additional model family are required before execution work.
+Run the new research EA on canonical actual ticks and produce event/economic
+parity. If execution parity fails, fix semantics before changing strategy.
