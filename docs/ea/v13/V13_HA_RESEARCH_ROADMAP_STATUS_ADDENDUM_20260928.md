@@ -1,8 +1,8 @@
 # V13 HA research roadmap status addendum
 
 Date: `2026-09-28`
-Base GitHub `main`: `29e0073e57553d8fe1fd14b843daf09164a7a248`
-Status: `HA-9 BREAKTHROUGH CANDIDATE / RESEARCH EA IMPLEMENTED / ACTUAL-TICK TEST PENDING`
+Base GitHub `main`: `6ea22fe914a8a7cc459cb5bd939b8435335b77d6`
+Status: `HA-9 CANDIDATE / ACTUAL-TICK CHILD ECONOMICS RECONSTRUCTED / EVENT PARITY PENDING`
 
 | Stage | Status | Current consequence |
 | --- | --- | --- |
@@ -11,7 +11,8 @@ Status: `HA-9 BREAKTHROUGH CANDIDATE / RESEARCH EA IMPLEMENTED / ACTUAL-TICK TES
 | HA-8A | consumed model observation | no flip-score action |
 | X1/X2 | negative external observations | stop simple EUR/USD rescue attempts |
 | HA-8B/8C follow-on | consumed diagnosis | Child-level economic target more useful than Journey-birth target, but model lift modest |
-| **HA-9** | **active breakthrough candidate** | add-on proof/lock/timeout EA ready for actual-tick validation |
+| **HA-9** | **active research candidate** | supplied actual-tick report reconstructed; Journal/event parity still required |
+| HA-9 trade-mode follow-on | consumed mechanism diagnosis | timeout, exit-horizon, re-arm and runner variants rejected |
 
 ## Objective change
 
@@ -39,6 +40,10 @@ slightly positive while Baseline is deeply negative.
 
 ## Immediate next step
 
-No new data and no additional model family are required before execution work.
-Run the new research EA on canonical actual ticks and produce event/economic
-parity. If execution parity fails, fix semantics before changing strategy.
+The supplied MT5 report provides preliminary actual-tick economics, but not the
+Journal events needed to prove proof/timeout/lock timing parity. Obtain and
+compare that event stream before changing HA-9. The trade-mode follow-on branch
+has been exhausted without a promoted action; see
+`V13_HA9_TRADE_MODE_COVERAGE_20260928.md`. Do not add a new model family,
+timeout length, cooldown, runner exception or sizing rule to rescue consumed
+results.

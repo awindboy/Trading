@@ -1,7 +1,7 @@
 # V13 document authority map
 
-As of `2026-09-28`, this package was prepared against GitHub `main`
-`29e0073e57553d8fe1fd14b843daf09164a7a248`. Always refresh `main` first.
+As of `2026-09-28`, this package was extended against GitHub `main`
+`6ea22fe914a8a7cc459cb5bd939b8435335b77d6`. Always refresh `main` first.
 
 ## Active read order
 
@@ -16,8 +16,11 @@ As of `2026-09-28`, this package was prepared against GitHub `main`
 9. `V13_HA9_ADDON_PROOF_LOCK_ACTION_CONTRACT_20260928.md`
 10. `results/V13_HA9_ADDON_PROOF_LOCK_RECEIPT_20260928.md`
 11. `V13_HA9_MQL5_VALIDATION_PROTOCOL_20260928.md`
-12. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` — frozen comparator EA
-13. `../../../mt5/experts/V13HAProofLockMax10EA.mq5` — HA-9 research EA
+12. `V13_HA9_TRADE_MODE_RESEARCH_BACKLOG_20260928.md`
+13. `V13_HA9_TRADE_MODE_COVERAGE_20260928.md`
+14. current HA-9 trade-mode receipts under `results/`
+15. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` — frozen comparator EA
+16. `../../../mt5/experts/V13HAProofLockMax10EA.mq5` — HA-9 research EA
 
 ## Precedence
 
@@ -33,6 +36,9 @@ As of `2026-09-28`, this package was prepared against GitHub `main`
   candidate.
 - Actual-tick MT5 evidence, once produced, controls execution economics over the
   M1 idealized receipt.
+- The supplied actual-tick report controls the reconstructed Child economics in
+  the trade-mode receipts, but it does not replace event-reason parity because
+  the tester Journal/event stream was not supplied.
 
 ## Current strategy/research boundary
 

@@ -34,3 +34,66 @@ The audit writes:
 
 The Python audit is not an official MT5 backtest. Actual-tick execution authority
 belongs to the Strategy Tester after event parity.
+
+## HA-9 trade-mode phase 1
+
+`ha9_trade_mode_phase1.py` reconstructs an actual MT5 report into Child-level
+trades and joins it to the ideal HA-9, integrated-state and raw-swing ledgers.
+It uses post-exit price only as a label to study the 4–8h timeout-loss and
+sub-4h winner populations.
+
+```powershell
+python research/v13/ha9_trade_mode_phase1.py `
+  --report '<path-to-ReportTester-318585216.xlsx>' `
+  --m1 'data/GOLD#/GOLD#_M1_202201030100_202609222358.csv' `
+  --h1 'data/GOLD#/GOLD#_H1_202201030100_202609222300.csv' `
+  --h4 'data/GOLD#/GOLD#_H4_202201030000_202609230000.csv' `
+  --ideal-ledger 'output/v13_ha9_proof_lock_20260928/child_ledger.csv' `
+  --integrated-features 'output/v13_ha4c_integrated_20260927/decision_features.csv' `
+  --raw-swing-features 'output/v13_ha5_raw_swing_20260927/decision_features.csv' `
+  --output 'output/v13_ha9_trade_mode_phase1_20260928'
+```
+
+Read `docs/ea/v13/results/V13_HA9_TRADE_MODE_PHASE1_RECEIPT_20260928.md`
+before interpreting its future-only recovery or continuation labels.
+
+`ha9_counterfactual_exit_matrix.py` keeps actual entries fixed and compares
+opposite H1, FAST-R25 H4, standard H4 and a natural one-H1 timeout extension.
+`ha9_timeout_extension_holdout.py` applies the frozen extension mechanisms to
+the short post-cutoff overlap between the supplied report and raw H1 data.
+
+```powershell
+python research/v13/ha9_counterfactual_exit_matrix.py `
+  --trade-ledger 'output/v13_ha9_trade_mode_phase1_20260928/trade_mode_ledger.csv' `
+  --h1 'data/GOLD#/GOLD#_H1_202201030100_202609222300.csv' `
+  --h4 'data/GOLD#/GOLD#_H4_202201030000_202609230000.csv' `
+  --output 'output/v13_ha9_counterfactual_exit_matrix_20260928'
+
+python research/v13/ha9_timeout_extension_holdout.py `
+  --report '<path-to-ReportTester-318585216.xlsx>' `
+  --m1 'data/GOLD#/GOLD#_M1_202201030100_202609222358.csv' `
+  --h1 'data/GOLD#/GOLD#_H1_202201030100_202609222300.csv' `
+  --h4 'data/GOLD#/GOLD#_H4_202201030000_202609230000.csv' `
+  --output 'output/v13_ha9_timeout_extension_holdout_20260928'
+```
+
+`ha9_information_rearm_audit.py` tests whether a failed tactical Child should
+block later actual C2..C10 opportunities until a new causal information event.
+It is a selection diagnostic; it does not synthesize replacement opportunities
+beyond C10.
+
+```powershell
+python research/v13/ha9_information_rearm_audit.py `
+  --trade-ledger 'output/v13_ha9_trade_mode_phase1_20260928/trade_mode_ledger.csv' `
+  --output 'output/v13_ha9_information_rearm_20260928'
+```
+
+`ha9_runner_tactical_audit.py` designates a runner only after an actual proof
+timestamp and compares FAST/standard H4 retention with and without suppressing
+later actual tactical opportunities.
+
+```powershell
+python research/v13/ha9_runner_tactical_audit.py `
+  --exit-ledger 'output/v13_ha9_counterfactual_exit_matrix_20260928/counterfactual_exit_ledger.csv' `
+  --output 'output/v13_ha9_runner_tactical_20260928'
+```

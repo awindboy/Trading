@@ -1,9 +1,9 @@
 # V13 research instructions — HA proof/lock generation
 
 Last synchronized: `2026-09-28`
-Status: `BASELINE 0 FROZEN COMPARATOR / HA-9 BREAKTHROUGH CANDIDATE / RESEARCH EA IMPLEMENTED / ACTUAL-TICK VALIDATION PENDING`
+Status: `BASELINE 0 FROZEN / HA-9 CANDIDATE / ACTUAL-TICK CHILD ECONOMICS RECONSTRUCTED / EVENT PARITY PENDING`
 Market authority: `GOLD# ONLY`
-Base GitHub `main` checked: `29e0073e57553d8fe1fd14b843daf09164a7a248`
+Base GitHub `main` checked: `6ea22fe914a8a7cc459cb5bd939b8435335b77d6`
 
 ## 0. Resume order
 
@@ -20,6 +20,8 @@ Base GitHub `main` checked: `29e0073e57553d8fe1fd14b843daf09164a7a248`
 10. `results/V13_HA9_ADDON_PROOF_LOCK_RECEIPT_20260928.md`;
 11. `V13_HA9_MQL5_VALIDATION_PROTOCOL_20260928.md` before tester work;
 12. `mt5/experts/V13HAProofLockMax10EA.mq5` before implementation changes.
+13. `V13_HA9_TRADE_MODE_RESEARCH_BACKLOG_20260928.md` and
+    `V13_HA9_TRADE_MODE_COVERAGE_20260928.md` before further mechanism work.
 
 Later GitHub commits always outrank this package.
 
@@ -88,7 +90,10 @@ All three year slices are positive under the idealized HA-9 reconstruction.
 Top-10 profitable-Journey removal leaves Baseline `-5,785.30` versus HA-9
 `+74.26` points.
 
-These are not actual-tick tester economics.
+These are not actual-tick tester economics. The supplied MT5 report later
+reconstructed 3,858 canonical Children at `+$3,067.50`, 2,118 strict wins,
+1,734 strict losses and six flats. That report establishes preliminary Child
+economics but does not establish event-reason parity without its Journal.
 
 ## 5. Causal boundaries
 
@@ -102,11 +107,13 @@ These are not actual-tick tester economics.
 
 Do **not** add another indicator/model first. Next priority:
 
-1. compile the HA-9 EA;
-2. run canonical-window actual-tick Strategy Tester;
-3. compare EA event ledger with the Python causal audit;
-4. explain any loss-count/win-rate/DD divergence from spread/tick execution;
-5. only after parity, consider capital/risk sizing or further mechanism work.
+1. obtain the Strategy Tester Journal/event stream for the supplied report;
+2. compare proof/timeout/lock events with the Python causal audit;
+3. explain the idealized-versus-actual loss-count/win-rate/DD divergence;
+4. do not reopen rejected timeout, re-arm, runner or generic exit-horizon
+   variants under a new label;
+5. only after event parity and genuinely new evidence, consider a new mechanism
+   branch; sizing remains unauthorized.
 
 New-data validation is not the immediate research step unless explicitly chosen
 later; first establish that the consumed-data breakthrough survives exact

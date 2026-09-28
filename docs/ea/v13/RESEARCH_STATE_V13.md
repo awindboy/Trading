@@ -1,9 +1,9 @@
 # V13 research state
 
 Last synchronized: `2026-09-28`
-Status: `BASELINE 0 FROZEN / HA-9 BREAKTHROUGH CANDIDATE / ACTUAL-TICK VALIDATION PENDING`
+Status: `BASELINE 0 FROZEN / HA-9 BREAKTHROUGH CANDIDATE / ACTUAL-TICK CHILD LEDGER RECONSTRUCTED / EVENT PARITY PENDING`
 Market: `GOLD# ONLY`
-Base GitHub `main`: `29e0073e57553d8fe1fd14b843daf09164a7a248`
+Base GitHub `main`: `6ea22fe914a8a7cc459cb5bd939b8435335b77d6`
 
 ## 1. Frozen comparator
 
@@ -119,3 +119,93 @@ cannot compile MQL5, so source-level EA delivery does not count as compile proof
 Do not tune HA-9 parameters before tester parity. If actual-tick results diverge,
 first attribute the difference to spread, Bid/Ask proof/lock semantics, tick
 ordering, slippage or execution recovery.
+
+## 9. Actual-tick trade-mode diagnosis
+
+An extended MT5 report was reconstructed into 3,977 completed Children. The
+canonical cutoff contains 3,858 actual Children and joins one-to-one to the
+ideal HA-9 ledger. This is preliminary economic evidence, not event-reason
+parity.
+
+The actual ledger confirms two different roles:
+
+```text
+Child #1: 965 trades, 34.30% non-flat WR, +$1,863.03, median 13.04h
+Add-ons: 2,893 trades, 61.90% non-flat WR, +$1,204.47, median 2.96h
+```
+
+Among add-ons, 734 canonical losses occur in the 4–8h timeout band and 733 had
+no proof. H1 repair raises later recovery probability, while persistent H1
+opposition, H4 delta contraction, opposite-wick state and FAST-H4 opposition
+identify more terminal failures. However, only 9.54% of the whole loss pile is
+positive if held to the standard-H4 Journey exit, so removing timeout broadly is
+rejected.
+
+For 1,460 sub-4h winning add-ons, the standard-H4 exit beats the actual exit in
+only 38.77%. Time-to-proof alone does not identify a runner. The next research
+step is therefore a predeclared H1/FAST-H4/standard-H4 counterfactual exit matrix,
+not feature stacking or simple longer holding.
+
+See:
+
+- `V13_HA9_TRADE_MODE_RESEARCH_BACKLOG_20260928.md`
+- `results/V13_HA9_TRADE_MODE_PHASE1_RECEIPT_20260928.md`
+
+## 10. Counterfactual exit result
+
+Global H1, FAST-H4 and standard-H4 add-on exits all increased losing-Child
+frequency sharply. FAST-H4 produced a much larger right tail, but add-on losses
+rose from 1,100 to 1,772, realized DD from `$693.33` to `$2,151.29`, and the
+maximum loss streak from 9 to 22. This violates the active objective.
+
+A natural one-H1 extension after actionable timeout looked favorable on the
+consumed period. A post-hoc persistent-opposition/unrepaired-mixed selector
+reduced combined losses by 48 and improved consumed-period net and DD. It then
+failed the short post-cutoff quasi-holdout: among 99 Children it did not reduce
+loss count, changed net from `+$7.13` to `-$70.59`, and increased DD from
+`$477.37` to `$525.34`.
+
+The timeout extension is rejected without parameter rescue. Immediate HA-9
+timeout remains unchanged. See
+`results/V13_HA9_COUNTERFACTUAL_EXIT_MATRIX_RECEIPT_20260928.md`.
+
+## 11. Information-based re-arm result
+
+Blocking re-entry after one tactical failure until a new extreme, raw-swing
+close, H1 no-opposition state or H4 delta re-expansion removed more winners than
+losses in every variant. Requiring two consecutive failures reduced the damage,
+but the best consumed-data diagnostic removed 34 winners and 31 losses, slightly
+worsened DD, and showed weak year stability.
+
+On the short post-cutoff quasi-holdout it skipped four winners and one loser,
+changing `+$7.13` to `-$18.12`. Information-based re-arm is rejected. Do not
+replace it with a fitted cooldown. See
+`results/V13_HA9_INFORMATION_REARM_RECEIPT_20260928.md`.
+
+## 12. Runner/tactical role result
+
+Converting the first proven add-on to a FAST-H4 runner raised consumed-period
+net to `+$5,780.22`, but losses rose by 210, win rate fell to 49.55%, DD rose to
+`$1,417.42`, and maximum loss streak rose to 19. This is right-tail restoration,
+not ordinary-equity improvement.
+
+Requiring aligned H1 close acceptance reduced runner assignments to 56 and
+improved net/DD, but still created ten extra losses. In the short post-cutoff
+overlap, two qualifying actual winners became one win and one loss, changing
+their `+$15.06` to `-$7.19`.
+
+Suppressing new add-ons while a runner lived removed far more winners than
+losses and collapsed win rate. C10 is negative but C4–C9 are not monotonic, so
+no late-ordinal veto is authorized. See
+`results/V13_HA9_RUNNER_TACTICAL_ROLE_RECEIPT_20260928.md`.
+
+## 13. Trade-mode program boundary
+
+The original proposal's actionable priority chain is complete through timeout
+decomposition, exit horizons, state timeout, re-arm and runner/tactical roles.
+The market/pullback/breakout selector is not executed because no stable holding
+mode exists to select; sizing is not authorized for the same reason. Structural
+stop variants cannot address the dominant no-proof timeout population and await
+event parity before lower-leverage post-proof mechanics are expanded.
+
+See `V13_HA9_TRADE_MODE_COVERAGE_20260928.md` for the 23-item coverage map.

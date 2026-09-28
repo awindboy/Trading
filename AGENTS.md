@@ -1,7 +1,7 @@
 # Trading repository authority
 
 Last synchronized: `2026-09-28`
-Base GitHub `main` checked: `29e0073e57553d8fe1fd14b843daf09164a7a248`
+Base GitHub `main` checked: `6ea22fe914a8a7cc459cb5bd939b8435335b77d6`
 
 ## Active generation
 
@@ -18,6 +18,8 @@ Start every V13 session in this order:
 6. read `docs/ea/v13/RESEARCH_STATE_V13.md`;
 7. read the frozen Baseline-0 contract and the current HA-9 action contract;
 8. read the HA-9 receipt and MQL5 validation protocol before tester work.
+9. read `V13_HA9_TRADE_MODE_COVERAGE_20260928.md` and its linked receipts
+   before proposing another timeout, re-arm, runner or exit-horizon variant.
 
 ## Frozen comparator
 
@@ -81,3 +83,15 @@ superseded by `V13_OBJECTIVE_AND_EVALUATION_UPDATE_20260928.md`.
 - 2024-01-01..2026-08-28 remains consumed development history.
 - MQL5 Strategy Tester `Every tick based on real ticks` is required for official
   execution economics.
+
+## Current actual-tick boundary
+
+The supplied extended MT5 report has been reconstructed into 3,977 completed
+Children and 3,858 canonical-cutoff Children. It provides preliminary execution
+economics, but no Journal/event stream was supplied, so proof/timeout/lock event
+parity remains pending.
+
+The HA-9 trade-mode follow-on branch tested timeout extensions, H1/FAST/STD
+exits, information re-arm and runner/tactical separation. No action survived
+the post-cutoff checks. Do not rescue those mechanisms with fitted thresholds,
+cooldowns or sizing. Read the coverage map before new research.

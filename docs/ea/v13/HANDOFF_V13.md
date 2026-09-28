@@ -1,8 +1,8 @@
 # V13 handoff
 
 Last synchronized: `2026-09-28`
-Status: `HA-9 BREAKTHROUGH CANDIDATE / RESEARCH EA READY / ACTUAL-TICK VALIDATION NEXT`
-Base GitHub `main`: `29e0073e57553d8fe1fd14b843daf09164a7a248`
+Status: `HA-9 BREAKTHROUGH CANDIDATE / ACTUAL-TICK CHILD LEDGER RECONSTRUCTED / EVENT PARITY AND TRADE-MODE RESEARCH NEXT`
+Base GitHub `main`: `6ea22fe914a8a7cc459cb5bd939b8435335b77d6`
 
 ## Resume point
 
@@ -84,13 +84,56 @@ always existed.
 
 ## Immediate next work
 
-1. MetaEditor compile `mt5/experts/V13HAProofLockMax10EA.mq5`.
-2. Run `Every tick based on real ticks`, canonical 2024-01-01..2026-08-28.
-3. Verify proof/timeout/lock event timing against
-   `research/v13/ha9_addon_proof_lock_audit.py`.
-4. Produce actual-tick receipt with the revised quality metrics.
-5. If actual-tick parity holds, decompose the remaining 1,685 losing Children;
-   do not return immediately to broad indicator or ML feature stacking.
+1. Verify proof/timeout/lock event reasons from the supplied actual-tick report
+   against `research/v13/ha9_addon_proof_lock_audit.py`; the exact Child ledger
+   join is not yet event-reason parity.
+2. Run the predeclared fixed-entry counterfactual matrix for opposite H1 HA,
+   one-H1 timeout extension, opposite FAST-H4 HA, standard-H4 HA and structural
+   protection.
+3. Diagnose the 734 canonical no-proof 4–8h add-on losses using only state known
+   by the action timestamp.
+4. Diagnose the 1,460 canonical sub-4h winning add-ons without treating future
+   maximum favorable excursion as executable profit.
+5. Test information-based re-arm on repeat-loss clusters only after the exit
+   modes are defined.
+6. Keep Journey persistence/runner roles separate from permission to add a new
+   late Child. Sizing remains last.
+
+The governing program is
+`V13_HA9_TRADE_MODE_RESEARCH_BACKLOG_20260928.md`; phase-1 evidence is in
+`results/V13_HA9_TRADE_MODE_PHASE1_RECEIPT_20260928.md`.
+
+Completed after that phase:
+
+- global opposite-H1, FAST-H4 and standard-H4 exits were rejected because they
+  materially increased losing Children and loss streak/DD burden;
+- a one-H1 timeout extension and a state-selected version looked favorable on
+  consumed data but failed the short post-cutoff quasi-holdout;
+- do not optimize another timeout length or add a rescue exception.
+
+Resume with runner identification, information-based re-arm and separation of
+an existing runner from a new late tactical Child. Read
+`results/V13_HA9_COUNTERFACTUAL_EXIT_MATRIX_RECEIPT_20260928.md` first.
+
+Information-based re-arm has now also been tested and rejected. One-failure
+gates removed more winners than losses. A narrower two-failure gate removed 34
+winners versus 31 losses on consumed data and then skipped four winners versus
+one loss post-cutoff. Resume with runner-versus-new-add separation, not another
+re-arm/cooldown variant. See
+`results/V13_HA9_INFORMATION_REARM_RECEIPT_20260928.md`.
+
+Runner/tactical separation has also been tested. A first-proven FAST runner
+restores a large right tail but adds 210 losses and worsens streak/DD. H1-close
+acceptance narrows the damage but still adds losses and failed post-cutoff.
+Suppressing new add-ons while a runner lives removes substantially more winners
+than losses. Do not proceed to sizing or a C10 veto. See
+`results/V13_HA9_RUNNER_TACTICAL_ROLE_RECEIPT_20260928.md`.
+
+The trade-mode branch is now closed without an action promotion. Entry-method
+selection and sizing were conditional downstream stages; neither is authorized
+because no stable mode survived the post-cutoff checks. Use
+`V13_HA9_TRADE_MODE_COVERAGE_20260928.md` to avoid repeating the 23 proposed
+ideas under new labels.
 
 ## Do not resume with
 
