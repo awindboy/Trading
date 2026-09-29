@@ -1,9 +1,46 @@
 # V13 research state
 
-Last synchronized: `2026-09-28`
-Status: `BASELINE 0 FROZEN / HA-9 BREAKTHROUGH CANDIDATE / ACTUAL-TICK CHILD LEDGER RECONSTRUCTED / EVENT PARITY PENDING`
+Last synchronized: `2026-09-29`
+Status: `BASELINE 0 FROZEN / LTF ROUTE RECONSTRUCTION A ACTUAL-TICK VERIFIED / NOT PROMOTED`
 Market: `GOLD# ONLY`
-Base GitHub `main`: `6ea22fe914a8a7cc459cb5bd939b8435335b77d6`
+Base GitHub `main`: `1555d2b06b4dabdbadf14366c26e4f2177506463`
+
+## 0. Current state — 2026-09-29 supersession
+
+Sections 1–13 below remain the historical HA-only/HA-9 research record. The
+active branch now replaces H4 add-ons with M30/M15 pullback Children and models
+delivery of a causal M30/H1 strategic destination.
+
+Current architecture:
+
+```text
+unchanged Baseline-0 Child #1
++ strict-prior OOF q75 hurdle-EV LTF admission
++ first-destination delivery as runtime proof
++ strict-prior OOF q50 first-correction repair permission
+```
+
+SA-1 remains the actual-tick ordinary-quality reference (`1,783`,
+`+$2,791.87`, PF `1.215`, DD `$971.77`, WR `50.17%`, streak 10).
+
+The interrupted LTF session result remains unrecoverable bit-for-bit because
+its exact q50 event ledger was not saved. A definition-faithful Reconstruction
+A recovered the same 512 LTF / 1,477 combined population and has now passed
+2,954/2,954 ordered actual-tick policy parity:
+
+```text
+net / PF                    +$4,461.37 / 1.301
+wins / losses / flats      554 / 922 / 1
+non-flat WR                37.53%
+realized / equity DD       $1,018.77 / $1,787.36
+max loss streak / exposure 15 / 8 positions
+```
+
+It is not promoted: against SA-1, improved payoff and net come with more losses,
+much lower win rate, longer streaks and greater exposure. The current boundary
+is forward shadow or a genuinely new predeclared mechanism, not threshold
+rescue or embedded production implementation. See the 2026-09-29 actual-tick
+replay receipt.
 
 ## 1. Frozen comparator
 

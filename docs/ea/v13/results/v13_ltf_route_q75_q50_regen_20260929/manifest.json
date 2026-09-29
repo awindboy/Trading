@@ -1,0 +1,67 @@
+{
+  "destinations": {
+    "path": "v13_route_destinations.csv",
+    "sha256": "cfd476e884ec583374d6cccc723b96d33f673003dc68a3afb2186f247ab1abc4",
+    "bytes": 1678027
+  },
+  "route_dataset": {
+    "path": "v13_route_dataset.csv",
+    "sha256": "10b6114b1b1ed2f7dd25a64c3f2e2881a8881891abad49376a46bde9c8f57e78",
+    "bytes": 2761084
+  },
+  "oof": {
+    "path": "v13_route_delivery_oof.csv",
+    "sha256": "337597d11fee64128c53bfdbbfe12f02be7d362ea9a6f16da0821cbe360cf93d",
+    "bytes": 670129
+  },
+  "auc": {
+    "path": "v13_route_auc.csv",
+    "sha256": "03e1e579441e4982d1420dcb1c8c5d8cd0c36e17c05df12e58d1068a300f7bb5",
+    "bytes": 371
+  },
+  "thresholds": {
+    "path": "v13_route_q75_thresholds.csv",
+    "sha256": "0e812aa3ab45c1931ba33b8e2c45912b78a869e9147bff2c6962f4bff2a56d55",
+    "bytes": 123
+  },
+  "admitted": {
+    "path": "v13_route_q75_admitted.csv",
+    "sha256": "eaeb4fa792b6425ba9148490352963b2dc5b6960d2a0aa61055c512a9c6564a2",
+    "bytes": 136969
+  },
+  "repair_oof": {
+    "path": "v13_route_q50_repair_oof.csv",
+    "sha256": "37698b9711b8433d7610f1d998b74af7149ee27e35e12f618d5e5f08cf7b5c4e",
+    "bytes": 81240
+  },
+  "repair_diagnostics": {
+    "path": "v13_route_q50_repair_diagnostics.csv",
+    "sha256": "f80f190904042db9b628c1b67f90213bd450fca8a3ce2a9deb56a86f04f63adb",
+    "bytes": 176
+  },
+  "repair_thresholds": {
+    "path": "v13_route_q50_thresholds.csv",
+    "sha256": "f8bdcaac6c36259bd4680f441707d0d0389d6e987737f6c45afbefc3fd5976b1",
+    "bytes": 126
+  },
+  "final_policy": {
+    "path": "v13_route_q75_q50_policy.csv",
+    "sha256": "5b07a6c8c1be6fa1b72eb46f06577637296a696898ff2e5be55c0201c0a85a39",
+    "bytes": 190028
+  },
+  "policy_ledger": {
+    "path": "v13_ltf_route_q75_q50_policy_ledger.csv",
+    "sha256": "0d4279ecf5e8033b3754ae11f31895bd3747232ed1b6f0a9fff6dd20875e8d87",
+    "bytes": 89873
+  },
+  "c1": {
+    "path": "v13_child1_actual_reference.csv",
+    "sha256": "456a5779ec19aedde38979f16251352471cdfa22ddc9c48c5e5910a5c4c71608",
+    "bytes": 82826
+  },
+  "combined_policy_ledger": {
+    "path": "v13_c1_ltf_route_q75_q50_policy_ledger.csv",
+    "sha256": "dc09bbef5602622089e80a3ee12dd3257430fdeeb3042ad57571211c20f2f5be",
+    "bytes": 262607
+  }
+}

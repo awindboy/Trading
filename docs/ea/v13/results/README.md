@@ -1,11 +1,22 @@
 # V13 result receipts
 
-Current status (`2026-09-28`): Baseline 0 frozen comparator; HA-9 add-on proof/
-lock/timeout is the active breakthrough candidate. An actual-tick report has
-been reconstructed at Child level for preliminary trade-mode research, but
-official event-reason parity is still pending.
+Current status (`2026-09-29`): Baseline 0 remains frozen and SA-1 remains the
+ordinary-quality actual-tick reference. LTF-route Reconstruction A has a frozen
+ledger and exact actual-tick parity, but is not promoted because stronger payoff
+and net came with worse loss frequency, win rate, streak and exposure.
 
 ## Current receipt
+
+- `V13_LTF_ROUTE_Q75_Q50_RESEARCH_RECEIPT_20260929.md` — full result/decision
+  summary for the final LTF destination branch, including explicit separation
+  of saved evidence, session-reported numbers and remaining parity work.
+- `V13_LTF_ROUTE_POLICY_REPLAY_EA_COMPILE_RECEIPT_20260929.md` — replay EA
+  source/EX5 hashes and zero-error/zero-warning MetaEditor compile evidence.
+- `V13_LTF_ROUTE_Q75_Q50_ACTUAL_TICK_REPLAY_RECEIPT_20260929.md` — Reconstruction
+  A ledger identity, 2,954/2,954 Journal parity, actual-tick economics, blocks,
+  tail robustness, closed-market retry evidence and non-promotion decision.
+
+## Historical HA-9 receipts
 
 - `V13_HA9_ADDON_PROOF_LOCK_RECEIPT_20260928.md` — causal M1/H4 action audit.
   Primary result: losses `2,427 -> 1,685`, non-flat win rate `37.08% -> 56.07%`,

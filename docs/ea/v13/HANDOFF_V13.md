@@ -1,8 +1,60 @@
 # V13 handoff
 
-Last synchronized: `2026-09-28`
-Status: `HA-9 BREAKTHROUGH CANDIDATE / ACTUAL-TICK CHILD LEDGER RECONSTRUCTED / EVENT PARITY AND TRADE-MODE RESEARCH NEXT`
-Base GitHub `main`: `6ea22fe914a8a7cc459cb5bd939b8435335b77d6`
+Last synchronized: `2026-09-29`
+Status: `LTF ROUTE RECONSTRUCTION A ACTUAL-TICK VERIFIED / NOT PROMOTED / SA-1 REFERENCE RETAINED`
+Base GitHub `main`: `1555d2b06b4dabdbadf14366c26e4f2177506463`
+
+## Current resume point — supersedes the older HA-9 resume prose below
+
+Research progressed through HA-9, SA-1, lower-timeframe Child replacement,
+correction-envelope studies and strategic-destination modeling. The current
+candidate is no longer an H4 add-on variant.
+
+```text
+Child #1 = Baseline 0 unchanged
+H4 PHA = Parent/Journey container
+M30 correction + fresh M15 POI = replacement Child opportunity
+M30/H1 confirmed swings ahead = forward route
+prior-OOF hurdle-EV q75 = fixed-size admission
+first destination delivery = proof, not TP
+first damaged post-delivery correction = prior-OOF q50 repair decision
+```
+
+The interrupted session reported 1,477 combined trades, `+$4,173.10`, PF
+`1.289`, payoff `2.19`, realized DD `$916.92`. Its exact q50 ledger was not
+saved, so that result remains session-reported evidence.
+
+Reconstruction A has now completed the missing implementation chain without
+tuning to those old numbers:
+
+```text
+hashed ledger                 1,477 events / 2,954 actions
+ordered Journal parity        2,954 / 2,954 PASS
+actual-tick net / PF           +$4,461.37 / 1.301
+wins / losses / flats         554 / 922 / 1
+realized / equity DD          $1,018.77 / $1,787.36
+max loss streak / concurrency 15 / 8
+```
+
+This is positive and the idealized-to-actual execution gap is small, but it is
+not promoted. Against SA-1 it makes more money through payoff while producing
+34 more losses, 340 fewer wins, lower win rate, a longer loss streak and more
+exposure despite 306 fewer trades. That conflicts with V13's ordinary-equity
+priority.
+
+Resume at one of only two legitimate boundaries:
+
+1. predeclared forward shadow after `2026-08-28 20:00`; or
+2. a genuinely new mechanism frozen before inspecting its future results.
+
+Do not fit q65/q70, size, side/year exceptions or another repair threshold to
+rescue Reconstruction A. Do not build an embedded production EA from it yet.
+
+Read the q75/q50 action contract, receipt and validation protocol first. Do not
+restart broad indicator research, rescue q65/q70, add score sizing, or modify
+Child #1 on this consumed sample.
+
+The remainder of this file preserves the historical HA-9 handoff record.
 
 ## Resume point
 

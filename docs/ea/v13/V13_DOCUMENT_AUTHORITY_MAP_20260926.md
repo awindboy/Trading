@@ -1,7 +1,7 @@
 # V13 document authority map
 
-As of `2026-09-28`, this package was extended against GitHub `main`
-`6ea22fe914a8a7cc459cb5bd939b8435335b77d6`. Always refresh `main` first.
+As of `2026-09-29`, this package was extended against GitHub `main`
+`1555d2b06b4dabdbadf14366c26e4f2177506463`. Always refresh `main` first.
 
 ## Active read order
 
@@ -13,14 +13,16 @@ As of `2026-09-28`, this package was extended against GitHub `main`
 6. `V13_HA_RESEARCH_ROADMAP_STATUS_ADDENDUM_20260928.md`
 7. `V13_BASELINE0_HA_MAX10_CONTRACT_20260926.md`
 8. historical HA-3..HA-8/X1/X2 contracts and their receipts as needed
-9. `V13_HA9_ADDON_PROOF_LOCK_ACTION_CONTRACT_20260928.md`
-10. `results/V13_HA9_ADDON_PROOF_LOCK_RECEIPT_20260928.md`
-11. `V13_HA9_MQL5_VALIDATION_PROTOCOL_20260928.md`
-12. `V13_HA9_TRADE_MODE_RESEARCH_BACKLOG_20260928.md`
-13. `V13_HA9_TRADE_MODE_COVERAGE_20260928.md`
-14. current HA-9 trade-mode receipts under `results/`
-15. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` — frozen comparator EA
-16. `../../../mt5/experts/V13HAProofLockMax10EA.mq5` — HA-9 research EA
+9. `V13_FULL_RESEARCH_CHRONICLE_20260929.md`
+10. `V13_LTF_BRANCH_DECISION_LOG_20260929.md`
+11. `V13_LTF_ROUTE_Q75_Q50_ACTION_CONTRACT_20260929.md`
+12. `results/V13_LTF_ROUTE_Q75_Q50_RESEARCH_RECEIPT_20260929.md`
+13. `V13_LTF_ROUTE_Q75_Q50_MQL5_VALIDATION_PROTOCOL_20260929.md`
+14. `results/V13_LTF_ROUTE_Q75_Q50_ACTUAL_TICK_REPLAY_RECEIPT_20260929.md`
+15. HA-9 action/coverage documents and earlier LTF checkpoint receipts as history
+16. `../../../mt5/experts/V13HAOnlyMax10EA.mq5` — frozen comparator EA
+17. `../../../mt5/experts/V13SA1CleanContinuationEA.mq5` — actual-tick reference EA
+18. `../../../mt5/experts/V13LTFRouteQ75Q50_PolicyReplayEA.mq5` — Reconstruction A replay EA
 
 ## Precedence
 
@@ -31,17 +33,21 @@ As of `2026-09-28`, this package was extended against GitHub `main`
   reason to reject an action.
 - Frozen historical experiment contracts/receipts still control what those old
   experiments did and what they measured. They are not rewritten retroactively.
-- HA-9 contract controls the current action candidate only.
-- HA-9 receipt controls the exact idealized research numbers reported for that
-  candidate.
-- Actual-tick MT5 evidence, once produced, controls execution economics over the
-  M1 idealized receipt.
+- The LTF route q75/q50 contract controls the current research candidate.
+- Its receipt distinguishes session-reported results from locally saved and
+  actual-tick-verified evidence.
+- Reconstruction A actual-tick MT5 evidence controls its execution economics
+  over the M1 idealized proxy. It does not retroactively reproduce the absent
+  interrupted-session q50 ledger.
 - The supplied actual-tick report controls the reconstructed Child economics in
   the trade-mode receipts, but it does not replace event-reason parity because
   the tester Journal/event stream was not supplied.
 
 ## Current strategy/research boundary
 
-Baseline 0 remains frozen. HA-9 is a breakthrough candidate but is not production
-or capital-sizing authority. No further indicator/model stack should be added
-before HA-9 actual-tick event parity is established.
+Baseline 0 remains frozen. SA-1 remains the ordinary-quality actual-tick
+reference. LTF-route Reconstruction A now has a saved, hashed event ledger and
+exact actual-tick Journal parity, but is not promoted because its superior net
+comes with worse loss frequency, win rate, streak and exposure than SA-1. Its
+compiled replay EA is an execution harness, not production or capital-sizing
+authority.

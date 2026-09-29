@@ -1,0 +1,174 @@
+{
+  "contract": "V13_LTF_ROUTE_Q75_Q50_ACTION_CONTRACT_20260929",
+  "cutoff": "2026-08-28 20:00:00",
+  "route_events": 3442,
+  "route_available": 3431,
+  "destination_delivery": 1463,
+  "auc": [
+    {
+      "year": 2023,
+      "model": "STATE",
+      "train_n": 652,
+      "test_n": 747,
+      "auc": 0.6670906200317965
+    },
+    {
+      "year": 2023,
+      "model": "STATE_ROUTE",
+      "train_n": 652,
+      "test_n": 747,
+      "auc": 0.6627186009538951
+    },
+    {
+      "year": 2024,
+      "model": "STATE",
+      "train_n": 1395,
+      "test_n": 775,
+      "auc": 0.758765196464877
+    },
+    {
+      "year": 2024,
+      "model": "STATE_ROUTE",
+      "train_n": 1395,
+      "test_n": 775,
+      "auc": 0.7748433674951246
+    },
+    {
+      "year": 2025,
+      "model": "STATE",
+      "train_n": 2175,
+      "test_n": 736,
+      "auc": 0.7102004716981132
+    },
+    {
+      "year": 2025,
+      "model": "STATE_ROUTE",
+      "train_n": 2175,
+      "test_n": 736,
+      "auc": 0.7230285437832608
+    },
+    {
+      "year": 2026,
+      "model": "STATE",
+      "train_n": 2911,
+      "test_n": 519,
+      "auc": 0.7083371860070888
+    },
+    {
+      "year": 2026,
+      "model": "STATE_ROUTE",
+      "train_n": 2911,
+      "test_n": 519,
+      "auc": 0.712174449067653
+    }
+  ],
+  "thresholds": [
+    {
+      "year": 2024,
+      "prior_oof_n": 747,
+      "q75_threshold": 0.05665570840639733
+    },
+    {
+      "year": 2025,
+      "prior_oof_n": 1522,
+      "q75_threshold": 0.06373420729529139
+    },
+    {
+      "year": 2026,
+      "prior_oof_n": 2258,
+      "q75_threshold": 0.0628516827586441
+    }
+  ],
+  "q75_k0": {
+    "n": 512,
+    "wins": 238,
+    "losses": 274,
+    "flats": 0,
+    "win_rate": 0.46484375,
+    "net": 2383.100000000002,
+    "pf": 1.57353889696468,
+    "avg_win": 27.471344537815135,
+    "avg_loss": -15.164525547445255,
+    "payoff": 1.811553183900514,
+    "expectancy": 4.654492187500004,
+    "realized_dd": 461.22999999999956,
+    "max_loss_streak": 7
+  },
+  "repair_diagnostics": [
+    {
+      "year": 2023,
+      "train_n": 123,
+      "test_n": 151,
+      "score_outcome_corr": 0.06889857093063784
+    },
+    {
+      "year": 2024,
+      "train_n": 274,
+      "test_n": 162,
+      "score_outcome_corr": -0.007526522063731987
+    },
+    {
+      "year": 2025,
+      "train_n": 437,
+      "test_n": 147,
+      "score_outcome_corr": 0.05215755313602671
+    },
+    {
+      "year": 2026,
+      "train_n": 584,
+      "test_n": 100,
+      "score_outcome_corr": 0.161032103210321
+    }
+  ],
+  "repair_thresholds": [
+    {
+      "year": 2024,
+      "prior_oof_n": 151,
+      "q50_threshold": -0.13713471407492994
+    },
+    {
+      "year": 2025,
+      "prior_oof_n": 313,
+      "q50_threshold": -0.014761467646184231
+    },
+    {
+      "year": 2026,
+      "prior_oof_n": 460,
+      "q50_threshold": 0.019930471182225358
+    }
+  ],
+  "q75_q50": {
+    "n": 512,
+    "wins": 231,
+    "losses": 281,
+    "flats": 0,
+    "win_rate": 0.451171875,
+    "net": 2667.5999999999985,
+    "pf": 1.626888820999694,
+    "avg_win": 29.96926406926407,
+    "avg_loss": -15.143416370106769,
+    "payoff": 1.979029258445515,
+    "expectancy": 5.210156249999997,
+    "realized_dd": 501.65999999999985,
+    "max_loss_streak": 10
+  },
+  "repair_allowed": 103,
+  "ledger_rows": 1024,
+  "child1_n": 965,
+  "combined": {
+    "n": 1477,
+    "wins": 561,
+    "losses": 916,
+    "flats": 0,
+    "win_rate": 0.3798239675016926,
+    "net": 4530.109999999998,
+    "pf": 1.3066078824062108,
+    "avg_win": 34.41183600713013,
+    "avg_loss": -16.129836244541487,
+    "payoff": 2.133427487137414,
+    "expectancy": 3.067102234258631,
+    "realized_dd": 1002.4900000000016,
+    "max_loss_streak": 14
+  },
+  "combined_ledger_rows": 2954
+}

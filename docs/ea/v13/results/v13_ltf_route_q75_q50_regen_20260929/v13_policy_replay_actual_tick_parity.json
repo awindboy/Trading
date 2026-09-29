@@ -1,0 +1,186 @@
+{
+  "status": "PASS",
+  "ledger": "docs\\ea\\v13\\results\\v13_ltf_route_q75_q50_regen_20260929\\v13_c1_ltf_route_q75_q50_policy_ledger.csv",
+  "ledger_sha256": "dc09bbef5602622089e80a3ee12dd3257430fdeeb3042ad57571211c20f2f5be",
+  "journal": "C:\\Temp\\V13PolicyReplayMT5\\Tester\\Agent-127.0.0.1-3000\\logs\\20260929.log",
+  "journal_sha256": "09afca05d9239a7121190de436d04f705b29b5d60aaf548149079bcd92459cac",
+  "ledger_action_rows": 2954,
+  "ledger_events": 1477,
+  "journal_marker_counts": {
+    "ENTRY": 1477,
+    "EXIT": 1477,
+    "INIT_OK": 1,
+    "ORDER_FAIL": 16565,
+    "REPLAY_COMPLETE": 1
+  },
+  "successful_action_rows": 2954,
+  "exact_ordered_action_parity": true,
+  "first_mismatch_zero_based": null,
+  "order_fail_attempts": 16565,
+  "order_fail_rows": 50,
+  "order_fail_retcodes": {
+    "10018": 16565
+  },
+  "maximum_retries_for_one_row": 3116,
+  "unresolved_failed_rows": [],
+  "has_complete_balance_delta_evidence": true,
+  "tester_completion": {
+    "balance": 14461.37,
+    "equity": 14461.37,
+    "maximum_actual_tick_equity_drawdown": 1787.36,
+    "maximum_concurrent_positions": 8
+  },
+  "h4_run_alignment": {
+    "status": "PASS",
+    "inferred_h4_run_offset": 716,
+    "alignment_observations": 512,
+    "modal_offset_support": 512,
+    "modal_offset_share": 1.0,
+    "offset_counts": {
+      "716": 512
+    }
+  },
+  "economics": {
+    "trades": 1477,
+    "wins": 554,
+    "losses": 922,
+    "flats": 1,
+    "nonflat_win_rate": 0.37533875338753386,
+    "net_profit": 4461.37,
+    "gross_profit": 19261.94,
+    "gross_loss": 14800.57,
+    "profit_factor": 1.3014323097015859,
+    "average_win": 34.768844765342955,
+    "average_loss": 16.05267895878525,
+    "payoff_ratio": 2.165921641777729,
+    "expectancy": 3.020561949898443,
+    "realized_max_drawdown": 1018.7699999999991,
+    "max_consecutive_losses": 15
+  },
+  "chronological_nonoverlapping_block_quality": {
+    "10": {
+      "blocks": 147,
+      "positive_share": 0.564625850340136,
+      "median_usd": 13.539999999999996,
+      "high_win_rate_negative_blocks": 0,
+      "high_win_rate_negative_share": 0.0
+    },
+    "25": {
+      "blocks": 59,
+      "positive_share": 0.576271186440678,
+      "median_usd": 37.95,
+      "high_win_rate_negative_blocks": 0,
+      "high_win_rate_negative_share": 0.0
+    },
+    "50": {
+      "blocks": 29,
+      "positive_share": 0.6206896551724138,
+      "median_usd": 87.48,
+      "high_win_rate_negative_blocks": 0,
+      "high_win_rate_negative_share": 0.0
+    },
+    "100": {
+      "blocks": 14,
+      "positive_share": 0.6428571428571429,
+      "median_usd": 289.28,
+      "high_win_rate_negative_blocks": 0,
+      "high_win_rate_negative_share": 0.0
+    }
+  },
+  "top_profitable_h4_runs_removed_net_profit": {
+    "1": 3512.0,
+    "3": 2395.99,
+    "5": 1649.6,
+    "10": 211.6899999999996,
+    "20": -2006.6999999999998
+  },
+  "economics_by_lane": {
+    "C1_BASELINE0": {
+      "trades": 965,
+      "wins": 328,
+      "losses": 636,
+      "flats": 1,
+      "nonflat_win_rate": 0.34024896265560167,
+      "net_profit": 1863.72,
+      "gross_profit": 12382.21,
+      "gross_loss": 10518.49,
+      "profit_factor": 1.1771851282836223,
+      "average_win": 37.75064024390244,
+      "average_loss": 16.538506289308177,
+      "payoff_ratio": 2.282590675574341,
+      "expectancy": 1.9313160621761658,
+      "realized_max_drawdown": 762.4900000000011,
+      "max_consecutive_losses": 11
+    },
+    "LTF_Q75": {
+      "trades": 512,
+      "wins": 226,
+      "losses": 286,
+      "flats": 0,
+      "nonflat_win_rate": 0.44140625,
+      "net_profit": 2597.65,
+      "gross_profit": 6879.73,
+      "gross_loss": 4282.08,
+      "profit_factor": 1.6066327579120427,
+      "average_win": 30.441283185840707,
+      "average_loss": 14.972307692307693,
+      "payoff_ratio": 2.033172428154178,
+      "expectancy": 5.07353515625,
+      "realized_max_drawdown": 494.8499999999997,
+      "max_consecutive_losses": 10
+    }
+  },
+  "economics_by_exit_year": {
+    "2024": {
+      "trades": 605,
+      "wins": 208,
+      "losses": 397,
+      "flats": 0,
+      "nonflat_win_rate": 0.343801652892562,
+      "net_profit": 208.73,
+      "gross_profit": 3633.7,
+      "gross_loss": 3424.97,
+      "profit_factor": 1.060943599505981,
+      "average_win": 17.46971153846154,
+      "average_loss": 8.62712846347607,
+      "payoff_ratio": 2.0249740817493964,
+      "expectancy": 0.3450082644628099,
+      "realized_max_drawdown": 552.2300000000002,
+      "max_consecutive_losses": 14
+    },
+    "2025": {
+      "trades": 527,
+      "wins": 220,
+      "losses": 306,
+      "flats": 1,
+      "nonflat_win_rate": 0.41825095057034223,
+      "net_profit": 2489.95,
+      "gross_profit": 7171.95,
+      "gross_loss": 4682.0,
+      "profit_factor": 1.5318133276377617,
+      "average_win": 32.59977272727273,
+      "average_loss": 15.300653594771243,
+      "payoff_ratio": 2.1306130829870686,
+      "expectancy": 4.724762808349146,
+      "realized_max_drawdown": 368.7700000000001,
+      "max_consecutive_losses": 15
+    },
+    "2026": {
+      "trades": 345,
+      "wins": 126,
+      "losses": 219,
+      "flats": 0,
+      "nonflat_win_rate": 0.3652173913043478,
+      "net_profit": 1762.69,
+      "gross_profit": 8456.29,
+      "gross_loss": 6693.6,
+      "profit_factor": 1.2633396079837458,
+      "average_win": 67.1134126984127,
+      "average_loss": 30.564383561643837,
+      "payoff_ratio": 2.1958045567336533,
+      "expectancy": 5.109246376811594,
+      "realized_max_drawdown": 1018.7699999999998,
+      "max_consecutive_losses": 13
+    }
+  }
+}

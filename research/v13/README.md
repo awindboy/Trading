@@ -1,5 +1,23 @@
 # V13 research code
 
+## Current 2026-09-29 boundary
+
+The active LTF evidence is Reconstruction A of the route q75/q50 state machine
+documented in `docs/ea/v13/V13_LTF_ROUTE_Q75_Q50_ACTION_CONTRACT_20260929.md`.
+The interrupted session did not save its exact final q50 ledger, so its reported
+economics remain distinct.
+
+`v13_ltf_route_q75_q50_policy.py` now regenerates Reconstruction A, including
+strict-prior OOF route admission, q50 repair, Child-#1 reference and frozen
+policy ledgers. `validate_v13_policy_ledger.py` checks ledger invariants;
+`parse_v13_policy_replay_journal.py` establishes ordered actual-tick parity and
+derives per-event economics, blocks and tail robustness.
+
+Reconstruction A passed 2,954/2,954 action parity but was not promoted because
+its better payoff/net came with worse loss frequency and ordinary exposure than
+SA-1. Do not present older hurdle/staged ledgers as this candidate and do not
+rescue it with post-hoc ranks or sizing.
+
 V13 historical audit scripts remain observation/action evidence for their named
 contracts. The current action audit is:
 

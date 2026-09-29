@@ -68,3 +68,24 @@ Right-tail accounting remains visible, but its role changes:
 The new add-on proof/lock candidate is evaluated primarily because it changes
 loss frequency and the ordinary equity path, not because it maximizes Baseline-0
 net points. Its tail sacrifice must be reported, but is not an automatic failure.
+
+## 6. 2026-09-29 metric completion
+
+Win rate cannot be interpreted without payoff. Every current candidate report
+must now include:
+
+- trades, wins, losses, flats and non-flat win rate;
+- net, PF, average winner, average loser, payoff ratio and expectancy;
+- break-even win rate implied by average win/loss;
+- realized trade-sequence DD, floating DD when available, concurrency and
+  maximum consecutive losses;
+- 10/25/50/100-trade positive share **and median P/L**;
+- count/share of blocks with win rate above 50% but negative P/L;
+- year slices and large-winner-trimmed robustness.
+
+A filter that removes winners and losers in equal economic proportions has not
+solved the objective merely because exposure fell. A high-win-rate stream with
+payoff below one can still decay. Conversely, a lower-win-rate replacement may
+be useful when its payoff and ordinary block medians materially improve. The
+Child-1 Journey seed and replacement add-on lane must also be reported
+separately before being combined.

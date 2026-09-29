@@ -1,7 +1,7 @@
 # Trading repository authority
 
-Last synchronized: `2026-09-28`
-Base GitHub `main` checked: `6ea22fe914a8a7cc459cb5bd939b8435335b77d6`
+Last synchronized: `2026-09-29`
+Base GitHub `main` checked: `1555d2b06b4dabdbadf14366c26e4f2177506463`
 
 ## Active generation
 
@@ -16,10 +16,12 @@ Start every V13 session in this order:
 4. read `docs/ea/v13/V13_OBJECTIVE_AND_EVALUATION_UPDATE_20260928.md`;
 5. read `docs/ea/v13/HANDOFF_V13.md`;
 6. read `docs/ea/v13/RESEARCH_STATE_V13.md`;
-7. read the frozen Baseline-0 contract and the current HA-9 action contract;
-8. read the HA-9 receipt and MQL5 validation protocol before tester work.
-9. read `V13_HA9_TRADE_MODE_COVERAGE_20260928.md` and its linked receipts
-   before proposing another timeout, re-arm, runner or exit-horizon variant.
+7. read the frozen Baseline-0 contract and the current LTF-route action contract;
+8. read the LTF-route receipt and MQL5 validation protocol before tester work;
+9. read the LTF-route actual-tick replay receipt;
+10. read `V13_HA9_TRADE_MODE_COVERAGE_20260928.md` and the LTF research chronicle
+   before proposing another timeout, re-arm, runner, correction-envelope or
+   exit-horizon variant.
 
 ## Frozen comparator
 
@@ -38,19 +40,26 @@ no Hard SL / TP / ML action / external filter
 
 ## Active action candidate
 
-HA-9 is the current research candidate, not production authority.
+The current research candidate is the LTF route q75/q50 state machine. HA-9
+and SA-1 remain historical comparators; SA-1 is the current actual-tick
+ordinary-equity reference.
 
 ```text
-Child #1: Baseline 0 unchanged
-Child #2..#10:
-  enter at Baseline-0 timing
-  next H4 must break the signal H4 favorable raw extreme
-  if proven -> lock at max(entry, signal high) LONG / min(entry, signal low) SHORT
-  if not proven within one H4 -> close that Child
-  opposite H4 HA still closes all remaining Journey positions
+Child #1: frozen Baseline 0 unchanged
+replacement add-on lane:
+  live H4 PHA
+  -> M30 correction + fresh causal M15 POI interaction
+  -> causal M30/H1 forward destination topology
+  -> strict-prior OOF hurdle-EV q75 admission, fixed 0.01 lot
+  -> first destination is proof, not TP
+  -> first post-delivery damaged correction uses strict-prior OOF q50 repair
 ```
 
-See `V13_HA9_ADDON_PROOF_LOCK_ACTION_CONTRACT_20260928.md` for exact timing.
+See `V13_LTF_ROUTE_Q75_Q50_ACTION_CONTRACT_20260929.md`. The interrupted
+session's exact q50 ledger remains absent. Reconstruction A recovered the same
+population and passed exact actual-tick policy parity, but is not promoted:
+its stronger payoff/net comes with worse loss frequency, win rate, streak and
+exposure than SA-1. It is not embedded-model authority.
 
 ## Current evaluation doctrine
 
@@ -80,18 +89,24 @@ superseded by `V13_OBJECTIVE_AND_EVALUATION_UPDATE_20260928.md`.
   or parameter thresholds.
 - Do not optimize the one-H4 proof window or proof/lock price on the same
   consumed sample merely to rescue a tester result.
+- Do not replace the predeclared q75 admission/q50 repair ranks with post-hoc
+  q65/q70 thresholds or convert q75 into fitted position sizing.
 - 2024-01-01..2026-08-28 remains consumed development history.
 - MQL5 Strategy Tester `Every tick based on real ticks` is required for official
   execution economics.
 
-## Current actual-tick boundary
+## Current execution boundary
 
-The supplied extended MT5 report has been reconstructed into 3,977 completed
-Children and 3,858 canonical-cutoff Children. It provides preliminary execution
-economics, but no Journal/event stream was supplied, so proof/timeout/lock event
-parity remains pending.
+SA-1 has an actual-tick report and Journal receipt: 1,783 canonical Children,
+`+$2,791.87`, PF `1.215`, realized DD `$971.77`. It remains the execution
+reference, not the active architecture.
 
-The HA-9 trade-mode follow-on branch tested timeout extensions, H1/FAST/STD
-exits, information re-arm and runner/tactical separation. No action survived
-the post-cutoff checks. Do not rescue those mechanisms with fitted thresholds,
-cooldowns or sizing. Read the coverage map before new research.
+LTF-route Reconstruction A has a hashed 1,477-event ledger and `2,954/2,954`
+ordered `Every tick based on real ticks` parity: `+$4,461.37`, PF `1.301`, 554
+wins / 922 losses / 1 flat, realized DD `$1,018.77`, equity DD `$1,787.36`,
+streak 15 and maximum concurrency 8. This verifies Reconstruction A only; it
+does not reproduce the missing interrupted-session q50 ledger.
+
+The next legitimate evidence is predeclared forward shadow after the consumed
+cutoff or a genuinely new frozen mechanism. No q65/q70, fitted repair threshold,
+sizing or side/year rescue is authorized.

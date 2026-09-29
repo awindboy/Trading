@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "ledger": "v13_ltf_route_q75_q50_policy_ledger.csv",
+  "sha256": "0d4279ecf5e8033b3754ae11f31895bd3747232ed1b6f0a9fff6dd20875e8d87",
+  "bytes": 89873,
+  "rows": 1024,
+  "events": 512,
+  "first_action_time": "2024-01-02 05:15:00",
+  "last_action_time": "2026-08-27 12:00:00",
+  "lanes": {
+    "LTF_Q75": 512
+  },
+  "directions": {
+    "LONG": 369,
+    "SHORT": 143
+  },
+  "same_timestamp_exit_before_entry_groups": 15
+}

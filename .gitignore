@@ -14,6 +14,7 @@ data/GOLD#/
 archive/outputs/
 output/
 tmp/
+/prior/
 .env
 .venv/
 __pycache__/

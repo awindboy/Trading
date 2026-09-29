@@ -1,0 +1,45 @@
+{
+  "created_at": "2026-09-29",
+  "status": "RECONSTRUCTION_A_ACTUAL_TICK_PARITY_PASS_NOT_PROMOTED",
+  "tester": {
+    "terminal": "XM Global MT5 build 6230",
+    "model": "Every tick based on real ticks",
+    "symbol": "GOLD#",
+    "period": "M1",
+    "from": "2024-01-01",
+    "to": "2026-08-29",
+    "ticks": 183208623,
+    "bars": 940833
+  },
+  "sha256": {
+    "combined_policy_ledger_csv": "dc09bbef5602622089e80a3ee12dd3257430fdeeb3042ad57571211c20f2f5be",
+    "final_tester_journal_external": "09afca05d9239a7121190de436d04f705b29b5d60aaf548149079bcd92459cac",
+    "policy_replay_ea_mq5": "94156bdd0221de876733f45110221d901b21ab02d5e05477bf78d421480a546f",
+    "policy_replay_ea_ex5": "1d9c7e00eb2a337c35e22b15bc538c3cd403be08e8ddafc9e1bc59f03d612710",
+    "parsed_actual_tick_events_csv": "b6cba67088bd2713105afa268efe9ecdf953d1d44cf3f074cc3479024381423c",
+    "normalized_journal_markers_csv": "32d8d4b28060eba23aea112bb44d87c233208f29d6eeffbd0d61871948da98f9",
+    "parsed_parity_json": "a89c46cb4d7d4608c8a680557e90a486cd12e0a066aab76e921a6ce31fbbb5e3",
+    "journal_parser_py": "96e88e7e8251bcad07ff2e41850d83910aa0de4dd910d213d84ab31b04ab28d6",
+    "reconstruction_py": "f288539805d527a032090a589248b7f29db156046a32af0fc73a4b6fe92e0188"
+  },
+  "parity": {
+    "ledger_actions": 2954,
+    "successful_actions": 2954,
+    "ordered_match": true,
+    "halts": 0,
+    "unresolved_failed_rows": 0,
+    "replay_complete": true
+  },
+  "economics": {
+    "trades": 1477,
+    "wins": 554,
+    "losses": 922,
+    "flats": 1,
+    "net_profit": 4461.37,
+    "profit_factor": 1.3014323097015859,
+    "realized_max_drawdown": 1018.77,
+    "actual_tick_equity_drawdown": 1787.36,
+    "maximum_concurrent_positions": 8,
+    "maximum_consecutive_losses": 15
+  }
+}
